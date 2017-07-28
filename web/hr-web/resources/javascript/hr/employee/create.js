@@ -373,7 +373,8 @@ var commom_fields_rules = {
         alphaWSplChar: true
     },
     "education.yearOfPassing": {
-        required: true
+        required: true,
+        year: true
     },
     "education.university": {
         required: false,
@@ -445,7 +446,8 @@ var commom_fields_rules = {
         required: false
     },
     "technical.yearOfPassing": {
-        required: false
+        required: false,
+        year: true
     },
     "technical.remarks": {
         required: false
@@ -2501,6 +2503,10 @@ function loadUI() {
                 $.validator.addMethod('alphaWSplChar', function(value) {
                     return value ? /^[a-zA-Z\-\/\_\.\*\@\#\$\%\^\&\ ]*$/.test(value) : true;
                 }, 'Only alphabets with special characters allowed.');
+
+                $.validator.addMethod('year', function(value) {
+                    return value ? /^\d{4}$/.test(value) : true;
+                }, 'Year should have 4 digits.');
 
                 $(".onlyNumber").on("keydown", function(e) {
                     var key = e.keyCode ? e.keyCode : e.which;

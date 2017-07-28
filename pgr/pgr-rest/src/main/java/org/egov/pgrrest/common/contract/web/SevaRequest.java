@@ -73,7 +73,9 @@ public class SevaRequest {
     }
 
     private List<String> getRoles(List<org.egov.common.contract.request.Role> roles) {
-        return roles.stream().map(Role::getCode).collect(Collectors.toList());
+        return roles.stream()
+            .map(Role::getCode)
+            .collect(Collectors.toList());
     }
 
 }

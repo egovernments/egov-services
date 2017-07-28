@@ -23,10 +23,10 @@ import lombok.ToString;
 @ToString
 public class AssetStatusResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	@JsonProperty("AssetStatus")
-	private List<AssetStatus> assetStatus = new ArrayList<AssetStatus>();
+    @JsonProperty("AssetStatus")
+    private List<AssetStatus> assetStatus = new ArrayList<>();
 
 }

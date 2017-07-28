@@ -80,6 +80,4 @@ public class Bank extends Auditable {
 	@Size(max = 50)
 	private String type;
 
-	private Fund fund;
-
 }

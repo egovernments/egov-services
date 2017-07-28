@@ -14,6 +14,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class AttributeActionsDefinitionKey implements Serializable {
 
+    private static final long serialVersionUID = 5033468783850139270L;
     @Column(name = "attributecode", nullable = false)
     private String attributeCode;
 

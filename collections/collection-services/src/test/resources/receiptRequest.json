@@ -1,17 +1,81 @@
 {
-    "RequestInfo":{
-        "apiId":"org.egov.collection",
-        "ver":"1.0",
-        "action":"POST",
-        "did":"4354648646",
-        "ts":"22-12-2016 00:00:00",
-        "key":"xyz",
-        "msgId":"654654",
-        "requesterId":"61",
-        "authToken":"ksnk",
-        "userInfo":
-        {
-        	"id":1
-        }
-     }
-}
+"tenantId": "default",
+"RequestInfo": {
+  "apiId": "emp",
+  "ver": "1.0",
+  "ts": "10-03-2017 00:00:00",
+  "action": "create",
+  "did": "1",
+  "key": "abcdkey",
+  "msgId": "20170310130900",
+  "requesterId": "rajesh",
+  "correlationId" : "",
+  "authToken": "a9199e9b-a472-4dc2-9a5f-9dd7705c56ae",
+  "userInfo": {
+    "id": "1"
+  }
+},
+"Receipt": [{
+  "tenantId": "default",
+  "instrumentType": "cash",
+  "instrumentHeader": "instrumentHeader",
+  "BankAccount": {
+    "BankBranch": {
+      "name": "SBI"
+    },
+    "ChartOfAccount": {
+      "name": "chartOfAccount"
+    }
+  },
+  "Bill" : 
+       [{
+           "id": "2",
+           "payeeName": "System",
+           "paidBy" : "Parvati",
+           "payeeAddress": null,
+           "payeeEmail": "system@gmail.com",
+           "isActive": true,
+           "isCancelled": false,
+           "BillDetail": [
+               {
+                   "id": "2",
+                   "tenantId": "default",
+                   "bill": "2",
+                   "businessService": "TL",
+                   "billNumber": "2",
+                   "billDate": 1500461751586,
+                   "consumerCode": "consumercode2",
+                   "receiptType" : "C",
+                   "consumerType": "consumertype1",
+                   "billDescription": "Water Charge Consumer Code: consumercode2",
+                   "displayMessage": "Water Charge Consumer Code: consumercode2",
+                   "minimumAmount": 10,
+                   "totalAmount": 900,
+                   "amountPaid" : 200,
+                   "collectionModesNotAllowed": [
+                       null
+                   ],
+                   "callBackForApportioning": false,
+                   "partPaymentAllowed": false,
+                   "BillAccountDetail": [
+                       {
+                           "id": "2",
+                           "tenantId": "default",
+                           "billDetail": "2",
+                           "glcode": "1405014",
+                           "order": 1,
+                           "accountDescription": "ESTIMATIONCHARGES-1491004800-1499990400",
+                           "crAmountToBePaid": 900,
+                           "creditAmount": null,
+                           "debitAmount": null,
+                           "isActualDemand": true,
+                           "purpose": "OTHERS"
+                       }
+                   ]
+               }
+           ],
+           "tenantId": "default",
+           "auditDetail": null
+       }]
+   }
+   ]}

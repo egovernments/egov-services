@@ -53,7 +53,7 @@ public interface PropertyService {
 	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
-			String ownerName, Integer demandFrom, Integer demandTo);
+			String ownerName, Integer demandFrom, Integer demandTo,String propertyId) throws Exception;
 	
 	
 	/**

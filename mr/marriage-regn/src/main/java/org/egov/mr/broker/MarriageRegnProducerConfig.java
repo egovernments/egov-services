@@ -35,12 +35,12 @@ public class MarriageRegnProducerConfig {
 
 	@Bean
 	public ProducerFactory<String, Object> producerFactory() {
-		return new DefaultKafkaProducerFactory<>(producerConfigs());
+		return new DefaultKafkaProducerFactory<String, Object>(producerConfigs());
 	}
 
 	@Bean
 	public Map<String, Object> producerConfigs() {
-		Map<String, Object> props = new HashMap<>();
+		Map<String, Object> props = new HashMap<String, Object>();
 
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
 		props.put(ProducerConfig.RETRIES_CONFIG, retriesConfig);
@@ -54,7 +54,7 @@ public class MarriageRegnProducerConfig {
 
 	@Bean
 	public KafkaTemplate<String, Object> kafkaTemplate() {
-		return new KafkaTemplate<>(producerFactory());
+		return new KafkaTemplate<String, Object>(producerFactory());
 	}
 
 	@Bean

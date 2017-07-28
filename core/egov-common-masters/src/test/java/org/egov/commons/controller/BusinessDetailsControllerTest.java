@@ -28,7 +28,6 @@ import org.egov.commons.service.BusinessCategoryService;
 import org.egov.commons.service.BusinessDetailsService;
 import org.egov.commons.web.contract.BusinessAccountDetails;
 import org.egov.commons.web.contract.BusinessAccountSubLedger;
-import org.egov.commons.web.contract.BusinessDetails;
 import org.egov.commons.web.contract.BusinessDetailsRequest;
 import org.egov.commons.web.contract.BusinessDetailsRequestInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFact;
@@ -95,7 +94,7 @@ public class BusinessDetailsControllerTest {
 		when(businessDetailsService.updateDetailsAsync(getBusinessDetailsRequestForUpdate()))
 				.thenReturn(getBusinessDetailsRequestForUpdate());
 
-		mockMvc.perform(post("/businessDetails/TL/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+		mockMvc.perform(post("/businessDetails/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("businessDetailsRequestUpdate.json"))).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("businessDetailsResponseUpdate.json")));
@@ -158,7 +157,6 @@ public class BusinessDetailsControllerTest {
 				.build();
 		org.egov.commons.model.BusinessDetails details12 = org.egov.commons.model.BusinessDetails.builder().id(2L)
 				.build();
-
 		List<org.egov.commons.model.BusinessDetails> listBusinessDetails = Arrays.asList(details1, details2);
 		org.egov.commons.model.BusinessAccountDetails account1 = org.egov.commons.model.BusinessAccountDetails.builder()
 				.id(1L).chartOfAccount(56L).amount(1000.0).tenantId("default").businessDetails(details).build();
@@ -203,73 +201,47 @@ public class BusinessDetailsControllerTest {
 	}
 
 	private List<BusinessAccountSubLedger> getListOfModelAccountSubledgerForUpdate() {
-		BusinessDetails details = BusinessDetails.builder().id(1L).code("TLM").name("Trade Licence Mutation")
-				.active(true).businessCategory(1L).businessType("C").callBackForApportioning(true)
-				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
-				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
-				.tenantId("default").build();
-		BusinessAccountDetails accountDetail1 = BusinessAccountDetails.builder().id(1L).amount(5000.00)
-				.chartOfAccounts(56L).businessDetails(details).build();
-		BusinessAccountDetails accountDetail2 = BusinessAccountDetails.builder().id(5L).amount(3000.00)
-				.chartOfAccounts(58L).businessDetails(details).build();
-		BusinessAccountDetails accountDetail3 = BusinessAccountDetails.builder().id(6L).amount(4000.00)
-				.chartOfAccounts(59L).businessDetails(details).build();
+
+	
 		BusinessAccountSubLedger subledger1 = BusinessAccountSubLedger.builder().id(1L).detailType(34L).detailKey(23L)
-				.amount(50000.00).businessAccountDetails(accountDetail1).build();
+				.amount(50000.00).businessAccountDetails(1L).build();
 		BusinessAccountSubLedger subledger2 = BusinessAccountSubLedger.builder().id(3L).detailType(34L).detailKey(23L)
-				.amount(30000.00).businessAccountDetails(accountDetail2).build();
+				.amount(30000.00).businessAccountDetails(5L).build();
 		BusinessAccountSubLedger subledger3 = BusinessAccountSubLedger.builder().id(4L).detailType(34L).detailKey(23L)
-				.amount(40000.00).businessAccountDetails(accountDetail3).build();
+				.amount(40000.00).businessAccountDetails(6L).build();
 		BusinessAccountSubLedger subledger4 = BusinessAccountSubLedger.builder().id(5L).detailType(34L).detailKey(23L)
-				.amount(50000.00).businessAccountDetails(accountDetail1).build();
+				.amount(50000.00).businessAccountDetails(1L).build();
 		return Arrays.asList(subledger1, subledger2, subledger3, subledger4);
 	}
 
 	private List<BusinessAccountDetails> getListOfModelAccountDetailsForUpdate() {
-		BusinessDetails details = BusinessDetails.builder().id(1L).code("TLM").name("Trade Licence Mutation")
-				.active(true).businessCategory(1L).businessType("C").callBackForApportioning(true)
-				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
-				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
-				.tenantId("default").build();
 		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).amount(5000.00).chartOfAccounts(56L)
-				.businessDetails(details).build();
+				.businessDetails(1L).build();
 		BusinessAccountDetails account2 = BusinessAccountDetails.builder().id(5L).amount(3000.00).chartOfAccounts(58L)
-				.businessDetails(details).build();
+				.businessDetails(1L).build();
 		BusinessAccountDetails account3 = BusinessAccountDetails.builder().id(6L).amount(4000.00).chartOfAccounts(59L)
-				.businessDetails(details).build();
+				.businessDetails(1L).build();
 
 		return Arrays.asList(account1, account2, account3);
 	}
 
 	private List<BusinessAccountSubLedger> getListOfAccountSubledger() {
 		BusinessAccountSubLedger subledger1 = BusinessAccountSubLedger.builder().id(1L).detailType(34L).detailKey(23L)
-				.amount(10000.00).businessAccountDetails(getAccountAssociatedWithSubledger()).build();
+				.amount(10000.00).businessAccountDetails(1L).build();
 		BusinessAccountSubLedger subledger2 = BusinessAccountSubLedger.builder().id(2L).detailType(35L).detailKey(24L)
-				.amount(20000.00).businessAccountDetails(getAccountAssociatedWithSubledger()).build();
+				.amount(20000.00).businessAccountDetails(1L).build();
 		return Arrays.asList(subledger1, subledger2);
 	}
 
 	private List<BusinessAccountDetails> getListOfAccountDetails() {
 		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccounts(56L)
-				.businessDetails(getDetails()).build();
+				.businessDetails(1L).build();
 		BusinessAccountDetails account2 = BusinessAccountDetails.builder().id(2L).amount(2000.00).chartOfAccounts(57L)
-				.businessDetails(getDetails()).build();
+				.businessDetails(1L).build();
 		return Arrays.asList(account1, account2);
 	}
 
-	private BusinessAccountDetails getAccountAssociatedWithSubledger() {
-		return BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccounts(56L)
-				.businessDetails(getDetails()).build();
 
-	}
-
-	private BusinessDetails getDetails() {
-		return BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").active(true).businessCategory(1L)
-				.businessType("C").businessUrl("/receipts/receipt-create.action").voucherCreation(true)
-				.isVoucherApproved(true).ordernumber(2).fund("12").function("123").fundSource("234").functionary("456")
-				.department("56").tenantId("default").callBackForApportioning(true).build();
-
-	}
 
 	private BusinessCategory getBusinessCategoryModel() {
 		BusinessCategory category = BusinessCategory.builder().id(1L).code("TL").name("Trade Licence").isactive(true)

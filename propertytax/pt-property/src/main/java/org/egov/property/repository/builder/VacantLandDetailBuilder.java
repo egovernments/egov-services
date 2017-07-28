@@ -19,4 +19,14 @@ public class VacantLandDetailBuilder {
 
 		return vacantlandUpdateSQL.toString();
 	}
+
+
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_vacantland where id= ?";
+
+	public static final String INSERT_VACANTLANDDETAILHISTORY_QUERY = "INSERT INTO egpt_vacantland_history ("
+			+ "surveyNumber,pattaNumber, marketValue,capitalValue,layoutApprovedAuth,layoutPermissionNo, "
+			+ "layoutPermissionDate, resdPlotArea,nonResdPlotArea,createdBy, lastModifiedBy, createdTime,"
+			+ "lastModifiedTime,property,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
 }

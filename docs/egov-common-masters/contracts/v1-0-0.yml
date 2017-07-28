@@ -1238,8 +1238,10 @@ paths:
        -  name: businessDetailsCode
           in: query
           required: false
-          description: The unique business details Code.
-          type: string
+          description: The list of unique business details Code.
+          type: array
+          items:
+            type: string
           minLength: 0
           maxLength: 64
           exclusiveMinimum: true

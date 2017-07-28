@@ -67,7 +67,7 @@ public class Unit {
 
 	@JsonProperty("occupancyType")
 	@NotNull
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String occupancyType = null;
 
 	@JsonProperty("occupierName")
@@ -83,11 +83,11 @@ public class Unit {
 
 	@JsonProperty("structure")
 	@NotNull
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String structure = null;
 
 	@JsonProperty("age")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String age = null;
 
 	@JsonProperty("exemptionReason")
@@ -107,7 +107,7 @@ public class Unit {
 	private Double manualArv = null;
 
 	@JsonProperty("arv")
-	private Double arv = null;
+	private Double arv = 0.0d;
 
 	@JsonProperty("electricMeterNo")
 	@Size(min = 1, max = 64)

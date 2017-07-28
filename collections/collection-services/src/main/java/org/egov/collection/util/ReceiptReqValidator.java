@@ -3,6 +3,7 @@ package org.egov.collection.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReceiptReqValidator {
 	
-	public List<ErrorResponse> validateServiceGroupRequest(final ReceiptReq receiptRequest) {
+	public List<ErrorResponse> validatecreateReceiptRequest(final ReceiptReq receiptRequest) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
 		final Error error = getError(receiptRequest);
@@ -42,7 +43,8 @@ public class ReceiptReqValidator {
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,
 			final List<ErrorField> errorFields) {
 	try{	
-		final Receipt receipt = receiptRequest.getReceipt();
+		final List<Receipt> receipts = receiptRequest.getReceipt();
+		for(Receipt receipt:receipts){
 		
 		if(null == receipt.getTenantId() || receipt.getTenantId().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.TENANT_ID_MISSING_CODE)
@@ -67,25 +69,20 @@ public class ReceiptReqValidator {
 		
 		for(BillDetail billDetails:  receipt.getBill().get(0).getBillDetails()){
 			List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
-			if(null == billDetails.getReceiptType()){
-				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)
-						.message(CollectionServiceConstants.RECEIPT_TYPE_MISSING_MESSAGE)
-						.field(CollectionServiceConstants.RECEIPT_TYPE_MISSING_FIELD).build();
-				errorFields.add(errorField);
-			}			
-			if(null == billDetails.getCollectionType()){
-				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLLECTIONTYPE_MISSING_CODE)
-						.message(CollectionServiceConstants.COLLECTIONTYPE_MISSING_MESSAGE)
-						.field(CollectionServiceConstants.COLLECTIONTYPE_MISSING_FIELD).build();
-				errorFields.add(errorField);
-			}
-			
-			if(null == billDetails.getCollectionModesNotAllowed()|| billDetails.getCollectionModesNotAllowed().isEmpty() ){
-				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_CODE)
-						.message(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_MESSAGE)
-						.field(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_FIELD).build();
-				errorFields.add(errorField);
-			}
+
+            if(StringUtils.isBlank(billDetails.getBillDescription())) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLL_DETAILS_DESCRIPTION_CODE)
+                        .message(CollectionServiceConstants.COLL_DETAILS_DESCRIPTION_MESSAGE)
+                        .field(CollectionServiceConstants.COLL_DETAILS_DESCRIPTION_FIELD).build();
+                errorFields.add(errorField);
+            }
+            
+            if(null == billDetails.getAmountPaid()) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.AMT_PAID_NOT_NULL_CODE)
+                        .message(CollectionServiceConstants.AMT_PAID_NOT_NULL_MESSAGE)
+                        .field(CollectionServiceConstants.AMT_PAID_NOT_NULL_FIELD).build();
+                errorFields.add(errorField);
+            }
 			
 			if(null == billDetails.getBusinessService() || billDetails.getBusinessService().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.BD_CODE_MISSING_CODE)
@@ -108,6 +105,7 @@ public class ReceiptReqValidator {
 							.field(CollectionServiceConstants.COA_MISSING_FIELD).build();
 					errorFields.add(errorField);
 				}
+			}
 			}
 		}
 	}catch(Exception e){

@@ -10,12 +10,12 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
-import org.egov.egf.master.domain.model.ChartOfAccountDetail;
 import org.egov.egf.master.persistence.entity.BudgetGroupEntity;
 import org.egov.egf.master.persistence.entity.BudgetGroupSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +26,10 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 		LOG.debug("init budgetGroup");
 		init(BudgetGroupEntity.class);
 		LOG.debug("end init budgetGroup");
+	}
+
+	public BudgetGroupJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public BudgetGroupEntity create(BudgetGroupEntity entity) {
@@ -50,88 +54,102 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
+		if (budgetGroupSearchEntity.getSortBy() != null && !budgetGroupSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(budgetGroupSearchEntity.getSortBy());
+			validateEntityFieldName(budgetGroupSearchEntity.getSortBy(), BudgetGroupEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (budgetGroupSearchEntity.getSortBy() != null && !budgetGroupSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + budgetGroupSearchEntity.getSortBy();
+		}
+
 		searchQuery = searchQuery.replace(":tablename", BudgetGroupEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (budgetGroupSearchEntity.getSortBy() != null && !budgetGroupSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(budgetGroupSearchEntity.getSortBy());
-                    validateEntityFieldName(budgetGroupSearchEntity.getSortBy(), BudgetGroupEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (budgetGroupSearchEntity.getSortBy() != null && !budgetGroupSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + budgetGroupSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (budgetGroupSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", budgetGroupSearchEntity.getId());
 		}
 		if (budgetGroupSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", budgetGroupSearchEntity.getName());
 		}
 		if (budgetGroupSearchEntity.getDescription() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("description =:description");
 			paramValues.put("description", budgetGroupSearchEntity.getDescription());
 		}
 		if (budgetGroupSearchEntity.getMajorCodeId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("majorCode =:majorCode");
 			paramValues.put("majorCode", budgetGroupSearchEntity.getMajorCodeId());
 		}
 		if (budgetGroupSearchEntity.getMaxCodeId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("maxCode =:maxCode");
 			paramValues.put("maxCode", budgetGroupSearchEntity.getMaxCodeId());
 		}
 		if (budgetGroupSearchEntity.getMinCodeId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("minCode =:minCode");
 			paramValues.put("minCode", budgetGroupSearchEntity.getMinCodeId());
 		}
-		if (budgetGroupSearchEntity.getAccountTypeId() != null) {
-			if (params.length() > 0)
+		if (budgetGroupSearchEntity.getAccountType() != null) {
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("accountType =:accountType");
-			paramValues.put("accountType", budgetGroupSearchEntity.getAccountTypeId());
+			paramValues.put("accountType", budgetGroupSearchEntity.getAccountType().toString());
 		}
-		if (budgetGroupSearchEntity.getBudgetingTypeId() != null) {
-			if (params.length() > 0)
+		if (budgetGroupSearchEntity.getBudgetingType() != null) {
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("budgetingType =:budgetingType");
-			paramValues.put("budgetingType", budgetGroupSearchEntity.getBudgetingTypeId());
+			paramValues.put("budgetingType", budgetGroupSearchEntity.getBudgetingType().toString());
 		}
 		if (budgetGroupSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", budgetGroupSearchEntity.getActive());
 		}
 
 		Pagination<BudgetGroup> page = new Pagination<>();
-		if (budgetGroupSearchEntity.getOffset() != null)
+		if (budgetGroupSearchEntity.getOffset() != null) {
 			page.setOffset(budgetGroupSearchEntity.getOffset());
-		if (budgetGroupSearchEntity.getPageSize() != null)
-			page.setPageSize(budgetGroupSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (budgetGroupSearchEntity.getPageSize() != null) {
+			page.setPageSize(budgetGroupSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -159,7 +177,7 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 	}
 
 	public BudgetGroupEntity findById(BudgetGroupEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

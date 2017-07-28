@@ -1,13 +1,12 @@
 package org.egov.egf.master.web.repository;
 
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.egov.egf.master.web.requests.FinancialYearResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
@@ -37,15 +36,14 @@ public class FinancialYearContractRepository {
 			content.append("&tenantId=" + financialYearContract.getTenantId());
 		}
 		url = url + content.toString();
-		CommonResponse<FinancialYearContract> result = objectMapper.convertValue(
-				restTemplate.postForObject(url, null, CommonResponse.class),
-				new TypeReference<CommonResponse<FinancialYearContract>>() {
-				});
+		FinancialYearResponse result = 	restTemplate.postForObject(url, null, FinancialYearResponse.class);
+				 
 
-		if (result.getData() != null && result.getData().size() == 1)
-			return result.getData().get(0);
-		else
+		if (result.getFinancialYears() != null && result.getFinancialYears().size() == 1) {
+			return result.getFinancialYears().get(0);
+		} else {
 			return null;
+		}
 
 	}
 }

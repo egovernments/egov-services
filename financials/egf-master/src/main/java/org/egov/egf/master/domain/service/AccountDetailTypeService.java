@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.egf.master.web.requests.AccountDetailTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,7 @@ public class AccountDetailTypeService {
 	@Autowired
 	private SmartValidator validator;
 
-	public BindingResult validate(List<AccountDetailType> accountdetailtypes, String method, BindingResult errors) {
+	private BindingResult validate(List<AccountDetailType> accountdetailtypes, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -72,6 +71,7 @@ public class AccountDetailTypeService {
 		return accountdetailtypes;
 	}
 
+	@Transactional
 	public List<AccountDetailType> add(List<AccountDetailType> accountdetailtypes, BindingResult errors) {
 		accountdetailtypes = fetchRelated(accountdetailtypes);
 		validate(accountdetailtypes, ACTION_CREATE, errors);
@@ -82,6 +82,7 @@ public class AccountDetailTypeService {
 
 	}
 
+	@Transactional
 	public List<AccountDetailType> update(List<AccountDetailType> accountdetailtypes, BindingResult errors) {
 		accountdetailtypes = fetchRelated(accountdetailtypes);
 		validate(accountdetailtypes, ACTION_UPDATE, errors);
@@ -92,7 +93,7 @@ public class AccountDetailTypeService {
 
 	}
 
-	public void addToQue(CommonRequest<AccountDetailTypeContract> request) {
+	public void addToQue(AccountDetailTypeRequest request) {
 		accountDetailTypeRepository.add(request);
 	}
 

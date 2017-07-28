@@ -13,7 +13,7 @@
         	"id":1
         }
     },
-    "Receipt": 
+    "Receipt": [
         {
             "tenantId": "default",
             "instrumentType": null,
@@ -86,8 +86,8 @@
             }],
             "Bank": null,
             "BankAccount": null,
-            "auditDetails": null,
-            "workflowDetails": null
+            "auditDetails": null
+        
         }
-    
+    ]
 }

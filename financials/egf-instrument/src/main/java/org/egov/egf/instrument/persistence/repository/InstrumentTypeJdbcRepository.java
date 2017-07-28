@@ -60,8 +60,9 @@ public class InstrumentTypeJdbcRepository extends JdbcRepository {
 		}
 
 		String orderBy = "order by id";
-		if (instrumentTypeSearchEntity.getSortBy() != null && !instrumentTypeSearchEntity.getSortBy().isEmpty())
+		if (instrumentTypeSearchEntity.getSortBy() != null && !instrumentTypeSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + instrumentTypeSearchEntity.getSortBy();
+		}
 
 		searchQuery = searchQuery.replace(":tablename", InstrumentTypeEntity.TABLE_NAME);
 
@@ -69,49 +70,60 @@ public class InstrumentTypeJdbcRepository extends JdbcRepository {
 
 		// implement jdbc specfic search
 		if (instrumentTypeSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", instrumentTypeSearchEntity.getId());
 		}
 		if (instrumentTypeSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", instrumentTypeSearchEntity.getName());
 		}
 		if (instrumentTypeSearchEntity.getDescription() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("description =:description");
 			paramValues.put("description", instrumentTypeSearchEntity.getDescription());
 		}
 		if (instrumentTypeSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", instrumentTypeSearchEntity.getActive());
 		}
-		/*if (instrumentTypeSearchEntity.getInstrumentTypeProperties() != null) {
-			if (params.length() > 0)
+	 
+		if (instrumentTypeSearchEntity.getIds() != null) {
+			if (params.length() > 0) {
 				params.append(" and ");
-			params.append("instrumentTypeProperties =:instrumentTypeProperties");
-			paramValues.put("instrumentTypeProperties", instrumentTypeSearchEntity.getInstrumentTypeProperties());
-		}*/
+			}
+			params.append("ids =:ids");
+			paramValues.put("ids", instrumentTypeSearchEntity.getIds());
+		}
 
 		Pagination<InstrumentType> page = new Pagination<>();
-		if (instrumentTypeSearchEntity.getOffset() != null)
+		if (instrumentTypeSearchEntity.getOffset() != null) {
 			page.setOffset(instrumentTypeSearchEntity.getOffset());
-		if (instrumentTypeSearchEntity.getPageSize() != null)
-			page.setPageSize(instrumentTypeSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (instrumentTypeSearchEntity.getPageSize() != null) {
+			page.setPageSize(instrumentTypeSearchEntity.getPageSize());
+		}
+
+	
+		  if (params.length() > 0) {
+		 
+		  searchQuery = searchQuery.replace(":condition", " where " +
+		  params.toString());
+		  
+		  } else {
+		 
+		searchQuery = searchQuery.replace(":condition", "");
+		  }
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -139,7 +151,7 @@ public class InstrumentTypeJdbcRepository extends JdbcRepository {
 	}
 
 	public InstrumentTypeEntity findById(InstrumentTypeEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

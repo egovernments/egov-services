@@ -1,4 +1,4 @@
-var localationData={
+var localationData = {
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
   "reports.pgr.wardtype":"Ward Type",
@@ -16,7 +16,7 @@ var localationData={
   "wc.create.groups.connectionDetails.connectionType":"Connection Type",
   "wc.create.groups.connectionDetails.sourceType":"Water Source Type",
   "wc.create.groups.connectionDetails.propertyType":"Property Type",
-  "wc.create.groups.connectionDetails.categoryType":"Category",
+  "wc.create.groups.connectionDetails.categoryType":"Category Type",
   "wc.create.groups.connectionDetails.usageType":"Usage Type",
   "wc.create.groups.connectionDetails.hscPipeSizeType":"H.S.C Pipe Size (Inches)",
   "wc.create.groups.connectionDetails.fields.sumpCapacity":"Sump Capacity (Litres)",
@@ -27,7 +27,27 @@ var localationData={
   "wc.create.groups.approvalDetails.fields.approver":"Approver  ",
   "wc.create.groups.approvalDetails.fields.comments":"Comments",
   "wc.create.categorytype*":"Category Type*",
-  "wc.create.categorytype.title":"Create Category Type"
+  "wc.create.categorytype.title":"Create Category Type",
+  "wc.create.groups.floorDetails.title": "Floor Details",
+  "wc.create.groups.roomDetails.title": "Room Details",
+  "wc.create.groups.floorDetails.floorNo": "Floor No",
+  "wc.create.groups.floorDetails.floorName": "Floor Name",
+  "wc.create.groups.roomDetails.roomNo": "Room No",
+  "wc.create.groups.roomDetails.roomName": "Room Name",
+  "wc.create.message.success": "Created Successfully . . . !",
+  "wc.create.groups.fileDetails.title": "Document Upload",
+  "wc.create.groups.fileDetails.fields.pan": "Pan Card",
+  "wc.create.documenttype.title": "Create Position",
+  "wc.create.applicationtype" : "Department",
+  "wc.create.documenttype" : "Designation",
+  "wc.create.positiontype" : "Position",
+  "wc.create.groups.radio" : "Outsourced Post",
+  "wc.create.groups.fileDetails.fields.PTaxReciept":"P. Tax Reciept",
+  "wc.create.groups.fileDetails.fields.DistributionLineLocationMap":"Distribution Line Location Map",
+  "wc.create.groups.fileDetails.fields.WhiteRationCard":"White Ration Card",
+  "wc.create.groups.fileDetails.fields.CourtFeeStamp":" 20Rs Court Fee Stamp",
+  "wc.create.groups.connectionDetails.billingType":"Billing Type",
+  "wc.create.groups.connectionDetails.supplyType":"Supply Type"
 }
 
 export function translate(locale_text){

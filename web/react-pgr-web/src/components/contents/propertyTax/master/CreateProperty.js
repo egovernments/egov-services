@@ -126,6 +126,28 @@ const getNameById = function(object, id, property = "") {
     return "";
 }
 
+const getNameByCode = function(object, code, property = "") {
+  if (code == "" || code == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].code == code) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].code == code) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 //Create Class for Create and update property
 class CreateProperty extends Component {
   constructor(props) {
@@ -153,6 +175,7 @@ class CreateProperty extends Component {
       revanue:[],
       election:[],
       usages:[],
+	  ack:''
     }
  }
   
@@ -170,36 +193,53 @@ class CreateProperty extends Component {
 	  
 	  var currentThis = this;
 
-      Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-        currentThis.setState({propertytypes:res.propertyTypes})
-      }).catch((err)=> {
-        currentThis.setState({
-          propertytypes:[]
-        })
-      })
+		  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+			currentThis.setState({propertytypes:res.propertyTypes})
+		  }).catch((err)=> {
+			currentThis.setState({
+			  propertytypes:[]
+			})
+		  })
 	  
-	   Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ELECTION", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
+	    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
+          console.log(res);
           currentThis.setState({election : res.Boundary})
         }).catch((err)=> {
-			currentThis.setState({
-				election : []
-			})
+          console.log(err)
         })
 		
-		 Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"REVANUE"}).then((res)=>{
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
+          console.log(res);
           currentThis.setState({street : res.Boundary})
         }).catch((err)=> {
-			currentThis.setState({
-				street : []
-			})
+          console.log(err)
         })
 		
-		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVANUE"}).then((res)=>{
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          console.log(res);
           currentThis.setState({block : res.Boundary})
         }).catch((err)=> {
-			currentThis.setState({
-				block :[]
-				})
+          console.log(err)
+        })
+		
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({locality : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            locality : []
+          })
+          console.log(err)
+        })
+		
+		 Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({zone : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            zone : []
+          })
+          console.log(err)
         })
   }
 
@@ -224,43 +264,87 @@ class CreateProperty extends Component {
   
 createPropertyTax = () => {
 	
-	let {createProperty} = this.props;
+	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+	
+	setLoadingStatus('loading');
+	
+	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
 	
 	var numberOfFloors='';
-	var plinthArea = 0;
-	if(createProperty && createProperty.hasOwnProperty('floorsArr')){
+	var builtupArea = 0;
+	if(createProperty && createProperty.hasOwnProperty('floorsArr') && createProperty.hasOwnProperty('floors')){
 		numberOfFloors = createProperty.floorsArr.length;
 		for(let i=0;i<createProperty.floors.length;i++){
 			
-			plinthArea += createProperty.floors[i].plinthArea;
+			builtupArea += createProperty.floors[i].builtupArea;
 			
 		}
 	}
 	
+	if(createProperty && createProperty.hasOwnProperty('owners')) {		
+		for(var i=0;i<createProperty.owners.length;i++){
+			createProperty.owners[i].locale = userRequest.locale;
+			createProperty.owners[i].type = userRequest.type;
+			createProperty.owners[i].active = true;
+			createProperty.owners[i].tenantId = 'default';
+			if(createProperty.owners[i].isPrimaryOwner == "PrimaryOwner") {
+				createProperty.owners[i].isPrimaryOwner = true;
+			} else {
+				createProperty.owners[i].isPrimaryOwner = false;
+			}
+		}
+	}
 	
+	var vacantLand = null;
 	
+	if(createProperty.propertyType =='VACANT_LAND') {
+			vacantLand =  {		
+							"surveyNumber": createProperty.survayNumber || null,
+							"pattaNumber": createProperty.pattaNumber || null,
+							"marketValue": createProperty.marketValue || null,
+							"capitalValue": createProperty.capitalValue || null,
+							"layoutApprovedAuth": createProperty.layoutApprovalAuthority || null,
+							"layoutPermissionNo": createProperty.layoutPermitNumber || null,
+							"layoutPermissionDate":createProperty.layoutPermitDate || null,
+							"resdPlotArea": null,
+							"nonResdPlotArea": null,
+							"auditDetails": {
+								"createdBy": userRequest.userName,
+								"lastModifiedBy":userRequest.userName,
+								"createdTime": date,
+								"lastModifiedTime": date
+							}																					
+						}
+						
+			createProperty.floorsArr = null;
+			createProperty.floors = null;	
+			createProperty.floor = null;	
+	} else {
+		vacantLand = null;
+	}
 	
 
 	
-	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
-	
 	var date = new Date().getTime();
-	
 	
 	var currentThis = this;
       var body = {
 			"properties": [{
+				"occupancyDate":"02/12/2016",
 				"tenantId": "default",
-				"oldUpicNumber": "",
-				"vltUpicNumber": "",
-				"creationReason": createProperty.reasonForCreation || '',
+				"oldUpicNumber": null,
+				"vltUpicNumber": null,
+				"creationReason": createProperty.reasonForCreation || null,
 				"address": {
 					"tenantId": "default",
-					"addressNumber": createProperty.doorNo || '',
-					"addressLine1": createProperty.locality || '',
+					 "latitude": null,
+					"longitude": null,
+					"addressNumber": createProperty.doorNo || null,
+					"addressLine1": createProperty.locality || null,
+					"addressLine2": null,
 					"landmark": null,
-					"city": "Bangalore",
-					"pincode": createProperty.pin || '',
+					"city": "secundrabad",
+					"pincode": createProperty.pin || null,
 					"detail": null,
 					"auditDetails": {
 						"createdBy": userRequest.userName,
@@ -269,50 +353,40 @@ createPropertyTax = () => {
 						"lastModifiedTime": date
 					}
 				},
-				"owners": createProperty.owners || '',
+				"owners": createProperty.owners || null,
 				"propertyDetail": {
-					"propertyType": createProperty.ownerShip || null,
-					"category": createProperty.assessmentPropertySubType || '',
+					"source": "MUNICIPAL_RECORDS",
+					"regdDocNo": "rdn2",
+					"regdDocDate": "15/02/2017",
+					"reason": "CREATE",
+					"status": "ACTIVE",
+					"isVerified": true,
+					"verificationDate": "25/05/2017",
+					"isExempted": false,
+					"propertyType": createProperty.propertyType || null,
+					"category": createProperty.propertySubType || null,
 					"usage": null,
-					"department": createProperty.assessmentDepartment || '',
+					"department": createProperty.department || null,
 					"apartment":null,
 					"siteLength": 12,
 					"siteBreadth": 15,
-					"sitalArea": createProperty.extentOfSite || '',
-					"totalBuiltupArea": plinthArea, 
+					"sitalArea": createProperty.extentOfSite || null,
+					"totalBuiltupArea": builtupArea, 
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
 					"landOwner": null,
-					"floorType":createProperty.floorType || '',
-					"woodType": createProperty.woodType || '',
-					"roofType": createProperty.roofType || '',
-					"wallType": createProperty.wallType || '',
+					"floorType":createProperty.floorType || null,
+					"woodType": createProperty.woodType || null,
+					"roofType": createProperty.roofType || null,
+					"wallType": createProperty.wallType || null,
 					"floors":createProperty.floorsArr || null,
-					"documents": [{
-						"documentType": {						
-							"name": "Photo of Assessment",
-							"application": "CREATE",
-							"auditDetails": {
-								"createdBy": userRequest.userName,
-								"lastModifiedBy":userRequest.userName,
-								"createdTime": date,
-								"lastModifiedTime": date
-							}
-						},
-						"fileStore": "testing",
-						"auditDetails": {
-							"createdBy": userRequest.userName,
-							"lastModifiedBy":userRequest.userName,
-							"createdTime": date,
-							"lastModifiedTime": date
-						}
-					}],
+					"documents": [],
 					"stateId": null,
 					"workFlowDetails": {
-						"department": createProperty.workflowDepartment,
-						"designation":createProperty.workflowDesignation,
-						"assignee": createProperty.approver,
+						"department": createProperty.workflowDepartment || null,
+						"designation":createProperty.workflowDesignation || null,
+						"assignee": createProperty.approver || null,
 						"action": "no",
 						"status": null
 					},
@@ -323,43 +397,27 @@ createPropertyTax = () => {
 						"lastModifiedTime": date
 					}
 				},
-				"vacantLand": {
-					"surveyNumber": createProperty.survayNumber || '',
-					"pattaNumber": createProperty.pattaNumber || '',
-					"marketValue": createProperty.marketValue || '',
-					"capitalValue": createProperty.capitalValue || '',
-					"layoutApprovedAuth": createProperty.layoutApprovalAuthority || '',
-					"layoutPermissionNo": createProperty.layoutPermitNumber || '',
-					"layoutPermissionDate":createProperty.layoutPermitDate || '',
-					"resdPlotArea": null,
-					"nonResdPlotArea": null,
-					"auditDetails": {
-						"createdBy": userRequest.userName,
-						"lastModifiedBy":userRequest.userName,
-						"createdTime": date,
-						"lastModifiedTime": date
-					}
-				},
+				"vacantLand": vacantLand,
 
 				"gisRefNo": null,
 				"isAuthorised": null,
 				"boundary": {
 					"revenueBoundary": { 
-						"id": createProperty.blockNo,
-						"name": getNameById(currentThis.state.block, createProperty.blockNo)  || ''
+						"id": createProperty.zoneNo || null,
+						"name": getNameById(currentThis.state.zone, createProperty.zoneNo)  || null
 					},
 					"locationBoundary": {
-						"id": createProperty.street ,
-						"name": getNameById(currentThis.state.street, createProperty.street)  || ''
+						"id": createProperty.street || createProperty.locality || null ,
+						"name": getNameById(currentThis.state.street, createProperty.street)  || getNameById(currentThis.state.locality, createProperty.locality) || null
 					},
 					"adminBoundary": { 
-						"id": createProperty.electionCard || '',
-						"name": getNameById(currentThis.state.election, createProperty.electionCard)  || ''
+						"id": createProperty.electionWard || null,
+						"name": getNameById(currentThis.state.election, createProperty.electionWard)  || null
 					},
-					"northBoundedBy": createProperty.north || '',
-					"eastBoundedBy": createProperty.east || '',
-					"westBoundedBy": createProperty.west || '',
-					"southBoundedBy": createProperty.south || '',
+					"northBoundedBy": createProperty.north || null,
+					"eastBoundedBy": createProperty.east || null,
+					"westBoundedBy": createProperty.west || null,
+					"southBoundedBy": createProperty.south || null,
 					"auditDetails": {
 						"createdBy": userRequest.userName,
 						"lastModifiedBy":userRequest.userName,
@@ -376,47 +434,112 @@ createPropertyTax = () => {
 				}
 			}]
       }
-
-     Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
-		 
-		 
-		  if(currentThis.props.files){
+	  
+	  var fileStoreArray = [];
+	  
+	  var hasFiles = true;
+	  			
+	   if(currentThis.props.files.length !=0){
+			hasFiles = false;
 			if(currentThis.props.files.length === 0){
-			  //currentThis.setState({loadingstatus:'hide'});
-				console.log('create succesfully done. No file uploads');
-			}else{
+				console.log('No file uploads');
+				hasFiles = true;
 				
-				console.log('create succesfully done. still file upload pending');
+			}else{
+				hasFiles = false;
+				console.log('still file upload pending', currentThis.props.files.length);
 				
 			  for(let i=0;i<currentThis.props.files.length;i++){
-				//this.props.files.length[i]
+				  
+				  console.log(currentThis.props.files);
+				  
 				let formData = new FormData();
 				formData.append("tenantId", localStorage.getItem('tenantId'));
 				formData.append("module", "PT");
-				formData.append("file", currentThis.props.files[i]);
+				formData.append("file", currentThis.props.files[i][0]);
 				Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response){
-				  if(i === (currentThis.props.files.length - 1)){
+					var documentArray = {
+						"documentType": {						
+							"code": currentThis.props.files[i].createCode
+						},
+						"fileStore": "",
+						"auditDetails": {
+							"createdBy": userRequest.userName,
+							"lastModifiedBy":userRequest.userName,
+							"createdTime": date,
+							"lastModifiedTime": date
+						}
+					}
+					
+					fileStoreArray.push(response.files[0]);
 					console.log('All files succesfully uploaded');
-					console.log(response);
-				  }
-				  
+					
+					documentArray.documentType.name = "Photo of Assessment "+[i]
+					documentArray.fileStore = response.files[0].fileStoreId;
+					body.properties[0].propertyDetail.documents.push(documentArray);
+					console.log(body);
+					  if(i === (currentThis.props.files.length - 1)){
+						console.log('All files succesfully uploaded');
+						hasFiles = true;
+					  }
+					
 				},function(err) {
 				  console.log(err);
 				});
 			  }
 			}
+		  } else {
+			  hasFiles = true;
 		  }
 		  
-        console.log(res);
-      }).catch((err)=> {
-        console.log(err)
-      })
-    }
+	if(hasFiles) {
+			  
+		 Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
+			currentThis.setState({
+				ack: res.properties.applicationNo
+			});
+			localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
+			this.props.history.push('acknowledgement');
+			setLoadingStatus('hide');
+		  }).catch((err)=> {
+			console.log(err)
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message);
+		  })
+		}
+	}	  
+		  
+	
+	
+createActivate = () => {
+	
+	let {isFormValid, createProperty} = this.props;
+	
+	console.log(createProperty)
+	
+	let notValidated = true;
+	
+	if(createProperty.hasOwnProperty('propertyType') && createProperty.propertyType == "VACANT_LAND") {
+		if(isFormValid && (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false )){
+			notValidated = false;
+		} else {
+			notValidated = true;
+		}
+	} else {
+		if(isFormValid && (createProperty.floors ? (createProperty.floors.length == 0 ? false : true) : false ) && (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false )){
+			notValidated = false;
+		} else {
+			notValidated = true;
+		}
+	}
+	
+	return notValidated;
+	
+}	
   
   render() {
 	  	  
     let {
-      owners,
       createProperty,
       fieldErrors,
       isFormValid,
@@ -429,12 +552,18 @@ createPropertyTax = () => {
       editIndex,
       isEditIndex,
       isAddRoom,
-	  files
+	  files,
+	  handleChangeOwner
     } = this.props;
 
     let {search, createPropertyTax, cThis} = this;
+	
+	if(this.props.files.length != 0){
+		console.log(this.props.files[0].length);
+	}
 
-    console.log(createProperty);
+	console.log(isFormValid);
+    
 
     const renderOption = function(list,listName="") {
         if(list)
@@ -446,12 +575,6 @@ createPropertyTax = () => {
         }
     }
 
-    const fileNames = () => {
-      this.state.files.map(function(e,i){
-        {i} {e}
-      })
-    }
-
 	  return(
 		  <div className="createProperty">
 				<h3 style={{padding:15}}>Create New Property</h3>
@@ -461,10 +584,11 @@ createPropertyTax = () => {
 				  <AssessmentDetails />				  
 				  <Amenities />                  
 				  <ConstructionTypes/>
-				  {(getNameById(this.state.propertytypes, createProperty.assessmentPropertyType) == "Vacant Land") ? <VacantLand/> : 
-					 <div> {!this.state.addFloor && <Card>
+				  <VacantLand/>
+				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : 
+					 <div> {!this.state.addFloor && <div><Card className="uiCard">
 						<CardText>
-							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} 
+							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:10}}  primary={true}
 								  onClick={()=>{
 									this.setState({
 									  addFloor: true
@@ -473,25 +597,30 @@ createPropertyTax = () => {
 							  />
 							  <div className="clearfix"></div>                    
 						</CardText>
-					  </Card>}
+					  </Card>
+	
+					   </div>
+					  }
+					  	 
 					  </div>
 				  }
-				  {this.state.addFloor && <FloorDetails/>}
+				  {(this.state.addFloor && (getNameByCode(this.state.propertytypes, createProperty.propertyType) != "Vacant Land")) && <FloorDetails/>}
 				  <DocumentUpload />
 				  <Workflow />
 				  
 									
 			   
-				  <Card>
-					<CardText style={styles.reducePadding}>
+				  <Card className="uiCard">
+					<CardText style={{textAlign:'center'}}>
 						<br/>
-						<RaisedButton type="button" label="Create Property" className="pull-right" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>
 						<div className="clearfix"></div>
 					</CardText>
 				  </Card>
+			
 			  </form>
 		  </div>
       )
@@ -503,7 +632,8 @@ const mapStateToProps = state => ({
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
   addRoom : state.form.addRoom,
-  files: state.form.files
+  files: state.form.files,
+  isFormValid: state.form.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -513,7 +643,27 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
+          required: ['reasonForCreation', 'propertyType', 'propertySubType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
+        },
+        pattern: {
+          current: [],
           required: []
+        }
+      },
+	   validatePropertyOwner: {
+        required: {
+          current: [],
+          required: ['aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      },
+	   validatePropertyFloor: {
+        required: {
+          current: [],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'usageSubType', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
         },
         pattern: {
           current: [],
@@ -602,6 +752,28 @@ const mapDispatchToProps = dispatch => ({
       object
     })
   },
+  
+  handleChangeOwner: (e, property, propertyOne, isRequired, pattern) => {
+    dispatch({
+      type: "HANDLE_CHANGE_OWNER",
+      property,
+      propertyOne,
+      value: e.target.value,
+      isRequired,
+      pattern
+    })
+  },
+  
+  handleChangeFloor: (e, property, propertyOne, isRequired, pattern) => {
+    dispatch({
+      type: "HANDLE_CHANGE_FLOOR",
+      property,
+      propertyOne,
+      value: e.target.value,
+      isRequired,
+      pattern
+    })
+  },
 
   isEditIndex: (index) => {
     dispatch({
@@ -616,6 +788,13 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
+  
+    setLoadingStatus: (loadingStatus) => {
+     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+   },
+   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
 
 });
 

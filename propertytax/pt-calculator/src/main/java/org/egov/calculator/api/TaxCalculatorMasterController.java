@@ -1,5 +1,7 @@
 package org.egov.calculator.api;
 
+import javax.validation.Valid;
+
 import org.egov.calculator.service.TaxCalculatorMasterService;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
@@ -39,7 +41,7 @@ public class TaxCalculatorMasterController {
 	 */
 	@RequestMapping(path = "/factor/_create", method = RequestMethod.POST)
 	public CalculationFactorResponse createFactor(@RequestParam String tenantId,
-			@RequestBody CalculationFactorRequest calculationFactorRequest) throws Exception {
+			@Valid @RequestBody CalculationFactorRequest calculationFactorRequest) throws Exception {
 
 		return taxCalculationMasterService.createFactor(tenantId, calculationFactorRequest);
 	}
@@ -54,7 +56,7 @@ public class TaxCalculatorMasterController {
 	 */
 	@RequestMapping(path = "/factor/_update", method = RequestMethod.POST)
 	public CalculationFactorResponse updateFactor(@RequestParam String tenantId,
-			@RequestBody CalculationFactorRequest calculationFactorRequest) throws Exception {
+			@Valid @RequestBody CalculationFactorRequest calculationFactorRequest) throws Exception {
 
 		return taxCalculationMasterService.updateFactor(tenantId, calculationFactorRequest);
 	}
@@ -91,7 +93,7 @@ public class TaxCalculatorMasterController {
 	 */
 	@RequestMapping(path = "/guidancevalue/_create", method = RequestMethod.POST)
 	public GuidanceValueResponse createGuidanceValue(@RequestParam String tenantId,
-			@RequestBody GuidanceValueRequest guidanceValueRequest) throws Exception {
+			@Valid @RequestBody GuidanceValueRequest guidanceValueRequest) throws Exception {
 
 		return taxCalculationMasterService.createGuidanceValue(tenantId, guidanceValueRequest);
 	}
@@ -106,7 +108,7 @@ public class TaxCalculatorMasterController {
 	 */
 	@RequestMapping(path = "/guidancevalue/_update", method = RequestMethod.POST)
 	public GuidanceValueResponse updateGuidanceValue(@RequestParam String tenantId,
-			@RequestBody GuidanceValueRequest guidanceValueRequest) throws Exception {
+			@Valid @RequestBody GuidanceValueRequest guidanceValueRequest) throws Exception {
 
 		return taxCalculationMasterService.updateGuidanceValue(tenantId, guidanceValueRequest);
 	}
@@ -147,7 +149,7 @@ public class TaxCalculatorMasterController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/taxrates/_create", method = RequestMethod.POST)
-	public TaxRatesResponse createTaxRate(@RequestParam String tenantId, @RequestBody TaxRatesRequest taxRatesRequest)
+	public TaxRatesResponse createTaxRate(@RequestParam String tenantId, @Valid @RequestBody TaxRatesRequest taxRatesRequest)
 			throws Exception {
 
 		return taxCalculationMasterService.createTaxRate(tenantId, taxRatesRequest);
@@ -162,7 +164,7 @@ public class TaxCalculatorMasterController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/taxrates/_update", method = RequestMethod.POST)
-	public TaxRatesResponse updateTaxRate(@RequestParam String tenantId, @RequestBody TaxRatesRequest taxRatesRequest)
+	public TaxRatesResponse updateTaxRate(@RequestParam String tenantId, @Valid @RequestBody TaxRatesRequest taxRatesRequest)
 			throws Exception {
 
 		return taxCalculationMasterService.updateTaxRate(tenantId, taxRatesRequest);
@@ -201,7 +203,7 @@ public class TaxCalculatorMasterController {
 	 */
 	@RequestMapping(path = "/taxperiods/_create", method = RequestMethod.POST)
 	public TaxPeriodResponse createTaxPeriod(@RequestParam(required = true) String tenantId,
-			@RequestBody(required = true) TaxPeriodRequest taxPeriodRequest) throws Exception {
+			@Valid @RequestBody(required = true) TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		return taxCalculationMasterService.createTaxPeriod(tenantId, taxPeriodRequest);
 	}
@@ -217,7 +219,7 @@ public class TaxCalculatorMasterController {
 	 */
 	@RequestMapping(path = "/taxperiods/_update", method = RequestMethod.POST)
 	public TaxPeriodResponse updateTaxPeriod(@RequestParam(required = true) String tenantId,
-			@RequestBody TaxPeriodRequest taxPeriodRequest) throws Exception {
+			@Valid @RequestBody TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		return taxCalculationMasterService.updateTaxPeriod(tenantId, taxPeriodRequest);
 	}

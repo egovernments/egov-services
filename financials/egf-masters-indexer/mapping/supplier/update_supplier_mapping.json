@@ -1,0 +1,66 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "address": {
+            "type": "keyword"
+        },
+        "mobile": {
+            "type": "keyword"
+        },
+        "email": {
+            "type": "keyword"
+        },
+        "description": {
+            "type": "keyword"
+        },
+        "active": {
+            "type": "boolean"
+        },
+	"panno": {
+            "type": "keyword"
+        },
+        "tinno": {
+            "type": "keyword"
+        },
+        "registationno": {
+            "type": "keyword"
+        },
+        "bankaccount": {
+            "type": "object"
+        },
+        "ifsccode": {
+            "type": "keyword"
+        },
+        "bank": {
+            "type": "object"
+        },
+        "createdby": {
+            "type": "object"
+        },
+        "lastmodifiedby": {
+            "type": "object"
+        },
+        "createddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastmodifieddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantid": {
+            "type": "keyword"
+        }
+    }
+}

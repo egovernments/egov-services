@@ -69,7 +69,7 @@ public class BusinessServDetailRowMapper implements RowMapper<BusinessServiceDet
         auditDetail.setCreatedTime(rs.getLong("createddate"));
         auditDetail.setLastModifiedTime(rs.getLong("lastmodifieddate"));
 
-        businessServiceDetail.setAuditDetail(auditDetail);
+        businessServiceDetail.setAuditDetails(auditDetail);
 
         return businessServiceDetail;
     }

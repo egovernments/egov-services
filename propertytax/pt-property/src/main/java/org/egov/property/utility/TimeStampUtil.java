@@ -8,13 +8,22 @@ import java.time.format.DateTimeFormatter;
 public class TimeStampUtil {
 
 	public static Timestamp getTimeStamp(String date) {
-		Timestamp timestamp;
+		Timestamp timestamp = null;
 		if (date == null) {
 			return null;
 		} else {
-			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			LocalDateTime time = LocalDateTime.from(LocalDate.parse(date, formatter).atStartOfDay());
-			timestamp = Timestamp.valueOf(time);
+			DateTimeFormatter[] formatter = new DateTimeFormatter[] { DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") };
+			for (int i = 0; i < formatter.length; i++) {
+				try {
+					LocalDateTime time = LocalDateTime.from(LocalDate.parse(date, formatter[i]).atStartOfDay());
+					timestamp = Timestamp.valueOf(time);
+					return timestamp;
+				} catch (Exception ex) {
+					continue;
+				}
+
+			}
 		}
 
 		return timestamp;

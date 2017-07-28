@@ -116,10 +116,10 @@ public class CommonMastersController {
             final RequestInfo requestInfo) {
         final CommonEnumResponse response = new CommonEnumResponse();
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
+        responseInfo.setStatus(HttpStatus.CREATED.toString());
         response.setResponseInfo(responseInfo);
         response.setDataModelList(modelList);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
 
     }
 

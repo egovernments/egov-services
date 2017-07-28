@@ -1,15 +1,18 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
 import org.egov.egf.master.persistence.entity.ChartOfAccountEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.ChartOfAccountJdbcRepository;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
+import org.egov.egf.master.web.requests.ChartOfAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChartOfAccountRepository {
@@ -20,20 +23,35 @@ public class ChartOfAccountRepository {
 	private MastersQueueRepository chartOfAccountQueueRepository;
 
 	public ChartOfAccount findById(ChartOfAccount chartOfAccount) {
-		return chartOfAccountJdbcRepository.findById(new ChartOfAccountEntity().toEntity(chartOfAccount)).toDomain();
+		ChartOfAccountEntity entity = chartOfAccountJdbcRepository
+				.findById(new ChartOfAccountEntity().toEntity(chartOfAccount));
+		return entity.toDomain();
 
 	}
 
+	@Transactional
 	public ChartOfAccount save(ChartOfAccount chartOfAccount) {
-		return chartOfAccountJdbcRepository.create(new ChartOfAccountEntity().toEntity(chartOfAccount)).toDomain();
+		ChartOfAccountEntity entity = chartOfAccountJdbcRepository
+				.create(new ChartOfAccountEntity().toEntity(chartOfAccount));
+		return entity.toDomain();
 	}
 
-	public ChartOfAccount update(ChartOfAccount entity) {
-		return chartOfAccountJdbcRepository.update(new ChartOfAccountEntity().toEntity(entity)).toDomain();
+	@Transactional
+	public ChartOfAccount update(ChartOfAccount chartOfAccount) {
+		ChartOfAccountEntity entity = chartOfAccountJdbcRepository
+				.update(new ChartOfAccountEntity().toEntity(chartOfAccount));
+		return entity.toDomain();
 	}
 
-	public void add(CommonRequest<ChartOfAccountContract> request) {
-		chartOfAccountQueueRepository.add(request);
+	public void add(ChartOfAccountRequest request) {
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+			message.put("chartofaccount_create", request);
+		} else {
+			message.put("chartofaccount_update", request);
+		}
+		chartOfAccountQueueRepository.add(message);
 	}
 
 	public Pagination<ChartOfAccount> search(ChartOfAccountSearch domain) {

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
+//@Import({TracerConfiguration.class})
 public class PtWorkflowApplication {
 
 	public static void main(String[] args) {

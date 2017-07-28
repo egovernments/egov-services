@@ -62,9 +62,9 @@ import lombok.ToString;
 public class CategoryTypeRequest {
 
     @NotNull
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("categoryType")
+    @JsonProperty("CategoryType")
     private CategoryType categoryType;
 }

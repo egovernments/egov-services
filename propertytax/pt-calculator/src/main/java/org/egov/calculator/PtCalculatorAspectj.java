@@ -77,6 +77,7 @@ public class PtCalculatorAspectj {
 		logger.error("An exception has been thrown in "
 				+ joinPoint.getSignature().getName() + " ()");
 		logger.error("Cause : " + exception.getCause());
+		exception.printStackTrace();
 	}
 
 	// Around -> Any method within resource annotated with @Controller

@@ -54,10 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -78,8 +75,8 @@ public class CommonReceiptController {
     @Autowired
     private ReceiptService receiptService;
 
-    @RequestMapping("/_creators")
-    public ResponseEntity<?> searchUsers(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+    @RequestMapping("/_getDistinctCollectedBy")
+    public ResponseEntity<?> searchDistinctCreators(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
         if (bindingResult.hasErrors())
@@ -87,7 +84,7 @@ public class CommonReceiptController {
 
         List<User> receiptCreators = new ArrayList<User>();
         try {
-            receiptCreators = receiptService.getReceiptCreators();
+            receiptCreators = receiptService.getReceiptCreators(requestInfo,tenantId);
         } catch (final Exception exception) {
             LOGGER.error("Error while processing request " + receiptCreators, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -98,20 +95,73 @@ public class CommonReceiptController {
     }
 
     @RequestMapping("/_status")
-    public ResponseEntity<?> searchStatus(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+    public ResponseEntity<?> searchStatus(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
         if (bindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
 
         List<String> statusList = new ArrayList<String>();
         try {
-            statusList = receiptService.getReceiptStatus();
+            statusList = receiptService.getReceiptStatus(tenantId);
         } catch (final Exception exception) {
             LOGGER.error("Error while processing request " + statusList, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
         return  getStatusSuccessResponse(statusList, requestInfo);
+    }
+
+    @RequestMapping("/_getDistinctBusinessDetails")
+    public ResponseEntity<?> getDistinctBusinessDetails(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        if (bindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
+
+        List<BusinessDetailsRequestInfo> businessDetails = new ArrayList<BusinessDetailsRequestInfo>();
+        try {
+            businessDetails = receiptService.getBusinessDetails(tenantId,requestInfo);
+        } catch (final Exception exception) {
+            LOGGER.error("Error while processing request " + businessDetails, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+
+        return  getBusinessDetailsSuccessResponse(businessDetails, requestInfo);
+    }
+
+    @RequestMapping("/_getChartOfAccounts")
+    public ResponseEntity<?> getChartOfAccounts(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        if (bindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
+
+        List<ChartOfAccount> chartOfAccounts = new ArrayList<ChartOfAccount>();
+        try {
+            chartOfAccounts = receiptService.getChartOfAccountsForByGlCodes(tenantId,requestInfo);
+        } catch(final Exception e) {
+            LOGGER.error("Error while processing request " + chartOfAccounts, e);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+        return getChartOfAccountsResponse(chartOfAccounts,requestInfo);
+    }
+
+    private ResponseEntity<?> getChartOfAccountsResponse(List<ChartOfAccount> chartOfAccounts, RequestInfo requestInfo) {
+        LOGGER.info("Building success response.");
+        ChartOfAccountsResponse chartOfAccountsResponse = new ChartOfAccountsResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        chartOfAccountsResponse.setChartOfAccounts(chartOfAccounts);
+        chartOfAccountsResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(chartOfAccountsResponse, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> getBusinessDetailsSuccessResponse(List<BusinessDetailsRequestInfo> businessDetailsList, RequestInfo requestInfo) {
+        LOGGER.info("Building success response.");
+        BusinessDetailsResponse businessDetailsResponse = new BusinessDetailsResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        businessDetailsResponse.setBusinessDetails(businessDetailsList);
+        businessDetailsResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(businessDetailsResponse, HttpStatus.OK);
     }
 
     private ResponseEntity<?> getStatusSuccessResponse(List<String> statusList, RequestInfo requestInfo) {

@@ -5,9 +5,9 @@
     "roofTypes": [
         {
             "tenantId": "1234",
-            "name": "Mansard Roof Type",
-            "code": "MRT",
-            "nameLocal": "Mansard",
+            "name": "KKL16",
+            "code": "MRTT",
+            "nameLocal": "Mansard KKL",
             "description": "Imported from USA",
             "auditDetails": {
                 "createdBy": null,

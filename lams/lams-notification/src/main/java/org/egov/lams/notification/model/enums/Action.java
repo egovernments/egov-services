@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Action {
 
-	CREATE("Create"),
+	CREATE("CREATE"),
 
-	CANCELATION("Cancelation"),
+	CANCELLATION("CANCELLATION"),
 
-	EVICTION("Eviction"),
+	EVICTION("EVICTION"),
 
-	RENEWAL("Renewal"),
+	RENEWAL("RENEWAL"),
 
-	OBJECTION("Objection");
+	OBJECTION("OBJECTION");
 
 	private String value;
 

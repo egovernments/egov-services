@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import static org.egov.constants.RequestContextConstants.CORRELATION_ID_KEY;
 
+/**
+ * Sets the correlation id to the response header.
+ */
 @Component
 public class ResponseEnhancementFilter extends ZuulFilter {
 

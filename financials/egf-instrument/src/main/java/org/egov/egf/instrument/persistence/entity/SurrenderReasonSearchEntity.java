@@ -14,10 +14,10 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class SurrenderReasonSearchEntity extends SurrenderReasonEntity {
+	private String ids;
+	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
-	private String sortBy;
-	private String ids;
 
 	@Override
 	public SurrenderReason toDomain() {
@@ -27,9 +27,11 @@ public class SurrenderReasonSearchEntity extends SurrenderReasonEntity {
 	}
 
 	public SurrenderReasonSearchEntity toEntity(SurrenderReasonSearch surrenderReasonSearch) {
-		super.toEntity((SurrenderReason) surrenderReasonSearch);
+		super.toEntity(surrenderReasonSearch);
 		this.pageSize = surrenderReasonSearch.getPageSize();
 		this.offset = surrenderReasonSearch.getOffset();
+		this.sortBy = surrenderReasonSearch.getSortBy();
+		this.ids = surrenderReasonSearch.getIds();
 		return this;
 	}
 

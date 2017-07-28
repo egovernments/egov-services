@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ComplaintSpecificDocumentEnricher implements ServiceRequestDocumentEnricher {
 
-    private static final String RECEIVING_MODE = "receivingMode";
+    private static final String RECEIVING_MODE = "systemReceivingMode";
 
     @Override
     public boolean matches(ServiceType serviceType, SevaRequest sevaRequest) {

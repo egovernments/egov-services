@@ -44,10 +44,10 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 
- 		<dependency>
+		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
-		</dependency> 
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -127,6 +127,12 @@
 			<version>0.18.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>services-common</artifactId>
+			<version>0.11.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -150,6 +156,7 @@
 							<includes>
 								<include>**/master/web/contract/**</include>
 								<include>**/master/web/repository/**</include>
+								<include>**/master/web/requests/**</include>
 							</includes>
 						</configuration>
 					</execution>

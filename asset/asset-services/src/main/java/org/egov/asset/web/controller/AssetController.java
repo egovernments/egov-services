@@ -67,7 +67,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -128,26 +127,23 @@ public class AssetController {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
-        // TODO Input field validation, it will be a part of phase-2
+
         assetValidator.validateAsset(assetRequest);
 
         final AssetResponse assetResponse = assetService.createAsync(assetRequest);
         return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
     }
 
-    @PostMapping("_update/{code}")
+    @PostMapping("_update")
     @ResponseBody
-    public ResponseEntity<?> update(@PathVariable("code") final String code,
-            @RequestBody final AssetRequest assetRequest, final BindingResult bindingResult) {
+    public ResponseEntity<?> update(@RequestBody final AssetRequest assetRequest, final BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
-
-        if (!code.equals(assetRequest.getAsset().getCode()))
-            throw new RuntimeException("Invalid asset code");
-
+        assetValidator.validateAssetForUpdate(assetRequest);
+        
         final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
 
         return new ResponseEntity<>(assetResponse, HttpStatus.OK);

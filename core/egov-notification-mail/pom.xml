@@ -122,6 +122,7 @@
 									<excludes>
 										<exclude>org.egov.web.notification.mail.config.*</exclude>
 										<exclude>org.egov.web.notification.mail.model.*</exclude>
+										<exclude>org.egov.web.notification.mail.service.ExternalEmailService</exclude>
 										<exclude>org.egov.web.notification.mail.consumer.contract.EmailRequestDeserializer</exclude>
 										<exclude>org.egov.web.notification.mail.consumer.contract.EmailRequest</exclude>
 										<exclude>org.egov.web.notification.mail.EgovNotificationMailApplication</exclude>

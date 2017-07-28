@@ -26,7 +26,7 @@ public class FinancialYearSearchEntity extends FinancialYearEntity {
 	}
 
 	public FinancialYearSearchEntity toEntity(FinancialYearSearch financialYearSearch) {
-		super.toEntity((FinancialYear) financialYearSearch);
+		super.toEntity(financialYearSearch);
 		this.pageSize = financialYearSearch.getPageSize();
 		this.offset = financialYearSearch.getOffset();
 		this.sortBy = financialYearSearch.getSortBy();

@@ -107,7 +107,8 @@ public class BusinessDetails {
 				.businessUrl(businessUrl).voucherCreation(voucherCreation).isVoucherApproved(isVoucherApproved)
 				.voucherCutoffDate(voucherCutoffDate).ordernumber(ordernumber).function(function).fund(fund)
 				.functionary(functionary).fundSource(fundSource).tenantId(tenantId).department(department)
-				.businessCategory(category).build();
+                .callBackForApportioning(callBackForApportioning)
+                .businessCategory(category).build();
 	}
 
 }

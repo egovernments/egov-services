@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.domain.repository.FundRepository;
-import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.requests.FundRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +91,7 @@ public class FundService {
 
 	}
 
-	public void addToQue(CommonRequest<FundContract> request) {
+	public void addToQue(FundRequest request) {
 		fundRepository.add(request);
 	}
 

@@ -102,8 +102,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 				asset.setLength(rs.getString("length"));
 				asset.setWidth(rs.getString("width"));
 				asset.setTotalArea(rs.getString("totalArea"));
-				asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepriciation"));
-				asset.setDepreciationRate(rs.getDouble("depriciationrate"));
+				asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepreciation"));
+				asset.setDepreciationRate(rs.getDouble("depreciationrate"));
 
 				final BigDecimal accumulatedDepreciation = rs.getBigDecimal("accumulateddepreciation");
 				if (accumulatedDepreciation == BigDecimal.ZERO)
@@ -157,7 +157,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 				assetCategory.setName(rs.getString("assetCategoryName"));
 				assetCategory.setCode(rs.getString("assetcategorycode"));
 				assetCategory.setParent((Long) rs.getObject("parentId"));
-				assetCategory.setDepreciationRate(rs.getDouble("depriciationRate"));
+				assetCategory.setDepreciationRate(rs.getDouble("depreciationrate"));
 				assetCategory.setDepreciationExpenseAccount((Long) rs.getObject("depreciationExpenseAccount"));
 				assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")));
 				assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));

@@ -13,56 +13,62 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AssetCategoryValidator {
-	
-	@Autowired
-	private AssetCategoryService assetCategoryService;
-	
-	private static final Logger logger = LoggerFactory.getLogger(AssetCategoryValidator.class);
-	
-	
-	public void validateAssetCategory(AssetCategoryRequest assetCategoryRequest) {
-		
-		List<AssetCategory> assetCategories = findByName(assetCategoryRequest.getAssetCategory().getName(),
-														assetCategoryRequest.getAssetCategory().getTenantId());
-		
-		if(!assetCategories.isEmpty()) {
-			throw new RuntimeException("Duplicate asset category name");
-		}
-	}
-	
-	public List<AssetCategory> findByName(String name, String tenantId) {
-		
-		AssetCategoryCriteria categoryCriteria = new AssetCategoryCriteria();
-		categoryCriteria.setName(name);
-		categoryCriteria.setTenantId(tenantId);
-		List<AssetCategory> assetCategories =null;
-		
-		try {
-			 assetCategories = assetCategoryService.search(categoryCriteria);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.info("findByName assetCategories:"+assetCategories);
-		}
-		return assetCategories;
-	}
-	public List<AssetCategory> findByIdAndCode(Long id, String code,String tenantId) {
-		
-		AssetCategoryCriteria categoryCriteria = new AssetCategoryCriteria();
-		
-		categoryCriteria.setTenantId(tenantId);
-		categoryCriteria.setId(id);;
-		categoryCriteria.setCode(code);
-		List<AssetCategory> assetCategories =null;
-		
-		try {
-			 assetCategories = assetCategoryService.search(categoryCriteria);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.info("findById assetCategories:"+assetCategories);
-		}
-		
-		return assetCategories;
-	}
 
+    @Autowired
+    private AssetCategoryService assetCategoryService;
+
+    private static final Logger logger = LoggerFactory.getLogger(AssetCategoryValidator.class);
+
+    public void validateAssetCategory(final AssetCategoryRequest assetCategoryRequest) {
+
+        final List<AssetCategory> assetCategories = findByName(assetCategoryRequest.getAssetCategory().getName(),
+                assetCategoryRequest.getAssetCategory().getTenantId());
+
+        if (!assetCategories.isEmpty())
+            throw new RuntimeException("Duplicate asset category name");
+    }
+
+    public List<AssetCategory> findByName(final String name, final String tenantId) {
+
+        final AssetCategoryCriteria categoryCriteria = new AssetCategoryCriteria();
+        categoryCriteria.setName(name);
+        categoryCriteria.setTenantId(tenantId);
+        List<AssetCategory> assetCategories = null;
+
+        try {
+            assetCategories = assetCategoryService.search(categoryCriteria);
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+            logger.info("findByName assetCategories:" + assetCategories);
+        }
+        return assetCategories;
+    }
+
+    public List<AssetCategory> findByIdAndCode(final Long id, final String code, final String tenantId) {
+
+        final AssetCategoryCriteria categoryCriteria = new AssetCategoryCriteria();
+
+        categoryCriteria.setTenantId(tenantId);
+        categoryCriteria.setId(id);
+        categoryCriteria.setCode(code);
+        List<AssetCategory> assetCategories = null;
+
+        try {
+            assetCategories = assetCategoryService.search(categoryCriteria);
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+            logger.info("findById assetCategories:" + assetCategories);
+        }
+
+        return assetCategories;
+    }
+
+    public void validateAssetCategoryForUpdate(final AssetCategoryRequest assetCategoryRequest) {
+        final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
+        final List<AssetCategory> assetCategories = findByIdAndCode(assetCategory.getId(), assetCategory.getCode(),
+                assetCategory.getTenantId());
+        if (assetCategories.isEmpty())
+            throw new RuntimeException("Invalid Asset Category Code for Asset :: " + assetCategory.getName());
+    }
 
 }

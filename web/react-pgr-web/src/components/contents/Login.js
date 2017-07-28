@@ -185,9 +185,10 @@ class Login extends Component {
       params.append('password', props.credential.password);
       params.append('grant_type', 'password');
       params.append('scope', 'read');
-      params.append('tenantId', 'default');
+      params.append('tenantId', typeof(props.match.params.tenantId)!="undefined"?props.match.params.tenantId:'default');
 
       instance.post('/user/oauth/token', params).then(function(response) {
+        localStorage.setItem("auth-token", response.data.access_token);
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("userRequest", JSON.stringify(response.data.UserRequest));
         localStorage.setItem("auth", response.data.access_token);
@@ -202,11 +203,11 @@ class Login extends Component {
         }
 
 
-   Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes}).then(function(response){
+   Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes,enabled:true}).then(function(response){
 
 				//console.log(response)
 		  localStorage.setItem("actions", JSON.stringify(response.actions));
-			setActionList(response.modules)
+			setActionList(response.actions)
         },function(err) {
             console.log(err);
         });
@@ -606,7 +607,7 @@ class Login extends Component {
                   <Col xs={12}  md={6} mdPull={6}>
                     <Row>
                       <Col xs={12} md={12}>
-                        <FloatingActionButton  style={styles.floatingIconButton}>
+                        <FloatingActionButton  style={styles.floatingIconButton} primary={true}>
                             <i className="material-icons">person</i>
                         </FloatingActionButton>
                         <div style={{"float": "left", "cursor": "pointer"}} onClick={handleSignUpModalOpen}>
@@ -615,7 +616,7 @@ class Login extends Component {
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                        <FloatingActionButton  style={styles.floatingIconButton}>
+                        <FloatingActionButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">mode_edit</i>
                         </FloatingActionButton>
                         <div style={{"float": "left", "cursor": "pointer"}} onClick={this.openAnonymousComplaint}>
@@ -624,7 +625,7 @@ class Login extends Component {
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                        <FloatingActionButton  style={styles.floatingIconButton}>
+                        <FloatingActionButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">search</i>
                         </FloatingActionButton>
                         <div style={styles.floatLeft}>

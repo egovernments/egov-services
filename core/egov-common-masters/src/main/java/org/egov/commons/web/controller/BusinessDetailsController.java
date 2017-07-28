@@ -72,10 +72,10 @@ public class BusinessDetailsController {
 		return getSuccessResponse(businessDetailsRequest.getRequestInfo(),Collections.singletonList(detailsRequest.getBusinessDetails()));
 	}
 
-	@PostMapping(value = "/{businessDetailsCode}/_update")
+	@PostMapping(value = "/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> updateBusinessDetails(@RequestBody BusinessDetailsRequest businessDetailsRequest,
-			@PathVariable String businessDetailsCode,final BindingResult errors) {
+			final BindingResult errors) {
 		if (errors.hasErrors()) {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
@@ -99,7 +99,7 @@ public class BusinessDetailsController {
 
 		BusinessDetailsCriteria detailsCriteria = BusinessDetailsCriteria.builder()
 				.active(detailsGetRequest.getActive()).businessCategoryCode(detailsGetRequest.getBusinessCategoryCode())
-				.businessDetailsCode(detailsGetRequest.getBusinessDetailsCode()).ids(detailsGetRequest.getIds())
+				.businessDetailsCodes(detailsGetRequest.getBusinessDetailsCodes()).ids(detailsGetRequest.getIds())
 				.sortBy(detailsGetRequest.getSortBy()).sortOrder(detailsGetRequest.getSortOrder())
 				.tenantId(detailsGetRequest.getTenantId()).build();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();

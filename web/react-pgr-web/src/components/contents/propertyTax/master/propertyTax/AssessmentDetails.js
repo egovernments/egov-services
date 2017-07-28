@@ -92,18 +92,18 @@ chip: {
 };
 
 
-const getNameById = function(object, id, property = "") {
-  if (id == "" || id == null) {
+const getNameByCode = function(object, code, property = "") {
+  if (code == "" || code == null) {
         return "";
     }
     for (var i = 0; i < object.length; i++) {
         if (property == "") {
-            if (object[i].id == id) {
+            if (object[i].code == code) {
                 return object[i].name;
             }
         } else {
             if (object[i].hasOwnProperty(property)) {
-                if (object[i].id == id) {
+                if (object[i].code == code) {
                     return object[i][property];
                 }
             } else {
@@ -132,6 +132,7 @@ class AssessmentDetails extends Component {
     var currentThis = this;
 
       Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+		  res.propertyTypes.unshift({id:-1, name:'None'});
         console.log(res);
         currentThis.setState({propertytypes:res.propertyTypes})
       }).catch((err)=> {
@@ -146,22 +147,28 @@ handleDepartment = (e) => {
 	
 	var currentThis = this;
 	
+	 currentThis.setState({
+            departments:[]
+     })
+	 
+	 this.props.assessmentDetails.department = '';
+	
 	let query = {
 		category : e.target.value
 	}
 	
-      Api.commonApiPost('pt-property/property/departments/_search',query, {},false, true).then((res)=>{
-          console.log(res);
-          currentThis.setState({
-            departments:res.departments
-          })
-        }).catch((err)=> {
-          console.log(err)
-        })
+	  Api.commonApiPost('pt-property/property/departments/_search',query, {},false, true).then((res)=>{
+		   res.departments.unshift({id:-1, name:'None'});
+		  console.log(res);
+		  currentThis.setState({
+			departments:res.departments
+		  })
+		}).catch((err)=> {
+		  console.log(err)
+		})
 
-}   
-
-
+} 
+  
   render() {
 
     const renderOption = function(list,listName="") {
@@ -175,7 +182,6 @@ handleDepartment = (e) => {
     }
 
     let {
-      owners,
       assessmentDetails,
       fieldErrors,
       isFormValid,
@@ -187,18 +193,19 @@ handleDepartment = (e) => {
       editObject,
       editIndex,
       isEditIndex,
-      isAddRoom
+      isAddRoom,
+	  addDepandencyFields,
+	  removeDepandencyFields
     } = this.props;
 
     let {search, handleDepartment} = this;
 
     let cThis = this;
 
-    return (<Card>
+    return (
+				<Card className="uiCard">
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Assessment details</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card className="darkShadow">
-                              <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
@@ -207,6 +214,12 @@ handleDepartment = (e) => {
                                                   errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.reasonForCreation}</span> : ""}
                                                   value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ""}
                                                   onChange={(event, index, value) => {
+													    (value == -1) ? value = '' : '';
+														if(value == 'SUBDIVISION') {
+															addDepandencyFields('parentUpicNo');
+														} else {
+															removeDepandencyFields('parentUpicNo');
+														}
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -220,12 +233,13 @@ handleDepartment = (e) => {
                                                   id="creationReason"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
-                                                  <MenuItem value={1} primaryText="New Property"/>
-                                                  <MenuItem value={2} primaryText="Bifurcation"/>
+												  <MenuItem value={-1} primaryText="None"/>
+                                                  <MenuItem value="NEWPROPERTY" primaryText="New Property"/>
+                                                  <MenuItem value="SUBDIVISION" primaryText="Bifurcation"/>
                                               </SelectField>
                                           </Col>
 
-                                          {(assessmentDetails.reasonForCreation == 2) && <Col xs={12} md={3} sm={6}>
+                                          {(assessmentDetails.reasonForCreation == 'SUBDIVISION') && <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText="Parent UPIC No. *"
                                                   errorText={fieldErrors.parentUpicNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.parentUpicNo}</span> : ""}
@@ -242,16 +256,41 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Property Type *"
-                                                  errorText={fieldErrors.assessmentPropertyType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentPropertyType}</span> : ""}
-                                                  value={assessmentDetails.assessmentPropertyType ? assessmentDetails.assessmentPropertyType : ""}
+                                                  errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertyType}</span> : ""}
+                                                  value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ""}
                                                   onChange={(event, index, value) => {
+													    (value == -1) ? value = '' : '';
+														if(value == 'VACANT_LAND') {
+															addDepandencyFields('survayNumber');
+															addDepandencyFields('pattaNumber');
+															addDepandencyFields('vacantLandArea');
+															addDepandencyFields('marketValue');
+															addDepandencyFields('capitalValue');
+															addDepandencyFields('effectiveDate');
+															addDepandencyFields('vacantLandPlotArea');
+															addDepandencyFields('layoutApprovalAuthority');
+															addDepandencyFields('layoutPermitNumber');
+															addDepandencyFields('layoutPermitDate');
+														} else {
+															removeDepandencyFields('survayNumber');
+															removeDepandencyFields('pattaNumber');
+															removeDepandencyFields('vacantLandArea');
+															removeDepandencyFields('marketValue');
+															removeDepandencyFields('capitalValue');
+															removeDepandencyFields('effectiveDate');
+															removeDepandencyFields('vacantLandPlotArea');
+															removeDepandencyFields('layoutApprovalAuthority');
+															removeDepandencyFields('layoutPermitNumber');
+															removeDepandencyFields('layoutPermitDate');
+															
+														}
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
 													  handleDepartment(e);
-                                                      handleChange(e, "assessmentPropertyType", true, "")}
+                                                      handleChange(e, "propertyType", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -264,38 +303,41 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Property Sub-type *"
-                                                  errorText={fieldErrors.assessmentPropertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentPropertySubType}</span> : ""}
-                                                  value={assessmentDetails.assessmentPropertySubType ? assessmentDetails.assessmentPropertySubType : ""}
+                                                  errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertySubType}</span> : ""}
+                                                  value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ""}
                                                   onChange={(event, index, value) => {
+													    (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "assessmentPropertySubType", true, "")}
+                                                      handleChange(e, "propertySubType", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
+                                              >   
+											      <MenuItem value={-1} primaryText="None"/>
                                                   <MenuItem value={1} primaryText="Options"/>
                                               </SelectField>
                                           </Col>
-										  {(getNameById(this.state.propertytypes ,assessmentDetails.assessmentPropertyType).match('Central Government') ||
-											getNameById(this.state.propertytypes ,assessmentDetails.assessmentPropertyType).match('State Government')) 
+										  {(getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('Central Government') ||
+											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government')) 
 											&& <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Department"
-                                                  errorText={fieldErrors.assessmentDepartment ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentDepartment}</span> : ""}
-                                                  value={assessmentDetails.assessmentDepartment ? assessmentDetails.assessmentDepartment : ""}
+                                                  errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.department}</span> : ""}
+                                                  value={assessmentDetails.department ? assessmentDetails.department : ""}
                                                   onChange={(event, index, value) => {
+													    (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "assessmentDepartment", false, "")}
+                                                      handleChange(e, "department", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -309,6 +351,7 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText="Extent of Site (Sq. Mtrs) *"
+												  hintText="14"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
                                                   onChange={(e) => {handleChange(e, "extentOfSite", true, "")}}
@@ -322,8 +365,6 @@ handleDepartment = (e) => {
 
                                       </Row>
                                   </Grid>
-                              </CardText>
-                          </Card>
                       </CardText>
                   </Card>)
   }
@@ -344,7 +385,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: []
+          required: ['reasonForCreation', 'propertyType', 'propertySubType', 'extentOfSite' ]
         },
         pattern: {
           current: [],
@@ -440,6 +481,20 @@ const mapDispatchToProps = dispatch => ({
       index
     })
   },
+  
+  addDepandencyFields: (property) => {
+		dispatch({
+			type: 'ADD_REQUIRED',
+			property
+		})
+	},
+
+	removeDepandencyFields: (property) => {
+		dispatch({
+			type: 'REMOVE_REQUIRED',
+			property
+		})
+	},
 
   isAddRoom: (room) => {
     dispatch({

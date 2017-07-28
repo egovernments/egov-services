@@ -40,11 +40,6 @@
 
 package org.egov.pgr.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
@@ -67,13 +62,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/service")
@@ -89,14 +82,14 @@ public class GrievanceTypeController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-    
+
     @Autowired
-	private ApplicationProperties applicationProperties;
+    private ApplicationProperties applicationProperties;
 
     @PostMapping(value = "/v1/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final ServiceRequest serviceTypeRequest,
-            final BindingResult errors) {
+                                    final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
@@ -107,32 +100,32 @@ public class GrievanceTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final ServiceType serviceType = serviceTypeService.createServiceType(applicationProperties.getCreateServiceTypeTopicName(),applicationProperties.getCreateServiceTypeTopicKey(), serviceTypeRequest);
+        final ServiceType serviceType = serviceTypeService.createServiceType(applicationProperties.getCreateServiceTypeTopicName(), applicationProperties.getCreateServiceTypeTopicKey(), serviceTypeRequest);
         final List<ServiceType> serviceTypes = new ArrayList<>();
         serviceTypes.add(serviceType);
         return getSuccessResponse(serviceTypes, serviceTypeRequest.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/v1/{code}/_update")
+    @PostMapping(value = "/v1/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final ServiceRequest serviceTypeRequest,
-            final BindingResult errors, @PathVariable("code") final String code) {
+                                    final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Service Update : Request::" + serviceTypeRequest);	
-        if(code==null || code.equals("")){
-        	final ErrorResponse errRes = populateErrors(errors);
+        logger.info("Service Update : Request::" + serviceTypeRequest);
+        if (serviceTypeRequest.getService().getServiceCode() == null || serviceTypeRequest.getService().getServiceCode().equals("")) {
+            final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        serviceTypeRequest.getService().setServiceCode(code);
+        serviceTypeRequest.getService().setServiceCode(serviceTypeRequest.getService().getServiceCode());
         final List<ErrorResponse> errorResponses = validateUpdateServiceRequest(serviceTypeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final ServiceType service = serviceTypeService.updateServices(applicationProperties.getUpdateServiceTypeTopicName(),applicationProperties.getUpdateServiceTypeTopicKey(), serviceTypeRequest);
+        final ServiceType service = serviceTypeService.updateServices(applicationProperties.getUpdateServiceTypeTopicName(), applicationProperties.getUpdateServiceTypeTopicKey(), serviceTypeRequest);
         final List<ServiceType> services = new ArrayList<>();
         services.add(service);
         return getSuccessResponse(services, serviceTypeRequest.getRequestInfo());
@@ -141,8 +134,8 @@ public class GrievanceTypeController {
     @PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final ServiceGetRequest serviceTypeGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult requestBodyBindingResult) {
+                                    final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+                                    final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         // validate input params
@@ -169,36 +162,36 @@ public class GrievanceTypeController {
     private List<ErrorResponse> validateServiceRequest(final ServiceRequest serviceTypeRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
-		final List<ErrorField> errorFields = getErrorFields(serviceTypeRequest);
+        final List<ErrorField> errorFields = getErrorFields(serviceTypeRequest);
         final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(PgrMasterConstants.INVALID_SERVICETYPE_REQUEST_MESSAGE).errorFields(errorFields)
-				.build();
+                .message(PgrMasterConstants.INVALID_SERVICETYPE_REQUEST_MESSAGE).errorFields(errorFields)
+                .build();
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
-    
+
     private List<ErrorResponse> validateUpdateServiceRequest(final ServiceRequest serviceTypeRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
         final List<ErrorField> errorFields = getUpdateErrorFields(serviceTypeRequest);
         final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(PgrMasterConstants.INVALID_SERVICETYPE_REQUEST_MESSAGE).errorFields(errorFields)
-				.build();
+                .message(PgrMasterConstants.INVALID_SERVICETYPE_REQUEST_MESSAGE).errorFields(errorFields)
+                .build();
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
-    
+
 
     private List<ErrorField> getErrorFields(final ServiceRequest serviceTypeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         addGrievanceNameValidationErrors(serviceTypeRequest, errorFields);
         addGrievanceNameValidator(serviceTypeRequest, errorFields);
         addTeanantIdValidationErrors(serviceTypeRequest, errorFields);
-        checkMetadataExists(serviceTypeRequest,errorFields);
+        checkMetadataExists(serviceTypeRequest, errorFields);
         checkCategorySLAValues(serviceTypeRequest, errorFields);
         checkServiceCodeExists(serviceTypeRequest, errorFields);
         return errorFields;
@@ -209,40 +202,40 @@ public class GrievanceTypeController {
         addGrievanceNameValidationErrors(serviceTypeRequest, errorFields);
         addGrievanceNameValidator(serviceTypeRequest, errorFields);
         addTeanantIdValidationErrors(serviceTypeRequest, errorFields);
-        checkMetadataExists(serviceTypeRequest,errorFields);
+        checkMetadataExists(serviceTypeRequest, errorFields);
         checkCategorySLAValues(serviceTypeRequest, errorFields);
         return errorFields;
     }
-    
+
     private void addGrievanceNameValidationErrors(final ServiceRequest serviceTypeRequest,
-			final List<ErrorField> errorFields) {
-		final ServiceType service = serviceTypeRequest.getService();
-		if (service.getServiceName() == null || service.getServiceName().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder()
-					.code(PgrMasterConstants.GRIEVANCETYPE_NAME_MANDATORY_CODE)
-					.message(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		}
-		return;
-	}
-    
-    private void addGrievanceNameValidator (final ServiceRequest serviceTypeRequest,
-			final List<ErrorField> errorFields) { 
-    	if (errorFields.size() == 0) {
-			if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceName(),
-					serviceTypeRequest.getService().getTenantId())) {
-				final ErrorField errorField = ErrorField.builder()
-						.code(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_CODE)
-						.message(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE)
-						.field(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_FIELD_NAME).build();
-				errorFields.add(errorField);
-			}
-		}
+                                                  final List<ErrorField> errorFields) {
+        final ServiceType service = serviceTypeRequest.getService();
+        if (service.getServiceName() == null || service.getServiceName().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(PgrMasterConstants.GRIEVANCETYPE_NAME_MANDATORY_CODE)
+                    .message(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+        return;
+    }
+
+    private void addGrievanceNameValidator(final ServiceRequest serviceTypeRequest,
+                                           final List<ErrorField> errorFields) {
+        if (errorFields.size() == 0) {
+            if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceName(),
+                    serviceTypeRequest.getService().getTenantId())) {
+                final ErrorField errorField = ErrorField.builder()
+                        .code(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_CODE)
+                        .message(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE)
+                        .field(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
+        }
     }
 
     private void addTeanantIdValidationErrors(final ServiceRequest serviceTypeRequest,
-            final List<ErrorField> errorFields) {
+                                              final List<ErrorField> errorFields) {
         final ServiceType serviceType = serviceTypeRequest.getService();
         if (serviceType.getTenantId() == null || serviceType.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
@@ -254,23 +247,23 @@ public class GrievanceTypeController {
         } else
             return;
     }
-    
+
     private void checkMetadataExists(final ServiceRequest serviceTypeRequest,
-			final List<ErrorField> errorFields) {
-		final ServiceType serviceType = serviceTypeRequest.getService();
-		if (serviceType.isMetadata()) {
-			if (null == serviceType.getAttributes() || serviceType.getAttributes().size() <= 0) {
-				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ATTRIBUTE_DETAILS_MANDATORY_CODE)
-						.message(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_ERROR_MESSAGE)
-						.field(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME).build();
-				errorFields.add(errorField);
-			}
-		} else
-			return;
-	}
-    
+                                     final List<ErrorField> errorFields) {
+        final ServiceType serviceType = serviceTypeRequest.getService();
+        if (serviceType.isMetadata()) {
+            if (null == serviceType.getAttributes() || serviceType.getAttributes().size() <= 0) {
+                final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ATTRIBUTE_DETAILS_MANDATORY_CODE)
+                        .message(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_ERROR_MESSAGE)
+                        .field(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
+        } else
+            return;
+    }
+
     private void checkCategorySLAValues(final ServiceRequest serviceTypeRequest,
-            final List<ErrorField> errorFields) {
+                                        final List<ErrorField> errorFields) {
         final ServiceType serviceType = serviceTypeRequest.getService();
         if (null == serviceType.getCategory()) {
             final ErrorField errorField = ErrorField.builder()
@@ -279,41 +272,41 @@ public class GrievanceTypeController {
                     .field(PgrMasterConstants.CATEGORY_ID_MANDATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else if(null == serviceType.getSlaHours()){
-        	final ErrorField errorField = ErrorField.builder()
+        } else if (null == serviceType.getSlaHours()) {
+            final ErrorField errorField = ErrorField.builder()
                     .code(PgrMasterConstants.SLA_HOURS_MANDATORY_CODE)
                     .message(PgrMasterConstants.SLA_HOURS_MANDATORY_ERROR_MESSAGE)
                     .field(PgrMasterConstants.SLA_HOURS_MANDATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         }
-            return;
+        return;
     }
-    
+
     private void checkServiceCodeExists(final ServiceRequest serviceTypeRequest,
-    		final List<ErrorField> errorFields) {
-    	final ServiceType serviceType = serviceTypeRequest.getService();
-    	if(serviceTypeService.checkServiceCodeIfExists(serviceType.getServiceCode(), serviceType.getTenantId())){
-    		final ErrorField errorField = ErrorField.builder()
+                                        final List<ErrorField> errorFields) {
+        final ServiceType serviceType = serviceTypeRequest.getService();
+        if (serviceTypeService.checkServiceCodeIfExists(serviceType.getServiceCode(), serviceType.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder()
                     .code(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_CODE)
                     .message(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE)
                     .field(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-    	} 
+        }
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
 
         final Error error = new Error();
-		error.setCode(1);
-		error.setDescription("Error while binding request");
-		if (errors.hasFieldErrors())
-			for (final FieldError fieldError : errors.getFieldErrors())
-				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-		errRes.setError(error);
-		return errRes;
+        error.setCode(1);
+        error.setDescription("Error while binding request");
+        if (errors.hasFieldErrors())
+            for (final FieldError fieldError : errors.getFieldErrors())
+                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+        errRes.setError(error);
+        return errRes;
     }
 
     private ResponseEntity<?> getSuccessResponse(final List<ServiceType> serviceTypeList, final RequestInfo requestInfo) {

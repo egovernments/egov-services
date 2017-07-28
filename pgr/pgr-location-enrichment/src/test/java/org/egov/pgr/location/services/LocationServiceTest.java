@@ -40,7 +40,7 @@ public class LocationServiceTest {
         serviceRequestMap.put("lng", 4.5d);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
         final HashMap<String, String> attribEntry = new HashMap<>();
-        attribEntry.put("key", "locationId");
+        attribEntry.put("key", "systemLocationId");
         attribEntry.put("name", "5");
         attributeValues.add(attribEntry);
         serviceRequestMap.put("attribValues", attributeValues);

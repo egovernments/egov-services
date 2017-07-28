@@ -1,0 +1,51 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "bankbranch": {
+            "type": "object"
+        },
+        "chartofaccount": {
+            "type": "object"
+        },
+        "fund": {
+            "type": "object"
+        },
+        "accountnumber": {
+            "type": "keyword"
+        },
+        "accounttype": {
+            "type": "keyword"
+        },
+        "description": {
+            "type": "keyword"
+        },
+        "payto": {
+            "type": "keyword"
+        },
+	"type": {
+            "type": "object"
+        },
+        "createdby": {
+            "type": "object"
+        },
+        "lastmodifiedby": {
+            "type": "object"
+        },
+        "createddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastmodifieddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantid": {
+            "type": "keyword"
+        }
+    }
+}

@@ -55,9 +55,9 @@ import lombok.ToString;
 @ToString
 public class PropertyPipeSizeResponseInfo {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("propertyTypePipeSizes")
+    @JsonProperty("PropertyTypePipeSizes")
     private List<PropertyTypeResponseInfo> propCategory;
     
     

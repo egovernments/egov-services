@@ -15,6 +15,7 @@ import org.egov.egf.master.persistence.entity.AccountEntitySearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,10 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 		LOG.debug("init accountEntity");
 		init(AccountEntityEntity.class);
 		LOG.debug("end init accountEntity");
+	}
+
+	public AccountEntityJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public AccountEntityEntity create(AccountEntityEntity entity) {
@@ -49,70 +54,81 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
+		if (accountEntitySearchEntity.getSortBy() != null && !accountEntitySearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(accountEntitySearchEntity.getSortBy());
+			validateEntityFieldName(accountEntitySearchEntity.getSortBy(), AccountEntityEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (accountEntitySearchEntity.getSortBy() != null && !accountEntitySearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + accountEntitySearchEntity.getSortBy();
+		}
+
 		searchQuery = searchQuery.replace(":tablename", AccountEntityEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (accountEntitySearchEntity.getSortBy() != null && !accountEntitySearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(accountEntitySearchEntity.getSortBy());
-                    validateEntityFieldName(accountEntitySearchEntity.getSortBy(), AccountEntityEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (accountEntitySearchEntity.getSortBy() != null && !accountEntitySearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + accountEntitySearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (accountEntitySearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", accountEntitySearchEntity.getId());
 		}
 		if (accountEntitySearchEntity.getAccountDetailTypeId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("accountDetailType =:accountDetailType");
 			paramValues.put("accountDetailType", accountEntitySearchEntity.getAccountDetailTypeId());
 		}
 		if (accountEntitySearchEntity.getCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("code =:code");
 			paramValues.put("code", accountEntitySearchEntity.getCode());
 		}
 		if (accountEntitySearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", accountEntitySearchEntity.getName());
 		}
 		if (accountEntitySearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", accountEntitySearchEntity.getActive());
 		}
 		if (accountEntitySearchEntity.getDescription() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("description =:description");
 			paramValues.put("description", accountEntitySearchEntity.getDescription());
 		}
 
 		Pagination<AccountEntity> page = new Pagination<>();
-		if (accountEntitySearchEntity.getOffset() != null)
+		if (accountEntitySearchEntity.getOffset() != null) {
 			page.setOffset(accountEntitySearchEntity.getOffset());
-		if (accountEntitySearchEntity.getPageSize() != null)
-			page.setPageSize(accountEntitySearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (accountEntitySearchEntity.getPageSize() != null) {
+			page.setPageSize(accountEntitySearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -129,7 +145,7 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 
 		page.setTotalResults(accountEntityEntities.size());
 
-		List<AccountEntity> accountentities = new ArrayList<AccountEntity>();
+		List<AccountEntity> accountentities = new ArrayList<>();
 		for (AccountEntityEntity accountEntityEntity : accountEntityEntities) {
 
 			accountentities.add(accountEntityEntity.toDomain());
@@ -140,7 +156,8 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 	}
 
 	public AccountEntityEntity findById(AccountEntityEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {

@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BusinessCategoryGetRequest {
-	private String businessCategoryName;
+	private String name;
 
 	private Boolean active;
 

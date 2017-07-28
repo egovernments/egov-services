@@ -3,7 +3,6 @@ package org.egov.pgrrest.common.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,16 +17,23 @@ public class ServiceDefinition {
     private String code;
     private String tenantId;
     private List<AttributeDefinition> attributes;
+    private List<GroupDefinition> groups;
 
-    public boolean isComputedFieldsAbsent() {
-        return isEmpty(getComputedFields());
+    public boolean isComputedFieldsAbsent(ServiceStatus action) {
+        return isEmpty(getComputedFields(action));
     }
 
     public boolean isAttributesAbsent() {
         return isEmpty(attributes);
     }
 
-    public List<AttributeDefinition> getComputedFields() {
+    public List<AttributeDefinition> getComputedFields(ServiceStatus action) {
+        return getComputedFields().stream()
+            .filter(attribute -> actionMatches(action, attribute))
+            .collect(Collectors.toList());
+    }
+
+    private List<AttributeDefinition> getComputedFields() {
         return attributes.stream()
             .filter(AttributeDefinition::isReadOnly)
             .collect(Collectors.toList());
@@ -39,7 +45,7 @@ public class ServiceDefinition {
             .collect(Collectors.toList());
     }
 
-    public List<AttributeDefinition> getMandatoryAttributes(SevaRequestAction action, List<String> roleCodes) {
+    public List<AttributeDefinition> getMandatoryAttributes(ServiceStatus action, List<String> roleCodes) {
         return attributes.stream()
             .filter(attribute -> attribute.isRequired()
                 && actionMatches(action, attribute)
@@ -51,9 +57,9 @@ public class ServiceDefinition {
         return !Collections.disjoint(attribute.getRoleNames(), roleCodes);
     }
 
-    private boolean actionMatches(SevaRequestAction expectedAction, AttributeDefinition attributeDefinition) {
+    private boolean actionMatches(ServiceStatus expectedAction, AttributeDefinition attributeDefinition) {
         return attributeDefinition.getActions().stream()
-            .anyMatch(a -> expectedAction.getActionName().equalsIgnoreCase(a.getName()));
+            .anyMatch(action -> expectedAction == action.getAction());
     }
 
     public List<AttributeDefinition> getNonComputedDateAttributes() {
@@ -81,6 +87,22 @@ public class ServiceDefinition {
     private List<AttributeDefinition> getAttributesOfType(AttributeDataType attributeType) {
         return getNonComputedAttributes().stream()
             .filter(attribute -> attributeType == attribute.getDataType())
+            .collect(Collectors.toList());
+    }
+
+    public List<GroupDefinition> getGroupsWithConstraints(ServiceStatus action, List<String> roleCodes) {
+        return groups.stream()
+            .filter(group -> groupHasMatchingConstraints(action, roleCodes, group))
+            .collect(Collectors.toList());
+    }
+
+    private boolean groupHasMatchingConstraints(ServiceStatus action, List<String> roleCodes, GroupDefinition group) {
+        return !isEmpty(group.getMatchingConstraints(action, roleCodes));
+    }
+
+    public List<AttributeDefinition> getAttributesWithGroupCode(String groupCode) {
+        return attributes.stream()
+            .filter(attributeDefinition -> groupCode.equals(attributeDefinition.getGroupCode()))
             .collect(Collectors.toList());
     }
 }

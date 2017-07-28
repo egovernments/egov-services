@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +38,6 @@ public class GuidanceValueRepostory {
 	 * @return
 	 */
 	public Long saveGuidanceValue(String tenantId, GuidanceValue guidanceValue) {
-		Long createdTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
 			@Override
@@ -59,8 +57,8 @@ public class GuidanceValueRepostory {
 				ps.setTimestamp(10, TimeStampUtil.getTimeStamp(guidanceValue.getToDate()));
 				ps.setString(11, guidanceValue.getAuditDetails().getCreatedBy());
 				ps.setString(12, guidanceValue.getAuditDetails().getLastModifiedBy());
-				ps.setLong(13, createdTime);
-				ps.setLong(14, createdTime);
+				ps.setLong(13, guidanceValue.getAuditDetails().getCreatedTime());
+				ps.setLong(14, guidanceValue.getAuditDetails().getLastModifiedTime());
 
 				return ps;
 			}
@@ -80,7 +78,6 @@ public class GuidanceValueRepostory {
 	 * @param id
 	 */
 	public void udpateGuidanceValue(String tenantId, GuidanceValue guidanceValue) {
-		Long modifiedTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
 			@Override
@@ -100,8 +97,8 @@ public class GuidanceValueRepostory {
 				ps.setTimestamp(10, TimeStampUtil.getTimeStamp(guidanceValue.getToDate()));
 				ps.setString(11, guidanceValue.getAuditDetails().getCreatedBy());
 				ps.setString(12, guidanceValue.getAuditDetails().getLastModifiedBy());
-				ps.setLong(13, modifiedTime);
-				ps.setLong(14, modifiedTime);
+				ps.setLong(13, guidanceValue.getAuditDetails().getCreatedTime());
+				ps.setLong(14, guidanceValue.getAuditDetails().getLastModifiedTime());
 				ps.setLong(15, guidanceValue.getId());
 
 				return ps;

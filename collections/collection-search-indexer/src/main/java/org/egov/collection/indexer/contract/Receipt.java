@@ -45,6 +45,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -58,6 +60,6 @@ public class Receipt {
     private String instrumentHeader;
 
     @JsonProperty("Bill")
-    private Bill bill;
+    private List<Bill> bill;
 
 }

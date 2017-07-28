@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.repository.BudgetGroupRepository;
 import org.egov.egf.master.domain.repository.ChartOfAccountRepository;
-import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.requests.BudgetGroupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class BudgetGroupService {
 	@Autowired
 	private ChartOfAccountRepository chartOfAccountRepository;
 
-	public BindingResult validate(List<BudgetGroup> budgetgroups, String method, BindingResult errors) {
+	private BindingResult validate(List<BudgetGroup> budgetgroups, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -98,6 +97,7 @@ public class BudgetGroupService {
 		return budgetgroups;
 	}
 
+	@Transactional
 	public List<BudgetGroup> add(List<BudgetGroup> budgetgroups, BindingResult errors) {
 		budgetgroups = fetchRelated(budgetgroups);
 		validate(budgetgroups, ACTION_CREATE, errors);
@@ -108,6 +108,7 @@ public class BudgetGroupService {
 
 	}
 
+	@Transactional
 	public List<BudgetGroup> update(List<BudgetGroup> budgetgroups, BindingResult errors) {
 		budgetgroups = fetchRelated(budgetgroups);
 		validate(budgetgroups, ACTION_UPDATE, errors);
@@ -118,7 +119,7 @@ public class BudgetGroupService {
 
 	}
 
-	public void addToQue(CommonRequest<BudgetGroupContract> request) {
+	public void addToQue(BudgetGroupRequest request) {
 		budgetGroupRepository.add(request);
 	}
 

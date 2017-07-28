@@ -3,9 +3,12 @@ package org.egov.pgrrest.read.domain.service;
 import org.egov.pgrrest.common.contract.web.SevaRequest;
 import org.egov.pgrrest.common.domain.model.*;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException;
-import org.egov.pgrrest.read.domain.model.*;
+import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
-import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
+import org.egov.pgrrest.read.domain.factory.JSScriptEngineFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,11 +55,13 @@ public class ServiceRequestCustomFieldServiceTest {
         final SevaRequest contractSevaRequest = mock(SevaRequest.class);
         final AttributeDefinition genderAttributeDefinition = AttributeDefinition.builder()
             .code("gender")
+            .actions(Collections.emptyList())
             .dataType(AttributeDataType.SINGLE_VALUE_LIST)
             .build();
         final AttributeDefinition ageAttributeDefinition = AttributeDefinition.builder()
             .code("age")
             .dataType(AttributeDataType.INTEGER)
+            .actions(Collections.emptyList())
             .build();
         final ComputeRuleDefinition ruleDefinition1 = ComputeRuleDefinition.builder()
             .rule("age > 30 && gender == 'male'")
@@ -70,11 +75,14 @@ public class ServiceRequestCustomFieldServiceTest {
             ruleDefinition1,
             ruleDefinition2
         );
+        final AttributeActionsDefinition attributeActionsDefinition =
+            new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED);
         final AttributeDefinition applicationFeeAttributeDefinition = AttributeDefinition.builder()
             .code("applicationFee")
             .dataType(AttributeDataType.DOUBLE)
             .readOnly(true)
             .computeRules(computeRules)
+            .actions(Collections.singletonList(attributeActionsDefinition))
             .build();
         final List<AttributeDefinition> attributeDefinitions = Arrays.asList(
             genderAttributeDefinition,
@@ -96,7 +104,7 @@ public class ServiceRequestCustomFieldServiceTest {
         when(serviceDefinitionService.find(searchCriteria))
             .thenReturn(serviceDefinition);
 
-        customFieldService.enrich(serviceRequest, contractSevaRequest, SevaRequestAction.CREATE);
+        customFieldService.enrich(serviceRequest, contractSevaRequest, ServiceStatus.COMPLAINT_REGISTERED);
 
         assertEquals(3, contractAttributeEntries.size());
         assertEquals("60", contractAttributeEntries.get(2).getName());
@@ -114,10 +122,12 @@ public class ServiceRequestCustomFieldServiceTest {
         final AttributeDefinition genderAttributeDefinition = AttributeDefinition.builder()
             .code("gender")
             .dataType(AttributeDataType.SINGLE_VALUE_LIST)
+            .actions(Collections.emptyList())
             .build();
         final AttributeDefinition ageAttributeDefinition = AttributeDefinition.builder()
             .code("age")
             .dataType(AttributeDataType.INTEGER)
+            .actions(Collections.emptyList())
             .build();
         final ComputeRuleDefinition ruleDefinition1 = ComputeRuleDefinition.builder()
             .rule("true")
@@ -131,11 +141,14 @@ public class ServiceRequestCustomFieldServiceTest {
             ruleDefinition1,
             ruleDefinition2
         );
+        final AttributeActionsDefinition attributeActionsDefinition =
+            new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED);
         final AttributeDefinition applicationFeeAttributeDefinition = AttributeDefinition.builder()
             .code("applicationFee")
             .dataType(AttributeDataType.DOUBLE)
             .readOnly(true)
             .computeRules(computeRules)
+            .actions(Collections.singletonList(attributeActionsDefinition))
             .build();
         final List<AttributeDefinition> attributeDefinitions = Arrays.asList(
             genderAttributeDefinition,
@@ -156,11 +169,74 @@ public class ServiceRequestCustomFieldServiceTest {
         when(serviceDefinitionService.find(searchCriteria))
             .thenReturn(serviceDefinition);
 
-        customFieldService.enrich(serviceRequest, contractSevaRequest, SevaRequestAction.CREATE);
+        customFieldService.enrich(serviceRequest, contractSevaRequest, ServiceStatus.COMPLAINT_REGISTERED);
 
         assertEquals(3, contractAttributeEntries.size());
         assertEquals("50", contractAttributeEntries.get(2).getName());
         assertEquals("applicationFee", contractAttributeEntries.get(2).getKey());
+    }
+
+    @Test
+    public void test_should_not_set_computed_field_when_action_does_not_match_current_action() {
+        final List<AttributeEntry> attributeEntries = Arrays.asList(
+            new AttributeEntry("gender", "male"),
+            new AttributeEntry("age", "30")
+        );
+        final ServiceRequest serviceRequest = createServiceRequest(attributeEntries);
+        final SevaRequest contractSevaRequest = mock(SevaRequest.class);
+        final AttributeDefinition genderAttributeDefinition = AttributeDefinition.builder()
+            .code("gender")
+            .dataType(AttributeDataType.SINGLE_VALUE_LIST)
+            .actions(Collections.emptyList())
+            .build();
+        final AttributeDefinition ageAttributeDefinition = AttributeDefinition.builder()
+            .code("age")
+            .dataType(AttributeDataType.INTEGER)
+            .actions(Collections.emptyList())
+            .build();
+        final ComputeRuleDefinition ruleDefinition1 = ComputeRuleDefinition.builder()
+            .rule("true")
+            .value("50")
+            .build();
+        final ComputeRuleDefinition ruleDefinition2 = ComputeRuleDefinition.builder()
+            .rule("true")
+            .value("60")
+            .build();
+        final List<ComputeRuleDefinition> computeRules = Arrays.asList(
+            ruleDefinition1,
+            ruleDefinition2
+        );
+        final AttributeActionsDefinition attributeActionsDefinition =
+            new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED);
+        final AttributeDefinition applicationFeeAttributeDefinition = AttributeDefinition.builder()
+            .code("applicationFee")
+            .dataType(AttributeDataType.DOUBLE)
+            .readOnly(true)
+            .computeRules(computeRules)
+            .actions(Collections.singletonList(attributeActionsDefinition))
+            .build();
+        final List<AttributeDefinition> attributeDefinitions = Arrays.asList(
+            genderAttributeDefinition,
+            ageAttributeDefinition,
+            applicationFeeAttributeDefinition
+        );
+        final ServiceDefinition serviceDefinition = ServiceDefinition.builder()
+            .attributes(attributeDefinitions)
+            .build();
+        final org.egov.pgrrest.common.contract.web.ServiceRequest mockServiceRequest =
+            mock(org.egov.pgrrest.common.contract.web.ServiceRequest.class);
+        final List<org.egov.pgr.common.contract.AttributeEntry> contractAttributeEntries = new ArrayList<>();
+        contractAttributeEntries.add(new org.egov.pgr.common.contract.AttributeEntry("gender", "male"));
+        contractAttributeEntries.add(new org.egov.pgr.common.contract.AttributeEntry("age", "30"));
+        when(contractSevaRequest.getAttributeValues()).thenReturn(contractAttributeEntries);
+        final ServiceDefinitionSearchCriteria searchCriteria =
+            new ServiceDefinitionSearchCriteria("serviceCode", "tenantId");
+        when(serviceDefinitionService.find(searchCriteria))
+            .thenReturn(serviceDefinition);
+
+        customFieldService.enrich(serviceRequest, contractSevaRequest, ServiceStatus.COMPLAINT_PROCESSING);
+
+        assertEquals(2, contractAttributeEntries.size());
     }
 
     @Test(expected = InvalidServiceTypeCodeException.class)
@@ -181,7 +257,7 @@ public class ServiceRequestCustomFieldServiceTest {
             new ServiceDefinitionSearchCriteria("serviceCode", "tenantId");
         when(serviceDefinitionService.find(searchCriteria)).thenReturn(null);
 
-        customFieldService.enrich(serviceRequest, contractSevaRequest, SevaRequestAction.CREATE);
+        customFieldService.enrich(serviceRequest, contractSevaRequest, ServiceStatus.COMPLAINT_REGISTERED);
     }
 
     private ServiceRequest createServiceRequest(List<AttributeEntry> attributeEntries) {

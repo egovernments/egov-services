@@ -41,13 +41,11 @@
 package org.egov.collection.repository;
 
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -60,20 +58,20 @@ public class WorkflowRepository {
 	
 	@Autowired
 	private RestTemplate restTemplate;
-	
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
 		
 	public Object getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
 		StringBuilder builder = new StringBuilder();
+		String hostname = applicationProperties.getEgovServiceHost();
 		String baseUri = applicationProperties.getGetPosition();
 		String uriAppend = applicationProperties.getGetPositionUriAppend();
 		String searchCriteria="?tenantId="+positionSearchCriteriaWrapper.getPositionSearchCriteria().getTenantId();
 		
-		builder.append(baseUri)
+		builder.append(hostname)
+			   .append(baseUri)
 			   .append(positionSearchCriteriaWrapper.getPositionSearchCriteria().getEmployeeId())
 			   .append(uriAppend)
 			   .append(searchCriteria);

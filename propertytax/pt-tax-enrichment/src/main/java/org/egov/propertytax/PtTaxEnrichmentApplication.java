@@ -1,6 +1,7 @@
 package org.egov.propertytax;
 
 import org.egov.models.ResponseInfoFactory;
+import org.egov.propertytax.config.PropertiesManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
+//@Import({TracerConfiguration.class})
 @EnableWebMvc
 public class PtTaxEnrichmentApplication {
 
@@ -26,5 +28,10 @@ public class PtTaxEnrichmentApplication {
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
+	}
+	
+	@Bean
+	public PropertiesManager getPropertiesManager() {
+		return new PropertiesManager();
 	}
 }

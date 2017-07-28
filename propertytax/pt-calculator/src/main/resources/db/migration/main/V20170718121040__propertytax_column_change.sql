@@ -1,0 +1,13 @@
+ALTER TABLE egpt_mstr_factor ALTER COLUMN tenantId TYPE character varying(128);
+ALTER TABLE egpt_mstr_factor ALTER COLUMN factorCode TYPE character varying(64);
+ALTER TABLE egpt_mstr_guidancevalue ALTER COLUMN tenantId TYPE character varying(128);
+ALTER TABLE egpt_mstr_guidancevalue ALTER COLUMN name TYPE character varying(128);
+ALTER TABLE egpt_mstr_guidancevalue ALTER COLUMN boundary TYPE character varying(64);
+ALTER TABLE egpt_mstr_guidancevalue ALTER COLUMN structure TYPE character varying(64);
+ALTER TABLE egpt_mstr_guidancevalue ALTER COLUMN usage TYPE character varying(64);
+ALTER TABLE egpt_mstr_guidancevalue ALTER COLUMN subUsage TYPE character varying(64);
+ALTER TABLE egpt_mstr_guidancevalue ALTER COLUMN occupancy TYPE character varying(64);
+ALTER TABLE egpt_mstr_taxrates ALTER COLUMN tenantId TYPE character varying(128);
+ALTER TABLE egpt_mstr_taxperiods ALTER COLUMN tenantId TYPE character varying(128);
+ALTER TABLE egpt_mstr_taxperiods ALTER COLUMN code TYPE character varying(64);
+ALTER TABLE egpt_mstr_taxperiods ALTER COLUMN financialYear TYPE character varying(64);

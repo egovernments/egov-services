@@ -52,7 +52,7 @@ public class FundJdbcRepository extends JdbcRepository {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
-		// StringBuffer params = new StringBuffer();
+		StringBuffer params = new StringBuffer();
 
 		if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty()) {
 			validateSortByOrder(fundSearchEntity.getSortBy());
@@ -60,8 +60,9 @@ public class FundJdbcRepository extends JdbcRepository {
 		}
 
 		String orderBy = "order by id";
-		if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty())
+		if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + fundSearchEntity.getSortBy();
+		}
 
 		searchQuery = searchQuery.replace(":tablename", FundEntity.TABLE_NAME);
 
@@ -70,17 +71,19 @@ public class FundJdbcRepository extends JdbcRepository {
 		// implement jdbc specfic search
 
 		Pagination<Fund> page = new Pagination<>();
-		if (fundSearchEntity.getOffset() != null)
+		if (fundSearchEntity.getOffset() != null) {
 			page.setOffset(fundSearchEntity.getOffset());
-		if (fundSearchEntity.getPageSize() != null)
+		}
+		if (fundSearchEntity.getPageSize() != null) {
 			page.setPageSize(fundSearchEntity.getPageSize());
+		}
 
 		/*
 		 * if (params.length() > 0) {
-		 * 
+		 *
 		 * searchQuery = searchQuery.replace(":condition", " where " +
 		 * params.toString());
-		 * 
+		 *
 		 * } else {
 		 */
 		searchQuery = searchQuery.replace(":condition", "");
@@ -110,7 +113,7 @@ public class FundJdbcRepository extends JdbcRepository {
 	}
 
 	public FundEntity findById(FundEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

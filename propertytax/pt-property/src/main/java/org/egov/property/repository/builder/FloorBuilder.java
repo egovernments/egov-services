@@ -18,7 +18,14 @@ public class FloorBuilder {
         .append(" lastModifiedTime = ?, propertydetails = ?")
         .append(" WHERE id = ?" );
 
-        return floorUpdateSQL.toString();
-    }
+		return floorUpdateSQL.toString();
+	}
+
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_floors where id= ?";
+	
+	public static final String INSERT_FLOORHISTORY_QUERY = "INSERT INTO egpt_floors_history ("
+			+ "floorNo,createdBy, lastModifiedBy, createdTime, lastModifiedTime, propertydetails,id)"
+			+ "VALUES(?,?,?,?,?,?,?)";
 
 }

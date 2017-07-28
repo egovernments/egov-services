@@ -59,7 +59,6 @@ import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/d
 import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
 import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
 
-
 //Property tax
 import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
 import Test from './components/contents/propertyTax/master/Test';
@@ -74,10 +73,13 @@ import MutationReason from './components/contents/propertyTax/master/MutationRea
 import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
 import ViewProperty from './components/contents/propertyTax/master/viewProperty';
+import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
+
 
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 import Create from './components/framework/create';
-
+import View from './components/framework/view';
+import Search from './components/framework/search';
 
 const base = "";
 
@@ -87,17 +89,11 @@ const Main = () => {
     return (
     <main style={{"marginBottom": "50px"}}>
     <Switch>
-      <Route exact path= {base + '/'} component={Login}/>
-
-      <Route exact path= {base + '/create/:moduleName/:master?'} component={Create}/>
-
-      <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
-
-      <Route exact path={base+'/dashboard'} component={Dashboard}/>
-
-        {/*
-        pgr
-        */}
+        <Route exact path= {base + '/:tenantId?'} component={Login}/>
+	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
+        <Route exact path= {base + '/search/:moduleName/:master?'} component={Search}/>
+        <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
+        <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>
@@ -171,7 +167,7 @@ const Main = () => {
 
 
             <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
-          <Route exact path={base+'/propertyTax'} component={PropertyTaxSearch}/>
+          <Route exact path={base+'/propertyTax/search'} component={PropertyTaxSearch}/>
           <Route exact path={base+'/propertyTax/test'} component={Test}/>
           <Route exact path={base+'/propertyTax/floor-type'} component={FloorType}/>
           <Route exact path={base+'/propertyTax/roof-type'} component={RoofType}/>
@@ -183,6 +179,10 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
 		  <Route exact path={base+'/propertyTax/view-property'} component={ViewProperty}/>
+		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
+          <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
+          <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
+
     </Switch>
   </main>
 )}

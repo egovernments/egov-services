@@ -1,0 +1,51 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "description": {
+            "type": "keyword"
+        },
+        "majorcode": {
+            "type": "object"
+        },
+        "maxcode": {
+            "type": "object"
+        },
+        "mincode": {
+            "type": "object"
+        },
+        "accounttype": {
+            "type": "object"
+        },
+        "active": {
+            "type": "boolean"
+        },
+	"budgetingtype": {
+	    "type": "object"
+	},
+        "createdby": {
+            "type": "object"
+        },
+        "lastmodifiedby": {
+            "type": "object"
+        },
+        "createddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastmodifieddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantid": {
+            "type": "keyword"
+        }
+    }
+}

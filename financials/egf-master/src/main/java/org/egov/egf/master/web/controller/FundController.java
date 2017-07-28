@@ -6,16 +6,16 @@ import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.domain.service.FundService;
 import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.FundSearchContract;
+import org.egov.egf.master.web.requests.FundRequest;
+import org.egov.egf.master.web.requests.FundResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,14 +37,13 @@ public class FundController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FundContract> create(@RequestBody CommonRequest<FundContract> fundRequest,
-			BindingResult errors) {
+	public FundResponse create(@RequestBody FundRequest fundRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
+		FundResponse fundResponse = new FundResponse();
 		fundResponse.setResponseInfo(getResponseInfo(fundRequest.getRequestInfo()));
 		List<Fund> funds = new ArrayList<>();
 		Fund fund;
@@ -53,7 +52,7 @@ public class FundController {
 
 		fundRequest.getRequestInfo().setAction("create");
 
-		for (FundContract fundContract : fundRequest.getData()) {
+		for (FundContract fundContract : fundRequest.getFunds()) {
 			fund = new Fund();
 			model.map(fundContract, fund);
 			fund.setCreatedDate(new Date());
@@ -71,34 +70,33 @@ public class FundController {
 			fundContracts.add(contract);
 		}
 
-		fundRequest.setData(fundContracts);
+		fundRequest.setFunds(fundContracts);
 		fundService.addToQue(fundRequest);
-		fundResponse.setData(fundContracts);
+		fundResponse.setFunds(fundContracts);
 
 		return fundResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FundContract> update(@RequestBody CommonRequest<FundContract> fundContractRequest,
-			BindingResult errors) {
+	public FundResponse update(@RequestBody FundRequest fundRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		fundContractRequest.getRequestInfo().setAction("update");
+		fundRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
+		FundResponse fundResponse = new FundResponse();
 		List<Fund> funds = new ArrayList<>();
-		fundResponse.setResponseInfo(getResponseInfo(fundContractRequest.getRequestInfo()));
+		fundResponse.setResponseInfo(getResponseInfo(fundRequest.getRequestInfo()));
 		Fund fund;
 		FundContract contract;
 		List<FundContract> fundContracts = new ArrayList<>();
 
-		for (FundContract fundContract : fundContractRequest.getData()) {
+		for (FundContract fundContract : fundRequest.getFunds()) {
 			fund = new Fund();
 			model.map(fundContract, fund);
-			fund.setLastModifiedBy(fundContractRequest.getRequestInfo().getUserInfo());
+			fund.setLastModifiedBy(fundRequest.getRequestInfo().getUserInfo());
 			fund.setLastModifiedDate(new Date());
 			funds.add(fund);
 		}
@@ -112,9 +110,9 @@ public class FundController {
 			fundContracts.add(contract);
 		}
 
-		fundContractRequest.setData(fundContracts);
-		fundService.addToQue(fundContractRequest);
-		fundResponse.setData(fundContracts);
+		fundRequest.setFunds(fundContracts);
+		fundService.addToQue(fundRequest);
+		fundResponse.setFunds(fundContracts);
 
 		return fundResponse;
 	}
@@ -122,8 +120,8 @@ public class FundController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<FundContract> search(@ModelAttribute FundSearchContract fundSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+	public FundResponse search(@ModelAttribute FundSearchContract fundSearchContract, RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FundSearch domain = new FundSearch();
@@ -133,14 +131,16 @@ public class FundController {
 		List<FundContract> fundContracts = new ArrayList<>();
 		Pagination<Fund> funds = fundService.search(domain);
 
-		for (Fund fund : funds.getPagedData()) {
-			contract = new FundContract();
-			model.map(fund, contract);
-			fundContracts.add(contract);
+		if(funds.getPagedData() != null) {
+			for (Fund fund : funds.getPagedData()) {
+				contract = new FundContract();
+				model.map(fund, contract);
+				fundContracts.add(contract);
+			}
 		}
 
-		CommonResponse<FundContract> response = new CommonResponse<>();
-		response.setData(fundContracts);
+		FundResponse response = new FundResponse();
+		response.setFunds(fundContracts);
 		response.setPage(new PaginationContract(funds));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -149,7 +149,7 @@ public class FundController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

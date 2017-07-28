@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.Supplier;
 import org.egov.egf.master.domain.model.SupplierSearch;
 import org.egov.egf.master.persistence.entity.SupplierEntity;
@@ -16,6 +15,7 @@ import org.egov.egf.master.persistence.entity.SupplierSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +26,10 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		LOG.debug("init supplier");
 		init(SupplierEntity.class);
 		LOG.debug("end init supplier");
+	}
+
+	public SupplierJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public SupplierEntity create(SupplierEntity entity) {
@@ -48,120 +52,139 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+		 StringBuffer params = new StringBuffer();
+
+		if (supplierSearchEntity.getSortBy() != null && !supplierSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(supplierSearchEntity.getSortBy());
+			validateEntityFieldName(supplierSearchEntity.getSortBy(), SupplierEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (supplierSearchEntity.getSortBy() != null && !supplierSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + supplierSearchEntity.getSortBy();
+		}
 
 		searchQuery = searchQuery.replace(":tablename", SupplierEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (supplierSearchEntity.getSortBy() != null && !supplierSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(supplierSearchEntity.getSortBy());
-                    validateEntityFieldName(supplierSearchEntity.getSortBy(), SupplierEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (supplierSearchEntity.getSortBy() != null && !supplierSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + supplierSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (supplierSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", supplierSearchEntity.getId());
 		}
 		if (supplierSearchEntity.getCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("code =:code");
 			paramValues.put("code", supplierSearchEntity.getCode());
 		}
 		if (supplierSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", supplierSearchEntity.getName());
 		}
 		if (supplierSearchEntity.getAddress() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("address =:address");
 			paramValues.put("address", supplierSearchEntity.getAddress());
 		}
 		if (supplierSearchEntity.getMobile() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("mobile =:mobile");
 			paramValues.put("mobile", supplierSearchEntity.getMobile());
 		}
 		if (supplierSearchEntity.getEmail() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("email =:email");
 			paramValues.put("email", supplierSearchEntity.getEmail());
 		}
 		if (supplierSearchEntity.getDescription() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("description =:description");
 			paramValues.put("description", supplierSearchEntity.getDescription());
 		}
 		if (supplierSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", supplierSearchEntity.getActive());
 		}
 		if (supplierSearchEntity.getPanNo() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("panNo =:panNo");
 			paramValues.put("panNo", supplierSearchEntity.getPanNo());
 		}
 		if (supplierSearchEntity.getTinNo() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("tinNo =:tinNo");
 			paramValues.put("tinNo", supplierSearchEntity.getTinNo());
 		}
 		if (supplierSearchEntity.getRegistationNo() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("registationNo =:registationNo");
 			paramValues.put("registationNo", supplierSearchEntity.getRegistationNo());
 		}
 		if (supplierSearchEntity.getBankAccountId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("bankAccount =:bankAccount");
 			paramValues.put("bankAccount", supplierSearchEntity.getBankAccountId());
 		}
 		if (supplierSearchEntity.getIfscCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("ifscCode =:ifscCode");
 			paramValues.put("ifscCode", supplierSearchEntity.getIfscCode());
 		}
 		if (supplierSearchEntity.getBankId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("bank =:bank");
 			paramValues.put("bank", supplierSearchEntity.getBankId());
 		}
 
 		Pagination<Supplier> page = new Pagination<>();
-		if (supplierSearchEntity.getOffset() != null)
+		if (supplierSearchEntity.getOffset() != null) {
 			page.setOffset(supplierSearchEntity.getOffset());
-		if (supplierSearchEntity.getPageSize() != null)
-			page.setPageSize(supplierSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (supplierSearchEntity.getPageSize() != null) {
+			page.setPageSize(supplierSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -189,7 +212,8 @@ public class SupplierJdbcRepository extends JdbcRepository {
 	}
 
 	public SupplierEntity findById(SupplierEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {

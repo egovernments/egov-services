@@ -11,6 +11,10 @@ import java.util.UUID;
 
 import static org.egov.constants.RequestContextConstants.CORRELATION_ID_KEY;
 
+/**
+ *  1st pre filter to get executed.
+ *  Sets the context and MDC with the newly generated correlation id.
+ */
 @Component
 public class CorrelationIdFilter extends ZuulFilter {
 

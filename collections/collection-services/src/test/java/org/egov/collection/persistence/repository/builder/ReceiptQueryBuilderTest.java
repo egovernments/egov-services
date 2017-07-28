@@ -41,6 +41,7 @@ package org.egov.collection.persistence.repository.builder;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -50,7 +51,7 @@ import org.junit.Test;
 
 public class ReceiptQueryBuilderTest {
 	@Test
-	public void no_input_test() {
+	public void no_input_test_for_select() throws ParseException {
 		ReceiptSearchCriteria receiptCriteria = new ReceiptSearchCriteria();
 		ReceiptDetailQueryBuilder receiptQueryBuilder = new ReceiptDetailQueryBuilder();
 
@@ -84,7 +85,7 @@ public class ReceiptQueryBuilderTest {
 	}
 
 	@Test
-	public void all_input_test() {
+	public void all_input_test_for_selelct() throws ParseException {
 		ReceiptSearchCriteria receiptCriteria = new ReceiptSearchCriteria();
 		ReceiptDetailQueryBuilder receiptQueryBuilder = new ReceiptDetailQueryBuilder();
 		receiptCriteria.setBusinessCode("TL");
@@ -97,6 +98,7 @@ public class ReceiptQueryBuilderTest {
 		receiptCriteria.setSortBy("payeename");
 		receiptCriteria.setSortOrder("DESC");
 		receiptCriteria.setReceiptNumbers(Arrays.asList("RECNO567"));
+		receiptCriteria.setIds(Arrays.asList(1L));
 		assertEquals("Select rh.id as rh_id,rh.payeename as rh_payeename,"
 				+ "rh.payeeAddress as rh_payeeAddress,rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy,"
 				+ "rh.referenceNumber as rh_referenceNumber,rh.referenceDate as rh_referenceDate,"
@@ -125,8 +127,24 @@ public class ReceiptQueryBuilderTest {
 				+ " rh.id=rd.receiptHeader WHERE rh.tenantId = ? AND rh.receiptNumber IN ('RECNO567') AND "
 				+ "rh.consumerCode = ? AND rh.status = ? AND rh.createdBy = ? AND"
 				+ " rh.receiptDate >= ? AND rh.receiptDate <= ? AND "
-				+ "rh.businessDetails = ? ORDER BY rh.payeename DESC",
+				+ "rh.businessDetails = ? AND rh.id IN (1) ORDER BY rh.payeename DESC",
 				receiptQueryBuilder.getQuery(receiptCriteria, new ArrayList<>()));
 
+	}
+	
+	@Test
+	public void no_input_test_for_update(){
+		ReceiptDetailQueryBuilder recceiptDetailQueryBuilder=new ReceiptDetailQueryBuilder();
+		assertEquals("Update egcl_receiptheader set lastModifiedBy = ? , lastModifiedDate = ? WHERE",recceiptDetailQueryBuilder.getQueryForUpdate(
+				null, null, null, null));
+	}
+	
+	
+	@Test
+	public void all_input_test_for_update(){
+		ReceiptDetailQueryBuilder receiptDetailQueryBuilder=new ReceiptDetailQueryBuilder();
+		assertEquals("Update egcl_receiptheader set stateId = ? ,"
+				+ " status = ? , lastModifiedBy = ? , lastModifiedDate = ? WHERE id = ? AND tenantId = ?"
+				,receiptDetailQueryBuilder.getQueryForUpdate(2L, "SUBMITTED", 1L, "default"));
 	}
 }

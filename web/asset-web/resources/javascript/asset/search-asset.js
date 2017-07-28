@@ -129,9 +129,17 @@ class SearchAsset extends React.Component {
       let {assetCategory,name,code,department,status}=this.state.searchSet;
       let {isSearchClicked,list, departments}=this.state;
 
-      const renderOption = function(list) {
+      const renderOption = function(list, statusBool) {
           if(list) {
               if (list.length) {
+                if(statusBool) {
+                  return list.map((item, ind) => {
+                    return (<option key={ind} value={item.code}>
+                            {item.code}
+                      </option>)
+                  })
+                };
+
                 list.sort(function(item1, item2) {
                   if(item1.name && item2.name)
                     return item1.name.toLowerCase() > item2.name.toLowerCase() ? 1 : item1.name.toLowerCase() < item2.name.toLowerCase() ? -1 : 0;
@@ -279,7 +287,7 @@ class SearchAsset extends React.Component {
                               handleChange(e,"status")
                           }}>
                             <option value="">Select Status</option>
-                            {renderOption(this.state.statusList)}
+                            {renderOption(this.state.statusList, true)}
                          </select>
                   </div>
                 </div>

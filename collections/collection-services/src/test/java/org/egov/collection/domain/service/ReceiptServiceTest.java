@@ -39,31 +39,41 @@
  */
 package org.egov.collection.domain.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptType;
+import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.service.ReceiptService;
+import org.egov.collection.web.contract.BankAccount;
+import org.egov.collection.web.contract.BankBranch;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
+import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.Purpose;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
@@ -73,6 +83,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -83,10 +94,136 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class ReceiptServiceTest {
 	@Mock
 	private ReceiptRepository receiptRepository;
+	
+	@Mock
+	private BusinessDetailsRepository businessDetailsRepository;
+	
+	@Mock
+	private ApplicationProperties applicationProperties;
 
 	@InjectMocks
 	private ReceiptService receiptService;
 
+	@Test(expected = Exception.class)
+	public void test_should_apportion_and_create_receipt_exception() throws ParseException {
+		
+		ReceiptService receiptSvc = new ReceiptService();
+		ReceiptService spy = Mockito.spy(receiptSvc);
+		
+		ReceiptReq receiptReq = getReceiptRequest();
+		ApplicationProperties applicationProperty = new ApplicationProperties();
+		String hostname = applicationProperty.getEgovServiceHost();
+		String baseUri = applicationProperty.getChartOfAccountsSearch();
+		List<String> businessDetailCodes = new ArrayList<>();
+	//	List<Object> chartOfAccounts = new ArrayList<>();
+		businessDetailCodes.add("TL");
+		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
+		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
+				
+		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
+		Mockito.when(applicationProperties.getEgovServiceHost()).thenReturn(hostname);
+		Mockito.when(applicationProperties.getChartOfAccountsSearch()).thenReturn(baseUri);
+	//	Mockito.when(receiptService.getChartOfAccountOnGlCode("1405014", "default", receiptReq.getRequestInfo())).thenReturn(chartOfAccounts);
+		
+		assertNotNull(receiptService.apportionAndCreateReceipt(receiptReq));
+				
+	}
+	
+/*	@Test
+	public void test_should_apportion_and_create_receipt() throws ParseException {
+		
+		ReceiptService receiptSvc = Mockito.mock(ReceiptService.class);
+	//	ReceiptService spy = Mockito.spy(receiptSvc);
+		
+		ReceiptReq receiptReq = getReceiptRequest();
+		ApplicationProperties applicationProperty = new ApplicationProperties();
+		String hostname = applicationProperty.getEgovServiceHost();
+		String baseUri = applicationProperty.getChartOfAccountsSearch();
+		List<String> businessDetailCodes = new ArrayList<>();
+		List<Object> chartOfAccounts = new ArrayList<>();
+		businessDetailCodes.add("TL");
+		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
+		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
+		
+	/*	Mockito.when(receiptService.getBusinessDetails("TL", receiptReq))
+			   .thenReturn(businessDetailsRes);
+		Mockito.when(receiptService.validateFundAndDept(businessDetailsRes)).thenReturn(true);
+		Mockito.when(receiptService.validateGLCode(receiptReq.getRequestInfo(),
+				receiptReq.getTenantId(), 
+				receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails().get(0))); 
+		Mockito.when(receiptService.create(receiptReq)).thenReturn(receiptReq.getReceipt().get(0)); */
+		
+	/*	Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
+		Mockito.when(applicationProperties.getEgovServiceHost()).thenReturn(hostname);
+		Mockito.when(applicationProperties.getChartOfAccountsSearch()).thenReturn(baseUri);
+		Mockito.when(receiptSvc.getChartOfAccountOnGlCode("1405014", "default", receiptReq.getRequestInfo())).thenReturn(chartOfAccounts);
+		
+		assertNotNull(receiptService.apportionAndCreateReceipt(receiptReq));
+		
+		
+	} */
+	
+	@Test(expected = Exception.class)
+	public void test_should_create_receipt_exception(){
+		ReceiptReq receiptReq = getReceiptRequest();
+		List<String> businessDetailCodes = new ArrayList<>();
+		businessDetailCodes.add("TL");
+		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
+		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
+		final Map<String, Object> parametersMap = new HashMap<>();
+
+		
+		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
+		Mockito.when(receiptRepository.persistToReceiptHeader(parametersMap, receiptReq.getReceipt().get(0).getBill().get(0).getPayeeName(),
+				receiptReq.getReceipt().get(0).getBill().get(0).getPaidBy(), receiptReq.getReceipt().get(0).getAuditDetails())).thenReturn(1l);
+
+		assertNotNull(receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
+				receiptReq.getTenantId()));
+		
+	}
+	
+/*	@Test
+	public void test_should_create_receipt(){
+		ReceiptReq receiptReq = getReceiptRequest();
+		List<String> businessDetailCodes = new ArrayList<>();
+		businessDetailCodes.add("TL");
+		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
+		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
+		final Map<String, Object> parametersMap = new HashMap<>();
+
+		
+		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
+		Mockito.when(receiptRepository.persistToReceiptHeader(parametersMap, receiptReq.getReceipt().get(0).getBill().get(0).getPayeeName(),
+				receiptReq.getReceipt().get(0).getBill().get(0).getPaidBy(), receiptReq.getReceipt().get(0).getAuditDetails())).thenReturn(1l);
+
+		assertNotNull(receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
+				receiptReq.getTenantId()));
+		
+	} */
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_should_not_create_receipt(){
+		ReceiptReq receiptReq = getReceiptRequest();
+		List<String> businessDetailCodes = new ArrayList<>();
+		businessDetailCodes.add("ABC");
+		final Map<String, Object> parametersMap = new HashMap<>();
+
+		
+		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenThrow(Exception.class);
+		Mockito.when(receiptRepository.persistToReceiptHeader(parametersMap, receiptReq.getReceipt().get(0).getBill().get(0).getPayeeName(),
+				receiptReq.getReceipt().get(0).getBill().get(0).getPaidBy(), receiptReq.getReceipt().get(0).getAuditDetails())).thenThrow(Exception.class);
+
+		receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
+				receiptReq.getTenantId());
+		
+	}
+	
 	@Test
 	public void test_should_search_business_details() throws ParseException {
 		when(receiptRepository.findAllReceiptsByCriteria(getReceiptSearchCriteria()))
@@ -99,15 +236,39 @@ public class ReceiptServiceTest {
 	@Test
 	public void test_should_be_able_to_cancel_receipt_before_bank_remittance() {
 		when(receiptRepository.cancelReceipt(any())).thenReturn(getReceiptRequest());
-		Receipt receipt = receiptService.cancelReceiptBeforeRemittance(getReceiptRequest());
-		assertEquals(getReceipt(), receipt);
+		List<Receipt> receipt = receiptService.cancelReceiptBeforeRemittance(getReceiptRequest());
+		assertNotNull(receipt);
 	}
 
 	@Test
 	public void test_should_be_able_to_push_cancel_request_to_kafka() {
-		when(receiptRepository.pushReceiptCancelDetailsToQueue(any())).thenReturn(getReceipt());
-		Receipt receipt = receiptService.cancelReceiptPushToQueue(getReceiptRequest());
-		assertEquals(getReceipt(), receipt);
+		when(receiptRepository.pushReceiptCancelDetailsToQueue(any())).thenReturn(Arrays.asList(getReceipt()));
+		List<Receipt> receipt = receiptService.cancelReceiptPushToQueue(getReceiptRequest());
+		assertEquals(Arrays.asList(getReceipt()), receipt);
+	}
+
+	@Test
+	public void test_should_be_able_to_push_update_receiptRequest_to_queue() throws ParseException {
+		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		when(receiptRepository.findAllReceiptsByCriteria(getReceiptSearchCriteriaForUpdate()))
+		.thenReturn(getReceiptsForUpdate());
+		receiptService.pushUpdateReceiptDetailsToQueque(1L, 2L, "SUBMITTED", "default", requestInfo);
+		verify(receiptRepository).pushUpdateDetailsToQueque(any(ReceiptReq.class));
+	}
+
+
+	@Test
+	public void test_should_be_able_to_update_status_and_stateId_and_return_true_after_update_workflow_is_called() {
+		when(receiptRepository.updateReceipt(any())).thenReturn(true);
+		Boolean value = receiptService.updateReceipt(getReceiptRequestForUpdate());
+		assertEquals(true, value);
+	}
+
+	@Test
+	public void test_should_be_able_to_return_false_if_status_and_stateId_are_not_updated_inDB__after_update_workflow_is_called_() {
+		when(receiptRepository.updateReceipt(any())).thenReturn(false);
+		Boolean value = receiptService.updateReceipt(getReceiptRequestForUpdate());
+		assertEquals(false, value);
 	}
 
 	@Test
@@ -174,6 +335,37 @@ public class ReceiptServiceTest {
 		assertTrue(value.equals(false));
 	}
 
+	
+	
+
+	private ReceiptCommonModel getReceiptsForUpdate() throws ParseException {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		ReceiptHeader header = ReceiptHeader.builder().id(1L).payeename("abc").payeeAddress("abc nagara")
+				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("ADHOC")
+				.receiptNumber("REC1234").referenceDesc("REFDESC45").manualReceiptNumber("MAN67").businessDetails("TL")
+				.collectionType("COUNTER").displayMsg("receipt created successfully").reference_ch_id(1L).stateId(2L)
+				.location(1L).isReconciled(true).status("SUBMITTED").reasonForCancellation("documents not proper")
+				.minimumAmount(125.00).totalAmount(150.00).collModesNotAllwd("Bill based").consumerCode("CON12343556")
+				.channel("567hfghr").consumerType("Good").fund("56").fundSource("78").function("678").boundary("67")
+				.department("78").voucherheader("VOUHEAD").depositedBranch("ICICI").version(1L).createdBy(1L)
+				.lastModifiedBy(1L).tenantId("default").receiptDate(dateFormat.parse("2016-02-02")).build();
+		ReceiptHeader receiptHeader = ReceiptHeader.builder().id(1L).build();
+		ReceiptDetail detail1 = ReceiptDetail.builder().id(1L).chartOfAccount("456").dramount(600.00).cramount(800.00)
+				.ordernumber(5L).receiptHeader(receiptHeader).actualcramountToBePaid(800.00)
+				.description("receipt details received").financialYear("sixteen").isActualDemand(true).purpose("REBATE")
+				.tenantId("default").build();
+		ReceiptDetail detail2 = ReceiptDetail.builder().id(2L).chartOfAccount("490").dramount(700.00).cramount(800.00)
+				.ordernumber(6L).receiptHeader(receiptHeader).actualcramountToBePaid(800.00)
+				.description("receipt details received").financialYear("sixteen").isActualDemand(true).purpose("REBATE")
+				.tenantId("default").build();
+		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header))
+				.receiptDetails(Arrays.asList(detail1, detail2)).build();
+	}
+
+	private ReceiptSearchCriteria getReceiptSearchCriteriaForUpdate() {
+		return ReceiptSearchCriteria.builder().tenantId("default").ids(Arrays.asList(1L)).build();
+	}
+	
 	private Receipt getReceipt() {
 		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("456").isActualDemand(true).id("1")
 				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
@@ -185,19 +377,56 @@ public class ReceiptServiceTest {
 		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
 				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
 				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
-				.receiptType(ReceiptType.valueOf("ADHOC")).channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
+				.receiptType("ADHOC").channel("567hfghr").voucherHeader("VOUHEAD")
+				.collectionType(CollectionType.COUNTER).boundary("67")
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
-			.businessService("TL").build();
+				.businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
-
 		return Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
 	}
 
 	private ReceiptReq getReceiptRequest() {
 
+		User userInfo = User.builder().id(1L).build();
+		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
+				.did("4354648646").key("xyz").msgId("654654").requesterId("61").authToken("ksnk").userInfo(userInfo).ts(new Date())
+				.build();
+		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("1405014").isActualDemand(true).id("1")
+				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
+				.debitAmount(BigDecimal.valueOf(600)).purpose(Purpose.REBATE).build();
+		BillAccountDetail detail2 = BillAccountDetail.builder().glcode("490").isActualDemand(true).id("2")
+				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
+				.debitAmount(BigDecimal.valueOf(700)).purpose(Purpose.REBATE).build();
+		
+		BankBranch bankBranch = BankBranch.builder().name("SBI").build();
+		BankAccount bankAccount = BankAccount.builder().bankBranch(bankBranch).build();
+
+		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
+				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
+				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
+				.receiptType("ADHOC").channel("567hfghr").voucherHeader("VOUHEAD")
+				.collectionType(CollectionType.COUNTER).boundary("67")
+				.reasonForCancellation("Data entry mistake")
+				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
+				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
+				.businessService("TL").build();
+		
+		AuditDetails auditDetails = AuditDetails.builder().createdBy(1L).lastModifiedBy(1L)
+				.createdDate(new Date().getTime()).lastModifiedDate(new Date().getTime()).build();
+		
+		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
+				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
+		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo))
+				.bankAccount(bankAccount).auditDetails(auditDetails).build();
+		
+		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
+	}
+
+	private ReceiptReq getReceiptRequestForUpdate() {
+	
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
 				.did("4354648646").key("xyz").msgId("654654").requesterId("61").authToken("ksnk").userInfo(userInfo)
@@ -212,15 +441,16 @@ public class ReceiptServiceTest {
 		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
 				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
 				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
-				.receiptType(ReceiptType.valueOf("ADHOC")).channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
-				.reasonForCancellation("Data entry mistake")
-				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
+				.receiptType(ReceiptType.valueOf("ADHOC").toString()).channel("567hfghr").voucherHeader("VOUHEAD")
+				.collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
+				.reasonForCancellation("Data entry mistake").cancellationRemarks(null).status("SUBMITTED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
 				.businessService("TL").build();
+			
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
-		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
-		return ReceiptReq.builder().requestInfo(requestInfo).receipt(receipt).build();
+		Receipt receipt = Receipt.builder().tenantId("default").stateId(2L).bill(Arrays.asList(billInfo)).build();
+		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
 	}
 
 	private ReceiptSearchCriteria getReceiptSearchCriteria() {
@@ -251,6 +481,19 @@ public class ReceiptServiceTest {
 				.tenantId("default").build();
 		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header))
 				.receiptDetails(Arrays.asList(detail1, detail2)).build();
+	}
+	
+	private BusinessDetailsResponse getBusinessDetails(){
+		BusinessDetailsResponse businessDetailsRes = new BusinessDetailsResponse();
+		BusinessDetailsRequestInfo businessDetailsRequestInfo = BusinessDetailsRequestInfo.builder()
+				.businessCategory(1L).businessType("CHALLAN").callBackForApportioning(true).code("code")
+				.fund("fund").department("department")
+				.build();
+		List<BusinessDetailsRequestInfo> businessDetails = new ArrayList<>();
+		businessDetails.add(businessDetailsRequestInfo);
+		businessDetailsRes.setBusinessDetails(businessDetails);
+		
+		return businessDetailsRes;
 	}
 
 }

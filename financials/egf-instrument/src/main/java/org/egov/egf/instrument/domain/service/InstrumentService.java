@@ -1,25 +1,24 @@
 package org.egov.egf.instrument.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
-import org.egov.egf.instrument.domain.model.InstrumentStatus;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
-import org.egov.egf.instrument.domain.repository.InstrumentStatusRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
-import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.repository.BankAccountContractRepository;
 import org.egov.egf.master.web.repository.BankContractRepository;
+import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,21 +37,80 @@ public class InstrumentService {
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
 
-	@Autowired
 	private InstrumentRepository instrumentRepository;
 
-	@Autowired
 	private SmartValidator validator;
-	@Autowired
-	private InstrumentStatusRepository instrumentStatusRepository;
-	@Autowired
+
 	private SurrenderReasonRepository surrenderReasonRepository;
-	@Autowired
+
 	private BankContractRepository bankContractRepository;
-	@Autowired
+
+	private FinancialStatusContractRepository financialStatusContractRepository;
+
 	private BankAccountContractRepository bankAccountContractRepository;
-	@Autowired
+
 	private InstrumentTypeRepository instrumentTypeRepository;
+
+	@Autowired
+	public InstrumentService(SmartValidator validator, InstrumentRepository instrumentRepository,
+			SurrenderReasonRepository surrenderReasonRepository, BankContractRepository bankContractRepository,
+			FinancialStatusContractRepository financialStatusContractRepository,
+			BankAccountContractRepository bankAccountContractRepository,
+			InstrumentTypeRepository instrumentTypeRepository) {
+		this.validator = validator;
+		this.instrumentRepository = instrumentRepository;
+		this.surrenderReasonRepository = surrenderReasonRepository;
+		this.bankContractRepository = bankContractRepository;
+		this.financialStatusContractRepository = financialStatusContractRepository;
+		this.bankAccountContractRepository = bankAccountContractRepository;
+		this.instrumentTypeRepository = instrumentTypeRepository;
+	}
+
+	@Transactional
+	public List<Instrument> save(List<Instrument> instruments, BindingResult errors) {
+
+		List<Instrument> resultList = new ArrayList<Instrument>();
+
+		try {
+
+			instruments = fetchAndValidate(instruments, errors, ACTION_CREATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (Instrument i : instruments) {
+
+			resultList.add(save(i));
+
+		}
+
+		return resultList;
+	}
+
+	@Transactional
+	public List<Instrument> update(List<Instrument> instruments, BindingResult errors) {
+
+		List<Instrument> resultList = new ArrayList<Instrument>();
+
+		try {
+
+			instruments = fetchAndValidate(instruments, errors, ACTION_UPDATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (Instrument i : instruments) {
+
+			resultList.add(update(i));
+
+		}
+
+		return resultList;
+	}
 
 	private BindingResult validate(List<Instrument> instruments, String method, BindingResult errors) {
 
@@ -109,14 +167,14 @@ public class InstrumentService {
 				}
 				instrument.setBankAccount(bankAccount);
 			}
-			if (instrument.getInstrumentStatus() != null) {
-				InstrumentStatus instrumentStatus = instrumentStatusRepository
-						.findById(instrument.getInstrumentStatus());
-				if (instrumentStatus == null) {
-					throw new InvalidDataException("instrumentStatus", "instrumentStatus.invalid",
-							" Invalid instrumentStatus");
+			if (instrument.getFinancialStatus() != null) {
+				FinancialStatusContract financialStatus = financialStatusContractRepository
+						.findById(instrument.getFinancialStatus());
+				if (financialStatus == null) {
+					throw new InvalidDataException("financialStatus", "financialStatus.invalid",
+							" Invalid financialStatus");
 				}
-				instrument.setInstrumentStatus(instrumentStatus);
+				instrument.setFinancialStatus(financialStatus);
 			}
 			if (instrument.getSurrendarReason() != null) {
 				SurrenderReason surrendarReason = surrenderReasonRepository.findById(instrument.getSurrendarReason());
@@ -133,29 +191,14 @@ public class InstrumentService {
 	}
 
 	@Transactional
-	public List<Instrument> add(List<Instrument> instruments, BindingResult errors) {
+	public List<Instrument> fetchAndValidate(List<Instrument> instruments, BindingResult errors, String action) {
 		instruments = fetchRelated(instruments);
-		validate(instruments, ACTION_CREATE, errors);
+		validate(instruments, action, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return instruments;
 
-	}
-
-	@Transactional
-	public List<Instrument> update(List<Instrument> instruments, BindingResult errors) {
-		instruments = fetchRelated(instruments);
-		validate(instruments, ACTION_UPDATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		return instruments;
-
-	}
-
-	public void addToQue(CommonRequest<InstrumentContract> request) {
-		instrumentRepository.add(request);
 	}
 
 	public Pagination<Instrument> search(InstrumentSearch instrumentSearch) {

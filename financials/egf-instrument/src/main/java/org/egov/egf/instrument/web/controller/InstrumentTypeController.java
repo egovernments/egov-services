@@ -4,25 +4,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
-import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.service.InstrumentTypeService;
+import org.egov.egf.instrument.persistence.queue.repository.InstrumentTypeQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentTypeContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
-import org.modelmapper.ModelMapper;
+import org.egov.egf.instrument.web.mapper.InstrumentTypeMapper;
+import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
+import org.egov.egf.instrument.web.requests.InstrumentTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,100 +33,124 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/instrumenttypes")
 public class InstrumentTypeController {
 
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String PLACEHOLDER = "placeholder";
+
+	private static String persistThroughKafka;
+
+	@Autowired
+	private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
+
 	@Autowired
 	private InstrumentTypeService instrumentTypeService;
-	
-	@GetMapping("/")
-	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentTypeContract> get() {
-		
-		 InstrumentTypeContract build = InstrumentTypeContract.builder().build();
-		 build.setCreatedDate(new Date());
-		 CommonResponse<InstrumentTypeContract> response=new CommonResponse<>();
-		 List<InstrumentTypeContract> instrumenttypes=new ArrayList();
-		 instrumenttypes.add(build);
-		 response.setData(instrumenttypes);
-		 return response;
-		
-	}
-	
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentTypeContract> create(@RequestBody CommonRequest<InstrumentTypeContract> instrumentTypeRequest,
+	public InstrumentTypeResponse create(@RequestBody InstrumentTypeRequest instrumentTypeRequest,
 			BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 
-		ModelMapper model = new ModelMapper();
-		CommonResponse<InstrumentTypeContract> instrumentTypeResponse = new CommonResponse<>();
+		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+		InstrumentTypeResponse instrumentTypeResponse = new InstrumentTypeResponse();
 		instrumentTypeResponse.setResponseInfo(getResponseInfo(instrumentTypeRequest.getRequestInfo()));
 		List<InstrumentType> instrumenttypes = new ArrayList<>();
 		InstrumentType instrumentType;
 		List<InstrumentTypeContract> instrumentTypeContracts = new ArrayList<>();
 		InstrumentTypeContract contract;
 
-		instrumentTypeRequest.getRequestInfo().setAction("create");
+		instrumentTypeRequest.getRequestInfo().setAction(ACTION_CREATE);
 
-		for (InstrumentTypeContract instrumentTypeContract : instrumentTypeRequest.getData()) {
-			instrumentType = new InstrumentType();
-			model.map(instrumentTypeContract, instrumentType);
+		for (InstrumentTypeContract instrumentTypeContract : instrumentTypeRequest.getInstrumentTypes()) {
+			instrumentType = mapper.toDomain(instrumentTypeContract);
+			instrumentType.setCreatedDate(new Date());
 			instrumentType.setCreatedBy(instrumentTypeRequest.getRequestInfo().getUserInfo());
 			instrumentType.setLastModifiedBy(instrumentTypeRequest.getRequestInfo().getUserInfo());
 			instrumenttypes.add(instrumentType);
 		}
 
-		instrumenttypes = instrumentTypeService.add(instrumenttypes, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (InstrumentType f : instrumenttypes) {
-			contract = new InstrumentTypeContract();
-			model.map(f, contract);
-			instrumentTypeContracts.add(contract);
+			instrumenttypes = instrumentTypeService.fetchAndValidate(instrumenttypes, errors, ACTION_CREATE);
+
+			for (InstrumentType it : instrumenttypes) {
+				contract = mapper.toContract(it);
+				contract.setCreatedDate(new Date());
+				instrumentTypeContracts.add(contract);
+			}
+
+			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
+			instrumentTypeQueueRepository.addToQue(instrumentTypeRequest);
+
+		} else {
+
+			instrumenttypes = instrumentTypeService.save(instrumenttypes, errors);
+
+			for (InstrumentType it : instrumenttypes) {
+				contract = mapper.toContract(it);
+				contract.setCreatedDate(new Date());
+				instrumentTypeContracts.add(contract);
+			}
+
+			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
+			instrumentTypeQueueRepository.addToSearchQue(instrumentTypeRequest);
+
 		}
 
-		instrumentTypeRequest.setData(instrumentTypeContracts);
-		instrumentTypeService.addToQue(instrumentTypeRequest);
-		instrumentTypeResponse.setData(instrumentTypeContracts);
+		instrumentTypeResponse.setInstrumentTypes(instrumentTypeContracts);
 
 		return instrumentTypeResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentTypeContract> update(@RequestBody @Valid CommonRequest<InstrumentTypeContract> instrumentTypeContractRequest,
+	public InstrumentTypeResponse update(@RequestBody InstrumentTypeRequest instrumentTypeRequest,
 			BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		instrumentTypeContractRequest.getRequestInfo().setAction("update");
-		ModelMapper model = new ModelMapper();
-		CommonResponse<InstrumentTypeContract> instrumentTypeResponse = new CommonResponse<>();
+		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+		instrumentTypeRequest.getRequestInfo().setAction(ACTION_UPDATE);
+		InstrumentTypeResponse instrumentTypeResponse = new InstrumentTypeResponse();
 		List<InstrumentType> instrumenttypes = new ArrayList<>();
-		instrumentTypeResponse.setResponseInfo(getResponseInfo(instrumentTypeContractRequest.getRequestInfo()));
+		instrumentTypeResponse.setResponseInfo(getResponseInfo(instrumentTypeRequest.getRequestInfo()));
 		InstrumentType instrumentType;
 		InstrumentTypeContract contract;
 		List<InstrumentTypeContract> instrumentTypeContracts = new ArrayList<>();
 
-		for (InstrumentTypeContract instrumentTypeContract : instrumentTypeContractRequest.getData()) {
-			instrumentType = new InstrumentType();
-			model.map(instrumentTypeContract, instrumentType);
-			instrumentType.setLastModifiedBy(instrumentTypeContractRequest.getRequestInfo().getUserInfo());
+		for (InstrumentTypeContract instrumentTypeContract : instrumentTypeRequest.getInstrumentTypes()) {
+			instrumentType = mapper.toDomain(instrumentTypeContract);
+			instrumentType.setLastModifiedBy(instrumentTypeRequest.getRequestInfo().getUserInfo());
+			instrumentType.setLastModifiedDate(new Date());
 			instrumenttypes.add(instrumentType);
 		}
 
-		instrumenttypes = instrumentTypeService.update(instrumenttypes, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (InstrumentType instrumentTypeObj : instrumenttypes) {
-			contract = new InstrumentTypeContract();
-			model.map(instrumentTypeObj, contract);
-			instrumentTypeContracts.add(contract);
+			instrumenttypes = instrumentTypeService.fetchAndValidate(instrumenttypes, errors, ACTION_UPDATE);
+
+			for (InstrumentType it : instrumenttypes) {
+				contract = mapper.toContract(it);
+				instrumentTypeContracts.add(contract);
+			}
+
+			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
+			instrumentTypeQueueRepository.addToQue(instrumentTypeRequest);
+
+		} else {
+
+			instrumenttypes = instrumentTypeService.update(instrumenttypes, errors);
+
+			for (InstrumentType it : instrumenttypes) {
+				contract = mapper.toContract(it);
+				instrumentTypeContracts.add(contract);
+			}
+
+			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
+			instrumentTypeQueueRepository.addToSearchQue(instrumentTypeRequest);
+
 		}
 
-		instrumentTypeContractRequest.setData(instrumentTypeContracts);
-		instrumentTypeService.addToQue(instrumentTypeContractRequest);
-		instrumentTypeResponse.setData(instrumentTypeContracts);
+		instrumentTypeResponse.setInstrumentTypes(instrumentTypeContracts);
 
 		return instrumentTypeResponse;
 	}
@@ -136,25 +158,24 @@ public class InstrumentTypeController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<InstrumentTypeContract> search(@ModelAttribute InstrumentTypeSearchContract instrumentTypeSearchContract,
+	public InstrumentTypeResponse search(@ModelAttribute InstrumentTypeSearchContract instrumentTypeSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
-		ModelMapper mapper = new ModelMapper();
-		InstrumentTypeSearch domain = new InstrumentTypeSearch();
-		mapper.map(instrumentTypeSearchContract, domain);
+		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+		InstrumentTypeSearch domain = mapper.toSearchDomain(instrumentTypeSearchContract);
 		InstrumentTypeContract contract;
-		ModelMapper model = new ModelMapper();
 		List<InstrumentTypeContract> instrumentTypeContracts = new ArrayList<>();
 		Pagination<InstrumentType> instrumenttypes = instrumentTypeService.search(domain);
 
-		for (InstrumentType instrumentType : instrumenttypes.getPagedData()) {
-			contract = new InstrumentTypeContract();
-			model.map(instrumentType, contract);
-			instrumentTypeContracts.add(contract);
+		if (instrumenttypes.getPagedData() != null) {
+			for (InstrumentType instrumentType : instrumenttypes.getPagedData()) {
+				contract = mapper.toContract(instrumentType);
+				instrumentTypeContracts.add(contract);
+			}
 		}
 
-		CommonResponse<InstrumentTypeContract> response = new CommonResponse<>();
-		response.setData(instrumentTypeContracts);
+		InstrumentTypeResponse response = new InstrumentTypeResponse();
+		response.setInstrumentTypes(instrumentTypeContracts);
 		response.setPage(new PaginationContract(instrumenttypes));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -163,8 +184,13 @@ public class InstrumentTypeController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+	}
+
+	@Value("${persist.through.kafka}")
+	public void setPersistThroughKafka(String persistThroughKafka) {
+		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

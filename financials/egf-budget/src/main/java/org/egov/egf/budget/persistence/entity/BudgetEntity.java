@@ -3,8 +3,8 @@ package org.egov.egf.budget.persistence.entity;
 import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.budget.domain.model.Budget;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.domain.model.EstimationType;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 
 import lombok.AllArgsConstructor;
@@ -45,7 +45,7 @@ public class BudgetEntity extends AuditableEntity {
 		budget.setActive(this.active);
 		budget.setPrimaryBudget(this.primaryBudget);
 		budget.setReferenceBudget(Budget.builder().id(referenceBudgetId).build());
-		budget.setStatus(EgfStatus.builder().id(statusId).build());
+		budget.setStatus(FinancialStatusContract.builder().id(statusId).build());
 		budget.setDocumentNumber(this.documentNumber);
 		budget.setDescription(this.description);
 		budget.setMaterializedPath(this.materializedPath);

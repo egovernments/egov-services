@@ -933,21 +933,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: () => {
-    dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: []
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },

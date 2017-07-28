@@ -16,7 +16,7 @@ import java.util.*;
 @Service
 public class PgrWorkflow implements Workflow {
 
-    public static final String STATE_ID = "stateId";
+    public static final String STATE_ID = "systemStateId";
     public static final String DEPARTMENT = "department";
     public static final String IN_PROGRESS = "IN PROGRESS";
     private final ComplaintRouterService complaintRouterService;
@@ -47,7 +47,7 @@ public class PgrWorkflow implements Workflow {
         state.setComments("Service Request is created with SRN : " + processInstance.getValueForKey("crn"));
         state.setNatureOfTask("Service Request");
         state.setOwnerPosition(resolveAssignee(processInstance));
-        state.setExtraInfo(processInstance.getValueForKey("statusDetails"));
+        state.setExtraInfo(processInstance.getValueForKey("systemStatusDetails"));
         state.setDateInfo(processInstance.getCreatedDate());
         state.setTenantId(jurisdiction);
         setAuditableFields(state, Long.valueOf(processInstance.getRequestInfo().getUserInfo().getId()));
@@ -187,7 +187,7 @@ public class PgrWorkflow implements Workflow {
         if (Objects.nonNull(state)) {
             state.addStateHistory(new StateHistory(state));
             state.setValue(task.getStatus());
-            state.setComments(task.getValueForKey("approvalComments"));
+            state.setComments(task.getValueForKey("systemApprovalComments"));
             state.setSenderName(task.getSender());
             //Logic to handle escalation
             if (null == task.getAssignee()) {

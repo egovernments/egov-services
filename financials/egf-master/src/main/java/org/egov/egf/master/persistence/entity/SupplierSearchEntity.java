@@ -14,11 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class SupplierSearchEntity extends SupplierEntity {
+	private String ids;
+	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
-	private String sortBy;
 
-	@Override
 	public Supplier toDomain() {
 		Supplier supplier = new Supplier();
 		super.toDomain(supplier);
@@ -30,6 +30,7 @@ public class SupplierSearchEntity extends SupplierEntity {
 		this.pageSize = supplierSearch.getPageSize();
 		this.offset = supplierSearch.getOffset();
 		this.sortBy = supplierSearch.getSortBy();
+		this.ids = supplierSearch.getIds();
 		return this;
 	}
 

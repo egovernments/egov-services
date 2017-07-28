@@ -15,6 +15,7 @@ import org.egov.egf.master.persistence.entity.SchemeSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,10 @@ public class SchemeJdbcRepository extends JdbcRepository {
 		LOG.debug("init scheme");
 		init(SchemeEntity.class);
 		LOG.debug("end init scheme");
+	}
+
+	public SchemeJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public SchemeEntity create(SchemeEntity entity) {
@@ -49,88 +54,102 @@ public class SchemeJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
+		if (schemeSearchEntity.getSortBy() != null && !schemeSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(schemeSearchEntity.getSortBy());
+			validateEntityFieldName(schemeSearchEntity.getSortBy(), SchemeEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (schemeSearchEntity.getSortBy() != null && !schemeSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + schemeSearchEntity.getSortBy();
+		}
+
 		searchQuery = searchQuery.replace(":tablename", SchemeEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (schemeSearchEntity.getSortBy() != null && !schemeSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(schemeSearchEntity.getSortBy());
-                    validateEntityFieldName(schemeSearchEntity.getSortBy(), SchemeEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (schemeSearchEntity.getSortBy() != null && !schemeSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + schemeSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (schemeSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", schemeSearchEntity.getId());
 		}
 		if (schemeSearchEntity.getFundId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("fund =:fund");
 			paramValues.put("fund", schemeSearchEntity.getFundId());
 		}
 		if (schemeSearchEntity.getCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("code =:code");
 			paramValues.put("code", schemeSearchEntity.getCode());
 		}
 		if (schemeSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", schemeSearchEntity.getName());
 		}
 		if (schemeSearchEntity.getValidFrom() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("validFrom =:validFrom");
 			paramValues.put("validFrom", schemeSearchEntity.getValidFrom());
 		}
 		if (schemeSearchEntity.getValidTo() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("validTo =:validTo");
 			paramValues.put("validTo", schemeSearchEntity.getValidTo());
 		}
 		if (schemeSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", schemeSearchEntity.getActive());
 		}
 		if (schemeSearchEntity.getDescription() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("description =:description");
 			paramValues.put("description", schemeSearchEntity.getDescription());
 		}
 		if (schemeSearchEntity.getBoundary() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("boundary =:boundary");
 			paramValues.put("boundary", schemeSearchEntity.getBoundary());
 		}
 
 		Pagination<Scheme> page = new Pagination<>();
-		if (schemeSearchEntity.getOffset() != null)
+		if (schemeSearchEntity.getOffset() != null) {
 			page.setOffset(schemeSearchEntity.getOffset());
-		if (schemeSearchEntity.getPageSize() != null)
-			page.setPageSize(schemeSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (schemeSearchEntity.getPageSize() != null) {
+			page.setPageSize(schemeSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -157,7 +176,8 @@ public class SchemeJdbcRepository extends JdbcRepository {
 	}
 
 	public SchemeEntity findById(SchemeEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {

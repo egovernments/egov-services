@@ -65,6 +65,51 @@ public class ServiceRequestControllerTest {
     }
 
     @Test
+    public void test_should_return_error_response_when_group_constraint_has_been_violated_on_creating_a_service_request()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new GroupConstraintViolationException("groupCode")).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("groupConstraintViolatedErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_service_status_is_not_present_on_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new ServiceStatusNotPresentException()).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("serviceStatusMandatoryErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_service_status_is_unknown_on_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new UnknownServiceStatusException("unknownStatus")).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("serviceStatusUnknownErrorResponse.json")));
+    }
+
+    @Test
     public void test_should_return_error_response_when_date_time_format_in_attribute_entry_is_invalid_on_creating_a_complaint()
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
@@ -244,7 +289,7 @@ public class ServiceRequestControllerTest {
             .startLastModifiedDate(null)
             .serviceCode("serviceCode_123")
             .serviceRequestId("serid_123").startDate(null)
-            .status(Arrays.asList("REGISTERED", "FORWARDED"))
+            .status(Arrays.asList("COMPLAINT_REGISTERED", "FORWARDED"))
             .userId(10L)
             .emailId("abc@gmail.com")
             .mobileNumber("74742487428")
@@ -266,7 +311,7 @@ public class ServiceRequestControllerTest {
                 .param("tenantId", "tenantId")
                 .param("serviceRequestId", "serid_123")
                 .param("serviceCode", "serviceCode_123")
-                .param("status", "REGISTERED")
+                .param("status", "COMPLAINT_REGISTERED")
                 .param("status", "FORWARDED")
                 .param("positionId", "10")
                 .param("userId", "10")
@@ -298,7 +343,7 @@ public class ServiceRequestControllerTest {
             .startLastModifiedDate(null)
             .serviceCode("serviceCode_123")
             .serviceRequestId("serid_123").startDate(null)
-            .status(Arrays.asList("REGISTERED", "FORWARDED"))
+            .status(Arrays.asList("COMPLAINT_REGISTERED", "FORWARDED"))
             .userId(10L)
             .emailId("abc@gmail.com")
             .mobileNumber("74742487428")
@@ -320,7 +365,7 @@ public class ServiceRequestControllerTest {
                 .param("tenantId", "tenantId")
                 .param("serviceRequestId", "serid_123")
                 .param("serviceCode", "serviceCode_123")
-                .param("status", "REGISTERED")
+                .param("status", "COMPLAINT_REGISTERED")
                 .param("status", "FORWARDED")
                 .param("positionId", "10")
                 .param("userId", "10")
@@ -348,7 +393,7 @@ public class ServiceRequestControllerTest {
             .startLastModifiedDate(null)
             .serviceCode("serviceCode_123")
             .serviceRequestId("serid_123").startDate(null)
-            .status(Arrays.asList("REGISTERED", "FORWARDED"))
+            .status(Arrays.asList("COMPLAINT_REGISTERED", "FORWARDED"))
             .userId(10L)
             .emailId("abc@gmail.com")
             .mobileNumber("74742487428")
@@ -366,7 +411,7 @@ public class ServiceRequestControllerTest {
                 .param("tenantId", "tenantId")
                 .param("serviceRequestId", "serid_123")
                 .param("serviceCode", "serviceCode_123")
-                .param("status", "REGISTERED")
+                .param("status", "COMPLAINT_REGISTERED")
                 .param("status", "FORWARDED")
                 .param("positionId", "10")
                 .param("userId", "10")

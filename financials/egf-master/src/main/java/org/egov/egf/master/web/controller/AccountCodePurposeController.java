@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.AccountCodePurposeSearch;
 import org.egov.egf.master.domain.service.AccountCodePurposeService;
 import org.egov.egf.master.web.contract.AccountCodePurposeContract;
 import org.egov.egf.master.web.contract.AccountCodePurposeSearchContract;
+import org.egov.egf.master.web.requests.AccountCodePurposeRequest;
+import org.egov.egf.master.web.requests.AccountCodePurposeResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,28 +37,29 @@ public class AccountCodePurposeController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<AccountCodePurposeContract> create(
-			@RequestBody @Valid CommonRequest<AccountCodePurposeContract> accountCodePurposeContractRequest,
+	public AccountCodePurposeResponse create(@RequestBody AccountCodePurposeRequest accountCodePurposeRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<AccountCodePurposeContract> accountCodePurposeResponse = new CommonResponse<>();
+		AccountCodePurposeResponse accountCodePurposeResponse = new AccountCodePurposeResponse();
+		accountCodePurposeResponse.setResponseInfo(getResponseInfo(accountCodePurposeRequest.getRequestInfo()));
 		List<AccountCodePurpose> accountcodepurposes = new ArrayList<>();
-		AccountCodePurpose accountCodePurpose = null;
-		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<AccountCodePurposeContract>();
-		AccountCodePurposeContract contract = null;
+		AccountCodePurpose accountCodePurpose;
+		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<>();
+		AccountCodePurposeContract contract;
 
-		accountCodePurposeContractRequest.getRequestInfo().setAction("create");
+		accountCodePurposeRequest.getRequestInfo().setAction("create");
 
-		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest.getData()) {
+		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeRequest
+				.getAccountCodePurposes()) {
 			accountCodePurpose = new AccountCodePurpose();
 			model.map(accountCodePurposeContract, accountCodePurpose);
 			accountCodePurpose.setCreatedDate(new Date());
-			accountCodePurpose.setCreatedBy(accountCodePurposeContractRequest.getRequestInfo().getUserInfo());
-			accountCodePurpose.setLastModifiedBy(accountCodePurposeContractRequest.getRequestInfo().getUserInfo());
+			accountCodePurpose.setCreatedBy(accountCodePurposeRequest.getRequestInfo().getUserInfo());
+			accountCodePurpose.setLastModifiedBy(accountCodePurposeRequest.getRequestInfo().getUserInfo());
 			accountcodepurposes.add(accountCodePurpose);
 		}
 
@@ -73,36 +72,36 @@ public class AccountCodePurposeController {
 			accountCodePurposeContracts.add(contract);
 		}
 
-		accountCodePurposeContractRequest.setData(accountCodePurposeContracts);
-		accountCodePurposeService.addToQue(accountCodePurposeContractRequest);
-		accountCodePurposeResponse.setData(accountCodePurposeContracts);
+		accountCodePurposeRequest.setAccountCodePurposes(accountCodePurposeContracts);
+		accountCodePurposeService.addToQue(accountCodePurposeRequest);
+		accountCodePurposeResponse.setAccountCodePurposes(accountCodePurposeContracts);
 
 		return accountCodePurposeResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<AccountCodePurposeContract> update(
-			@RequestBody @Valid CommonRequest<AccountCodePurposeContract> accountCodePurposeContractRequest,
+	public AccountCodePurposeResponse update(@RequestBody AccountCodePurposeRequest accountCodePurposeRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		accountCodePurposeContractRequest.getRequestInfo().setAction("update");
-
+		accountCodePurposeRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<AccountCodePurposeContract> accountCodePurposeResponse = new CommonResponse<>();
+		AccountCodePurposeResponse accountCodePurposeResponse = new AccountCodePurposeResponse();
 		List<AccountCodePurpose> accountcodepurposes = new ArrayList<>();
+		accountCodePurposeResponse.setResponseInfo(getResponseInfo(accountCodePurposeRequest.getRequestInfo()));
 		AccountCodePurpose accountCodePurpose;
 		AccountCodePurposeContract contract;
 		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<>();
 
-		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest.getData()) {
+		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeRequest
+				.getAccountCodePurposes()) {
 			accountCodePurpose = new AccountCodePurpose();
 			model.map(accountCodePurposeContract, accountCodePurpose);
+			accountCodePurpose.setLastModifiedBy(accountCodePurposeRequest.getRequestInfo().getUserInfo());
 			accountCodePurpose.setLastModifiedDate(new Date());
-			accountCodePurpose.setLastModifiedBy(accountCodePurposeContractRequest.getRequestInfo().getUserInfo());
 			accountcodepurposes.add(accountCodePurpose);
 		}
 
@@ -110,14 +109,14 @@ public class AccountCodePurposeController {
 
 		for (AccountCodePurpose accountCodePurposeObj : accountcodepurposes) {
 			contract = new AccountCodePurposeContract();
-			contract.setLastModifiedDate(new Date());
 			model.map(accountCodePurposeObj, contract);
+			accountCodePurposeObj.setLastModifiedDate(new Date());
 			accountCodePurposeContracts.add(contract);
 		}
 
-		accountCodePurposeContractRequest.setData(accountCodePurposeContracts);
-		accountCodePurposeService.addToQue(accountCodePurposeContractRequest);
-		accountCodePurposeResponse.setData(accountCodePurposeContracts);
+		accountCodePurposeRequest.setAccountCodePurposes(accountCodePurposeContracts);
+		accountCodePurposeService.addToQue(accountCodePurposeRequest);
+		accountCodePurposeResponse.setAccountCodePurposes(accountCodePurposeContracts);
 
 		return accountCodePurposeResponse;
 	}
@@ -125,17 +124,16 @@ public class AccountCodePurposeController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<AccountCodePurposeContract> search(
-			@ModelAttribute AccountCodePurposeSearchContract accountCodePurposeSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+	public AccountCodePurposeResponse search(
+			@ModelAttribute AccountCodePurposeSearchContract accountCodePurposeSearchContract, RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		AccountCodePurposeSearch domain = new AccountCodePurposeSearch();
 		mapper.map(accountCodePurposeSearchContract, domain);
-		AccountCodePurposeContract contract = null;
+		AccountCodePurposeContract contract;
 		ModelMapper model = new ModelMapper();
-		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<AccountCodePurposeContract>();
-
+		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<>();
 		Pagination<AccountCodePurpose> accountcodepurposes = accountCodePurposeService.search(domain);
 
 		for (AccountCodePurpose accountCodePurpose : accountcodepurposes.getPagedData()) {
@@ -144,8 +142,8 @@ public class AccountCodePurposeController {
 			accountCodePurposeContracts.add(contract);
 		}
 
-		CommonResponse<AccountCodePurposeContract> response = new CommonResponse<>();
-		response.setData(accountCodePurposeContracts);
+		AccountCodePurposeResponse response = new AccountCodePurposeResponse();
+		response.setAccountCodePurposes(accountCodePurposeContracts);
 		response.setPage(new PaginationContract(accountcodepurposes));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -154,7 +152,7 @@ public class AccountCodePurposeController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

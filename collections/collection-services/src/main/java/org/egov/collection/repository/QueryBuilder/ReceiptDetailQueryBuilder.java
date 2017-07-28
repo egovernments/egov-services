@@ -39,7 +39,8 @@
  */
 package org.egov.collection.repository.QueryBuilder;
 
-import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.egov.collection.model.ReceiptSearchCriteria;
@@ -82,8 +83,61 @@ public class ReceiptDetailQueryBuilder {
 			+ "rd.tenantId as rd_tenantId" + " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
 			+ " rh.id=rd.receiptHeader";
 
+	private static final String UPDATE_QUERY = "Update egcl_receiptheader set";
+
 	@SuppressWarnings("rawtypes")
-	public String getQuery(ReceiptSearchCriteria searchCriteria, List preparedStatementValues) {
+	public String getQueryForUpdate(Long stateId, String status, Long id, String tenantId) {
+		StringBuilder updateQuery = new StringBuilder(UPDATE_QUERY);
+		addSetUpValues(stateId, status, updateQuery);
+		addWhereClause(updateQuery, id, tenantId);
+		return updateQuery.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addWhereClause(StringBuilder updateQuery, Long id, String tenantId) {
+		updateQuery.append(" WHERE");
+		Boolean isAppendAndClause = false;
+		if (id != null) {
+			isAppendAndClause = true;
+			updateQuery.append(" id = ?");
+
+		}
+		if (tenantId != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, updateQuery);
+			updateQuery.append(" tenantId = ?");
+
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	private void addSetUpValues(Long stateId, String status, StringBuilder updateQuery) {
+		Boolean isAppendCommmaSeparator = false;
+		if (stateId != null) {
+			isAppendCommmaSeparator = true;
+			updateQuery.append(" stateId = ?");
+
+		}
+		if (status != null) {
+			isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+			updateQuery.append(" status = ?");
+
+		}
+		isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+		updateQuery.append(" lastModifiedBy = ?");
+
+		isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+		updateQuery.append(" lastModifiedDate = ?");
+
+	}
+
+	private Boolean addCommmaSeparatorIfRequired(Boolean isAppendCommmaSeparator, StringBuilder updateQuery) {
+		if (isAppendCommmaSeparator)
+			updateQuery.append(" ,");
+		return true;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public String getQuery(ReceiptSearchCriteria searchCriteria, List preparedStatementValues) throws ParseException {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
@@ -95,7 +149,7 @@ public class ReceiptDetailQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			ReceiptSearchCriteria searchCriteria) {
+			ReceiptSearchCriteria searchCriteria) throws ParseException {
 
 		if (searchCriteria.getTenantId() == null)
 			return;
@@ -130,19 +184,21 @@ public class ReceiptDetailQueryBuilder {
 		if (searchCriteria.getCollectedBy() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.createdBy = ?");
-			preparedStatementValues.add(Long.parseLong(searchCriteria.getCollectedBy()));
+			preparedStatementValues.add(new Long(searchCriteria.getCollectedBy()));
 		}
 
 		if (searchCriteria.getFromDate() != null) {
+			java.util.Date fromDate = new SimpleDateFormat("dd-MM-yyyy").parse(searchCriteria.getFromDate());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.receiptDate >= ?");
-			preparedStatementValues.add(Timestamp.valueOf(searchCriteria.getFromDate()));
+			preparedStatementValues.add(fromDate.getTime());
 		}
 
 		if (searchCriteria.getToDate() != null) {
+			java.util.Date toDate=new SimpleDateFormat("dd-MM-yyyy").parse(searchCriteria.getToDate());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.receiptDate <= ?");
-			preparedStatementValues.add(Timestamp.valueOf(searchCriteria.getToDate()));
+			preparedStatementValues.add(toDate.getTime());
 		}
 
 		if (searchCriteria.getBusinessCode() != null) {
@@ -150,7 +206,23 @@ public class ReceiptDetailQueryBuilder {
 			selectQuery.append(" rh.businessDetails = ?");
 			preparedStatementValues.add(searchCriteria.getBusinessCode());
 		}
+		
+		if(searchCriteria.getIds() !=null){
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" rh.id IN " + getIdQuery(searchCriteria.getIds()));
+		}
 	}
+	
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
+}
 
 	private void addOrderByClause(StringBuilder selectQuery, ReceiptSearchCriteria criteria) {
 		String sortBy = (criteria.getSortBy() == null ? "rh.receiptDate" : "rh." + criteria.getSortBy());
@@ -215,11 +287,19 @@ public class ReceiptDetailQueryBuilder {
 				+ " lastmodifiedby=? , lastmodifieddate=?" + " where id =? and tenantId=?";
 	}
 
-    public String searchQuery() {
-        return "select distinct u.id as user_id,u.name as user_name from eg_user u RIGHT JOIN egcl_receiptheader rh ON u.id=rh.createdby ";
-    }
+	public String searchQuery() {
+		return "select distinct createdby from egcl_receiptheader where tenantId = ?";
+	}
 
-    public String searchStatusQuery() {
-        return "select distinct status from egcl_receiptheader order by status ASC";
+	public String searchStatusQuery() {
+		return "select distinct status from egcl_receiptheader where tenantId = ? order by status ASC";
+	}
+
+	public String searchBusinessDetailsQuery() {
+		return "select distinct(trim(businessdetails,'&nbsp')) from egcl_receiptheader where tenantId = ?";
+	}
+
+    public String searchChartOfAccountsQuery() {
+        return "select distinct chartofaccount from egcl_receiptdetails where tenantId = ? and purpose != 'OTHERS' and description != '' ";
     }
 }

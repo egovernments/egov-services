@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.AccountEntity;
 import org.egov.egf.master.domain.model.AccountEntitySearch;
 import org.egov.egf.master.domain.service.AccountEntityService;
 import org.egov.egf.master.web.contract.AccountEntityContract;
 import org.egov.egf.master.web.contract.AccountEntitySearchContract;
+import org.egov.egf.master.web.requests.AccountEntityRequest;
+import org.egov.egf.master.web.requests.AccountEntityResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,28 +37,27 @@ public class AccountEntityController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<AccountEntityContract> create(
-			@RequestBody @Valid CommonRequest<AccountEntityContract> accountEntityContractRequest,
-			BindingResult errors) {
+	public AccountEntityResponse create(@RequestBody AccountEntityRequest accountEntityRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<AccountEntityContract> accountEntityResponse = new CommonResponse<>();
+		AccountEntityResponse accountEntityResponse = new AccountEntityResponse();
+		accountEntityResponse.setResponseInfo(getResponseInfo(accountEntityRequest.getRequestInfo()));
 		List<AccountEntity> accountentities = new ArrayList<>();
-		AccountEntity accountEntity = null;
-		List<AccountEntityContract> accountEntityContracts = new ArrayList<AccountEntityContract>();
-		AccountEntityContract contract = null;
+		AccountEntity accountEntity;
+		List<AccountEntityContract> accountEntityContracts = new ArrayList<>();
+		AccountEntityContract contract;
 
-		accountEntityContractRequest.getRequestInfo().setAction("create");
+		accountEntityRequest.getRequestInfo().setAction("create");
 
-		for (AccountEntityContract accountEntityContract : accountEntityContractRequest.getData()) {
+		for (AccountEntityContract accountEntityContract : accountEntityRequest.getAccountEntities()) {
 			accountEntity = new AccountEntity();
 			model.map(accountEntityContract, accountEntity);
 			accountEntity.setCreatedDate(new Date());
-			accountEntity.setCreatedBy(accountEntityContractRequest.getRequestInfo().getUserInfo());
-			accountEntity.setLastModifiedBy(accountEntityContractRequest.getRequestInfo().getUserInfo());
+			accountEntity.setCreatedBy(accountEntityRequest.getRequestInfo().getUserInfo());
+			accountEntity.setLastModifiedBy(accountEntityRequest.getRequestInfo().getUserInfo());
 			accountentities.add(accountEntity);
 		}
 
@@ -73,36 +70,34 @@ public class AccountEntityController {
 			accountEntityContracts.add(contract);
 		}
 
-		accountEntityContractRequest.setData(accountEntityContracts);
-		accountEntityService.addToQue(accountEntityContractRequest);
-		accountEntityResponse.setData(accountEntityContracts);
+		accountEntityRequest.setAccountEntities(accountEntityContracts);
+		accountEntityService.addToQue(accountEntityRequest);
+		accountEntityResponse.setAccountEntities(accountEntityContracts);
 
 		return accountEntityResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<AccountEntityContract> update(
-			@RequestBody @Valid CommonRequest<AccountEntityContract> accountEntityContractRequest,
-			BindingResult errors) {
+	public AccountEntityResponse update(@RequestBody AccountEntityRequest accountEntityRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		accountEntityContractRequest.getRequestInfo().setAction("update");
+		accountEntityRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<AccountEntityContract> accountEntityResponse = new CommonResponse<>();
+		AccountEntityResponse accountEntityResponse = new AccountEntityResponse();
 		List<AccountEntity> accountentities = new ArrayList<>();
+		accountEntityResponse.setResponseInfo(getResponseInfo(accountEntityRequest.getRequestInfo()));
 		AccountEntity accountEntity;
 		AccountEntityContract contract;
 		List<AccountEntityContract> accountEntityContracts = new ArrayList<>();
 
-		for (AccountEntityContract accountEntityContract : accountEntityContractRequest.getData()) {
+		for (AccountEntityContract accountEntityContract : accountEntityRequest.getAccountEntities()) {
 			accountEntity = new AccountEntity();
 			model.map(accountEntityContract, accountEntity);
+			accountEntity.setLastModifiedBy(accountEntityRequest.getRequestInfo().getUserInfo());
 			accountEntity.setLastModifiedDate(new Date());
-			accountEntity.setLastModifiedBy(accountEntityContractRequest.getRequestInfo().getUserInfo());
 			accountentities.add(accountEntity);
 		}
 
@@ -111,13 +106,13 @@ public class AccountEntityController {
 		for (AccountEntity accountEntityObj : accountentities) {
 			contract = new AccountEntityContract();
 			model.map(accountEntityObj, contract);
-			contract.setLastModifiedDate(new Date());
+			accountEntityObj.setLastModifiedDate(new Date());
 			accountEntityContracts.add(contract);
 		}
 
-		accountEntityContractRequest.setData(accountEntityContracts);
-		accountEntityService.addToQue(accountEntityContractRequest);
-		accountEntityResponse.setData(accountEntityContracts);
+		accountEntityRequest.setAccountEntities(accountEntityContracts);
+		accountEntityService.addToQue(accountEntityRequest);
+		accountEntityResponse.setAccountEntities(accountEntityContracts);
 
 		return accountEntityResponse;
 	}
@@ -125,17 +120,15 @@ public class AccountEntityController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<AccountEntityContract> search(
-			@ModelAttribute AccountEntitySearchContract accountEntitySearchContract,
+	public AccountEntityResponse search(@ModelAttribute AccountEntitySearchContract accountEntitySearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		AccountEntitySearch domain = new AccountEntitySearch();
 		mapper.map(accountEntitySearchContract, domain);
-		AccountEntityContract contract = null;
+		AccountEntityContract contract;
 		ModelMapper model = new ModelMapper();
-		List<AccountEntityContract> accountEntityContracts = new ArrayList<AccountEntityContract>();
-
+		List<AccountEntityContract> accountEntityContracts = new ArrayList<>();
 		Pagination<AccountEntity> accountentities = accountEntityService.search(domain);
 
 		for (AccountEntity accountEntity : accountentities.getPagedData()) {
@@ -144,8 +137,8 @@ public class AccountEntityController {
 			accountEntityContracts.add(contract);
 		}
 
-		CommonResponse<AccountEntityContract> response = new CommonResponse<>();
-		response.setData(accountEntityContracts);
+		AccountEntityResponse response = new AccountEntityResponse();
+		response.setAccountEntities(accountEntityContracts);
 		response.setPage(new PaginationContract(accountentities));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -154,7 +147,7 @@ public class AccountEntityController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

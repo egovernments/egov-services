@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/marriageRegns/appl")
+@RequestMapping("/marriageRegns/appl/")
 public class MarriageRegnController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarriageRegnController.class);
@@ -110,7 +110,7 @@ public class MarriageRegnController {
 
 	private ResponseEntity<?> getSuccessResponseForCreate(MarriageRegn marriageRegn, RequestInfo requestInfo) {
 			MarriageRegnResponse marriageRegnResponse = new MarriageRegnResponse();
-			List<MarriageRegn> marriageRegns = new ArrayList<>();
+			List<MarriageRegn> marriageRegns = new ArrayList<MarriageRegn>();
 			marriageRegns.add(marriageRegn);
 			marriageRegnResponse.setMarriageRegns(marriageRegns);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);

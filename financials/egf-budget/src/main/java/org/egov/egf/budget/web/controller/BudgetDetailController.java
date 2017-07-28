@@ -1,25 +1,27 @@
 package org.egov.egf.budget.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.domain.service.BudgetDetailService;
-import org.egov.egf.budget.persistence.queue.BudgetServiceQueueRepository;
+import org.egov.egf.budget.persistence.queue.repository.BudgetDetailQueueRepository;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
+import org.egov.egf.budget.web.contract.BudgetDetailRequest;
+import org.egov.egf.budget.web.contract.BudgetDetailResponse;
 import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,15 +44,16 @@ public class BudgetDetailController {
 	private BudgetDetailService budgetDetailService;
 
 	@Autowired
-	private BudgetServiceQueueRepository budgetServiceQueueRepository;
+	private BudgetDetailQueueRepository budgetDetailQueueRepository;
+
+	private static String persistThroughKafka;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetDetailContract> create(
-			@RequestBody CommonRequest<BudgetDetailContract> budgetDetailRequest, BindingResult errors) {
+	public BudgetDetailResponse create(@RequestBody BudgetDetailRequest budgetDetailRequest, BindingResult errors) {
 
 		BudgetDetailMapper mapper = new BudgetDetailMapper();
-		CommonResponse<BudgetDetailContract> budgetDetailResponse = new CommonResponse<>();
+		BudgetDetailResponse budgetDetailResponse = new BudgetDetailResponse();
 		budgetDetailResponse.setResponseInfo(getResponseInfo(budgetDetailRequest.getRequestInfo()));
 		List<BudgetDetail> budgetdetails = new ArrayList<>();
 		BudgetDetail budgetDetail = null;
@@ -59,60 +62,97 @@ public class BudgetDetailController {
 
 		budgetDetailRequest.getRequestInfo().setAction(ACTION_CREATE);
 
-		for (BudgetDetailContract budgetDetailContract : budgetDetailRequest.getData()) {
+		for (BudgetDetailContract budgetDetailContract : budgetDetailRequest.getBudgetDetails()) {
 			budgetDetail = mapper.toDomain(budgetDetailContract);
 			budgetDetail.setCreatedBy(budgetDetailRequest.getRequestInfo().getUserInfo());
 			budgetDetail.setLastModifiedBy(budgetDetailRequest.getRequestInfo().getUserInfo());
 			budgetdetails.add(budgetDetail);
 		}
 
-		budgetdetails = budgetDetailService.save(budgetdetails, errors,
-				budgetDetailRequest.getRequestInfo().getAction());
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (BudgetDetail bd : budgetdetails) {
-			contract = mapper.toContract(bd);
-			budgetDetailContracts.add(contract);
+			budgetdetails = budgetDetailService.fetchAndValidate(budgetdetails, errors,
+					budgetDetailRequest.getRequestInfo().getAction());
+
+			for (BudgetDetail bd : budgetdetails) {
+				contract = mapper.toContract(bd);
+				budgetDetailContracts.add(contract);
+			}
+
+			budgetDetailRequest.setBudgetDetails(budgetDetailContracts);
+			budgetDetailQueueRepository.addToQue(budgetDetailRequest);
+
+		} else {
+
+			budgetdetails = budgetDetailService.save(budgetdetails, errors);
+
+			for (BudgetDetail bd : budgetdetails) {
+				contract = mapper.toContract(bd);
+				budgetDetailContracts.add(contract);
+			}
+
+			budgetDetailRequest.setBudgetDetails(budgetDetailContracts);
+
+			budgetDetailQueueRepository.addToSearchQue(budgetDetailRequest);
+
 		}
-
-		budgetDetailRequest.setData(budgetDetailContracts);
-		budgetServiceQueueRepository.addToQue(budgetDetailRequest);
-		budgetDetailResponse.setData(budgetDetailContracts);
+		budgetDetailResponse.setBudgetDetails(budgetDetailContracts);
 
 		return budgetDetailResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetDetailContract> update(
-			@RequestBody @Valid CommonRequest<BudgetDetailContract> budgetDetailRequest, BindingResult errors) {
+	public BudgetDetailResponse update(@RequestBody @Valid BudgetDetailRequest budgetDetailRequest,
+			BindingResult errors) {
 
 		BudgetDetailMapper mapper = new BudgetDetailMapper();
 		budgetDetailRequest.getRequestInfo().setAction(ACTION_UPDATE);
-		CommonResponse<BudgetDetailContract> budgetDetailResponse = new CommonResponse<>();
+		BudgetDetailResponse budgetDetailResponse = new BudgetDetailResponse();
 		budgetDetailResponse.setResponseInfo(getResponseInfo(budgetDetailRequest.getRequestInfo()));
 		List<BudgetDetail> budgetdetails = new ArrayList<>();
 		BudgetDetail budgetDetail = null;
 		BudgetDetailContract contract = null;
 		List<BudgetDetailContract> budgetDetailContracts = new ArrayList<BudgetDetailContract>();
 
-		for (BudgetDetailContract budgetDetailContract : budgetDetailRequest.getData()) {
+		for (BudgetDetailContract budgetDetailContract : budgetDetailRequest.getBudgetDetails()) {
 			budgetDetail = mapper.toDomain(budgetDetailContract);
 			budgetDetail.setCreatedBy(budgetDetailRequest.getRequestInfo().getUserInfo());
 			budgetDetail.setLastModifiedBy(budgetDetailRequest.getRequestInfo().getUserInfo());
 			budgetdetails.add(budgetDetail);
 		}
 
-		budgetdetails = budgetDetailService.save(budgetdetails, errors,
-				budgetDetailRequest.getRequestInfo().getAction());
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (BudgetDetail bd : budgetdetails) {
-			contract = mapper.toContract(bd);
-			budgetDetailContracts.add(contract);
+			budgetdetails = budgetDetailService.fetchAndValidate(budgetdetails, errors,
+					budgetDetailRequest.getRequestInfo().getAction());
+
+			for (BudgetDetail bd : budgetdetails) {
+				contract = mapper.toContract(bd);
+				budgetDetailContracts.add(contract);
+			}
+
+			budgetDetailRequest.setBudgetDetails(budgetDetailContracts);
+			budgetDetailQueueRepository.addToQue(budgetDetailRequest);
+
+		} else {
+
+			budgetdetails = budgetDetailService.update(budgetdetails, errors);
+
+			for (BudgetDetail bd : budgetdetails) {
+				contract = mapper.toContract(bd);
+				budgetDetailContracts.add(contract);
+			}
+
+			budgetDetailRequest.setBudgetDetails(budgetDetailContracts);
+
+			budgetDetailQueueRepository.addToSearchQue(budgetDetailRequest);
+
 		}
 
-		budgetDetailRequest.setData(budgetDetailContracts);
-		budgetServiceQueueRepository.addToQue(budgetDetailRequest);
-		budgetDetailResponse.setData(budgetDetailContracts);
+		budgetDetailResponse.setBudgetDetails(budgetDetailContracts);
 
 		return budgetDetailResponse;
 	}
@@ -120,9 +160,8 @@ public class BudgetDetailController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<BudgetDetailContract> search(
-			@ModelAttribute BudgetDetailSearchContract budgetDetailSearchContract, @RequestBody RequestInfo requestInfo,
-			BindingResult errors) {
+	public BudgetDetailResponse search(@ModelAttribute BudgetDetailSearchContract budgetDetailSearchContract,
+			@RequestBody RequestInfo requestInfo, BindingResult errors) {
 
 		BudgetDetailMapper mapper = new BudgetDetailMapper();
 		BudgetDetailSearch domain = mapper.toSearchDomain(budgetDetailSearchContract);
@@ -136,8 +175,8 @@ public class BudgetDetailController {
 			budgetDetailContracts.add(contract);
 		}
 
-		CommonResponse<BudgetDetailContract> response = new CommonResponse<>();
-		response.setData(budgetDetailContracts);
+		BudgetDetailResponse response = new BudgetDetailResponse();
+		response.setBudgetDetails(budgetDetailContracts);
 		response.setPage(new PaginationContract(budgetdetails));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -146,8 +185,14 @@ public class BudgetDetailController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
-				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
+				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+	}
+
+	@Value("${persist.through.kafka}")
+	public void setPersistThroughKafka(String persistThroughKafka) {
+		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

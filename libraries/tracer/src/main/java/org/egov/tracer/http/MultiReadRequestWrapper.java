@@ -29,6 +29,20 @@ public class MultiReadRequestWrapper extends HttpServletRequestWrapper {
         return new CachedServletInputStream();
     }
 
+    public void update(ByteArrayOutputStream newBytes) {
+        this.cachedBytes = newBytes;
+    }
+
+    @Override
+    public int getContentLength() {
+        return this.cachedBytes.size();
+    }
+
+    @Override
+    public long getContentLengthLong() {
+        return this.cachedBytes.size();
+    }
+
     @Override
     public BufferedReader getReader() throws IOException{
         return new BufferedReader(new InputStreamReader(getInputStream()));

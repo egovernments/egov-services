@@ -1,20 +1,19 @@
 package org.egov.egf.master.web.repository;
 
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.master.web.contract.SupplierContract;
+import org.egov.egf.master.web.requests.SupplierResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SupplierContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/suppliers/_search?";
+	public static final String SEARCH_URL = " /egf-master/suppliers/search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -35,13 +34,10 @@ public class SupplierContractRepository {
 			content.append("&tenantId=" + supplierContract.getTenantId());
 		}
 		url = url + content.toString();
-		CommonResponse<SupplierContract> result = objectMapper.convertValue(
-				restTemplate.postForObject(url, null, CommonResponse.class),
-				new TypeReference<CommonResponse<SupplierContract>>() {
-				});
+		SupplierResponse result = restTemplate.postForObject(url, null, SupplierResponse.class);
 
-		if (result.getData() != null && result.getData().size() == 1) {
-			return result.getData().get(0);
+		if (result.getSuppliers() != null && result.getSuppliers().size() == 1) {
+			return result.getSuppliers().get(0);
 		} else {
 			return null;
 		}

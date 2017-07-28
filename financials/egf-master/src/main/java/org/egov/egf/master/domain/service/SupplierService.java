@@ -5,7 +5,6 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.Supplier;
@@ -13,7 +12,7 @@ import org.egov.egf.master.domain.model.SupplierSearch;
 import org.egov.egf.master.domain.repository.BankAccountRepository;
 import org.egov.egf.master.domain.repository.BankRepository;
 import org.egov.egf.master.domain.repository.SupplierRepository;
-import org.egov.egf.master.web.contract.SupplierContract;
+import org.egov.egf.master.web.requests.SupplierRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +41,7 @@ public class SupplierService {
 	@Autowired
 	private BankRepository bankRepository;
 
-	public BindingResult validate(List<Supplier> suppliers, String method, BindingResult errors) {
+	private BindingResult validate(List<Supplier> suppliers, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -95,6 +94,7 @@ public class SupplierService {
 		return suppliers;
 	}
 
+	@Transactional
 	public List<Supplier> add(List<Supplier> suppliers, BindingResult errors) {
 		suppliers = fetchRelated(suppliers);
 		validate(suppliers, ACTION_CREATE, errors);
@@ -105,6 +105,7 @@ public class SupplierService {
 
 	}
 
+	@Transactional
 	public List<Supplier> update(List<Supplier> suppliers, BindingResult errors) {
 		suppliers = fetchRelated(suppliers);
 		validate(suppliers, ACTION_UPDATE, errors);
@@ -115,7 +116,7 @@ public class SupplierService {
 
 	}
 
-	public void addToQue(CommonRequest<SupplierContract> request) {
+	public void addToQue(SupplierRequest request) {
 		supplierRepository.add(request);
 	}
 
@@ -132,4 +133,5 @@ public class SupplierService {
 	public Supplier update(Supplier supplier) {
 		return supplierRepository.update(supplier);
 	}
+
 }

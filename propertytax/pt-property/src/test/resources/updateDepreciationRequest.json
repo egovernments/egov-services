@@ -13,7 +13,7 @@
     },
     "depreciations":[{
     	"id":"5",
-    	"tenantId":"kiranprasad",
+    	"tenantId":"kiran",
     	"code":"pra",
          "auditDetails":{
       	"createdBy":null,

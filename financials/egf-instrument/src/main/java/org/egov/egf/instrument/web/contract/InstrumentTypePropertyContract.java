@@ -1,8 +1,9 @@
 package org.egov.egf.instrument.web.contract;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.instrument.domain.model.TransactionType;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -11,23 +12,26 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "transactionType","reconciledOncreate","statusOnCreate","statusOnUpdate","statusOnReconcile"})
-public class InstrumentTypePropertyContract extends AuditableContract{
-	
+@JsonPropertyOrder({ "transactionType", "reconciledOncreate", "statusOnCreate", "statusOnUpdate", "statusOnReconcile" })
+public class InstrumentTypePropertyContract extends AuditableContract {
+
+	private String id;
 	@NotNull
-	private TransactionType transactionType;
+	private TransactionTypeContract transactionType;
 	@NotNull
 	private Boolean reconciledOncreate;
 	@NotNull
-	private InstrumentStatusContract statusOnCreate;
+	private FinancialStatusContract statusOnCreate;
 	@NotNull
-	private InstrumentStatusContract statusOnUpdate;
+	private FinancialStatusContract statusOnUpdate;
 	@NotNull
-	private InstrumentStatusContract statusOnReconcile;
+	private FinancialStatusContract statusOnReconcile;
+
 }

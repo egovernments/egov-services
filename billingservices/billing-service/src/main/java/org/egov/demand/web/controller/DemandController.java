@@ -50,6 +50,8 @@ import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.demand.web.validator.DemandValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +70,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DemandController {
 
+	private static final Logger logger = LoggerFactory.getLogger(DemandController.class);
+
 	@Autowired
 	private DemandService demandService;
 
@@ -76,10 +80,10 @@ public class DemandController {
 
 	@Autowired
 	private DemandValidator demandValidator;
-	
+
 	/**
 	 * API to create demands
-	 * 
+	 *
 	 * @param demandRequest
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
@@ -88,7 +92,7 @@ public class DemandController {
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
-		log.debug("the demand request object : " + demandRequest);
+		logger.info("the demand request object : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
@@ -98,7 +102,7 @@ public class DemandController {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
 		DemandResponse demandResponse =  demandService.create(demandRequest);
-		log.debug("the Response Object from service : "+demandResponse);
+		logger.info("the Response Object from service : "+demandResponse);
 		return new ResponseEntity<>(demandResponse, HttpStatus.CREATED);
 	}
 
@@ -126,14 +130,14 @@ public class DemandController {
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
-		
+
 		demandValidator.validate(demandRequest, bindingResult);
 		return new ResponseEntity<>(demandService.updateCollection(demandRequest), HttpStatus.CREATED);
 	}
 
 	@PostMapping("_search")
 	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid DemandCriteria demandCriteria, BindingResult bindingResult) {
+									@ModelAttribute @Valid DemandCriteria demandCriteria, BindingResult bindingResult) {
 
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (bindingResult.hasErrors()) {
@@ -144,7 +148,7 @@ public class DemandController {
 
 	@PostMapping("/demanddetail/_search")
 	public ResponseEntity<?> demandDetailSearch(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid DemandDetailCriteria demandDetailCriteria, BindingResult bindingResult) {
+												@ModelAttribute @Valid DemandDetailCriteria demandDetailCriteria, BindingResult bindingResult) {
 
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (bindingResult.hasErrors()) {

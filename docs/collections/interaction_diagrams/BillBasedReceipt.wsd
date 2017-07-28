@@ -1,11 +1,12 @@
 title Bill Based Collection
 
-Client->+BillingSvc: Search Demand & Create Bill
+Client->+BillingSvc: Search Demand & Generate Bill
 note over Client,BillingSvc
-    Validate search request and 
-    prepare bill response
+    Validate search request and Post the request to
+    billing service to generate bill for the 
+    given parameters and prepare bill response
 end note
-BillingSvc->-Client: Demand/Bill Response
+BillingSvc->-Client: Bill Response
 
 Client->+ReceiptSvc: Get collection modes allowed and bank List
 note over Client,ReceiptSvc
@@ -36,13 +37,13 @@ note over ReceiptSvc,BusinessDetailsSvc
     will be used to persist receipt.
 end note
 BusinessDetailsSvc->-ReceiptSvc: BusinessDetailsSvc
+ReceiptSvc->ReceiptSvc: Persist receipt
 ReceiptSvc->+KafkaQSvc: Queue for further processing
 ReceiptSvc->-Client: Create receipt response
-KafkaQSvc->ReceiptSvc: Persist receipt
 
 KafkaQSvc->WorkflowSvc: Initiate workflow
 KafkaQSvc->InstrumentSvc : Persist instrument
 KafkaQSvc->VoucherSvc: Post voucher in financials
-KafkaQSvc->BillingSvc: Update demand system based on receipt date.
+KafkaQSvc->BillingSvc: Update demand system based on receipt created.
 KafkaQSvc->ESSvc: Push to elastic search
 KafkaQSvc->NotificationSvc: Send email/sms

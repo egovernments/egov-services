@@ -38,16 +38,22 @@ module.exports = {
         else
             url += "?"
         for (var variable in queryObject) {
-            if (typeof(queryObject[variable]) != "undefined" && (queryObject[variable] != "" ) ) {
+              // if (typeof(queryObject[variable]) != "undefined" && (queryObject[variable] != "" ) ) {
+            if (typeof(queryObject[variable]) != "undefined") {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }
+
+        if(/_search/.test(context)) {
+            url += "&pageSize=500";
+        }
+
         requestInfo.authToken = localStorage.getItem("token");
         if(isTimeLong){
-            requestInfo.ts = new Date().getTime();	
+            requestInfo.ts = new Date().getTime();
         }
-		
-		
+
+
         body["RequestInfo"] = requestInfo;
 
         return instance.post(url, body).then(function(response) {
@@ -85,6 +91,10 @@ module.exports = {
             if (typeof queryObject[variable] != "undefined") {
                 url += "&" + variable + "=" + queryObject[variable];
             }
+        }
+
+        if(/_search/.test(context)) {
+            url += "&pageSize=500";
         }
         return instance.get(url).then(function(response) {
             return response.data;

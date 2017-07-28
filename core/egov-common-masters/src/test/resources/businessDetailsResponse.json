@@ -27,48 +27,13 @@
             "accountDetails": [
                 {
                     "id": 1,
-                    "businessDetails": {
-                        "id": 1,
-                        "code": "TL",
-                        "name": "Trade Licence",
-                        "active": true,
-                        "businessCategory": 1,
-                        "businessType": "C",
-                        "businessUrl": "/receipts/receipt-create.action",
-                        "voucherCreation": true,
-                        "isVoucherApproved": true,
-                        "voucherCutoffDate": null,
-                        "ordernumber": 2,
-                        "fund": "12",
-                        "function": "123",
-                        "tenantId": "default",
-                        "department": "56",
-                        "fundSource": "234",
-                        "functionary": "456"
-                    },
+                    "businessDetails":1,
                     "chartOfAccounts": 56,
                     "amount": 1000.0
                 },
                 {
                     "id": 2,
-                    "businessDetails": {
-                        "id": 1,
-                        "code": "TL",
-                        "name": "Trade Licence",
-                        "active": true,
-                        "businessCategory": 1,
-                        "businessType": "C",
-                        "businessUrl": "/receipts/receipt-create.action",
-                        "voucherCreation": true,
-                        "isVoucherApproved": true,
-                        "ordernumber": 2,
-                        "fund": "12",
-                        "function": "123",
-                        "tenantId": "default",
-                        "department": "56",
-                        "fundSource": "234",
-                        "functionary": "456"
-                    },
+                    "businessDetails":1,
                     "chartOfAccounts": 57,
                     "amount": 2000.0
                 }
@@ -79,58 +44,14 @@
                     "detailType": 34,
                     "detailKey": 23,
                     "amount": 10000.0,
-                    "businessAccountDetails": {
-                        "id": 1,
-                        "businessDetails": {
-                            "id": 1,
-                            "code": "TL",
-                            "name": "Trade Licence",
-                            "active": true,
-                            "businessCategory": 1,
-                            "businessType": "C",
-                            "businessUrl": "/receipts/receipt-create.action",
-                            "voucherCreation": true,
-                            "isVoucherApproved": true,
-                            "ordernumber": 2,
-                            "fund": "12",
-                            "function": "123",
-                            "tenantId": "default",
-                            "department": "56",
-                            "fundSource": "234",
-                            "functionary": "456"
-                        },
-                        "chartOfAccounts": 56,
-                        "amount": 1000.0
-                    }
+                    "businessAccountDetails":1
                 },
                 {
                     "id": 2,
                     "detailType": 35,
                     "detailKey": 24,
                     "amount": 20000.0,
-                    "businessAccountDetails": {
-                        "id": 1,
-                        "businessDetails": {
-                            "id": 1,
-                            "code": "TL",
-                            "name": "Trade Licence",
-                            "active": true,
-                            "businessCategory": 1,
-                            "businessType": "C",
-                            "businessUrl": "/receipts/receipt-create.action",
-                            "voucherCreation": true,
-                            "isVoucherApproved": true,
-                            "ordernumber": 2,
-                            "fund": "12",
-                            "function": "123",
-                            "tenantId": "default",
-                            "department": "56",
-                            "fundSource": "234",
-                            "functionary": "456"
-                        },
-                        "chartOfAccounts": 56,
-                        "amount": 1000.0
-                    }
+                    "businessAccountDetails":1
                 }
             ]
         },
@@ -154,47 +75,13 @@
             "accountDetails": [
                 {
                     "id": 3,
-                    "businessDetails": {
-                        "id": 2,
-                        "code": "PT",
-                        "name": "Property Tax",
-                        "active": true,
-                        "businessCategory": 1,
-                        "businessType": "C",
-                        "businessUrl": "/receipts/receipt-create.action",
-                        "voucherCreation": true,
-                        "isVoucherApproved": true,
-                        "ordernumber": 2,
-                        "fund": "12",
-                        "function": "123",
-                        "tenantId": "default",
-                        "department": "56",
-                        "fundSource": "234",
-                        "functionary": "456"
-                    },
+                    "businessDetails":2,
                     "chartOfAccounts": 56,
                     "amount": 1000.0
                 },
                 {
                     "id": 4,
-                    "businessDetails": {
-                        "id": 2,
-                        "code": "PT",
-                        "name": "Property Tax",
-                        "active": true,
-                        "businessCategory": 1,
-                        "businessType": "C",
-                        "businessUrl": "/receipts/receipt-create.action",
-                        "voucherCreation": true,
-                        "isVoucherApproved": true,
-                        "ordernumber": 2,
-                        "fund": "12",
-                        "function": "123",
-                        "tenantId": "default",
-                        "department": "56",
-                        "fundSource": "234",
-                        "functionary": "456"
-                    },
+                    "businessDetails":2,
                     "chartOfAccounts": 57,
                     "amount": 2000.0
                 }
@@ -205,58 +92,14 @@
                     "detailType": 34,
                     "detailKey": 23,
                     "amount": 10000.0,
-                    "businessAccountDetails": {
-                        "id": 3,
-                        "businessDetails": {
-                            "id": 2,
-                            "code": "PT",
-                            "name": "Property Tax",
-                            "active": true,
-                            "businessCategory": 1,
-                            "businessType": "C",
-                            "businessUrl": "/receipts/receipt-create.action",
-                            "voucherCreation": true,
-                            "isVoucherApproved": true,
-                            "ordernumber": 2,
-                            "fund": "12",
-                            "function": "123",
-                            "tenantId": "default",
-                            "department": "56",
-                            "fundSource": "234",
-                            "functionary": "456"
-                        },
-                        "chartOfAccounts": 56,
-                        "amount": 1000.0
-                    }
+                    "businessAccountDetails": 3
                 },
                 {
                     "id": 4,
                     "detailType": 35,
                     "detailKey": 24,
                     "amount": 20000.0,
-                    "businessAccountDetails": {
-                        "id": 3,
-                        "businessDetails": {
-                            "id": 2,
-                            "code": "PT",
-                            "name": "Property Tax",
-                            "active": true,
-                            "businessCategory": 1,
-                            "businessType": "C",
-                            "businessUrl": "/receipts/receipt-create.action",
-                            "voucherCreation": true,
-                            "isVoucherApproved": true,
-                            "ordernumber": 2,
-                            "fund": "12",
-                            "function": "123",
-                            "tenantId": "default",
-                            "department": "56",
-                            "fundSource": "234",
-                            "functionary": "456"
-                        },
-                        "chartOfAccounts": 56,
-                        "amount": 1000.0
-                    }
+                    "businessAccountDetails":3
                 }
             ]
         }

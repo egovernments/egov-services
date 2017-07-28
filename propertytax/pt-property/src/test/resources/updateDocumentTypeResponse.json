@@ -1,0 +1,15 @@
+{
+    "responseInfo": {
+    },
+    "documentType": [
+        {
+            "tenantId": "default2",
+            "name": "veswanth2",
+            "code": "codevalue2",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null
+            }
+        }
+    ]
+}

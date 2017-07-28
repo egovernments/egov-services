@@ -13,8 +13,8 @@
       "structureClasses":[  
          {  
             "tenantId":"default",
-            "name":null,
-            "code":null,
+            "name":"kkl16",
+            "code":"1234",
             "nameLocal":null,
             "description":null,
             "active":null,

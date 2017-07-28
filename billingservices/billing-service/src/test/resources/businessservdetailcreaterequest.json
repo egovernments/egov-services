@@ -12,6 +12,6 @@
     "businessService":"Test Business Service",
     "collectionModesNotAllowed":[],
     "tenantId":"ap.kurnool",
-    "auditDetail": null
+    "auditDetails": null
   }]
 }

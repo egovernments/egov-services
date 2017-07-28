@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap'
+import {Card, CardHeader, CardText} from 'material-ui/Card'
 
 import UiTextField from './components/UiTextField'
 import UiSelectField from './components/UiSelectField'
@@ -17,33 +17,69 @@ import UiMultiFileUpload from './components/UiMultiFileUpload'
 import UiSingleFileUpload from './components/UiSingleFileUpload'
 import UiAadharCard from './components/UiAadharCard'
 import UiPanCard from './components/UiPanCard'
-
+import UiLabel from './components/UiLabel'
+import UiRadioButton from './components/UiRadioButton'
+import UiTextSearch from './components/UiTextSearch'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
 
 export default class ShowFields extends Component {
   constructor(props) {
        super(props);
+       this.state = {};
   }
 
-  renderGroups=(groups, noCols, uiFramework="google")=>
-  {
+  changeExpanded = (name) => {
+    this.setState({
+      [name]: !this.state[name]
+    })
+  }
+
+  renderGroups=(groups, noCols, uiFramework="google", jsonPath) => {
     let {renderField}=this;
+    let {addNewCard, removeCard} = this.props;
+    let self = this;
     switch (uiFramework) {
       case "google":
-        return groups.map((group,groupIndex)=>{
-          return (<Card key={groupIndex}>
-                    <CardHeader style={{paddingBottom:0}} title={group.label}/>
-                    <CardText style={{padding:0}}>
+        return groups.map((group, groupIndex)=>{
+          return (<Card key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+                    <CardHeader style={{paddingBottom:0}} title={group.label} showExpandableButton={true} actAsExpander={true}/>
+                    <CardText style={{padding:0}} expandable={true}>
                     <Grid>
                       <Row>
-                        {group.fields.map((field,fieldIndex)=>{
-                            return (
+                        {group.fields.map((field, fieldIndex)=>{
+                            if(!field.isHidden) {
+                              return (
                                 <Col key={fieldIndex} xs={12} md={noCols}>
-                                    {renderField(field)}
+                                    {renderField(field, self.props.screen)}
                                 </Col>
-                            )
+                              )
+                            }
                         })}
                       </Row>
+                      {group.multiple && <Row style={{"visibility": (groupIndex == (groups.length-1)) ? "initial" : "hidden" }}>
+                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
+                          <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath)}}>
+                            <span className="glyphicon glyphicon-plus"></span>
+                          </FloatingActionButton>
+                        </Col>
+                      </Row>}
+                      {group.multiple && <Row style={{"visibility": (groupIndex < (groups.length-1)) ? "initial" : "hidden" }}>
+                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
+                          <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex)}}>
+                            <span className="glyphicon glyphicon-minus"></span>
+                          </FloatingActionButton>
+                        </Col>
+                      </Row>}
                     </Grid>
+                    <div style={{"marginLeft": "15px"}}>
+                      {
+                        group.children && 
+                        group.children.length ? 
+                        group.children.map(function(child) {
+                          return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
+                        }) : ""
+                      }
+                    </div>
                     </CardText>
                 </Card>)
         })
@@ -52,7 +88,10 @@ export default class ShowFields extends Component {
   }
 
 
-  renderField=(item)=> {
+  renderField=(item, screen)=> {
+    if(screen == "view") {
+      item.type = "label";
+    }
   	switch(item.type) {
   		case 'text':
   			 return <UiTextField ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
@@ -93,13 +132,19 @@ export default class ShowFields extends Component {
         return <UiPanCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'aadhar':
         return <UiAadharCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'label':
+        return <UiLabel getVal={this.props.getVal} item={item}/>
+      case 'radio':
+        return <UiRadioButton ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'textSearch':
+        return <UiTextSearch ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
     }
   }
 
   render() {
     let  {groups,noCols,uiFramework}=this.props;
   	return ( <div>
-  	 	{this.renderGroups(groups,noCols,uiFramework)}
+  	 	{this.renderGroups(groups, noCols, uiFramework)}
   	 </div>)
   }
 }

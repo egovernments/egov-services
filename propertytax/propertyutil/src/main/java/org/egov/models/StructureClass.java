@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties("data")
 public class StructureClass {
 	@JsonProperty("id")
 	private Long id = null;
@@ -33,7 +35,7 @@ public class StructureClass {
 
 	@JsonProperty("code")
 	@NotNull
-	@Size(min = 4, max = 16)
+	@Size(min = 4, max = 64)
 	private String code = null;
 
 	@JsonProperty("nameLocal")

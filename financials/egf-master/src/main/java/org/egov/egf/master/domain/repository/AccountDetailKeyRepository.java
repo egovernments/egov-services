@@ -1,15 +1,18 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.AccountDetailKey;
 import org.egov.egf.master.domain.model.AccountDetailKeySearch;
 import org.egov.egf.master.persistence.entity.AccountDetailKeyEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.AccountDetailKeyJdbcRepository;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
+import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountDetailKeyRepository {
@@ -20,22 +23,35 @@ public class AccountDetailKeyRepository {
 	private MastersQueueRepository accountDetailKeyQueueRepository;
 
 	public AccountDetailKey findById(AccountDetailKey accountDetailKey) {
-		return accountDetailKeyJdbcRepository.findById(new AccountDetailKeyEntity().toEntity(accountDetailKey))
-				.toDomain();
+		AccountDetailKeyEntity entity = accountDetailKeyJdbcRepository
+				.findById(new AccountDetailKeyEntity().toEntity(accountDetailKey));
+		return entity.toDomain();
 
 	}
 
+	@Transactional
 	public AccountDetailKey save(AccountDetailKey accountDetailKey) {
-		return accountDetailKeyJdbcRepository.create(new AccountDetailKeyEntity().toEntity(accountDetailKey))
-				.toDomain();
+		AccountDetailKeyEntity entity = accountDetailKeyJdbcRepository
+				.create(new AccountDetailKeyEntity().toEntity(accountDetailKey));
+		return entity.toDomain();
 	}
 
-	public AccountDetailKey update(AccountDetailKey entity) {
-		return accountDetailKeyJdbcRepository.update(new AccountDetailKeyEntity().toEntity(entity)).toDomain();
+	@Transactional
+	public AccountDetailKey update(AccountDetailKey accountDetailKey) {
+		AccountDetailKeyEntity entity = accountDetailKeyJdbcRepository
+				.update(new AccountDetailKeyEntity().toEntity(accountDetailKey));
+		return entity.toDomain();
 	}
 
-	public void add(CommonRequest<AccountDetailKeyContract> request) {
-		accountDetailKeyQueueRepository.add(request);
+	public void add(AccountDetailKeyRequest request) {
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+			message.put("accountdetailkey_create", request);
+		} else {
+			message.put("accountdetailkey_update", request);
+		}
+		accountDetailKeyQueueRepository.add(message);
 	}
 
 	public Pagination<AccountDetailKey> search(AccountDetailKeySearch domain) {

@@ -45,9 +45,13 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.demand.contract.Demand;
+import org.egov.wcms.transaction.demand.contract.DemandRequest;
+import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
+import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
@@ -68,6 +72,8 @@ import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transaction.web.errorhandler.Error;
 import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -81,6 +87,8 @@ public class RestConnectionService {
 
     @Autowired
     private ConfigurationManager configurationManager;
+    
+    private static final Logger logger = LoggerFactory.getLogger(RestConnectionService.class);
 
     public CategoryResponseInfo getCategoryTypeByName(WaterConnectionReq waterConnectionRequest) {
         StringBuilder url = new StringBuilder();
@@ -244,7 +252,7 @@ public class RestConnectionService {
                     "Error while Fetching Data from PropertyTax", requestInfo);
         }
 
-        if (propResp != null && !propResp.getProperties().isEmpty())
+        if (propResp != null && propResp.getProperties()!=null && !propResp.getProperties().isEmpty())
             waterRequestReq.getConnection().setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
 
         return propResp;
@@ -356,9 +364,8 @@ public class RestConnectionService {
     }
 
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
-        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
         StringBuilder url = new StringBuilder();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
                 .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic()).append("?propertyType=")
                 .append(waterConnectionRequest.getConnection().getProperty().getPropertyType())
@@ -383,45 +390,6 @@ public class RestConnectionService {
         return donation;
     }
 
-    public String generateAcknowledgementNumber(final String tenantId) {
-        StringBuilder url = new StringBuilder();
-        String ackNumber = null;
-        url.append(configurationManager.getIdGenServiceBasePathTopic())
-                .append(configurationManager.getIdGenServiceCreatePathTopic());
-        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
-        List<AckIdRequest> idRequests = new ArrayList<>();
-        AckIdRequest idrequest = new AckIdRequest();
-
-        idrequest.setIdName(configurationManager.getIdGenNameServiceTopic());
-        idrequest.setTenantId(tenantId);
-        idrequest.setFormat(configurationManager.getIdGenFormatServiceTopic());
-        AckNoGenerationRequest idGeneration = new AckNoGenerationRequest();
-        idRequests.add(idrequest);
-        idGeneration.setIdRequests(idRequests);
-        idGeneration.setRequestInfo(requestInfo);
-        String response = null;
-        try {
-            response = new RestTemplate().postForObject(url.toString(), idGeneration, String.class);
-        } catch (Exception ex) {
-            throw new IdGenerationException("Error While generating ACK number", "Error While generating ACK number",
-                    requestInfo);
-        }
-        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-        IdGenErrorRes errorResponse = gson.fromJson(response, IdGenErrorRes.class);
-        AckNoGenerationResponse idResponse = gson.fromJson(response, AckNoGenerationResponse.class);
-        if (!errorResponse.getErrors().isEmpty()) {
-            throw new IdGenerationException("Error While generating ACK number", "Error While generating ACK number",
-                    requestInfo);
-        } else if (idResponse.getResponseInfo() != null) {
-            if (idResponse.getResponseInfo().getStatus().toString()
-                    .equalsIgnoreCase("SUCCESSFUL")) {
-                if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-                    ackNumber = idResponse.getIdResponses().get(0).getId();
-            }
-        }
-
-        return ackNumber;
-    }
     
     public String getFinancialYear(final String tenantId) { 
             StringBuilder url = new StringBuilder();
@@ -458,12 +426,12 @@ public class RestConnectionService {
             return finYear;
     }
     
-    public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic, final String formatServiceTopic) {
+    public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic, final String formatServiceTopic,RequestInfo requestInfo) {
         StringBuilder url = new StringBuilder();
         String ackNumber = null;
         url.append(configurationManager.getIdGenServiceBasePathTopic())
                 .append(configurationManager.getIdGenServiceCreatePathTopic());
-        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+//        final RequestInfo RequestInfo = RequestInfo.builder().ts(11111111l).build();
         List<AckIdRequest> idRequests = new ArrayList<>();
         AckIdRequest idrequest = new AckIdRequest();
         
@@ -493,16 +461,51 @@ public class RestConnectionService {
                 }
         }
         
-        if(!nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
+        if(nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
         	//Enable the below method call to get financial year from the Finance Service
             //String finYear = getFinancialYear(tenantId);
             String finYear = getFiscalYear();
             if(null!=finYear && !finYear.isEmpty()) { 
-            	return tenantId.substring(0,4).concat(ackNumber).concat("/"+finYear);
+            	return ackNumber=tenantId.substring(0,4).concat(ackNumber).concat("/"+finYear);
             }	
         }
 
-        return tenantId.substring(0,4).concat(ackNumber);
+        return ackNumber;
+    }
+    
+    public Demand getDemandEstimation(Connection connection) { 
+    	StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getBillingDemandServiceHostNameTopic())
+                .append(configurationManager.getSearchbillingDemandServiceTopic());
+        url.append("?tenantId=" + connection.getTenantId());
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+        DemandRequest demandRequest = new DemandRequest();
+        demandRequest.setRequestInfo(requestInfo);
+        List<Demand> demandList = new ArrayList<>();
+        String response = null;
+        try {
+            response = new RestTemplate().postForObject(url.toString(), demandRequest, String.class);
+        } catch (Exception ex) {
+            // throw new DemandException("Error While obtaining Demand Estimation Value", "Error While obtaining Demand Estimation Value",requestInfo);
+        	logger.info(ex.getMessage());
+        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+        DemandResponse demandResponse = gson.fromJson(response, DemandResponse.class);
+		if (null != demandResponse) {
+			logger.info("Demand Response : " + demandResponse);
+			if (null != demandResponse.getResponseInfo()) {
+				if (demandResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
+					if (demandResponse.getDemands() != null && !demandResponse.getDemands().isEmpty()) {
+						demandList = demandResponse.getDemands();
+					}
+
+				}
+			}
+		}
+        if(demandList.size() > 0) { 
+        	return demandList.get(0); 
+        }
+        return null;
     }
     
     public List<ErrorResponse> populateErrors() {

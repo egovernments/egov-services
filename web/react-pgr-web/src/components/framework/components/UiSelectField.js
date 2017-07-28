@@ -20,7 +20,7 @@ class UiSelectField extends Component {
 	{
 		let {item, setDropDownData, useTimestamp}=this.props;
 		// console.log(this.props.item);
-		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1)
+		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1 && item.url.search("{")==-1)
 		{
 			let splitArray=item.url.split("?");
 			let context="";
@@ -30,8 +30,15 @@ class UiSelectField extends Component {
 				context+=splitArray[0].split("/")[j]+"/";
 			}
 
+			let queryStringObject=splitArray[1].split("|")[0].split("&");
+			for (var i = 0; i < queryStringObject.length; i++) {
+				if (i) {
+					id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+				}
+			}
+
 			var response=Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
-				
+
 					let keys=jp.query(response,splitArray[1].split("|")[1]);
 					let values=jp.query(response,splitArray[1].split("|")[2]);
 					let dropDownData=[];

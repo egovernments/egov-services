@@ -55,7 +55,8 @@ public class MarriageRegnService {
 
 	public MarriageRegn createAsync(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
-		marriageRegn.setApplicationNumber(marriageRegnRepository.generateApplicationNumber());
+		String applicationNumber=marriageRegnRepository.generateApplicationNumber();
+		marriageRegn.setApplicationNumber(applicationNumber);  
 		populateAuditDetailsForMarriageRegnCreate(marriageRegnRequest);
 	
 		String marriageRegnRequestJson = null;

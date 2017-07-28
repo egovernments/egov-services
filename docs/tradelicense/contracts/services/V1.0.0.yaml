@@ -1,0 +1,431 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov Trade License System.
+  description: |
+    APIs for Trade License module. This modules handles creation of new properties, changes to existing properties (Detail Updates, renewal, closure, title transfer etc.), search of required Trade License and Trade License Fee calculation, demand generation, notices to enable ULBs to cmpletely manage the Trade Licenses within their jurisdiction.
+  contact:
+    name: Phani Kiran Gutha ( phani)
+    email : phani.kiran@walkingtree.tech
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+paths:
+  /_search:
+    post:
+      summary: Get the list of Trade License defined in the system.
+      description: |
+          Search and get Trade License(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Trade License(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of TradeLicense as defined in TradeLicense Response model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: active
+          in: query
+          description: True will be set in cases where only active trade liceses are needed and False will be set when inactive trade licenses are needed and no value will be set when all trade licenses are needed.
+          required: false
+          type: boolean
+          allowEmptyValue: true
+        - name: tradeLicenseId
+          in: query
+          description: Primary key of Trade License object.
+          required: false
+          type: string
+          format: varchar
+        - name: applicationNumber
+          in: query
+          required: false
+          description: The unique reference number for a trade license Application
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: licenseNumber
+          in: query
+          required: false
+          description: The unique  license number no for a Trade license.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: oldLicenseNumber
+          in: query
+          required: false
+          description: The unique old license number no for a Trade license.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: mobileNumber
+          in: query
+          required: false
+          description: The mobile number of a Trade  owner.
+          type: string
+          pattern: "[0-9]"
+          maxLength: 10
+          exclusiveMaximum: true
+        - name: aadhaarNumber
+          in: query
+          required: false
+          description: The Aadhaar number of a Trade owner.
+          type: string
+          pattern: "[0-9]"
+          maxLength: 12
+          exclusiveMaximum: true
+        - name: eamilId
+          in: query
+          required: false
+          description: Email id of the Trade Owner
+          type: string
+        - name: propertyAssesmentNo
+          in: query
+          description: Assesment Number of the property in which trade is running
+          required: false
+          type: string
+          maxLength: 15
+        - name: revenueWard
+          in: query
+          description: Revenue Ward boundary where the Trade is located.
+          required: false
+          type: integer
+          format: int64
+        - name: locality
+          in: query
+          description: Locality boundary where the Trade is located.
+          required: false
+          type: integer
+          format: int64
+        - name: ownerName
+          in: query
+          required: false
+          description: The name of a Trade owner.
+          type: string
+          minLength: 4
+          maxLength: 100
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: tradeTitle
+          in: query
+          description: Title of the Trade .
+          required: false
+          type: string
+          maxLength: 33
+        - name: tradeType
+          in: query
+          description: Nature of Business of the Trade. Possible values are from BusinessNature ENUM
+          required: false
+          type: string
+        - name: tradeCategory
+          in: query
+          description: Unique reference of the Category of the trade
+          required: false
+          type: integer
+        - name: tradeSubCategory
+          in: query
+          description: Unique reference of the Sub Category of the trade
+          required: false
+          type: integer
+      responses:
+        200:
+          description: Trade License(s) Retrived Successfully
+          schema:
+            $ref: "#/definitions/TradeLicenseResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - TradeLicense
+       
+  /_create:
+    post:
+      summary: Create new Trade Licenses.
+      description: |
+          To create new TradeLicense in the system. API supports bulk creation with max limit as defined in the TradeLicenseRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one TradeLicense, please pass array with one TradeLicense object. 
+          Following Conditions are applied -
+            1. When isLegacy is True then oldLicenseNumber is treated as mandatory
+            2. PropertyAssesmentNumber is not mandatory if entered then validate. Invalid number fails trade license creation
+            3. adhaar Number is not mandatory if entered it will validated, Invalid number fails trade license creation
+          
+      parameters:
+        - name: TradeLicense
+          in: body
+          description: Details for the new property + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/TradeLicenseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Trade License(s) created sucessfully
+          schema:
+            $ref: '#/definitions/TradeLicenseResponse'
+        400:
+          description: TradeLicense(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - TradeLicense  
+        
+  
+            
+  
+
+definitions:
+########################################################
+#RequestInfo and ResponseInfo object should be reffered from Common.
+#Definition must start with Upper case followed by camel case.
+#Every model will have tenantId
+########################################################
+    
+  TradeLicense:
+    type: object
+    description: A Object holds the basic data for a Trade License
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Trade License
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+      applicationType:
+        type: string
+        description: ApplicationType should be refered here
+      applicationNumber:
+        type: string
+        description: Unique identfiication number of the Trade License Appilcaiton . This is a unique in system. This is mandatory but always be generated on Trade License create Request processing.
+        maxLength: 128
+        minLength: 6  
+      licenseNumber:
+        type: string
+        description: Unique License Number of the Trade. This is a unique in system. This is mandatory but always be generated on the final approval.
+        maxLength: 128
+        minLength: 6
+      oldLicenseNumber:
+        type: string
+        description: Old license number of the Trade. ULBs have the existing Trade License in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
+        maxLength: 128
+        minLength: 4
+      applicationDate:
+        type: string
+        format: date
+        description: date on which applicaiton has been generated for new Trade License
+      adhaarNumber:
+        type: string
+        description : Adhaar Number of trade owner
+        pattern: "[0-9]"
+        maxLength: 12
+        exclusiveMaximum: true
+      mobileNumber:
+        type: string
+        description: Mobile Number of the trade owner
+        pattern: "[0-9]"
+        maxLength: 10
+        exclusiveMaximum: true
+      ownerName:
+        type: string
+        description: Name of the Trade Name
+        maxLength: 32
+        minLength: 4
+      fatherSpouseName:
+        type: string
+        description: Father/Spouse Name of the Trade Owner
+        maxLength: 32
+        minLength: 4
+      emailId:
+        type: string
+        description: EmailID of the Trade Owner
+      ownerAddress:
+        description: address of the Trade Owner
+        type: string
+        maxLength: 256
+      propertyAssesmentNo:
+        type: string
+        maxLength: 15
+        exclusiveMaximum: true
+        description: Assesment Number of the Property in which Trade is established or running
+      localityId:
+        type: integer
+        format: int64
+        description: Locality Id of the Property in which Trade is established or running
+      wardId:
+        type: integer
+        format: int64
+        description: Ward Id of the Property in which Trade is established or running
+      tradeAddress:
+        type: string
+        description: Address of the property in which Trade is established or running
+        maxLength: 256
+      ownerShipType:
+        $ref : '#/definitions/OwnerShipType'
+      tradeTitle:
+        type: string
+        pattern: '[a-zA-Z0-9\s\.,]'
+        maxLength: 33
+      tradeType:
+        type: string
+        description: Business Nature EMUM will be refered here
+      categoryId:
+        type: integer
+        format: int64
+        description: Unique identifier of the Category
+      subCategoryId:
+        type: integer
+        format: int64
+        description: Unique identifier of the SubCategory
+      uomId:
+        type: integer
+        format: int64
+        description: Unique indentifier of the Unit of Measure
+      uomValue:
+        type: integer
+        format: int64
+        description: The numeric value for the given UOM, based on which the license fees is calculated.
+      remarks: 
+        type: string
+        description: Remarks for the Trade License
+        maxLength: 256
+      tradeCommencementDate:
+        type: string
+        format: date
+        description:  Commencement Date of the trade
+      agrementDate:
+        type: integer
+        format: int64
+        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running
+      agrementNo:
+        type: string
+        maxLength: 128
+        description: Document of Registered lease agreement between the property owner and trade owner
+      isLegacy:
+        type: boolean
+        default: false
+        description: True to be set to mark this Trade License as Legacy one, In this case oldLicenseNumber will be mandatory, False to be set to mark this Trade License as non legacy
+      active:
+        type: boolean
+        default: true
+        description: True to be set to mark this Trade License as Active, False to be set to mark this Trade License as inActive
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+    - tenantId
+    - mobileNumber
+    - applicationType
+    - ownerName
+    - fatherSpouseName
+    - emailId
+    - ownerAddress
+    - localityId
+    - wardId
+    - tradeAddress
+    - ownerShipType
+    - tradeTitle
+    - tradeType
+    - categoryId
+    - subCategoryId
+    - uomId
+    - uomValue
+    - tradeCommencementDate
+  OwnerShipType:
+    type: string
+    enum:
+      - STATE_GOVERNEMNT
+      - RENTED
+  TradeLicenseRequest:
+      description: Contract class to receive request. Array of TradeLicense items are used in case of create, whereas single TradeLicense item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        feeMatrixs:
+          description: Used for search result and create only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/TradeLicense'
+  TradeLicenseResponse:
+      description: Contract class to send response. Array of TradeLicense items are used in case of search results or response for create, whereas single TradeLicense item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        feeMatrixs:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/TradeLicense'
+      
+parameters:
+##########################################################
+#Parameter name must start with small case followed by camel case.
+##########################################################
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  sortProperty:
+    name: sort
+    in: query
+    description: TradeLicense results will be sorted by licenseNumber ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](licenseNumber|tradeTitle|ownerName)'
+    default:
+      - +licenseNumber
+tags:
+  - name: TradeLicense
+    description: APIs required for Trade License.

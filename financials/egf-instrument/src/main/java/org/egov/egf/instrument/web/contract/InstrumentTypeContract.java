@@ -38,8 +38,10 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.instrument.web.contract;
+
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -53,6 +55,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
@@ -75,12 +78,12 @@ public class InstrumentTypeContract extends AuditableContract {
 	@NotBlank
 	@Size(max=50,min=2)
 	private String name;
-	
+
 	/*
-	 * description specifies details of the instrument type . For example 
+	 * description specifies details of the instrument type . For example
 	 * type DD description may be Demand Draft
 	 */
-	
+
 	@Size(max=100)
 	private String description;
 
@@ -89,13 +92,12 @@ public class InstrumentTypeContract extends AuditableContract {
 	 */
 	@NotNull
 	private Boolean active;
-	
-	
+
+	@Valid
 	@NotNull
-	@Size(max=2,min=2)
-//	@DrillDownTable
+	@Size(max=2,min=2,message="")
 	private List<InstrumentTypePropertyContract> instrumentTypeProperties;
 
-	
+
 
 }

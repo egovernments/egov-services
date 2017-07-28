@@ -59,7 +59,7 @@ public class ECSType {
 	private String id;
 
 	/*
-	 * 
+	 *
 	 * type will give you name of the ECSType of ECS receipt made. Ex - ICICI,
 	 * ONLINE, etc,.
 	 */

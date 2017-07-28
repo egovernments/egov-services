@@ -31,4 +31,6 @@ public class TaxPeriodCriteria {
     private Long fromDate;
 
     private Long toDate;
+    
+    private Long date;
 }

@@ -31,18 +31,18 @@ public class WorkflowService {
             workflowResponse = workflowRepository.close(request);
         } else {
             ServiceRequest responseFromDB = complaintRestRepository.getComplaintByCrn(request.getTenantId(), request.getCrn());
-            String locationId = responseFromDB.getDynamicSingleValue("locationId");
-            String departmentId = responseFromDB.getDynamicSingleValue("departmentId");
-            String positionId = responseFromDB.getDynamicSingleValue("positionId");
-            String status = responseFromDB.getDynamicSingleValue("status");
+            String locationId = responseFromDB.getDynamicSingleValue("systemLocationId");
+            String departmentId = responseFromDB.getDynamicSingleValue("systemDepartmentId");
+            String positionId = responseFromDB.getDynamicSingleValue("systemPositionId");
+            String status = responseFromDB.getDynamicSingleValue("systemStatus");
             boolean isUpdate = false;
             if (!responseFromDB.getComplaintTypeCode().equals(request.getValueForKey("complaintTypeCode"))
                 || !locationId.equals(request.getValueForKey("boundaryId"))
                 || !positionId.equals(request.getPositionId().toString())) {
                 isUpdate = true;
-            } else if (!departmentId.equals(request.getValueForKey("departmentId"))
+            } else if (!departmentId.equals(request.getValueForKey("systemDepartmentId"))
                 || (!status.equals(request.getStatus())
-                || !responseFromDB.getDescription().equals(request.getValueForKey("approvalComments")))
+                || !responseFromDB.getDescription().equals(request.getValueForKey("systemApprovalComments")))
                 && !isUpdate) {
                 isUpdate = true;
             }

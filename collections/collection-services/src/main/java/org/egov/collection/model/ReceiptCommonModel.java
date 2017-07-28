@@ -39,26 +39,15 @@
  */
 package org.egov.collection.model;
 
+import lombok.*;
+import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.web.contract.*;
+
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.egov.collection.model.enums.CollectionType;
-import org.egov.collection.model.enums.ReceiptType;
-import org.egov.collection.web.contract.Bill;
-import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.Purpose;
-import org.egov.collection.web.contract.Receipt;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -73,7 +62,6 @@ public class ReceiptCommonModel {
 
 	public List<Receipt> toDomainContract() {
 		List<Receipt> receipts = new ArrayList<>();
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		for (ReceiptHeader receiptHeader : receiptHeaders) {
 
@@ -85,31 +73,53 @@ public class ReceiptCommonModel {
 			}
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 			for (ReceiptDetail rctDetail : listReceiptDetail) {
+				if(null != rctDetail.getDramount() ){
 				billAccountDetails.add(BillAccountDetail.builder().isActualDemand(rctDetail.getIsActualDemand())
 						.id(rctDetail.getId().toString()).tenantId(rctDetail.getTenantId())
 						.billDetail(rctDetail.getReceiptHeader().getId().toString())
 						.creditAmount(BigDecimal.valueOf(rctDetail.getCramount()))
 						.debitAmount(BigDecimal.valueOf(rctDetail.getDramount())).glcode(rctDetail.getChartOfAccount())
 						.purpose(Purpose.valueOf(rctDetail.getPurpose())).build());
+			
+				}else{
+					billAccountDetails.add(BillAccountDetail.builder().isActualDemand(rctDetail.getIsActualDemand())
+							.id(rctDetail.getId().toString()).tenantId(rctDetail.getTenantId())
+							.billDetail(rctDetail.getReceiptHeader().getId().toString())
+							.creditAmount(BigDecimal.valueOf(rctDetail.getCramount()))
+							.glcode(rctDetail.getChartOfAccount())
+							.purpose(Purpose.valueOf(rctDetail.getPurpose())).build());
+				}
+			}
+			CollectionType collectnType = null;
+			for(CollectionType coll: CollectionType.values()){
+				if(coll.getValue().equals(receiptHeader.getCollectionType())){
+					collectnType = coll;
+					break;
+				}
 			}
 			BillDetail billDetail = BillDetail.builder().id(receiptHeader.getId().toString()).billNumber(receiptHeader.getReferenceNumber())
 					.consumerCode(receiptHeader.getConsumerCode()).consumerType(receiptHeader.getConsumerType())
-					.minimumAmount(BigDecimal.valueOf(receiptHeader.getMinimumAmount()))
-					.totalAmount(BigDecimal.valueOf(receiptHeader.getTotalAmount()))
 					.collectionModesNotAllowed(Arrays.asList(receiptHeader.getCollModesNotAllwd()))
 					.tenantId(receiptHeader.getTenantId()).displayMessage(receiptHeader.getDisplayMsg())
 					.billAccountDetails(billAccountDetails).businessService(receiptHeader.getBusinessDetails())
-					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(ReceiptType.valueOf(receiptHeader.getReceiptType()))
+					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(receiptHeader.getReceiptType())
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
-					.collectionType(CollectionType.valueOf(receiptHeader.getCollectionType())).boundary(receiptHeader.getBoundary())
+					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation()).
 					cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus()).
-					billAccountDetails(billAccountDetails).receiptDate((receiptHeader.getReceiptDate().getTime())).build();
+					billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDate().getTime()).build();
+			if(null != receiptHeader.getMinimumAmount()){
+				billDetail.setMinimumAmount(BigDecimal.valueOf(receiptHeader.getMinimumAmount()));
+			}
+			if(null != receiptHeader.getTotalAmount()){
+				billDetail.setTotalAmount(BigDecimal.valueOf(receiptHeader.getTotalAmount()));
+			}
+			
 			Bill billInfo = Bill.builder().payeeName(receiptHeader.getPayeename())
 					.payeeAddress(receiptHeader.getPayeeAddress()).payeeEmail(receiptHeader.getPayeeEmail())
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
-			Receipt receipt = Receipt.builder().tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).build();
+			Receipt receipt = Receipt.builder().stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).build();
 			receipts.add(receipt);
 		}
 

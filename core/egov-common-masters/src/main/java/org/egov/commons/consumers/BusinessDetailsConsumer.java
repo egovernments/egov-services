@@ -60,7 +60,7 @@ public class BusinessDetailsConsumer {
 							.add(new org.egov.commons.model.BusinessAccountDetails(details, modelDetails, false));
 				}
 				for (BusinessAccountSubLedger subledger : contractListOfSubledgers) {
-					listModelAccountSubledger.add(new BusinessAccountSubLedgerDetails(subledger, modelDetails, false));
+					listModelAccountSubledger.add(new BusinessAccountSubLedgerDetails(subledger,listModelAccountDetails, modelDetails, false));
 				}
 			businessDetailsService.createBusinessDetails(modelDetails,listModelAccountDetails,listModelAccountSubledger);
 			}
@@ -69,7 +69,7 @@ public class BusinessDetailsConsumer {
 					listModelAccountDetails.add(new org.egov.commons.model.BusinessAccountDetails(details, modelDetails, true));
 				}
 				for (BusinessAccountSubLedger subledger : contractListOfSubledgers) {
-					listModelAccountSubledger.add(new BusinessAccountSubLedgerDetails(subledger, modelDetails, true));
+					listModelAccountSubledger.add(new BusinessAccountSubLedgerDetails(subledger,listModelAccountDetails, modelDetails, true));
 				}
 				businessDetailsService.updateBusinessDetails(modelDetails, listModelAccountDetails, listModelAccountSubledger);
 			}

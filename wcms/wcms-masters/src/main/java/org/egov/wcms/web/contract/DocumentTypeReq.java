@@ -62,9 +62,9 @@ import lombok.ToString;
 @ToString
 public class DocumentTypeReq {
     @NotNull
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     public RequestInfo requestInfo;
 
-    @JsonProperty("documentType")
+    @JsonProperty("DocumentType")
     public DocumentType documentType;
 }

@@ -111,7 +111,7 @@ public class PropertyCategoryController {
         final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
                 applicationProperties.getCreatePropertyCategoryTopicName(), "property-category-create",
                 propertyCategoryRequest);
-        return getSuccessResponse(propertyCategory, "created", propertyCategoryRequest.getRequestInfo());
+        return getSuccessResponse(propertyCategory, "Created", propertyCategoryRequest.getRequestInfo());
 
     }
 

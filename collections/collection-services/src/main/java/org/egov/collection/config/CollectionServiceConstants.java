@@ -53,8 +53,8 @@ public class CollectionServiceConstants {
 	public static final String INVALID_BD = "Fund, FundSource, Function, Department or glcode may be invalid.";
 
 	public static final String TENANT_ID_MISSING_CODE = "egcl_001";
-	public static final String TENANT_ID_MISSING_FIELD = "tenantId";
-	public static final String TENANT_ID_MISSING_MESSAGE = "Tenant id is mising";
+	public static final String TENANT_ID_MISSING_FIELD = "tenantId or receiptHeaderId";
+	public static final String TENANT_ID_MISSING_MESSAGE = "Tenant id or ReceiptHeader id is mising";
 
 	public static final String PAYEE_NAME_MISSING_CODE = "egcl_002";
 	public static final String PAYEE_NAME_MISSING_FIELD = "payeeName";
@@ -94,11 +94,18 @@ public class CollectionServiceConstants {
 	public static final String COLL_MODES_NOT_ALLWD_MISSING_MESSAGE = "Collection Modes Not Allowed is mising";
 
 	public static final String COLL_ID_NAME = "collection.receiptno";
-	//TODO: FIXME: Actual format - [MM/Fin-Yr/6-digit]
-	public static final String COLL_ID_FORMAT = "GN-CL-[yyyy/MM/dd]-[SEQ_COLL_RCPT_NUM]"; 
+	public static final String COLL_ID_FORMAT = "[cy:MM]/[fy:yyyy-yy]/[SEQ_COLL_RCPT_NUM]"; 
 
 	public static final String STATUS_MISSING_CODE = "egcl_011";
 	public static final String STATUS_MISSING_MESSAGE = "status";
 	public static final String STATUS_MISSING_FIELD = "Status is missing";
+
+    public static final String COLL_DETAILS_DESCRIPTION_CODE = "egcl_012";
+    public static final String COLL_DETAILS_DESCRIPTION_FIELD = "billDescription";
+    public static final String COLL_DETAILS_DESCRIPTION_MESSAGE = "Bill details description is required";
+    
+    public static final String AMT_PAID_NOT_NULL_CODE = "egcl_013";
+    public static final String AMT_PAID_NOT_NULL_FIELD = "amountPaid";
+    public static final String AMT_PAID_NOT_NULL_MESSAGE = "Amount paid cannot be null";
 
 }

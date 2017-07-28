@@ -548,7 +548,29 @@ paths:
         '400':
           description: Invalid input
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'            
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes' 
+
+  /latepaymentpenalty/_calculate:
+    post: 
+      description: Calculation for the latepayment penalty of the property
+      parameters:
+       - name: penaltyCalculationRequest
+         in: body
+         description: Request header of the penalty
+         required: true
+         schema:
+          $ref: '#/definitions/LatePaymentPenaltyRequest'
+      responses:
+        '200':
+          description: Penalty Calculated
+          schema:
+            $ref: '#/definitions/LatePaymentPenaltyResponse'
+        '400':
+          description: Unable to calculate penalty
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Penalty
             
 definitions:
 ########################################################
@@ -749,7 +771,7 @@ definitions:
       factorCode:
         type: string
         description: code for the respctive type of the factor from property master.
-        maxLength: 16
+        maxLength: 64
         minLength: 4
       factorType:
         type: string
@@ -828,27 +850,27 @@ definitions:
       boundary:
         type: string
         description: The boundary for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       structure:
         type: string
         description: The Structure for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       usage:
         type: string
         description: The usage for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       subUsage:
         type: string
         description: The subUsage for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       occupancy:
         type: string
         description: The occupancy for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1        
       value:
         type: number
@@ -1040,5 +1062,56 @@ definitions:
         items:
           $ref: '#/definitions/TaxPeriod'
     type: object
+   
+  LatePaymentPenaltyRequest:
+    type: object
+    description: This object holds the information for the property for which penalty to be calculated
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      upicNo:
+       type: string
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+    required:
+       - upicNo
+       - tenantId 
+              
+  
+  LatePaymentPenaltyResponse:
+    type: object
+    description: This object holds the information for the property for which penalty to be calculated
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      upicNo:
+       type: string
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+      penalty:
+       type: array
+       items:
+         $ref: '#/definitions/Penalty'
+    required:
+       - upicNo
+       - tenantId
+       - penalty
+       
+  Penalty:
+    type: object
+    description: This object would hold the infromation about the penalty imposed on a Property on a perticular period
+    properties:
+      period:
+        type: string
+        description: This would define a period for the penalty
+      amount:
+        type: number
+        format: double
 
 

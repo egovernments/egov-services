@@ -49,7 +49,7 @@ public class RegistrationUnitService {
 		marriageRegnProducer.sendMessage(propertiesManager.getCreateRegistrationUnitTopicName(),
 				propertiesManager.getRegistrationUnitKey(), value);
 
-		List<RegistrationUnit> registrationUnitList = new ArrayList<>();
+		List<RegistrationUnit> registrationUnitList = new ArrayList<RegistrationUnit>();
 		registrationUnitList.add(registrationUnit);
 		// List back to UI from controller
 		return registrationUnitList;
@@ -79,13 +79,13 @@ public class RegistrationUnitService {
 				e.printStackTrace();
 			}
 
-			List<RegistrationUnit> registrationUnitList = new ArrayList<>();
+			List<RegistrationUnit> registrationUnitList = new ArrayList<RegistrationUnit>();
 			registrationUnitList.add(registrationUnit);
 
 			// List back to UI from controller
 			return registrationUnitList;
 		}
-		return new ArrayList<>();
+		return new ArrayList<RegistrationUnit>();
 	}
 
 	// ******** Called from Kafka and persisted to DB *********

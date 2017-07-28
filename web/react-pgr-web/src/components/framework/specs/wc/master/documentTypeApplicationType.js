@@ -1,38 +1,55 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype/_create",
+		"url": "/wcms/masters/documenttype-applicationtype/_create",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "documentTypeApplicationType",
 		"groups": [
 			{
 				"label": "wc.create.documenttype.title",
-				"name": "createCategoryType",
+				"name": "createdocumentTypeApplicationType",
 				"fields": [
-						{
-							"name": "name",
-							"jsonPath": "documentTypes.name",
-							"label": "wc.create.documenttype*",
-							"pattern": "",
-							"type": "text",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "description",
-							"jsonPath": "",
-							"label": "Description",
-							"pattern": "",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
+					{
+						"name": "applicationType",
+						"jsonPath": "createdocumentTypeApplicationType.applicationType",
+						"label": "wc.create.applicationtype",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/wcms/masters/master/_getapplicationtypes?|$..key|$..object",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "documenttype",
+						"jsonPath": "createdocumentTypeApplicationType.documentType",
+						"label": "wc.create.documenttype",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/wcms/masters/documenttype/_search?|$..code|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
 						{
 							"name": "Active",
-							"jsonPath": "",
+							"jsonPath": "createdocumentTypeApplicationType.active",
 							"label": "Active",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"default": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "mandatory",
+							"jsonPath": "createdocumentTypeApplicationType.mandatory",
+							"label": "Mandatory",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,

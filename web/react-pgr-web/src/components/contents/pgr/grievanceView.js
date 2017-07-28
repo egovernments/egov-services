@@ -68,22 +68,17 @@ class grievanceView extends Component{
 
     this.props.setLoadingStatus('loading');
 
-    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
-    {
-      currentThis.setState({SD : response.attributes})
-    },function(err) {
-      currentThis.props.setLoadingStatus('hide');
-      currentThis.handleError(err.message);
-    });
-
     Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
     {
+
       if(response.serviceRequests.length === 0){
         currentThis.props.setLoadingStatus('hide');
         currentThis.handleError('Not a valid SRN.');
         return false;
       }
+
       currentThis.setState({srn : response.serviceRequests});
+
       currentThis.state.srn.map((item, index) => {
         for(var k in item){
            if(item[k] instanceof Array){
@@ -94,24 +89,22 @@ class grievanceView extends Component{
              currentThis.setState({[k] : item[k]});
            }
         }
-        if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.status === 'COMPLETED' || currentThis.state.status === 'REJECTED')){
-          currentThis.props.ADD_MANDATORY('rating');
-          if(currentThis.state.rating)
-            handleChange(currentThis.state.rating, "rating", true, "");
+        if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED')){
+          currentThis.props.ADD_MANDATORY('systemRating');
+          if(currentThis.state.systemRating)
+            handleChange(currentThis.state.systemRating, "systemRating", true, "");
         }
-        if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
-          handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
-        }
-        if(currentThis.state.status === 'FORWARDED' && localStorage.getItem('type') === 'EMPLOYEE'){
+        if(currentThis.state.systemStatus === 'FORWARDED' && localStorage.getItem('type') === 'EMPLOYEE'){
           currentThis.props.ADD_MANDATORY('designationId');
-          currentThis.props.ADD_MANDATORY('positionId');
+          currentThis.props.ADD_MANDATORY('systemPositionId');
           handleChange('', "designationId", true, "");
-          handleChange('', "positionId", true, "");
+          handleChange('', "systemPositionId", true, "");
         }
-        handleChange(currentThis.state.status, "status", false, "");
+        handleChange(currentThis.state.systemStatus, "systemStatus", false, "");
+
       });
 
-      Api.commonApiPost('/workflow/history/v1/_search',{workflowId : currentThis.state.stateId}).then(function(response)
+      Api.commonApiPost('/workflow/history/v1/_search',{workflowId : currentThis.state.systemStateId}).then(function(response)
       {
         //console.log(JSON.stringify(response));
         currentThis.setState({workflow : response});
@@ -120,14 +113,11 @@ class grievanceView extends Component{
         {
           //console.log(JSON.stringify(response));
           currentThis.setState({files : response.files});
-          currentThis.getDepartmentById();
-
+          currentThis.SDAPI();
         },function(err) {
           currentThis.props.setLoadingStatus('hide');
           currentThis.handleError(err.message);
         });
-
-
       },function(err) {
         currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
@@ -138,8 +128,37 @@ class grievanceView extends Component{
       currentThis.handleError(err.message);
     });
   }
+  SDAPI = () => {
+    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : this.state.serviceCode }).then(function(response)
+    {
+      currentThis.setState({SD : response.attributes});
+      //ADD MANDATORY & DISPATCH based on SD
+      //Required for SD
+      if(response.attributes.length > 0 && localStorage.getItem('type') === 'EMPLOYEE'){
+        let FormFields = response.attributes.filter(function (el) {
+          return (el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS') ;
+        });
+        if(FormFields.length > 0){
+          //check condition
+            FormFields.map((item,index) =>
+            {
+              if(item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf(currentThis.state.systemStatus) > -1){
+                if(currentThis.state[item.code])
+                  currentThis.props.handleChange(currentThis.state[item.code], item.code, item.required, "");
+                if(item.required)
+                  currentThis.props.ADD_MANDATORY(item.code);
+              }
+            });
+        }
+      }
+      currentThis.getDepartmentById();
+    },function(err) {
+      currentThis.props.setLoadingStatus('hide');
+      currentThis.handleError(err.message);
+    });
+  }
   getDepartmentById = () => {
-    Api.commonApiPost("/egov-common-masters/departments/_search", {id:this.state.departmentId}).then(function(response)
+    Api.commonApiPost("/egov-common-masters/departments/_search", {id:this.state.systemDepartmentId}).then(function(response)
     {
       currentThis.setState({departmentName : response.Department[0].name});
       currentThis.getReceivingCenter();
@@ -149,8 +168,8 @@ class grievanceView extends Component{
     });
   }
   getReceivingCenter(){
-    if(this.state.receivingCenter){
-      Api.commonApiPost("/pgr-master/receivingcenter/v1/_search", {id:this.state.receivingCenter}).then(function(response)
+    if(this.state.systemReceivingCenter){
+      Api.commonApiPost("/pgr-master/receivingcenter/v1/_search", {id:this.state.systemReceivingCenter}).then(function(response)
       {
         currentThis.setState({receivingCenterName : response.ReceivingCenterType[0].name});
         currentThis.getWardbyId();
@@ -163,8 +182,8 @@ class grievanceView extends Component{
     }
   }
   getWardbyId(){
-    if(this.state.locationId)
-      Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.locationId}).then(function(response)
+    if(this.state.systemLocationId)
+      Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.systemLocationId}).then(function(response)
       {
         currentThis.setState({locationName : response.Boundary[0].name});
         currentThis.getLocation();
@@ -178,8 +197,8 @@ class grievanceView extends Component{
     }
   }
   getLocation(){
-    if(this.state.childLocationId)
-      Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.childLocationId}).then(function(response)
+    if(this.state.systemChildLocationId)
+      Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.systemChildLocationId}).then(function(response)
       {
         currentThis.setState({childLocationName : response.Boundary[0].name});
         currentThis.nextStatus();
@@ -194,7 +213,7 @@ class grievanceView extends Component{
   }
   nextStatus = () => {
     if(localStorage.getItem('type')){
-      Api.commonApiPost("/workflow/v1/nextstatuses/_search", {currentStatusCode:this.state.status}).then(function(response)
+      Api.commonApiPost("/workflow/v1/nextstatuses/_search", {currentStatusCode:this.state.systemStatus}).then(function(response)
       {
         currentThis.setState({nextStatus : response.statuses});
         currentThis.allServices();
@@ -242,7 +261,7 @@ class grievanceView extends Component{
     });
   }
   getLocality = () => {
-    Api.commonApiPost("/egov-location/boundarys/childLocationsByBoundaryId", {boundaryId:this.state.locationId}).then(function(response)
+    Api.commonApiPost("/egov-location/boundarys/childLocationsByBoundaryId", {boundaryId:this.state.systemLocationId}).then(function(response)
     {
       currentThis.setState({locality : response.Boundary});
       currentThis.getDepartment();
@@ -276,28 +295,30 @@ class grievanceView extends Component{
 
     //change status, position, ward, location in attribValues
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
-      if(req_obj.serviceRequest.attribValues[i]['key'] === 'status'){
-        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
-      }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'positionId'){
-          req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId) ? currentThis.props.grievanceView.positionId : currentThis.state.positionId ;
-      }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'locationId'){
-          req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.locationId ? currentThis.props.grievanceView.locationId : currentThis.state.locationId;
+      if(req_obj.serviceRequest.attribValues[i]['key'] === 'systemStatus'){
+        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.systemStatus ? currentThis.props.grievanceView.systemStatus : currentThis.state.systemStatus;
+      }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'systemPositionId'){
+          req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.systemPositionId ? currentThis.props.grievanceView.systemPositionId : currentThis.state.systemPositionId ;
+      }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'systemLocationId'){
+          req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.systemLocationId ? currentThis.props.grievanceView.systemLocationId : currentThis.state.systemLocationId;
       }
     }
 
     //change serviceCode in serviceRequests
     req_obj.serviceRequest.serviceCode = currentThis.props.grievanceView.serviceCode ? currentThis.props.grievanceView.serviceCode :  currentThis.state.serviceCode;
 
-    if(currentThis.props.grievanceView['childLocationId'])
-      currentThis.chckkey('childLocationId', req_obj);
+    if(currentThis.props.grievanceView['systemChildLocationId'])
+      currentThis.chckkey('systemChildLocationId', req_obj);
 
-    currentThis.chckkey('approvalComments', req_obj);
+    if(currentThis.props.grievanceView['systemApprovalComments'])
+      currentThis.chckkey('systemApprovalComments', req_obj);
 
     if(localStorage.getItem('type') === 'EMPLOYEE'){
-      currentThis.chckkey('PRIORITY', req_obj);
-      //currentThis.chckkey('priorityColor', req_obj);
+      if(currentThis.props.grievanceView['PRIORITY'])
+        currentThis.chckkey('PRIORITY', req_obj);
     }else if(localStorage.getItem('type') === 'CITIZEN'){
-        currentThis.chckkey('rating', req_obj);
+        if(currentThis.props.grievanceView['systemRating'])
+          currentThis.chckkey('systemRating', req_obj);
     }
 
     if(currentThis.props.files.length > 0){
@@ -348,7 +369,7 @@ class grievanceView extends Component{
     }
   }
   updateSeva = (req_obj) =>{
-    console.log('Before Submit',JSON.stringify(req_obj));
+    //console.log('Before Submit',JSON.stringify(req_obj));
     Api.commonApiPost("/pgr/seva/v1/_update",{},req_obj).then(function(updateResponse)
     {
       // console.log('After submit',JSON.stringify(updateResponse));
@@ -376,20 +397,21 @@ class grievanceView extends Component{
     //toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
   }
   loadServiceDefinition = () => {
-    var currentThis = this;
-    if(currentThis.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE'){
-      let FormFields = currentThis.state.SD.filter(function (el) {
+    if(this.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE'){
+      let FormFields = this.state.SD.filter(function (el) {
         return (el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS') ;
       });
       if(FormFields.length > 0){
-        return FormFields.map((item,index) =>
-        {
-          if(item.required)
-            this.props.ADD_MANDATORY(item.code)
-          return (
-            <Fields key={index} obj={item} value={currentThis.props.grievanceView[item.code] ? currentThis.props.grievanceView[item.code] : currentThis.state.PRIORITY} handler={currentThis.props.handleChange}/>
-          );
-        })
+        //check condition
+          return FormFields.map((item,index) =>
+          {
+            //console.log(item.roles, item.actions, this.state.systemStatus, this.state.serviceCode);
+            if(item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf(this.state.systemStatus) > -1){
+              return (
+                <Fields key={index} error={currentThis.props.fieldErrors[item.code]} obj={item} value={currentThis.props.grievanceView[item.code] ? currentThis.props.grievanceView[item.code] : currentThis.state[item.code]} handler={currentThis.props.handleChange}/>
+              );
+            }
+          });
       }
     }
   }
@@ -429,7 +451,7 @@ class grievanceView extends Component{
         <ViewSRN srn={this.state} />
         <EmployeeDocs srn={this.state.srn}/>
         <WorkFlow workflowdetails={this.state.workflow} />
-        { (this.state.isUpdateAllowed && localStorage.getItem('type') === 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED') ||  (localStorage.getItem('type') === 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
+        { (this.state.isUpdateAllowed && localStorage.getItem('type') === 'EMPLOYEE' && this.state.systemStatus !== 'REJECTED' && this.state.systemStatus !== 'COMPLETED') ||  (localStorage.getItem('type') === 'CITIZEN' && this.state.systemStatus !== 'WITHDRAWN') ?
         <Grid style={{width:'100%'}}>
           <Card style={{margin:'15px 0'}}>
             <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
@@ -438,8 +460,8 @@ class grievanceView extends Component{
             <CardText style={{padding:'8px 16px 0'}}>
               <Row>
                 <Col xs={12} md={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
-                    handleStatusChange(value, "status", false, "")
+                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.systemStatus ? grievanceView.systemStatus : this.state.systemStatus} onChange={(event, key, value) => {
+                    handleStatusChange(value, "systemStatus", false, "")
                   }}>
                     {this.state.nextStatus !== undefined ?
                     this.state.nextStatus.map((status, index) => (
@@ -459,8 +481,8 @@ class grievanceView extends Component{
                 </Col> : "" }
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
                 <Col xs={12} md={3}>
-                  <SelectField fullWidth={true} floatingLabelText="Ward *" maxHeight={200} value={grievanceView.locationId ? grievanceView.locationId : this.state.locationId}  onChange={(event, key, value) => {
-                    handleWard(value, "locationId", false, "")}}>
+                  <SelectField fullWidth={true} floatingLabelText="Ward *" maxHeight={200} value={grievanceView.systemLocationId ? grievanceView.systemLocationId : this.state.systemLocationId}  onChange={(event, key, value) => {
+                    handleWard(value, "systemLocationId", false, "")}}>
                     {this.state.ward !== undefined ?
                     this.state.ward.map((ward, index) => (
                         <MenuItem value={ward.id} key={index} primaryText={ward.name} />
@@ -469,8 +491,8 @@ class grievanceView extends Component{
                 </Col>: ""}
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
                 <Col xs={12} md={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
-                    handleLocality(value, "childLocationId", true, "")}}>
+                  <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.systemChildLocationId ? grievanceView.systemChildLocationId : this.state.systemChildLocationId}  onChange={(event, key, value) => {
+                    handleLocality(value, "systemChildLocationId", true, "")}}>
                     {this.state.locality !== undefined ?
                     this.state.locality.map((locality, index) => (
                         <MenuItem value={locality.id} key={index} primaryText={locality.name} />
@@ -478,7 +500,7 @@ class grievanceView extends Component{
                   </SelectField>
                 </Col> : "" }
               </Row>
-              { localStorage.getItem('type') === 'EMPLOYEE' && grievanceView.status === 'FORWARDED' ?
+              { localStorage.getItem('type') === 'EMPLOYEE' && grievanceView.systemStatus === 'FORWARDED' ?
               <Row>
                 <Col xs={12} md={3}>
                   <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwddept')} maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
@@ -502,8 +524,8 @@ class grievanceView extends Component{
                   </SelectField>
                 </Col>
                 <Col xs={12} md={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwdpos')} maxHeight={200} value={grievanceView.positionId} onChange={(event, key, value) => {
-                    handleChange(value, "positionId", true, ""); }}>
+                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwdpos')} maxHeight={200} value={grievanceView.systemPositionId} onChange={(event, key, value) => {
+                    handleChange(value, "systemPositionId", true, ""); }}>
                     <MenuItem value={0} primaryText="Select Position" />
                     {this.state.position !== undefined ?
                     this.state.position.map((position, index) => (
@@ -518,17 +540,17 @@ class grievanceView extends Component{
               <Row>
                 {loadServiceDefinition()}
               </Row> : ''}
-              { localStorage.getItem('type') === 'CITIZEN' && (this.state.status === 'COMPLETED' || currentThis.state.status === 'REJECTED') ?
+              { localStorage.getItem('type') === 'CITIZEN' && (this.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED') ?
               <Row>
                 <Col xs={12} md={3}>
                   <h4>Feedback</h4>
-                  <Rating initialRate={grievanceView.rating} onClick={(rate, event) => { handleChange(rate,"rating", true,"")}}/>
+                  <Rating initialRate={grievanceView.systemRating} onClick={(rate, event) => { handleChange(rate,"systemRating", true,"")}}/>
                 </Col>
               </Row> : ''}
               <Row>
                 <Col xs={12} md={12}>
-                  <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.approvalComments ? grievanceView.approvalComments : ''} onChange={(event, newValue) => {
-                    handleChange(newValue, "approvalComments", true, "") }} errorText={fieldErrors.approvalComments ? fieldErrors.approvalComments : ""}/>
+                  <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} onChange={(event, newValue) => {
+                    handleChange(newValue, "systemApprovalComments", true, "") }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
                 </Col>
               </Row>
               { localStorage.getItem('type') === 'EMPLOYEE' ?
@@ -545,7 +567,7 @@ class grievanceView extends Component{
               </Row> : ""}
                 <Row>
                   <div style={{textAlign: 'center'}}>
-                    <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
+                    <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" primary={true}/>
                   </div>
                 </Row>
             </CardText>
@@ -568,7 +590,7 @@ class grievanceView extends Component{
 }
 
 const mapStateToProps = state => {
-  //console.log(state.form.form);
+  //console.log(state.form.fieldErrors);
   return ({grievanceView: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
@@ -579,7 +601,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['approvalComments']
+          required: ['systemApprovalComments']
         },
         pattern: {
           current: [],
@@ -592,21 +614,22 @@ const mapDispatchToProps = dispatch => ({
      dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : true, pattern: ''});
   },
   handleChange: (value, property, isRequired, pattern) => {
-      dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+    //console.log(value, property, isRequired, pattern);
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleStatusChange: (value, property, isRequired, pattern) => {
     if(value === 'FORWARDED'){
       dispatch({type: "ADD_MANDATORY", property: "designationId", value: '', isRequired : true, pattern: ''});
-      dispatch({type: "ADD_MANDATORY", property: "positionId", value: '', isRequired : true, pattern: ''});
+      dispatch({type: "ADD_MANDATORY", property: "systemPositionId", value: '', isRequired : true, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'departmentId', value:0, isRequired:false, pattern:''});
       dispatch({type: "HANDLE_CHANGE", property:'designationId', value:0, isRequired:true, pattern:''});
-      dispatch({type: "HANDLE_CHANGE", property:'positionId', value:0, isRequired:true, pattern:''});
+      dispatch({type: "HANDLE_CHANGE", property:'systemPositionId', value:0, isRequired:true, pattern:''});
     }else{
       dispatch({type: "REMOVE_MANDATORY", property: "designationId", value: '', isRequired : false, pattern: ''});
-      dispatch({type: "REMOVE_MANDATORY", property: "positionId", value: '', isRequired : false, pattern: ''});
+      dispatch({type: "REMOVE_MANDATORY", property: "systemPositionId", value: '', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'departmentId', value:0, isRequired:false, pattern:''});
       dispatch({type: "HANDLE_CHANGE", property:'designationId', value:0, isRequired:false, pattern:''});
-      dispatch({type: "HANDLE_CHANGE", property:'positionId', value:0, isRequired:false, pattern:''});
+      dispatch({type: "HANDLE_CHANGE", property:'systemPositionId', value:0, isRequired:false, pattern:''});
     }
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
@@ -615,15 +638,15 @@ const mapDispatchToProps = dispatch => ({
     {
       currentThis.setState({locality : response.Boundary});
       currentThis.setState({childLocationId : ''});
-      dispatch({type: "ADD_MANDATORY", property: "childLocationId", value: '', isRequired : true, pattern: ''});
-      dispatch({type: "HANDLE_CHANGE", property: "childLocationId", value:'', isRequired:true, pattern:''});
+      dispatch({type: "ADD_MANDATORY", property: "systemChildLocationId", value: '', isRequired : true, pattern: ''});
+      dispatch({type: "HANDLE_CHANGE", property: "systemChildLocationId", value:'', isRequired:true, pattern:''});
       dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
     },function(err) {
       currentThis.handleError(err.message);
     });
   },
   handleLocality : (value, property, isRequired, pattern) => {
-    dispatch({type: "ADD_MANDATORY", property: "childLocationId", value: '', isRequired : true, pattern: ''});
+    dispatch({type: "ADD_MANDATORY", property: "systemChildLocationId", value: '', isRequired : true, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleDesignation: (value, property, isRequired, pattern) => {
@@ -631,18 +654,18 @@ const mapDispatchToProps = dispatch => ({
         currentThis.setState({designation : []});
         currentThis.setState({position : []});
         dispatch({type: "REMOVE_MANDATORY", property: "designationId", value: '', isRequired : false, pattern: ''});
-        dispatch({type: "REMOVE_MANDATORY", property: "positionId", value: '', isRequired : false, pattern: ''});
+        dispatch({type: "REMOVE_MANDATORY", property: "systemPositionId", value: '', isRequired : false, pattern: ''});
         dispatch({type: "HANDLE_CHANGE", property:'departmentId', value: 0, isRequired:false, pattern:''});
         dispatch({type: "HANDLE_CHANGE", property:'designationId', value:'', isRequired:false, pattern:''});
-        dispatch({type: "HANDLE_CHANGE", property:'positionId', value: '', isRequired:false, pattern:''});
+        dispatch({type: "HANDLE_CHANGE", property:'systemPositionId', value: '', isRequired:false, pattern:''});
     }else{
         Api.commonApiPost("/hr-masters/designations/_search").then(function(response)
         {
           currentThis.setState({designation : response.Designation});
           dispatch({type: "ADD_MANDATORY", property: "designationId", value: '', isRequired : true, pattern: ''});
-          dispatch({type: "ADD_MANDATORY", property: "positionId", value: '', isRequired : true, pattern: ''});
+          dispatch({type: "ADD_MANDATORY", property: "systemPositionId", value: '', isRequired : true, pattern: ''});
           dispatch({type: "HANDLE_CHANGE", property:'designationId', value: '', isRequired:true, pattern:''});
-          dispatch({type: "HANDLE_CHANGE", property:'positionId', value: '', isRequired:true, pattern:''});
+          dispatch({type: "HANDLE_CHANGE", property:'systemPositionId', value: '', isRequired:true, pattern:''});
           dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
         },function(err) {
           currentThis.handleError(err.message);
@@ -652,7 +675,7 @@ const mapDispatchToProps = dispatch => ({
   handlePosition: (dep, value, property, isRequired, pattern) => {
     if(property === 'designationId' && value === 0)
     {
-      dispatch({type: "HANDLE_CHANGE", property:'positionId', value: 0, isRequired, pattern});
+      dispatch({type: "HANDLE_CHANGE", property:'systemPositionId', value: 0, isRequired, pattern});
     }else{
       let des = value;
       if(dep && des){

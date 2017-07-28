@@ -19,17 +19,47 @@ public class PropertiesManager {
 	@Value("${kafka.topics.notification.sms.name}")
 	private String smsNotificationTopic;
 	
+	@Value("${kafka.topics.notification.email.name}")
+	private String emailNotificationTopic;
+	
 	@Value("${kafka.topics.notification.sms.key}")
 	private String smsNotificationTopicKey;
 
-	@Value("${lams.notification.sms.msg}")
-	private String notificationMessage;
+	@Value("${lams.create.notification.msg}")
+	private String createNotificationMessage;
 
-	@Value("${lams.approval.sms.msg}")
-	public String approveMessage;
+	@Value("${lams.create.approval.msg}")
+	public String createApproveMessage;
 
-	@Value("${lams.rejected.sms.msg}")
-	public String rejectMessage;
+	@Value("${lams.create.rejected.msg}")
+	public String createRejectMessage;
+	
+	@Value("${lams.evict.notification.msg}")
+	private String evictNotificationMessage;
+
+	@Value("${lams.evict.approval.msg}")
+	public String evictApproveMessage;
+
+	@Value("${lams.evict.rejected.msg}")
+	public String evictRejectMessage;
+	
+	@Value("${lams.cancel.notification.msg}")
+	private String cancelNotificationMessage;
+
+	@Value("${lams.cancel.approval.msg}")
+	public String cancelApproveMessage;
+
+	@Value("${lams.cancel.rejected.msg}")
+	public String cancelRejectMessage;
+	
+	@Value("${lams.create.subject}")
+	public String createSubject;
+	
+	@Value("${lams.evict.subject}")
+	public String evictSubject;
+	
+	@Value("${lams.cancel.subject}")
+	public String cancelSubject;
 	
 	@Value("${egov.services.asset_service.hostname}")
 	 private String assetApiHostUrl;

@@ -7,6 +7,8 @@ import org.egov.models.RequestInfo;
 import org.egov.property.exception.InvalidPropertyBoundaryException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.BoundaryResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Repository
 public class BoundaryRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(BoundaryRepository.class);
+
     @Autowired
     Environment env;
      
@@ -30,9 +35,10 @@ public class BoundaryRepository {
         URI uri = UriComponentsBuilder.fromUriString(BoundaryURI.toString())
                         .queryParam("Boundary.tenantId", property.getTenantId()).queryParam("Boundary.id", id).build(true)
                         .encode().toUri();
-
+        logger.info("BoundaryRepository BoundaryURI ---->> "+BoundaryURI.toString()+" \n request uri ---->> "+uri);
         try {
                 BoundaryResponseInfo boundaryResponseInfo = restTemplate.getForObject(uri, BoundaryResponseInfo.class);
+                logger.info("BoundaryRepository BoundaryResponseInfo ---->> "+boundaryResponseInfo);
                 if (boundaryResponseInfo.getResponseInfo() != null && boundaryResponseInfo.getBoundary().size() != 0) {
                         return true;
                 } else {

@@ -80,6 +80,7 @@ public class PropertyWorkflowAspectJ {
 	public void logAfterThrowing(JoinPoint joinPoint, Throwable exception) {
 		logger.error("An exception has been thrown in " + joinPoint.getSignature().getName() + " ()");
 		logger.error("Cause : " + exception.getCause());
+		exception.printStackTrace();
 	}
 
 	@Around("controller() && allMethod()")

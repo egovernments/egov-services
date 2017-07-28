@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.egov.enums.ApplicationEnum;
+import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.Depreciation;
+import org.egov.models.DocumentType;
 import org.egov.models.FloorType;
 import org.egov.models.MutationMaster;
 import org.egov.models.OccuapancyMaster;
@@ -22,6 +25,7 @@ import org.egov.models.WoodType;
 import org.egov.property.model.ExcludeFileds;
 import org.egov.property.repository.builder.DepartmentQueryBuilder;
 import org.egov.property.repository.builder.DepreciationBuilder;
+import org.egov.property.repository.builder.DocumentTypeBuilder;
 import org.egov.property.repository.builder.FloorTypeBuilder;
 import org.egov.property.repository.builder.MutationMasterBuilder;
 import org.egov.property.repository.builder.OccuapancyQueryBuilder;
@@ -42,6 +46,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -62,8 +67,6 @@ public class PropertyMasterRepository {
 	 */
 	public Long saveDepartment(String tenantId, Department department, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -77,8 +80,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, department.getAuditDetails().getCreatedBy());
 				ps.setString(5, department.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, department.getAuditDetails().getCreatedTime());
+				ps.setLong(7, department.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -98,7 +101,6 @@ public class PropertyMasterRepository {
 	 * @param id
 	 */
 	public Department updateDepartment(Department department, String data, Long id) {
-		Long modifiedTime = new Date().getTime();
 
 		String updateDepartmentSql = DepartmentQueryBuilder.UPDATE_DEPARTMENT_QUERY;
 		String selectDepartmentSql = DepartmentQueryBuilder.SELECT_DEPARTMENT_CREATETIME;
@@ -114,7 +116,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, department.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, modifiedTime);
+				ps.setLong(5, department.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, id);
 				return ps;
 			}
@@ -147,7 +149,7 @@ public class PropertyMasterRepository {
 
 		String departmentSearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.DEPARTMENT_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues,
-				null, null);
+				null, null, null);
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		departments = jdbcTemplate.query(departmentSearchSql.toString(), preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(Department.class));
@@ -173,7 +175,6 @@ public class PropertyMasterRepository {
 	 */
 
 	public Long saveOccuapancy(String tenantId, OccuapancyMaster occuapancy, String data) {
-		Long createdTime = new Date().getTime();
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -188,8 +189,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, occuapancy.getAuditDetails().getCreatedBy());
 				ps.setString(5, occuapancy.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, occuapancy.getAuditDetails().getCreatedTime());
+				ps.setLong(7, occuapancy.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -211,8 +212,6 @@ public class PropertyMasterRepository {
 	 */
 	public OccuapancyMaster updateOccuapancy(OccuapancyMaster occuapancyMaster, String data) {
 
-		Long modifiedTime = new Date().getTime();
-
 		String updateOccupancySql = OccuapancyQueryBuilder.UPDATE_OCCUAPANCY_QUERY;
 		String selectOccupancySql = OccuapancyQueryBuilder.SELECT_OCCUAPANCY_CREATETIME;
 
@@ -227,7 +226,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, occuapancyMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, modifiedTime);
+				ps.setLong(5, occuapancyMaster.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, occuapancyMaster.getId());
 				return ps;
 			}
@@ -264,7 +263,7 @@ public class PropertyMasterRepository {
 
 		String occuapancySearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.OCCUPANCY_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet,
-				preparedStatementValues, null, null);
+				preparedStatementValues, null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		occupancyMasters = jdbcTemplate.query(occuapancySearchSql.toString(), preparedStatementValues.toArray(),
@@ -292,8 +291,6 @@ public class PropertyMasterRepository {
 
 	public Long savePropertyType(String tenantId, PropertyType propertyType, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -307,8 +304,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, propertyType.getAuditDetails().getCreatedBy());
 				ps.setString(5, propertyType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, propertyType.getAuditDetails().getCreatedTime());
+				ps.setLong(7, propertyType.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -331,8 +328,6 @@ public class PropertyMasterRepository {
 
 	public PropertyType updatePropertyType(PropertyType propertyType, String data) {
 
-		Long modifiedTime = new Date().getTime();
-
 		String updatePropertyTypeSql = PropertyTypesBuilder.UPDATE_PROPERTYTYPES_QUERY;
 		String selectPropertyTypeSql = PropertyTypesBuilder.SELECT_PROPERTYTYPES_CREATETIME;
 
@@ -347,7 +342,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, propertyType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, modifiedTime);
+				ps.setLong(5, propertyType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, propertyType.getId());
 				return ps;
 			}
@@ -383,7 +378,7 @@ public class PropertyMasterRepository {
 
 		String propertyTypeSearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.PROPERTY_TYPE_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet,
-				preparedStatementValues, null, null);
+				preparedStatementValues, null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		propertyTypes = jdbcTemplate.query(propertyTypeSearchSql.toString(), preparedStatementValues.toArray(),
@@ -410,7 +405,6 @@ public class PropertyMasterRepository {
 
 	public Long saveFloorType(FloorType floorType, String data) {
 
-		Long createdTime = new Date().getTime();
 		String saveFloorTypeSql = FloorTypeBuilder.INSERT_FLOOR_QUERY;
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -424,8 +418,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, floorType.getAuditDetails().getCreatedBy());
 				ps.setString(5, floorType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, floorType.getAuditDetails().getCreatedTime());
+				ps.setLong(7, floorType.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 
@@ -447,7 +441,6 @@ public class PropertyMasterRepository {
 
 	public FloorType updateFloorType(FloorType floorType, String data) {
 
-		Long updatedTime = new Date().getTime();
 		String updateFloorTypeSql = FloorTypeBuilder.UPDATE_FLOOR_QUERY;
 		String selectFloorCreateTime = FloorTypeBuilder.SELECT_FLOOR_CREATETIME;
 
@@ -462,7 +455,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, floorType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, floorType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, floorType.getId());
 
 				return ps;
@@ -498,7 +491,7 @@ public class PropertyMasterRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 
 		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.FLOOR_TYPE_TABLE_NAME, tenantId, ids,
-				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null);
+				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		floorTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
@@ -525,7 +518,6 @@ public class PropertyMasterRepository {
 
 	public Long saveRoofType(RoofType roofType, String data) {
 
-		Long createdTime = new Date().getTime();
 		String SaveRoofTypeSql = RoofTypeBuilder.INSERT_ROOF_TYPE;
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -539,8 +531,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, roofType.getAuditDetails().getCreatedBy());
 				ps.setString(5, roofType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, roofType.getAuditDetails().getCreatedTime());
+				ps.setLong(7, roofType.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 
@@ -562,7 +554,6 @@ public class PropertyMasterRepository {
 
 	public RoofType updateRoofType(RoofType roofType, String data) {
 
-		long updatedTime = new Date().getTime();
 		String updateRoofTypeSql = RoofTypeBuilder.UPDATE_ROOF_QUERY;
 		String selectRoofTypeSql = RoofTypeBuilder.SELECT_ROOF_CREATETIME;
 
@@ -577,7 +568,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, roofType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, roofType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, roofType.getId());
 				return ps;
 			}
@@ -607,7 +598,7 @@ public class PropertyMasterRepository {
 		List<RoofType> roofTypes = new ArrayList<RoofType>();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.ROOF_TYPE_TABLE_NAME, tenantId, ids,
-				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null);
+				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		roofTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
@@ -634,7 +625,6 @@ public class PropertyMasterRepository {
 
 	public Long saveWoodType(WoodType woodType, String data) {
 
-		Long createdTime = new Date().getTime();
 		String saveWoodTypeSql = WoodTypeBuilder.INSERT_WOOD_QUERY;
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -648,8 +638,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, woodType.getAuditDetails().getCreatedBy());
 				ps.setString(5, woodType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, woodType.getAuditDetails().getCreatedTime());
+				ps.setLong(7, woodType.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 
@@ -671,7 +661,6 @@ public class PropertyMasterRepository {
 
 	public WoodType updateWoodType(WoodType woodType, String data) {
 
-		long updatedTime = new Date().getTime();
 		String updateWoodTypeSql = WoodTypeBuilder.UPDATE_WOOD_QUERY;
 		String selectWoodCreateTime = WoodTypeBuilder.SELECT_WOOD_CREATETIME;
 
@@ -686,7 +675,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, woodType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, woodType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, woodType.getId());
 
 				return ps;
@@ -720,7 +709,7 @@ public class PropertyMasterRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 
 		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.WOOD_TYPE_TABLE_NAME, tenantId, ids,
-				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null);
+				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		woodTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
@@ -756,7 +745,7 @@ public class PropertyMasterRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String wallTypeMasterSearchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.WALL_TYPE_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues,
-				null, null);
+				null, null, null);
 		List<WallType> wallTypes = jdbcTemplate.query(wallTypeMasterSearchQuery, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(WallType.class));
 
@@ -795,7 +784,7 @@ public class PropertyMasterRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String usageMasterSearchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.USAGE_TYPE_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, active, isResidential, orderNumber, null, pageSize, offSet,
-				preparedStatementValues, null, null);
+				preparedStatementValues, null, null, null);
 		List<UsageMaster> usageTypes = jdbcTemplate.query(usageMasterSearchQuery, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(UsageMaster.class));
 
@@ -818,8 +807,6 @@ public class PropertyMasterRepository {
 
 	public Long saveStructureClsses(String tenantId, StructureClass structureClass, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		String structureClassInsert = StructureClassesBuilder.INSERT_STRUCTURECLASSES_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -836,8 +823,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, structureClass.getAuditDetails().getCreatedBy());
 				ps.setString(5, structureClass.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, structureClass.getAuditDetails().getCreatedTime());
+				ps.setLong(7, structureClass.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -851,8 +838,6 @@ public class PropertyMasterRepository {
 	}
 
 	public StructureClass updateStructureClsses(StructureClass structureClass, String data) {
-
-		Long updatedTime = new Date().getTime();
 
 		String structureClassesUpdate = StructureClassesBuilder.UPDATE_STRUCTURECLASSES_QUERY;
 		String selectStructureClassessSql = StructureClassesBuilder.SELECT_STRUCTURECLASSES_CREATETIME;
@@ -870,7 +855,7 @@ public class PropertyMasterRepository {
 				ps.setString(2, structureClass.getCode());
 				ps.setObject(3, jsonObject);
 				ps.setString(4, structureClass.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, structureClass.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, structureClass.getId());
 
 				return ps;
@@ -893,8 +878,6 @@ public class PropertyMasterRepository {
 
 	public Long saveUsageMaster(UsageMaster usageMaster, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		String usageInsert = UsageMasterBuilder.INSERT_USAGEMASTER_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -913,8 +896,8 @@ public class PropertyMasterRepository {
 				ps.setObject(4, jsonObject);
 				ps.setString(5, usageMaster.getAuditDetails().getCreatedBy());
 				ps.setString(6, usageMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, createdTime);
-				ps.setLong(8, createdTime);
+				ps.setLong(7, usageMaster.getAuditDetails().getCreatedTime());
+				ps.setLong(8, usageMaster.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -936,8 +919,6 @@ public class PropertyMasterRepository {
 	 */
 	public UsageMaster updateUsageMaster(UsageMaster usageMaster, String data) {
 
-		Long updatedTime = new Date().getTime();
-
 		String usageUpdate = UsageMasterBuilder.UPDATE_USAGEMASTER_QUERY;
 		String selectUsageMasterSql = UsageMasterBuilder.SELECT_USAGEMASTER_CREATETIME;
 
@@ -954,7 +935,7 @@ public class PropertyMasterRepository {
 				ps.setLong(3, usageMaster.getParent());
 				ps.setObject(4, jsonObject);
 				ps.setString(5, usageMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, updatedTime);
+				ps.setLong(6, usageMaster.getAuditDetails().getLastModifiedTime());
 				ps.setLong(7, usageMaster.getId());
 				return ps;
 			}
@@ -976,8 +957,6 @@ public class PropertyMasterRepository {
 
 	public Long saveWallTypes(WallType wallType, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		String wallTypeInsert = WallTypesBuilder.INSERT_WALLTYPES_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -994,9 +973,9 @@ public class PropertyMasterRepository {
 				ps.setString(2, wallType.getCode());
 				ps.setObject(3, jsonObject);
 				ps.setString(4, wallType.getAuditDetails().getCreatedBy());
-				ps.setLong(5, createdTime);
+				ps.setLong(5, wallType.getAuditDetails().getCreatedTime());
 				ps.setString(6, wallType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, createdTime);
+				ps.setLong(7, wallType.getAuditDetails().getLastModifiedTime());
 
 				return ps;
 			}
@@ -1019,8 +998,6 @@ public class PropertyMasterRepository {
 
 	public WallType updateWallTypes(WallType wallType, String data) {
 
-		Long updatedTime = new Date().getTime();
-
 		String wallTypesUpdate = WallTypesBuilder.UPDATE_WALLTYPES_QUERY;
 		String selectWallTypeSql = WallTypesBuilder.SELECT_WALLTYPES_CREATETIME;
 
@@ -1037,7 +1014,7 @@ public class PropertyMasterRepository {
 				ps.setString(2, wallType.getCode());
 				ps.setObject(3, jsonObject);
 				ps.setString(4, wallType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, wallType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, wallType.getId());
 				return ps;
 			}
@@ -1070,7 +1047,7 @@ public class PropertyMasterRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String structureClassSearchQuery = SearchMasterBuilder.buildSearchQuery(
 				ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, tenantId, ids, name, nameLocal, code, active, null,
-				orderNumber, null, pageSize, offSet, preparedStatementValues, null, null);
+				orderNumber, null, pageSize, offSet, preparedStatementValues, null, null, null);
 
 		List<StructureClass> structureClasses = jdbcTemplate.query(structureClassSearchQuery,
 				preparedStatementValues.toArray(), new BeanPropertyRowMapper(StructureClass.class));
@@ -1107,12 +1084,7 @@ public class PropertyMasterRepository {
 		String query = UtilityBuilder.getUniqueTenantCodeQuery(tableName, code, tenantId, id);
 
 		int count = 0;
-		try {
-
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 
 		if (count == 0)
 			isExists = Boolean.FALSE;
@@ -1132,7 +1104,6 @@ public class PropertyMasterRepository {
 	public Long createDepreciation(Depreciation depreciation, String data) {
 
 		String insertDepreciationQuery = DepreciationBuilder.INSERT_DEPRECIATION_QUERY;
-		Long createdTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
 			@Override
@@ -1150,8 +1121,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, depreciation.getAuditDetails().getCreatedBy());
 				ps.setString(5, depreciation.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, depreciation.getAuditDetails().getCreatedTime());
+				ps.setLong(7, depreciation.getAuditDetails().getLastModifiedTime());
 
 				return ps;
 			}
@@ -1175,7 +1146,6 @@ public class PropertyMasterRepository {
 	public void updateDepreciation(Depreciation depreciation, String data) {
 
 		String updateDepreciation = DepreciationBuilder.UPDATE_DEPRECIATION_QUERY;
-		Long updatedTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -1189,7 +1159,7 @@ public class PropertyMasterRepository {
 				ps.setString(2, depreciation.getCode());
 				ps.setObject(3, jsonObject);
 				ps.setString(4, depreciation.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, depreciation.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, depreciation.getId());
 				return ps;
 			}
@@ -1218,13 +1188,13 @@ public class PropertyMasterRepository {
 	 */
 
 	public List<Depreciation> searchDepreciations(String tenantId, Integer[] ids, Integer fromYear, Integer toYear,
-			String code, String nameLocal, Integer pageSize, Integer offset) {
+			String code, String nameLocal, Integer pageSize, Integer offset, Integer year) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
 
 		String searchDepreciationSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.DEPRECIATION_TABLE_NAME,
 				tenantId, ids, null, nameLocal, code, null, null, null, null, pageSize, offset, preparedStatementValues,
-				fromYear, toYear);
+				fromYear, toYear, year);
 
 		List<Depreciation> depreciations = jdbcTemplate.query(searchDepreciationSql, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(Depreciation.class));
@@ -1252,7 +1222,6 @@ public class PropertyMasterRepository {
 
 	public Long createMutationMaster(MutationMaster mutationMaster, String data) {
 		String insertMuationQuery = MutationMasterBuilder.INSERT_MUTATTION_QUERY;
-		Long createdTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
 			@Override
@@ -1270,8 +1239,8 @@ public class PropertyMasterRepository {
 				ps.setObject(4, jsonObject);
 				ps.setString(5, mutationMaster.getAuditDetails().getCreatedBy());
 				ps.setString(6, mutationMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, createdTime);
-				ps.setLong(8, createdTime);
+				ps.setLong(7, mutationMaster.getAuditDetails().getCreatedTime());
+				ps.setLong(8, mutationMaster.getAuditDetails().getLastModifiedTime());
 
 				return ps;
 			}
@@ -1293,7 +1262,6 @@ public class PropertyMasterRepository {
 	public void updateMutationMaster(MutationMaster mutationMaster, String data) {
 
 		String updateMutation = MutationMasterBuilder.UPDATE_MUTATION_QUERY;
-		Long updatedTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -1308,7 +1276,7 @@ public class PropertyMasterRepository {
 				ps.setString(3, mutationMaster.getName());
 				ps.setObject(4, jsonObject);
 				ps.setString(5, mutationMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, updatedTime);
+				ps.setLong(6, mutationMaster.getAuditDetails().getLastModifiedTime());
 				ps.setLong(7, mutationMaster.getId());
 				return ps;
 			}
@@ -1342,7 +1310,7 @@ public class PropertyMasterRepository {
 
 		String searchMutationQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.MUTATION_MASTER_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatemetValues,
-				null, null);
+				null, null, null);
 
 		List<MutationMaster> mutationMasters = jdbcTemplate.query(searchMutationQuery, preparedStatemetValues.toArray(),
 				new BeanPropertyRowMapper(MutationMaster.class));
@@ -1379,5 +1347,179 @@ public class PropertyMasterRepository {
 			isExists = Boolean.FALSE;
 
 		return isExists;
+	}
+
+	/**
+	 * Checks whether Record with tenantId, name, Application name values exists
+	 * or not
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @param applicationEnum
+	 * @param tableName
+	 * @param id
+	 * @return
+	 */
+	public Boolean checkWhetherRecordWithTenantIdAndNameExits(String tenantId, String code, String application,
+			String tableName, Long id) {
+
+		Boolean isExists = Boolean.FALSE;
+
+		List<Object> preparedStatementvalues = new ArrayList<>();
+
+		String query = UtilityBuilder.getUniqueTenantIdNameQuery(tenantId, code, application, tableName, id,
+				preparedStatementvalues);
+
+		int count = 0;
+
+		count = (Integer) jdbcTemplate.queryForObject(query, preparedStatementvalues.toArray(), Integer.class);
+
+		if (count > 0)
+			isExists = Boolean.TRUE;
+
+		return isExists;
+
+	}
+
+	/**
+	 * This will ceate the Document type master in the Database
+	 * 
+	 * @param documentType
+	 * @return {@link Long}
+	 */
+	public Long createDocumentTypeMaster(DocumentType documentType) {
+		String insertDocumentTypeQuery = DocumentTypeBuilder.INSERT_DOCUMENTTYPE_MASTER_QUERY;
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+
+				final PreparedStatement ps = connection.prepareStatement(insertDocumentTypeQuery,
+						new String[] { "id" });
+
+				ps.setString(1, documentType.getTenantId());
+				ps.setString(2, documentType.getName());
+				ps.setString(3, documentType.getCode());
+				ps.setString(4, documentType.getApplication().toString());
+				ps.setString(5, documentType.getAuditDetails().getCreatedBy());
+				ps.setString(6, documentType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(7, documentType.getAuditDetails().getCreatedTime());
+				ps.setLong(8, documentType.getAuditDetails().getLastModifiedTime());
+
+				return ps;
+			}
+		};
+
+		final KeyHolder holder = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(psc, holder);
+		return Long.valueOf(holder.getKey().intValue());
+	}
+
+	/**
+	 * This will update the document type based on the given object
+	 * 
+	 * @param documentType
+	 */
+	public void updateDocumentTypeMaster(DocumentType documentType) {
+		String updateDocumentTypeQuery = DocumentTypeBuilder.UPDATE_DOCUMENTTYPE_MASTER_QUERY;
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(updateDocumentTypeQuery);
+
+				ps.setString(1, documentType.getTenantId());
+				ps.setString(2, documentType.getName());
+				ps.setString(3, documentType.getCode());
+				ps.setString(4, documentType.getApplication().toString());
+				ps.setString(5, documentType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, documentType.getAuditDetails().getLastModifiedTime());
+				ps.setLong(7, documentType.getId());
+				return ps;
+			}
+		};
+
+		Long createdTime = jdbcTemplate.queryForObject(DocumentTypeBuilder.SELECT_DOCUMENTTYPE_MASTER_CREATETIME,
+				new Object[] { documentType.getId() }, Long.class);
+
+		jdbcTemplate.update(psc);
+		documentType.getAuditDetails().setCreatedTime(createdTime);
+	}
+
+	/**
+	 * This will search the document types based on the given parameters
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @param code
+	 * @param application
+	 * @return {@link DocumentType} List of document types
+	 */
+	public List<DocumentType> searchDocumentTypeMaster(String tenantId, String name, String code, String application,
+			Integer pageSize, Integer offSet) {
+
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		String searchDocumentTypeQuery = DocumentTypeBuilder.searchDocumentType(tenantId, name, code, application,
+				pageSize, offSet, preparedStatementValues);
+
+		List<DocumentType> documentTypes = null;
+		documentTypes = getDocumentTypes(searchDocumentTypeQuery, preparedStatementValues);
+
+		return documentTypes;
+	}
+
+	/**
+	 * This will add all the details to the Document type model
+	 * 
+	 * @param query
+	 * @return List<DocumentType>
+	 */
+	private List<DocumentType> getDocumentTypes(String query, List<Object> preparedStatementvalues) {
+
+		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementvalues.toArray());
+		for (Map row : rows) {
+			DocumentType documentType = new DocumentType();
+			documentType.setTenantId(getString(row.get("tenantId")));
+			documentType.setId(getLong(row.get("id")));
+			documentType.setName(getString(row.get("name")));
+			documentType.setCode(getString(row.get("code")));
+			documentType.setApplication(ApplicationEnum.valueOf(getString(row.get("application"))));
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+			documentType.setAuditDetails(auditDetails);
+
+			documentTypes.add(documentType);
+
+		}
+
+		return documentTypes;
+	}
+
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String} String value
+	 */
+	private String getString(Object object) {
+		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long} Long value
+	 */
+	private Long getLong(Object object) {
+		return object == null ? 0 : Long.parseLong(object.toString());
 	}
 }

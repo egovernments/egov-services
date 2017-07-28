@@ -1,14 +1,13 @@
 package org.egov.egf.instrument.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.model.SurrenderReasonSearch;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
-import org.egov.egf.instrument.web.contract.SurrenderReasonContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,13 +32,65 @@ public class SurrenderReasonService {
 	@Autowired
 	private SmartValidator validator;
 
+	@Autowired
+	public SurrenderReasonService(SmartValidator validator, SurrenderReasonRepository surrenderReasonRepository) {
+		this.validator = validator;
+		this.surrenderReasonRepository = surrenderReasonRepository;
+	}
+
+	@Transactional
+	public List<SurrenderReason> save(List<SurrenderReason> surrenderReasons, BindingResult errors) {
+
+		List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
+
+		try {
+
+			surrenderReasons = fetchAndValidate(surrenderReasons, errors, ACTION_CREATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (SurrenderReason sr : surrenderReasons) {
+
+			resultList.add(save(sr));
+
+		}
+
+		return resultList;
+	}
+
+	@Transactional
+	public List<SurrenderReason> update(List<SurrenderReason> surrenderReasons, BindingResult errors) {
+
+		List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
+
+		try {
+
+			surrenderReasons = fetchAndValidate(surrenderReasons, errors, ACTION_UPDATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (SurrenderReason sr : surrenderReasons) {
+
+			resultList.add(update(sr));
+
+		}
+
+		return resultList;
+	}
 
 	private BindingResult validate(List<SurrenderReason> surrenderreasons, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
 			case ACTION_VIEW:
-				// validator.validate(surrenderReasonContractRequest.getSurrenderReason(), errors);
+				// validator.validate(surrenderReasonContractRequest.getSurrenderReason(),
+				// errors);
 				break;
 			case ACTION_CREATE:
 				Assert.notNull(surrenderreasons, "SurrenderReasons to create must not be null");
@@ -73,29 +124,15 @@ public class SurrenderReasonService {
 	}
 
 	@Transactional
-	public List<SurrenderReason> add(List<SurrenderReason> surrenderreasons, BindingResult errors) {
+	public List<SurrenderReason> fetchAndValidate(List<SurrenderReason> surrenderreasons, BindingResult errors,
+			String action) {
 		surrenderreasons = fetchRelated(surrenderreasons);
-		validate(surrenderreasons, ACTION_CREATE, errors);
+		validate(surrenderreasons, action, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return surrenderreasons;
 
-	}
-
-	@Transactional
-	public List<SurrenderReason> update(List<SurrenderReason> surrenderreasons, BindingResult errors) {
-		surrenderreasons = fetchRelated(surrenderreasons);
-		validate(surrenderreasons, ACTION_UPDATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		return surrenderreasons;
-
-	}
-
-	public void addToQue(CommonRequest<SurrenderReasonContract> request) {
-		surrenderReasonRepository.add(request);
 	}
 
 	public Pagination<SurrenderReason> search(SurrenderReasonSearch surrenderReasonSearch) {

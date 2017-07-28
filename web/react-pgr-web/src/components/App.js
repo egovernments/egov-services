@@ -148,7 +148,7 @@ class App extends Component {
   }
 
   render() {
-    var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus} = this.props;
+    var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus, isSuccess, isError} = this.props;
 
     const actions = [
       <FlatButton
@@ -175,8 +175,9 @@ class App extends Component {
           <Snackbar
               open={isSnackBarOpen}
               message={toastMsg}
+              bodyStyle={{"backgroundColor": isSuccess ? "#3ca23c" : (isError ? "#e83e36" : "rgb(95, 92, 98)"), "textAlign": "center"}}
               autoHideDuration={6000}
-              onRequestClose={()=>toggleSnackbarAndSetText(false,"")}
+              onRequestClose={()=>toggleSnackbarAndSetText(false, "", false, false)}
             />
           <LoadingIndicator status={loadingStatus || "hide"}/>
       </div>
@@ -198,7 +199,9 @@ const mapStateToProps = state => ({
     msg: state.form.msg,
     isSnackBarOpen : state.form.snackbarOpen,
     toastMsg: state.form.toastMsg,
-    loadingStatus: state.form.loadingStatus
+    loadingStatus: state.form.loadingStatus,
+    isSuccess: state.form.isSuccess,
+    isError: state.form.isError
 });
 
 // this.props.appLoaded
@@ -228,8 +231,8 @@ const mapDispatchToProps = dispatch => ({
     toggleDailogAndSetText: (dailogState,msg) => {
       dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState, msg});
     },
-    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
-      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
     },
     setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});

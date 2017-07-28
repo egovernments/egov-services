@@ -66,6 +66,7 @@ public class DemandRequest {
 	private RequestInfo requestInfo;
 	
 	@Valid
+	@NotNull
 	@JsonProperty("Demands")
 	private List<Demand> demands = new ArrayList<>();
 }

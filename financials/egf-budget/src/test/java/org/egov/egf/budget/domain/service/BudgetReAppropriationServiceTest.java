@@ -55,11 +55,74 @@ public class BudgetReAppropriationServiceTest {
 	}
 
 	@Test
+	public final void test_save_with_out_kafka() {
+
+		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+
+		BudgetReAppropriation budgetReAppropriation = expextedResult.get(0);
+
+		when(budgetReAppropriationRepository.save(any(BudgetReAppropriation.class))).thenReturn(budgetReAppropriation);
+
+		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.save(expextedResult, errors);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test(expected = CustomBindException.class)
+	public final void test_save_with_out_kafka_and_with_null_req() {
+
+		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+
+		BudgetReAppropriation budgetReAppropriation = expextedResult.get(0);
+
+		when(budgetReAppropriationRepository.save(any(BudgetReAppropriation.class))).thenReturn(budgetReAppropriation);
+
+		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.save(null, errors);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test
+	public final void test_update_with_out_kafka() {
+
+		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+
+		BudgetReAppropriation budgetReAppropriation = expextedResult.get(0);
+
+		when(budgetReAppropriationRepository.update(any(BudgetReAppropriation.class)))
+				.thenReturn(budgetReAppropriation);
+
+		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.update(expextedResult, errors);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test(expected = CustomBindException.class)
+	public final void test_update_with_out_kafka_and_with_null_req() {
+
+		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+
+		BudgetReAppropriation budgetReAppropriation = expextedResult.get(0);
+
+		when(budgetReAppropriationRepository.update(any(BudgetReAppropriation.class)))
+				.thenReturn(budgetReAppropriation);
+
+		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.update(null, errors);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test
 	public final void test_save_for_create() {
 
 		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
 
-		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.save(expextedResult, errors, "create");
+		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.fetchAndValidate(expextedResult, errors,
+				"create");
 
 		assertEquals(expextedResult, actualResult);
 
@@ -70,7 +133,8 @@ public class BudgetReAppropriationServiceTest {
 
 		List<BudgetReAppropriation> expextedResult = null;
 
-		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.save(expextedResult, errors, "create");
+		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.fetchAndValidate(expextedResult, errors,
+				"create");
 
 	}
 
@@ -79,7 +143,8 @@ public class BudgetReAppropriationServiceTest {
 
 		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
 
-		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.save(expextedResult, errors, "update");
+		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.fetchAndValidate(expextedResult, errors,
+				"update");
 
 		assertEquals(expextedResult, actualResult);
 

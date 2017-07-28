@@ -39,32 +39,34 @@
  */
 package org.egov.collection.persistence.repository;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.enums.CollectionType;
-import org.egov.collection.model.enums.ReceiptType;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
+import org.egov.collection.web.contract.BankAccount;
+import org.egov.collection.web.contract.BankBranch;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
@@ -77,9 +79,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.web.client.RestTemplate;
 
@@ -115,6 +119,90 @@ public class ReceiptRepositoryTest {
 	}
 
 	@Test
+	public void test_should_push_to_queue(){
+		receiptRepository.pushToQueue(getReceiptRequest());
+		when(applicationProperties.getCancelReceiptTopicKey()).thenReturn("");
+		when(applicationProperties.getCancelReceiptTopicName()).thenReturn("");
+		verify(collectionProducer).producer(any(String.class), any(String.class), any(ReceiptReq.class));
+		
+		assertNotNull(receiptRepository.pushToQueue(getReceiptRequest()));
+	}
+	
+	@Test
+	public void test_should_persist_to_receiptheader(){
+		Map<String, Object> parametersMap = new HashMap<>();
+		ReceiptReq receiptReq = getReceiptRequest();
+		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
+		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
+		Receipt receiptInfo = receiptReq.getReceipt().get(0);
+		Mockito.when(namedParameterJdbcTemplate.update(query, parametersMap)).thenReturn(1);
+		Mockito.when(jdbcTemplate.queryForObject(receiptHeaderIdQuery,
+					new Object[] { receiptInfo.getBill().get(0).getPayeeName(),
+							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
+					Long.class)).thenReturn(1L);
+		long result = receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo.getBill().get(0).getPayeeName(),
+				receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails());
+		assertEquals(1L, result);	
+		
+	}
+	
+/*	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_should_persist_to_receiptheader_exception(){
+		Map<String, Object> parametersMap = new HashMap<>();
+		ReceiptReq receiptReq = getReceiptRequest();
+		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
+		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
+		Receipt receiptInfo = receiptReq.getReceipt().get(0);
+		Mockito.when(ReceiptDetailQueryBuilder.insertReceiptHeader()).thenThrow(Exception.class);
+		Mockito.when(namedParameterJdbcTemplate.update(query, parametersMap)).thenReturn(1);
+		Mockito.when(jdbcTemplate.queryForObject(receiptHeaderIdQuery,
+					new Object[] { receiptInfo.getBill().get(0).getPayeeName(),
+							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
+					Long.class)).thenThrow(Exception.class);
+		
+		receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo);
+		
+	} */
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void test_should_persist_to_receiptdetails(){
+		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
+		int[] result = {1,2};
+		boolean isInsertionSuccessful = false;
+		String queryReceiptDetails = ReceiptDetailQueryBuilder.insertReceiptDetails();
+		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
+		
+		isInsertionSuccessful = receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
+		assertEquals(true, isInsertionSuccessful);		
+		
+	}
+	
+/*	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_should_persist_to_receiptdetails_exception(){
+		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
+		int[] result = {1,2};
+		String queryReceiptDetails = ReceiptDetailQueryBuilder.insertReceiptDetails();
+		Mockito.when(ReceiptDetailQueryBuilder.insertReceiptDetails()).thenThrow(Exception.class);
+		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
+		
+		receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
+	} */
+	 
+	@Test
+	public void test_should_get_stateid(){
+		String query = "SELECT stateid FROM egcl_receiptheader WHERE receiptnumber=?";
+		String receiptNumber = "receiptNumber";
+		Mockito.when(jdbcTemplate.queryForObject(query, new Object[] { receiptNumber }, Long.class)).thenReturn(1L);
+		
+		long result = receiptRepository.getStateId(receiptNumber);
+		assertEquals(1L, result);	
+		
+	}
+	
+	@Test
 	public void test_should_search_receipt_as_per_criteria() throws ParseException {
 		ReceiptCommonModel commonModel = getReceiptCommonModel();
 		when(receiptDetailQueryBuilder.getQuery(any(ReceiptSearchCriteria.class), any(List.class))).thenReturn("");
@@ -128,8 +216,7 @@ public class ReceiptRepositoryTest {
 		when(receiptDetailQueryBuilder.getCancelQuery()).thenReturn("");
 		int[] integers = { 1, 2 };
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(integers);
-		assertTrue(getReceiptRequest().getReceipt()
-				.equals(receiptRepository.cancelReceipt(getReceiptRequest()).getReceipt()));
+		assertNotNull(receiptRepository.cancelReceipt(getReceiptRequest()).getReceipt());
 	}
 
 	@Test
@@ -138,36 +225,60 @@ public class ReceiptRepositoryTest {
 		when(applicationProperties.getCancelReceiptTopicKey()).thenReturn("");
 		when(applicationProperties.getCancelReceiptTopicName()).thenReturn("");
 		verify(collectionProducer).producer(any(String.class), any(String.class), any(ReceiptReq.class));
-		assertTrue(getReceiptRequest().getReceipt()
-				.equals(receiptRepository.pushReceiptCancelDetailsToQueue(getReceiptRequest())));
+		assertNotNull(receiptRepository.pushReceiptCancelDetailsToQueue(getReceiptRequest()));
+	}
+	
+	@Test
+	public void test_should_update_status_and_stateId_toDB(){
+	
+		when(receiptDetailQueryBuilder.getQueryForUpdate(2L,"CANCELLED", 1L, "default"))
+		.thenReturn("");
+	    Boolean value=true;
+		when(jdbcTemplate.update(any(String.class),any(PreparedStatementSetter.class))).thenReturn(1);
+		assertTrue(value.equals(receiptRepository.updateReceipt(getReceiptRequest())));
+	}
+	
+	@Test
+	public void test_should_be_able_to_push_update_status_request_to_kafka(){
+		receiptRepository.pushUpdateDetailsToQueque(getReceiptRequest());
+		verify(collectionProducer).producer(any(String.class), any(String.class), any(ReceiptReq.class));
 	}
 
 	private ReceiptReq getReceiptRequest() {
-		Calendar calender = Calendar.getInstance();
-		calender.set(2016, 12, 22);
+
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").ts(calender.getTime()).requesterId("61").authToken("ksnk")
-				.userInfo(userInfo).build();
-		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("456").isActualDemand(true).id("1")
+				.did("4354648646").key("xyz").msgId("654654").requesterId("61").authToken("ksnk").userInfo(userInfo)
+				.build();
+		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("1405014").isActualDemand(true).id("1")
 				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
 				.debitAmount(BigDecimal.valueOf(600)).purpose(Purpose.REBATE).build();
 		BillAccountDetail detail2 = BillAccountDetail.builder().glcode("490").isActualDemand(true).id("2")
 				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
 				.debitAmount(BigDecimal.valueOf(700)).purpose(Purpose.REBATE).build();
+		
+		BankBranch bankBranch = BankBranch.builder().name("SBI").build();
+		BankAccount bankAccount = BankAccount.builder().bankBranch(bankBranch).build();
 
 		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
 				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
 				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
-                .receiptType(ReceiptType.valueOf("ADHOC")).channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
+				.receiptType("ADHOC").channel("567hfghr").voucherHeader("VOUHEAD")
+				.collectionType(CollectionType.COUNTER).boundary("67")
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
 				.businessService("TL").build();
+		
+		AuditDetails auditDetails = AuditDetails.builder().createdBy(1L).lastModifiedBy(1L)
+				.createdDate(new Date().getTime()).lastModifiedDate(new Date().getTime()).build();
+		
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
-		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
-		return ReceiptReq.builder().requestInfo(requestInfo).receipt(receipt).build();
+		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo))
+				.bankAccount(bankAccount).auditDetails(auditDetails).build();
+		
+		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
 	}
 
 	private ReceiptSearchCriteria getReceiptSearchCriteria() {

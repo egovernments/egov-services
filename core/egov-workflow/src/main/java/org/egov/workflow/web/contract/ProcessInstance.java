@@ -63,7 +63,7 @@ public class ProcessInstance {
 
     @JsonIgnore
     public String getComments(){
-        return getValueForKey("approvalComments");
+        return getValueForKey("systemApprovalComments");
     }
 
     @JsonIgnore
@@ -75,7 +75,7 @@ public class ProcessInstance {
         Value value = new Value("stateId", String.valueOf(stateId));
         List<Value> attributeValues = Collections.singletonList(value);
         Attribute attribute = new Attribute(true, "stateId", "String", true, "This is the id of state",attributeValues,"tenantId");
-        values.put("stateId",attribute);
+        values.put("systemStateId",attribute);
     }
 
     //To be used to fetch single value attributes

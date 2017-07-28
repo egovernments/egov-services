@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 public class IdRequestWrapper {
 	
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	public IdGenRequestInfo idGenRequestInfo;
 	
 	public List<IdRequest> idRequests;

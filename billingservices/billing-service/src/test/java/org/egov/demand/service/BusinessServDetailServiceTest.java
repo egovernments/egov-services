@@ -146,7 +146,7 @@ public class BusinessServDetailServiceTest {
         businessServiceDetail.setPartPaymentAllowed(false);
         businessServiceDetail.setCallBackForApportioning(false);
         businessServiceDetail.setCollectionModesNotAllowed(Collections.EMPTY_LIST);
-        businessServiceDetail.setAuditDetail(new AuditDetail());
+        businessServiceDetail.setAuditDetails(new AuditDetail());
         return businessServiceDetail;
     }
 }

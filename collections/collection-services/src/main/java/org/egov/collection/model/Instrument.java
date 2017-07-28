@@ -143,27 +143,4 @@ public class Instrument {
 	@Size(max=100)
 	private String drawer;
 
-	/*
-	 * surrendarReason is the reason from the defined list seleted while
-	 * surrendering a payment cheque. Depending on the reason, the cheque can be
-	 * re-used or not is decided.
-	 */
-	private SurrenderReason surrendarReason;
-
-	/*
-	 * serialNo is the series of the cheque numbers from which the
-	 * instrument is assigned from. The cheque numbers in an account is defined
-	 * based on Year, Bank account and tagged to a department.
-	 */
-	@NotBlank
-	@Size(max=50,min=2)
-	private String serialNo;
-
-	/*
-	 * instrumentVouchers is the reference to the payment vouchers for which the
-	 * instrument is attached.
-	 */
-//	@DrillDownTable
-	private Set<InstrumentVoucher> instrumentVouchers = new HashSet<InstrumentVoucher>(0);
-
 }

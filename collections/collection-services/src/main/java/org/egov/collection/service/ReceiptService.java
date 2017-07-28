@@ -120,15 +120,18 @@ public class ReceiptService {
 		 
 		receipt = create(bill, receiptReq.getRequestInfo(),
 				receiptReq.getTenantId(), 1L); // sync call
+		
+		LOGGER.info("Receipt receieved: "+receipt);
 		if (null != receipt){
 			LOGGER.info("Pushing receipt to kafka queue");
 			receiptReq.setReceipt(Arrays.asList(receipt));
 			receipt = receiptRepository.pushToQueue(receiptReq);
+			return receipt;
+
 		}else{
 			LOGGER.error("Receipt creation failed!");
 			return null;
 		}
-		return receipt;
 	}
 
 	private List<BillDetail> apportionPaidAmount(RequestInfo requestInfo,
@@ -342,6 +345,7 @@ public class ReceiptService {
 					}
 				}				
 				if(!receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, receiptHeaderId, instrumentId)){
+					LOGGER.info("Repo returned false");
 					Receipt receipt = new Receipt();
 					return receipt;
 				}

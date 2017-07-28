@@ -295,7 +295,7 @@ public class BoundaryController {
 
 	}
 
-	@PostMapping(value = "/search")
+	@PostMapping(value = "/_search")
 	@ResponseBody
 	public ResponseEntity<?> boundarySearch(@RequestParam(value = "tenantId", required = true) String tenantId,
 			@RequestParam(value = "boundaryIds", required = false) final List<Long> boundaryIds,

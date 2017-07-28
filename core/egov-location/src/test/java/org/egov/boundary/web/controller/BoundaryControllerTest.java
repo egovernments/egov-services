@@ -109,7 +109,7 @@ public class BoundaryControllerTest {
 	public void testShouldReturnBadRequestWhenTenantIdAndBoundaryIdsNotProvided() throws Exception {
 		when(boundaryService.getAllBoundariesByBoundaryIdsAndTenant(any(String.class), anyListOf(Long.class)))
 				.thenReturn(null);
-		mockMvc.perform(post("/boundarys/search").contentType(MediaType.APPLICATION_JSON_UTF8))
+		mockMvc.perform(post("/boundarys/_search").contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -117,7 +117,7 @@ public class BoundaryControllerTest {
 	public void testShouldReturnBadRequestWhenTenantIdAndBoundaryIdsAreEmpty() throws Exception {
 		when(boundaryService.getAllBoundariesByBoundaryIdsAndTenant(any(String.class), anyListOf(Long.class)))
 				.thenReturn(null);
-		mockMvc.perform(post("/boundarys/search").param("tenantId", "").param("boundaryIds", "")
+		mockMvc.perform(post("/boundarys/_search").param("tenantId", "").param("boundaryIds", "")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
 	}
 

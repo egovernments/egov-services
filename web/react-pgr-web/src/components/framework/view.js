@@ -91,18 +91,18 @@ class Report extends Component {
     const renderTable = function() {
       var objectName = mockData[`${moduleName}.${actionName}`].objectName;
       if(formData[objectName].documents && formData[objectName].documents.length) {
-        /*var dataList = {
+        var dataList = {
           resultHeader: ["#", "Name", "File"],
           resultValues: []
         };
 
         for(var i=0; i<formData[objectName].documents.length; i++) {
-          dataList.resultValues.push([i+1, formData[objectName].documents].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=" + formData[objectName].documents].fileStoreId + ">Download</a>");
+          dataList.resultValues.push([i+1, formData[objectName].documents[i].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + formData[objectName].documents[i].fileStoreId + ">Download</a>"]);
         }
 
         return (
           <UiTable resultList={dataList}/>
-        );*/
+        );
       }
     }
 

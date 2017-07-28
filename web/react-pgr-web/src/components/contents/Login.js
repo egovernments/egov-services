@@ -616,6 +616,7 @@ class Login extends Component {
                           <p>{translate('pgr.msg.creategrievance.avail.onlineservices')}</p>
                         </div>
                       </Col>
+                      
                       <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
                         <IconButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">mode_edit</i>

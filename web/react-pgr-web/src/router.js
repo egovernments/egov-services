@@ -89,11 +89,11 @@ const Main = () => {
     return (
     <main style={{"marginBottom": "50px"}}>
     <Switch>
-        <Route exact path= {base + '/'} component={Login}/>
+        <Route exact path= {base + '/:tenantId?'} component={Login}/>
 	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
         <Route exact path= {base + '/search/:moduleName/:master?'} component={Search}/>
-        <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
-        <Route exact path={base+'/dashboard'} component={Dashboard}/>
+        <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
+        <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>
@@ -167,7 +167,7 @@ const Main = () => {
 
 
             <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
-          <Route exact path={base+'/propertyTax'} component={PropertyTaxSearch}/>
+          <Route exact path={base+'/propertyTax/search'} component={PropertyTaxSearch}/>
           <Route exact path={base+'/propertyTax/test'} component={Test}/>
           <Route exact path={base+'/propertyTax/floor-type'} component={FloorType}/>
           <Route exact path={base+'/propertyTax/roof-type'} component={RoofType}/>
@@ -180,7 +180,9 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
 		  <Route exact path={base+'/propertyTax/view-property'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
-          <Route exact path= {base + '/:actionName/:moduleName/:master?/:id?'} component={Create}/>
+          <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
+          <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
+
     </Switch>
   </main>
 )}

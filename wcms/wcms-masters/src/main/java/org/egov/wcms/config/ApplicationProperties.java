@@ -136,6 +136,12 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.treatmentplant.update.name}")
     private String updateTreatmentPlantTopicName;
+    
+    @Value("${kafka.topics.meterwaterrates.create.name}")
+    private String createMeterWaterRatesTopicName;
+
+    @Value("${kafka.topics.meterwaterrates.update.name}")
+    private String updateMeterWaterRatesTopicName;
 
     @Autowired
     private Environment environment;
@@ -258,5 +264,13 @@ public class ApplicationProperties {
 
     public String getUpdateTreatmentPlantTopicName() {
         return updateTreatmentPlantTopicName;
+    }
+    
+    public String getCreateMeterWaterRatesTopicName() {
+        return createMeterWaterRatesTopicName;
+    }
+
+    public String getUpdateMeterWaterRatesTopicName() {
+        return updateMeterWaterRatesTopicName;
     }
 }

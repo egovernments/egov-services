@@ -283,6 +283,8 @@ public class PropertyValidator {
 			if (!structureExists) {
 				throw new InvalidCodeException(env.getProperty("invalid.input.structure"), requestInfo);
 			}
+			
+			//if(unit.get)
 		}
 	}
 }

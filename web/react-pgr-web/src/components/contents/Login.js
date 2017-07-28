@@ -185,7 +185,7 @@ class Login extends Component {
       params.append('password', props.credential.password);
       params.append('grant_type', 'password');
       params.append('scope', 'read');
-      params.append('tenantId', 'default');
+      params.append('tenantId', typeof(props.match.params.tenantId)!="undefined"?props.match.params.tenantId:'default');
 
       instance.post('/user/oauth/token', params).then(function(response) {
         localStorage.setItem("auth-token", response.data.access_token);

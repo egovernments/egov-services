@@ -68,10 +68,9 @@ public class BoundaryTypeService {
 
 	@Autowired
 	private HierarchyTypeService hierarchyTypeService;
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
-	
 
 	@Transactional
 	public BoundaryType createBoundaryType(BoundaryType boundaryType) {
@@ -116,24 +115,20 @@ public class BoundaryTypeService {
 
 	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantName(final String hierarchyTypeName,
 			final String tenantId) {
-Session currentSession = entityManager.unwrap(Session.class);
-		
-		String sql="select t.* from eg_boundary_Type t where hierarchytype in "
+		Session currentSession = entityManager.unwrap(Session.class);
+
+		String sql = "select t.* from eg_boundary_Type t where hierarchytype in "
 				+ "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId  ";
-				
-			SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-				.addScalar("name")
-				.addScalar("hierarchy",LongType.INSTANCE)
-				.addScalar("code")
-				.addScalar("tenantId");
-		
+
+		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+				.addScalar("name").addScalar("hierarchy", LongType.INSTANCE).addScalar("code").addScalar("tenantId");
+
 		createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
 		createSQLQuery.setString("tenantId", tenantId);
-		//createSQLQuery.setsca
+		// createSQLQuery.setsca
 		createSQLQuery.setResultTransformer(Transformers.aliasToBean(BoundaryType.class));
 		List boundarylist = createSQLQuery.list();
-		
-		
+
 		return boundarylist;
 	}
 
@@ -164,8 +159,7 @@ Session currentSession = entityManager.unwrap(Session.class);
 	}
 
 	public BoundaryType getBoundaryTypeByNameAndHierarchyTypeName(final String boundaryTypename,
-																  final String hierarchyTypeName,
-																  String tenantId) {
+			final String hierarchyTypeName, String tenantId) {
 		return boundaryTypeRepository.findByNameAndHierarchyTypeName(boundaryTypename, hierarchyTypeName, tenantId);
 	}
 
@@ -205,4 +199,11 @@ Session currentSession = entityManager.unwrap(Session.class);
 		return boundaryTypes;
 	}
 
+	public List<BoundaryType> getAllBoundarytypesByNameAndTenant(String name,String tenantId){
+		
+		return boundaryTypeRepository.findAllByTenantIdAndName(tenantId,name);
+		
+	}
+	
+	
 }

@@ -8,6 +8,7 @@ import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountEntity;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankAccount;
+import org.egov.egf.master.domain.model.BankBranch;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
@@ -48,6 +49,7 @@ import org.egov.egf.master.web.contract.AccountDetailKeyContract;
 import org.egov.egf.master.web.contract.AccountDetailTypeContract;
 import org.egov.egf.master.web.contract.AccountEntityContract;
 import org.egov.egf.master.web.contract.BankAccountContract;
+import org.egov.egf.master.web.contract.BankBranchContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
@@ -68,6 +70,7 @@ import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
 import org.egov.egf.master.web.requests.AccountDetailTypeRequest;
 import org.egov.egf.master.web.requests.AccountEntityRequest;
 import org.egov.egf.master.web.requests.BankAccountRequest;
+import org.egov.egf.master.web.requests.BankBranchRequest;
 import org.egov.egf.master.web.requests.BankRequest;
 import org.egov.egf.master.web.requests.BudgetGroupRequest;
 import org.egov.egf.master.web.requests.ChartOfAccountDetailRequest;
@@ -264,6 +267,36 @@ public class FinancialMastersListener {
 			mastersMap.clear();
 			mastersMap.put("bank_persisted", request);
 			financialProducer.sendMessage(completedTopic, bankCompletedKey,
+					mastersMap);
+		}
+		
+		if (mastersMap.get("bankbranch_create") != null) {
+			BankBranchRequest request = objectMapper.convertValue(
+					mastersMap.get("bankbranch_create"), BankBranchRequest.class);
+			ModelMapper mapper = new ModelMapper();
+			for (BankBranchContract bankBranchContract : request.getBankBranches()) {
+				BankBranch domain = mapper.map(bankBranchContract, BankBranch.class);
+				bankBranchService.save(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("bankbranch_persisted", request);
+			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey,
+					mastersMap);
+		}
+		if (mastersMap.get("bankbranch_update") != null) {
+
+			BankBranchRequest request = objectMapper.convertValue(
+					mastersMap.get("bankbranch_update"), BankBranchRequest.class);
+
+			ModelMapper mapper = new ModelMapper();
+			for (BankBranchContract bankBranchContract : request.getBankBranches()) {
+				BankBranch domain = mapper.map(bankBranchContract, BankBranch.class);
+				bankBranchService.update(domain);
+			}
+			mastersMap.clear();
+			mastersMap.put("bankbranch_persisted", request);
+			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey,
 					mastersMap);
 		}
 
@@ -926,6 +959,38 @@ public class FinancialMastersListener {
 			financialProducer.sendMessage(completedTopic,
 					financialConfigurationCompletedKey, mastersMap);
 		}
+		
+		if (mastersMap.get("bankbranch_create") != null) {
+	            BankBranchRequest request = objectMapper.convertValue(
+	                    mastersMap.get("bankbranch_create"), BankBranchRequest.class);
+	            ModelMapper mapper = new ModelMapper();
+	            for (BankBranchContract bankBranchContract : request.getBankBranches()) {
+	                BankBranch domain = mapper.map(bankBranchContract, BankBranch.class);
+	                bankBranchService.save(domain);
+	            }
+
+	            mastersMap.clear();
+	            mastersMap.put("bankbranch_persisted", request);
+	            financialProducer.sendMessage(completedTopic, bankBranchCompletedKey,
+	                    mastersMap);
+	        }
+	        if (mastersMap.get("bankbranch_update") != null) {
+
+	            BankBranchRequest request = objectMapper.convertValue(
+	                    mastersMap.get("bankbranch_update"), BankBranchRequest.class);
+
+	            ModelMapper mapper = new ModelMapper();
+	            for (BankBranchContract bankBranchContract : request.getBankBranches()) {
+	                BankBranch domain = mapper.map(bankBranchContract, BankBranch.class);
+	                bankBranchService.update(domain);
+	            }
+
+	            mastersMap.clear();
+	            mastersMap.put("bankbranch_persisted", request);
+	            financialProducer.sendMessage(completedTopic, bankBranchCompletedKey,
+	                    mastersMap);
+	        }
+
 
 	}
 

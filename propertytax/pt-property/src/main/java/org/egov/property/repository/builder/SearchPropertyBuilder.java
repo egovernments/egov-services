@@ -7,6 +7,8 @@ import java.util.Map;
 import org.egov.models.RequestInfo;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 public class SearchPropertyBuilder {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SearchPropertyBuilder.class);
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -29,6 +33,8 @@ public class SearchPropertyBuilder {
 
 	@Autowired
 	RestTemplate restTemplate;
+	
+	
 
 	String BASE_SEARCH_QUERY = "select * from egpt_property prop  JOIN egpt_address Addr"
 			+ " on Addr.property =  prop.id JOIN egpt_property_owner puser on puser.property = prop.id where";
@@ -36,7 +42,7 @@ public class SearchPropertyBuilder {
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
-			String ownerName, int demandFrom, int demandTo, List<Object> preparedStatementValues) {
+			String ownerName, int demandFrom, int demandTo, String propertyId, List<Object> preparedStatementValues) {
 
 		StringBuffer searchPropertySql = new StringBuffer();
 
@@ -61,12 +67,15 @@ public class SearchPropertyBuilder {
 		userSearchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
 
 		UserResponseInfo userResponse = null;
-
+		logger.info("searchUserUrl searchUrl ---->> "+userSearchUrl.toString()+" \n userSearchRequestInfo ---->> "+userSearchRequestInfo);
 		if (ownerName != null || mobileNumber != null || aadhaarNumber != null || tenantId != null) {
-
+			logger.info("searchUserUrl inside  searchUrl ---->> "+userSearchUrl.toString()+" \n userSearchRequestInfo ---->> "+userSearchRequestInfo);
 			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
+			logger.info(" search response  \n userResponse ---->> "+userResponse);
 		}
+		logger.info(" search response  \n userResponse ---->> "+userResponse);
+		
 		String Ids = "";
 
 		List<User> users = null;
@@ -121,6 +130,11 @@ public class SearchPropertyBuilder {
 			searchPropertySql.append(" AND Addr.addressnumber=?");
 			preparedStatementValues.add(houseNoBldgApt.trim());
 
+		}
+
+		if (propertyId != null && !propertyId.isEmpty()) {
+			searchPropertySql.append(" AND prop.id =?");
+			preparedStatementValues.add(propertyId);
 		}
 
 		if (sort != null && sort.length > 0) {

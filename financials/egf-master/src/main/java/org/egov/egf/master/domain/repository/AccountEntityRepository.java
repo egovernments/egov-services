@@ -47,9 +47,9 @@ public class AccountEntityRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("accountEntity_create", request);
+			message.put("accountentity_create", request);
 		} else {
-			message.put("accountEntity_update", request);
+			message.put("accountentity_update", request);
 		}
 		accountEntityQueueRepository.add(message);
 	}

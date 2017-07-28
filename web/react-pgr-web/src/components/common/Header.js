@@ -10,6 +10,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 // import PropTypes from 'prop-types'
 import { withRouter } from 'react-router';
 import Api from '../../api/api';
+import {logo, tenantName} from './temp/local';
 // import {history} from 'react-router-dom'
 
 // import {Grid, Row, Col} from 'react-bootstrap';
@@ -40,9 +41,35 @@ const styles = {
   }
 }
 
-const Logo = () => {
+const getTenantId = () => {
+  if(localStorage.getItem("tenantId")) {
+    return localStorage.getItem("tenantId");
+  } else {
+    var queryString = window.location.href.split("?");
+    if(queryString && queryString[1] && /tenantId/.test(queryString[1])) {
+      var queries = queryString[1].split("&");
+      for(var i=0; i<queries.length; i++) {
+        if(/tenantId/.test(queries[i])) {
+          return queries[i].split("=")[1];
+        }
+      }
+    }
+    return 'default';
+  }
+}
 
-  return (<img src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
+const Logo = () => {
+  if(logo[getTenantId()]) {
+    return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
+  } else if(logo["default"]) {
+    return (<img width="64" src={logo["default"]} style={styles.mainLogo} alt="logo"/>);
+  } else {
+    return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
+  }
+}
+
+const getTitle = () => {
+  return tenantName[getTenantId()] || "Your City";
 }
 
 const RightIcon = (props) => {
@@ -52,7 +79,7 @@ const RightIcon = (props) => {
       <div>
       <i onClick={()=>{
         if(localStorage.getItem("token"))
-          props.setRoute("/dashboard");
+          props.setRoute("/prd/dashboard");
         else
           props.setRoute("/");
       }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -129,7 +156,7 @@ class Header extends Component {
   componentDidMount()
   {
 
-	  console.log(this.props.actionList);
+	  console.log(this.props);
     //When api ready asssign api response to menuItems
     let menuItems=[{
             id:0,
@@ -798,10 +825,9 @@ class Header extends Component {
   }
 
   render() {
-    // console.log(this.props);
     return (
       <div className="Header">
-        <AppBar title={<div><Logo/> Egovernments </div>}
+        <AppBar title={<div><Logo/> {getTitle()} </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>

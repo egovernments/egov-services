@@ -18,7 +18,11 @@ public class SurrenderReasonRepository {
 	public SurrenderReason findById(SurrenderReason surrenderReason) {
 		SurrenderReasonEntity entity = surrenderReasonJdbcRepository
 				.findById(new SurrenderReasonEntity().toEntity(surrenderReason));
-		return entity.toDomain();
+		if (entity != null)
+			return entity.toDomain();
+
+		return null;
+
 
 	}
 

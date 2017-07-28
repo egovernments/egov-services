@@ -45,9 +45,9 @@ public class FiscalPeriodRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("fiscalPeriod_create", request);
+			message.put("fiscalperiod_create", request);
 		} else {
-			message.put("fiscalPeriod_update", request);
+			message.put("fiscalperiod_update", request);
 		}
 		fiscalPeriodQueueRepository.add(message);
 	}

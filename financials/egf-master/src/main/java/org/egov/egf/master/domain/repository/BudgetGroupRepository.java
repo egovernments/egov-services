@@ -44,9 +44,9 @@ public class BudgetGroupRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("budgetGroup_create", request);
+			message.put("budgetgroup_create", request);
 		} else {
-			message.put("budgetGroup_update", request);
+			message.put("budgetgroup_update", request);
 		}
 		budgetGroupQueueRepository.add(message);
 	}

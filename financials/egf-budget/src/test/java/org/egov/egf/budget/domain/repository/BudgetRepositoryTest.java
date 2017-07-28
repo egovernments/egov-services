@@ -99,11 +99,10 @@ public class BudgetRepositoryTest {
 
 	private BudgetEntity getBudgetEntity() {
 		BudgetEntity entity = new BudgetEntity();
-		Budget budget = getBudgetDomin();
-		entity.setName(budget.getName());
-		entity.setActive(budget.getActive());
+		entity.setName("name");
+		entity.setActive(true);
 		entity.setEstimationType(EstimationType.BE.name());
-		entity.setTenantId(budget.getTenantId());
+		entity.setTenantId("default");
 		return entity;
 	}
 

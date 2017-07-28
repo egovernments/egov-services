@@ -58,6 +58,7 @@ public class DemandDetailRowMapper implements RowMapper<DemandDetail>{
 		TaxHeadMaster taxHeadMaster = new TaxHeadMaster();
 		taxHeadMaster.setCode(rs.getString("dltaxheadcode"));
 		//demandDetail.setTaxHeadMaster(taxHeadMaster);
+		demandDetail.setTaxHeadMasterCode(rs.getString("dltaxheadcode"));
 		demandDetail.setTenantId(rs.getString("dltenantid"));
 		demandDetail.setTaxAmount(rs.getBigDecimal("dltaxamount"));
 		demandDetail.setCollectionAmount(rs.getBigDecimal("dlcollectionamount"));

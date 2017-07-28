@@ -74,7 +74,7 @@ public class ChartOfAccountRepositoryTest {
 		request.getChartOfAccounts().add(getChartOfAccountContract());
 		chartOfAccountRepository.add(request);
 		Map<String, Object> message = new HashMap<>();
-		message.put("chartOfAccount_create", request);
+		message.put("chartofaccount_create", request);
 		Mockito.verify(chartofAccountQueueRepository).add(message);
 	}
 

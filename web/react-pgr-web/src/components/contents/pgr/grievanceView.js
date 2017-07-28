@@ -567,7 +567,7 @@ class grievanceView extends Component{
               </Row> : ""}
                 <Row>
                   <div style={{textAlign: 'center'}}>
-                    <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
+                    <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" primary={true}/>
                   </div>
                 </Row>
             </CardText>

@@ -1,3 +1,4 @@
+
 package org.egov.property.repository.builder;
 
 import java.util.HashMap;
@@ -7,8 +8,6 @@ import java.util.Map;
 import org.egov.models.RequestInfo;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,8 +21,6 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 public class SearchPropertyBuilder {
-	
-	private static final Logger logger = LoggerFactory.getLogger(SearchPropertyBuilder.class);
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -33,11 +30,9 @@ public class SearchPropertyBuilder {
 
 	@Autowired
 	RestTemplate restTemplate;
-	
-	
 
-	String BASE_SEARCH_QUERY = "select * from egpt_property prop  JOIN egpt_address Addr"
-			+ " on Addr.property =  prop.id JOIN egpt_property_owner puser on puser.property = prop.id where";
+	String BASE_SEARCH_QUERY = "select * from egpt_property prop "
+			+ "JOIN egpt_property_owner puser on puser.property = prop.id where";
 
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
@@ -67,15 +62,12 @@ public class SearchPropertyBuilder {
 		userSearchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
 
 		UserResponseInfo userResponse = null;
-		logger.info("searchUserUrl searchUrl ---->> "+userSearchUrl.toString()+" \n userSearchRequestInfo ---->> "+userSearchRequestInfo);
+
 		if (ownerName != null || mobileNumber != null || aadhaarNumber != null || tenantId != null) {
-			logger.info("searchUserUrl inside  searchUrl ---->> "+userSearchUrl.toString()+" \n userSearchRequestInfo ---->> "+userSearchRequestInfo);
+
 			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
-			logger.info(" search response  \n userResponse ---->> "+userResponse);
 		}
-		logger.info(" search response  \n userResponse ---->> "+userResponse);
-		
 		String Ids = "";
 
 		List<User> users = null;
@@ -96,6 +88,12 @@ public class SearchPropertyBuilder {
 
 		}
 		searchPropertySql.append(BASE_SEARCH_QUERY);
+
+		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
+
+			searchPropertySql.append("JOIN egpt_address Addr on Addr.property =  prop.id");
+
+		}
 
 		if (tenantId != null && !tenantId.isEmpty()) {
 			searchPropertySql.append(" prop.tenantid=?");
@@ -129,7 +127,6 @@ public class SearchPropertyBuilder {
 		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
 			searchPropertySql.append(" AND Addr.addressnumber=?");
 			preparedStatementValues.add(houseNoBldgApt.trim());
-
 		}
 
 		if (propertyId != null && !propertyId.isEmpty()) {

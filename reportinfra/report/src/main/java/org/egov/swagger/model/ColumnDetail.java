@@ -16,11 +16,12 @@ public class ColumnDetail extends ColumnDef  {
 public ColumnDetail() {
 		
 	}
-  public ColumnDetail(String label, TypeEnum type,Object defaultValue,String name) {
+  public ColumnDetail(String label, TypeEnum type,Object defaultValue,Boolean total,String name) {
 		super();
 		this.label = label;
 		this.type = type;
 		this.defaultValue = defaultValue;
+		this.total = total;
 		this.name(name);
   }	
 
@@ -93,8 +94,17 @@ public ColumnDetail() {
 
   @JsonProperty("showColumn")
   private Boolean showColumn = true;
+  
+  @JsonProperty("total")
+  private Boolean total = false;
 
-  public ColumnDetail label(String label) {
+  public Boolean getTotal() {
+	return total;
+}
+public void setTotal(Boolean total) {
+	this.total = total;
+}
+public ColumnDetail label(String label) {
     this.label = label;
     return this;
   }

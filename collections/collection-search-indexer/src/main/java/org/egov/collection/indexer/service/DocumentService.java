@@ -59,13 +59,14 @@ public class DocumentService {
     public List<ReceiptRequestDocument> enrich(ReceiptRequest receiptRequest) {
         final List<ReceiptRequestDocument> documents = new ArrayList<ReceiptRequestDocument>();
         final List<Receipt> receipts = receiptRequest.getReceipt();
-        for(Receipt receipt : receipts) {
-            Bill bill = receipt.getBill().get(0);
-            BillDetail billDetail = bill.getBillDetails().get(0);
+        Receipt receipt = receipts.get(0);
+        final List<Bill> bills = receipt.getBill();
+        List<BillDetail> billDetails = bills.get(0).getBillDetails();
+        for(BillDetail billDetail: billDetails) {
             ReceiptRequestDocument document = new ReceiptRequestDocument();
             document.setTenantId(receipt.getTenantId());
             document.setPaymentMode(receipt.getInstrumentType());
-            document.setConsumerName(bill.getPayeeName());
+            document.setConsumerName(bills.get(0).getPayeeName());
             document.setConsumerType(billDetail.getConsumerType());
             document.setConsumerCode(billDetail.getConsumerCode());
             document.setReceiptNumber(billDetail.getReceiptNumber());
@@ -75,7 +76,6 @@ public class DocumentService {
             document.setTotalAmount(billDetail.getTotalAmount());
             document.setPurpose(billDetail.getBillAccountDetails().get(0).getPurpose());
             documents.add(document);
-
         }
 
         documentEnrichers.stream()

@@ -204,6 +204,7 @@ ReportDefinitions:
     label: reports.collection.cash.count
     type: string
     source: collection
+    total : true
   - name: cashAmount
     label: reports.collection.cash.amount
     type: number

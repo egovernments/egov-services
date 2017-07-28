@@ -33,12 +33,13 @@ var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId
 module.exports = {
     commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false) => {
         var url = context;
+        if(url && url[url.length-1] == "/")
+            url = url.substring(0, url.length-1);
         if (!doNotOverride)
             url += "?tenantId=" + tenantId;
         else
             url += "?"
         for (var variable in queryObject) {
-              // if (typeof(queryObject[variable]) != "undefined" && (queryObject[variable] != "" ) ) {
             if (typeof(queryObject[variable]) != "undefined") {
                 url += "&" + variable + "=" + queryObject[variable];
             }

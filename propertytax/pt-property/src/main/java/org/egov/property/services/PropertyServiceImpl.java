@@ -68,7 +68,6 @@ public class PropertyServiceImpl implements PropertyService {
 	@Autowired
 	PropertyRepository propertyRepository;
 
-
 	@Autowired
 	PropertyMasterRepository propertyMasterRepository;
 
@@ -183,9 +182,9 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @param propertyId
 	 * @return Property Object if search is successful or Error Object if search
 	 *         will fail
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
 
 	@SuppressWarnings("unchecked")
@@ -196,13 +195,13 @@ public class PropertyServiceImpl implements PropertyService {
 
 		List<Property> updatedPropety = null;
 
-			Map<String, Object> map = propertyRepository.searchProperty(requestInfo, tenantId, active, upicNo, pageSize,
-					pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-					locality, ownerName, demandFrom, demandTo, propertyId);
+		Map<String, Object> map = propertyRepository.searchProperty(requestInfo, tenantId, active, upicNo, pageSize,
+				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
+				locality, ownerName, demandFrom, demandTo, propertyId);
 
-			List<Property> property = (List<Property>) map.get("properties");
-			List<User> users = (List<User>) map.get("users");
-			updatedPropety = addAllPropertyDetails(property, requestInfo, users);
+		List<Property> property = (List<Property>) map.get("properties");
+		List<User> users = (List<User>) map.get("users");
+		updatedPropety = addAllPropertyDetails(property, requestInfo, users);
 
 		PropertyResponse propertyResponse = new PropertyResponse();
 		propertyResponse.setProperties(updatedPropety);
@@ -278,15 +277,17 @@ public class PropertyServiceImpl implements PropertyService {
 			List<Floor> floors = propertyRepository.getFloorsByPropertyDetails(propertyDetailId);
 			property.getPropertyDetail().setFloors(floors);
 
-			for (Floor floor : property.getPropertyDetail().getFloors()) {
+			for (Floor floor : floors) {
 				List<Unit> units = propertyRepository.getUnitsByFloor(floor.getId());
 				floor.setUnits(units);
 
 			}
 
-			for (Floor floor : propertyDetail.getFloors()) {
-				int i = 0;
-				List<Unit> units = propertyDetail.getFloors().get(i).getUnits();
+			int i = 0;
+
+			for (Floor floor : floors) {
+
+				List<Unit> units = floors.get(i).getUnits();
 
 				for (Unit unit : units) {
 					if (unit.getParentId() != 0)
@@ -316,7 +317,7 @@ public class PropertyServiceImpl implements PropertyService {
 			}
 
 			List<Document> documents = propertyRepository.getDocumentByPropertyDetails(propertyDetailId);
-			
+
 			property.getPropertyDetail().setDocuments(documents);
 
 			property.setAuditDetails(propertyRepository.getAuditDetailsForProperty(propertyId));

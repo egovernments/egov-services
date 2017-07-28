@@ -70,23 +70,41 @@ public class ApplicationProperties {
     @Value("${egov.services.hostname}")
     private String egovServiceHost;
     
+    @Value("${egov.egfcommonmasters.hostname}")
+    private String egfcommonmastersHost;
+    
     @Value("${buisnessdetails.search.uri}")
     private String businessDetailsSearch;
+    
+    @Value("${egov.egfmasters.hostname}")
+    private String egfmastersHost;
     
     @Value("${coa.search.uri}")
     private String chartOfAccountsSearch;
     
+    @Value("${egov.statuscode.hostname}")
+    private String statuscodeHost;
+    
     @Value("${statuscode.search.uri}")
     private String statusCodeSearch;
     
+    @Value("${egov.idgen.hostname}")
+    private String idGenServiceHost;
+    
     @Value("${rcptno.gen.uri}")
     private String idGeneration;
+    
+    @Value("${egov.hremployee.hostname}")
+    private String hremployeeServiceHost;
     
     @Value("${positionforuser.get.uri}")
     private String getPosition;
     
     @Value("${positionforuser.get.append.uri}")
     private String getPositionUriAppend;
+    
+    @Value("${egov.instrument.hostname}")
+    private String instrumentServiceHost;
     
     @Value("${create.instrument.uri}")
     private String createInstrument;

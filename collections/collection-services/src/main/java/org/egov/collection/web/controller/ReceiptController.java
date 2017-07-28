@@ -170,7 +170,7 @@ public class ReceiptController {
 		
 		//to differentiate between badrequest and internal server so that user has a clear idea
 		
-		if (null == receiptInfo.getTenantId()) {
+		if (null == receiptInfo.getTenantId()) { 
 			LOGGER.info("Service returned null");
 			Error error = new Error();
 			ErrorField errorField = new ErrorField();

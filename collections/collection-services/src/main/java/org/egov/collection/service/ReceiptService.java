@@ -365,6 +365,7 @@ public class ReceiptService {
 					.getBusinessDetails(Arrays.asList(businessDetailsCode),
 							tenantId, requestInfo);
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.error("Error while fetching buisnessDetails from coll-master service. "
 					+ e);
 			return null;
@@ -379,7 +380,7 @@ public class ReceiptService {
 		LOGGER.info("Generating receipt number for the receipt.");
 
 		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getEgovServiceHost();
+		String hostname = applicationProperties.getIdGenServiceHost();
 		String baseUri = applicationProperties.getIdGeneration();
 		builder.append(hostname).append(baseUri);
 
@@ -480,7 +481,7 @@ public class ReceiptService {
 	public Long getInstrumentId(ReceiptReq receiptReq) {
 		Long instrumentId = null;
 		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getEgovServiceHost();
+		String hostname = applicationProperties.getInstrumentServiceHost();
 		String baseUri = applicationProperties.getCreateInstrument();
 		builder.append(hostname).append(baseUri);
 		Receipt receipt = receiptReq.getReceipt().get(0);

@@ -19,6 +19,7 @@ import Snackbar from 'material-ui/Snackbar';
 import {Redirect} from 'react-router-dom'
 import Api from '../../api/api';
 import {translate} from '../common/common';
+import IconButton from 'material-ui/IconButton';
 var axios = require('axios');
 
 const styles = {
@@ -606,28 +607,29 @@ class Login extends Component {
                   </Col>
                   <Col xs={12}  md={6} mdPull={6}>
                     <Row>
-                      <Col xs={12} md={12}>
-                        <FloatingActionButton  style={styles.floatingIconButton} primary={true}>
+                      <Col xs={12} md={12} onClick={handleSignUpModalOpen}>
+                        <IconButton style={styles.floatingIconButton} primary={true}>
                             <i className="material-icons">person</i>
-                        </FloatingActionButton>
-                        <div style={{"float": "left", "cursor": "pointer"}} onClick={handleSignUpModalOpen}>
+                        </IconButton>
+                        <div style={{"float": "left", "cursor": "pointer"}}>
                           <h4>{translate('pgr.title.create.account')}</h4>
                           <p>{translate('pgr.msg.creategrievance.avail.onlineservices')}</p>
                         </div>
                       </Col>
-                      <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                        <FloatingActionButton  style={styles.floatingIconButton}  primary={true}>
+                      
+                      <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
+                        <IconButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">mode_edit</i>
-                        </FloatingActionButton>
-                        <div style={{"float": "left", "cursor": "pointer"}} onClick={this.openAnonymousComplaint}>
+                        </IconButton>
+                        <div style={{"float": "left", "cursor": "pointer"}}>
                           <h4>{translate('pgr.lbl.register.grievance')}</h4>
                           <p>{translate('pgr.lbl.register.grievance')}</p>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                        <FloatingActionButton  style={styles.floatingIconButton}  primary={true}>
+                        <IconButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">search</i>
-                        </FloatingActionButton>
+                        </IconButton>
                         <div style={styles.floatLeft}>
                           <h4>{translate('pgr.msg.complaintstatus.anytime')}</h4>
                           <TextField
@@ -639,9 +641,9 @@ class Login extends Component {
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                        <FloatingActionButton  style={styles.floatingIconButton}>
+                        <IconButton  style={styles.floatingIconButton}>
                             <i className="material-icons">phone</i>
-                        </FloatingActionButton>
+                        </IconButton>
                         <div style={styles.floatLeft}>
                           <h4>{translate('pgr.lbl.grievancecell')}</h4>
                           <p>{translate('Call 1800-425-9766 to register your grievance')}</p>

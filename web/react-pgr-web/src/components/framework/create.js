@@ -10,6 +10,7 @@ import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload, getInitiatorPosition} from './utility/utility';
+
 var specifications={};
 try {
   var hash = window.location.hash.split("/");
@@ -81,7 +82,11 @@ class Report extends Component {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
-        self.props.setFormData(res);
+          if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isObjectArray) {
+            self.props.setFormData({[specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName]: jp.query(res, "$..[0]")[0]});
+          } else {
+            self.props.setFormData(res);
+          }
       }, function(err){
 
       })

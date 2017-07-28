@@ -120,7 +120,6 @@ public class GrievanceTypeController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        serviceTypeRequest.getService().setServiceCode(serviceTypeRequest.getService().getServiceCode());
         final List<ErrorResponse> errorResponses = validateUpdateServiceRequest(serviceTypeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -223,7 +222,7 @@ public class GrievanceTypeController {
     private void addGrievanceNameValidator(final ServiceRequest serviceTypeRequest,
                                            final List<ErrorField> errorFields) {
         if (errorFields.size() == 0) {
-            if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceName(),
+            if (!serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceName(),
                     serviceTypeRequest.getService().getTenantId())) {
                 final ErrorField errorField = ErrorField.builder()
                         .code(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_CODE)

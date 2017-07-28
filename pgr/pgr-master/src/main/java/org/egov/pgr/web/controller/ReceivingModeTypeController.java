@@ -228,8 +228,9 @@ public class ReceivingModeTypeController {
         }
 
         if (errorFields.size() == 0) {
-            if (modeTypeService.checkReceivingModeTypeByName(receivingMode.getCode(), receivingMode.getName(),
-                    receivingMode.getTenantId())) {
+            boolean checkReceivingModeTypeByName = modeTypeService.checkReceivingModeTypeByName(receivingMode.getCode(), receivingMode.getName(),
+                    receivingMode.getTenantId());
+            if (checkReceivingModeTypeByName) {
                 final ErrorField errorField = ErrorField.builder()
                         .code(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_CODE)
                         .message(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE)

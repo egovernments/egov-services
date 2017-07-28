@@ -25,7 +25,7 @@ public class ReportQueryBuilder {
 		for(SearchParam searchParam : searchParams){
 				
 			Object value = searchParam.getInput();
-			//Object value = null;
+			
 			if(value instanceof Number)
 			baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),value.toString());
 			

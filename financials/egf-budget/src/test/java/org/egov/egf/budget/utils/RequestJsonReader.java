@@ -56,4 +56,13 @@ public class RequestJsonReader {
 			throw new RuntimeException(e);
 		}
 	}
+	
+    public String getFileContents(String fileName) {
+        try {
+            return IOUtils.toString(this.getClass().getClassLoader()
+                    .getResourceAsStream(fileName), "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

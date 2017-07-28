@@ -123,11 +123,10 @@ class OwnerDetails extends Component {
     let cThis = this;
 
     return (
-      <Card>
+      <Card className="uiCard">
         <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Owner Details</div>} style={styles.reducePadding} />
         <CardText style={styles.reducePadding}>
-          <Card className="darkShadow">
-            <CardText style={styles.reducePadding}>
+       
               <Grid fluid>
                 <Row>
                   <Col xs={12} md={12}>
@@ -352,14 +351,14 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={3} style={styles.textRight}>
                           <br/>
                           { (editIndex == -1 || editIndex == undefined ) &&
-                            <RaisedButton type="button" label="Add" disabled={!isOwnerValid} backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                            <RaisedButton type="button" label="Add" disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 this.props.addNestedFormData("owners","owner");
                                 this.props.resetObject("owner", false);
                               }
                             }/>
                           }
                           { (editIndex > -1) &&
-                            <RaisedButton type="button" label="Save" disabled={!isOwnerValid} backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                            <RaisedButton type="button" label="Save" disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 this.props.updateObject("owners","owner",  editIndex);
                                 this.props.resetObject("owner", false);
                                 isEditIndex(-1);
@@ -422,8 +421,6 @@ class OwnerDetails extends Component {
                   </Col>
                 </Row>
               </Grid>
-            </CardText>
-          </Card>
         </CardText>
       </Card>)
   }

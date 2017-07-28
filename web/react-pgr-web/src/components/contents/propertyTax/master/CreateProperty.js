@@ -584,10 +584,11 @@ createActivate = () => {
 				  <AssessmentDetails />				  
 				  <Amenities />                  
 				  <ConstructionTypes/>
+				  <VacantLand/>
 				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : 
-					 <div> {!this.state.addFloor && <Card>
+					 <div> {!this.state.addFloor && <div><Card className="uiCard">
 						<CardText>
-							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} 
+							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:10}}  primary={true}
 								  onClick={()=>{
 									this.setState({
 									  addFloor: true
@@ -596,7 +597,11 @@ createActivate = () => {
 							  />
 							  <div className="clearfix"></div>                    
 						</CardText>
-					  </Card>}
+					  </Card>
+	
+					   </div>
+					  }
+					  	 
 					  </div>
 				  }
 				  {(this.state.addFloor && (getNameByCode(this.state.propertytypes, createProperty.propertyType) != "Vacant Land")) && <FloorDetails/>}
@@ -605,7 +610,7 @@ createActivate = () => {
 				  
 									
 			   
-				  <Card>
+				  <Card className="uiCard">
 					<CardText style={{textAlign:'center'}}>
 						<br/>
 						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
@@ -615,6 +620,7 @@ createActivate = () => {
 						<div className="clearfix"></div>
 					</CardText>
 				  </Card>
+			
 			  </form>
 		  </div>
       )

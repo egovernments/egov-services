@@ -202,11 +202,10 @@ handleDepartment = (e) => {
 
     let cThis = this;
 
-    return (<Card>
+    return (
+				<Card className="uiCard">
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Assessment details</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card className="darkShadow">
-                              <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
@@ -366,8 +365,6 @@ handleDepartment = (e) => {
 
                                       </Row>
                                   </Grid>
-                              </CardText>
-                          </Card>
                       </CardText>
                   </Card>)
   }

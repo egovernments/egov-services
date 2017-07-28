@@ -25,10 +25,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
+ 
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
+  
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -202,11 +202,10 @@ handleDepartment = (e) => {
 
     let cThis = this;
 
-    return (<Card>
+    return (
+				<Card className="uiCard">
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Assessment details</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card className="darkShadow">
-                              <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
@@ -271,6 +270,7 @@ handleDepartment = (e) => {
 															addDepandencyFields('vacantLandPlotArea');
 															addDepandencyFields('layoutApprovalAuthority');
 															addDepandencyFields('layoutPermitNumber');
+															addDepandencyFields('layoutPermitDate');
 														} else {
 															removeDepandencyFields('survayNumber');
 															removeDepandencyFields('pattaNumber');
@@ -281,6 +281,8 @@ handleDepartment = (e) => {
 															removeDepandencyFields('vacantLandPlotArea');
 															removeDepandencyFields('layoutApprovalAuthority');
 															removeDepandencyFields('layoutPermitNumber');
+															removeDepandencyFields('layoutPermitDate');
+															
 														}
                                                       var e = {
                                                         target: {
@@ -363,8 +365,6 @@ handleDepartment = (e) => {
 
                                       </Row>
                                   </Grid>
-                              </CardText>
-                          </Card>
                       </CardText>
                   </Card>)
   }

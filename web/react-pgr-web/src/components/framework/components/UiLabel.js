@@ -45,7 +45,7 @@ export default class UiLabel extends Component {
       <div>
  			<Row>
           <Col xs={12}>
-            <label>{item.label}</label>
+            <label><span style={{"fontWeight":"bold"}}>{item.label}</span></label>
           </Col>
           <Col xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "-"}</Col>
       </Row>

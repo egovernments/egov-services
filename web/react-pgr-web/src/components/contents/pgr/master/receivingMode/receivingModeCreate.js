@@ -127,7 +127,7 @@ class receivingModeCreate extends Component {
     }
       if(_this.props.match.params.id){
 
-            Api.commonApiPost("pgr-master/receivingmode/v1/"+body.ReceivingModeType.code+"/_update", {},body).then(function(response) {
+            Api.commonApiPost("pgr-master/receivingmode/v1/_update", {},body).then(function(response) {
 
               _this.setState({
           			open: true

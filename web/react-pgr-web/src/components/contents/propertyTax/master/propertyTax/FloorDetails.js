@@ -25,10 +25,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
+ 
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -420,11 +420,10 @@ calcArea = (e, type) => {
 		
 		console.log(floorDetails);
 	   return(
-			<Card>
+			
+			<Card className="uiCard">
                 <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Floor Details</div>} />
-				<CardText style={styles.reducePadding}>
-					<Card className="darkShadow">
-							<CardText style={styles.reducePadding}>
+				<CardText>
 								<Grid fluid>
 									<Row>
 										 <Col xs={12} md={12}>
@@ -979,8 +978,7 @@ calcArea = (e, type) => {
 										</Col>
 									</Row>
 								</Grid>
-							</CardText>
-					</Card>
+		
 				</CardText>
 			</Card>
 	   )

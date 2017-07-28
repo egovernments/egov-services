@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 import org.egov.models.RequestInfo;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
+import org.egov.propertyUser.config.PropertiesManager;
 import org.egov.propertyUser.model.UserRequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,21 +22,21 @@ public class UserUtil {
 	private static final Logger logger = LoggerFactory.getLogger(UserUtil.class);
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	RestTemplate restTemplate;
 
 	public User getUserId(User user, RequestInfo requestInfo) throws Exception {
 		StringBuffer createUrl = new StringBuffer();
-		createUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-		createUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-		createUrl.append(environment.getProperty("egov.services.egov_user.createpath"));
+		createUrl.append(propertiesManager.getUserHostName());
+		createUrl.append(propertiesManager.getUserBasepath());
+		createUrl.append(propertiesManager.getUserCreatepath());
 
 		StringBuffer searchUrl = new StringBuffer();
-		searchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-		searchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-		searchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
+		searchUrl.append(propertiesManager.getUserHostName());
+		searchUrl.append(propertiesManager.getUserBasepath());
+		searchUrl.append(propertiesManager.getUserSearchpath());
 
 		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 		userSearchRequestInfo.put("name", user.getName());
@@ -62,7 +62,7 @@ public class UserUtil {
 		if (userResponse.getUser().size() == 0) {
 			UserRequestInfo userRequestInfo = new UserRequestInfo();
 			userRequestInfo.setRequestInfo(requestInfo);
-			user.setPassword(environment.getProperty("default.password"));
+			user.setPassword(propertiesManager.getDefaultPassword());
 			userRequestInfo.setUser(user);
 			logger.info("UserUtil createUrl ---->> "+createUrl.toString()+" \n userRequestInfo ---->> "+userRequestInfo);
 			UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(), userRequestInfo,

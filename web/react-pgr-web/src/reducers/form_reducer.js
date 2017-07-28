@@ -32,16 +32,20 @@ export default(state = defaultState, action) => {
 	}
 		
 		return {
-			...state
+			...state,
 		}
 	case "REMOVE_REQUIRED" : 
 	
 		var a = state.validationData.required.required.indexOf(action.property);
+		var b = state.validationData.required.current.indexOf(action.property);
+		
 		console.log('isthere', a)
-		if(a==-1){
-			
-		} else {
-			state.validationData.required.required.splice(state.validationData.required.required.indexOf(action.property),1);
+		if(a!=-1){
+			state.validationData.required.required.splice(a,1);
+		}
+		
+		if(b!=-1){
+			state.validationData.required.current.splice(b,1);
 		}
 			
 		return {
@@ -272,8 +276,8 @@ export default(state = defaultState, action) => {
             }
 
           },
-         // validatePropertyFloor: validatePropertyFloor.validatePropertyFloor,
-          isFloorValid: validatePropertyFloor.isFloorValid
+			validatePropertyFloor: validatePropertyFloor.validatePropertyFloor,
+			isFloorValid: validatePropertyFloor.isFloorValid
         }
 		
     case "HANDLE_CHANGE_NEXT_TWO":

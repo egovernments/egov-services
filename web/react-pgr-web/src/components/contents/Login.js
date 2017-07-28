@@ -607,7 +607,7 @@ class Login extends Component {
                   <Col xs={12}  md={6} mdPull={6}>
                     <Row>
                       <Col xs={12} md={12}>
-                        <FloatingActionButton  style={styles.floatingIconButton}>
+                        <FloatingActionButton  style={styles.floatingIconButton} primary={true}>
                             <i className="material-icons">person</i>
                         </FloatingActionButton>
                         <div style={{"float": "left", "cursor": "pointer"}} onClick={handleSignUpModalOpen}>
@@ -616,7 +616,7 @@ class Login extends Component {
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                        <FloatingActionButton  style={styles.floatingIconButton}>
+                        <FloatingActionButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">mode_edit</i>
                         </FloatingActionButton>
                         <div style={{"float": "left", "cursor": "pointer"}} onClick={this.openAnonymousComplaint}>
@@ -625,7 +625,7 @@ class Login extends Component {
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                        <FloatingActionButton  style={styles.floatingIconButton}>
+                        <FloatingActionButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">search</i>
                         </FloatingActionButton>
                         <div style={styles.floatLeft}>

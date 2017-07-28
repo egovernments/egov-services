@@ -37,10 +37,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
+
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
+ 
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -295,6 +295,36 @@ createPropertyTax = () => {
 		}
 	}
 	
+	var vacantLand = null;
+	
+	if(createProperty.propertyType =='VACANT_LAND') {
+			vacantLand =  {		
+							"surveyNumber": createProperty.survayNumber || null,
+							"pattaNumber": createProperty.pattaNumber || null,
+							"marketValue": createProperty.marketValue || null,
+							"capitalValue": createProperty.capitalValue || null,
+							"layoutApprovedAuth": createProperty.layoutApprovalAuthority || null,
+							"layoutPermissionNo": createProperty.layoutPermitNumber || null,
+							"layoutPermissionDate":createProperty.layoutPermitDate || null,
+							"resdPlotArea": null,
+							"nonResdPlotArea": null,
+							"auditDetails": {
+								"createdBy": userRequest.userName,
+								"lastModifiedBy":userRequest.userName,
+								"createdTime": date,
+								"lastModifiedTime": date
+							}																					
+						}
+						
+			createProperty.floorsArr = null;
+			createProperty.floors = null;	
+			createProperty.floor = null;	
+	} else {
+		vacantLand = null;
+	}
+	
+
+	
 	var date = new Date().getTime();
 	
 	var currentThis = this;
@@ -367,23 +397,7 @@ createPropertyTax = () => {
 						"lastModifiedTime": date
 					}
 				},
-				"vacantLand": null ,/*{
-					"surveyNumber": createProperty.survayNumber || ,
-					"pattaNumber": createProperty.pattaNumber || null,
-					"marketValue": createProperty.marketValue || null,
-					"capitalValue": createProperty.capitalValue || null,
-					"layoutApprovedAuth": createProperty.layoutApprovalAuthority || null,
-					"layoutPermissionNo": createProperty.layoutPermitNumber || null,
-					"layoutPermissionDate":createProperty.layoutPermitDate || null,
-					"resdPlotArea": null,
-					"nonResdPlotArea": null,
-					"auditDetails": {
-						"createdBy": userRequest.userName,
-						"lastModifiedBy":userRequest.userName,
-						"createdTime": date,
-						"lastModifiedTime": date
-					}
-				},*/
+				"vacantLand": vacantLand,
 
 				"gisRefNo": null,
 				"isAuthorised": null,
@@ -422,24 +436,31 @@ createPropertyTax = () => {
       }
 	  
 	  var fileStoreArray = [];
+	  
+	  var hasFiles = true;
 	  			
 	   if(currentThis.props.files.length !=0){
-			if(currentThis.props.files[0].length === 0){
+			hasFiles = false;
+			if(currentThis.props.files.length === 0){
 				console.log('No file uploads');
+				hasFiles = true;
+				
 			}else{
+				hasFiles = false;
+				console.log('still file upload pending', currentThis.props.files.length);
 				
-				console.log('still file upload pending', currentThis.props.files[0].length);
-				
-			  for(let i=0;i<currentThis.props.files[0].length;i++){
+			  for(let i=0;i<currentThis.props.files.length;i++){
+				  
+				  console.log(currentThis.props.files);
 				  
 				let formData = new FormData();
 				formData.append("tenantId", localStorage.getItem('tenantId'));
 				formData.append("module", "PT");
-				formData.append("file", currentThis.props.files[0][i]);
+				formData.append("file", currentThis.props.files[i][0]);
 				Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response){
 					var documentArray = {
 						"documentType": {						
-							"code": ""
+							"code": currentThis.props.files[i].createCode
 						},
 						"fileStore": "",
 						"auditDetails": {
@@ -457,26 +478,38 @@ createPropertyTax = () => {
 					documentArray.fileStore = response.files[0].fileStoreId;
 					body.properties[0].propertyDetail.documents.push(documentArray);
 					console.log(body);
+					  if(i === (currentThis.props.files.length - 1)){
+						console.log('All files succesfully uploaded');
+						hasFiles = true;
+					  }
+					
 				},function(err) {
 				  console.log(err);
 				});
 			  }
 			}
+		  } else {
+			  hasFiles = true;
 		  }
 		  
-     Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
-		currentThis.setState({
-			ack: res.properties.applicationNo
-		});
-		localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-		this.props.history.push('acknowledgement');
-setLoadingStatus('hide');
-      }).catch((err)=> {
-        console.log(err)
-		setLoadingStatus('hide');
- toggleSnackbarAndSetText(true, err.message);
-      })
-    }
+	if(hasFiles) {
+			  
+		 Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
+			currentThis.setState({
+				ack: res.properties.applicationNo
+			});
+			localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
+			this.props.history.push('acknowledgement');
+			setLoadingStatus('hide');
+		  }).catch((err)=> {
+			console.log(err)
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message);
+		  })
+		}
+	}	  
+		  
+	
 	
 createActivate = () => {
 	
@@ -552,9 +585,9 @@ createActivate = () => {
 				  <Amenities />                  
 				  <ConstructionTypes/>
 				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : 
-					 <div> {!this.state.addFloor && <Card>
+					 <div> {!this.state.addFloor && <div><Card className="uiCard">
 						<CardText>
-							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} 
+							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:10}}  primary={true}
 								  onClick={()=>{
 									this.setState({
 									  addFloor: true
@@ -563,25 +596,30 @@ createActivate = () => {
 							  />
 							  <div className="clearfix"></div>                    
 						</CardText>
-					  </Card>}
+					  </Card>
+	
+					   </div>
+					  }
+					  	 
 					  </div>
 				  }
-				  {this.state.addFloor && <FloorDetails/>}
+				  {(this.state.addFloor && (getNameByCode(this.state.propertytypes, createProperty.propertyType) != "Vacant Land")) && <FloorDetails/>}
 				  <DocumentUpload />
 				  <Workflow />
 				  
 									
 			   
-				  <Card>
+				  <Card className="uiCard">
 					<CardText style={{textAlign:'center'}}>
 						<br/>
-						<RaisedButton type="button" label="Create Property" disabled={(this.createActivate())} backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  primary={true} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>
 						<div className="clearfix"></div>
 					</CardText>
 				  </Card>
+			
 			  </form>
 		  </div>
       )

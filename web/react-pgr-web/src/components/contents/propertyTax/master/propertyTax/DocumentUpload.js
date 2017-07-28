@@ -106,14 +106,21 @@ class ConstructionTypes extends Component {
 
     var currentThis = this;
 	
+	let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+	
+	setLoadingStatus('loading');
+	
     Api.commonApiPost( 'pt-property/property/documenttypes/_search').then((res)=>{
       console.log(res);
       currentThis.setState({documentType: res.documentType})
+	  	setLoadingStatus('hide');
     }).catch((err)=> {
       currentThis.setState({
         documentType:[]
       }) 
-      console.log(err)
+      console.log(err);
+	  toggleSnackbarAndSetText(true, err.message)
+	   	setLoadingStatus('hide');
     })
 
   }  
@@ -317,7 +324,14 @@ const mapDispatchToProps = dispatch => ({
   },
   handleUpload: (e) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files})
-  }
+  },
+   
+   setLoadingStatus: (loadingStatus) => {
+     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+   },
+   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
 
 });
 

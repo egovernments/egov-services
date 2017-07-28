@@ -162,5 +162,10 @@ public class User {
 	@JsonProperty("ownerType")
 	@Size(min = 4, max = 32)
 	private String ownerType = null;
+	
+	
+	@JsonProperty("owner")
+	private Long owner = null;
+	
 
 }

@@ -60,6 +60,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+//import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
 
@@ -110,16 +111,17 @@ public class ReceiptService {
 
 	    Receipt receipt = null;
 
-/*	    Long instrumentid = getInstrumentId(receiptReq);
-		 if(null == instrumentid || 0L == Long.valueOf(instrumentid)){ 
+/*	    String instrumentid = getInstrumentId(receiptReq);
+	    LOGGER.info("Instrument id recieved: "+instrumentid);
+		 if(null == instrumentid || instrumentid.isEmpty()){ 
 			 return null; 
 		 }else{ 
 			receipt = create(bill, receiptReq.getRequestInfo(),
-						receiptReq.getTenantId(), instrumentid); // sync call
-		} */
+						receiptReq.getTenantId(), instrumentid); // sync call //uncomment for instrument integration
+		}  */
 		 
 		receipt = create(bill, receiptReq.getRequestInfo(),
-				receiptReq.getTenantId(), 1L); // sync call
+				receiptReq.getTenantId(), "instrumentid"); // sync call
 		
 		LOGGER.info("Receipt receieved: "+receipt);
 		if (null != receipt){
@@ -226,7 +228,7 @@ public class ReceiptService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Receipt create(Bill bill, RequestInfo requestInfo, String tenantId, long instrumentId) {
+	public Receipt create(Bill bill, RequestInfo requestInfo, String tenantId, String instrumentId) {
 		LOGGER.info("Persisting recieptdetail");
 		AuditDetails auditDetail = getAuditDetails(requestInfo.getUserInfo());
 		for (BillDetail billDetail : bill.getBillDetails()) {
@@ -239,6 +241,7 @@ public class ReceiptService {
 			billDetail.setReceiptDate(new Date().getTime());
 			billDetail.setReceiptNumber(generateReceiptNumber(requestInfo,
 					tenantId));
+			LOGGER.info("Rcpt no generated: "+billDetail.getReceiptNumber());
 			final Map<String, Object> parametersMap = new HashMap<>();
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billDetail.getBusinessService(), requestInfo, tenantId);
@@ -301,8 +304,7 @@ public class ReceiptService {
 				parametersMap.put("isreconciled", false);
 				parametersMap.put("status", billDetail.getStatus());
 	
-				/*LOGGER.info("InstrumentId: "+instrumentId+" ReceiptHeaderId: "+receiptHeaderId);
-				receiptRepository.persistIntoReceiptInstrument(instrumentId, receiptHeaderId); */
+				LOGGER.info("InstrumentId: "+instrumentId+" ReceiptHeaderId: "+receiptHeaderId);
 				 
 				Map<String, Object>[] parametersReceiptDetails = new Map[billDetail
 						.getBillAccountDetails().size()];
@@ -343,9 +345,12 @@ public class ReceiptService {
 								+ billAccountDetails.getGlcode());
 						break;
 					}
-				}				
-				if(!receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, receiptHeaderId, instrumentId)){
-					LOGGER.info("Repo returned false");
+				}	
+				try{
+					receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, receiptHeaderId, instrumentId);
+				}catch(Exception e){
+					e.printStackTrace();
+					LOGGER.error("Persistingreceipt FAILED! ",e.getCause());
 					Receipt receipt = new Receipt();
 					return receipt;
 				}
@@ -482,8 +487,8 @@ public class ReceiptService {
 		return receiptRepository.getReceiptStatus(tenantId);
 	}
 
-	public Long getInstrumentId(ReceiptReq receiptReq) {
-		Long instrumentId = null;
+	public String getInstrumentId(ReceiptReq receiptReq) {
+		String instrumentId = null;
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getInstrumentServiceHost();
 		String baseUri = applicationProperties.getCreateInstrument();
@@ -496,26 +501,22 @@ public class ReceiptService {
 		instrumentRequest.setRequestInfo(receiptReq.getRequestInfo());
 		instrumentRequest.setInstruments(instruments);
 		Object response = null;
+		
+		LOGGER.info("Request to instrument create: "+instrumentRequest.toString());
+		LOGGER.info("URI Instrument create: "+builder.toString());
 		try {
 			response = restTemplate.postForObject(builder.toString(),
 					instrumentRequest, Object.class);
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.error(
 					"Couldn't create instrument in the instrument service.",
 					e.getCause());
 			return instrumentId;
 		}
 		LOGGER.info("Response from instrument service: " + response.toString());
-
-	/*	try {
-			// To do add proper code
-			LOGGER.error("Empty try block");
-		} catch (Exception e) {
-			LOGGER.error(
-					"Couldn't fetch instrument id from instrument service.",
-					e.getCause());
-			return instrumentId;
-		} */
+		
+		instrumentId = JsonPath.read(response, "$.instruments[0].id");
 		return instrumentId;
 	}
 

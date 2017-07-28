@@ -10,6 +10,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class EmailMessage {
-    private String message;
     private String email;
+    private String subject;
+    private String body;
 }

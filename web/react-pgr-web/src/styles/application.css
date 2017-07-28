@@ -673,9 +673,9 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 
 
 table th {
-	background-color: #51bad9 !important;
+	background-color: #607d8b !important;
 	color: #ffffff !important;
-	font-weight: bolder;
+	font-weight: 500;
 }
 
 table td {
@@ -686,11 +686,18 @@ table td {
     z-index: 3;
     color: #fff;
     cursor: default;
-    background-color: #51bad9 !important;
-    border-color: #51bad9 !important;
+    background-color: #f58720 !important;
+    border-color: #f58720 !important;
 }
 
+.paginate_button {
+	background: #ffffff !important;
+	border: none !important;
+}
 
+.paginate_button a {
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+}
 .uiCard {
 	margin:15px;
 }

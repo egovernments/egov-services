@@ -120,7 +120,6 @@ public class GrievanceTypeController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        serviceTypeRequest.getService().setServiceCode(serviceTypeRequest.getService().getServiceCode());
         final List<ErrorResponse> errorResponses = validateUpdateServiceRequest(serviceTypeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);

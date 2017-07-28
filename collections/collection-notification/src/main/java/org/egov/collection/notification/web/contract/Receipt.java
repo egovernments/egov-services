@@ -24,7 +24,7 @@ public class Receipt {
     private String mobileNumber;
     private String payeeName;
     private BigDecimal amountPaid;
-    private String emailId;
+    private String payeeEmail;
     private String consumerCode;
     private String businessService;
 

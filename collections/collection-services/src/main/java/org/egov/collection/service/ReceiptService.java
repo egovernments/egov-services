@@ -98,8 +98,14 @@ public class ReceiptService {
 
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Bill bill = receiptReq.getReceipt().get(0).getBill().get(0);
-		bill.setBillDetails(apportionPaidAmount(receiptReq.getRequestInfo(),
+		try{
+			bill.setBillDetails(apportionPaidAmount(receiptReq.getRequestInfo(),
 				bill, receiptReq.getTenantId()));
+		}catch(Exception e){
+			LOGGER.info("Receipt persist failed due to internal server error");
+			Receipt receipt = new Receipt();
+			return receipt;
+		}
 		// return receiptRepository.pushToQueue(receiptReq); //async call
 
 	    Receipt receipt = null;
@@ -336,7 +342,8 @@ public class ReceiptService {
 					}
 				}				
 				if(!receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, receiptHeaderId, instrumentId)){
-					return null;
+					Receipt receipt = new Receipt();
+					return receipt;
 				}
 				
 			}else{

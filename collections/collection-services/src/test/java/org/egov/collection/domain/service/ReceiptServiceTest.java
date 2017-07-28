@@ -105,18 +105,14 @@ public class ReceiptServiceTest {
 	@InjectMocks
 	private ReceiptService receiptService;
 
-	@Test(expected = Exception.class)
+	@Test
 	public void test_should_apportion_and_create_receipt_exception() throws ParseException {
-		
-		ReceiptService receiptSvc = new ReceiptService();
-		ReceiptService spy = Mockito.spy(receiptSvc);
-		
+				
 		ReceiptReq receiptReq = getReceiptRequest();
 		ApplicationProperties applicationProperty = new ApplicationProperties();
 		String hostname = applicationProperty.getEgovServiceHost();
 		String baseUri = applicationProperty.getChartOfAccountsSearch();
 		List<String> businessDetailCodes = new ArrayList<>();
-	//	List<Object> chartOfAccounts = new ArrayList<>();
 		businessDetailCodes.add("TL");
 		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
 		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
@@ -125,7 +121,6 @@ public class ReceiptServiceTest {
 				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
 		Mockito.when(applicationProperties.getEgovServiceHost()).thenReturn(hostname);
 		Mockito.when(applicationProperties.getChartOfAccountsSearch()).thenReturn(baseUri);
-	//	Mockito.when(receiptService.getChartOfAccountOnGlCode("1405014", "default", receiptReq.getRequestInfo())).thenReturn(chartOfAccounts);
 		
 		assertNotNull(receiptService.apportionAndCreateReceipt(receiptReq));
 				

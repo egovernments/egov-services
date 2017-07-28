@@ -24,7 +24,8 @@ class Report extends Component {
       setMetaData(response)
       // setForm();
     },function(err) {
-        console.log(err);
+        // console.log(err);
+        alert("Try again later");
     });
   }
 

@@ -88,7 +88,7 @@ class ShowForm extends Component {
                   // console.log(metaData);
                   setMetaData(metaData);
               },function(err) {
-                  console.log(err);
+                  alert("Somthing went wrong while loading depedant dropdown");
               });
             }
         }
@@ -164,7 +164,9 @@ class ShowForm extends Component {
         setReportResult(response)
         setFlag(1);
       },function(err) {
-          console.log(err);
+          // console.log(err);
+          alert("Select all mandatory fields or try again later");
+
       });
 
       // console.log("Show Table");

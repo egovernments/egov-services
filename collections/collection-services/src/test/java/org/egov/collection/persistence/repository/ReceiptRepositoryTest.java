@@ -142,8 +142,8 @@ public class ReceiptRepositoryTest {
 					new Object[] { receiptInfo.getBill().get(0).getPayeeName(),
 							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
 					Long.class)).thenReturn(1L);
-		boolean result = receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, 1L);
-		assertEquals(false, result);	
+		boolean result = receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, "instrumentId");
+		assertEquals(true, result);	
 		
 	}
 	

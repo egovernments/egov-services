@@ -412,7 +412,7 @@ class grievanceCreate extends Component {
     //console.log(JSON.stringify(request));
     var currentThis = this;
 
-    if(localStorage.getItem('type') === null){
+    if(localStorage.getItem('type') === null && this.state.otpEnabled){
 
       let mob = this.props.grievanceCreate.phone;
       let tenant =  localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';

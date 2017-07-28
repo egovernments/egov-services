@@ -46,13 +46,19 @@ class ShowForm extends Component {
 
   handleChange=(e, property, isRequired, pattern)=>
   {
+
     // console.log(e);
     let {metaData,setMetaData}=this.props;
+    this.props.handleChange(e, property, isRequired, pattern);
+
     // console.log(metaData);
     if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
     {
       for (var i = 0; i < metaData.reportDetails.searchParams.length; i++) {
-        if (metaData.reportDetails.searchParams[i].type=="url") {
+        if (metaData.reportDetails.searchParams[i].type=="url" && (typeof(metaData.reportDetails.searchParams[i].defaultValue)!="object" || metaData.reportDetails.searchParams[i].hasOwnProperty("pattern"))) {
+            if (!metaData.reportDetails.searchParams[i].hasOwnProperty("pattern")) {
+              metaData.reportDetails.searchParams[i]["pattern"]=metaData.reportDetails.searchParams[i].defaultValue;
+            }
             // console.log(metaData.reportDetails.searchParams[i].type);
             if(metaData.reportDetails.searchParams[i].pattern.search(property)>-1)
             {
@@ -89,7 +95,6 @@ class ShowForm extends Component {
       }
     }
 
-    this.props.handleChange(e, property, isRequired, pattern);
   }
 
 
@@ -101,8 +106,9 @@ class ShowForm extends Component {
     {
       return metaData.reportDetails.searchParams.map((item,index) =>
       {
+        item["value"]=_.isEmpty(searchForm)?"":searchForm[item.name];
         return (
-          <ShowField key={index} obj={item}  handler={this.handleChange}/>
+          <ShowField key={index} obj={item} handler={this.handleChange}/>
         );
       })
     }
@@ -128,7 +134,7 @@ class ShowForm extends Component {
   {
     e.preventDefault();
 
-      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag}=this.props;
+      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams}=this.props;
       let searchParams=[]
 
 
@@ -148,6 +154,8 @@ class ShowForm extends Component {
       //       "name": "complainttype",
       //       "value": "BRKNB"
       //   })
+
+      setSearchParams(searchParams);
 
 
       let response=Api.commonApiPost("pgr-master/report/_get",{},{tenantId:"default",reportName:metaData.reportDetails.reportName,searchParams}).then(function(response)
@@ -182,7 +190,7 @@ class ShowForm extends Component {
       metaData
     } = this.props;
     let {search} = this;
-    // console.log(metaData);
+    console.log(metaData);
     // console.log(searchForm);
     return (
       <div className="searchForm">
@@ -201,7 +209,12 @@ class ShowForm extends Component {
           </Grid>
           </CardText>
         </Card>
-        <RaisedButton type="submit" disabled={false}  label={buttonText} />
+        <div style={{"textAlign": "center"}}>
+          <br/>
+            <RaisedButton type="submit" disabled={false} primary={true}  label={buttonText} />
+          <br/>
+          <br/>
+        </div>
         </form>
 
       </div>
@@ -289,6 +302,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setMetaData:(metaData)=>{
     dispatch({type:"SET_META_DATA",metaData})
+  },
+  setSearchParams:(searchParams)=>{
+    dispatch({type:"SET_SEARCH_PARAMS",searchParams})
   }
 });
 

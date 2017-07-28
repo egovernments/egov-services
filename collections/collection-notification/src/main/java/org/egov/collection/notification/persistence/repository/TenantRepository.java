@@ -37,76 +37,37 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.indexer.repository.contract;
+package org.egov.collection.notification.persistence.repository;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import org.egov.collection.notification.domain.model.City;
+import org.egov.collection.notification.web.contract.TenantResponse;
+import org.egov.common.contract.request.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ReceiptRequestDocument {
+@Repository
+public class TenantRepository {
 
-    private static final String ES_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    @Autowired
+    private RestTemplate restTemplate;
 
-    @JsonProperty("tenantId")
-    private String tenantId;
+    private String url;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
-    @JsonProperty("receiptDate")
-    private Date receiptDate;
+    public TenantRepository(RestTemplate restTemplate,@Value("${egov.tenant.host}") final String tenantServiceHost,@Value("${egov.tenant.url}") final String url) {
+        this.restTemplate = restTemplate;
+        this.url = tenantServiceHost + url;
+    }
 
-    @JsonProperty("receiptNumber")
-    private String receiptNumber;
+    public City fetchTenantByCode(final RequestInfo requestInfo,final String tenant) {
 
-    @JsonProperty("billingService")
-    private String billingService;
-
-    @JsonProperty("paymentMode")
-    private String paymentMode;
-
-    @JsonProperty("totalAmount")
-    private BigDecimal totalAmount;
-
-    @JsonProperty("channel")
-    private String channel;
-
-    @JsonProperty("paymentGateway")
-    private String paymentGateway;
-
-    @JsonProperty("billNumber")
-    private String billNumber;
-
-    @JsonProperty("consumerCode")
-    private String consumerCode;
-
-    @JsonProperty("status")
-    private String status;
-
-    @JsonProperty("consumerName")
-    private String consumerName;
-
-    @JsonProperty("receiptCreator")
-    private String receiptCreator;
-
-    @JsonProperty("consumerType")
-    private String consumerType;
-
-    @JsonProperty("cityName")
-    private String cityName;
-
-    @JsonProperty("districtName")
-    private String districtName;
-
-    @JsonProperty("regionName")
-    private String regionName;
-
-    @JsonProperty("purpose")
-    private String purpose;
+        final TenantResponse tenantResponse = restTemplate.postForObject(url, requestInfo, TenantResponse.class, tenant);
+        if (!CollectionUtils.isEmpty(tenantResponse.getTenant()))
+            return tenantResponse.getTenant().get(0).getCity();
+        else
+            return null;
+    }
 }

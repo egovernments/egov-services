@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  *    accountability and the service delivery of the government  organizations.
@@ -37,76 +38,26 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.indexer.repository.contract;
+package org.egov.collection.notification.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.collection.notification.domain.model.SmsMessage;
+import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ReceiptRequestDocument {
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Service
+public class SmsRequest {
 
-    private static final String ES_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private String mobileNumber;
+    private String message;
 
-    @JsonProperty("tenantId")
-    private String tenantId;
+    public SmsMessage toDomain() {
+        return new SmsMessage(mobileNumber, message);
+    }
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
-    @JsonProperty("receiptDate")
-    private Date receiptDate;
-
-    @JsonProperty("receiptNumber")
-    private String receiptNumber;
-
-    @JsonProperty("billingService")
-    private String billingService;
-
-    @JsonProperty("paymentMode")
-    private String paymentMode;
-
-    @JsonProperty("totalAmount")
-    private BigDecimal totalAmount;
-
-    @JsonProperty("channel")
-    private String channel;
-
-    @JsonProperty("paymentGateway")
-    private String paymentGateway;
-
-    @JsonProperty("billNumber")
-    private String billNumber;
-
-    @JsonProperty("consumerCode")
-    private String consumerCode;
-
-    @JsonProperty("status")
-    private String status;
-
-    @JsonProperty("consumerName")
-    private String consumerName;
-
-    @JsonProperty("receiptCreator")
-    private String receiptCreator;
-
-    @JsonProperty("consumerType")
-    private String consumerType;
-
-    @JsonProperty("cityName")
-    private String cityName;
-
-    @JsonProperty("districtName")
-    private String districtName;
-
-    @JsonProperty("regionName")
-    private String regionName;
-
-    @JsonProperty("purpose")
-    private String purpose;
 }

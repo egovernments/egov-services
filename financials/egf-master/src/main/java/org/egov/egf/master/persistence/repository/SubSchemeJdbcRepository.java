@@ -134,14 +134,14 @@ public class SubSchemeJdbcRepository extends JdbcRepository {
 			page.setPageSize(subSchemeSearchEntity.getPageSize());
 		}
 
-		/*
-		 * if (params.length() > 0) {
-		 *
-		 * searchQuery = searchQuery.replace(":condition", " where " +
-		 * params.toString());
-		 *
-		 * } else {
-		 */
+		
+		if (params.length() > 0) {
+		
+		searchQuery = searchQuery.replace(":condition", " where " +
+		params.toString());
+		
+		} else 
+		
 		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);

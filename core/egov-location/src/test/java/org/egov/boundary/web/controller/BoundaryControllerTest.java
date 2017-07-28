@@ -8,16 +8,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.persistence.entity.Boundary;
-import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.web.contract.factory.ResponseInfoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -112,7 +109,7 @@ public class BoundaryControllerTest {
 	public void testShouldReturnBadRequestWhenTenantIdAndBoundaryIdsNotProvided() throws Exception {
 		when(boundaryService.getAllBoundariesByBoundaryIdsAndTenant(any(String.class), anyListOf(Long.class)))
 				.thenReturn(null);
-		mockMvc.perform(post("/boundarys/_search").contentType(MediaType.APPLICATION_JSON_UTF8))
+		mockMvc.perform(post("/boundarys/search").contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -120,7 +117,7 @@ public class BoundaryControllerTest {
 	public void testShouldReturnBadRequestWhenTenantIdAndBoundaryIdsAreEmpty() throws Exception {
 		when(boundaryService.getAllBoundariesByBoundaryIdsAndTenant(any(String.class), anyListOf(Long.class)))
 				.thenReturn(null);
-		mockMvc.perform(post("/boundarys/_search").param("tenantId", "").param("boundaryIds", "")
+		mockMvc.perform(post("/boundarys/search").param("tenantId", "").param("boundaryIds", "")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
 	}
 

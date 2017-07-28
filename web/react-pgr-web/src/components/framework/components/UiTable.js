@@ -44,7 +44,7 @@ export default class UiTable extends Component {
   	}
 
   	render() {
-  		let {resultList} = this.props;
+  		let {resultList, rowClickHandler} = this.props;
 
   		const renderTable = function () {
   			return (
@@ -66,11 +66,11 @@ export default class UiTable extends Component {
 
 		                {resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
 		                  return (
-		                    <tr key={i}>
+		                    <tr key={i} onClick={() => {rowClickHandler(i)}}>
 		                      {
 		                      	item.map((item2, i2)=>{
 			                        return (
-			                          <td key={i2}>{item2}</td>
+			                          <td key={i2}>{item2 + ""}</td>
 			                        )
 		                      })}
 		                    </tr>

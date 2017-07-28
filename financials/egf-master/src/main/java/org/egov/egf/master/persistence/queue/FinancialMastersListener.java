@@ -959,6 +959,38 @@ public class FinancialMastersListener {
 			financialProducer.sendMessage(completedTopic,
 					financialConfigurationCompletedKey, mastersMap);
 		}
+		
+		if (mastersMap.get("bankbranch_create") != null) {
+	            BankBranchRequest request = objectMapper.convertValue(
+	                    mastersMap.get("bankbranch_create"), BankBranchRequest.class);
+	            ModelMapper mapper = new ModelMapper();
+	            for (BankBranchContract bankBranchContract : request.getBankBranches()) {
+	                BankBranch domain = mapper.map(bankBranchContract, BankBranch.class);
+	                bankBranchService.save(domain);
+	            }
+
+	            mastersMap.clear();
+	            mastersMap.put("bankbranch_persisted", request);
+	            financialProducer.sendMessage(completedTopic, bankBranchCompletedKey,
+	                    mastersMap);
+	        }
+	        if (mastersMap.get("bankbranch_update") != null) {
+
+	            BankBranchRequest request = objectMapper.convertValue(
+	                    mastersMap.get("bankbranch_update"), BankBranchRequest.class);
+
+	            ModelMapper mapper = new ModelMapper();
+	            for (BankBranchContract bankBranchContract : request.getBankBranches()) {
+	                BankBranch domain = mapper.map(bankBranchContract, BankBranch.class);
+	                bankBranchService.update(domain);
+	            }
+
+	            mastersMap.clear();
+	            mastersMap.put("bankbranch_persisted", request);
+	            financialProducer.sendMessage(completedTopic, bankBranchCompletedKey,
+	                    mastersMap);
+	        }
+
 
 	}
 

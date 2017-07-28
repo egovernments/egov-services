@@ -446,7 +446,7 @@ createPropertyTax = () => {
 				hasFiles = true;
 				
 			}else{
-				
+				hasFiles = false;
 				console.log('still file upload pending', currentThis.props.files.length);
 				
 			  for(let i=0;i<currentThis.props.files.length;i++){
@@ -489,7 +489,7 @@ createPropertyTax = () => {
 			  }
 			}
 		  } else {
-			  
+			  hasFiles = true;
 		  }
 		  
 	if(hasFiles) {

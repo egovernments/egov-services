@@ -1,8 +1,7 @@
 package org.egov.egf.budget.web.repository;
 
-import java.util.Date;
-
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.egf.budget.domain.service.DateFactory;
 import org.egov.egf.budget.web.contract.DepartmentRes;
 import org.egov.egf.budget.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +15,22 @@ public class DepartmentRepository {
 	private final RestTemplate restTemplate;
 
 	private final String departmentByIdUrl;
+	
+	private DateFactory dateFactory;
 
 	@Autowired
 	public DepartmentRepository(final RestTemplate restTemplate,
 			@Value("${egov.services.commonmasters.host}") final String departmentServiceHostname,
-			@Value("${egov.services.common_masters.department}") final String departmentByIdUrl) {
+			@Value("${egov.services.common_masters.department}") final String departmentByIdUrl,DateFactory dateFactory) {
 
 		this.restTemplate = restTemplate;
 		this.departmentByIdUrl = departmentServiceHostname + departmentByIdUrl;
+		this.dateFactory = dateFactory;
 	}
 
 	public DepartmentRes getDepartmentById(final String departmentId, final String tenantId) {
 		final RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setTs(new Date());
+		requestInfo.setTs(dateFactory.create());
 		RequestInfoWrapper wrapper = new RequestInfoWrapper();
 		wrapper.setRequestInfo(requestInfo);
 		return restTemplate.postForObject(departmentByIdUrl, wrapper, DepartmentRes.class, departmentId, tenantId);

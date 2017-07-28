@@ -182,7 +182,7 @@ class CustomMenu extends Component {
     if (!path) {
       this.resetMenu();
       // console.log("level 0");
-      setRoute("/dashboard");
+      setRoute("/pdr/dashboard");
     }
     else {
       let splitArray=_.split(path, '.');

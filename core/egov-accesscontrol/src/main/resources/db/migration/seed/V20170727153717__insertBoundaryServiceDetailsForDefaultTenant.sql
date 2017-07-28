@@ -1,0 +1,1 @@
+insert into service (id,code,name,enabled,displayname,ordernumber,parentmodule,tenantId) values (nextval('SEQ_SERVICE'),'BNDRY','Boundary Module',true,'Jurisdidction',NULL,NULL,'default');

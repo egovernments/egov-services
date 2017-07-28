@@ -72,7 +72,7 @@ var dat = {
 					},
           {
             "name": "donationAmount",
-            "jsonPath": "pipeSize.donationAmount",
+            "jsonPath": "donation.donationAmount",
             "label": "Donation Amount",
             "pattern": "",
             "type": "number",
@@ -81,7 +81,28 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-
+					{
+            "name": "fromDate",
+            "jsonPath": "donation.fromDate",
+            "label": "From Date",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
+            "name": "fromDate",
+            "jsonPath": "donation.toDate",
+            "label": "To Date",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          }
 				]
 			}
 		]

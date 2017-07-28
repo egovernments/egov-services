@@ -17,6 +17,7 @@ import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
+import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.DisposalRepository;
@@ -57,7 +58,7 @@ public class DisposalService {
 
     @Autowired
     private AssetMasterService assetMasterService;
-    
+
     @Autowired
     private AssetConfigurationService assetConfigurationService;
 
@@ -116,7 +117,8 @@ public class DisposalService {
         }
 
         try {
-            assetProducer.sendMessage(applicationProperties.getCreateAssetDisposalTopicName(), "save-disposal", value);
+            assetProducer.sendMessage(applicationProperties.getCreateAssetDisposalTopicName(),
+                    KafkaTopicName.SAVEDISPOSAL.toString(), value);
         } catch (final Exception ex) {
             LOGGER.info("DisposalService:", ex);
             throw new RuntimeException(ex);
@@ -149,7 +151,7 @@ public class DisposalService {
 
             final VoucherRequest voucherRequest = voucherService.createVoucherRequestForDisposal(disposalRequest, asset,
                     accountCodeDetails);
-            
+
             LOGGER.debug("Voucher Request for Disposal :: " + voucherRequest);
 
             return voucherService.createVoucher(voucherRequest, disposalRequest.getDisposal().getTenantId());

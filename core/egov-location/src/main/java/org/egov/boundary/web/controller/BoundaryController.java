@@ -15,7 +15,6 @@ import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.Boundary;
 import org.egov.boundary.web.contract.BoundaryRequest;
 import org.egov.boundary.web.contract.BoundaryResponse;
-import org.egov.boundary.web.contract.BoundarySearchRequest;
 import org.egov.boundary.web.contract.RequestInfoWrapper;
 import org.egov.boundary.web.contract.ShapeFile;
 import org.egov.boundary.web.contract.ShapeFileResponse;
@@ -298,55 +297,87 @@ public class BoundaryController {
 
 	@PostMapping(value = "/_search")
 	@ResponseBody
-	public ResponseEntity<?> boundarySearch(@RequestBody BoundarySearchRequest boundaryRequest) {
+	public ResponseEntity<?> boundarySearch(@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "boundaryIds", required = false) final List<Long> boundaryIds,
+			@RequestParam(value = "boundaryNum", required = false) final Long boundaryNum,
+			@RequestParam(value = "boundaryType", required = false) final String boundaryType) {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		boundaryResponse.setResponseInfo(responseInfo);
-		
-		if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getBoundaryIds() != null
-				&& !boundaryRequest.getBoundary().getBoundaryIds().isEmpty()
-				&& boundaryRequest.getBoundary().getBoundaryIds().size() > 0
-				&& boundaryRequest.getBoundary().getTenantId() != null
-				&& boundaryRequest.getBoundary().getTenantId() != "") {
-		
+
+		if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum != 0 && boundaryType != null
+				&& boundaryType != "" && boundaryIds != null && !boundaryIds.isEmpty() && boundaryIds.size() > 0) {
+
+			if (getBoundaryTypeList(tenantId, boundaryType).isEmpty()) {
+
+				ErrorResponse errorResponses = addBoundaryTypeValidationError(boundaryResponse);
+
+				return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+			}
 
 			List<Boundary> allBoundarys = mapToContractBoundaryList(
-					boundaryService.getAllBoundariesByBoundaryIdsAndTenant(boundaryRequest.getBoundary().getTenantId(),
-							boundaryRequest.getBoundary().getBoundaryIds()));
+					boundaryService.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(tenantId, boundaryNum, boundaryIds,
+							getBoundaryTypeList(tenantId, boundaryType)));
 
 			boundaryResponse.setBoundarys(allBoundarys);
+
 			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
-		} else if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getBoundaryNum() != null
-				&& boundaryRequest.getBoundary().getBoundaryNum().toString() != ""
-				&& boundaryRequest.getBoundary().getBoundaryType() != null
-				&& boundaryRequest.getBoundary().getBoundaryType().getName() != null
-				&& boundaryRequest.getBoundary().getBoundaryType().getName() != "") {
 
-			
-			List<Long> list = new ArrayList<Long>();
+		} else if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum != 0 && boundaryType != null
+				&& boundaryType != "") {
 
-			List<BoundaryType> boundaryTypeList = boundaryTypeService.getAllBoundarytypesByNameAndTenant(
-					boundaryRequest.getBoundary().getBoundaryType().getName(),
-					boundaryRequest.getBoundary().getTenantId());
+			if (getBoundaryTypeList(tenantId, boundaryType).isEmpty()) {
 
-			for (BoundaryType bndryType : boundaryTypeList) {
+				ErrorResponse errorResponses = addBoundaryTypeValidationError(boundaryResponse);
 
-				list.add(bndryType.getId());
+				return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 			}
 
 			List<Boundary> allBoundarys = mapToContractBoundaryList(boundaryService.getAllBoundariesByNumberAndType(
-					boundaryRequest.getBoundary().getTenantId(), boundaryRequest.getBoundary().getBoundaryNum(), list));
+					tenantId, boundaryNum, getBoundaryTypeList(tenantId, boundaryType)));
 
 			boundaryResponse.setBoundarys(allBoundarys);
 			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
-		} else if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getTenantId() != null) {
+
+		} else if (tenantId != null && tenantId != "" && boundaryIds != null && !boundaryIds.isEmpty()
+				&& boundaryIds.size() > 0) {
 
 			List<Boundary> allBoundarys = mapToContractBoundaryList(
-					boundaryService.getAllBoundaryByTenantId(boundaryRequest.getBoundary().getTenantId()));
+					boundaryService.getAllBoundariesByBoundaryIdsAndTenant(tenantId, boundaryIds));
 
 			boundaryResponse.setBoundarys(allBoundarys);
-			
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
+		} else if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum != 0) {
+
+			List<Boundary> allBoundarys = mapToContractBoundaryList(
+					boundaryService.getAllBoundaryByTenantIdAndNumber(tenantId, boundaryNum));
+
+			boundaryResponse.setBoundarys(allBoundarys);
+
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
+		} else if (tenantId != null && tenantId != "" && boundaryType != null && boundaryType != "") {
+
+			if (getBoundaryTypeList(tenantId, boundaryType).isEmpty()) {
+
+				ErrorResponse errorResponses = addBoundaryTypeValidationError(boundaryResponse);
+
+				return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+			}
+
+			List<Boundary> allBoundarys = mapToContractBoundaryList(boundaryService
+					.getAllBoundaryByTenantIdAndTypeIds(tenantId, getBoundaryTypeList(tenantId, boundaryType)));
+
+			boundaryResponse.setBoundarys(allBoundarys);
+
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
+
+		} else if (tenantId != null && tenantId != "") {
+
+			List<Boundary> allBoundarys = mapToContractBoundaryList(boundaryService.getAllBoundaryByTenantId(tenantId));
+
+			boundaryResponse.setBoundarys(allBoundarys);
+
 			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
 		} else {
 			responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
@@ -354,6 +385,41 @@ public class BoundaryController {
 			return new ResponseEntity<>(boundaryResponse, HttpStatus.BAD_REQUEST);
 		}
 
+	}
+
+	private ErrorResponse addBoundaryTypeValidationError(BoundaryResponse boundaryResponse) {
+
+		boundaryResponse.getResponseInfo().setStatus(HttpStatus.BAD_REQUEST.toString());
+
+		final ErrorResponse errorResponse = new ErrorResponse();
+		final List<ErrorField> errorFields = new ArrayList<>();
+
+		final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_TYPE_INVALID_CODE)
+				.message(BoundaryConstants.BOUNDARY_TYPE_INVALID_ERROR_MESSAGE)
+				.field(BoundaryConstants.BOUNDARY_TYPE_INVALID_FIELD_NAME).build();
+
+		final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(BoundaryConstants.INVALID_BOUNDARY_REQUEST_MESSAGE).errorFields(errorFields).build();
+		errorResponse.setError(error);
+
+		errorFields.add(errorField);
+
+		return errorResponse;
+
+	}
+
+	private List<Long> getBoundaryTypeList(String tenantId, String boundaryType) {
+
+		List<Long> list = new ArrayList<Long>();
+
+		List<BoundaryType> boundaryTypeList = boundaryTypeService.getAllBoundarytypesByNameAndTenant(boundaryType,
+				tenantId);
+
+		for (BoundaryType bndryType : boundaryTypeList) {
+
+			list.add(bndryType.getId());
+		}
+		return list;
 	}
 
 	private ErrorResponse validateBoundaryRequest(final BoundaryRequest boundaryRequest) {

@@ -118,7 +118,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn} 
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -176,7 +176,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -237,7 +237,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -402,7 +402,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn} 
+      linkedColumn: _url?/pgr/viewGrievance/:srn 
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -461,7 +461,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -523,7 +523,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -855,7 +855,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -1343,7 +1343,7 @@ ReportDefinitions:
     type: string
     source: egpgr_complainttype
  
-  query : SELECT CONCAT(us.username,'-',pos.name) as userposition,count(CASE WHEN cs.status::text = 'REGISTERED'::text
+  query : SELECT us.username as userposition,count(CASE WHEN cs.status::text = 'REGISTERED'::text
     THEN 1 ELSE NULL::integer END) AS registered, count(CASE WHEN cs.status::text
     = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text,
     'NOTCOMPLETED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
@@ -1388,7 +1388,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string

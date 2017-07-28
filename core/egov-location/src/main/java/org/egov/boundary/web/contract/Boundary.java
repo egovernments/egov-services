@@ -24,9 +24,6 @@ public class Boundary {
 	@JsonProperty("id")
 	private String id;
 	
-	@JsonProperty("boundaryIds")
-	private List<Long> boundaryIds;
-
 	@JsonProperty("name")
 	private String name;
 

@@ -393,4 +393,20 @@ public class BoundaryService {
 		return boundaryJpaRepository.findAllByTenantId(tenantId);
 	}
 	
+	public List<Boundary> getAllBoundaryByTenantIdAndNumber(String tenantId,Long boundaryNumb){
+		
+		return boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber(tenantId,boundaryNumb);
+	}
+	
+	public List<Boundary> getAllBoundaryByTenantIdAndTypeIds(String tenantId,List<Long> boundaryTypeIds){
+		
+		return boundaryJpaRepository.getAllBoundaryByTenantIdAndTypeIds(tenantId,boundaryTypeIds);
+	}
+	
+	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId,Long boundaryNum,List<Long> boundaryIds,List<Long> boundaryTypeIds){
+		
+		return boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(tenantId,boundaryNum,boundaryIds,boundaryTypeIds);
+		
+	}
+	
 }

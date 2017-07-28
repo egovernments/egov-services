@@ -46,6 +46,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.egov.asset.contract.AssetRequest;
@@ -182,7 +183,7 @@ public class AssetRepository {
         if (asset.getStatus() != null)
             status = asset.getStatus();
 
-        if (assetRequest.getAsset().getEnableYearWiseDepreciation())
+        if (asset.getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation())
             asset.setDepreciationRate(null);
 
         final Location location = asset.getLocationDetails();
@@ -202,8 +203,8 @@ public class AssetRepository {
         } catch (final Exception ex) {
             logger.info("the exception from insert query : " + ex);
         }
-        if (assetRequest.getAsset().getEnableYearWiseDepreciation())
-            saveYearWiseDepreciation(assetRequest);
+        if (asset.getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation())
+            saveYearWiseDepreciation(assetRequest, asset.getYearWiseDepreciation());
         return asset;
     }
 
@@ -284,91 +285,63 @@ public class AssetRepository {
 
     private void updateYearWiseDepreciationData(final AssetRequest assetRequest, final Asset oldAsset) {
         final Asset asset = assetRequest.getAsset();
+
+        final List<YearWiseDepreciation> reqYearWiseDepreciations = asset.getYearWiseDepreciation();
+
+        final List<YearWiseDepreciation> dbYearWiseDepreciations = getDBYearWiseDepreciations(oldAsset);
+
+        final List<YearWiseDepreciation> rywds = new ArrayList<YearWiseDepreciation>();
+        final List<YearWiseDepreciation> uywds = new ArrayList<YearWiseDepreciation>();
+        final List<YearWiseDepreciation> iywds = new ArrayList<YearWiseDepreciation>();
+
+        final List<Long> dbYWDIds = new ArrayList<Long>();
+        for (final YearWiseDepreciation dbYwd : dbYearWiseDepreciations)
+            dbYWDIds.add(dbYwd.getId());
+
+        final Iterator<YearWiseDepreciation> itr = reqYearWiseDepreciations.iterator();
+        while (itr.hasNext()) {
+            final YearWiseDepreciation reqYwd = itr.next();
+            if (dbYWDIds.contains(reqYwd.getId())) {
+                uywds.add(reqYwd);
+                itr.remove();
+                removeFromDBYearWiseDepreciations(dbYearWiseDepreciations, reqYwd);
+            } else if (reqYwd.getId() == null)
+                iywds.add(reqYwd);
+        }
+
+        if (!dbYearWiseDepreciations.isEmpty())
+            rywds.addAll(dbYearWiseDepreciations);
+
+        saveYearWiseDepreciation(assetRequest, iywds);
+        updateYearWiseDepreciation(assetRequest, uywds);
+        removeYearWiseDepreciation(assetRequest, rywds);
+
+        updateAssetDepreciationRate(asset, false);
+
+    }
+
+    private void removeFromDBYearWiseDepreciations(final List<YearWiseDepreciation> dbYearWiseDepreciations,
+            final YearWiseDepreciation reqYwd) {
+        int i = 0;
+        for (final YearWiseDepreciation ywd : dbYearWiseDepreciations)
+            if (ywd.getId() == reqYwd.getId())
+                break;
+            else
+                i++;
+        dbYearWiseDepreciations.remove(i);
+    }
+
+    private List<YearWiseDepreciation> getDBYearWiseDepreciations(final Asset oldAsset) {
         final String queryToGetYearWiseDepreciation = AssetQueryBuilder.GETYEARWISEDEPRECIATIONQUERY;
         logger.debug("Get Year Wise Depreciation Query :: " + queryToGetYearWiseDepreciation);
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(oldAsset.getId());
         preparedStatementValues.add(oldAsset.getTenantId());
         logger.debug("parameters for searching year wise depreciations :: " + preparedStatementValues);
+
         final List<YearWiseDepreciation> dbYearWiseDepreciations = jdbcTemplate.query(queryToGetYearWiseDepreciation,
                 preparedStatementValues.toArray(), yearWiseDepreciationRowMapper);
-        if (dbYearWiseDepreciations.size() < asset.getYearWiseDepreciation().size()) {
-            saveOrUpdateYearWiseDepreciations(dbYearWiseDepreciations, assetRequest);
-            updateAssetDepreciationRate(asset, false);
-        } else if (dbYearWiseDepreciations.size() > asset.getYearWiseDepreciation().size()) {
-            removeOrUpdateYearWiseDepreciations(dbYearWiseDepreciations, assetRequest);
-            updateAssetDepreciationRate(asset, false);
-        } else {
-            updateYearWiseDepreciation(assetRequest);
-            updateAssetDepreciationRate(asset, false);
-        }
-    }
-
-    private void saveOrUpdateYearWiseDepreciations(final List<YearWiseDepreciation> oldYearWiseDepr,
-            final AssetRequest assetRequest) {
-        final List<YearWiseDepreciation> newYearWiseDepr = assetRequest.getAsset().getYearWiseDepreciation();
-        final List<String> financialYears = new ArrayList<String>();
-        for (final YearWiseDepreciation oldYwd : oldYearWiseDepr)
-            financialYears.add(oldYwd.getFinancialYear());
-        logger.info("adding and updating year wise depreciations");
-        final List<YearWiseDepreciation> iywds = new ArrayList<YearWiseDepreciation>();
-        final List<YearWiseDepreciation> uywds = new ArrayList<YearWiseDepreciation>();
-
-        for (final YearWiseDepreciation newYwd : newYearWiseDepr)
-            if (financialYears.contains(newYwd.getFinancialYear()))
-                uywds.add(newYwd);
-            else
-                iywds.add(newYwd);
-        logger.debug("year wise depreciations will be inserted :: " + iywds);
-        logger.debug("year wise depreciations will be updated :: " + uywds);
-        if (!iywds.isEmpty()) {
-            assetRequest.getAsset().setYearWiseDepreciation(iywds);
-            logger.debug("Asset Request for inserting year wise depreciations :: " + assetRequest);
-            saveYearWiseDepreciation(assetRequest);
-        }
-        if (!uywds.isEmpty()) {
-            assetRequest.getAsset().setYearWiseDepreciation(uywds);
-            logger.debug("Asset Request for updating year wise depreciations :: " + assetRequest);
-            updateYearWiseDepreciation(assetRequest);
-        }
-
-    }
-
-    private void removeOrUpdateYearWiseDepreciations(final List<YearWiseDepreciation> oldYearWiseDepr,
-            final AssetRequest assetRequest) {
-        final List<YearWiseDepreciation> newYearWiseDepr = assetRequest.getAsset().getYearWiseDepreciation();
-        final List<String> oldFinancialYears = new ArrayList<String>();
-        final List<String> newFinancialYears = new ArrayList<String>();
-        for (final YearWiseDepreciation oldYwd : oldYearWiseDepr)
-            oldFinancialYears.add(oldYwd.getFinancialYear());
-        for (final YearWiseDepreciation newYwd : newYearWiseDepr)
-            newFinancialYears.add(newYwd.getFinancialYear());
-
-        oldFinancialYears.removeAll(newFinancialYears);
-
-        logger.info("removing and updating year wise depreciations");
-        final List<YearWiseDepreciation> rywds = new ArrayList<YearWiseDepreciation>();
-        final List<YearWiseDepreciation> uywds = new ArrayList<YearWiseDepreciation>();
-
-        for (final YearWiseDepreciation oldYwd : oldYearWiseDepr)
-            if (oldFinancialYears.contains(oldYwd.getFinancialYear()))
-                rywds.add(oldYwd);
-        for (final YearWiseDepreciation newYwd : newYearWiseDepr)
-            uywds.add(newYwd);
-
-        logger.debug("year wise depreciations will be deleted :: " + rywds);
-        logger.debug("year wise depreciations will be updated :: " + uywds);
-        if (!rywds.isEmpty()) {
-            assetRequest.getAsset().setYearWiseDepreciation(rywds);
-            logger.debug("Asset Request for removing year wise depreciations :: " + assetRequest);
-            removeYearWiseDepreciation(assetRequest);
-        }
-        if (!uywds.isEmpty()) {
-            assetRequest.getAsset().setYearWiseDepreciation(uywds);
-            logger.debug("Asset Request for updating year wise depreciations :: " + assetRequest);
-            updateYearWiseDepreciation(assetRequest);
-        }
-
+        return dbYearWiseDepreciations;
     }
 
     private void updateAssetDepreciationRate(final Asset asset, final boolean changeDepRateInAsset) {
@@ -388,10 +361,10 @@ public class AssetRepository {
         jdbcTemplate.update(depreciationRateUpdateQuery, preparedStatementValues.toArray());
     }
 
-    private void saveYearWiseDepreciation(final AssetRequest assetRequest) {
+    private void saveYearWiseDepreciation(final AssetRequest assetRequest,
+            final List<YearWiseDepreciation> yearWiseDepreciations) {
         final RequestInfo requestInfo = assetRequest.getRequestInfo();
         final Asset asset = assetRequest.getAsset();
-        final List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
 
         logger.debug("Year Wise Details Insert Query ::" + AssetQueryBuilder.BATCHINSERTQUERY);
         logger.debug("Year Wise Depreciations for Insert ::" + yearWiseDepreciations);
@@ -418,10 +391,10 @@ public class AssetRepository {
         });
     }
 
-    private void updateYearWiseDepreciation(final AssetRequest assetRequest) {
+    private void updateYearWiseDepreciation(final AssetRequest assetRequest,
+            final List<YearWiseDepreciation> yearWiseDepreciations) {
         final RequestInfo requestInfo = assetRequest.getRequestInfo();
         final Asset asset = assetRequest.getAsset();
-        final List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
 
         logger.debug("Year Wise Details Update Query ::" + AssetQueryBuilder.BATCHUPDATEQUERY);
         logger.debug("Year Wise Depreciations for Update ::" + yearWiseDepreciations);
@@ -448,9 +421,9 @@ public class AssetRepository {
         });
     }
 
-    private void removeYearWiseDepreciation(final AssetRequest assetRequest) {
+    private void removeYearWiseDepreciation(final AssetRequest assetRequest,
+            final List<YearWiseDepreciation> yearWiseDepreciations) {
         final Asset asset = assetRequest.getAsset();
-        final List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
 
         logger.debug("Year Wise Details Delete Query ::" + AssetQueryBuilder.YEARWISEDEPRECIATIONDELETEQUERY);
         logger.debug("Year Wise Depreciations for Delete ::" + yearWiseDepreciations);

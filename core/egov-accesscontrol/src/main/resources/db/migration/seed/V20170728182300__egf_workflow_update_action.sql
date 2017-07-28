@@ -1,0 +1,1 @@
+update eg_action set url = '/egov-common-workflows/tasks/{id}/_update' where name='tasksMS' and servicecode='Workflow_MS';

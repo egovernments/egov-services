@@ -14,6 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class YearWiseDepreciation {
+    
+    private Long id;
 
     private Double depreciationRate;
     

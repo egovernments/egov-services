@@ -430,7 +430,7 @@ class ViewProperty extends Component {
 												   Old Assessment Number
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.oldUpicNumber}
+												  {item.oldUpicNumber || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -440,17 +440,7 @@ class ViewProperty extends Component {
 												   Assessment Number
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.upicNumber}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Category of Ownership
-											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.propertyDetail.propertyType}
+												  {item.upicNumber || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -470,7 +460,7 @@ class ViewProperty extends Component {
 												  Property Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												 
+												 {item.propertyDetail.propertyType || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -480,7 +470,7 @@ class ViewProperty extends Component {
 												  Extent of Site (Sq.Mtrs)
 											  </Col>
 											  <Col xs={8} md={6}>
-												 
+												  {item.propertyDetail.sitalArea || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -490,7 +480,7 @@ class ViewProperty extends Component {
 												  Registration Doc No
 											  </Col>
 											  <Col xs={8} md={6}>
-												 
+												  {item.propertyDetail.regdDocNo || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -500,7 +490,7 @@ class ViewProperty extends Component {
 												  Reason for Creation
 											  </Col>
 											  <Col xs={8} md={6}>
-												 
+												   {item.creationReason || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -525,7 +515,7 @@ class ViewProperty extends Component {
 												   Exemption Category
 											  </Col>
 											  <Col xs={8} md={6}>
-												
+												{item.propertyDetail.exemptionReason || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -535,7 +525,7 @@ class ViewProperty extends Component {
 												   Effective Date
 											  </Col>
 											  <Col xs={8} md={6}>
-												
+												  {item.occupancyDate}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -555,7 +545,7 @@ class ViewProperty extends Component {
 												  Property Department
 											  </Col>
 											  <Col xs={8} md={6}>
-												
+												  {item.propertyDetail.department || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -565,7 +555,7 @@ class ViewProperty extends Component {
 												  Registration Doc Date
 											  </Col>
 											  <Col xs={8} md={6}>
-												
+												  {item.propertyDetail.regdDocDate}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -575,7 +565,7 @@ class ViewProperty extends Component {
 												  Assessment Date
 											  </Col>
 											  <Col xs={8} md={6}>
-												
+												  {item.assessmentDate}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -607,11 +597,11 @@ class ViewProperty extends Component {
 												   Property Address
 											  </Col>
 											  <Col xs={8} md={6}>
-												 {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
-												 {item.address.addressLine1 ? item.address.addressLine1+', ' : '' }
-												 {item.address.addressLine2 ? item.address.addressLine2+', ':''}
-												 {item.address.landmark ? item.address.landmark+', ' : ''}
-												 {item.address.city ? item.address.city+', ' : ''}
+												 {item.address.addressNumber ? item.address.addressNumber+', ' : 'NA' }
+												 {item.address.addressLine1 ? item.address.addressLine1+', ' : 'NA' }
+												 {item.address.addressLine2 ? item.address.addressLine2+', ':'NA'}
+												 {item.address.landmark ? item.address.landmark+', ' : 'NA'}
+												 {item.address.city ? item.address.city+', ' : 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -675,7 +665,7 @@ class ViewProperty extends Component {
 												   Locality
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.address.addressLine1 || ''}
+												  {item.address.addressLine1 || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -708,7 +698,7 @@ class ViewProperty extends Component {
 																   Aadhaar No
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.aadhaarNumber ? owner.aadhaarNumber : ''}
+																  {owner.aadhaarNumber ? owner.aadhaarNumber : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -718,7 +708,7 @@ class ViewProperty extends Component {
 																   Mobile Number (without +91)
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.mobileNumber ? owner.mobileNumber : ''}
+																  {owner.mobileNumber ? owner.mobileNumber : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -728,7 +718,7 @@ class ViewProperty extends Component {
 																   Owner Name
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.name ? owner.name : ''}
+																  {owner.name ? owner.name : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -738,7 +728,7 @@ class ViewProperty extends Component {
 																  Gender
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gender ? owner.gender : ''}
+																  {owner.gender ? owner.gender : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>								  
@@ -752,7 +742,7 @@ class ViewProperty extends Component {
 																   Email Address
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.emailId ? owner.emailId : ''}
+																  {owner.emailId ? owner.emailId : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -762,7 +752,7 @@ class ViewProperty extends Component {
 																   Guardian Relation
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gaurdianRelation ? owner.gaurdianRelation : ''}
+																  {owner.gaurdianRelation ? owner.gaurdianRelation : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -772,7 +762,7 @@ class ViewProperty extends Component {
 																   Guardian
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gaurdian ? owner.gaurdian : ''}
+																  {owner.gaurdian ? owner.gaurdian : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>  
@@ -796,7 +786,7 @@ class ViewProperty extends Component {
 												   Lift
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.lift || ''}
+												  {item.lift || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -806,7 +796,7 @@ class ViewProperty extends Component {
 												   Toilets
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.toilet || ''}
+												  {item.toilet || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -816,7 +806,7 @@ class ViewProperty extends Component {
 												   Water Tap
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.waterTap || ''}
+												  {item.waterTap || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -826,7 +816,7 @@ class ViewProperty extends Component {
 												  Electricity
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.electricity || ''}
+												  {item.electricity || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>								  
@@ -840,7 +830,7 @@ class ViewProperty extends Component {
 												   Attached Bathroom
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.attachedBathroom || ''}
+												  {item.attachedBathroom || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -850,7 +840,7 @@ class ViewProperty extends Component {
 												   Water Harvesting
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.waterHarvesting || ''}
+												  {item.waterHarvesting || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -860,7 +850,7 @@ class ViewProperty extends Component {
 												  Cable Connection
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.cableConnection || ''}
+												  {item.cableConnection || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>  
@@ -928,7 +918,7 @@ class ViewProperty extends Component {
 						  <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Floor Details</div>} />
 								  {item.propertyDetail.floors.length !=0 && item.propertyDetail.floors.map((floor, index)=>(
-									<div key={index}> <h5 style={{marginLeft:'30px'}}> Floor Number {floor.floorNo || ''}</h5>
+									<div key={index}> <h5 style={{marginLeft:'30px'}}> Floor Number {floor.floorNo || 'NA'}</h5>
 										{floor.units.length !=0 && floor.units.map((unit, index)=>{
 											return(
 													<CardText key={index}>
@@ -941,7 +931,7 @@ class ViewProperty extends Component {
 																   Classification of Building
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.structure || ''}
+																  {unit.structure || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>							  
@@ -951,7 +941,7 @@ class ViewProperty extends Component {
 																   Nature of Usage
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.usage || ''}
+																  {unit.usage || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -961,7 +951,7 @@ class ViewProperty extends Component {
 																   Firm Name
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.firmName || ''}
+																  {unit.firmName || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -971,7 +961,7 @@ class ViewProperty extends Component {
 																   Occupancy
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.occupancyType || ''}
+																  {unit.occupancyType || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -981,7 +971,7 @@ class ViewProperty extends Component {
 																   Occupant Name
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.occupierName || ''}
+																  {unit.occupierName || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -991,7 +981,7 @@ class ViewProperty extends Component {
 																   Construction Date	
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.constCompletionDate || ''}
+																  {unit.constCompletionDate || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -1001,7 +991,7 @@ class ViewProperty extends Component {
 																   Effective From Date	
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.occupancyDate || ''}
+																  {unit.occupancyDate || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -1015,7 +1005,7 @@ class ViewProperty extends Component {
 																   Unstructured land
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.isStructured || ''}
+																  {unit.isStructured || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -1025,7 +1015,7 @@ class ViewProperty extends Component {
 																   Length
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.length || ''}
+																  {unit.length || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -1035,7 +1025,7 @@ class ViewProperty extends Component {
 																   Breadth
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.width || ''}
+																  {unit.width || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -1045,7 +1035,7 @@ class ViewProperty extends Component {
 																   Plinth area (Sq.Mtrs)
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.builtupArea || ''}
+																  {unit.builtupArea || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -1065,7 +1055,7 @@ class ViewProperty extends Component {
 																   Building Permission Date
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {unit.bpaDate}
+																  {unit.bpaDate || 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>

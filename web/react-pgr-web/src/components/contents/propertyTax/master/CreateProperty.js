@@ -436,10 +436,15 @@ createPropertyTax = () => {
       }
 	  
 	  var fileStoreArray = [];
+	  
+	  var hasFiles = true;
 	  			
 	   if(currentThis.props.files.length !=0){
+			hasFiles = false;
 			if(currentThis.props.files.length === 0){
 				console.log('No file uploads');
+				hasFiles = true;
+				
 			}else{
 				
 				console.log('still file upload pending', currentThis.props.files.length);
@@ -473,27 +478,38 @@ createPropertyTax = () => {
 					documentArray.fileStore = response.files[0].fileStoreId;
 					body.properties[0].propertyDetail.documents.push(documentArray);
 					console.log(body);
+					  if(i === (currentThis.props.files.length - 1)){
+						console.log('All files succesfully uploaded');
+						hasFiles = true;
+					  }
+					
 				},function(err) {
 				  console.log(err);
 				});
 			  }
 			}
+		  } else {
+			  
 		  }
 		  
+	if(hasFiles) {
+			  
+		 Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
+			currentThis.setState({
+				ack: res.properties.applicationNo
+			});
+			localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
+			this.props.history.push('acknowledgement');
+			setLoadingStatus('hide');
+		  }).catch((err)=> {
+			console.log(err)
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message);
+		  })
+		}
+	}	  
 		  
-     Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
-		currentThis.setState({
-			ack: res.properties.applicationNo
-		});
-		localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-		this.props.history.push('acknowledgement');
-setLoadingStatus('hide');
-      }).catch((err)=> {
-        console.log(err)
-		setLoadingStatus('hide');
- toggleSnackbarAndSetText(true, err.message);
-      })
-    }
+	
 	
 createActivate = () => {
 	
@@ -583,7 +599,7 @@ createActivate = () => {
 					  </Card>}
 					  </div>
 				  }
-				  {this.state.addFloor && <FloorDetails/>}
+				  {(this.state.addFloor && (getNameByCode(this.state.propertytypes, createProperty.propertyType) != "Vacant Land")) && <FloorDetails/>}
 				  <DocumentUpload />
 				  <Workflow />
 				  

@@ -151,7 +151,7 @@ class CustomMenu extends Component {
     let {actionList}=this.props;
     let menuItems=[];
     for (var i = 0; i < actionList.length; i++) {
-      if (actionList[i].path!="" && actionList[i].path.search(path)>-1 && actionList[i].path.search(path+" ")==-1) {
+      if (actionList[i].path!="" && actionList[i].path.startsWith(path)) {
         let splitArray=actionList[i].path.split(path)[1].split(".");
         if (splitArray.length>2) {
             if (!_.some(menuItems,{ 'name':splitArray[1]} )) {
@@ -182,7 +182,7 @@ class CustomMenu extends Component {
     if (!path) {
       this.resetMenu();
       // console.log("level 0");
-      setRoute("/pdr/dashboard");
+      setRoute("/prd/dashboard");
     }
     else {
       let splitArray=_.split(path, '.');

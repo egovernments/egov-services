@@ -169,7 +169,17 @@ var dat = {
 						"depedants":[{
 								"jsonPath":"Connection.categoryType",
 								"type":"dropDown",
-								"pattern":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..id|$..name"
+								"pattern":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..categoryTypeName|$..categoryTypeName"
+							},
+							{
+									"jsonPath":"Connection.property.usageType",
+									"type":"dropDown",
+									"pattern":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..usageType|$..usageType"
+							},
+							{
+										"jsonPath":"Connection.hscPipeSizeType",
+										"type":"dropDown",
+										"pattern":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSize"
 							}],
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -182,7 +192,6 @@ var dat = {
 								"type": "singleValueList",
 								"isRequired": false,
 								"isDisabled": false,
-								"url": "/wcms/masters/propertytype-categorytype/_search?|$..categoryTypeName|$..categoryTypeName",
 								"requiredErrMsg": "",
 								"patternErrMsg": ""
 					},
@@ -194,7 +203,6 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/wcms/masters/propertytype-usagetype/_search?|$..usageType|$..usageType",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -206,7 +214,6 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/wcms/masters/propertytype-pipesize/_search?|$..pipeSize|$..pipeSize",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},

@@ -143,4 +143,13 @@ public interface BoundaryJpaRepository extends JpaRepository<Boundary, Long> {
 	
 	@Query("from Boundary b where b.tenantId=:tenantId and b.boundaryNum =:boundaryNum and b.boundaryType.id in :boundaryTypeIds ")
 	List<Boundary> findAllBoundariesByNumberAndType(@Param("tenantId") String tenantId,@Param("boundaryNum") Long boundaryNum,@Param("boundaryTypeIds") List<Long> boundaryTypeIds);
+	
+	@Query("from Boundary b where b.tenantId=:tenantId and b.boundaryNum =:boundaryNum ")
+	List<Boundary> getAllBoundaryByTenantIdAndNumber(@Param("tenantId") String tenantId,@Param("boundaryNum") Long boundaryNum);
+	
+	@Query("from Boundary b where b.tenantId=:tenantId and b.boundaryType.id in :boundaryTypeIds ")
+	List<Boundary> getAllBoundaryByTenantIdAndTypeIds(@Param("tenantId") String tenantId,@Param("boundaryTypeIds") List<Long> boundaryTypeIds);
+	
+	@Query("from Boundary b where b.tenantId=:tenantId and b.boundaryNum =:boundaryNum and b.id in :boundaryIds and b.boundaryType.id in :boundaryTypeIds ")
+	List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(@Param("tenantId") String tenantId,@Param("boundaryNum") Long boundaryNum,@Param("boundaryIds") List<Long> boundaryIds,@Param("boundaryTypeIds") List<Long> boundaryTypeIds);
 }

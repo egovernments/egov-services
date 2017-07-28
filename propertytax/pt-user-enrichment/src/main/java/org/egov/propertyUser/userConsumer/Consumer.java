@@ -13,6 +13,7 @@ import org.egov.propertyUser.config.PropertiesManager;
 import org.egov.propertyUser.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -42,6 +43,9 @@ public class Consumer {
 
     @Autowired
     private UserUtil userUtil;
+    
+    @Autowired
+    private Environment environment;
 
     /*
      * This method for creating rest template
@@ -91,8 +95,8 @@ public class Consumer {
      * This method will listen property object from producer and check user authentication Updating auth token in
      * UserAuthResponseInfo Search user Create user
      */
-    @KafkaListener(topics = { "#{propertiesManager.getCreatePropertyValidator()}",
-            "#{propertiesManager.getUpdatePropertyValidator()}" })
+    @KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.create.property.validated')}",
+            "#{environment.getProperty('egov.propertytax.update.property.validated')}" })
     public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
         log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
         PropertyRequest propertyRequest = consumerRecord.value();
@@ -104,15 +108,15 @@ public class Consumer {
 
             }
             if (consumerRecord.topic()
-                    .equalsIgnoreCase(propertiesManager.getCreatePropertyValidator())) {
+                    .equalsIgnoreCase(environment.getProperty("egov.propertytax.create.property.validated"))) {
 
-                producer.kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(),
+                producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.create.property.user.validated"),
                         propertyRequest);
 
             } else if (consumerRecord.topic()
-                    .equalsIgnoreCase(propertiesManager.getUpdatePropertyValidator())) {
+                    .equalsIgnoreCase(environment.getProperty("egov.propertytax.update.property.validated"))) {
 
-                producer.kafkaTemplate.send(propertiesManager.getUpdatePropertyUserValidator(),
+                producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.update.property.user.validated"),
                         propertyRequest);
 
             }

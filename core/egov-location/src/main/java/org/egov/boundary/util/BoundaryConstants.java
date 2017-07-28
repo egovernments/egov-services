@@ -36,4 +36,9 @@ public class BoundaryConstants {
 	public static final String BOUNDARY_TYPE_ID_MANDATORY_FIELD_NAME = "id";
 	public static final String BOUNDARY_TYPE_ID_MANDATORY_ERROR_MESSAGE = "BoundaryTypeId is Required.";
 	
+	public static final String BOUNDARY_TYPE_INVALID_CODE = "accesscontrol.0007";
+	public static final String BOUNDARY_TYPE_INVALID_FIELD_NAME = "boundaryType";
+	public static final String BOUNDARY_TYPE_INVALID_ERROR_MESSAGE = "boundaryType Does Not Exist.";
+	
+	
 }

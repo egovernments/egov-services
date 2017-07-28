@@ -91,7 +91,7 @@ const Main = () => {
     <Switch>
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
 	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
-        <Route exact path= {base + '/search/:moduleName/:master?'} component={Search}/>
+        <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>

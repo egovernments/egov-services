@@ -92,7 +92,6 @@ public class InstrumentType extends Auditable {
 	@Valid
 	@NotNull
 	@Size(max = 2, min = 2, message = "")
-	// @DrillDownTable
 	private List<InstrumentTypeProperty> instrumentTypeProperties;
 
 }

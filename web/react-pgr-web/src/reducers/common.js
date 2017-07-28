@@ -34,6 +34,18 @@ let menuConvention={
   // "Grievance Redressal.Masters.Escalation.Update Escalation":"",
   "Grievance Redressal.Masters.Escalation.Search Escalation":"/pgr/bulkEscalationGeneration",
 
+    "Water Charge.Water Charge Connection.CreateNewConnectionAPI":"/create/wc",
+    "Water Charge.WCMS Masters.CategoryMasters.CreateCategoryMasterApi":"/create/wc/categoryType",
+    "Water Charge.WCMS Masters.PipeSize Master.CreatePipeSizeMasterApi":"/create/wc/pipeSize",
+    "Water Charge.WCMS Masters.Document Type Master.CreateDocumentTypeMasterApi":"/create/wc/documentType",
+    "Water Charge.WCMS Masters.Donation.CreatDonationApi":"/create/wc/donation",
+    "Water Charge.WCMS Masters.PropertyCategory.CreatPropertyCategoryApi":"/create/wc/propertyCategory",
+    "Water Charge.WCMS Masters.PropertyPipeSize.CreatPropertyPipeSizeApi":"/create/wc/propertyPipeSize",
+    "Water Charge.WCMS Masters.PropertyUsage.CreatPropertyUsageApi":"/create/wc/propertyUsage",
+    "Water Charge.WCMS Masters.StorageReservoir.CreatStorageReservoirApi":"/create/wc/storageReservoir",
+    "Water Charge.WCMS Masters.TreatmentPlant.CreatTreatmentPlantApi":"/create/wc/treatmentPlants",
+    "Water Charge.WCMS Masters.Supply Type Master.CreateSupplyTypeMasterApi":"/create/wc/supplyType",
+    "Water Charge.WCMS Masters.Source Type Master.CreateSourceTypeMasterApi":"/create/wc/waterSourceType",
 
 
 

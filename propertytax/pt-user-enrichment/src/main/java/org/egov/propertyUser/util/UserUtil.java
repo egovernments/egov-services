@@ -38,8 +38,14 @@ public class UserUtil {
 		searchUrl.append(propertiesManager.getUserBasepath());
 		searchUrl.append(propertiesManager.getUserSearchpath());
 
+		UserResponseInfo userResponse = null;
+        Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
+        userSearchRequestInfo.put("userName", user.getMobileNumber());
+        userSearchRequestInfo.put("type", user.getType());
+        userSearchRequestInfo.put("tenantId", user.getTenantId());
+        userSearchRequestInfo.put("RequestInfo", requestInfo);
 		  // search user
-        UserResponseInfo userResponse = null;
+        
         logger.info("UserUtil searchUrl ---->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
                 + userSearchRequestInfo);
         userResponse = restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
@@ -66,7 +72,7 @@ public class UserUtil {
             if (userResponse == null || userResponse.getUser().size() == 0) {
                 UserRequestInfo userRequestInfo = new UserRequestInfo();
                 userRequestInfo.setRequestInfo(requestInfo);
-                user.setPassword(environment.getProperty("default.password"));
+                user.setPassword(propertiesManager.getDefaultPassword());
                 userRequestInfo.setUser(user);
                 logger.info("UserUtil createUrl ---->> " + createUrl.toString() + " \n userRequestInfo ---->> "
                         + userRequestInfo);

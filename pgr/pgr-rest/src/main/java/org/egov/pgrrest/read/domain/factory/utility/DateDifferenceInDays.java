@@ -1,4 +1,4 @@
-package org.egov.pgrrest.read.factory.utility;
+package org.egov.pgrrest.read.domain.factory.utility;
 
 import org.joda.time.Days;
 import org.joda.time.LocalDate;

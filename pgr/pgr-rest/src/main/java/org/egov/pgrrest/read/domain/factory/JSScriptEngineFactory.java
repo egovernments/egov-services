@@ -1,8 +1,8 @@
-package org.egov.pgrrest.read.factory;
+package org.egov.pgrrest.read.domain.factory;
 
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
-import org.egov.pgrrest.read.factory.utility.DateDifferenceInDays;
+import org.egov.pgrrest.read.domain.factory.utility.DateDifferenceInDays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

@@ -42,7 +42,12 @@ public class AssetQueryBuilderTest {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").build();
         Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,"
+                + "asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,"
+                + "ywd.id as ywd_id,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as "
+                + "assetcategory_depreciationrate FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON "
+                + "asset.assetcategory = assetcategory.id LEFT OUTER JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid "
+                + "WHERE ASSET.tenantId = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
         assertEquals(queryWithTenantId,
                 assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 
@@ -59,7 +64,12 @@ public class AssetQueryBuilderTest {
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
                 .grossValue(Double.valueOf("15.0")).build();
         Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.grossvalue = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
+                + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
+                + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
+                + "egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT "
+                + "OUTER JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.grossvalue = ? "
+                + "ORDER BY asset.name LIMIT ? OFFSET ?";
         assertEquals(queryWithTenantId,
                 assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 
@@ -77,7 +87,12 @@ public class AssetQueryBuilderTest {
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
                 .toCapitalizedValue(Double.valueOf("15.0")).build();
         Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN 1 AND ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
+                + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
+                + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
+                + "egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER "
+                + "JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN 1 "
+                + "AND ? ORDER BY asset.name LIMIT ? OFFSET ?";
         assertEquals(queryWithTenantId,
                 assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 
@@ -95,7 +110,12 @@ public class AssetQueryBuilderTest {
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
                 .fromCapitalizedValue(Double.valueOf("15")).toCapitalizedValue(Double.valueOf("150")).build();
         Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN ? AND ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
+                + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
+                + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
+                + "egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER "
+                + "JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN ? "
+                + "AND ? ORDER BY asset.name LIMIT ? OFFSET ?";
         assertEquals(queryWithTenantId,
                 assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 
@@ -120,7 +140,13 @@ public class AssetQueryBuilderTest {
                 .block(Long.valueOf(20)).code(String.valueOf(560042)).department(Long.valueOf(30))
                 .description(String.valueOf(123)).build();
         Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.id IN (10,20,30) AND ASSET.code like ? AND ASSET.department = ? AND ASSET.block = ? AND ASSET.description ilike ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
+                + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
+                + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
+                + "egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER "
+                + "JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.id IN (10,20,30) AND "
+                + "ASSET.code like ? AND ASSET.department = ? AND ASSET.block = ? AND ASSET.description ilike ? ORDER BY asset.name LIMIT ? "
+                + "OFFSET ?";
         assertEquals(queryWithTenantId,
                 assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
         final List<Object> expectedPreparedStatementValues = new ArrayList<>();
@@ -142,7 +168,14 @@ public class AssetQueryBuilderTest {
                 .offset(Long.valueOf(50)).pinCode(Long.valueOf(60)).revenueWard(Long.valueOf(70)).size(Long.valueOf(80))
                 .status(Status.CREATED.toString()).street(Long.valueOf(90)).zone(Long.valueOf(100)).build();
         Mockito.doReturn("80").when(applicationProperties).commonsSearchPageSizeDefault();
-        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.name ilike ? AND ASSET.status = ? AND ASSET.locality = ? AND ASSET.zone = ? AND ASSET.revenueWard = ? AND ASSET.street = ? AND ASSET.electionWard = ? AND ASSET.pinCode = ? AND ASSET.doorno = ? AND ASSET.grossvalue = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+        final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
+                + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
+                + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
+                + "egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id LEFT OUTER "
+                + "JOIN egasset_yearwisedepreciation ywd ON asset.id = ywd.assetid WHERE ASSET.tenantId = ? AND ASSET.name ilike ? AND "
+                + "ASSET.status = ? AND ASSET.locality = ? AND ASSET.zone = ? AND ASSET.revenueWard = ? AND ASSET.street = ? AND "
+                + "ASSET.electionWard = ? AND ASSET.pinCode = ? AND ASSET.doorno = ? AND ASSET.grossvalue = ? ORDER BY asset.name LIMIT ? "
+                + "OFFSET ?";
         assertEquals(queryWithTenantId,
                 assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
         System.out.println(preparedStatementValues);
@@ -165,13 +198,20 @@ public class AssetQueryBuilderTest {
 
     @Test
     public void getInsertQuery() {
-        final String queryWithTenantId = "INSERT into egasset_asset (id,assetcategory,name,code,department,assetdetails,description,dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepreciation,depreciationrate)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        final String queryWithTenantId = "INSERT into egasset_asset (id,assetcategory,name,code,department,assetdetails,description,"
+                + "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward,street,electionward,"
+                + "doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,lastmodifieddate,grossvalue,"
+                + "accumulateddepreciation,assetreference,version,enableyearwisedepreciation,depreciationrate)"
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         assertEquals(queryWithTenantId, assetQueryBuilder.getInsertQuery());
     }
 
     @Test
     public void getUpdateQuery() {
-        final String queryWithTenantId = "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?WHERE code=? and tenantid=?";
+        final String queryWithTenantId = "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,"
+                + "length=?,width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,"
+                + "locality=?,block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,"
+                + "assetreference=?,version=?WHERE code=? and tenantid=?";
         assertEquals(queryWithTenantId, assetQueryBuilder.getUpdateQuery());
     }
 

@@ -14,6 +14,7 @@ import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
+import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.RevaluationRepository;
@@ -86,7 +87,7 @@ public class RevaluationService {
         try {
             if (json != null)
                 assetProducer.sendMessage(applicationProperties.getCreateAssetRevaluationTopicName(),
-                        "save-revaluation", json);
+                        KafkaTopicName.SAVEREVALUATION.toString(), json);
         } catch (final Exception ex) {
             logger.info("RevaluationService send kafka createAsync:" + ex.getMessage());
         }

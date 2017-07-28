@@ -252,7 +252,7 @@ public class RestConnectionService {
                     "Error while Fetching Data from PropertyTax", requestInfo);
         }
 
-        if (propResp != null && !propResp.getProperties().isEmpty())
+        if (propResp != null && propResp.getProperties()!=null && !propResp.getProperties().isEmpty())
             waterRequestReq.getConnection().setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
 
         return propResp;

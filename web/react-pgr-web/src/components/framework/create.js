@@ -150,7 +150,7 @@ class Report extends Component {
     let self = this, _url;
     e.preventDefault();
     self.props.setLoadingStatus('loading');
-    var formData = Object.assign(this.props.formData);
+    var formData = {...this.props.formData};
 
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])

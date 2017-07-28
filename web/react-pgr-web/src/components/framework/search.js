@@ -10,10 +10,12 @@ import Api from '../../api/api';
 import UiButton from './components/UiButton';
 import UiDynamicTable from './components/UiDynamicTable';
 import {fileUpload} from './utility/utility';
+import UiTable from './components/UiTable';
+
 var specifications={};
 try {
   var hash = window.location.hash.split("/");
-  if(hash.length == 3) {
+  if(hash.length == 4) {
     specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
   } else {
     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
@@ -23,20 +25,30 @@ let reqRequired = [];
 class Report extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showResult: false,
+      resultList : {
+        resultHeader: [],
+        resultValues: []
+      },
+      values: []
+    }
   }
 
   setLabelAndReturnRequired(configObject) {
-    for(var i=0; i<configObject.groups.length; i++) {
-      configObject.groups[i].label = translate(configObject.groups[i].label);
-      for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-            configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
-            if (configObject.groups[i].fields[j].isRequired)
-                reqRequired.push(configObject.groups[i].fields[j].jsonPath);
-      }
+    if(configObject && configObject.groups) {
+      for(var i=0; i<configObject.groups.length; i++) {
+        configObject.groups[i].label = translate(configObject.groups[i].label);
+        for (var j = 0; j < configObject.groups[i].fields.length; j++) {
+              configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+              if (configObject.groups[i].fields[j].isRequired)
+                  reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+        }
 
-      if(configObject.groups[i].children && configObject.groups[i].children.length) {
-        for(var k=0; k<configObject.groups[i].children.length; k++) {
-          this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
+        if(configObject.groups[i].children && configObject.groups[i].children.length) {
+          for(var k=0; k<configObject.groups[i].children.length; k++) {
+            this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
+          }
         }
       }
     }
@@ -63,8 +75,41 @@ class Report extends Component {
   }
 
   search = (e) => {
+    e.preventDefault();
+    let self = this;
+    self.props.setLoadingStatus('loading');
+    var formData = {...this.props.formData};
+    for(var key in formData) {
+      if(!formData[key])
+        delete formData[key];
+    }
 
-
+    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
+      self.props.setLoadingStatus('hide');
+      var resultList = {
+        resultHeader: [{label: "#"}, ...self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header],
+        resultValues: []
+      };
+      var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
+      var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
+      if(values && values.length) {
+        for(var i=0; i<values.length; i++) {
+          var tmp = [i+1];
+          for(var j=0; j<specsValuesList.length; j++) {
+            tmp.push(_.get(values[i], specsValuesList[j]));
+          }
+          resultList.resultValues.push(tmp);
+        }
+      }
+      self.setState({
+        resultList,
+        values,
+        showResult: true
+      });
+    }, function(err) {
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+      self.props.setLoadingStatus('hide');
+    })
   }
 
   getVal = (path) => {
@@ -73,15 +118,23 @@ class Report extends Component {
 
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
       let {handleChange}=this.props;
-      // console.log(e + " "+ property + " "+ isRequired +" "+pattern);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+  }
+
+  rowClickHandler = (index) => {
+    var value = this.state.values[index];
+    var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
+    _url = _url.replace("{id}", value.id);
+    this.props.setRoute(_url);
   }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {search, handleChange, getVal, addNewCard, removeCard} = this;
+    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
+    let {showResult, resultList} = this.state;
+
     return (
-      <div className="Report">
+      <div className="SearchResult">
         <form onSubmit={(e) => {
           search(e)
         }}>
@@ -89,50 +142,8 @@ class Report extends Component {
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit"}} ui="google"/>
-            <UiDynamicTable getVal={getVal} fieldErrors={fieldErrors} handler={handleChange} item={{
-							"name": "consumerCode",
-							"jsonPath": "search.consumerCode",
-							"label": "Consumer Code",
-							"pattern": "",
-							"type": "dynamictable",
-							"header": [{
-									"label": "wc.table.view"
-							},{
-                "label": "wc.table.view"
-              }],
-							"values":[{
-
-		  						cols:[{
-                    "name": "billerService",
-  		  						"jsonPath": "search.billerService",
-  		  						"label": "Billing service name",
-  		  						"pattern": "",
-  		  						"type": "singleValueList",
-  		  						"isRequired": false,
-  		  						"isDisabled": false,
-  		  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
-  		  						"requiredErrMsg": "",
-  		  						"patternErrMsg": ""
-                  },{
-                    "name": "billerService",
-  		  						"jsonPath": "search.billerService",
-  		  						"label": "Billing service name",
-  		  						"pattern": "",
-  		  						"type": "singleValueList",
-  		  						"isRequired": false,
-  		  						"isDisabled": false,
-  		  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
-  		  						"requiredErrMsg": "",
-  		  						"patternErrMsg": ""
-                  }]
-
-							}],
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}}/>
             <br/>
+            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
           </div>
         </form>
       </div>
@@ -185,6 +196,7 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
-  }
+  },
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

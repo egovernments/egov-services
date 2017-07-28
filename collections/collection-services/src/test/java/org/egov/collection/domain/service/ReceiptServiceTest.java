@@ -58,6 +58,7 @@ import java.util.Map;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.AuditDetails;
+import org.egov.collection.model.Instrument;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
@@ -173,15 +174,17 @@ public class ReceiptServiceTest {
 		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
 		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
 		final Map<String, Object> parametersMap = new HashMap<>();
+		Map<String, Object>[] parametersReceiptDetails = new Map[100];
 
 		
 		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
 				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
-		Mockito.when(receiptRepository.persistToReceiptHeader(parametersMap, receiptReq.getReceipt().get(0).getBill().get(0).getPayeeName(),
-				receiptReq.getReceipt().get(0).getBill().get(0).getPaidBy(), receiptReq.getReceipt().get(0).getAuditDetails())).thenReturn(1l);
+		Mockito.doNothing().when(receiptRepository).persistToReceiptHeader(parametersMap);
+		Mockito.doNothing().when(receiptRepository).persistToReceiptDetails(parametersReceiptDetails, 1L);
+		Mockito.when(receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, 1L)).thenReturn(true);
 
 		assertNotNull(receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
-				receiptReq.getTenantId()));
+				receiptReq.getTenantId(), Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId())));
 		
 	}
 	
@@ -193,15 +196,17 @@ public class ReceiptServiceTest {
 		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
 		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
 		final Map<String, Object> parametersMap = new HashMap<>();
+		Map<String, Object>[] parametersReceiptDetails = new Map[100];
 
 		
 		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
 				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
-		Mockito.when(receiptRepository.persistToReceiptHeader(parametersMap, receiptReq.getReceipt().get(0).getBill().get(0).getPayeeName(),
-				receiptReq.getReceipt().get(0).getBill().get(0).getPaidBy(), receiptReq.getReceipt().get(0).getAuditDetails())).thenReturn(1l);
+		Mockito.doNothing().when(receiptRepository).persistToReceiptHeader(parametersMap);
+		Mockito.doNothing().when(receiptRepository).persistToReceiptDetails(parametersReceiptDetails, 1L);
+		Mockito.when(receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, 1L)).thenReturn(true);
 
 		assertNotNull(receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
-				receiptReq.getTenantId()));
+				receiptReq.getTenantId(), Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId())));
 		
 	} */
 	
@@ -212,15 +217,17 @@ public class ReceiptServiceTest {
 		List<String> businessDetailCodes = new ArrayList<>();
 		businessDetailCodes.add("ABC");
 		final Map<String, Object> parametersMap = new HashMap<>();
+		Map<String, Object>[] parametersReceiptDetails = new Map[100];
 
 		
 		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
 				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenThrow(Exception.class);
-		Mockito.when(receiptRepository.persistToReceiptHeader(parametersMap, receiptReq.getReceipt().get(0).getBill().get(0).getPayeeName(),
-				receiptReq.getReceipt().get(0).getBill().get(0).getPaidBy(), receiptReq.getReceipt().get(0).getAuditDetails())).thenThrow(Exception.class);
+		Mockito.doNothing().when(receiptRepository).persistToReceiptHeader(parametersMap);
+		Mockito.doNothing().when(receiptRepository).persistToReceiptDetails(parametersReceiptDetails, 1L);
+		Mockito.when(receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, 1L)).thenReturn(true);
 
 		receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
-				receiptReq.getTenantId());
+				receiptReq.getTenantId(), Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId()));
 		
 	}
 	
@@ -419,8 +426,10 @@ public class ReceiptServiceTest {
 		
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
+		
+		Instrument instrument = Instrument.builder().id("10").build();
 		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo))
-				.bankAccount(bankAccount).auditDetails(auditDetails).build();
+				.bankAccount(bankAccount).instrument(instrument).auditDetails(auditDetails).build();
 		
 		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
 	}

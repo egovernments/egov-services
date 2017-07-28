@@ -459,7 +459,8 @@ var commom_fields_rules = {
         required: true
     },
     "test.yearOfPassing": {
-        required: true
+        required: true,
+        year: true
     },
     "test.remarks": {
         required: false

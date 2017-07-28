@@ -34,7 +34,7 @@ public class InstrumentTypeJdbcRepository extends JdbcRepository {
 
 	public InstrumentTypeEntity create(InstrumentTypeEntity entity) {
 
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
+		//entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}
@@ -134,9 +134,15 @@ public class InstrumentTypeJdbcRepository extends JdbcRepository {
 				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(InstrumentTypeEntity.class);
+		
+		/*searchQuery="select * from egf_instrumenttype egf_instrumenttype, egf_instrumenttypeproperty properties where "+
+		"egf_instrumenttype.name=properties.instrumentTypeId";*/
 
 		List<InstrumentTypeEntity> instrumentTypeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
 				paramValues, row);
+		
+		
+		
 
 		page.setTotalResults(instrumentTypeEntities.size());
 

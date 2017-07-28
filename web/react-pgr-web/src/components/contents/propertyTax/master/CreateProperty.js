@@ -37,10 +37,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
+
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
+ 
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -584,7 +584,6 @@ createActivate = () => {
 				  <AssessmentDetails />				  
 				  <Amenities />                  
 				  <ConstructionTypes/>
-				  <VacantLand/>
 				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : 
 					 <div> {!this.state.addFloor && <div><Card className="uiCard">
 						<CardText>
@@ -613,7 +612,7 @@ createActivate = () => {
 				  <Card className="uiCard">
 					<CardText style={{textAlign:'center'}}>
 						<br/>
-						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  primary={true} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>

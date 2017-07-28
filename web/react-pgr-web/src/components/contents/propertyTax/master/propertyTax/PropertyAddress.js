@@ -25,10 +25,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
+    
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
+   
   },
   floatingLabelStyle: {
     color: "#354f57"

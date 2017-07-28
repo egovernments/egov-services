@@ -203,11 +203,11 @@ public class ConnectionValidator {
                )
         {
              PropertyResponse propResp=  restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
-            if(propResp==null && propResp.getProperties()!=null && propResp.getProperties().isEmpty()){
+            if(propResp.getProperties()!=null && propResp.getProperties().isEmpty()){
                 final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.
-                        PROPERTY_IDENTIFIER_CODE)
-                        .message(WcmsConnectionConstants.PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE)
-                        .field(WcmsConnectionConstants.PROPERTY_CATEGORY_INVALID_FIELD_NAME).build();
+                        PROPERTY_INVALID_CODE)
+                        .message(WcmsConnectionConstants.PROPERTY_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConnectionConstants.PROPERTY_INVALID_FIELD_NAME).build();
                 errorFields.add(errorField);
                }
         }

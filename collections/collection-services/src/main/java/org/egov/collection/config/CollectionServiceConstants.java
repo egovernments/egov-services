@@ -51,6 +51,10 @@ public class CollectionServiceConstants {
 	public static final String INVALID_WF_REQUEST = "Start Workflow request is invalid";
 	public static final String INVALID_REQ_DESC = "Some fields entered are either syntactically or logically incorrect";
 	public static final String INVALID_BD = "Fund, FundSource, Function, Department or glcode may be invalid.";
+	public static final String RECEIPT_FAIL = "Receipt persistence failed due to internal error";
+	public static final String RECEIPT_FAIL_DESC = "Receipt persistence failed due to an error while persistence or due to error in other dependent services";
+
+
 
 	public static final String TENANT_ID_MISSING_CODE = "egcl_001";
 	public static final String TENANT_ID_MISSING_FIELD = "tenantId or receiptHeaderId";

@@ -223,6 +223,9 @@ public class WcmsConnectionConstants {
     public static final String PROPERTY_CATEGORY_INVALID_FIELD_NAME = "propertyType - categoryType";
     public static final String PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE = "Property Type - Category Type values don't match.";
 
+    public static final String PROPERTY_INVALID_CODE = "wcms.0044";
+    public static final String PROPERTY_INVALID_FIELD_NAME = "propertyIdentifier";
+    public static final String PROPERTY_INVALID_ERROR_MESSAGE = "PropertyIdentifier doesnt exist  in Property";
     public static final String PROPERTY_USAGE_INVALID_CODE = "wcms.0035";
     public static final String PROPERTY_USAGE_INVALID_FIELD_NAME = "propertyType - usageType";
     public static final String PROPERTY_USAGE_INVALID_ERROR_MESSAGE = "Property Type - Usage Type values don't match.";

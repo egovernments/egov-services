@@ -116,9 +116,9 @@ class Report extends Component {
     })
   }
 
-  makeAjaxCall = (formData) => {
+  makeAjaxCall = (formData, url) => {
     let self = this;
-    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
+    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
       self.initData();
@@ -147,7 +147,7 @@ class Report extends Component {
   }
 
   create=(e) => {
-    let self = this;
+    let self = this, _url;
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = Object.assign(this.props.formData);
@@ -157,6 +157,13 @@ class Report extends Component {
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
 
       formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
+    }
+
+    if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
+      var match = _url.match(/\{.*\}/)[0];
+      var jPath = match.replace(/\{|}/g,"");
+      _url = _url.replace(match, _.get(formData, jPath));
     }
 
     //Check if documents, upload and get fileStoreId
@@ -178,13 +185,13 @@ class Report extends Component {
     //         counter--;
     //         if(counter == 0 && breakOut == 0) {
     //           formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-    //           self.makeAjaxCall(formData);
+    //           self.makeAjaxCall(formData, _url);
     //         }
     //       }
     //     })
     //   }
     // } else {
-      self.makeAjaxCall(formData);
+      self.makeAjaxCall(formData, _url);
 
   }
 

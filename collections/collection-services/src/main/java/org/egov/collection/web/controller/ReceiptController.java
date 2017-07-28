@@ -157,6 +157,7 @@ public class ReceiptController {
 			errorField.setField("businessDetailsCode or glcode");
 			errorField.setMessage(CollectionServiceConstants.INVALID_BD);
 			errorFields.add(errorField);
+			error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
 			error.setMessage(CollectionServiceConstants.INVALID_RECEIPT_REQUEST);
 			error.setDescription(CollectionServiceConstants.INVALID_REQ_DESC);
 			error.setErrorFields(errorFields);
@@ -164,6 +165,27 @@ public class ReceiptController {
 			errorResponse.setError(error);
 
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+
+		}
+		
+		//to differentiate between badrequest and internal server so that user has a clear idea
+		
+		if (null == receiptInfo.getTenantId()) {
+			LOGGER.info("Service returned null");
+			Error error = new Error();
+			ErrorField errorField = new ErrorField();
+			List<ErrorField> errorFields = new ArrayList<>();
+			errorField.setField("Receipt");
+			errorField.setMessage(CollectionServiceConstants.RECEIPT_FAIL);
+			errorFields.add(errorField);
+			error.setCode(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()));
+			error.setMessage(CollectionServiceConstants.RECEIPT_FAIL);
+			error.setDescription(CollectionServiceConstants.RECEIPT_FAIL_DESC);
+			error.setErrorFields(errorFields);
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 

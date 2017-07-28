@@ -14,24 +14,41 @@ var dat = {
 				"children": [],
 				"multiple": false,
 				"fields": [
-						{
-							"name": "AssessmentNumber",
-							"jsonPath": "Connection.property.propertyIdentifier",
-							"label": "wc.create.groups.applicantDetails.propertyIdentifier",
-							"pattern": "",
-							"type": "number",
-							"isRequired": true,
-							"isDisabled": false,
-							"autoCompleteUrl": "",
-							"autoFillFields": {
-								"NameOfApplicant": "",
-								"MobileNumber": "",
-								"Email": "",
-								"AadharNumber": ""
-							},
-							"requiredErrMsg": "",//Remove required messages
-							"patternErrMsg": ""
+					{
+						  "name": "AssessmentNumber",
+						  "jsonPath": "connection.property.propertyIdentifier",
+						  "label": "wc.create.groups.applicantDetails.propertyIdentifier",
+						  "pattern": "",
+						  "type": "textSearch",
+						  "isRequired": true,
+						  "isDisabled": false,
+						  "autoCompleteDependancy": {
+						    "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
+						    "autoFillFields": {
+						      "Connection.asset.nameOfApplicant": "propety.test.val"
+						    }
+						  },
+						  "requiredErrMsg": "",
+						  "patternErrMsg": ""
 						},
+						// {
+						// 	"name": "AssessmentNumber",
+						// 	"jsonPath": "Connection.property.propertyIdentifier",
+						// 	"label": "wc.create.groups.applicantDetails.propertyIdentifier",
+						// 	"pattern": "",
+						// 	"type": "number",
+						// 	"isRequired": true,
+						// 	"isDisabled": false,
+						// 	"autoCompleteUrl": "",
+						// 	"autoFillFields": {
+						// 		"NameOfApplicant": "",
+						// 		"MobileNumber": "",
+						// 		"Email": "",
+						// 		"AadharNumber": ""
+						// 	},
+						// 	"requiredErrMsg": "",//Remove required messages
+						// 	"patternErrMsg": ""
+						// },
 						{
 							"name": "NameOfApplicant",
 							"jsonPath": "Connection.asset.nameOfApplicant",
@@ -149,6 +166,11 @@ var dat = {
 						"isRequired": false,
 						"isDisabled": false,
 						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+						"depedants":[{
+								"jsonPath":"Connection.categoryType",
+								"type":"dropDown",
+								"pattern":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..id|$..name"
+							}],
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},

@@ -12,10 +12,11 @@ import org.egov.collection.notification.domain.model.SmsMessage;
 @Builder
 @AllArgsConstructor
 public class EmailRequest {
-    private String emailId;
-    private String message;
+    private String email;
+    private String subject;
+    private String body;
 
     public EmailMessage toDomain() {
-        return new EmailMessage(emailId, message);
+        return new EmailMessage(email, subject,body);
     }
 }

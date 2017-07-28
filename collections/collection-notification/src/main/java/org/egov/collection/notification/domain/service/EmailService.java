@@ -11,8 +11,11 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,20 +37,17 @@ public class EmailService {
    public void send(ReceiptRequest receiptRequest) {
        List<Receipt> receipts = receiptRequest.getReceipt();
        String applicantName = receipts.get(0).getPayeeName();
-       String emailId = receipts.get(0).getEmailId();
-      // String receiptNumber = receipt.getReceiptNumber();
+       Receipt receipt = receipts.get(0);
+       String emailId = receipt.getBill().get(0).getPayeeEmail();
        final City city = tenantRepository.fetchTenantByCode(receiptRequest.getRequestInfo(),receiptRequest.getTenantId());
+       sendEmailNotification(receiptRequest, applicantName,emailId,city);
 
-       //if(StringUtils.isBlank(receiptNumber)) {
-           sendEmailNotification(receiptRequest, applicantName,emailId,city);
-
-       //}
    }
 
     private void sendEmailNotification(ReceiptRequest receiptRequest, String applicantName, String emailId, City city) {
 
-        final EmailRequest emailRequest = EmailRequest.builder().message(getSmsMessage(receiptRequest,applicantName,city))
-                .emailId(emailId).build();
+        final EmailRequest emailRequest = EmailRequest.builder().subject("Tax Payment details").body(getSmsMessage(receiptRequest,applicantName,city))
+                .email(emailId).build();
 
         log.info("Collection email details------------" + emailRequest);
         try {
@@ -63,23 +63,26 @@ public class EmailService {
         List<Receipt> receipts = receiptRequest.getReceipt();
         List<Bill> bills = receipts.get(0).getBill();
         List<BillDetail> billDetails = bills.get(0).getBillDetails();
-        emailMessage.append("Dear Sir/Madam,\\n\\nGreetings from ").append(city.getName()).append(".\\n\\n We thank you for making a payment of Rs.");
+        emailMessage.append("Dear Sir/Madam,\n\nGreetings from ").append(city.getName()).append(".").append("\n\n").append("We thank you for making a payment of Rs.");
 
         String consumerCode = "";
         Long receiptDate = 0l;
         for(BillDetail billDetail : billDetails) {
             BusinessDetailsResponse response = businessDetailsRepository.getBusinessDetails(Arrays.asList(billDetail.getBusinessService()) ,receiptRequest.getTenantId(),receiptRequest.getRequestInfo());
-            emailMessage.append(billDetail.getAmountPaid()).append("for ").append(response.getBusinessDetails().get(0).getName());
+            emailMessage.append(billDetail.getAmountPaid()).append(" for ").append(response.getBusinessDetails().get(0).getName());
             consumerCode = billDetail.getConsumerCode();
             receiptDate = billDetail.getReceiptDate();
         }
-        emailMessage.append(" against Consumer Code : ").append(consumerCode).append(" on").append(receiptDate).append(".\n\n");
-        emailMessage.append("Please click on the URL to View your Payment Receipt: \n\n");
+
+        Date receiptCreateDate = new Date(receiptDate);
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        emailMessage.append(" against Consumer Code :").append(consumerCode).append(" on ").append(format.format(receiptCreateDate)).append(".").append(System.lineSeparator());
+        emailMessage.append("Please click on the URL to View your Payment Receipt: ").append(System.lineSeparator());
         for(BillDetail billDetail : billDetails) {
             emailMessage.append(propertiesManager.getCollectionServiceHost()).append(propertiesManager.getCollectionServiceUrl())
                     .append("?receiptNumbers=").append(billDetail.getReceiptNumber());
         }
-
+        emailMessage.append("\n").append("Regards,").append("\n").append(city.getName());
         return emailMessage.toString();
 
     }

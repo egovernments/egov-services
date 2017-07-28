@@ -141,7 +141,7 @@ class ServiceGroupCreate extends Component {
 
       if(this.props.match.params.id){
 
-          Api.commonApiPost("/pgr-master/serviceGroup/v1/"+body.ServiceGroup.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/serviceGroup/v1/_update",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true

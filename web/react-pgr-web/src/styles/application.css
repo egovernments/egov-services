@@ -119,6 +119,10 @@ a:hover, a:focus{
     outline: none;
 }
 button:focus{outline: none;}
+button span {
+	font-weight: normal !important;
+}
+
 ul{list-style-type: none; padding: 0; margin: 0;}
 
 /*.left-side-menu{

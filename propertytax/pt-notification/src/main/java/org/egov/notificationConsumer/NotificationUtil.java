@@ -7,7 +7,6 @@ import org.egov.notification.model.EmailMessageContext;
 import org.egov.notification.model.EmailRequest;
 import org.egov.notification.model.SMSMessageContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Service;
  *
  */
 public class NotificationUtil {
-
-	@Autowired
-	Environment environment;
 
 	@Autowired
 	TemplateUtil templateService;

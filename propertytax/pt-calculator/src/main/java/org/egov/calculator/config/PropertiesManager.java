@@ -3,6 +3,7 @@ package org.egov.calculator.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,6 +17,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @SuppressWarnings("unused")
+@Service
 public class PropertiesManager {
 
 	@Autowired

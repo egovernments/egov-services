@@ -1,5 +1,15 @@
 {
-  "LAND": "LAND",
-  "IMMOVABLE": "IMMOVABLE",
-  "MOVABLE": "MOVABLE"
+    "ResponseInfo": {
+        "apiId": null,
+        "ver": null,
+        "ts": null,
+        "resMsgId": null,
+        "msgId": null,
+        "status": null
+    },
+    "AssetCategoryType": {
+        "IMMOVABLE": "IMMOVABLE",
+        "MOVABLE": "MOVABLE",
+        "LAND": "LAND"
+    }
 }

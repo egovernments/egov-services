@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.egov.notification.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -21,8 +21,9 @@ import org.springframework.stereotype.Service;
  *
  */
 public class Producer {
+
 	@Autowired
-	private Environment envorniment;
+	PropertiesManager propertiesManager;
 
 	/**
 	 * This method will return map object for producer configuration
@@ -30,7 +31,7 @@ public class Producer {
 	@Bean
 	public Map<String, Object> producerConfig() {
 		Map<String, Object> producerProperties = new HashMap<String, Object>();
-		producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, envorniment.getProperty("kafka.config.bootstrap_server_config"));
+		producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, propertiesManager.getBootstrapServer());
 		producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 		return producerProperties;

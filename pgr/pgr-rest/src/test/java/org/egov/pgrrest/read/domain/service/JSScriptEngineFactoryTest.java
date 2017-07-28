@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.domain.service;
 
 import delight.nashornsandbox.NashornSandbox;
-import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
+import org.egov.pgrrest.read.domain.factory.JSScriptEngineFactory;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;

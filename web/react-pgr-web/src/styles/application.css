@@ -3,6 +3,7 @@ html, body{
 	font-size: 14px;
 	line-height: 18px;
 	top: 0px !important;
+	background-color: #f2f2f2 !important;
 }
 
 /* fallback */

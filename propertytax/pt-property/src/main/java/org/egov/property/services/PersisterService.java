@@ -21,7 +21,6 @@ import org.egov.models.User;
 import org.egov.property.consumer.Producer;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.repository.PropertyRepository;
-import org.egov.property.utility.PropertyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -51,9 +50,6 @@ public class PersisterService {
 
 	@Autowired
 	Producer producer;
-
-	@Autowired
-	PropertyValidator propertyValidator;
 
 	@Autowired
 	PropertyServiceImpl propertyServiceImpl;
@@ -366,7 +362,7 @@ public class PersisterService {
 		String upicNo = titleTransfer.getUpicNo();
 		try {
 			PropertyResponse propertyResponse = propertyServiceImpl.searchProperty(requestInfo, tenantId, null, upicNo,
-					null, null, null, null, null, null, null, null, null, null, null, null, null);
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 			if (propertyResponse != null && propertyResponse.getProperties().size() > 0) {
 				property = propertyResponse.getProperties().get(0);
 			}

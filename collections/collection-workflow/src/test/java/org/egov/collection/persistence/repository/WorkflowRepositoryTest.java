@@ -16,14 +16,12 @@ import org.egov.collection.web.contract.ProcessInstance;
 import org.egov.collection.web.contract.ProcessInstanceRequest;
 import org.egov.collection.web.contract.ProcessInstanceResponse;
 import org.egov.common.contract.request.RequestInfo;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.web.client.RestTemplate;
@@ -45,12 +43,6 @@ public class WorkflowRepositoryTest {
 
 	@InjectMocks
 	private WorkflowRepository workflowRepository;
-
-	@Before
-	public void before() {
-	/*	workflowRepository = new WorkflowRepository(jdbcTemplate, applicationProperties, 
-				restTemplate); */
-	}
 	
 	@Test(expected = Exception.class)
 	public void test_should_be_able_to_start_workflow() {

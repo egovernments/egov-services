@@ -9,7 +9,7 @@ import org.egov.pgrrest.read.domain.exception.RuleEvaluationException;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
-import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
+import org.egov.pgrrest.read.domain.factory.JSScriptEngineFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

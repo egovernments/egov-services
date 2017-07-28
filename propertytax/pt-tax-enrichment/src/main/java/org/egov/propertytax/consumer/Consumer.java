@@ -7,10 +7,10 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.PropertyRequest;
+import org.egov.propertytax.config.PropertiesManager;
 import org.egov.propertytax.service.DemandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Consumer {
 
     @Autowired
-    private Environment environment;
+	PropertiesManager propertiesManager;
 
     @Autowired
     private Producer producer;
@@ -40,9 +40,9 @@ public class Consumer {
     public Map<String, Object> consumerConfig() {
         Map<String, Object> consumerProperties = new HashMap<String, Object>();
         consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-                environment.getProperty("auto.offset.reset.config"));
+        		propertiesManager.getAutoOffsetReset());
         consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                environment.getProperty("spring.kafka.bootstrap.servers"));
+        		propertiesManager.getBootstrapServer());
         consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "boundary");
@@ -75,13 +75,13 @@ public class Consumer {
      *
      * @param PropertyRequest This method is listened whenever property is created and updated
      */
-    @KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.create.tax.calculated')}" })
+    @KafkaListener(topics = { "#{propertiesManager.getCreatePropertyTaxCalculated()}" })
     public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
         log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
         demandService.createDemand(consumerRecord.value());
-        log.info("demand generated >>>> \n next topic ----->> " + environment.getProperty("egov.propertytax.create.demand")
+        log.info("demand generated >>>> \n next topic ----->> " + propertiesManager.getCreatePropertyTaxGenerated()
                 + " \n Property >>>>> " + consumerRecord.value());
-        producer.send(environment.getProperty("egov.propertytax.create.demand"), consumerRecord.value());
+        producer.send(propertiesManager.getCreatePropertyTaxGenerated(), consumerRecord.value());
 
     }
 }

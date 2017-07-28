@@ -141,9 +141,9 @@ public class ReceiptService {
 									.apportionPaidAmount(
 											billDetail.getAmountPaid(),
 											billDetail.getBillAccountDetails()));
-					apportionBillDetails.add(billDetail);
 				}
 			}
+			apportionBillDetails.add(billDetail);
 		}
 		if (callBackForApportion) {
 			apportionBillDetails.addAll(billingServiceRepository
@@ -235,8 +235,8 @@ public class ReceiptService {
 				parametersMap.put("payeeaddress", bill.getPayeeAddress());
 				parametersMap.put("payeeemail", bill.getPayeeEmail());
 				parametersMap.put("paidby", bill.getPaidBy());
-				parametersMap.put("referencenumber",
-						billDetail.getBillNumber());
+				parametersMap
+						.put("referencenumber", billDetail.getBillNumber());
 				parametersMap.put("receipttype",
 						businessDetails.getBusinessType());
 				parametersMap.put("receiptdate", billDetail.getReceiptDate());
@@ -253,8 +253,7 @@ public class ReceiptService {
 				parametersMap.put("totalamount", billDetail.getTotalAmount());
 				parametersMap.put("collmodesnotallwd", billDetail
 						.getCollectionModesNotAllowed().toString());
-				parametersMap
-						.put("consumercode", billDetail.getConsumerCode());
+				parametersMap.put("consumercode", billDetail.getConsumerCode());
 				parametersMap.put("channel", billDetail.getChannel());
 				parametersMap.put("fund", businessDetails.getFund());
 				parametersMap

@@ -47,9 +47,9 @@ public class AccountDetailTypeRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("accountDetailType_create", request);
+			message.put("accountdetailtype_create", request);
 		} else {
-			message.put("accountDetailType_update", request);
+			message.put("accountdetailtype_update", request);
 		}
 		accountDetailTypeQueueRepository.add(message);
 	}

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.enums.ChannelEnum;
+import org.egov.enums.CreationReasonEnum;
 import org.egov.models.Address;
 import org.egov.models.AuditDetails;
 import org.egov.models.Demand;
@@ -459,16 +461,16 @@ public class PropertyRepository {
 	public Map<String, Object> searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber, String aadhaarNumber,
 			String houseNoBldgApt, int revenueZone, int revenueWard, int locality, String ownerName, int demandFrom,
-			int demandTo) {
+			int demandTo, String propertyId) {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 
 		Map<String, Object> propertyMap = searchPropertyBuilder.createSearchPropertyQuery(requestInfo, tenantId, active,
 				upicNo, pageSize, pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone,
-				revenueWard, locality, ownerName, demandFrom, demandTo, preparedStatementValues);
-		List<Property> properties = jdbcTemplate.query(propertyMap.get("Sql").toString(),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper(Property.class));
+				revenueWard, locality, ownerName, demandFrom, demandTo,propertyId, preparedStatementValues);
+		List<Property> properties = getProperty(propertyMap.get("Sql").toString(),
+				preparedStatementValues);
 
 		searchPropertyMap.put("properties", properties);
 		searchPropertyMap.put("users", propertyMap.get("users"));
@@ -587,9 +589,13 @@ public class PropertyRepository {
 
 		for (Map<String, Object> documentdata : documentList) {
 			Document document = new Document();
+			if ( documentdata.get("documenttype")!=null) 
 			document.setDocumentType(documentdata.get("documenttype").toString());
+			
 			document.setFileStore(documentdata.get("filestore").toString());
+			if ( documentdata.get("id")!=null)
 			document.setId(Long.valueOf(documentdata.get("id").toString()));
+			
 			documents.add(document);
 
 		}
@@ -1355,5 +1361,85 @@ public class PropertyRepository {
 
 		jdbcTemplate.update(UserBuilder.INSERT_USERHISTORY_QUERY, userPropertyArgs);
 	}
+	
+	/**
+	 * This will give the list of Properties
+	 * @param query
+	 * @param preparedStatementValues
+	 * @return {@link Property} List of property
+	 */
+	private List<Property> getProperty(String query, List<Object> preparedStatementValues) {
+
+		List<Property> properties = new ArrayList<Property>();
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+
+		for (Map<String, Object> row : rows) {
+			Property property = new Property();
+
+			property.setId(getLong(row.get("id")));
+			property.setTenantId(getString(row.get("tenantid")));
+			property.setUpicNumber(getString("upicnumber"));
+			property.setOldUpicNumber(getString(row.get("oldupicnumber")));
+			property.setVltUpicNumber(getString(row.get("vltupicnumber")));
+			if (row.get("creationreason") != null)
+				property.setCreationReason(CreationReasonEnum.valueOf(row.get("creationreason").toString()));
+			property.setAssessmentDate(getString(row.get("assessmentdate")));
+			property.setOccupancyDate(getString(row.get("occupancydate")));
+			property.setGisRefNo(getString(row.get("gisrefno")));
+			property.setIsAuthorised(getBooleaan(row.get("isauthorised")));
+			property.setIsAuthorised(getBooleaan(row.get("isunderworkflow")));
+			property.setActive(getBooleaan(row.get("active")));
+			if (row.get("channel") != null)
+				property.setChannel(ChannelEnum.valueOf(getString(row.get("channel"))));
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+			property.setAuditDetails(auditDetails);
+
+			properties.add(property);
+
+		}
+
+		return properties;
+	}
+
+	/**
+	 * * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
+	private String getString(Object object) {
+		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
+	private Long getLong(Object object) {
+		return object == null ? 0 : Long.parseLong(object.toString());
+	}
+
+	/**
+	 * * This method will cast the given object to Boolean
+	 * 
+	 * @param object
+	 *            that need to be cast to Boolean
+	 * @return {@link String}
+	 */
+	private Boolean getBooleaan(Object object) {
+		return object == null ? Boolean.FALSE : (Boolean) object;
+	}
+
+
+
+
 
 }

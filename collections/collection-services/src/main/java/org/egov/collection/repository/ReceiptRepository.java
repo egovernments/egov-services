@@ -149,7 +149,6 @@ public class ReceiptRepository {
 			logger.error("Persisting to DB FAILED! ", e.getCause());
 			return id;
 		}
-
 		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder
 				.getreceiptHeaderId();
 		// TODO: Vishal: Before persisting the object itself first get the next
@@ -343,7 +342,7 @@ public class ReceiptRepository {
 					ps.setLong(i++, receiptRequest.getRequestInfo()
 							.getUserInfo().getId());
 
-				ps.setDate(i++, new java.sql.Date(new Date().getTime()));
+				ps.setLong(i++, new Date().getTime());
 
 				if (billDetail.getId() != null)
 					ps.setLong(i++, new Long(billDetail.getId()));

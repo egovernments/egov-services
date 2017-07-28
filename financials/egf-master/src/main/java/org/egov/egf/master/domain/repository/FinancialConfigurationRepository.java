@@ -47,9 +47,9 @@ public class FinancialConfigurationRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("financialConfiguration_create", request);
+			message.put("financialconfiguration_create", request);
 		} else {
-			message.put("financialConfiguration_update", request);
+			message.put("financialconfiguration_update", request);
 		}
 		financialConfigurationQueueRepository.add(message);
 	}

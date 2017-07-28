@@ -2,6 +2,7 @@ package org.egov.filters.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.egov.contract.Action;
 import org.egov.contract.User;
 import org.springframework.http.HttpStatus;
 
@@ -13,6 +14,8 @@ import static org.egov.constants.RequestContextConstants.*;
  */
 public class RbacFilter extends ZuulFilter{
 
+    private static final String FORBIDDEN_MESSAGE = "Not authorized to access this resource";
+
     @Override
     public String filterType() {return "pre";}
 
@@ -22,19 +25,32 @@ public class RbacFilter extends ZuulFilter{
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        return ctx.getBoolean("shoulDoRbac");
+        return ctx.getBoolean(RBAC_BOOLEAN_FLAG_NAME);
     }
 
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        String requestUri = ctx.getRequest().getRequestURI();
-        User user = (User) ctx.get(USER_INFO_KEY);
-        if(user.getActions().stream().anyMatch(action -> requestUri.equals(action.getUrl())))
+        final boolean isIncomingURIInAuthorizedActionList = isIncomingURIInAuthorizedActionList(ctx);
+        if(isIncomingURIInAuthorizedActionList)
             return null;
 
-        abortWithStatus(ctx,HttpStatus.NOT_FOUND,"The resource you are trying to find is not available");
+        abortWithStatus(ctx,HttpStatus.FORBIDDEN, FORBIDDEN_MESSAGE);
         return null;
+    }
+
+    private boolean isIncomingURIInAuthorizedActionList(RequestContext ctx) {
+        String requestUri = ctx.getRequest().getRequestURI();
+        User user = (User) ctx.get(USER_INFO_KEY);
+        return user.getActions().stream()
+            .anyMatch(action -> isActionMatchingIncomingURI(requestUri, action));
+    }
+
+    private boolean isActionMatchingIncomingURI(String requestUri, Action action) {
+        if(action.hasDynamicFields()) {
+            return requestUri.matches(action.getRegexUrl());
+        }
+        return requestUri.equals(action.getUrl());
     }
 
 

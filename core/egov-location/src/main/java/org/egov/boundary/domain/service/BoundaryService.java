@@ -122,6 +122,16 @@ public class BoundaryService {
 		return boundaryJpaRepository.save(boundary);
 	}
 
+	public boolean checkBoundaryExistByTypeAndNumber(Long boundaryNumber,Long boundaryTypeId){
+		
+		List<Boundary> bndryList =boundaryRepository.getBoundaryByTypeAndNumber(boundaryNumber,boundaryTypeId);
+		
+		if(bndryList!=null && !bndryList.isEmpty()){
+			return true;
+		}
+		return false;
+	}
+	
 	public Boundary getBoundaryById(final Long id) {
 		return boundaryJpaRepository.findOne(id);
 	}
@@ -371,4 +381,16 @@ public class BoundaryService {
 		
 		return false;
 	}
+	
+	public List<Boundary> getAllBoundariesByNumberAndType(String tenantId,long bndryNumber,List<Long> boundaryTypeIds){
+		
+		return boundaryJpaRepository.findAllBoundariesByNumberAndType(tenantId,bndryNumber,boundaryTypeIds);
+		
+	}
+	
+	public List<Boundary> getAllBoundaryByTenantId(String tenantId){
+		
+		return boundaryJpaRepository.findAllByTenantId(tenantId);
+	}
+	
 }

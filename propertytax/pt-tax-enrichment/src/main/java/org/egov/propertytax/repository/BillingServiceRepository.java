@@ -1,13 +1,5 @@
 package org.egov.propertytax.repository;
 
-import org.egov.models.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,13 +8,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.egov.models.CommonTaxDetails;
+import org.egov.models.Demand;
+import org.egov.models.DemandDetail;
+import org.egov.models.DemandRequest;
+import org.egov.models.DemandResponse;
+import org.egov.models.HeadWiseTax;
+import org.egov.models.Owner;
+import org.egov.models.Property;
+import org.egov.models.RequestInfo;
+import org.egov.models.TaxCalculation;
+import org.egov.propertytax.config.PropertiesManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestTemplate;
+
 @Repository
 public class BillingServiceRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(BillingServiceRepository.class);
 
     @Autowired
-    Environment environment;
+	PropertiesManager propertiesManager;
+    
     @Autowired
     private RestTemplate restTemplate;
 
@@ -82,8 +92,8 @@ public class BillingServiceRepository {
 
         logger.info("BillingServiceRepository createDemand(), demands --> " + demands);
 
-        String url = environment.getProperty("egov.services.billing_service.hostname") +
-                environment.getProperty("egov.services.billing_service.createdemand");
+        String url = propertiesManager.getBillingServiceHostName() +
+        		propertiesManager.getBillingServiceCreatedDemand();
         logger.info("BillingServiceRepository createDemand(), URL - > " + url + " \n demandRequest --> " + demandRequest);
 
         return restTemplate.postForObject(url, demandRequest, DemandResponse.class);

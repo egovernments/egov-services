@@ -82,7 +82,7 @@ public class ChartOfAccountDetailRepositoryTest {
 		request.setChartOfAccountDetails(coadcs);
 		chartOfAccountDetailRepository.add(request);
 		Map<String, Object> message = new HashMap<>();
-		message.put("chartOfAccountDetail_create", request);
+		message.put("chartofaccountdetail_create", request);
 		verify(chartofAccountDetailQueueRepository).add(message);
 	}
 

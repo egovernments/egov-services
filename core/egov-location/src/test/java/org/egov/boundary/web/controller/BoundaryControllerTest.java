@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.boundary.domain.service.BoundaryService;
+import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
@@ -36,6 +37,9 @@ public class BoundaryControllerTest {
 
 	@MockBean
 	private BoundaryService boundaryService;
+	
+	@MockBean
+	private BoundaryTypeService boundaryTypeService;
 
 	@MockBean
 	private CrossHierarchyService crossHierarchyService;
@@ -118,63 +122,6 @@ public class BoundaryControllerTest {
 				.thenReturn(null);
 		mockMvc.perform(post("/boundarys/_search").param("tenantId", "").param("boundaryIds", "")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
-	}
-
-	@Test
-	public void testShouldBoundarySearchReturnSuccesresponse() throws Exception {
-
-		List<Boundary> boundaries = getBoundaries();
-
-		when(boundaryService.getAllBoundariesByBoundaryIdsAndTenant(any(String.class), anyListOf(Long.class)))
-				.thenReturn(boundaries);
-		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").param("boundaryIds", "1,2")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("boundarySearchResponse.json")));
-	}
-
-	private List<Boundary> getBoundaries() {
-
-		List<Boundary> boundaries = new ArrayList<Boundary>();
-
-		Boundary boundary1 = new Boundary();
-
-		boundary1.setId(1l);
-		boundary1.setName("Srikakulam  Municipality");
-		boundary1.setBoundaryNum(1l);
-		boundary1.setTenantId("default");
-
-		BoundaryType bt1 = new BoundaryType();
-
-		bt1.setId(1l);
-		bt1.setName("City");
-		bt1.setHierarchy(1l);
-		bt1.setTenantId("default");
-		bt1.setVersion(0l);
-		boundary1.setBoundaryType(bt1);
-
-		Boundary boundary2 = new Boundary();
-
-		boundary2.setId(2l);
-		boundary2.setName("Zone-1");
-		boundary2.setBoundaryNum(1l);
-		boundary2.setTenantId("default");
-
-		boundary2.setParent(boundary1);
-
-		BoundaryType bt2 = new BoundaryType();
-
-		bt2.setId(3l);
-		bt2.setName("Zone");
-		bt2.setHierarchy(3l);
-		bt2.setTenantId("default");
-		bt2.setVersion(0l);
-		boundary2.setBoundaryType(bt2);
-
-		boundaries.add(boundary1);
-		boundaries.add(boundary2);
-
-		return boundaries;
 	}
 
 	private String getFileContents(String fileName) {

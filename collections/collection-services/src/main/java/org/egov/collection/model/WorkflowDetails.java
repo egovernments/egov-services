@@ -68,7 +68,6 @@ public class WorkflowDetails {
 	@NotNull
 	private String tenantId;
 	
-	@NotNull
 	private String receiptNumber;
 	
 	@NotNull

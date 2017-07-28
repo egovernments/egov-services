@@ -24,6 +24,7 @@ import org.egov.models.RequestInfo;
 import org.egov.models.TitleTransfer;
 import org.egov.models.Unit;
 import org.egov.models.User;
+import org.egov.models.UserResponseInfo;
 import org.egov.models.VacantLandDetail;
 import org.egov.property.model.PropertyLocationRowMapper;
 import org.egov.property.model.PropertyUser;
@@ -53,6 +54,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -467,15 +469,91 @@ public class PropertyRepository {
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 
-		Map<String, Object> propertyMap = searchPropertyBuilder.createSearchPropertyQuery(requestInfo, tenantId, active,
-				upicNo, pageSize, pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone,
-				revenueWard, locality, ownerName, demandFrom, demandTo, propertyId, preparedStatementValues);
-		List<Property> properties = getProperty(propertyMap.get("Sql").toString(), preparedStatementValues);
+		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null)) {
 
-		searchPropertyMap.put("properties", properties);
-		searchPropertyMap.put("users", propertyMap.get("users"));
+			List<Property> properties = getPropertyBYUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
+					pageNumber, pageSize, requestInfo);
+			searchPropertyMap.put("properties", properties);
+			searchPropertyMap.put("users", null);
+
+		} else {
+
+			Map<String, Object> propertyMap = searchPropertyBuilder.createSearchPropertyQuery(requestInfo, tenantId,
+					active, upicNo, pageSize, pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt,
+					revenueZone, revenueWard, locality, ownerName, demandFrom, demandTo, propertyId,
+					preparedStatementValues);
+			List<Property> properties = getProperty(propertyMap.get("Sql").toString(), preparedStatementValues);
+
+			searchPropertyMap.put("properties", properties);
+			searchPropertyMap.put("users", propertyMap.get("users"));
+
+		}
 
 		return searchPropertyMap;
+
+	}
+
+	private List<Property> getPropertyBYUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
+			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo) {
+
+		List<Object> preparedStatementvalues = new ArrayList<>();
+
+		String query = searchPropertyBuilder.getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
+				preparedStatementvalues, pageSize, pageNumber);
+
+		List<Property> properties = getProperty(query, preparedStatementvalues);
+		properties.forEach(property -> {
+
+			Address address = getAddressByProperty(property.getId());
+			property.setAddress(address);
+
+			property.setOwners(getOwnersByproperty(property.getId(), property.getTenantId(), requestInfo));
+		});
+
+		return properties;
+
+	}
+
+	private List<User> getOwnersByproperty(Long propertyId, String tenantId, RequestInfo requestInfo) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		List<Object> preparedStatementvalues = new ArrayList<>();
+		String ownersQuery = SearchPropertyBuilder.getOwnersByproperty(propertyId, preparedStatementvalues);
+		List<User> owners = null;
+		try {
+			owners = jdbcTemplate.query(ownersQuery, preparedStatementvalues.toArray(),
+					new BeanPropertyRowMapper(User.class));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		List<User> users = new ArrayList<>();
+		owners.forEach(owner -> {
+			StringBuffer userSearchUrl = new StringBuffer();
+			userSearchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
+			userSearchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
+			userSearchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
+			Map<String, Object> userSearchRequestInfo = new HashMap<>();
+			List<Long> userIds = new ArrayList<Long>();
+			userIds.add(owner.getOwner());
+			userSearchRequestInfo.put("tenantId", tenantId);
+			userSearchRequestInfo.put("id", userIds);
+			userSearchRequestInfo.put("RequestInfo", requestInfo);
+
+			System.out.println("userSearchRequestInfo :" + userSearchRequestInfo);
+			System.out.println("userSearchUrl :" + userSearchUrl);
+
+			UserResponseInfo userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
+					UserResponseInfo.class);
+
+			userResponse.getUser().forEach(user -> {
+				users.add(user);
+			});
+			;
+
+		});
+
+		return users;
 
 	}
 
@@ -1486,5 +1564,19 @@ public class PropertyRepository {
 	private Boolean getBooleaan(Object object) {
 		return object == null ? Boolean.FALSE : (Boolean) object;
 	}
+
+	/*
+	 * public Address getAddressByHouseNoBldgApt(Long houseNoBldgApt) { Address
+	 * address = null; try { address = (Address)
+	 * jdbcTemplate.queryForObject(AddressBuilder.ADDRES_BY_PROPERTY_ID_QUERY,
+	 * new Object[] { houseNoBldgApt }, new
+	 * BeanPropertyRowMapper(Address.class)); } catch
+	 * (EmptyResultDataAccessException e) { return null; } if (address != null
+	 * && address.getId() != null && address.getId() > 0)
+	 * address.setAuditDetails(getAuditDetailsForAddress(address.getId()));
+	 * 
+	 * return address;
+	 */
+	// }
 
 }

@@ -272,7 +272,7 @@ class DefineEscalationTime extends Component {
     var current = this
     var body = {
       EscalationTimeType:{
-        id : this.props.defineEscalationTime.id
+        id : this.props.defineEscalationTime.id,
         grievancetype:{
           id: this.props.defineEscalationTime.grievanceType.id
         },

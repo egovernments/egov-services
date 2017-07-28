@@ -3,7 +3,6 @@ package org.egov.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-
 import javax.validation.constraints.*;
 /**
  * Request object to fetch the report data
@@ -12,7 +11,7 @@ import javax.validation.constraints.*;
 
 public class MetadataRequest   {
   @JsonProperty("requestInfo")
-  private RequestInfo requestInfo = null;
+  private org.egov.common.contract.request.RequestInfo requestInfo = null;
 
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -20,7 +19,7 @@ public class MetadataRequest   {
   @JsonProperty("reportName")
   private String reportName = null;
 
-  public MetadataRequest requestInfo(RequestInfo requestInfo) {
+  public MetadataRequest requestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
     return this;
   }
@@ -31,11 +30,11 @@ public class MetadataRequest   {
   **/
   
   @NotNull
-  public RequestInfo getRequestInfo() {
+  public org.egov.common.contract.request.RequestInfo getRequestInfo() {
     return requestInfo;
   }
 
-  public void setRequestInfo(RequestInfo requestInfo) {
+  public void setRequestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
   }
 

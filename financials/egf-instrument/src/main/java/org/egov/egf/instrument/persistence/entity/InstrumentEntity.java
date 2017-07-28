@@ -48,7 +48,7 @@ public class InstrumentEntity extends AuditableEntity {
 		instrument.setTransactionNumber(this.transactionNumber);
 		instrument.setTransactionDate(this.transactionDate);
 		instrument.setAmount(this.amount);
-		instrument.setInstrumentType(InstrumentType.builder().id(instrumentTypeId).build());
+		instrument.setInstrumentType(InstrumentType.builder().name(instrumentTypeId).build());
 		instrument.setBank(BankContract.builder().id(bankId).build());
 		instrument.setBranchName(this.branchName);
 		instrument.setBankAccount(BankAccountContract.builder().id(bankAccountId).build());
@@ -67,7 +67,7 @@ public class InstrumentEntity extends AuditableEntity {
 		this.transactionNumber = instrument.getTransactionNumber();
 		this.transactionDate = instrument.getTransactionDate();
 		this.amount = instrument.getAmount();
-		this.instrumentTypeId = instrument.getInstrumentType() != null ? instrument.getInstrumentType().getId() : null;
+		this.instrumentTypeId = instrument.getInstrumentType() != null ? instrument.getInstrumentType().getName() : null;
 		this.bankId = instrument.getBank() != null ? instrument.getBank().getId() : null;
 		this.branchName = instrument.getBranchName();
 		this.bankAccountId = instrument.getBankAccount() != null ? instrument.getBankAccount().getId() : null;

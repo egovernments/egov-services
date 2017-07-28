@@ -45,6 +45,7 @@ import org.egov.property.utility.TimeStampUtil;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -468,9 +469,8 @@ public class PropertyRepository {
 
 		Map<String, Object> propertyMap = searchPropertyBuilder.createSearchPropertyQuery(requestInfo, tenantId, active,
 				upicNo, pageSize, pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone,
-				revenueWard, locality, ownerName, demandFrom, demandTo,propertyId, preparedStatementValues);
-		List<Property> properties = getProperty(propertyMap.get("Sql").toString(),
-				preparedStatementValues);
+				revenueWard, locality, ownerName, demandFrom, demandTo, propertyId, preparedStatementValues);
+		List<Property> properties = getProperty(propertyMap.get("Sql").toString(), preparedStatementValues);
 
 		searchPropertyMap.put("properties", properties);
 		searchPropertyMap.put("users", propertyMap.get("users"));
@@ -480,9 +480,13 @@ public class PropertyRepository {
 	}
 
 	public Address getAddressByProperty(Long propertyId) {
-
-		Address address = (Address) jdbcTemplate.queryForObject(AddressBuilder.ADDRES_BY_PROPERTY_ID_QUERY,
-				new Object[] { propertyId }, new BeanPropertyRowMapper(Address.class));
+		Address address = null;
+		try {
+			address = (Address) jdbcTemplate.queryForObject(AddressBuilder.ADDRES_BY_PROPERTY_ID_QUERY,
+					new Object[] { propertyId }, new BeanPropertyRowMapper(Address.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 		if (address != null && address.getId() != null && address.getId() > 0)
 			address.setAuditDetails(getAuditDetailsForAddress(address.getId()));
 
@@ -490,26 +494,40 @@ public class PropertyRepository {
 	}
 
 	public List<PropertyUser> getPropertyUserByProperty(Long propertyId) {
+		List<PropertyUser> propertyUsers = null;
+		try {
 
-		List<PropertyUser> propertyUsers = jdbcTemplate.query(UserBuilder.PROPERTY_OWNER_BY_PROPERTY_ID_QUERY,
-				new Object[] { propertyId }, new BeanPropertyRowMapper(PropertyUser.class));
+			propertyUsers = jdbcTemplate.query(UserBuilder.PROPERTY_OWNER_BY_PROPERTY_ID_QUERY,
+					new Object[] { propertyId }, new BeanPropertyRowMapper(PropertyUser.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+
 		return propertyUsers;
 
 	}
 
 	public PropertyUser getPropertyUserByUser(Long userId) {
-
-		PropertyUser propertyUser = (PropertyUser) jdbcTemplate.queryForObject(
-				UserBuilder.PROPERTY_OWNER_BY_USER_ID_QUERY, new Object[] { userId },
-				new BeanPropertyRowMapper(PropertyUser.class));
+		PropertyUser propertyUser = null;
+		try {
+			propertyUser = (PropertyUser) jdbcTemplate.queryForObject(UserBuilder.PROPERTY_OWNER_BY_USER_ID_QUERY,
+					new Object[] { userId }, new BeanPropertyRowMapper(PropertyUser.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 		return propertyUser;
 
 	}
 
 	public PropertyDetail getPropertyDetailsByProperty(Long propertyId) {
-		PropertyDetail propertyDetail = (PropertyDetail) jdbcTemplate.queryForObject(
-				PropertyDetailBuilder.PROPERTY_DETAIL_BY_PROPERTY_QUERY, new Object[] { propertyId },
-				new BeanPropertyRowMapper(PropertyDetail.class));
+		PropertyDetail propertyDetail = null;
+		try {
+			propertyDetail = (PropertyDetail) jdbcTemplate.queryForObject(
+					PropertyDetailBuilder.PROPERTY_DETAIL_BY_PROPERTY_QUERY, new Object[] { propertyId },
+					new BeanPropertyRowMapper(PropertyDetail.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 		if (propertyDetail != null && propertyDetail.getId() != null && propertyDetail.getId() > 0)
 			propertyDetail.setAuditDetails(getAuditDetailsForPropertyDetail(propertyDetail.getId()));
 
@@ -518,9 +536,15 @@ public class PropertyRepository {
 	}
 
 	public VacantLandDetail getVacantLandByProperty(Long propertyId) {
-		VacantLandDetail vacantLandDetail = (VacantLandDetail) jdbcTemplate.queryForObject(
-				VacantLandDetailBuilder.VACANT_LAND_BY_PROPERTY_QUERY, new Object[] { propertyId },
-				new BeanPropertyRowMapper(VacantLandDetail.class));
+
+		VacantLandDetail vacantLandDetail = null;
+		try {
+			vacantLandDetail = (VacantLandDetail) jdbcTemplate.queryForObject(
+					VacantLandDetailBuilder.VACANT_LAND_BY_PROPERTY_QUERY, new Object[] { propertyId },
+					new BeanPropertyRowMapper(VacantLandDetail.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 		if (vacantLandDetail != null && vacantLandDetail.getId() != null && vacantLandDetail.getId() > 0)
 			vacantLandDetail.setAuditDetails(getAuditDetailsForvacantLandDetail(vacantLandDetail.getId()));
 
@@ -528,9 +552,14 @@ public class PropertyRepository {
 	}
 
 	public PropertyLocation getPropertyLocationByproperty(Long propertyId) {
-		PropertyLocation propertyLocation = (PropertyLocation) jdbcTemplate.queryForObject(
-				BoundaryBuilder.PROPERTY_LOCATION_BY_PROPERTY_QUERY, new Object[] { propertyId },
-				new PropertyLocationRowMapper());
+		PropertyLocation propertyLocation = null;
+		try {
+			propertyLocation = (PropertyLocation) jdbcTemplate.queryForObject(
+					BoundaryBuilder.PROPERTY_LOCATION_BY_PROPERTY_QUERY, new Object[] { propertyId },
+					new PropertyLocationRowMapper());
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 		if (propertyLocation != null && propertyLocation.getId() != null && propertyLocation.getId() > 0)
 			propertyLocation.setAuditDetails(getAuditDetailsForBoundary(propertyLocation.getId()));
 
@@ -538,9 +567,13 @@ public class PropertyRepository {
 	}
 
 	public List<Floor> getFloorsByPropertyDetails(Long propertyDetailId) {
-
-		List<Floor> floors = jdbcTemplate.query(FloorBuilder.FLOORS_BY_PROPERTY_DETAILS_QUERY,
-				new Object[] { propertyDetailId }, new BeanPropertyRowMapper(Floor.class));
+		List<Floor> floors = null;
+		try {
+			floors = jdbcTemplate.query(FloorBuilder.FLOORS_BY_PROPERTY_DETAILS_QUERY,
+					new Object[] { propertyDetailId }, new BeanPropertyRowMapper(Floor.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 		floors.forEach(floor -> {
 			if (floor.getId() != null && floor.getId() > 0) {
 				floor.setAuditDetails(getAuditDetailsForFloor(floor.getId()));
@@ -552,9 +585,13 @@ public class PropertyRepository {
 	}
 
 	public List<Unit> getUnitsByFloor(Long floorId) {
-
-		List<Unit> units = jdbcTemplate.query(UnitBuilder.UNITS_BY_FLOOR_QUERY, new Object[] { floorId },
-				new BeanPropertyRowMapper(Unit.class));
+		List<Unit> units = null;
+		try {
+			units = jdbcTemplate.query(UnitBuilder.UNITS_BY_FLOOR_QUERY, new Object[] { floorId },
+					new BeanPropertyRowMapper(Unit.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 		units.forEach(unit -> {
 			if (unit.getId() != null && unit.getId() > 0)
 				unit.setAuditDetails(getAuditDetailsForUnit(unit.getId()));
@@ -565,8 +602,13 @@ public class PropertyRepository {
 	}
 
 	public List<Document> getDocumentByPropertyDetails(Long propertyDetailId) {
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(DocumentBuilder.DOCUMENT_BY_PROPERTY_DETAILS_QUERY,
-				new Object[] { propertyDetailId });
+		List<Map<String, Object>> rows = null;
+		try {
+			rows = jdbcTemplate.queryForList(DocumentBuilder.DOCUMENT_BY_PROPERTY_DETAILS_QUERY,
+					new Object[] { propertyDetailId });
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 		List<Document> documents = getDocumentObject(rows);
 		documents.forEach(document -> {
 			if (document.getId() != null && document.getId() > 0)
@@ -577,9 +619,15 @@ public class PropertyRepository {
 	}
 
 	public AuditDetails getAuditForPropertyDetails(Long propertyId) {
-		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(
-				PropertyBuilder.AUDIT_DETAILS_FOR_PROPERTY_DETAILS, new Object[] { propertyId },
-				new BeanPropertyRowMapper(AuditDetails.class));
+		AuditDetails auditDetails = null;
+		try {
+			auditDetails = (AuditDetails) jdbcTemplate.queryForObject(
+					PropertyBuilder.AUDIT_DETAILS_FOR_PROPERTY_DETAILS, new Object[] { propertyId },
+					new BeanPropertyRowMapper(AuditDetails.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+
 		return auditDetails;
 	}
 
@@ -589,13 +637,13 @@ public class PropertyRepository {
 
 		for (Map<String, Object> documentdata : documentList) {
 			Document document = new Document();
-			if ( documentdata.get("documenttype")!=null) 
-			document.setDocumentType(documentdata.get("documenttype").toString());
-			
+			if (documentdata.get("documenttype") != null)
+				document.setDocumentType(documentdata.get("documenttype").toString());
+
 			document.setFileStore(documentdata.get("filestore").toString());
-			if ( documentdata.get("id")!=null)
-			document.setId(Long.valueOf(documentdata.get("id").toString()));
-			
+			if (documentdata.get("id") != null)
+				document.setId(Long.valueOf(documentdata.get("id").toString()));
+
 			documents.add(document);
 
 		}
@@ -1361,9 +1409,10 @@ public class PropertyRepository {
 
 		jdbcTemplate.update(UserBuilder.INSERT_USERHISTORY_QUERY, userPropertyArgs);
 	}
-	
+
 	/**
 	 * This will give the list of Properties
+	 * 
 	 * @param query
 	 * @param preparedStatementValues
 	 * @return {@link Property} List of property
@@ -1437,9 +1486,5 @@ public class PropertyRepository {
 	private Boolean getBooleaan(Object object) {
 		return object == null ? Boolean.FALSE : (Boolean) object;
 	}
-
-
-
-
 
 }

@@ -1505,7 +1505,7 @@ public class PropertyRepository {
 
 			property.setId(getLong(row.get("id")));
 			property.setTenantId(getString(row.get("tenantid")));
-			property.setUpicNumber(getString("upicnumber"));
+			property.setUpicNumber(getString(row.get("upicnumber")));
 			property.setOldUpicNumber(getString(row.get("oldupicnumber")));
 			property.setVltUpicNumber(getString(row.get("vltupicnumber")));
 			if (row.get("creationreason") != null)

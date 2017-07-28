@@ -272,6 +272,7 @@ class DefineEscalationTime extends Component {
     var current = this
     var body = {
       EscalationTimeType:{
+        id : this.props.defineEscalationTime.id
         grievancetype:{
           id: this.props.defineEscalationTime.grievanceType.id
         },
@@ -280,8 +281,6 @@ class DefineEscalationTime extends Component {
         tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
       }
     }
-
-    var idd = this.props.defineEscalationTime.id
 
     Api.commonApiPost("workflow/escalation-hours/v1/_update",{},body).then(function(response){
 

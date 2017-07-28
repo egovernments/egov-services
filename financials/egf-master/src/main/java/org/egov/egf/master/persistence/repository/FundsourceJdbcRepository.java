@@ -134,14 +134,14 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 			page.setPageSize(fundsourceSearchEntity.getPageSize());
 		}
 
-		/*
-		 * if (params.length() > 0) {
-		 *
-		 * searchQuery = searchQuery.replace(":condition", " where " +
-		 * params.toString());
-		 *
-		 * } else {
-		 */
+		
+		if (params.length() > 0) {
+		
+		searchQuery = searchQuery.replace(":condition", " where " +
+		params.toString());
+		
+		} else 
+		
 		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);

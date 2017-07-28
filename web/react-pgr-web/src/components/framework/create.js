@@ -120,8 +120,8 @@ class Report extends Component {
     let self = this;
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
-      self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
       self.initData();
+      self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
     }, function(err) {
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);
@@ -395,6 +395,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
+    console.log(toastMsg);
+    console.log(isSuccess);
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
   },
   setDropDownData:(fieldName,dropDownData)=>{

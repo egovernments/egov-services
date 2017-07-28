@@ -106,6 +106,8 @@ class Report extends Component {
         values,
         showResult: true
       });
+
+      self.props.setFlag(1);
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.props.setLoadingStatus('hide');
@@ -157,7 +159,8 @@ const mapStateToProps = state => ({
   moduleName:state.framework.moduleName,
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
-  fieldErrors: state.frameworkForm.fieldErrors
+  fieldErrors: state.frameworkForm.fieldErrors,
+  flag: state.report.flag
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -197,6 +200,9 @@ const mapDispatchToProps = dispatch => ({
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
   },
-  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+  setFlag: (flag) => {
+    dispatch({type:"SET_FLAG", flag})
+  }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

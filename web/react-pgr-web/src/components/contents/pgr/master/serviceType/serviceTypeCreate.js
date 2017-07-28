@@ -213,7 +213,7 @@ class ServiceTypeCreate extends Component {
 
       current.props.setLoadingStatus('loading');
       if(this.props.match.params.id){
-          Api.commonApiPost("/pgr-master/service/v1/"+body.Service.serviceCode+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/service/v1/_update",{},body).then(function(response){
               current.setState({
                 open: true
               });

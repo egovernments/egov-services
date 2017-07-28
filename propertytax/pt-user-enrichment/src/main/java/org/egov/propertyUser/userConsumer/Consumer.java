@@ -9,10 +9,10 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.User;
+import org.egov.propertyUser.config.PropertiesManager;
 import org.egov.propertyUser.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -33,10 +33,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class Consumer {
-
+    
     @Autowired
-    Environment environment;
-
+    PropertiesManager propertiesManager;
+    
     @Autowired
     private Producer producer;
 
@@ -58,9 +58,9 @@ public class Consumer {
     public Map<String, Object> consumerConfig() {
         Map<String, Object> consumerProperties = new HashMap<String, Object>();
         consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-                environment.getProperty("auto.offset.reset.config"));
+        		propertiesManager.getAutoOffsetReset());
         consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                environment.getProperty("kafka.config.bootstrap_server_config"));
+        		propertiesManager.getBootstrapServer());
         consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "user");
@@ -91,8 +91,8 @@ public class Consumer {
      * This method will listen property object from producer and check user authentication Updating auth token in
      * UserAuthResponseInfo Search user Create user
      */
-    @KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.validate.user')}",
-            "#{environment.getProperty('egov.propertytax.property.update.validate.user')}" })
+    @KafkaListener(topics = { "#{propertiesManager.getCreatePropertyValidator()}",
+            "#{propertiesManager.getUpdatePropertyValidator()}" })
     public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
         log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
         PropertyRequest propertyRequest = consumerRecord.value();
@@ -104,15 +104,15 @@ public class Consumer {
 
             }
             if (consumerRecord.topic()
-                    .equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.validate.user"))) {
+                    .equalsIgnoreCase(propertiesManager.getCreatePropertyValidator())) {
 
-                producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.create.tax.calculaion"),
+                producer.kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(),
                         propertyRequest);
 
             } else if (consumerRecord.topic()
-                    .equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.validate.user"))) {
+                    .equalsIgnoreCase(propertiesManager.getUpdatePropertyValidator())) {
 
-                producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.update.tax.calculaion"),
+                producer.kafkaTemplate.send(propertiesManager.getUpdatePropertyUserValidator(),
                         propertyRequest);
 
             }

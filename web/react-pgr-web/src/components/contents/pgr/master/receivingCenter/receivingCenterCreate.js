@@ -116,7 +116,7 @@ class CreateReceivingCenter extends Component {
       }
       current.props.setLoadingStatus('loading');
       if(this.props.match.params.id){
-          Api.commonApiPost("/pgr-master/receivingcenter/v1/"+body.ReceivingCenterType.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/receivingcenter/v1/_update",{},body).then(function(response){
               current.setState({
                 open: true
               });

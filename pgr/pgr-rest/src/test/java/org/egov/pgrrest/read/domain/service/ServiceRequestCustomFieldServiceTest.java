@@ -8,7 +8,7 @@ import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
-import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
+import org.egov.pgrrest.read.domain.factory.JSScriptEngineFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

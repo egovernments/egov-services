@@ -8,6 +8,8 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.property.services.PropertyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/properties/")
 public class PropertyController {
 
+	private static final Logger logger = LoggerFactory.getLogger(PropertyController.class);
+
 	@Autowired
 	PropertyService propertyService;
 
@@ -36,7 +40,7 @@ public class PropertyController {
 
 	@RequestMapping(method = RequestMethod.POST, path = "_create")
 	public PropertyResponse createProperty(@Valid @RequestBody PropertyRequest propertyRequest) {
-
+		logger.info("PropertyController    PropertyRequest ---->> "+propertyRequest);
 		return propertyService.createProperty(propertyRequest);
 
 	}
@@ -94,7 +98,8 @@ public class PropertyController {
 			@RequestParam(value = "locality", required = false) Integer locality,
 			@RequestParam(value = "ownerName", required = false) String ownerName,
 			@RequestParam(value = "demandFrom", required = false) Integer demandFrom,
-			@RequestParam(value = "demandTo", required = false) Integer demandTo) {
+			@RequestParam(value = "demandTo", required = false) Integer demandTo,
+			@RequestParam(value= "propertyId",required=false ) String propertyId) throws Exception {
 		if (pageSize == null)
 			pageSize = -1;
 
@@ -118,7 +123,7 @@ public class PropertyController {
 
 		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNo, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo);
+				locality, ownerName, demandFrom, demandTo, propertyId);
 
 	}
 

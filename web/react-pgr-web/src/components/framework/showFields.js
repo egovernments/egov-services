@@ -19,6 +19,7 @@ import UiAadharCard from './components/UiAadharCard'
 import UiPanCard from './components/UiPanCard'
 import UiLabel from './components/UiLabel'
 import UiRadioButton from './components/UiRadioButton'
+import UiTextSearch from './components/UiTextSearch'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 
 export default class ShowFields extends Component {
@@ -46,11 +47,13 @@ export default class ShowFields extends Component {
                     <Grid>
                       <Row>
                         {group.fields.map((field, fieldIndex)=>{
-                            return (
+                            if(!field.isHidden) {
+                              return (
                                 <Col key={fieldIndex} xs={12} md={noCols}>
-                                    {renderField(field)}
+                                    {renderField(field, self.props.screen)}
                                 </Col>
-                            )
+                              )
+                            }
                         })}
                       </Row>
                       {group.multiple && <Row style={{"visibility": (groupIndex == (groups.length-1)) ? "initial" : "hidden" }}>
@@ -85,7 +88,10 @@ export default class ShowFields extends Component {
   }
 
 
-  renderField=(item)=> {
+  renderField=(item, screen)=> {
+    if(screen == "view") {
+      item.type = "label";
+    }
   	switch(item.type) {
   		case 'text':
   			 return <UiTextField ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
@@ -130,6 +136,8 @@ export default class ShowFields extends Component {
         return <UiLabel getVal={this.props.getVal} item={item}/>
       case 'radio':
         return <UiRadioButton ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'textSearch':
+        return <UiTextSearch ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
     }
   }
 

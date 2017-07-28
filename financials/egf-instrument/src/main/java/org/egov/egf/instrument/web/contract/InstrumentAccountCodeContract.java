@@ -73,6 +73,6 @@ public class InstrumentAccountCodeContract extends AuditableContract{
 	 * accountCode is the COA that is tagged to a instrument type used in ledger
 	 * posting.
 	 */
-	private ChartOfAccountContract accountCode;
+	private ChartOfAccountContract  accountCode;
 
 }

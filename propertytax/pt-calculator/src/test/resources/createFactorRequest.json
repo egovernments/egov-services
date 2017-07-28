@@ -21,13 +21,14 @@
          "authToken":"d0058c65-7c55-445e-89b3-7f5b0cfdc12b"
       },
       "calculationFactors":[  
-         {  
+         { 
+            "id":0,
             "tenantId":"default",
-            "factorCode":null,
-            "factorType":null,
-            "factorValue":null,
-            "fromDate":null,
-            "toDate":null,
+            "factorCode":"propertytax",
+            "factorType":"age",
+            "factorValue":1234.12,
+            "fromDate":"10/06/2007  00:00:00",
+            "toDate":"25/06/2017  00:00:00",
             "auditDetails": {
 		        "createdBy": null,
 		        "lastModifiedBy": null,

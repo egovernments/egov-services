@@ -23,6 +23,7 @@ import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.UserInfo;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -540,6 +541,9 @@ public class TaxCalculatorMasterServiceTest {
 		requestInfo.setMsgId("20170310130900");
 		requestInfo.setRequesterId("rajesh");
 		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+		UserInfo userInfo = new UserInfo();
+		userInfo.setId(123);
+		requestInfo.setUserInfo(userInfo);
 
 		return requestInfo;
 	}

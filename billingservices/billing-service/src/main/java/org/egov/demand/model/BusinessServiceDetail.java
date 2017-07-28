@@ -68,5 +68,5 @@ public class BusinessServiceDetail {
 
     private String callBackApportionURL;
 
-    private AuditDetail auditDetail;
+    private AuditDetail auditDetails;
 }

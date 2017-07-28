@@ -1,5 +1,6 @@
 package org.egov.calculator;
 
+import org.egov.calculator.config.PropertiesManager;
 import org.egov.models.ResponseInfoFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +25,11 @@ public class PtCalculatorApplication {
 	@Bean
 	public ResponseInfoFactory responseInfoFactory() {
 		return new ResponseInfoFactory();
+	}
+	
+	@Bean
+	public PropertiesManager getPropertiesManager() {
+		return new PropertiesManager();
 	}
 
 }

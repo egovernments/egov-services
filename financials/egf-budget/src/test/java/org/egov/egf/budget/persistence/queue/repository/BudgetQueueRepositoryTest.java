@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.egov.common.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.budget.domain.model.EstimationType;
 import org.egov.egf.budget.persistence.queue.FinancialProducer;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetRequest;
+import org.egov.egf.budget.web.contract.EstimationTypeContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 import org.junit.Before;
 import org.junit.Test;
@@ -97,7 +98,7 @@ public class BudgetQueueRepositoryTest {
 
 		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("budget_completed"));
+		assertEquals(request, actualRequest.get("budget_persisted"));
 
 	}
 
@@ -105,7 +106,7 @@ public class BudgetQueueRepositoryTest {
 		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
 		BudgetContract budgetContract = BudgetContract.builder().name("test")
 				.financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
-				.estimationType(EstimationType.BE).primaryBudget(false).build();
+				.estimationType(EstimationTypeContract.BE).primaryBudget(false).build();
 		budgetContract.setTenantId("default");
 		budgetContracts.add(budgetContract);
 		return budgetContracts;

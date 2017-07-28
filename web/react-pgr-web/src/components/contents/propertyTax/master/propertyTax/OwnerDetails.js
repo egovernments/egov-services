@@ -24,10 +24,8 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -93,12 +91,15 @@ chip: {
 
 class OwnerDetails extends Component { 
 
+	componentDidMount() {
+		
+	}
+
 
   render() {
 
 
     let {
-      owners,
       ownerDetails,
       fieldErrors,
       isFormValid,
@@ -110,7 +111,9 @@ class OwnerDetails extends Component {
       editObject,
       editIndex,
       isEditIndex,
-      isAddRoom
+      isAddRoom,
+	  isOwnerValid,
+	  handleChangeOwner
     } = this.props;
 
     let {search} = this;
@@ -118,11 +121,10 @@ class OwnerDetails extends Component {
     let cThis = this;
 
     return (
-      <Card>
+      <Card className="uiCard">
         <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Owner Details</div>} style={styles.reducePadding} />
         <CardText style={styles.reducePadding}>
-          <Card className="darkShadow">
-            <CardText style={styles.reducePadding}>
+       
               <Grid fluid>
                 <Row>
                   <Col xs={12} md={12}>
@@ -135,7 +137,8 @@ class OwnerDetails extends Component {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.aadhaarNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.aadhaarNumber}</span>: "") : ""}
                             value={ownerDetails.owner ? ownerDetails.owner.aadhaarNumber:""}
                             onChange={(e) => {
-                                handleChangeNextOne(e,"owner", "aadhaarNumber", true, /^\d{12}$/g);
+								handleChangeOwner(e,"owner", "aadhaarNumber", true, /^\d{12}$/g);
+                               // handleChangeNextOne(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -153,7 +156,8 @@ class OwnerDetails extends Component {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.mobileNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.mobileNumber}</span>: ""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.mobileNumber:""}
                             onChange={(e) =>{
-                                handleChangeNextOne(e, "owner","mobileNumber", true, /^\d{10}$/g)
+								handleChangeOwner(e, "owner","mobileNumber", true, /^\d{10}$/g)
+                               // handleChangeNextOne(e, "owner","mobileNumber", false, /^\d{10}$/g)
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -170,7 +174,8 @@ class OwnerDetails extends Component {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
-                                handleChangeNextOne(e,"owner" ,"name", true, "");
+								handleChangeOwner(e,"owner" ,"name", true, "");
+                                //handleChangeNextOne(e,"owner" ,"name", false, "");
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -183,15 +188,17 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
                             floatingLabelText="Gender *"
-                            errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.gender}</span>:""): ""}
+                            errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gender}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gender:""}
                             onChange={(event, index, value) => {
+								(value == -1) ? value = '' : '';
                                 var e = {
                                   target: {
                                     value: value
                                    }
                                   };
-                                handleChangeNextOne(e, "owner" ,"gender", true, "")
+								  handleChangeOwner(e, "owner" ,"gender", true, "")
+                                //handleChangeNextOne(e, "owner" ,"gender", false, "")
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -199,6 +206,7 @@ class OwnerDetails extends Component {
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
+							<MenuItem value={-1} primaryText="None"/>
                             <MenuItem value="Male" primaryText="Male"/>
                             <MenuItem value="Female" primaryText="Female"/>
                             <MenuItem value="Others" primaryText="Others"/>  
@@ -224,15 +232,19 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
                             floatingLabelText="Guardian Relation *"
-                            errorText={fieldErrors.owner ? (fieldErrors.owner.gaurdianRelation? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.gaurdianRelation}</span>:""): ""}
+                            errorText={fieldErrors.owner ? (fieldErrors.owner.gaurdianRelation? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gaurdianRelation}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gaurdianRelation:""}
                             onChange={(event, index, value) => {
+								(value == -1) ? value = '' : '';
                                 var e = {
                                   target: {
                                     value: value
                                   }
                                 };
-                                handleChangeNextOne(e, "owner", "gaurdianRelation", true, "")
+								handleChangeOwner(e, "owner", "gaurdianRelation", true, "")
+								//handleChangeNextOne(e, "owner", "gaurdianRelation", false, "")
+
+                                
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -240,6 +252,7 @@ class OwnerDetails extends Component {
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
+							<MenuItem value={-1} primaryText="None"/>
                             <MenuItem value={1} primaryText="Father"/>
                             <MenuItem value={2} primaryText="Husband"/>
                             <MenuItem value={3} primaryText="Mother"/>
@@ -252,7 +265,10 @@ class OwnerDetails extends Component {
                             floatingLabelText="Guardian *"
                             errorText={fieldErrors.owner ?(fieldErrors.owner.gaurdian? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.gaurdian}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gaurdian:""}
-                            onChange={(e) => handleChangeNextOne(e,  "owner",  "gaurdian", true, "")}
+                            onChange={(e) => {
+								handleChangeOwner(e,  "owner",  "gaurdian", true, "")
+								//handleChangeNextOne(e,  "owner",  "gaurdian", false, "")
+							}}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}
@@ -263,9 +279,10 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
                             floatingLabelText="Owner type"
-                            errorText={fieldErrors.owner ?(fieldErrors.owner.ownerType? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.ownerType}</span>:""): ""}
+                            errorText={fieldErrors.owner ?(fieldErrors.owner.ownerType? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.ownerType}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.ownerType:""}
                             onChange={(event, index, value) => {
+								(value == -1) ? value = '' : '';
                                 var e = {
                                   target: {
                                     value: value
@@ -279,6 +296,7 @@ class OwnerDetails extends Component {
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
+							<MenuItem value={-1} primaryText="None"/>
                             <MenuItem value="Ex_Service_man" primaryText="Ex-Service man"/>
                             <MenuItem value="Freedom_Fighter" primaryText="Freedom Fighter"/>
                             <MenuItem value="Freedom_fighers_wife" primaryText="Freedom figher's wife"/>
@@ -310,7 +328,8 @@ class OwnerDetails extends Component {
                             value: v
                             }
                             }
-                            handleChangeNextOne(e,"owner", "isPrimaryOwner", true,'')
+							handleChangeOwner(e,"owner", "isPrimaryOwner", false,'')
+                           // handleChangeNextOne(e,"owner", "isPrimaryOwner", false,'')
                             }}
                           >
                             <RadioButton
@@ -330,16 +349,16 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={3} style={styles.textRight}>
                           <br/>
                           { (editIndex == -1 || editIndex == undefined ) &&
-                            <RaisedButton type="button" label="Add" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                            <RaisedButton type="button" label="Add" disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 this.props.addNestedFormData("owners","owner");
-                                this.props.resetObject("owner");
+                                this.props.resetObject("owner", false);
                               }
                             }/>
                           }
                           { (editIndex > -1) &&
-                            <RaisedButton type="button" label="Save" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                            <RaisedButton type="button" label="Save" disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 this.props.updateObject("owners","owner",  editIndex);
-                                this.props.resetObject("owner");
+                                this.props.resetObject("owner", false);
                                 isEditIndex(-1);
                               }
                             }/>
@@ -382,7 +401,7 @@ class OwnerDetails extends Component {
                                     <td>{i.ownerShipPercentage}</td>
                                     <td>
 										<i className="material-icons" style={styles.iconFont} onClick={ () => {
-											editObject("owner",i);
+											editObject("owner",i, true);
 											isEditIndex(index);
 										 }}>mode_edit</i>
 										<i className="material-icons" style={styles.iconFont} onClick={ () => {
@@ -400,8 +419,6 @@ class OwnerDetails extends Component {
                   </Col>
                 </Row>
               </Grid>
-            </CardText>
-          </Card>
         </CardText>
       </Card>)
   }
@@ -412,25 +429,12 @@ const mapStateToProps = state => ({
   ownerDetails:state.form.form,
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
-  addRoom : state.form.addRoom
+  addRoom : state.form.addRoom,
+  isOwnerValid : state.form.isOwnerValid
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: () => {
-    dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: ['type', 'aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian' ]
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
@@ -438,6 +442,17 @@ const mapDispatchToProps = dispatch => ({
   handleChangeNextOne: (e, property, propertyOne, isRequired, pattern) => {
     dispatch({
       type: "HANDLE_CHANGE_NEXT_ONE",
+      property,
+      propertyOne,
+      value: e.target.value,
+      isRequired,
+      pattern
+    })
+  },
+  
+  handleChangeOwner: (e, property, propertyOne, isRequired, pattern) => {
+    dispatch({
+      type: "HANDLE_CHANGE_OWNER",
       property,
       propertyOne,
       value: e.target.value,
@@ -479,19 +494,20 @@ const mapDispatchToProps = dispatch => ({
     })
   },
 
-  editObject: (objectName, object, isEditable) => {
+  editObject: (objectName, object, isSectionValid) => {
     dispatch({
       type: "EDIT_OBJECT",
       objectName,
       object,
-      isEditable
+      isSectionValid
     })
   },
 
-  resetObject: (object) => {
+  resetObject: (object, isSectionValid) => {
     dispatch({
       type: "RESET_OBJECT",
-      object
+      object,
+	  isSectionValid
     })
   },
 

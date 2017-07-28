@@ -1,6 +1,5 @@
 package org.egov.egf.instrument.persistence.entity;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 
@@ -34,7 +33,7 @@ public class InstrumentTypeEntity extends AuditableEntity {
 	}
 
 	public InstrumentTypeEntity toEntity(InstrumentType instrumentType) {
-		super.toEntity((Auditable) instrumentType);
+		super.toEntity(instrumentType);
 		this.id = instrumentType.getId();
 		this.name = instrumentType.getName();
 		this.description = instrumentType.getDescription();

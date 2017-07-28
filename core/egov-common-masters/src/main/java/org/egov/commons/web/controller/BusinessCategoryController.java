@@ -68,10 +68,10 @@ public class BusinessCategoryController {
 
 	}
 
-	@PostMapping(value = "/{businessCategoryCode}/_update")
+	@PostMapping(value = "/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> updateServiceCategory(@RequestBody BusinessCategoryRequest businessCategoryRequest,
-			@PathVariable String businessCategoryCode, final BindingResult errors) {
+			 final BindingResult errors) {
 		if (errors.hasErrors()) {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
@@ -95,7 +95,7 @@ public class BusinessCategoryController {
 			final BindingResult requestBodyBindingResult) {
 
 		BusinessCategoryCriteria criteria = BusinessCategoryCriteria.builder().active(categoryGetRequest.getActive())
-				.businessCategoryName(categoryGetRequest.getBusinessCategoryName()).ids(categoryGetRequest.getIds())
+				.businessCategoryName(categoryGetRequest.getName()).ids(categoryGetRequest.getIds())
 				.sortBy(categoryGetRequest.getSortBy()).sortOrder(categoryGetRequest.getSortOrder())
 				.tenantId(categoryGetRequest.getTenantId()).build();
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();

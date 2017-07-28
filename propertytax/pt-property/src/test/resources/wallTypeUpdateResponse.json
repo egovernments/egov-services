@@ -4,9 +4,10 @@
     },
     "wallTypes": [
         {
-            "tenantId": "default",
-            "name": null,
-            "code": null,
+           "id":1,
+           "tenantId": "default",
+            "name": "kkl16",
+            "code": "1234",
             "nameLocal": null,
             "description": null,
             "auditDetails": {

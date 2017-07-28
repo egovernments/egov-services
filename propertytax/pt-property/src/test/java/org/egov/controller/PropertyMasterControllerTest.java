@@ -119,10 +119,11 @@ public class PropertyMasterControllerTest {
 		FloorTypeResponse floorTypeResponse = new FloorTypeResponse();
 		List<FloorType> floorTypes = new ArrayList<>();
 		FloorType floorType = new FloorType();
+		floorType.setId((long)1);
 		floorType.setTenantId("1234");
-		floorType.setCode("256");
 		floorType.setName("Stone Flooring");
-		floorType.setNameLocal("Stone");
+		floorType.setCode("2566");
+		floorType.setNameLocal("Stone Flooring");
 		floorType.setDescription("Stone Flooring");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -195,9 +196,9 @@ public class PropertyMasterControllerTest {
 		List<RoofType> roofTypes = new ArrayList<>();
 		RoofType roofType = new RoofType();
 		roofType.setTenantId("1234");
-		roofType.setCode("MRT");
-		roofType.setName("Mansard Roof Type");
-		roofType.setNameLocal("Mansard");
+		roofType.setCode("MRTT");
+		roofType.setName("KKL16");
+		roofType.setNameLocal("Mansard KKL");
 		roofType.setDescription("Imported from USA");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -233,9 +234,9 @@ public class PropertyMasterControllerTest {
 		List<RoofType> roofTypes = new ArrayList<>();
 		RoofType roofType = new RoofType();
 		roofType.setTenantId("1234");
-		roofType.setCode("GRT");
+		roofType.setCode("GRTT");
 		roofType.setName("Gambrel Roof Type");
-		roofType.setNameLocal("Gambrel");
+		roofType.setNameLocal("Gambrel Roof");
 		roofType.setDescription("Imported from USA");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -304,9 +305,9 @@ public class PropertyMasterControllerTest {
 		List<WoodType> woodTypes = new ArrayList<>();
 		WoodType woodType = new WoodType();
 		woodType.setTenantId("1237");
-		woodType.setCode("MWT");
 		woodType.setName("Maple Wood Type");
-		woodType.setNameLocal("Maple");
+		woodType.setCode("MWTT");
+		woodType.setNameLocal("Maple Type");
 		woodType.setDescription("Imported from USA");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -342,9 +343,9 @@ public class PropertyMasterControllerTest {
 		List<WoodType> woodTypes = new ArrayList<>();
 		WoodType woodType = new WoodType();
 		woodType.setTenantId("1237");
-		woodType.setCode("WWT");
+		woodType.setCode("WWTT");
 		woodType.setName("Walnut Wood Type");
-		woodType.setNameLocal("Walnut");
+		woodType.setNameLocal("Walnut Type");
 		woodType.setDescription("Imported from USA");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -377,7 +378,7 @@ public class PropertyMasterControllerTest {
 		List<WoodType> woodTypes = new ArrayList<>();
 		WoodType woodType = new WoodType();
 		woodType.setTenantId("1237");
-		woodType.setCode("WWT");
+		woodType.setCode("WWTT");
 		woodType.setName("Walnut Wood Type");
 		woodType.setNameLocal("Walnut");
 		woodType.setDescription("Imported from USA");
@@ -421,7 +422,7 @@ public class PropertyMasterControllerTest {
 		Department department = new Department();
 		department.setTenantId("default");
 		department.setCategory("testing");
-		department.setCode("009");
+		department.setCode("0009");
 		department.setName("kumar");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -652,7 +653,7 @@ public class PropertyMasterControllerTest {
 		List<PropertyType> propertyTypes = new ArrayList<PropertyType>();
 		PropertyType propertyType = new PropertyType();
 		propertyType.setTenantId("default");
-		propertyType.setCode("007");
+		propertyType.setCode("0007");
 		propertyType.setName("anil");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -765,6 +766,8 @@ public class PropertyMasterControllerTest {
 		List<StructureClass> structureClasses = new ArrayList<>();
 		StructureClass structureClass = new StructureClass();
 		structureClass.setTenantId("default");
+		structureClass.setName("kkl16");
+		structureClass.setCode("1234");
 
 		AuditDetails auditDetails = new AuditDetails();
 		structureClass.setAuditDetails(auditDetails);
@@ -802,7 +805,9 @@ public class PropertyMasterControllerTest {
 		List<StructureClass> structureClasses = new ArrayList<>();
 		StructureClass structureClass = new StructureClass();
 		structureClass.setTenantId("default");
-
+     	structureClass.setName("kkl16");
+    	structureClass.setCode("1234");
+    	
 		AuditDetails auditDetails = new AuditDetails();
 		structureClass.setAuditDetails(auditDetails);
 
@@ -916,7 +921,8 @@ public class PropertyMasterControllerTest {
 		List<UsageMaster> usageMasters = new ArrayList<>();
 		UsageMaster usageMaster = new UsageMaster();
 		usageMaster.setTenantId("default");
-
+		usageMaster.setName("Yoyo");
+		usageMaster.setCode("1234");
 		AuditDetails auditDetails = new AuditDetails();
 		usageMaster.setAuditDetails(auditDetails);
 
@@ -1060,11 +1066,15 @@ public class PropertyMasterControllerTest {
 		WallTypeResponse wallTypeResponse = new WallTypeResponse();
 		List<WallType> wallTypes = new ArrayList<>();
 		WallType wallType = new WallType();
+		wallType.setId(1l);
 		wallType.setTenantId("default");
-
+		wallType.setName("kkl16");
+		wallType.setCode("1234");
+		
 		AuditDetails auditDetails = new AuditDetails();
 		wallType.setAuditDetails(auditDetails);
-
+		
+		
 		wallTypes.add(wallType);
 
 		wallTypeResponse.setResponseInfo(new ResponseInfo());
@@ -1097,7 +1107,7 @@ public class PropertyMasterControllerTest {
 		List<Depreciation> depreciations = new ArrayList<>();
 		Depreciation depreciation = new Depreciation();
 		depreciation.setTenantId("kiran");
-		depreciation.setCode("pra");
+		depreciation.setCode("praa");
 
 		AuditDetails auditDetails = new AuditDetails();
 		depreciation.setAuditDetails(auditDetails);
@@ -1177,7 +1187,7 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.searchDepreciation(any(RequestInfo.class), anyString(), any(Integer[].class),
 					any(Integer.class), any(Integer.class), anyString(), anyString(), any(Integer.class),
-					any(Integer.class))).thenReturn(depreciationResponse);
+					any(Integer.class), any(Integer.class))).thenReturn(depreciationResponse);
 			mockMvc.perform(post("/property/depreciations/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDepreciationRequest.json")))
 					.andExpect(status().isOk())
@@ -1302,6 +1312,7 @@ public class PropertyMasterControllerTest {
 		DocumentType documentType = new DocumentType();
 		documentType.setTenantId("tenantid1");
 		documentType.setName("username1");
+		documentType.setCode("1234");
 		documentType.setApplication(ApplicationEnum.BIFURCATION);
 
 		AuditDetails auditDetails = new AuditDetails();

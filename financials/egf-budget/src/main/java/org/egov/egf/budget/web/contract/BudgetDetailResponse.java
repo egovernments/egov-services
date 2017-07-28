@@ -42,8 +42,8 @@ package org.egov.egf.budget.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

@@ -141,4 +141,10 @@ public class CustomControllerAdvice {
     public ErrorResponse handleUnknownServiceStatusException(UnknownServiceStatusException ex) {
         return new UnknownServiceStatusExceptionAdapter().adapt(ex.getUnknownStatus());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(GroupConstraintViolationException.class)
+    public ErrorResponse handleGroupConstraintViolationException(GroupConstraintViolationException ex) {
+        return new GroupConstraintViolationExceptionAdapter().adapt(ex.getGroupCode());
+    }
 }

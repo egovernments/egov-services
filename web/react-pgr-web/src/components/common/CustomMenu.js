@@ -151,7 +151,7 @@ class CustomMenu extends Component {
     let {actionList}=this.props;
     let menuItems=[];
     for (var i = 0; i < actionList.length; i++) {
-      if (actionList[i].path!="" && actionList[i].path.search(path)>-1) {
+      if (actionList[i].path!="" && actionList[i].path.search(path)>-1 && actionList[i].path.search(path+" ")==-1) {
         let splitArray=actionList[i].path.split(path)[1].split(".");
         if (splitArray.length>2) {
             if (!_.some(menuItems,{ 'name':splitArray[1]} )) {
@@ -182,7 +182,7 @@ class CustomMenu extends Component {
     if (!path) {
       this.resetMenu();
       // console.log("level 0");
-      setRoute("/dashboard");
+      setRoute("/pdr/dashboard");
     }
     else {
       let splitArray=_.split(path, '.');
@@ -353,15 +353,15 @@ class CustomMenu extends Component {
                     )
               } else {
                 let base="";
-                if (item.path.search("EIS")>-1) {
+                if (item.path.search("EIS.")>-1 || item.path.search("ess.")>-1) {
                   base=window.location.origin+"/hr-web";
                   // console.log(base);
                 }
-                else if (item.path.search("Leases And Agreements")>-1) {
+                else if (item.path.search("Leases And Agreements.")>-1) {
                   base=window.location.origin+"/lams-web";
 
                 }
-                else if (item.path.search("Asset Management")>-1) {
+                else if (item.path.search("Asset Management.")>-1) {
                     base=window.location.origin+"/asset-web";
                 }
                 return (
@@ -398,15 +398,15 @@ class CustomMenu extends Component {
                   )
             } else {
               let base="";
-              if (item.path.search("EIS")>-1) {
+              if (item.path.search("EIS.")>-1 || item.path.search("ess.")>-1) {
                 base=window.location.origin+"/hr-web";
                 // console.log(base);
               }
-              else if (item.path.search("Leases And Agreements")>-1) {
+              else if (item.path.search("Leases And Agreements.")>-1) {
                 base=window.location.origin+"/lams-web";
 
               }
-              else if (item.path.search("Asset Management")>-1) {
+              else if (item.path.search("Asset Management.")>-1) {
                   base=window.location.origin+"/asset-web";
               }
               return (

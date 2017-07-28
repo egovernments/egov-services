@@ -1105,6 +1105,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Attribute'
+      groups:
+        type: array
+        items:
+          $ref: '#/definitions/Group'    
     required:
       - tenantId
       - serviceCode
@@ -1154,6 +1158,11 @@ definitions:
         items:
          type: string
         description: roles associated to this attribute.
+      constraints:
+        type: array
+        items:
+            $ref: '#/definitions/Constraint'
+        description: roles associated to this attribute.        
       actions:
         type: array
         items:
@@ -1166,6 +1175,46 @@ definitions:
     required:
       - code
 ###########################################################################          
+  Group:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Represents localization message code to show group name
+      code:
+        type: string
+        description: A unique identifier for the group
+      constraints:
+        type: array
+        items:
+            $ref: '#/definitions/GroupConstraint'
+
+###########################################################################          
+  Constraint:
+    type: object
+    properties:
+      rule:
+        type: string
+        description: Valid JS code
+      value:
+        type: string
+        description: Value to be set if the rule evaluates to truthy
+      
+###########################################################################       
+  GroupConstraint:
+    type: object
+    properties:
+      constraint:
+        type: string
+        description: AT_LEAST_ONE_REQUIRED or ALL_REQUIRED
+      action:
+        type: string
+        description: Service status name for which this constraint applies
+      role:
+        type: string
+        description: Role name for which this constraint applies
+      
+###########################################################################       
   Seva:
     type: object
     description: Service request raised by the citizen also called Seva in eGov platform

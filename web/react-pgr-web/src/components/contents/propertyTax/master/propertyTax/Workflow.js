@@ -25,10 +25,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
+  
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
+   
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -111,6 +111,7 @@ class Workflow extends Component {
 
     Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
       console.log(res);
+	  res.Department.unshift({id:-1, name:'None'});
       currentThis.setState({workflowDepartment: res.Department})
     }).catch((err)=> {
       currentThis.setState({
@@ -120,13 +121,24 @@ class Workflow extends Component {
     })
 
      Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus=&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
-      console.log(res);
-			    Api.commonApiPost('hr-masters/designations/_search', {name:res.name}).then((response)=>{
-					currentThis.setState({designation: response.Designation})
-				}).catch((err)=> {
-					currentThis.setState({designation: []})
-					console.log(err)
-				})
+			    
+				for(var i=0; i<res.length;i++){
+					Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
+						console.log(response)
+						response.Designation.unshift({id:-1, name:'None'});
+						currentThis.setState({
+								...currentThis.state,
+								designation: [
+									...currentThis.state.designation,
+									...response.Designation
+								]
+						})
+					}).catch((err)=> {
+						currentThis.setState({designation: []})
+						console.log(err)
+					})
+				}
+				
     }).catch((err)=> {
       currentThis.setState({
         designation:[]
@@ -166,6 +178,7 @@ class Workflow extends Component {
 
     if(hasData){
         Api.commonApiPost( '/hr-employee/employees/_search', query).then((res)=>{
+		  res.Employee.unshift({id:-1, name:'None'});
           currentThis.setState({approver: res.Employee})
       }).catch((err)=> {
         currentThis.setState({
@@ -198,7 +211,6 @@ class Workflow extends Component {
     }
 
     let {
-      owners,
       workflow,
       fieldErrors,
       isFormValid,
@@ -218,26 +230,25 @@ class Workflow extends Component {
     let cThis = this;
 
     return ( 
-                  <Card>
+                  <Card className="uiCard">
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
-                        <Card className="darkShadow">
-                            <CardText style={styles.reducePadding}>
                                 <Grid fluid>
                                     <Row>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Department Name"
+                                                  floatingLabelText="Department Name *"
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
+													(value == -1) ? value = '' : '';  
                                                     var e = {
                                                       target: {
                                                         value: value
                                                       }
                                                     };
                                                     handleWorkFlowChange(e, 'department');
-                                                    handleChange(e, "workflowDepartment", false, "")}}
+                                                    handleChange(e, "workflowDepartment", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
@@ -248,17 +259,18 @@ class Workflow extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Designation Name"
+                                                  floatingLabelText="Designation Name *"
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
                                                       }
                                                     };
                                                     handleWorkFlowChange(e, 'designation');
-                                                    handleChange(e, "workflowDesignation", false, "")}}
+                                                    handleChange(e, "workflowDesignation", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
@@ -273,6 +285,7 @@ class Workflow extends Component {
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -287,13 +300,25 @@ class Workflow extends Component {
                                                     {renderOption(this.state.approver)}
                                               </SelectField>
                                         </Col>
+										<Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText="Comments"
+                                                  errorText={fieldErrors.comments ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.comments}</span>: ""}
+                                                  value={workflow.comments ? workflow.comments : ""}
+                                                  onChange={(e) => {
+                                                    handleChange(e, "comments", false, "")}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  />
+                                                   
+                                        </Col>
                                     </Row>
                                 </Grid>
-                            </CardText>
-                        </Card>
                     </CardText>
                   </Card>
-)
+				)
   }
 
 }

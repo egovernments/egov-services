@@ -63,10 +63,10 @@ import lombok.ToString;
 @ToString
 public class MeterCostResponse {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("meterCost")
+    @JsonProperty("MeterCost")
     private List<MeterCost> meterCost = new ArrayList<>();
 
 }

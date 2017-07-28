@@ -47,7 +47,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
@@ -192,7 +192,7 @@ public class BudgetDetailContract extends AuditableContract {
 	/**
 	 * status gives the current status of the budget line item. (detailed level)
 	 */
-	private EgfStatusContract status;
+	private FinancialStatusContract status;
 
 	/**
 	 * documentNumber is the reference number to identify the attachments made

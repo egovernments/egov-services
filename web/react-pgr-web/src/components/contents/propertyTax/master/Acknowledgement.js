@@ -95,7 +95,7 @@ class Acknowledgement extends Component {
   constructor(props) {
     super(props);
     this.state= {
-          ack:[],
+          ack:'',
     }
   } 
 
@@ -103,7 +103,9 @@ class Acknowledgement extends Component {
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
-
+	this.setState({
+		ack : localStorage['ack']
+	});
   }  
 
 
@@ -123,11 +125,12 @@ class Acknowledgement extends Component {
 					<Card className="darkShadow" >
 						<CardText style={styles.reducePadding} >
 							<Grid fluid >
-								<Row style={{paddingTop:8, paddingBottom:4}}>
+								<Row style={{paddingTop:8, paddingBottom:15}}>
 									<Col xs={12} md={12}>
 									  <Row>
-										<Col xs={12} md={12} >
-											Your application is submitted with application no : 
+										<Col xs={12} md={12} style={{textAlign:'center'}}>
+											<h3>Application Submited</h3>
+											Your new property application has been submited : <span style={{fontWeight:500}}>{this.state.ack}</span>
 										</Col>
 									  </Row>
 									</Col>

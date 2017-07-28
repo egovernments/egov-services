@@ -143,7 +143,7 @@ class DefineEscalationTime extends Component {
           })
       });
     }
-	
+
 	componentWillUpdate() {
 	  $('#searchTable').dataTable().fnDestroy();
 	}
@@ -169,15 +169,15 @@ class DefineEscalationTime extends Component {
     }
 
   submitForm = (e) => {
-	  
+
        let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
-	   
+
       setLoadingStatus('loading');
 
       e.preventDefault();
       let current = this;
 
-  
+
        let query = {
         id:this.props.defineEscalationTime.grievanceType.id
         }
@@ -185,7 +185,7 @@ class DefineEscalationTime extends Component {
       Api.commonApiPost("workflow/escalation-hours/v1/_search",query,{}).then(function(response){
              setLoadingStatus('hide');
           if (response.EscalationTimeType[0] != null && response.EscalationTimeType[0].id !=null ) {
-			  
+
               flag = 1;
               current.setState({
                 resultList: response.EscalationTimeType,
@@ -229,17 +229,17 @@ class DefineEscalationTime extends Component {
     }
 
     Api.commonApiPost("workflow/escalation-hours/v1/_create",{},body).then(function(response){
-      
+
 	  toggleDailogAndSetText(true,"Escalation Time Created Successfully");
 	  emptyProperty('noOfHours');
 	emptyProperty('designation');
 	  let searchquery = {
         id:current.props.defineEscalationTime.grievanceType.id
       }
-	  	  
+
       Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
          setLoadingStatus('hide');
-      
+
           if (response.EscalationTimeType[0] != null) {
               flag = 1;
               current.setState({
@@ -272,6 +272,7 @@ class DefineEscalationTime extends Component {
     var current = this
     var body = {
       EscalationTimeType:{
+        id : this.props.defineEscalationTime.id,
         grievancetype:{
           id: this.props.defineEscalationTime.grievanceType.id
         },
@@ -281,21 +282,19 @@ class DefineEscalationTime extends Component {
       }
     }
 
-    var idd = this.props.defineEscalationTime.id
+    Api.commonApiPost("workflow/escalation-hours/v1/_update",{},body).then(function(response){
 
-    Api.commonApiPost("workflow/escalation-hours/v1/_update/"+idd,{},body).then(function(response){
-      
       let searchquery = {
         id:current.props.defineEscalationTime.grievanceType.id
       }
-	  
+
 	  toggleDailogAndSetText(true,"Escalation Time Updated Successfully");
 	  emptyProperty('noOfHours');
 	emptyProperty('designation');
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
          setLoadingStatus('hide');
-         
+
           if (response.EscalationTimeType[0] != null) {
               flag = 1;
               current.setState({
@@ -304,7 +303,7 @@ class DefineEscalationTime extends Component {
 				 noData: false,
               })
           } else {
-			  
+
             current.setState({
               noData: true,
             })
@@ -559,7 +558,7 @@ const mapDispatchToProps = dispatch => ({
       pattern
     });
   },
-  
+
   emptyProperty: (property) => {
 	  dispatch({
 		  type: "EMPTY_PROPERTY",

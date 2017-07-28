@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.instrument.web.contract;
+
 import org.egov.common.web.contract.AuditableContract;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -47,13 +48,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "instrument","voucherHeaderId"})
+@JsonPropertyOrder({ "instrument", "voucherHeaderId" })
 public class InstrumentVoucherContract extends AuditableContract {
 
 	/*

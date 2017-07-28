@@ -3,6 +3,7 @@ html, body{
 	font-size: 14px;
 	line-height: 18px;
 	top: 0px !important;
+	background-color: #f2f2f2 !important;
 }
 
 /* fallback */
@@ -118,6 +119,10 @@ a:hover, a:focus{
     outline: none;
 }
 button:focus{outline: none;}
+button span {
+	font-weight: normal !important;
+}
+
 ul{list-style-type: none; padding: 0; margin: 0;}
 
 /*.left-side-menu{
@@ -661,7 +666,7 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 
 
 table th {
-	background-color: #3f474d !important;
+	background-color: #51bad9 !important;
 	color: #ffffff !important;
 	font-weight: bolder;
 }
@@ -676,4 +681,8 @@ table td {
     cursor: default;
     background-color: #51bad9 !important;
     border-color: #51bad9 !important;
+}
+
+.uiCard {
+	margin:15px;
 }

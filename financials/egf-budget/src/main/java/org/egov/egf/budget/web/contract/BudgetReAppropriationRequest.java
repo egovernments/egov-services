@@ -41,7 +41,7 @@ package org.egov.egf.budget.web.contract;
 
 import java.util.List;
 
-import org.egov.common.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 
 import lombok.Getter;
 import lombok.Setter;

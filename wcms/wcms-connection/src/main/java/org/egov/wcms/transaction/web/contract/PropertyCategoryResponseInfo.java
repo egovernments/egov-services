@@ -55,9 +55,9 @@ import lombok.ToString;
 @ToString
 public class PropertyCategoryResponseInfo {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("propertyTypeCategoryTypes")
+    @JsonProperty("PropertyTypeCategoryTypes")
     private List<PropertyTypeResponseInfo> propCategory;
     
     

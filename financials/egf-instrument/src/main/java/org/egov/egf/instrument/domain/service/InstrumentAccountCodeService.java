@@ -1,20 +1,18 @@
 package org.egov.egf.instrument.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.repository.InstrumentAccountCodeRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
-import org.egov.egf.instrument.web.contract.InstrumentAccountCodeContract;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.repository.ChartOfAccountContractRepository;
-import org.egov.egf.master.web.repository.FundContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,17 +31,71 @@ public class InstrumentAccountCodeService {
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
 
-	@Autowired
 	private InstrumentAccountCodeRepository instrumentAccountCodeRepository;
 
-	@Autowired
 	private SmartValidator validator;
 
-	@Autowired
 	private ChartOfAccountContractRepository chartOfAccountContractRepository;
-	
-	@Autowired
+
 	private InstrumentTypeRepository instrumentTypeRepository;
+
+	@Autowired
+	public InstrumentAccountCodeService(SmartValidator validator,
+			InstrumentAccountCodeRepository instrumentAccountCodeRepository,
+			ChartOfAccountContractRepository chartOfAccountContractRepository,
+			InstrumentTypeRepository instrumentTypeRepository) {
+		this.validator = validator;
+		this.instrumentAccountCodeRepository = instrumentAccountCodeRepository;
+		this.chartOfAccountContractRepository = chartOfAccountContractRepository;
+		this.instrumentTypeRepository = instrumentTypeRepository;
+	}
+
+	@Transactional
+	public List<InstrumentAccountCode> save(List<InstrumentAccountCode> instrumentAccountCodes, BindingResult errors) {
+
+		List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
+
+		try {
+
+			instrumentAccountCodes = fetchAndValidate(instrumentAccountCodes, errors, ACTION_CREATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (InstrumentAccountCode iac : instrumentAccountCodes) {
+
+			resultList.add(save(iac));
+
+		}
+
+		return resultList;
+	}
+
+	@Transactional
+	public List<InstrumentAccountCode> update(List<InstrumentAccountCode> instrumentAccountCodes,
+			BindingResult errors) {
+
+		List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
+
+		try {
+
+			instrumentAccountCodes = fetchAndValidate(instrumentAccountCodes, errors, ACTION_UPDATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (InstrumentAccountCode iac : instrumentAccountCodes) {
+
+			resultList.add(update(iac));
+
+		}
+
+		return resultList;
+	}
 
 	private BindingResult validate(List<InstrumentAccountCode> instrumentaccountcodes, String method,
 			BindingResult errors) {
@@ -103,30 +155,15 @@ public class InstrumentAccountCodeService {
 	}
 
 	@Transactional
-	public List<InstrumentAccountCode> add(List<InstrumentAccountCode> instrumentaccountcodes, BindingResult errors) {
+	public List<InstrumentAccountCode> fetchAndValidate(List<InstrumentAccountCode> instrumentaccountcodes,
+			BindingResult errors, String action) {
 		instrumentaccountcodes = fetchRelated(instrumentaccountcodes);
-		validate(instrumentaccountcodes, ACTION_CREATE, errors);
+		validate(instrumentaccountcodes, action, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return instrumentaccountcodes;
 
-	}
-
-	@Transactional
-	public List<InstrumentAccountCode> update(List<InstrumentAccountCode> instrumentaccountcodes,
-			BindingResult errors) {
-		instrumentaccountcodes = fetchRelated(instrumentaccountcodes);
-		validate(instrumentaccountcodes, ACTION_UPDATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		return instrumentaccountcodes;
-
-	}
-
-	public void addToQue(CommonRequest<InstrumentAccountCodeContract> request) {
-		instrumentAccountCodeRepository.add(request);
 	}
 
 	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch instrumentAccountCodeSearch) {

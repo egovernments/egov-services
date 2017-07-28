@@ -41,6 +41,8 @@ package org.egov.wcms.transaction.web.contract;
 
 import org.egov.common.contract.request.RequestInfo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,7 +55,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FinYearReq {
-	
+    @JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
 }

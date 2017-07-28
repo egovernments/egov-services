@@ -31,7 +31,6 @@ import org.egov.models.WorkFlowDetails;
 import org.egov.property.consumer.Producer;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
-import org.egov.property.exception.PropertySearchException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.PropertyUser;
@@ -181,30 +180,29 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @param ownerName
 	 * @param demandFrom
 	 * @param demandTo
+	 * @param propertyId
 	 * @return Property Object if search is successful or Error Object if search
 	 *         will fail
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
 	 */
 
 	@SuppressWarnings("unchecked")
 	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
-			String ownerName, Integer demandFrom, Integer demandTo) {
+			String ownerName, Integer demandFrom, Integer demandTo, String propertyId) throws Exception {
 
 		List<Property> updatedPropety = null;
 
-		try {
-
 			Map<String, Object> map = propertyRepository.searchProperty(requestInfo, tenantId, active, upicNo, pageSize,
 					pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-					locality, ownerName, demandFrom, demandTo);
+					locality, ownerName, demandFrom, demandTo, propertyId);
 
 			List<Property> property = (List<Property>) map.get("properties");
 			List<User> users = (List<User>) map.get("users");
 			updatedPropety = addAllPropertyDetails(property, requestInfo, users);
-		} catch (Exception e) {
-			throw new PropertySearchException(environment.getProperty("invalid.input"), requestInfo);
-		}
 
 		PropertyResponse propertyResponse = new PropertyResponse();
 		propertyResponse.setProperties(updatedPropety);

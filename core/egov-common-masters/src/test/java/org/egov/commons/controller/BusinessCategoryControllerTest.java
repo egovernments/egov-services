@@ -80,7 +80,7 @@ public class BusinessCategoryControllerTest {
 		when(serviceCategoryService.getBusinessCategoryByCodeAndTenantId("TLM", "default", 1L, true)).thenReturn(true);
 		when(serviceCategoryService.updateAsync(getBusinessCategoryRequestForUpdate()))
 				.thenReturn(getBusinessCategoryRequestForUpdate());
-		mockMvc.perform(post("/businessCategory/{businessCategoryCode}/_update", "TLM")
+		mockMvc.perform(post("/businessCategory/_update")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("businessCategoryRequestUpdate.json"))).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

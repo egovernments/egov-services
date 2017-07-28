@@ -43,8 +43,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.budget.domain.model.EstimationType;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -98,7 +97,7 @@ public class BudgetContract extends AuditableContract {
 	 * type i.e New budget (BE) or the Revised budget (RE)
 	 */
 	@NotNull
-	private EstimationType estimationType;
+	private EstimationTypeContract estimationType;
 
 	/**
 	 * parent is the node used to define in the budget hierarchy tree structure
@@ -133,7 +132,7 @@ public class BudgetContract extends AuditableContract {
 	 * status gives the current status of the budget Node. i.e collective status
 	 * of the details. However the status at budget detail also exist.
 	 */
-	private EgfStatusContract status;
+	private FinancialStatusContract status;
 
 	/**
 	 * documentNumber is the reference number to identify the attachments made

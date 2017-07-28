@@ -1,6 +1,5 @@
 package org.egov.egf.instrument.persistence.entity;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 
@@ -32,7 +31,7 @@ public class SurrenderReasonEntity extends AuditableEntity {
 	}
 
 	public SurrenderReasonEntity toEntity(SurrenderReason surrenderReason) {
-		super.toEntity((Auditable) surrenderReason);
+		super.toEntity(surrenderReason);
 		this.id = surrenderReason.getId();
 		this.name = surrenderReason.getName();
 		this.description = surrenderReason.getDescription();

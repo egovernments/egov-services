@@ -14,10 +14,10 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class InstrumentTypeSearchEntity extends InstrumentTypeEntity {
+	private String ids;
+	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
-	private String sortBy;
-	private String ids;
 
 	@Override
 	public InstrumentType toDomain() {
@@ -27,9 +27,11 @@ public class InstrumentTypeSearchEntity extends InstrumentTypeEntity {
 	}
 
 	public InstrumentTypeSearchEntity toEntity(InstrumentTypeSearch instrumentTypeSearch) {
-		super.toEntity((InstrumentType) instrumentTypeSearch);
+		super.toEntity(instrumentTypeSearch);
 		this.pageSize = instrumentTypeSearch.getPageSize();
 		this.offset = instrumentTypeSearch.getOffset();
+		this.sortBy = instrumentTypeSearch.getSortBy();
+		this.ids = instrumentTypeSearch.getIds();
 		return this;
 	}
 

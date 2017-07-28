@@ -17,8 +17,8 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
 import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.persistence.entity.BudgetReAppropriationEntity;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,7 +80,7 @@ public class BudgetReAppropriationJdbcRepositoryTest {
 		BudgetReAppropriationEntity budgetReAppropriation = BudgetReAppropriationEntity.builder().budgetDetailId("1")
 				.id("1").build();
 		budgetReAppropriation.setTenantId("default");
-		BudgetReAppropriationEntity actualResult = budgetReAppropriationJdbcRepository.update(budgetReAppropriation); 
+		BudgetReAppropriationEntity actualResult = budgetReAppropriationJdbcRepository.update(budgetReAppropriation);
 
 		List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_budgetReAppropriation",
 				new BudgetReAppropriationResultExtractor());
@@ -193,7 +193,7 @@ public class BudgetReAppropriationJdbcRepositoryTest {
 		budgetReAppropriationSearch.setOriginalDeductionAmount(BigDecimal.ONE);
 		budgetReAppropriationSearch.setAnticipatoryAmount(BigDecimal.ONE);
 		budgetReAppropriationSearch.setBudgetDetail(BudgetDetail.builder().id("1").build());
-		budgetReAppropriationSearch.setStatus(EgfStatus.builder().id("1").build());
+		budgetReAppropriationSearch.setStatus(FinancialStatusContract.builder().id("1").build());
 		budgetReAppropriationSearch.setAsOnDate(new Date());
 		budgetReAppropriationSearch.setTenantId("tenantId");
 		budgetReAppropriationSearch.setPageSize(500);

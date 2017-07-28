@@ -12,10 +12,10 @@
     },
     "usageMasters": [{
     	"tenantId":"default",
-    	"name":"Butterfly",
+    	"name":"Yoyo",
     	"code":"1234",
-    	"nameLocal":"12212",
-    	"description":"test test",
+    	"nameLocal":"test_namelocal",
+    	"description":"test_description",
     	"active":true,
     	"isResidential":true,
     	"orderNumber":12345,

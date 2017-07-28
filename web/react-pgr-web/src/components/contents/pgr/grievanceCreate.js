@@ -267,11 +267,11 @@ class grievanceCreate extends Component {
   loadSD = () => {
     if(this.state.attributes.length > 0){
       return this.state.attributes.map((item, index) => {
-        if(item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf('CREATE') > -1){
+        if(item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf('REGISTERED') > -1){
           if(item.required)
             this.props.ADD_MANDATORY(item.code)
           return (
-            <Fields key={index} obj={item} value={this.props.grievanceCreate[item.code] ? this.props.grievanceCreate[item.code] : ''} handler={_this.props.handleChange}/>
+            <Fields key={index} error={this.props.fieldErrors[item.code]} obj={item} value={this.props.grievanceCreate[item.code] ? this.props.grievanceCreate[item.code] : ''} handler={_this.props.handleChange}/>
           )
         }
       });
@@ -358,14 +358,14 @@ class grievanceCreate extends Component {
     data['attribValues'] = [];
 
     finobj = {
-        key: 'receivingMode',
+        key: 'systemReceivingMode',
         name: this.props.grievanceCreate.receivingMode ? this.props.grievanceCreate.receivingMode : 'Website'
     };
     data['attribValues'].push(finobj);
 
     if(this.props.grievanceCreate.receivingCenter) {
       finobj = {
-        key: 'receivingCenter',
+        key: 'systemReceivingCenter',
         name: this.props.grievanceCreate.receivingCenter
       };
       data['attribValues'].push(finobj);
@@ -373,21 +373,21 @@ class grievanceCreate extends Component {
 
     if(this.props.grievanceCreate.externalCRN){
       finobj = {
-        key: 'externalCRN',
+        key: 'systemExternalCRN',
         name: this.props.grievanceCreate.externalCRN
       };
       data['attribValues'].push(finobj);
     }
 
     finobj = {
-        key: 'status',
+        key: 'systemStatus',
         name: 'REGISTERED'
     };
     data['attribValues'].push(finobj);
 
     if(this.props.grievanceCreate.requesterAddress) {
       finobj = {
-        key: 'requesterAddress',
+        key: 'systemRequesterAddress',
         name: this.props.grievanceCreate.requesterAddress ? this.props.grievanceCreate.requesterAddress : ''
       };
       data['attribValues'].push(finobj);
@@ -401,7 +401,7 @@ class grievanceCreate extends Component {
 
     if(localStorage.getItem('type') === 'CITIZEN'){
       finobj = {
-          key: 'citizenUserId',
+          key: 'systemCitizenUserId',
           name: localStorage.getItem('id')
       };
       data['attribValues'].push(finobj);
@@ -412,7 +412,7 @@ class grievanceCreate extends Component {
     //console.log(JSON.stringify(request));
     var currentThis = this;
 
-    if(localStorage.getItem('type') === null){
+    if(localStorage.getItem('type') === null && this.state.otpEnabled){
 
       let mob = this.props.grievanceCreate.phone;
       let tenant =  localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
@@ -754,7 +754,7 @@ class grievanceCreate extends Component {
               </CardText>
           </Card>
           <div style={{textAlign: 'center'}}>
-            <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Create" backgroundColor={"#5a3e1b"} labelColor={white}/>
+            <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Create" primary={true}/>
           </div>
         </form>
         <div>

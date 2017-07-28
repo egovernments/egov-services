@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class BusinessAccountDetails {
 	private Long id;
 
-	private BusinessDetails businessDetails;
+	private Long businessDetails;
 
 	private Long chartOfAccounts;
 

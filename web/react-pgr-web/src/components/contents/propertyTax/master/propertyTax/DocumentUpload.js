@@ -26,10 +26,8 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -99,23 +97,41 @@ class ConstructionTypes extends Component {
     super(props);
     this.state= {
           files:[],
+		  documentType: []
     }
   } 
 
 
   componentDidMount() {
-    //call boundary service fetch wards,location,zone data
+
     var currentThis = this;
+	
+    Api.commonApiPost( 'pt-property/property/documenttypes/_search').then((res)=>{
+      console.log(res);
+      currentThis.setState({documentType: res.documentType})
+    }).catch((err)=> {
+      currentThis.setState({
+        documentType:[]
+      }) 
+      console.log(err)
+    })
 
   }  
 
-  handleUploadValidation = (e, formats, limit) => {
-	     
+  handleUploadValidation = (e, code , formats, limit) => {
+	  
+	  console.log(this.props.files);
+	  
     if(this.props.files.length >= limit){
-      console.log('Maximum files allowed : '+limit);
-      return;
+		console.log(this.props.files);
+        console.log('Maximum files allowed : '+limit);
+        return;
     }
+	
     let validFile = validate_fileupload(e.target.files, formats);
+	
+	e.target.files.createCode = code;
+	
     if(validFile){
       this.props.handleUpload(e);
 	  console.log(e.target.files.length);
@@ -127,16 +143,6 @@ class ConstructionTypes extends Component {
 
 
   render() {
-
-    const renderOption = function(list,listName="") {
-        if(list)
-        {
-            return list.map((item)=>
-            {
-                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
-            })
-        }
-    }
 
     let {
       owners,
@@ -159,22 +165,24 @@ class ConstructionTypes extends Component {
 
     let cThis = this;
 
-    return ( <Card>
-				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Document Upload</div>} />
+    return (
+			<Card className="uiCard">
+				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Documents</div>} />
 				<CardText style={styles.reducePadding}>
-					<Card className="darkShadow">
-						<CardText style={styles.reducePadding}>
 							<Grid fluid>
 								<Row style={{paddingTop:8, paddingBottom:4}}>
 									<Col xs={12} md={6}>
-									  <Row>
-										<Col xs={12} md={6}>
-											Photo of Assessment
-										</Col>
-										<Col xs={12} md={6}>
-										  <input type="file" accept="image/*"  onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)} />
-										</Col>
-									  </Row>
+									  
+									  {this.state.documentType.length !=0 && this.state.documentType.map((item, index)=>(
+										  <Row style={{margin:'10px 0'}}>
+											<Col xs={12} md={6}>
+												{item.code}
+											</Col>
+											<Col xs={12} md={6}>
+											  <input type="file" accept="image/*" name={item.name}  onChange={(e)=>handleUploadValidation(e, item.name ,['jpg', 'jpeg', 'png'], 3)} />
+											</Col>
+										  </Row>
+									  ))}
 									</Col>
 									<Col xs={12} md={9} style={{display: 'flex',flexWrap: 'wrap'}}>
 									{this.state.files.map((e,i)=> (<Chip key={i} style={styles.chip}>
@@ -183,8 +191,6 @@ class ConstructionTypes extends Component {
 									</Col>
 								</Row>
 							</Grid>
-						</CardText>
-					</Card>
 				</CardText>
 			 </Card>)
   }

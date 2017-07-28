@@ -111,13 +111,6 @@ public class BankJdbcRepository extends JdbcRepository {
 			params.append("type =:type");
 			paramValues.put("type", bankSearchEntity.getType());
 		}
-		if (bankSearchEntity.getFundId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("fund =:fund");
-			paramValues.put("fund", bankSearchEntity.getFundId());
-		}
 
 		Pagination<Bank> page = new Pagination<>();
 		if (bankSearchEntity.getOffset() != null) {

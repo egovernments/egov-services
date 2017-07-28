@@ -3,14 +3,14 @@
         summary: Get the list of instrumenttypes
         description: instrumenttypes
         tags: 
-          - voucher
+          - instrument
           - InstrumentType
         parameters:
           - name: requestInfo
             in: body
             description: Common Request info for the Services
             schema:
-              $ref: '#/definitions/RequestInfo'
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
           - name: tenantId
             in: query
             description: Unique id for  a tenant.
@@ -25,12 +25,18 @@
             in: query
             maxItems: 50
             description: comma seperated list of Ids 
-          - name: type
+          - name: name
             type: string
             in: query
             description: |
-              type specifies the modetype of transaction that can be made - i.e
-              ChequeDDRTGS. For receipt - ChequeDDRTGS
+              
+              
+          - name: description
+            type: string
+            in: query
+            description: |
+              description specifies details of the instrument type . For example
+              type DD description may be Demand Draft
               
           - name: active
             type: boolean
@@ -60,13 +66,13 @@
           400:
             description: Invalid Input
             schema:
-              $ref: '#/definitions/ErrorResponse'
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     /instrumenttypes/_create:
       post:
         summary: Create  new  instrumenttypes
         description: Create  new instrumenttypes
         tags: 
-          - voucher
+          - instrument
           - InstrumentType
         parameters:
           - name: tenantId
@@ -88,13 +94,13 @@
           400:
             description: Invalid Input
             schema:
-              $ref: '#/definitions/ErrorResponse'
-    /instrumenttypes/{id}/_update:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /instrumenttypes/_update:
       post:
         summary: Update any of the instrumenttypes
         description: Update any of the instrumenttypes
         tags: 
-          - voucher
+          - instrument
           - InstrumentType
         parameters:
           - name: tenantId
@@ -103,12 +109,6 @@
             required: true
             type: string
             format: varchar
-          - name: id
-            in: path
-            description: Unique id of the InstrumentType
-            required: true
-            type: integer
-            format: int64
           - name: instrumentTypeRequest
             in: body
             description: common Request info
@@ -122,7 +122,7 @@
           400:
             description: Invalid Input
             schema:
-              $ref: '#/definitions/ErrorResponse'
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 definitions:
     InstrumentType:
       type: object
@@ -132,40 +132,72 @@ definitions:
           description: |
             id is the unique reference to instrument type entered in the system.
             
-        type:
+        name:
           type: string
           description: |
-            type specifies the modetype of transaction that can be made - i.e
-            ChequeDDRTGS. For receipt - ChequeDDRTGS
             
+            
+          maxLength: 50
+          minLength: 2
+        description:
+          type: string
+          description: |
+            description specifies details of the instrument type . For example
+            type DD description may be Demand Draft
+            
+          maxLength: 100
         active:
           type: boolean
           description: |
             active specifies whether the type is active for transacting.
             
+        tenantId:
+          type: string
+          description: |
+            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+            represents the client for which the transaction is created.
+            
+          maxLength: 50
+          minLength: 5
+        createdBy:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+        lastModifiedBy:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+        createdDate:
+          type: string
+          format: date
+          description: |
+            
+            
+        lastModifiedDate:
+          type: string
+          format: date
+          description: |
+            lastModifiedDate date is on which trnasaction is updated lastly
+            
+      required:
+      - name
+      - active
+      - tenantId
     InstrumentTypeRequest:
-      description: Contract class to receive request. Array of InstrumentType items  are used in case of create . Where as single InstrumentType item is used for update
+      description: Contract class for web request. Array of InstrumentType items  are used in case of create or update
       properties:
         requestInfo:
-          $ref: '#/definitions/RequestInfo'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         instrumentTypes:
           description: Used for search result and create only
           type:  array
           items:
             $ref: '#/definitions/InstrumentType'
-        instrumentType:
-          $ref: '#/definitions/InstrumentType'
     InstrumentTypeResponse:
-      description: Contract class to send response. Array of InstrumentType items  are used in case of search results or response for create. Where as single InstrumentType item is used for update
+      description: Contract class for web response. Array of InstrumentType items  are used in case of search ,create or update request. 
       properties:
         responseInfo:
-          $ref: '#/definitions/ResponseInfo'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         instrumentTypes:
           description: Used for search result and create only
           type:  array
           items:
             $ref: '#/definitions/InstrumentType'
-        instrumentType:
-          $ref: '#/definitions/InstrumentType'
         page:
-          $ref: '#/definitions/Page'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Page'

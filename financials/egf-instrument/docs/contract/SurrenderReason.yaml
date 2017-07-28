@@ -160,7 +160,7 @@ definitions:
           type: string
           format: date
           description: |
-            lastModifiedDate date is  on which trnasaction is updated lastly
+            lastModifiedDate date is on which trnasaction is updated lastly
             
       required:
       - name

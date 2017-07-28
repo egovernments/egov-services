@@ -1,6 +1,5 @@
 package org.egov.egf.instrument.persistence.entity;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentType;
@@ -24,7 +23,7 @@ public class InstrumentAccountCodeEntity extends AuditableEntity {
 	private String instrumentTypeId;
 	private String accountCodeId;
 
-	public InstrumentAccountCode toDomain() { 
+	public InstrumentAccountCode toDomain() {
 		InstrumentAccountCode instrumentAccountCode = new InstrumentAccountCode();
 		super.toDomain(instrumentAccountCode);
 		instrumentAccountCode.setId(this.id);
@@ -34,7 +33,7 @@ public class InstrumentAccountCodeEntity extends AuditableEntity {
 	}
 
 	public InstrumentAccountCodeEntity toEntity(InstrumentAccountCode instrumentAccountCode) {
-		super.toEntity((Auditable) instrumentAccountCode);
+		super.toEntity(instrumentAccountCode);
 		this.id = instrumentAccountCode.getId();
 		this.instrumentTypeId = instrumentAccountCode.getInstrumentType() != null
 				? instrumentAccountCode.getInstrumentType().getId() : null;

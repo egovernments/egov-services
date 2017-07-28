@@ -1,3 +1,4 @@
+
 package org.egov.property.repository.builder;
 
 import java.util.HashMap;
@@ -30,13 +31,13 @@ public class SearchPropertyBuilder {
 	@Autowired
 	RestTemplate restTemplate;
 
-	String BASE_SEARCH_QUERY = "select * from egpt_property prop  JOIN egpt_address Addr"
-			+ " on Addr.property =  prop.id JOIN egpt_property_owner puser on puser.property = prop.id where";
+	String BASE_SEARCH_QUERY = "select * from egpt_property prop "
+			+ "JOIN egpt_property_owner puser on puser.property = prop.id where";
 
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
-			String ownerName, int demandFrom, int demandTo, List<Object> preparedStatementValues) {
+			String ownerName, int demandFrom, int demandTo, String propertyId, List<Object> preparedStatementValues) {
 
 		StringBuffer searchPropertySql = new StringBuffer();
 
@@ -88,6 +89,12 @@ public class SearchPropertyBuilder {
 		}
 		searchPropertySql.append(BASE_SEARCH_QUERY);
 
+		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
+
+			searchPropertySql.append("JOIN egpt_address Addr on Addr.property =  prop.id");
+
+		}
+
 		if (tenantId != null && !tenantId.isEmpty()) {
 			searchPropertySql.append(" prop.tenantid=?");
 			preparedStatementValues.add(tenantId.trim());
@@ -120,7 +127,11 @@ public class SearchPropertyBuilder {
 		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
 			searchPropertySql.append(" AND Addr.addressnumber=?");
 			preparedStatementValues.add(houseNoBldgApt.trim());
+		}
 
+		if (propertyId != null && !propertyId.isEmpty()) {
+			searchPropertySql.append(" AND prop.id =?");
+			preparedStatementValues.add(propertyId);
 		}
 
 		if (sort != null && sort.length > 0) {

@@ -41,6 +41,7 @@ package org.egov.collection.persistence.repository.builder;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -50,7 +51,7 @@ import org.junit.Test;
 
 public class ReceiptQueryBuilderTest {
 	@Test
-	public void no_input_test_for_select() {
+	public void no_input_test_for_select() throws ParseException {
 		ReceiptSearchCriteria receiptCriteria = new ReceiptSearchCriteria();
 		ReceiptDetailQueryBuilder receiptQueryBuilder = new ReceiptDetailQueryBuilder();
 
@@ -84,7 +85,7 @@ public class ReceiptQueryBuilderTest {
 	}
 
 	@Test
-	public void all_input_test_for_selelct() {
+	public void all_input_test_for_selelct() throws ParseException {
 		ReceiptSearchCriteria receiptCriteria = new ReceiptSearchCriteria();
 		ReceiptDetailQueryBuilder receiptQueryBuilder = new ReceiptDetailQueryBuilder();
 		receiptCriteria.setBusinessCode("TL");

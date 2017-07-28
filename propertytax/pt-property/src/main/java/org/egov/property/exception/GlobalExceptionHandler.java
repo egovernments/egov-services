@@ -32,6 +32,27 @@ public class GlobalExceptionHandler {
     private Environment environment;
 
     /**
+     * Description : Null pointer exception handler
+     * 
+     * @param ex
+     * @return
+     */
+
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorRes nullPointerException(NullPointerException ex) {
+        ex.printStackTrace();
+        Map<String, String> errors = new HashMap<String, String>();
+        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
+                errors);
+        List<Error> errorList = new ArrayList<Error>();
+        errorList.add(error);
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(environment.getProperty("failed"));
+        return new ErrorRes(responseInfo, errorList);
+    }
+
+    /**
      * Description : MethodArgumentNotValidException type exception handler
      * 
      * @param ex
@@ -93,7 +114,7 @@ public class GlobalExceptionHandler {
             responseInfo.setStatus(environment.getProperty("failed"));
             return new ErrorRes(responseInfo, errorList);
         } else if (ex instanceof ValidationUrlNotFoundException) {
-            Error error = new Error(HttpStatus.NOT_FOUND.toString(),
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
                     ((ValidationUrlNotFoundException) ex).getCustomMsg(),
                     ((ValidationUrlNotFoundException) ex).getMsgDetails(), new HashMap<String, String>());
             ResponseInfo responseInfo = new ResponseInfo();
@@ -160,7 +181,7 @@ public class GlobalExceptionHandler {
             return new ErrorRes(responseInfo, errorList);
 
         } else if (ex instanceof DuplicateIdException) {
-            Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
                     environment.getProperty("duplicate.code"), null, null);
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
@@ -172,7 +193,7 @@ public class GlobalExceptionHandler {
             errorList.add(error);
             return new ErrorRes(responseInfo, errorList);
         } else if (ex instanceof PropertyUnderWorkflowException) {
-            Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
                     ((PropertyUnderWorkflowException) ex).getCustomMsg(), ex.getMessage(), null);
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.setApiId(((PropertyUnderWorkflowException) ex).getRequestInfo().getApiId());
@@ -198,7 +219,7 @@ public class GlobalExceptionHandler {
         }
 
         else {
-            Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,
                     new HashMap<String, String>());
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.setStatus(environment.getProperty("failed"));

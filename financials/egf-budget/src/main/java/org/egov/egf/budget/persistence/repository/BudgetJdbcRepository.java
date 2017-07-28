@@ -183,7 +183,7 @@ public class BudgetJdbcRepository extends JdbcRepository {
 	}
 
 	public BudgetEntity findById(BudgetEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

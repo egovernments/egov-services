@@ -45,9 +45,13 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.demand.contract.Demand;
+import org.egov.wcms.transaction.demand.contract.DemandRequest;
+import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
+import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
@@ -68,6 +72,8 @@ import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transaction.web.errorhandler.Error;
 import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -81,6 +87,8 @@ public class RestConnectionService {
 
     @Autowired
     private ConfigurationManager configurationManager;
+    
+    private static final Logger logger = LoggerFactory.getLogger(RestConnectionService.class);
 
     public CategoryResponseInfo getCategoryTypeByName(WaterConnectionReq waterConnectionRequest) {
         StringBuilder url = new StringBuilder();
@@ -244,7 +252,7 @@ public class RestConnectionService {
                     "Error while Fetching Data from PropertyTax", requestInfo);
         }
 
-        if (propResp != null && !propResp.getProperties().isEmpty())
+        if (propResp != null && propResp.getProperties()!=null && !propResp.getProperties().isEmpty())
             waterRequestReq.getConnection().setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
 
         return propResp;
@@ -356,9 +364,8 @@ public class RestConnectionService {
     }
 
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
-        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
         StringBuilder url = new StringBuilder();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
                 .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic()).append("?propertyType=")
                 .append(waterConnectionRequest.getConnection().getProperty().getPropertyType())
@@ -419,12 +426,12 @@ public class RestConnectionService {
             return finYear;
     }
     
-    public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic, final String formatServiceTopic) {
+    public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic, final String formatServiceTopic,RequestInfo requestInfo) {
         StringBuilder url = new StringBuilder();
         String ackNumber = null;
         url.append(configurationManager.getIdGenServiceBasePathTopic())
                 .append(configurationManager.getIdGenServiceCreatePathTopic());
-        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+//        final RequestInfo RequestInfo = RequestInfo.builder().ts(11111111l).build();
         List<AckIdRequest> idRequests = new ArrayList<>();
         AckIdRequest idrequest = new AckIdRequest();
         
@@ -464,6 +471,41 @@ public class RestConnectionService {
         }
 
         return ackNumber;
+    }
+    
+    public Demand getDemandEstimation(Connection connection) { 
+    	StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getBillingDemandServiceHostNameTopic())
+                .append(configurationManager.getSearchbillingDemandServiceTopic());
+        url.append("?tenantId=" + connection.getTenantId());
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+        DemandRequest demandRequest = new DemandRequest();
+        demandRequest.setRequestInfo(requestInfo);
+        List<Demand> demandList = new ArrayList<>();
+        String response = null;
+        try {
+            response = new RestTemplate().postForObject(url.toString(), demandRequest, String.class);
+        } catch (Exception ex) {
+            // throw new DemandException("Error While obtaining Demand Estimation Value", "Error While obtaining Demand Estimation Value",requestInfo);
+        	logger.info(ex.getMessage());
+        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+        DemandResponse demandResponse = gson.fromJson(response, DemandResponse.class);
+		if (null != demandResponse) {
+			logger.info("Demand Response : " + demandResponse);
+			if (null != demandResponse.getResponseInfo()) {
+				if (demandResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
+					if (demandResponse.getDemands() != null && !demandResponse.getDemands().isEmpty()) {
+						demandList = demandResponse.getDemands();
+					}
+
+				}
+			}
+		}
+        if(demandList.size() > 0) { 
+        	return demandList.get(0); 
+        }
+        return null;
     }
     
     public List<ErrorResponse> populateErrors() {

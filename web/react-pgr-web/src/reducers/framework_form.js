@@ -100,6 +100,11 @@ export default(state = defaultState, action) => {
         }
       }
 
+    case "SET_FORM_DATA":
+      return {
+        ...state,
+        form: action.data
+      }
 
     case "SET_FORM":
       return {
@@ -113,14 +118,12 @@ export default(state = defaultState, action) => {
     case "HANDLE_CHANGE_VERSION_TWO":
       validationData = undefined;
       validationData = validate(action.isRequired, action.pattern, action.property, action.value, state.validationData,action.requiredErrMsg,action.patternErrMsg);
-      var currentState= JSON.parse(JSON.stringify(state));
-      // console.log(currentState);
+      var currentState= {...state};
       _.set(currentState.form, action.property, action.value);
       currentState.fieldErrors= {
         ...state.fieldErrors,
         [action.property]: validationData.errorText
       };
-
       currentState.validationData=validationData.validationData;
       currentState.isFormValid=validationData.isFormValid;
       return currentState;

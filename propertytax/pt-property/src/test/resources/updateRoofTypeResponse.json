@@ -6,8 +6,8 @@
         {
             "tenantId": "1234",
             "name": "Gambrel Roof Type",
-            "code": "GRT",
-            "nameLocal": "Gambrel",
+            "code": "GRTT",
+            "nameLocal": "Gambrel Roof",
             "description": "Imported from USA",
             "auditDetails": {
                 "createdBy": null,

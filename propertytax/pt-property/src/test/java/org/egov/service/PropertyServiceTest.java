@@ -53,6 +53,7 @@ import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
 import org.egov.models.User;
+import org.egov.models.UserInfo;
 import org.egov.models.VacantLandDetail;
 import org.egov.models.WallType;
 import org.egov.models.WallTypeRequest;
@@ -850,16 +851,6 @@ public class PropertyServiceTest {
 		try {
 			String tenantId = "default";
 
-			RequestInfo requestInfo = new RequestInfo();
-			requestInfo.setApiId("emp");
-			requestInfo.setVer("1.0");
-			requestInfo.setTs(new Long(122366));
-			requestInfo.setDid("1");
-			requestInfo.setKey("yyyykey");
-			requestInfo.setMsgId("20170310130900");
-			requestInfo.setRequesterId("yosadhara");
-			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
-
 			List<UsageMaster> usageMasters = new ArrayList<>();
 
 			UsageMaster usageMaster = new UsageMaster();
@@ -883,7 +874,7 @@ public class PropertyServiceTest {
 
 			UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
 			usageMasterRequest.setUsageMasters(usageMasters);
-			usageMasterRequest.setRequestInfo(requestInfo);
+			usageMasterRequest.setRequestInfo(getRequestInfoObject());
 
 			UsageMasterResponse response = masterService.createUsageMaster(tenantId, usageMasterRequest);
 
@@ -899,16 +890,6 @@ public class PropertyServiceTest {
 	@Test
 	public void modifyUsageMasterTest() throws Exception {
 		try {
-			RequestInfo requestInfo = new RequestInfo();
-			requestInfo.setApiId("emp");
-			requestInfo.setVer("1.0");
-			requestInfo.setTs(new Long(122366));
-			requestInfo.setDid("1");
-			requestInfo.setKey("abcdkey");
-			requestInfo.setMsgId("20170310130900");
-			requestInfo.setRequesterId("yosadhara");
-			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
-
 			List<UsageMaster> usageMasters = new ArrayList<>();
 
 			UsageMaster usageMaster = new UsageMaster();
@@ -933,7 +914,7 @@ public class PropertyServiceTest {
 
 			UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
 			usageMasterRequest.setUsageMasters(usageMasters);
-			usageMasterRequest.setRequestInfo(requestInfo);
+			usageMasterRequest.setRequestInfo(getRequestInfoObject());
 
 			UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(usageMasterRequest);
 
@@ -949,15 +930,6 @@ public class PropertyServiceTest {
 	public void createWallTypeTest() {
 		try {
 			String tenantId = "default";
-			RequestInfo requestInfo = new RequestInfo();
-			requestInfo.setApiId("emp");
-			requestInfo.setVer("1.0");
-			requestInfo.setTs(new Long(122366));
-			requestInfo.setDid("1");
-			requestInfo.setKey("yyyykey");
-			requestInfo.setMsgId("20170310130900");
-			requestInfo.setRequesterId("yosadhara");
-			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 			List<WallType> wallTypes = new ArrayList<>();
 			WallType wallType = new WallType();
 			wallType.setTenantId("default");
@@ -975,7 +947,7 @@ public class PropertyServiceTest {
 			wallTypes.add(wallType);
 			WallTypeRequest wallTypeRequest = new WallTypeRequest();
 			wallTypeRequest.setWallTypes(wallTypes);
-			wallTypeRequest.setRequestInfo(requestInfo);
+			wallTypeRequest.setRequestInfo(getRequestInfoObject());
 
 			WallTypeResponse wallTypeResponse;
 
@@ -996,15 +968,6 @@ public class PropertyServiceTest {
 
 		try {
 			long id = 1;
-			RequestInfo requestInfo = new RequestInfo();
-			requestInfo.setApiId("emp");
-			requestInfo.setVer("1.0");
-			requestInfo.setTs(new Long(122366));
-			requestInfo.setDid("1");
-			requestInfo.setKey("abcdkey");
-			requestInfo.setMsgId("20170310130900");
-			requestInfo.setRequesterId("rajesh");
-			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 
 			List<WallType> wallTypes = new ArrayList<>();
 
@@ -1029,7 +992,7 @@ public class PropertyServiceTest {
 
 			WallTypeRequest wallTypeRequest = new WallTypeRequest();
 			wallTypeRequest.setWallTypes(wallTypes);
-			wallTypeRequest.setRequestInfo(requestInfo);
+			wallTypeRequest.setRequestInfo(getRequestInfoObject());
 			WallTypeResponse wallTypeResponse = masterService.updateWallTypeMaster(wallTypeRequest);
 			if (wallTypeResponse.getWallTypes().size() == 0)
 				assertTrue(false);
@@ -1051,21 +1014,11 @@ public class PropertyServiceTest {
 			String nameLocal = "test_namelocal";
 			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
 			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
-			RequestInfo requestInfo = new RequestInfo();
-			requestInfo.setApiId("emp");
-			requestInfo.setVer("1.0");
-			requestInfo.setTs(new Long(122366));
-			requestInfo.setDid("1");
-			requestInfo.setKey("abcdkey");
-			requestInfo.setMsgId("20170310130900");
-			requestInfo.setRequesterId("yosadhara");
-			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
-
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
+			requestInfoWrapper.setRequestInfo(getRequestInfoObject());
 
-			WallTypeResponse wallTypeResponse = masterService.getWallTypeMaster(requestInfo, tenantId, ids, name, code,
-					nameLocal, pageSize, offset);
+			WallTypeResponse wallTypeResponse = masterService.getWallTypeMaster(getRequestInfoObject(), tenantId, ids,
+					name, code, nameLocal, pageSize, offset);
 			if (wallTypeResponse.getWallTypes().size() == 0)
 				assertTrue(false);
 
@@ -1086,7 +1039,9 @@ public class PropertyServiceTest {
 		requestInfo.setMsgId("20170310130900");
 		requestInfo.setRequesterId("rajesh");
 		requestInfo.setAuthToken("a78edc28-1a5f-422e-91c6-19cae574c272");
-
+		UserInfo userInfo = new UserInfo();
+		userInfo.setId(1);
+		requestInfo.setUserInfo(userInfo);
 		return requestInfo;
 	}
 
@@ -1103,17 +1058,6 @@ public class PropertyServiceTest {
 			auditDetails.setLastModifiedBy("Anil");
 			auditDetails.setCreatedTime((long) 564644560);
 			auditDetails.setLastModifiedTime((long) 564644560);
-
-			RequestInfo requestInfo = new RequestInfo();
-			requestInfo.setApiId("emp");
-			requestInfo.setVer("1.0");
-			requestInfo.setTs((long) 20171205);
-			requestInfo.setAction("create");
-			requestInfo.setDid("1");
-			requestInfo.setKey("abcdkey");
-			requestInfo.setMsgId("20170310130900");
-			requestInfo.setRequesterId("rajesh");
-			requestInfo.setAuthToken("08db73a8-945e-4164-94e3-63ccef7856d4");
 
 			property.setTenantId("default");
 			property.setUpicNumber("test123");
@@ -1324,7 +1268,7 @@ public class PropertyServiceTest {
 			properties.add(property);
 
 			propertyRequest.setProperties(properties);
-			propertyRequest.setRequestInfo(requestInfo);
+			propertyRequest.setRequestInfo(getRequestInfoObject());
 
 			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
 					propertyRequest);
@@ -1346,18 +1290,6 @@ public class PropertyServiceTest {
 			auditDetails.setLastModifiedBy("sandrapati");
 			auditDetails.setCreatedTime((long) 123456);
 			auditDetails.setLastModifiedTime((long) 987654);
-
-			RequestInfo requestInfo = new RequestInfo();
-			requestInfo.setApiId("emp");
-			requestInfo.setVer("1.0");
-			requestInfo.setTs((long) 20171205);
-			requestInfo.setAction("create");
-			requestInfo.setDid("1");
-			requestInfo.setKey("abcdkey");
-			requestInfo.setMsgId("20170310130900");
-			requestInfo.setRequesterId("rajesh");
-			requestInfo.setAuthToken("08db73a8-945e-4164-94e3-63ccef7856d4");
-
 			property.setId((long) 1);
 			property.setTenantId("default");
 			property.setUpicNumber("anil123");
@@ -1572,7 +1504,7 @@ public class PropertyServiceTest {
 			properties.add(property);
 
 			propertyRequest.setProperties(properties);
-			propertyRequest.setRequestInfo(requestInfo);
+			propertyRequest.setRequestInfo(getRequestInfoObject());
 
 			producer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
 					propertyRequest);
@@ -1592,9 +1524,9 @@ public class PropertyServiceTest {
 		List<Depreciation> depreciations = new ArrayList<>();
 		depreciation.setTenantId("123");
 		depreciation.setNameLocal("prasad");
-		depreciation.setFromYear(2017);
+		depreciation.setFromYear(2015);
 		depreciation.setCode("456");
-		depreciation.setToyear(2016);
+		depreciation.setToyear(2017);
 		depreciation.setDescription("Intial loading");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -1635,9 +1567,9 @@ public class PropertyServiceTest {
 		depreciation.setId(1l);
 		depreciation.setTenantId("12345");
 		depreciation.setNameLocal("prasad");
-		depreciation.setFromYear(2017);
+		depreciation.setFromYear(2015);
 		depreciation.setCode("4567");
-		depreciation.setToyear(2016);
+		depreciation.setToyear(2017);
 		depreciation.setDescription("Intial loading");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -1674,18 +1606,19 @@ public class PropertyServiceTest {
 		String tenantId = "12345";
 		Integer[] ids = new Integer[] { 1, 2, 7 };
 
-		Integer fromYear = 2017;
-		Integer toYear = 2016;
+		Integer fromYear = 2015;
+		Integer toYear = 2017;
 		String code = "4567";
 		String nameLocal = "prasad";
 		Integer pageSize = 20;
 		Integer offset = 0;
+		Integer year = null;
 
 		DepreciationResponse depreciationResponse = null;
 
 		try {
 			depreciationResponse = masterService.searchDepreciation(getRequestInfoObject(), tenantId, ids, fromYear,
-					toYear, code, nameLocal, pageSize, offset);
+					toYear, code, nameLocal, pageSize, offset, year);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -1801,7 +1734,7 @@ public class PropertyServiceTest {
 		} else
 			assertTrue(false);
 	}
-	
+
 	@Test
 	public void createDocumentTypeTest() {
 

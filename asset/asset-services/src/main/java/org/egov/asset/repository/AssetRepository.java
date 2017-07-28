@@ -59,6 +59,7 @@ import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetRowMapper;
 import org.egov.asset.repository.rowmapper.YearWiseDepreciationRowMapper;
+import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
@@ -95,6 +96,9 @@ public class AssetRepository {
 
     @Autowired
     private AssetMasterService assetMasterService;
+
+    @Autowired
+    private AssetCommonService assetCommonService;
 
     public List<Asset> findForCriteria(final AssetCriteria assetCriteria) {
 
@@ -191,7 +195,8 @@ public class AssetRepository {
                 location.getPinCode(), location.getLocality(), location.getBlock(), property,
                 requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
                 asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
-                asset.getVersion(), asset.getEnableYearWiseDepreciation(), asset.getDepreciationRate() };
+                asset.getVersion(), asset.getEnableYearWiseDepreciation(),
+                assetCommonService.getDepreciationRate(asset.getDepreciationRate()) };
         try {
             jdbcTemplate.update(query, obj);
         } catch (final Exception ex) {
@@ -376,7 +381,7 @@ public class AssetRepository {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(asset.getEnableYearWiseDepreciation());
         if (changeDepRateInAsset)
-            preparedStatementValues.add(asset.getDepreciationRate());
+            preparedStatementValues.add(assetCommonService.getDepreciationRate(asset.getDepreciationRate()));
         preparedStatementValues.add(asset.getCode());
         preparedStatementValues.add(asset.getTenantId());
         logger.debug("Asset Depreciation Rate Update Parameters : " + preparedStatementValues);
@@ -395,7 +400,7 @@ public class AssetRepository {
             @Override
             public void setValues(final PreparedStatement ps, final int index) throws SQLException {
                 final YearWiseDepreciation yearWiseDepreciation = yearWiseDepreciations.get(index);
-                ps.setDouble(1, yearWiseDepreciation.getDepreciationRate());
+                ps.setDouble(1, assetCommonService.getDepreciationRate(yearWiseDepreciation.getDepreciationRate()));
                 ps.setString(2, yearWiseDepreciation.getFinancialYear());
                 ps.setLong(3, asset.getId());
                 ps.setObject(4, yearWiseDepreciation.getUsefulLifeInYears());
@@ -425,7 +430,7 @@ public class AssetRepository {
             @Override
             public void setValues(final PreparedStatement ps, final int index) throws SQLException {
                 final YearWiseDepreciation yearWiseDepreciation = yearWiseDepreciations.get(index);
-                ps.setDouble(1, yearWiseDepreciation.getDepreciationRate());
+                ps.setDouble(1, assetCommonService.getDepreciationRate(yearWiseDepreciation.getDepreciationRate()));
                 ps.setObject(2, yearWiseDepreciation.getUsefulLifeInYears());
                 ps.setString(3, requestInfo.getUserInfo().getId().toString());
                 ps.setLong(4, new Date().getTime());

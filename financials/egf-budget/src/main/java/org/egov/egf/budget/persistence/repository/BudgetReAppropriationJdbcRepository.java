@@ -173,7 +173,7 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 	}
 
 	public BudgetReAppropriationEntity findById(BudgetReAppropriationEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

@@ -1,0 +1,50 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "financialyear": {
+            "type": "object"
+        },
+        "startingdate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "endingdate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "isactiveforposting": {
+            "type": "boolean"
+        },
+        "isclosed": {
+            "type": "boolean"
+        },
+        "active": {
+            "type": "boolean"
+        },
+        "createdby": {
+            "type": "object"
+        },
+        "lastmodifiedby": {
+            "type": "object"
+        },
+        "createddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastmodifieddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantid": {
+            "type": "keyword"
+        }
+    }
+}

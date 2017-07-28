@@ -13,6 +13,8 @@ import org.egov.propertyWorkflow.models.Task;
 import org.egov.propertyWorkflow.models.TaskRequest;
 import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -28,6 +30,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 public class WorkFlowUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(WorkFlowUtil.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -61,7 +65,7 @@ public class WorkFlowUtil {
 		ProcessInstanceResponse processInstanceResponse = null;
 
 		try {
-
+			logger.info("URL ------->> "+url+" \n processInstanceRequest -->> "+processInstanceRequest);
 			processInstanceResponse = restTemplate.postForObject(url, processInstanceRequest,
 					ProcessInstanceResponse.class);
 

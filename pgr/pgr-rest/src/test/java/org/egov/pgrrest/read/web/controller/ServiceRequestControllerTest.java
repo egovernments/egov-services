@@ -65,6 +65,21 @@ public class ServiceRequestControllerTest {
     }
 
     @Test
+    public void test_should_return_error_response_when_group_constraint_has_been_violated_on_creating_a_service_request()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new GroupConstraintViolationException("groupCode")).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("groupConstraintViolatedErrorResponse.json")));
+    }
+
+    @Test
     public void test_should_return_error_response_when_service_status_is_not_present_on_creating_a_complaint()
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());

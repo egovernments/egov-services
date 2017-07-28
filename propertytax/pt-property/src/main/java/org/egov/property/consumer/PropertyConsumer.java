@@ -93,11 +93,11 @@ public class PropertyConsumer {
 
 		if (consumerRecord.topic()
 				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow.started"))) {
-			persisterService.addProperty(consumerRecord.value().getProperties());
+			persisterService.addProperty(consumerRecord.value());
 		}
 
 		else {
-			persisterService.updateProperty(consumerRecord.value().getProperties());
+			persisterService.updateProperty(consumerRecord.value());
 		}
 	}
 }

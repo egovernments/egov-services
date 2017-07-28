@@ -80,7 +80,7 @@ public class WorkflowController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		if(!validateTenantId(workflowDetails.getTenantId())){
+		if(!validator(workflowDetails.getTenantId(), workflowDetails.getReceiptHeaderId())){
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();
 			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
@@ -122,9 +122,10 @@ public class WorkflowController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		if(!validateTenantId(workflowDetails.getTenantId())){
+		if(!validator(workflowDetails.getTenantId(), workflowDetails.getReceiptHeaderId())){
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();
+			error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
 			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
 			ErrorResponse errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
@@ -162,10 +163,13 @@ public class WorkflowController {
 		return errRes;
 	}
 	
-	private boolean validateTenantId(String tenantId){
+	private boolean validator(String tenantId, long receiptHeaderId){
 		boolean isTenantValid = true;
 		if(null == tenantId || tenantId.isEmpty())
 			isTenantValid = false;
+		else if(receiptHeaderId == 0L)
+			isTenantValid = false;
+		
 		return isTenantValid;
 	}
 }

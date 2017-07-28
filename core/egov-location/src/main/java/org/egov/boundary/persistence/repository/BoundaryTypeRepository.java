@@ -93,4 +93,7 @@ public interface BoundaryTypeRepository extends JpaRepository<BoundaryType, Long
 	BoundaryType findByIdAndTenantId(Long id, String tenantId);
 
 	List<BoundaryType> findAllByTenantId(String tenantId);
+	
+	@Query("select bt from BoundaryType bt where bt.tenantId =:tenantId and bt.name =:name")
+	List<BoundaryType> findAllByTenantIdAndName(@Param("tenantId") String tenantId,@Param("name") String name);
 }

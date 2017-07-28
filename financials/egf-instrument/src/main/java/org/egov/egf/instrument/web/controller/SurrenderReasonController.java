@@ -4,25 +4,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
-import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.model.SurrenderReasonSearch;
 import org.egov.egf.instrument.domain.service.SurrenderReasonService;
+import org.egov.egf.instrument.persistence.queue.repository.SurrenderReasonQueueRepository;
 import org.egov.egf.instrument.web.contract.SurrenderReasonContract;
 import org.egov.egf.instrument.web.contract.SurrenderReasonSearchContract;
-import org.modelmapper.ModelMapper;
+import org.egov.egf.instrument.web.mapper.SurrenderReasonMapper;
+import org.egov.egf.instrument.web.requests.SurrenderReasonRequest;
+import org.egov.egf.instrument.web.requests.SurrenderReasonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,100 +33,126 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/surrenderreasons")
 public class SurrenderReasonController {
 
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String PLACEHOLDER = "placeholder";
+
+	private static String persistThroughKafka;
+
+	@Autowired
+	private SurrenderReasonQueueRepository surrenderReasonQueueRepository;
+
 	@Autowired
 	private SurrenderReasonService surrenderReasonService;
-	
-	@GetMapping("/")
-	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SurrenderReasonContract> get() {
-		
-		 SurrenderReasonContract build = SurrenderReasonContract.builder().build();
-		 build.setCreatedDate(new Date());
-		 CommonResponse<SurrenderReasonContract> response=new CommonResponse<>();
-		 List<SurrenderReasonContract> surrenderreasons=new ArrayList();
-		 surrenderreasons.add(build);
-		 response.setData(surrenderreasons);
-		 return response;
-		
-	}
-	
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SurrenderReasonContract> create(@RequestBody CommonRequest<SurrenderReasonContract> surrenderReasonRequest,
+	public SurrenderReasonResponse create(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
 			BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 
-		ModelMapper model = new ModelMapper();
-		CommonResponse<SurrenderReasonContract> surrenderReasonResponse = new CommonResponse<>();
+		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+		SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
 		surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
 		List<SurrenderReason> surrenderreasons = new ArrayList<>();
 		SurrenderReason surrenderReason;
 		List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
 		SurrenderReasonContract contract;
 
-		surrenderReasonRequest.getRequestInfo().setAction("create");
+		surrenderReasonRequest.getRequestInfo().setAction(ACTION_CREATE);
 
-		for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getData()) {
-			surrenderReason = new SurrenderReason();
-			model.map(surrenderReasonContract, surrenderReason);
+		for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
+			surrenderReason = mapper.toDomain(surrenderReasonContract);
+			surrenderReason.setCreatedDate(new Date());
 			surrenderReason.setCreatedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
 			surrenderReason.setLastModifiedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
 			surrenderreasons.add(surrenderReason);
 		}
 
-		surrenderreasons = surrenderReasonService.add(surrenderreasons, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (SurrenderReason f : surrenderreasons) {
-			contract = new SurrenderReasonContract();
-			model.map(f, contract);
-			surrenderReasonContracts.add(contract);
+			surrenderreasons = surrenderReasonService.fetchAndValidate(surrenderreasons, errors, ACTION_CREATE);
+
+			for (SurrenderReason sr : surrenderreasons) {
+				contract = mapper.toContract(sr);
+				contract.setCreatedDate(new Date());
+				surrenderReasonContracts.add(contract);
+			}
+
+			surrenderReasonRequest.setSurrenderReasons(surrenderReasonContracts);
+			surrenderReasonQueueRepository.addToQue(surrenderReasonRequest);
+
+		} else {
+
+			surrenderreasons = surrenderReasonService.save(surrenderreasons, errors);
+
+			for (SurrenderReason sr : surrenderreasons) {
+				contract = mapper.toContract(sr);
+				contract.setCreatedDate(new Date());
+				surrenderReasonContracts.add(contract);
+			}
+
+			surrenderReasonRequest.setSurrenderReasons(surrenderReasonContracts);
+			surrenderReasonQueueRepository.addToSearchQue(surrenderReasonRequest);
+
 		}
 
-		surrenderReasonRequest.setData(surrenderReasonContracts);
-		surrenderReasonService.addToQue(surrenderReasonRequest);
-		surrenderReasonResponse.setData(surrenderReasonContracts);
+		surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
 
 		return surrenderReasonResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SurrenderReasonContract> update(@RequestBody @Valid CommonRequest<SurrenderReasonContract> surrenderReasonContractRequest,
+	public SurrenderReasonResponse update(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
 			BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		surrenderReasonContractRequest.getRequestInfo().setAction("update");
-		ModelMapper model = new ModelMapper();
-		CommonResponse<SurrenderReasonContract> surrenderReasonResponse = new CommonResponse<>();
+		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+		surrenderReasonRequest.getRequestInfo().setAction(ACTION_UPDATE);
+		SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
 		List<SurrenderReason> surrenderreasons = new ArrayList<>();
-		surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonContractRequest.getRequestInfo()));
+		surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
 		SurrenderReason surrenderReason;
 		SurrenderReasonContract contract;
 		List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
 
-		for (SurrenderReasonContract surrenderReasonContract : surrenderReasonContractRequest.getData()) {
-			surrenderReason = new SurrenderReason();
-			model.map(surrenderReasonContract, surrenderReason);
-			surrenderReason.setLastModifiedBy(surrenderReasonContractRequest.getRequestInfo().getUserInfo());
+		for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
+			surrenderReason = mapper.toDomain(surrenderReasonContract);
+			surrenderReason.setLastModifiedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
+			surrenderReason.setLastModifiedDate(new Date());
 			surrenderreasons.add(surrenderReason);
 		}
 
-		surrenderreasons = surrenderReasonService.update(surrenderreasons, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (SurrenderReason surrenderReasonObj : surrenderreasons) {
-			contract = new SurrenderReasonContract();
-			model.map(surrenderReasonObj, contract);
-			surrenderReasonContracts.add(contract);
+			surrenderreasons = surrenderReasonService.fetchAndValidate(surrenderreasons, errors, ACTION_UPDATE);
+
+			for (SurrenderReason sr : surrenderreasons) {
+				contract = mapper.toContract(sr);
+				contract.setCreatedDate(new Date());
+				surrenderReasonContracts.add(contract);
+			}
+
+			surrenderReasonRequest.setSurrenderReasons(surrenderReasonContracts);
+			surrenderReasonQueueRepository.addToQue(surrenderReasonRequest);
+
+		} else {
+
+			surrenderreasons = surrenderReasonService.update(surrenderreasons, errors);
+
+			for (SurrenderReason sr : surrenderreasons) {
+				contract = mapper.toContract(sr);
+				contract.setCreatedDate(new Date());
+				surrenderReasonContracts.add(contract);
+			}
+
+			surrenderReasonRequest.setSurrenderReasons(surrenderReasonContracts);
+			surrenderReasonQueueRepository.addToSearchQue(surrenderReasonRequest);
+
 		}
 
-		surrenderReasonContractRequest.setData(surrenderReasonContracts);
-		surrenderReasonService.addToQue(surrenderReasonContractRequest);
-		surrenderReasonResponse.setData(surrenderReasonContracts);
+		surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
 
 		return surrenderReasonResponse;
 	}
@@ -136,25 +160,24 @@ public class SurrenderReasonController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<SurrenderReasonContract> search(@ModelAttribute SurrenderReasonSearchContract surrenderReasonSearchContract,
+	public SurrenderReasonResponse search(@ModelAttribute SurrenderReasonSearchContract surrenderReasonSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
-		ModelMapper mapper = new ModelMapper();
-		SurrenderReasonSearch domain = new SurrenderReasonSearch();
-		mapper.map(surrenderReasonSearchContract, domain);
+		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+		SurrenderReasonSearch domain = mapper.toSearchDomain(surrenderReasonSearchContract);
 		SurrenderReasonContract contract;
-		ModelMapper model = new ModelMapper();
 		List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
 		Pagination<SurrenderReason> surrenderreasons = surrenderReasonService.search(domain);
 
-		for (SurrenderReason surrenderReason : surrenderreasons.getPagedData()) {
-			contract = new SurrenderReasonContract();
-			model.map(surrenderReason, contract);
-			surrenderReasonContracts.add(contract);
+		if (surrenderreasons.getPagedData() != null) {
+			for (SurrenderReason surrenderReason : surrenderreasons.getPagedData()) {
+				contract = mapper.toContract(surrenderReason);
+				surrenderReasonContracts.add(contract);
+			}
 		}
 
-		CommonResponse<SurrenderReasonContract> response = new CommonResponse<>();
-		response.setData(surrenderReasonContracts);
+		SurrenderReasonResponse response = new SurrenderReasonResponse();
+		response.setSurrenderReasons(surrenderReasonContracts);
 		response.setPage(new PaginationContract(surrenderreasons));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -163,8 +186,13 @@ public class SurrenderReasonController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+	}
+
+	@Value("${persist.through.kafka}")
+	public void setPersistThroughKafka(String persistThroughKafka) {
+		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

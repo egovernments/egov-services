@@ -70,7 +70,7 @@ public class BankAccountContract extends AuditableContract implements java.io.Se
 	private BankBranchContract bankBranch;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
-	private ChartOfAccountContract chartOfAccount;
+	private ChartOfAccount chartOfAccount;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private FundContract fund;

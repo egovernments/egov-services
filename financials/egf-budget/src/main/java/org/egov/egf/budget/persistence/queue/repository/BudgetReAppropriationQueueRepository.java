@@ -15,24 +15,24 @@ public class BudgetReAppropriationQueueRepository {
 
 	private String validatedTopic;
 
-	private String validatedKey;
+	private String budgetReAppValidatedKey;
 
 	private String completedTopic;
 
-	private String completedKey;
+	private String budgetReAppCompletedKey;
 
 	@Autowired
 	public BudgetReAppropriationQueueRepository(FinancialProducer financialProducer,
 			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.budget.service.validated.key}") String validatedKey,
+			@Value("${kafka.topics.egf.budget.budgetreapp.validated.key}") String budgetReAppValidatedKey,
 			@Value("${kafka.topics.egf.budget.service.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.budget.service.completed.key}") String completedKey) {
+			@Value("${kafka.topics.egf.budget.budgetreapp.completed.key}") String budgetReAppCompletedKey) {
 
 		this.financialProducer = financialProducer;
 		this.validatedTopic = validatedTopic;
-		this.validatedKey = validatedKey;
+		this.budgetReAppValidatedKey = budgetReAppValidatedKey;
 		this.completedTopic = completedTopic;
-		this.completedKey = completedKey;
+		this.budgetReAppCompletedKey = budgetReAppCompletedKey;
 	}
 
 	public void addToQue(BudgetReAppropriationRequest request) {
@@ -49,7 +49,7 @@ public class BudgetReAppropriationQueueRepository {
 			break;
 
 		}
-		financialProducer.sendMessage(validatedTopic, validatedKey, topicMap);
+		financialProducer.sendMessage(validatedTopic, budgetReAppValidatedKey, topicMap);
 	}
 
 	public void addToSearchQue(BudgetReAppropriationRequest request) {
@@ -58,13 +58,13 @@ public class BudgetReAppropriationQueueRepository {
 
 		if (!request.getBudgetReAppropriations().isEmpty()) {
 
-			topicMap.put("budgetreappropriation_completed", request);
+			topicMap.put("budgetreappropriation_persisted", request);
 
 			System.out.println("push search topic" + request);
 
 		}
 
-		financialProducer.sendMessage(completedTopic, completedKey, topicMap);
+		financialProducer.sendMessage(completedTopic, budgetReAppCompletedKey, topicMap);
 
 	}
 }

@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.instrument.web.contract;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -49,9 +50,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.instrument.domain.model.TransactionType;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -61,27 +62,31 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","transactionNumber","transactionDate","amount","instrumentType","bank","branchName","bankAccount","instrumentStatus","transactionType","payee","drawer","surrendarReason","serialNo","instrumentVouchers"})
+@JsonPropertyOrder({ "id", "transactionNumber", "transactionDate", "amount", "instrumentType", "bank", "branchName",
+		"bankAccount", "financialStatus", "transactionType", "payee", "drawer", "surrendarReason", "serialNo",
+		"instrumentVouchers" })
 public class InstrumentContract extends AuditableContract {
 
 	/*
-	 * id is the unique reference to InstrumentContract Header entered in the system.
+	 * id is the unique reference to InstrumentContract Header entered in the
+	 * system.
 	 */
 	private String id;
 
 	/*
 	 * transactionNumber unique number of the instrument. For cheque type this
 	 * is cheque date. For DD type it is DD number
-	 * 
+	 *
 	 */
 	@NotBlank
-	@Size(max=50,min=6)
+	@Size(max = 50, min = 6)
 	private String transactionNumber;
 
 	/*
@@ -95,14 +100,14 @@ public class InstrumentContract extends AuditableContract {
 	 * amount is the instrument amount. For cheque type it is cheque amount.
 	 */
 	@NotNull
-	@Min(value=1)
-	@Max(value=999999999)
+	@Min(value = 1)
+	@Max(value = 999999999)
 	private BigDecimal amount;
 
 	/*
 	 * instrumentType specifies the type of the instrument - The folowing are
 	 * the different types Cash,Cheque,DD,POC
-	 * 
+	 *
 	 */
 	private InstrumentTypeContract instrumentType;
 
@@ -115,11 +120,11 @@ public class InstrumentContract extends AuditableContract {
 	 * branchName is the branch name entered in the collection Receipt.
 	 */
 
-	@Size(max=50)
+	@Size(max = 50)
 	private String branchName;
 
-	/* bankAccount
-	 *  is the reference of the Bank account from which the payment
+	/*
+	 * bankAccount is the reference of the Bank account from which the payment
 	 * instrument is assigned
 	 */
 	private BankAccountContract bankAccount;
@@ -127,24 +132,25 @@ public class InstrumentContract extends AuditableContract {
 	/*
 	 * instrumentStatus gives the current status of the instrument.
 	 */
-	private InstrumentStatusContract instrumentStatus;
+	private FinancialStatusContract financialStatus;
 
 	/*
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt
 	 * instrument it is Debit and in case of payment instrument its credit.
 	 */
-	private TransactionType transactionType;
+	@NotNull
+	private TransactionTypeContract transactionType;
 
 	/*
 	 * payee is the entity who is making the payment via instrument
 	 */
-	@Size(max=50)
+	@Size(max = 50)
 	private String payee;
 
 	/*
 	 * drawer is the entity to which the payment is made.
 	 */
-	@Size(max=100)
+	@Size(max = 100)
 	private String drawer;
 
 	/*
@@ -155,19 +161,18 @@ public class InstrumentContract extends AuditableContract {
 	private SurrenderReasonContract surrendarReason;
 
 	/*
-	 * serialNo is the series of the cheque numbers from which the
-	 * instrument is assigned from. The cheque numbers in an account is defined
-	 * based on Year, Bank account and tagged to a department.
+	 * serialNo is the series of the cheque numbers from which the instrument is
+	 * assigned from. The cheque numbers in an account is defined based on Year,
+	 * Bank account and tagged to a department.
 	 */
 	@NotBlank
-	@Size(max=50,min=2)
+	@Size(max = 50, min = 2)
 	private String serialNo;
 
 	/*
 	 * instrumentVouchers is the reference to the payment vouchers for which the
 	 * instrument is attached.
 	 */
-	//@DrillDownTable
 	private Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<InstrumentVoucherContract>(0);
 
 }

@@ -15,17 +15,22 @@ var requestInfo = {
     "authToken": authToken
 };
 
-var tenantId = "";
-if(window.location.origin.split("-").length>1)
-{
-  tenantId+=window.location.origin.split("-")[0].split("//")[1]
-}
-else {
-  tenantId+=window.location.origin.split(".")[0].split("//")[1]
-}
+var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
 
-tenantId = tenantIds[tenantId] || "ap." + tenantId;
+if (tenantId) {
+  tenantId=tenantId.tenantId;
+} else {
+  if(window.location.origin.split("-").length>1)
+  {
+    tenantId+=window.location.origin.split("-")[0].split("//")[1]
+  }
+  else {
+    tenantId+=window.location.origin.split(".")[0].split("//")[1]
+  }
 
+  tenantId = tenantIds[tenantId] || "ap." + tenantId;
+
+}
 
 function titleCase(field) {
     if (field) {
@@ -396,8 +401,8 @@ function getDropdown(name, cb, params) {
                     queryString = Object.assign(queryString, params);
                 commonApiPost("asset-services", "assetstatuses", "_search", queryString, function(err, res) {
                     if (res) {
-                        localStorage.setItem("statusList", JSON.stringify(res["AssetStatus"]));
-                        cb(res["AssetStatus"]);
+                        localStorage.setItem("statusList", JSON.stringify(res["AssetStatus"][0]["statusValues"]));
+                        cb(res["AssetStatus"][0]["statusValues"]);
                     } else {
                         cb({});
                     }

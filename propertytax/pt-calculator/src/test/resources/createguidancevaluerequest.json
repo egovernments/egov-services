@@ -13,6 +13,7 @@
     },
   "guidanceValues": [
     {
+      "id":1,
       "tenantId": "default",
       "name": "anil",
       "boundary": "b1",
@@ -20,9 +21,9 @@
       "usage": null,
       "subUsage": null,
       "occupancy": null,
-      "value": null,
-      "fromDate": null,
-      "toDate": null,
+      "value": 252,
+      "fromDate": "25/10/2016 00:00:00",
+      "toDate": "25/10/2017 00:00:00",
         "auditDetails": {
         "createdBy": null,
         "lastModifiedBy": null,

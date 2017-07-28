@@ -1,9 +1,9 @@
 package org.egov.egf.instrument.persistence.entity;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
-import org.egov.egf.instrument.domain.model.InstrumentStatus;
 import org.egov.egf.instrument.domain.model.InstrumentTypeProperty;
+import org.egov.egf.instrument.domain.model.TransactionType;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,25 +29,27 @@ public class InstrumentTypePropertyEntity extends AuditableEntity {
 	public InstrumentTypeProperty toDomain() {
 		InstrumentTypeProperty instrumentTypeProperty = new InstrumentTypeProperty();
 		super.toDomain(instrumentTypeProperty);
-		//instrumentTypeProperty.setTransactionType(TransactionType.builder().id(transactionTypeId).build());
+		instrumentTypeProperty.setTransactionType(TransactionType.valueOf(this.transactionTypeId));
 		instrumentTypeProperty.setReconciledOncreate(this.reconciledOncreate);
-		instrumentTypeProperty.setStatusOnCreate(InstrumentStatus.builder().id(statusOnCreateId).build());
-		instrumentTypeProperty.setStatusOnUpdate(InstrumentStatus.builder().id(statusOnUpdateId).build());
-		instrumentTypeProperty.setStatusOnReconcile(InstrumentStatus.builder().id(statusOnReconcileId).build());
+		instrumentTypeProperty.setStatusOnCreate(FinancialStatusContract.builder().code(statusOnCreateId).build());
+		instrumentTypeProperty.setStatusOnUpdate(FinancialStatusContract.builder().code(statusOnUpdateId).build());
+		instrumentTypeProperty.setStatusOnReconcile(FinancialStatusContract.builder().code(statusOnReconcileId).build());
 		return instrumentTypeProperty;
 	}
 
 	public InstrumentTypePropertyEntity toEntity(InstrumentTypeProperty instrumentTypeProperty) {
-		super.toEntity((Auditable) instrumentTypeProperty);
-	/*	this.transactionTypeId = instrumentTypeProperty.getTransactionType() != null
-				? instrumentTypeProperty.getTransactionType().getId() : null;*/
+		super.toEntity(instrumentTypeProperty);
+		
+		 this.transactionTypeId = instrumentTypeProperty.getTransactionType()
+		 != null ? instrumentTypeProperty.getTransactionType().toString() : null;
+	
 		this.reconciledOncreate = instrumentTypeProperty.getReconciledOncreate();
 		this.statusOnCreateId = instrumentTypeProperty.getStatusOnCreate() != null
-				? instrumentTypeProperty.getStatusOnCreate().getId() : null;
+				? instrumentTypeProperty.getStatusOnCreate().getCode() : null;
 		this.statusOnUpdateId = instrumentTypeProperty.getStatusOnUpdate() != null
-				? instrumentTypeProperty.getStatusOnUpdate().getId() : null;
+				? instrumentTypeProperty.getStatusOnUpdate().getCode() : null;
 		this.statusOnReconcileId = instrumentTypeProperty.getStatusOnReconcile() != null
-				? instrumentTypeProperty.getStatusOnReconcile().getId() : null;
+				? instrumentTypeProperty.getStatusOnReconcile().getCode() : null;
 		return this;
 	}
 

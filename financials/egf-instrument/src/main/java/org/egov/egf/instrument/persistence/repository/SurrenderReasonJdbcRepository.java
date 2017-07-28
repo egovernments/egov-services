@@ -60,44 +60,61 @@ public class SurrenderReasonJdbcRepository extends JdbcRepository {
 		}
 
 		String orderBy = "order by id";
-		if (surrenderReasonSearchEntity.getSortBy() != null && !surrenderReasonSearchEntity.getSortBy().isEmpty())
+		if (surrenderReasonSearchEntity.getSortBy() != null && !surrenderReasonSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + surrenderReasonSearchEntity.getSortBy();
+		}
 
 		searchQuery = searchQuery.replace(":tablename", SurrenderReasonEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( surrenderReasonSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =:id");
-paramValues.put("id" ,surrenderReasonSearchEntity.getId());} 
-if( surrenderReasonSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =:name");
-paramValues.put("name" ,surrenderReasonSearchEntity.getName());} 
-if( surrenderReasonSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =:description");
-paramValues.put("description" ,surrenderReasonSearchEntity.getDescription());} 
-
+		if (surrenderReasonSearchEntity.getId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("id =:id");
+			paramValues.put("id", surrenderReasonSearchEntity.getId());
+		}
+		if (surrenderReasonSearchEntity.getName() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("name =:name");
+			paramValues.put("name", surrenderReasonSearchEntity.getName());
+		}
+		if (surrenderReasonSearchEntity.getDescription() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("description =:description");
+			paramValues.put("description", surrenderReasonSearchEntity.getDescription());
+		}
+		if (surrenderReasonSearchEntity.getIds() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("ids =:ids");
+			paramValues.put("ids", surrenderReasonSearchEntity.getIds());
+		}
 
 		Pagination<SurrenderReason> page = new Pagination<>();
-		if (surrenderReasonSearchEntity.getOffset() != null)
+		if (surrenderReasonSearchEntity.getOffset() != null) {
 			page.setOffset(surrenderReasonSearchEntity.getOffset());
-		if (surrenderReasonSearchEntity.getPageSize() != null)
-			page.setPageSize(surrenderReasonSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (surrenderReasonSearchEntity.getPageSize() != null) {
+			page.setPageSize(surrenderReasonSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -109,7 +126,8 @@ paramValues.put("description" ,surrenderReasonSearchEntity.getDescription());}
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SurrenderReasonEntity.class);
 
-		List<SurrenderReasonEntity> surrenderReasonEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<SurrenderReasonEntity> surrenderReasonEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(surrenderReasonEntities.size());
 
@@ -124,7 +142,7 @@ paramValues.put("description" ,surrenderReasonSearchEntity.getDescription());}
 	}
 
 	public SurrenderReasonEntity findById(SurrenderReasonEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

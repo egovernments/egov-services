@@ -24,10 +24,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
+ 
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
+   
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -112,6 +112,7 @@ class ConstructionTypes extends Component {
 
     Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
       console.log(res);
+	  res.floorTypes.unshift({code:-1, name:'None'})
       currentThis.setState({floortypes:res.floorTypes})
     }).catch((err)=> {
       currentThis.setState({
@@ -122,6 +123,7 @@ class ConstructionTypes extends Component {
 
     Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
       console.log(res);
+	  res.roofTypes.unshift({code:-1, name:'None'})
       currentThis.setState({rooftypes: res.roofTypes})
     }).catch((err)=> {
       currentThis.setState({
@@ -132,6 +134,7 @@ class ConstructionTypes extends Component {
 
     Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
       console.log(res);
+	  res.wallTypes.unshift({code:-1, name:'None'})
       currentThis.setState({walltypes: res.wallTypes})
     }).catch((err)=> {
       currentThis.setState({
@@ -142,6 +145,7 @@ class ConstructionTypes extends Component {
 
     Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
       console.log(res);
+	  res.woodTypes.unshift({code:-1, name:'None'})
       currentThis.setState({woodtypes: res.woodTypes})
     }).catch((err)=> {
       currentThis.setState({
@@ -157,7 +161,7 @@ class ConstructionTypes extends Component {
 
     const renderOption = function(list,listName="") {
         if(list)
-        {
+        {	
             return list.map((item)=>
             {
                 return (<MenuItem key={item.id} value={item.code} primaryText={item.name}/>)
@@ -185,19 +189,19 @@ class ConstructionTypes extends Component {
 
     let cThis = this;
 
-    return (<Card>
+    return (	
+				<Card className="uiCard">
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Construction Types</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card className="darkShadow">
-                              <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                 floatingLabelText="Floor Type *"
-                                                errorText={fieldErrors.floorType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floorType}</span> : ""}
+                                                errorText={fieldErrors.floorType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floorType}</span> : ""}
                                                 value={constructionTypes.floorType ? constructionTypes.floorType : ""}
                                                 onChange={(event, index, value) => {
+													(value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -216,9 +220,10 @@ class ConstructionTypes extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                 floatingLabelText="Roof Type *"
-                                                errorText={fieldErrors.roofType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.roofType}</span> : ""}
+                                                errorText={fieldErrors.roofType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.roofType}</span> : ""}
                                                 value={constructionTypes.roofType ? constructionTypes.roofType : ""}
                                                 onChange={(event, index, value) => {
+													(value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -230,16 +235,17 @@ class ConstructionTypes extends Component {
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
+                                              >		
                                                     {renderOption(this.state.rooftypes)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                 floatingLabelText="Wall Type"
-                                                errorText={fieldErrors.wallType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.wallType}</span> : ""}
+                                                errorText={fieldErrors.wallType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.wallType}</span> : ""}
                                                 value={constructionTypes.wallType ? constructionTypes.wallType : ""}
                                                 onChange={(event, index, value) => {
+													(value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -251,16 +257,17 @@ class ConstructionTypes extends Component {
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
+                                              >		
                                                     {renderOption(this.state.walltypes)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                 floatingLabelText="Wood Type"
-                                                errorText={fieldErrors.woodType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.woodType }</span>: ""}
+                                                errorText={fieldErrors.woodType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.woodType }</span>: ""}
                                                 value={constructionTypes.woodType ? constructionTypes.woodType : ""}
                                                 onChange={(event, index, value) => {
+													(value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -272,17 +279,14 @@ class ConstructionTypes extends Component {
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
+                                              >		
                                                     {renderOption(this.state.woodtypes)}
                                               </SelectField>
                                           </Col>
                                       </Row>
                                   </Grid>
-                              </CardText>
-                          </Card>
                       </CardText>
-                  </Card>
-)
+                  </Card>)
   }
 
 }

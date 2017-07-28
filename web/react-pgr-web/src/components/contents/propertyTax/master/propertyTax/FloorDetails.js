@@ -25,10 +25,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: "#354f57"
+ 
   },
   underlineFocusStyle: {
-    borderColor: "#354f57"
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -166,7 +166,7 @@ class FloorDetails extends Component {
 				label = 'rd';
 			}
 			var commonFloors = {
-				id:i,
+				code:i,
 				name:(i-4)+label+" Floor"
 			}
 			temp.push(commonFloors);
@@ -336,7 +336,7 @@ handleAge = (year) => {
 }	
 	
 calcArea = (e, type) => {
-		let {floorDetails, handleChangeNextOne} = this.props;
+		let {floorDetails, handleChangeNextOne, handleChangeFloor} = this.props;
 		
 		let f = {
 			target:{
@@ -358,7 +358,7 @@ calcArea = (e, type) => {
 				}
 				
 				handleChangeNextOne(f, "floor","assessableArea", false, "");
-				handleChangeNextOne(f, "floor","builtupArea", true, "");
+				handleChangeFloor(f, "floor","builtupArea", true, "");
 				
 			} else if(type == 'width' 	&& floorDetails.floor.hasOwnProperty('length')){
 			
@@ -371,7 +371,7 @@ calcArea = (e, type) => {
 				}
 				
 				handleChangeNextOne(f, "floor","assessableArea", false, "");
-				handleChangeNextOne(f, "floor","builtupArea", true, "");
+				handleChangeFloor(f, "floor","builtupArea", true, "");
 				
 			} 			
 		}
@@ -388,7 +388,7 @@ calcArea = (e, type) => {
 		   
 		const renderOption = function(list,listName="") {
 			if(list)
-			{
+			{	list.unshift({code:-1, name:'None'})
 				return list.map((item)=>
 				{
 					return (<MenuItem key={item.code} value={item.code} primaryText={item.name}/>)
@@ -397,7 +397,6 @@ calcArea = (e, type) => {
 		}
 	   
 	     let {
-		  owners,
 		  floorDetails,
 		  fieldErrors,
 		  isFormValid,
@@ -411,7 +410,9 @@ calcArea = (e, type) => {
 		  isEditIndex,
 		  toggleDailogAndSetText,
 		  setLoadingStatus,
-		  toggleSnackbarAndSetText
+		  toggleSnackbarAndSetText,
+		  handleChangeFloor,
+		  isFloorValid
 				} = this.props;
 
 				let {handleAge} = this;
@@ -419,11 +420,10 @@ calcArea = (e, type) => {
 		
 		console.log(floorDetails);
 	   return(
-			<Card>
+			
+			<Card className="uiCard">
                 <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Floor Details</div>} />
-				<CardText style={styles.reducePadding}>
-					<Card className="darkShadow">
-							<CardText style={styles.reducePadding}>
+				<CardText>
 								<Grid fluid>
 									<Row>
 										 <Col xs={12} md={12}>
@@ -432,16 +432,17 @@ calcArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelText="Floor Number *"
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.floorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.floorNo}</span>:"") : ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.floorNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.floorNo}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.floorNo : ""}
 														  onChange={(event, index, value) => {
+															 (value == -1) ?  value = '' : '';
 															  var e = {
 																target: {
 																  value: value
 																}
 															  };
 																
-															  handleChangeNextOne(e, "floor","floorNo", true, "")}
+															  handleChangeFloor(e, "floor","floorNo", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -454,22 +455,26 @@ calcArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														 <SelectField  className="fullWidth selectOption"
 															floatingLabelText="Unit Type"
-															errorText={fieldErrors.floor ? (fieldErrors.floor.unitType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitType}</span>:"" ): ""}
+															errorText={fieldErrors.floor ? (fieldErrors.floor.unitType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.unitType}</span>:"" ): ""}
 															value={floorDetails.floor ? floorDetails.floor.unitType : ""}
 															onChange={(event, index, value) => {
+																(value == -1) ?  value = '' : '';
+							
 																var e = {
 																  target: {
 																	value: value
 																  }
 																};
 																
-																floorDetails.floor.electricMeterNo = null;
-																floorDetails.floor.waterMeterNo = null;
-																floorDetails.floor.exemptionReason = null;
-																floorDetails.floor.rentCollected = null;
-																floorDetails.floor.age = '0TO25';
-
-																handleChangeNextOne(e,"floor" ,"unitType", true, "");
+																if(floorDetails.hasOwnProperty('floor')) {
+																	floorDetails.floor.electricMeterNo = null;
+																	floorDetails.floor.waterMeterNo = null;
+																	floorDetails.floor.exemptionReason = null;
+																	floorDetails.floor.rentCollected = null;
+																	floorDetails.floor.age = '0TO25';
+																}
+																
+																handleChangeFloor(e,"floor" ,"unitType", true, "");
 																
 															  }
 															}
@@ -486,15 +491,16 @@ calcArea = (e, type) => {
 															<Col xs={12} md={3} sm={6}>
 																 <SelectField  className="fullWidth selectOption"
 																	floatingLabelText="Is Room in Flat?"
-																	errorText={fieldErrors.roomInFlat ? (fieldErrors.floor.roomInFlat ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.roomInFlat}</span>:"" ): ""}
+																	errorText={fieldErrors.roomInFlat ? (fieldErrors.floor.roomInFlat ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.roomInFlat}</span>:"" ): ""}
 																	value={floorDetails.floor ? floorDetails.floor.roomInFlat : ""}
 																	onChange={(event, index, value) => {
+																		(value == -1) ?  value = '' : '';
 																		var e = {
 																		  target: {
 																			value: value
 																		  }
 																		};
-																		handleChangeNextOne(e,"floor" ,"roomInFlat", true, "");
+																		handleChangeFloor(e,"floor" ,"roomInFlat", true, "");
 																		if(value == 2) {
 																		  this.setState({addRoom:false});
 																		}
@@ -512,10 +518,10 @@ calcArea = (e, type) => {
 																<Col xs={12} md={3} sm={6}>			
 																	<TextField  className="fullWidth"
 																	  hintText="201"
-																	  floatingLabelText="Flat Number *"
+																	  floatingLabelText="Flat Number"
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
-																	  onChange={(e) => {handleChangeNextOne(e,"floor" ,"flatNo", true, /^\d+$/g)}}
+																	  onChange={(e) => {handleChangeNextOne(e,"floor" ,"flatNo", false, /^\d+$/g)}}
 																	  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 																	  underlineStyle={styles.underlineStyle}
 																	  underlineFocusStyle={styles.underlineFocusStyle}
@@ -533,7 +539,7 @@ calcArea = (e, type) => {
 														  hintText="102"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"unitNo", true, /^\d{3}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^\d{3}$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -544,15 +550,16 @@ calcArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelText="Construction type *"
-														  errorText={fieldErrors.floor ?(fieldErrors.floor.structure? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.structure}</span>:"" ): ""}
+														  errorText={fieldErrors.floor ?(fieldErrors.floor.structure? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.structure}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.structure : ""}
 														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
 															  var e = {
 																target: {
 																  value: value
 																}
 															  };
-															  handleChangeNextOne(e,"floor" ,"structure", true, "")}
+															  handleChangeFloor(e,"floor" ,"structure", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -565,15 +572,16 @@ calcArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelText="Usage type *"
-														  errorText={fieldErrors.floor ?(fieldErrors.floor.usage? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.usage}</span>:"" ): ""}
+														  errorText={fieldErrors.floor ?(fieldErrors.floor.usage? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usage}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usage : ""}
 														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
 															  var e = {
 																target: {
 																  value: value
 																}
 															  };
-															  handleChangeNextOne(e,"floor" ,"usage", true, "")}
+															  handleChangeFloor(e,"floor" ,"usage", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -587,15 +595,16 @@ calcArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelText="Usage sub type *"
-														  errorText={fieldErrors.floor ?(fieldErrors.floor.usageSubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.usageSubType}</span> :""): ""}
+														  errorText={fieldErrors.floor ?(fieldErrors.floor.usageSubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usageSubType}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usageSubType : ""}
 														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
 															  var e = {
 																target: {
 																  value: value
 																}
 															  };
-															  handleChangeNextOne(e,"floor" ,"usageSubType", true, "")}
+															  handleChangeFloor(e,"floor" ,"usageSubType", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -621,15 +630,16 @@ calcArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelText="Occupancy *"
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyType?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyType}</span>:"") : ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyType?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.occupancyType}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyType : ""}
 														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
 															  var e = {
 																target: {
 																  value: value
 																}
 															  };
-															  handleChangeNextOne(e,"floor" ,"occupancyType", true, "")}
+															  handleChangeFloor(e,"floor" ,"occupancyType", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -687,7 +697,6 @@ calcArea = (e, type) => {
 														  formatDate={(date)=> this.formatDate(date)}
 														  floatingLabelText="Construction Date *"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
-														  defaultDate={ floorDetails.floor ? (floorDetails.floor.constCompletionDate ? new Date(floorDetails.floor.constCompletionDate) : new Date() ):  new Date()}
 														  onChange={(event,date) => {
 															  var e = {
 																target:{
@@ -695,7 +704,7 @@ calcArea = (e, type) => {
 																}
 															  }
 															handleAge(date.getFullYear());
-															handleChangeNextOne(e,"floor" ,"constCompletionDate", true, "")}}
+															handleChangeFloor(e,"floor" ,"constCompletionDate", true, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -708,14 +717,13 @@ calcArea = (e, type) => {
 														formatDate={(date)=> this.formatDate(date)}
 														  floatingLabelText="Effective From Date *"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> : "") : ""}
-														  defaultDate={ floorDetails.floor ? (floorDetails.floor.occupancyDate ? new Date(floorDetails.floor.occupancyDate) : new Date() ):  new Date()}
 														  onChange={(event,date) => {
 															  var e = {
 																target:{
 																	value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
 																}
 															  }
-															  handleChangeNextOne(e,"floor" ,"occupancyDate", true, "")}}
+															  handleChangeFloor(e,"floor" ,"occupancyDate", true, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -726,15 +734,16 @@ calcArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelText="Unstructured land *"
-														  errorText={fieldErrors.floor ? ( fieldErrors.floor.isStructured?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.isStructured}</span>:"") : ""}
+														  errorText={fieldErrors.floor ? ( fieldErrors.floor.isStructured?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.isStructured}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.isStructured : ""}
 														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
 															  var e = {
 																target: {
 																  value: value
 																}
 															  };
-															  handleChangeNextOne(e, "floor" ,"isStructured", true, "")}
+															  handleChangeFloor(e, "floor" ,"isStructured", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -788,7 +797,7 @@ calcArea = (e, type) => {
 														  value={floorDetails.floor ? floorDetails.floor.builtupArea : ""}
 														  onChange={(e) => {
 															  handleChangeNextOne(e, "floor","assessableArea", false, "")
-															  handleChangeNextOne(e, "floor","builtupArea", true, "")
+															  handleChangeFloor(e, "floor","builtupArea", true, "")
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -831,7 +840,6 @@ calcArea = (e, type) => {
 														formatDate={(date)=> this.formatDate(date)}
 														  floatingLabelText="Building Permission Date"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.bpaDate? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaDate}</span>:"") : ""}
-															defaultDate={ floorDetails.floor ? (floorDetails.floor.bpaDate ? new Date(floorDetails.floor.bpaDate) : new Date() ):  new Date()}
 														  onChange={(event,date) => {
 															  var e = {
 																target:{
@@ -862,18 +870,18 @@ calcArea = (e, type) => {
 
 													<Col xs={12} style={{textAlign:"right"}}>
 														<br/>
-														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room"  backgroundColor="#0b272e" labelColor={white} onClick={()=>{
+														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid}  backgroundColor="#0b272e" labelColor={white} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
-															 this.props.resetObject("floor");
+															 this.props.resetObject("floor", false);
 															 setTimeout(()=>{
 																	_this.createFloorObject();
 																}, 300);
 															}	
 														}/>}
 														{ (editIndex > -1) &&
-															<RaisedButton type="button" label="Update Room"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+															<RaisedButton type="button" label="Update Room" disabled={!isFloorValid} backgroundColor="#0b272e" labelColor={white} onClick={()=> {
 																  this.props.updateObject("floors","floor",  editIndex);
-																  this.props.resetObject("floor");
+																  this.props.resetObject("floor", false);
 																  isEditIndex(-1);
 																  setTimeout(()=>{
 																	_this.createFloorObject();
@@ -944,7 +952,7 @@ calcArea = (e, type) => {
                                                     <td>{i.bpaBuiltupArea}</td>
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
-															editObject("floor",i);
+															editObject("floor",i, true);
 															toggleSnackbarAndSetText(true, 'Edit room details and update.')
 															isEditIndex(index);
                                                          }}>mode_edit</i>
@@ -970,8 +978,7 @@ calcArea = (e, type) => {
 										</Col>
 									</Row>
 								</Grid>
-							</CardText>
-					</Card>
+		
 				</CardText>
 			</Card>
 	   )
@@ -983,7 +990,8 @@ const mapStateToProps = state => ({
   floorDetails:state.form.form,
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
-  addRoom : state.form.addRoom
+  addRoom : state.form.addRoom,
+  isFloorValid: state.form.isFloorValid
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1016,6 +1024,18 @@ const mapDispatchToProps = dispatch => ({
       pattern
     })
   },
+  
+  handleChangeFloor: (e, property, propertyOne, isRequired, pattern) => {
+    dispatch({
+      type: "HANDLE_CHANGE_FLOOR",
+      property,
+      propertyOne,
+      value: e.target.value,
+      isRequired,
+      pattern
+    })
+  },
+  
   addNestedFormData: (formArray, formData) => {
     dispatch({
       type: "PUSH_ONE",
@@ -1051,18 +1071,20 @@ const mapDispatchToProps = dispatch => ({
     })
   },
 
-  editObject: (objectName, object) => {
+  editObject: (objectName, object, isSectionValid) => {
     dispatch({
       type: "EDIT_OBJECT",
       objectName,
-      object
+      object,
+	  isSectionValid
     })
   },
 
-  resetObject: (object) => {
+  resetObject: (object, isSectionValid) => {
     dispatch({
       type: "RESET_OBJECT",
-      object
+      object,
+	  isSectionValid
     })
   },
 
@@ -1090,6 +1112,20 @@ const mapDispatchToProps = dispatch => ({
       index
     })
   },
+  
+	addDepandencyFields: (property) => {
+		dispatch({
+			type: 'ADD_REQUIRED',
+			property
+		})
+	},
+
+	removeDepandencyFields: (property) => {
+		dispatch({
+			type: 'REMOVE_REQUIRED',
+			property
+		})
+	},
   
 	setLoadingStatus: (loadingStatus) => {
 	  dispatch({type: "SET_LOADING_STATUS", loadingStatus});

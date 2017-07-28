@@ -30,6 +30,13 @@ html, body{
   -webkit-font-smoothing: antialiased;
 }
 
+.menuStyle{
+
+	white-space: nowrap;
+	overflow: hidden;
+	
+}
+
 
 .side-bar {
   margin-top: 64px;

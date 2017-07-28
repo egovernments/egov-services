@@ -329,10 +329,10 @@ class CustomMenu extends Component {
             if (!item.url) {
               return (
                         <MenuItem
-                             style={{whiteSpace: "initial"}}
+                             style={{whiteSpace: "initial", fontSize: "14px"}}
                              key={index}
                              leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={item.name}
+                             primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
                              rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
                              onTouchTap={()=>{menuChangeTwo(!item.path?item.name:item.path)}}
                           />
@@ -344,10 +344,10 @@ class CustomMenu extends Component {
                 return(
                       <Link  key={index} to={menuConvention[item.path]} >
                         <MenuItem
-                            style={{whiteSpace: "initial"}}
+                            style={{whiteSpace: "initial", fontSize: "14px"}}
                              onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
                              leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={item.name}
+                             primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
                           />
                       </Link>
                     )
@@ -367,9 +367,9 @@ class CustomMenu extends Component {
                 return (
                          <a key={index} href={base+item.url} target="_blank">
                            <MenuItem
-                                style={{whiteSpace: "initial"}}
+                                style={{whiteSpace: "initial", fontSize: "14px"}}
                                 leftIcon={<i className="material-icons">view_module</i>}
-                                primaryText={item.name}
+                                primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
                              />
                           </a>
                         )
@@ -389,10 +389,10 @@ class CustomMenu extends Component {
               return(
                     <Link  key={index} to={menuConvention[item.path]} >
                       <MenuItem
-                          style={{whiteSpace: "initial"}}
+                          style={{whiteSpace: "initial", fontSize: "14px"}}
                            onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
                            leftIcon={<i className="material-icons">view_module</i>}
-                           primaryText={item.name}
+                           primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
                         />
                     </Link>
                   )
@@ -412,9 +412,9 @@ class CustomMenu extends Component {
               return (
                        <a key={index} href={base+item.url} target="_blank">
                          <MenuItem
-                              style={{whiteSpace: "initial"}}
+                              style={{whiteSpace: "initial", fontSize: "14px"}}
                               leftIcon={<i className="material-icons">view_module</i>}
-                              primaryText={item.name}
+                              primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
                            />
                         </a>
                       )

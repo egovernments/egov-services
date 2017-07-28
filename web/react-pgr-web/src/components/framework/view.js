@@ -83,9 +83,13 @@ class Report extends Component {
     return  val && (typeof val == "string" || typeof val == "number") ? val : "";
   } 
 
+  printer = () => {
+    window.print();
+  }
+
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {create, handleChange, getVal, addNewCard, removeCard} = this;
+    let {handleChange, getVal, addNewCard, removeCard, printer} = this;
 
     const renderTable = function() {
       if(moduleName && actionName && formData && formData[objectName]) {
@@ -109,13 +113,15 @@ class Report extends Component {
 
     return (
       <div className="Report">
-        <form onSubmit={(e) => {
-          create(e)
-        }}>
+        <form id="printable">
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
+          <br/>
         </form>
+        <div style={{"textAlign": "center"}}>
+            <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" handler={printer}/>
+        </div>
       </div>
     );
   }

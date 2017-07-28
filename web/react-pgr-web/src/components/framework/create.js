@@ -28,17 +28,19 @@ class Report extends Component {
   }
 
   setLabelAndReturnRequired(configObject) {
-    for(var i=0;configObject && i<configObject.groups.length; i++) {
-      configObject.groups[i].label = translate(configObject.groups[i].label);
-      for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-            configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
-            if (configObject.groups[i].fields[j].isRequired)
-                reqRequired.push(configObject.groups[i].fields[j].jsonPath);
-      }
+    if(configObject && configObject.groups) {
+      for(var i=0;configObject && i<configObject.groups.length; i++) {
+        configObject.groups[i].label = translate(configObject.groups[i].label);
+        for (var j = 0; j < configObject.groups[i].fields.length; j++) {
+              configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+              if (configObject.groups[i].fields[j].isRequired)
+                  reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+        }
 
-      if(configObject.groups[i].children && configObject.groups[i].children.length) {
-        for(var k=0; k<configObject.groups[i].children.length; k++) {
-          this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
+        if(configObject.groups[i].children && configObject.groups[i].children.length) {
+          for(var k=0; k<configObject.groups[i].children.length; k++) {
+            this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
+          }
         }
       }
     }

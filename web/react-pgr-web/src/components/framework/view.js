@@ -59,7 +59,6 @@ class Report extends Component {
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
-
     //Get view form data
     var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[0];
     var hash = window.location.hash.split("/");
@@ -89,20 +88,22 @@ class Report extends Component {
     let {create, handleChange, getVal, addNewCard, removeCard} = this;
 
     const renderTable = function() {
-      var objectName = mockData[`${moduleName}.${actionName}`].objectName;
-      if(formData[objectName].documents && formData[objectName].documents.length) {
-        var dataList = {
-          resultHeader: ["#", "Name", "File"],
-          resultValues: []
-        };
+      if(moduleName && actionName && formData && formData[objectName]) {
+        var objectName = mockData[`${moduleName}.${actionName}`].objectName;
+        if(formData[objectName].documents && formData[objectName].documents.length) {
+          var dataList = {
+            resultHeader: ["#", "Name", "File"],
+            resultValues: []
+          };
 
-        for(var i=0; i<formData[objectName].documents.length; i++) {
-          dataList.resultValues.push([i+1, formData[objectName].documents[i].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + formData[objectName].documents[i].fileStoreId + ">Download</a>"]);
+          for(var i=0; i<formData[objectName].documents.length; i++) {
+            dataList.resultValues.push([i+1, formData[objectName].documents[i].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + formData[objectName].documents[i].fileStoreId + ">Download</a>"]);
+          }
+
+          return (
+            <UiTable resultList={dataList}/>
+          );
         }
-
-        return (
-          <UiTable resultList={dataList}/>
-        );
       }
     }
 

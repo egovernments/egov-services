@@ -119,11 +119,11 @@ class PropertyTaxSearch extends Component {
       e.preventDefault();
 	  
 	var query = {
-		  upicNumber : propertyTaxSearch.assessmentNo || '',
-		  oldUpicNo: propertyTaxSearch.oldAssessmentNo || '',
-		  mobileNumber: propertyTaxSearch.mobileNo || '',
-		  aadhaarNumber: propertyTaxSearch.aadharNo || '',
-		  houseNoBldgApt: propertyTaxSearch.doorNo || '',
+		  upicNumber : propertyTaxSearch.upicNumber || '',
+		  oldUpicNo: propertyTaxSearch.oldUpicNo || '',
+		  mobileNumber: propertyTaxSearch.mobileNumber || '',
+		  aadhaarNumber: propertyTaxSearch.aadhaarNumber || '',
+		  houseNoBldgApt: propertyTaxSearch.houseNoBldgApt || '',
 		  revenueZone: propertyTaxSearch.zone || '',
 		  revenueWard: propertyTaxSearch.ward || '',
 		  locality: propertyTaxSearch.location || '',
@@ -214,9 +214,9 @@ class PropertyTaxSearch extends Component {
             </tr>
           </thead>
           <tbody>
-          { false && <tr>
+          {this.state.resultList.length != 0 && <tr>
               <td>3</td>
-              <td>Table cell</td>
+              <td></td>
               <td>Table cell</td>
               <td>Table cell</td>
               <td>Table cell</td>
@@ -249,29 +249,29 @@ class PropertyTaxSearch extends Component {
                   <Grid>
                     <Row>
                       <Col xs={12} md={6}>
-                        <TextField errorText={fieldErrors.doorNo
-                          ? fieldErrors.doorNo
-                          : ""} id="doorNo" value={propertyTaxSearch.doorNo?propertyTaxSearch.doorNo:""} onChange={(e) => handleChange(e, "doorNo", false, /^([\d,/.\-]){6,10}$/g)} hintText="eg:-3233312323" floatingLabelText="Door number" />
+                        <TextField errorText={fieldErrors.houseNoBldgApt
+                          ? fieldErrors.houseNoBldgApt
+                          : ""} id="houseNoBldgApt" value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, /^([\d,/.\-]){6,10}$/g)} hintText="eg:-3233312323" floatingLabelText="Door number" />
                       </Col>
 
                       <Col xs={12} md={6}>
-                        <TextField errorText={fieldErrors.assessmentNo
-                          ? fieldErrors.assessmentNo
-                          : ""} value={propertyTaxSearch.assessmentNo?propertyTaxSearch.assessmentNo:""} onChange={(e) => handleChange(e, "assessmentNo", false, /^\d{3,15}$/g)} hintText="eg:-123456789123456" floatingLabelText="Assessment number"/>
+                        <TextField errorText={fieldErrors.upicNumber
+                          ? fieldErrors.upicNumber
+                          : ""} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^\d{3,15}$/g)} hintText="eg:-123456789123456" floatingLabelText="Assessment number"/>
                       </Col>
                     </Row>
 
                     <Row>
                       <Col xs={12} md={6}>
-                        <TextField errorText={fieldErrors.mobileNo
-                          ? fieldErrors.mobileNo
-                          : ""} value={propertyTaxSearch.mobileNo?propertyTaxSearch.mobileNo:""} onChange={(e) => handleChange(e, "mobileNo", false, /^\d{10}$/g)} hintText="Mobile number" floatingLabelText="Mobile number" />
+                        <TextField errorText={fieldErrors.mobileNumber
+                          ? fieldErrors.mobileNumber
+                          : ""} value={propertyTaxSearch.mobileNumber?propertyTaxSearch.mobileNumber:""} onChange={(e) => handleChange(e, "mobileNumber", false, /^\d{10}$/g)} hintText="Mobile number" floatingLabelText="Mobile number" />
                       </Col>
 
                       <Col xs={12} md={6}>
-                        <TextField errorText={fieldErrors.aadharNo
-                          ? fieldErrors.aadharNo
-                          : ""} value={propertyTaxSearch.aadharNo?propertyTaxSearch.aadharNo:""} onChange={(e) => handleChange(e, "aadharNo", false, /^\d{12}$/g)} hintText="Aadhar number " floatingLabelText="Aadhar number " />
+                        <TextField errorText={fieldErrors.aadhaarNumber
+                          ? fieldErrors.aadhaarNumber
+                          : ""} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText="Aadhar number " floatingLabelText="Aadhar number " />
                       </Col>
                     </Row>
                   </Grid>
@@ -292,9 +292,9 @@ class PropertyTaxSearch extends Component {
                       </Col>
 
                       <Col xs={12} md={6}>
-                        <TextField errorText={fieldErrors.oldAssessmentNo
-                          ? fieldErrors.oldAssessmentNo
-                          : ""} value={propertyTaxSearch.oldAssessmentNo?propertyTaxSearch.oldAssessmentNo:""} onChange={(e) => handleChange(e, "oldAssessmentNo", false, /^\d{3,15}$/g)} hintText="Old Assessment Number" floatingLabelText="Old Assessment Number" />
+                        <TextField errorText={fieldErrors.oldUpicNo
+                          ? fieldErrors.oldUpicNo
+                          : ""} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^\d{3,15}$/g)} hintText="Old Assessment Number" floatingLabelText="Old Assessment Number" />
                       </Col>
                     </Row>
 
@@ -425,7 +425,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: ["assessmentNo", "oldAssessmentNo", "mobileNo", "aadharNo", "doorNo"]
+          required: ["upicNumber", "oldUpicNo", "mobileNumber", "aadhaarNumber", "houseNoBldgApt"]
         }
       }
     });

@@ -120,13 +120,20 @@ class ConstructionTypes extends Component {
 
   }  
 
-  handleUploadValidation = (e, formats, limit) => {
-	     
+  handleUploadValidation = (e, code , formats, limit) => {
+	  
+	  console.log(this.props.files);
+	  
     if(this.props.files.length >= limit){
-      console.log('Maximum files allowed : '+limit);
-      return;
+		console.log(this.props.files);
+        console.log('Maximum files allowed : '+limit);
+        return;
     }
+	
     let validFile = validate_fileupload(e.target.files, formats);
+	
+	e.target.files.createCode = code;
+	
     if(validFile){
       this.props.handleUpload(e);
 	  console.log(e.target.files.length);
@@ -170,12 +177,12 @@ class ConstructionTypes extends Component {
 									<Col xs={12} md={6}>
 									  
 									  {this.state.documentType.length !=0 && this.state.documentType.map((item, index)=>(
-										  <Row>
+										  <Row style={{margin:'10px 0'}}>
 											<Col xs={12} md={6}>
 												{item.code}
 											</Col>
 											<Col xs={12} md={6}>
-											  <input type="file" accept="image/*"  onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)} />
+											  <input type="file" accept="image/*" name={item.name}  onChange={(e)=>handleUploadValidation(e, item.name ,['jpg', 'jpeg', 'png'], 3)} />
 											</Col>
 										  </Row>
 									  ))}

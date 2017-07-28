@@ -438,22 +438,24 @@ createPropertyTax = () => {
 	  var fileStoreArray = [];
 	  			
 	   if(currentThis.props.files.length !=0){
-			if(currentThis.props.files[0].length === 0){
+			if(currentThis.props.files.length === 0){
 				console.log('No file uploads');
 			}else{
 				
-				console.log('still file upload pending', currentThis.props.files[0].length);
+				console.log('still file upload pending', currentThis.props.files.length);
 				
-			  for(let i=0;i<currentThis.props.files[0].length;i++){
+			  for(let i=0;i<currentThis.props.files.length;i++){
+				  
+				  console.log(currentThis.props.files);
 				  
 				let formData = new FormData();
 				formData.append("tenantId", localStorage.getItem('tenantId'));
 				formData.append("module", "PT");
-				formData.append("file", currentThis.props.files[0][i]);
+				formData.append("file", currentThis.props.files[i][0]);
 				Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response){
 					var documentArray = {
 						"documentType": {						
-							"code": ""
+							"code": currentThis.props.files[i].createCode
 						},
 						"fileStore": "",
 						"auditDetails": {
@@ -477,6 +479,7 @@ createPropertyTax = () => {
 			  }
 			}
 		  }
+		  
 		  
      Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
 		currentThis.setState({
@@ -589,7 +592,7 @@ createActivate = () => {
 				  <Card>
 					<CardText style={{textAlign:'center'}}>
 						<br/>
-						<RaisedButton type="button" label="Create Property" disabled={(this.createActivate())} backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>

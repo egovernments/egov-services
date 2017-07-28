@@ -162,6 +162,7 @@ public class ReceiptRepository {
 			logger.error("Persistingreceipt FAILED! ",e.getCause());
 			return isInsertionSuccessful;
 		}
+		isInsertionSuccessful = true;
 		return isInsertionSuccessful;
 
 

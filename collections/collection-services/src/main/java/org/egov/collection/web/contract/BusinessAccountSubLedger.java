@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 @Builder
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
-
 public class BusinessAccountSubLedger {
 
 	private Long id;
@@ -22,6 +19,6 @@ public class BusinessAccountSubLedger {
 
 	private Double amount;
 
-	private BusinessAccountDetails businessAccountDetails;
+	private Long businessAccountDetails;
 
 }

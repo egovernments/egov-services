@@ -43,7 +43,6 @@ package org.egov.collection.repository;
 import lombok.AllArgsConstructor;
 
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
@@ -159,6 +158,7 @@ public class ReceiptRepository {
 			persistToReceiptDetails(parametersReceiptDetails, receiptHeader);
 		//	persistIntoReceiptInstrument(instrumentId, receiptHeader);
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Persistingreceipt FAILED! ",e.getCause());
 			return isInsertionSuccessful;
 		}

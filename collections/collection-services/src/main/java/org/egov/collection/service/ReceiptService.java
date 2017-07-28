@@ -223,7 +223,7 @@ public class ReceiptService {
 		for (BillDetail billDetail : bill.getBillDetails()) {
 			
 			Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
-
+			LOGGER.info("ReceiptHeaderId: "+receiptHeaderId);
 			
 			billDetail.setCollectionType(CollectionType.COUNTER);
 			billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());

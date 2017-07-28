@@ -1,6 +1,7 @@
 package org.egov.egf.master.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,13 +77,33 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 			params.append("id =:id");
 			paramValues.put("id", chartOfAccountSearchEntity.getId());
 		}
+
+		if (chartOfAccountSearchEntity.getIds() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("id in(:ids) ");
+			paramValues.put("ids",
+					new ArrayList<String>(Arrays.asList(chartOfAccountSearchEntity.getIds().split(","))));
+		}
+
 		if (chartOfAccountSearchEntity.getGlcode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("glcode =:glcode");
+			params.append("glcode like :glcode");
 			paramValues.put("glcode", chartOfAccountSearchEntity.getGlcode());
 		}
+
+		if (chartOfAccountSearchEntity.getGlcodes() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("glcode in(:glcodes) ");
+			paramValues.put("glcodes",
+					new ArrayList<String>(Arrays.asList(chartOfAccountSearchEntity.getGlcodes().split(","))));
+		}
+
 		if (chartOfAccountSearchEntity.getName() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -94,7 +115,7 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("accountCodePurpose =:accountCodePurpose");
+			params.append("accountCodePurposeId =:accountCodePurpose");
 			paramValues.put("accountCodePurpose", chartOfAccountSearchEntity.getAccountCodePurposeId());
 		}
 		if (chartOfAccountSearchEntity.getDescription() != null) {
@@ -169,15 +190,13 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 			page.setPageSize(chartOfAccountSearchEntity.getPageSize());
 		}
 
-		/*
-		 * if (params.length() > 0) {
-		 *
-		 * searchQuery = searchQuery.replace(":condition", " where " +
-		 * params.toString());
-		 *
-		 * } else {
-		 */
-		searchQuery = searchQuery.replace(":condition", "");
+		if (params.length() > 0) {
+
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 

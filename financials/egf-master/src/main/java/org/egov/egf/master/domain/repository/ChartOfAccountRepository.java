@@ -1,7 +1,10 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.ChartOfAccount;
@@ -56,7 +59,33 @@ public class ChartOfAccountRepository {
 
 	public Pagination<ChartOfAccount> search(ChartOfAccountSearch domain) {
 
-		return chartOfAccountJdbcRepository.search(domain);
+		Set<ChartOfAccount> chartOfAccountSet = new HashSet<ChartOfAccount>();
+
+		Pagination<ChartOfAccount> finalResult = null;
+		Pagination<ChartOfAccount> result = chartOfAccountJdbcRepository.search(domain);
+
+		if (domain != null && domain.getAccountCodePurpose() != null
+				&& domain.getAccountCodePurpose().getId() != null) {
+
+			domain.setAccountCodePurpose(null);
+
+			for (ChartOfAccount coa : result.getPagedData()) {
+				chartOfAccountSet.add(coa);
+				domain.setGlcode(coa.getGlcode() + "%");
+				Pagination<ChartOfAccount> result1 = chartOfAccountJdbcRepository.search(domain);
+				for (ChartOfAccount temp : result1.getPagedData()) {
+					chartOfAccountSet.add(temp);
+				}
+				finalResult = result1;
+			}
+			finalResult.setTotalResults(chartOfAccountSet.size());
+			finalResult.setPagedData(new ArrayList<>(chartOfAccountSet));
+
+			return finalResult;
+
+		} else
+
+			return result;
 
 	}
 

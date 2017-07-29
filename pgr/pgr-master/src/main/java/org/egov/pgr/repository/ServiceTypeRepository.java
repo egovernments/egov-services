@@ -204,7 +204,7 @@ public class ServiceTypeRepository {
                 preparedStatementValues.toArray());
         if (!serviceTypes.isEmpty()) {
             Long idFromDb = (Long) serviceTypes.get(0).get("id");
-            if (id !=null && idFromDb != id)
+            if (idFromDb != id)
                 return true;
         }
         return false;

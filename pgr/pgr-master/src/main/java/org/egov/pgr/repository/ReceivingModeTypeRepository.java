@@ -171,7 +171,7 @@ public class ReceivingModeTypeRepository {
                 preparedStatementValues.toArray());
         if (!centerTypes.isEmpty()) {
             Long idFromDB = (Long) centerTypes.get(0).get("id");
-            if (id !=null && idFromDB != id)
+            if (idFromDB != id)
                 return true;
         }
         return false;

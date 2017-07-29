@@ -190,6 +190,18 @@ class FloorDetails extends Component {
 	  
 	    var allRooms = floorDetails.floors;
 		
+		if(allRooms) {
+			for(var i = 0; i<allRooms.length;i++){
+			if(allRooms[i].isStructured == 'YES'){
+				allRooms[i].isStructured = true;
+			} else {
+				allRooms[i].isStructured = false;
+			}
+		}
+		
+		}
+		
+		
 		if(!allRooms){
 			return false;
 		}
@@ -739,11 +751,6 @@ calcArea = (e, type) => {
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
 															  
-															  if(value == 'YES'){
-																  value = true;
-															  } else if(value == 'NO'){
-																  value = false;
-															  }
 															  var e = {
 																target: {
 																  value: value

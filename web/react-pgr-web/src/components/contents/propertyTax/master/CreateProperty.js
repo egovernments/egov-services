@@ -415,10 +415,10 @@ createPropertyTax = () => {
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
 					"landOwner": null,
-					"floorType":createProperty.floorType || null,
-					"woodType": createProperty.woodType || null,
-					"roofType": createProperty.roofType || null,
-					"wallType": createProperty.wallType || null,
+					"floorType":(createProperty.propertyType != 'VACANT_LAND' ? (createProperty.floorType || null) : null),
+					"woodType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.woodType || null) : null),
+					"roofType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.roofType || null) : null),
+					"wallType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.wallType || null) : null),
 					"floors":createProperty.floorsArr || null,
 					"documents": [],
 					"stateId": null,
@@ -628,9 +628,13 @@ createActivate = () => {
 				  <OwnerDetails />
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
-				  <Amenities />                  
-				  <ConstructionTypes/>
-				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : <FloorDetails/>}
+				
+				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> :
+					<div>
+						<Amenities />                  
+						<ConstructionTypes/>				  
+						<FloorDetails/>
+					</div>}
 				  <DocumentUpload />
 				  <Workflow />
 				  

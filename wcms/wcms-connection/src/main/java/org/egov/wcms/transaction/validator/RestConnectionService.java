@@ -245,14 +245,10 @@ public class RestConnectionService {
                 .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
         PropertyResponse propResp = null;
         try {
-            System.out.println(wrapper!=null? wrapper.toString()+url.toString():"issue with wrapper in WT");
-            System.out.println(propResp!=null? propResp.toString():"issue with propResp in try block WT");
-            propResp = new RestTemplate().postForObject(url.toString(), wrapper,
+           propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
-            System.out.println(propResp+" propResp after pT hit");
             System.out.println(propResp!=null ?( propResp.toString() +""+propResp.getProperties().size()):"iisue while binding pt to watertax");
         } catch (Exception e) {
-            System.out.println("Exception in geting ptbyupicNo in watertax" +(requestInfo!=null?requestInfo.getTs():null));
             
             System.out.println(propResp!=null? propResp.toString():"issue with propResp in exception block in WT");
             

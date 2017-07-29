@@ -636,16 +636,16 @@ createActivate = () => {
 				  
 									
 			   
-				  <Card className="uiCard">
-					<CardText style={{textAlign:'center'}}>
+				  <div style={{textAlign:'center'}} >
+				
 						<br/>
 						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  primary={true} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>
 						<div className="clearfix"></div>
-					</CardText>
-				  </Card>
+				
+				  </div>
 			
 			  </form>
 		  </div>
@@ -669,7 +669,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'propertyType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
+          required: ['reasonForCreation', 'approver','propertyType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
         },
         pattern: {
           current: [],

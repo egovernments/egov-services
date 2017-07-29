@@ -297,10 +297,10 @@ class PropertyTaxSearch extends Component {
 					  <td>{index+1}</td> 
 					  <td onClick={() => {
 						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
-					  }}>{item.upicNumber}</td>
-					  <td>{item.owners[0].name}</td>
-					  <td>{item.address.addressNumber}</td>
-					  <td>{item.address.addressLine1}</td>
+					  }}>{item.upicNumber || ''}</td>
+					  <td>{item.owners[0] ? item.owners[0].name : ''}</td>
+					  <td>{item.address.addressNumber || ''}</td>
+					  <td>{item.address.addressLine1 || ''}</td>
 					  <td>-</td>
 					  <td>{item.address.addressNumber? item.address.addressNumber+', ' : ''} {item.address.addressLine1 ? item.address.addressLine1+', ' : ''} 
 						  {item.address.addressLine2 ? item.address.addressLine2+', ':''}{item.address.landmark ? item.address.landmark+',':''}
@@ -308,8 +308,8 @@ class PropertyTaxSearch extends Component {
 						  </td>
 					  <td>0</td>
 					  <td>0</td>
-					  <td>{getNameByCode(currentThis.state.propertytypes ,item.propertyDetail.propertyType)}</td>
-					  <td>{item.propertyDetail.category}</td>
+					  <td>{getNameByCode(currentThis.state.propertytypes ,item.propertyDetail.propertyType) || ''}</td>
+					  <td>{item.propertyDetail.category || ''}</td>
 					  <td>
 						<DropdownButton title="Action" id="dropdown-3" pullRight>
 							<MenuItem onClick={()=>{

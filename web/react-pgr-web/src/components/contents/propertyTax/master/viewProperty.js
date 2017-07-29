@@ -63,6 +63,9 @@ const getNameById = function(object, id, property = "") {
 }
 
 const getNameByCode = function(object, code, property = "") {
+	
+	console.log(object, code);
+	
   if (code == "" || code == null) {
         return "";
     }
@@ -91,9 +94,9 @@ class ViewProperty extends Component {
 			resultList:[],
 			unitType:[{code:"FLAT", name:'Flat'},{code:"ROOM", name:'Room'}],
 			floorNumber:[{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
-			gaurdianRelation: [{code:'FATHER', Name:'Father'}, {code:'HUSBAND', Name:'Husband'}, {code:'MOTHER', Name:'Mother'}, {code:'OTHERS', Name:'Others'} ],
-		    gender:[{code:'MALE', Name:'Male'}, {code:'FEMALE', Name:'Female'}, {code:'OTHERS', Name:'Others'}],
-			ownerType:[{code:'Ex_Service_man', Name:'Ex-Service man'}, {code:'Freedom_Fighter', Name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', Name:"Freedom figher's wife"}],
+			gaurdianRelation: [{code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
+		    gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
+			ownerType:[{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}],
 			propertytypes: [],
 			apartments:[],
 			departments:[],
@@ -111,7 +114,7 @@ class ViewProperty extends Component {
 			revanue:[],
 			election:[],
 			usages:[],
-			creationReason:[{code:'NEWPROPERTY', Name:'New Property'}, {code:'SUBDIVISION', Name:'Bifurcation'}]
+			creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}]
        }
       
    }
@@ -125,9 +128,53 @@ class ViewProperty extends Component {
   componentDidMount() {
 	  
 	var currentThis = this;
-
-		let {toggleSnackbarAndSetText} = this.props;
+		
+	 let {showTable,changeButtonText, propertyTaxSearch, setLoadingStatus, toggleSnackbarAndSetText }=this.props;
+      	  
+	  setLoadingStatus('loading');
 	  
+	   var query;
+	  
+	  if(this.props.match.params.type){
+		  query = {
+			  propertyId: this.props.match.params.searchParam
+		  };
+	  } else {
+		   query = {
+			  upicNumber: this.props.match.params.searchParam
+		  };
+	  }
+
+	  
+      Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
+		setLoadingStatus('hide');
+		if(res.hasOwnProperty('Errors')){
+			toggleSnackbarAndSetText(true, "Server returned unexpected error. Please contact system administrator.")
+		} else {
+			  var units = [];
+  
+			  var floors = res.properties[0].propertyDetail.floors;
+			  
+			  for(var i = 0; i<floors.length; i++){
+				  for(var j = 0; j<floors[i].units.length;j++){
+					  floors[i].units[j].floorNo = floors[i].floorNo;
+					  units.push(floors[i].units[j])
+				  }
+			  }
+			  
+			  res.properties[0].propertyDetail.floors = units;
+			  
+			  this.setState({
+				  resultList: res.properties,
+			  })
+		}
+	
+      }).catch((err)=> {
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message)
+      })	
+		
+		
 	Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
         currentThis.setState({propertytypes:res.propertyTypes})
     }).catch((err)=> {
@@ -296,6 +343,11 @@ class ViewProperty extends Component {
 			temp.push(commonFloors);
 			
 		}
+		
+		  
+		  this.setState({
+			  floorNumber: temp
+		  })
 
 		
     let properties = [
@@ -629,24 +681,6 @@ class ViewProperty extends Component {
       "demands": null
     }
   ]
-  
-  var units = [];
-  
-  var floors = properties[0].propertyDetail.floors;
-  
-  for(var i = 0; i<floors.length; i++){
-	  for(var j = 0; j<floors[i].units.length;j++){
-		  floors[i].units[j].floorNo = floors[i].floorNo;
-		  units.push(floors[i].units[j])
-	  }
-  }
-  
-  properties[0].propertyDetail.floors = units;
-  
-  this.setState({
-	  resultList: properties,
-	  floorNumber:temp
-  })
   
 }
 
@@ -987,7 +1021,7 @@ class ViewProperty extends Component {
 																  Gender
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gender ? getNameByCode(this.state.gender, owner.gender) : 'NA'}
+																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>								  
@@ -1011,7 +1045,7 @@ class ViewProperty extends Component {
 																   Guardian Relation
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gaurdianRelation ? getNameByCode(this.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
+																  {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -1205,39 +1239,36 @@ class ViewProperty extends Component {
                                               <th>Building Permission Number</th>
                                               <th>Building Permission Date</th>
                                               <th>Plinth Area In Building Plan</th>
-                                              <th style={{minWidth:70}}></th>
                                             </tr>
                                           </thead>
                                           <tbody>
                                             {item.propertyDetail.floors.length !=0  && item.propertyDetail.floors.map(function(i, index){
                                               if(i){
+												  console.log(i)
                                                 return (<tr key={index}>
                                                     <td>{index}</td>
-                                                    <td>{getNameByCode(currentThis.state.floorNumber, i.floorNo+1) || 'NA'}</td>
+                                                    <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || 'NA'}</td>
 													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || 'NA'}</td>
 													<td>{i.flatNo ? i.flatNo : ''}</td>
                                                     <td>{i.unitNo || 'NA'}</td>
                                                     <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.usage ,i.usageType) || 'NA'}</td>
-                                                    <td>{i.usageSubType}</td>
-                                                    <td>{i.firmName}</td>
-                                                    <td>{i.occupancyType}</td>
-                                                    <td>{i.occupierName}</td>
-                                                    <td>{i.annualRent}</td>
-                                                    <td>{i.manualArv}</td>
-                                                    <td>{i.constCompletionDate}</td>
-                                                    <td>{i.occupancyDate}</td>
-                                                    <td>{i.isStructured}</td>
-                                                    <td>{i.length}</td>
-                                                    <td>{i.width}</td>
-                                                    <td>{i.builtupArea}</td>
-                                                    <td>{i.occupancyCertiNumber}</td>
-                                                    <td>{i.bpaNo}</td>
-                                                    <td>{i.bpaDate}</td>
-                                                    <td>{i.bpaBuiltupArea}</td>
-                                                    <td>
-														
-                                                    </td>
+                                                    <td>{getNameByCode(currentThis.state.usages ,i.usageType) || 'NA'}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || 'NA'}</td>
+                                                    <td>{i.firmName || 'NA'}</td>
+                                                    <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || 'NA'}</td>
+                                                    <td>{i.occupierName || 'NA'}</td>
+                                                    <td>{i.annualRent || 'NA'}</td>
+                                                    <td>{i.manualArv || 'NA'}</td>
+                                                    <td>{i.constCompletionDate ? new Date(i.constCompletionDate).getDate()+'/'+(new Date(i.constCompletionDate).getMonth()+1)+'/'+new Date(i.constCompletionDate).getFullYear() : 'NA' }</td>
+                                                    <td>{i.occupancyDate ? new Date(i.occupancyDate).getDate()+'/'+(new Date(i.occupancyDate).getMonth()+1)+'/'+new Date(i.occupancyDate).getFullYear() : 'NA' }</td>
+                                                    <td>{i.isStructured ? 'Yes' : 'No'}</td>
+                                                    <td>{i.length || 'NA'}</td>
+                                                    <td>{i.width || 'NA'}</td>
+                                                    <td>{i.builtupArea || 'NA'}</td>
+                                                    <td>{i.occupancyCertiNumber || 'NA'}</td>
+                                                    <td>{i.bpaNo || 'NA'}</td>
+                                                    <td>{i.bpaDate ? new Date(i.bpaDate).getDate()+'/'+(new Date(i.bpaDate).getMonth()+1)+'/'+new Date(i.bpaDate).getFullYear() : 'NA' }</td>
+                                                    <td>{i.bpaBuiltupArea || 'NA'}</td>
                                                   </tr>)
                                               }
 

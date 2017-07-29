@@ -750,8 +750,9 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-															  <MenuItem value={true} primaryText="Yes" />
-															  <MenuItem value={false} primaryText="No" />
+															<MenuItem value={-1} primaryText="None" />
+															  <MenuItem value='YES' primaryText="Yes" />
+															  <MenuItem value='NO' primaryText="No" />
 														</SelectField>
 													</Col>
 													<Col xs={12} md={3} sm={6}>

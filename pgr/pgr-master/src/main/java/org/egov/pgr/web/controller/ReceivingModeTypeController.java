@@ -219,7 +219,7 @@ public class ReceivingModeTypeController {
                     .message(PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (modeTypeService.checkReceivingModeTypeByNameAndCode(receivingMode.getCode(),
+        } else if (flag && modeTypeService.checkReceivingModeTypeByNameAndCode(receivingMode.getCode(),
                 receivingMode.getName(), receivingMode.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.RECEIVINGMODE_CODE_UNIQUE_CODE)
                     .message(PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE)

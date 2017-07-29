@@ -171,7 +171,7 @@ public class ReceivingModeTypeRepository {
                 preparedStatementValues.toArray());
         if (!centerTypes.isEmpty()) {
             String codeFromDB = (String) centerTypes.get(0).get("code");
-            if (!codeFromDB.equalsIgnoreCase(code))
+            if (codeFromDB.equalsIgnoreCase(code))
                 return true;
         }
         return false;

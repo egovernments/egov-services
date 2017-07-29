@@ -725,7 +725,7 @@ class ViewProperty extends Component {
 																   Guardian
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gaurdian ? owner.gaurdian : 'NA'}
+																  {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>  

@@ -466,7 +466,7 @@ calcArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														 <SelectField  className="fullWidth selectOption"
-															floatingLabelText="Unit Type"
+															floatingLabelText="Unit Type *"
 															errorText={fieldErrors.floor ? (fieldErrors.floor.unitType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.unitType}</span>:"" ): ""}
 															value={floorDetails.floor ? floorDetails.floor.unitType : ""}
 															onChange={(event, index, value) => {
@@ -512,7 +512,7 @@ calcArea = (e, type) => {
 																			value: value
 																		  }
 																		};
-																		handleChangeFloor(e,"floor" ,"roomInFlat", true, "");
+																		handleChangeNextOne(e,"floor" ,"roomInFlat", false, "");
 																		if(value == 2) {
 																		  this.setState({addRoom:false});
 																		}
@@ -966,6 +966,11 @@ calcArea = (e, type) => {
                                                     <td>{i.bpaBuiltupArea}</td>
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
+															if(i.isStructured){
+																i.isStructured = 'YES'
+															} else {
+																i.isStructured = 'NO'
+															}
 															editObject("floor",i, true);
 															toggleSnackbarAndSetText(true, 'Edit room details and update.')
 															isEditIndex(index);

@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"version": "v1",
 		"url": "/wcms-connection/connection/_create",
+		"idJsonPath":"Connection[0].id",
 		"useTimestamp": true,
 		"tenantIdRequired": true, //Instead of boolean value give json path
 		"objectName": "Connection",

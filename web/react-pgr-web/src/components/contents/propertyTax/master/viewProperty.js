@@ -834,7 +834,7 @@ class ViewProperty extends Component {
 												   Floor Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {getNameById(this.state.floortypes ,item.propertyDetail.floorType) || 'NA'}
+												  {getNameByCode(this.state.floortypes ,item.propertyDetail.floorType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -844,7 +844,7 @@ class ViewProperty extends Component {
 												   Wall Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {getNameById(this.state.walltypes ,item.propertyDetail.wallType) || 'NA'}
+												  {getNameByCode(this.state.walltypes ,item.propertyDetail.wallType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>							  
@@ -858,7 +858,7 @@ class ViewProperty extends Component {
 												   Roof Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												{getNameById(this.state.rooftypes ,item.propertyDetail.roofType) || 'NA'}
+												{getNameByCode(this.state.rooftypes ,item.propertyDetail.roofType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -869,7 +869,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={8} md={6}>
 											  
-												{getNameById(this.state.floortypes ,item.propertyDetail.woodType) || 'NA'}
+												{getNameByCode(this.state.floortypes ,item.propertyDetail.woodType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>

@@ -353,9 +353,10 @@ class ViewProperty extends Component {
 		
 		
 		var tQuery = {
-			businessService :'propertyTax',
-			demandId: [41,45]
-		}
+			businessService :'Property Tax',
+			consumerCode:'AP-PT-2017/07/26-000230-12'
+		}		
+		
 		
         Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
           console.log('taxDetails',res);

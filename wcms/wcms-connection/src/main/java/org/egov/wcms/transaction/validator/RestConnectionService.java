@@ -247,7 +247,9 @@ public class RestConnectionService {
         try {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
+            System.out.println(propResp!=null ?( propResp.toString() +""+propResp.getProperties().size()):"iisue while binding pt to watertax");
         } catch (Exception e) {
+            System.out.println("Exception in geting ptbyupicNo in watertax" +(requestInfo!=null?requestInfo.getTs():null));
             throw new WaterConnectionException("Error while Fetching Data from PropertyTax",
                     "Error while Fetching Data from PropertyTax", requestInfo);
         }

@@ -689,7 +689,7 @@ class ServiceTypeCreate extends Component {
                                     id="active"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              {/*}<Col xs={12} md={3} sm={6}>
 
                                   <Checkbox
                                     label="Has Financial Impact"
@@ -724,7 +724,7 @@ class ServiceTypeCreate extends Component {
                                                                    }}
                                                                    id="metadata"
                                                                  />
-                                                             </Col>
+                                                             </Col>*/}
                               <div className="clearfix"></div>
                                 {promotionFunc()}
 

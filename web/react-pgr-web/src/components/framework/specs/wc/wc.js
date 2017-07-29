@@ -435,7 +435,7 @@ var dat = {
 	"wc.view": {
 		"numCols": 12/3,
 		"version": "v1",
-		"url": "/wcms/masters/categorytype/_search?acknowledgementNumber={acknowledgementNumber}",
+		"url": "/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}",
 		"useTimestamp": true,
 		"tenantIdRequired": true, //Instead of boolean value give json path
 		"objectName": "Connection",

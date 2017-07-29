@@ -130,7 +130,7 @@ class Report extends Component {
       self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath; 
+          var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath); 
           self.props.setRoute(hash);
         }
       }, 1500);

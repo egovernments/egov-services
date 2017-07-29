@@ -100,6 +100,10 @@ public class WcmsConnectionConstants {
     public static final String CATEGORY_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String CATEGORY_NAME_MANADATORY_ERROR_MESSAGE = "Category Type is required";
     
+    public static final String PROPERTYIDENTIFIER_MANDATORY_CODE = "wcms.0045";
+    public static final String PROPERTYIDENTIFIER_MANADATORY_FIELD_NAME = "PropertyIdentifier";
+    public static final String PROPERTYIDENTIFIER_MANADATORY_ERROR_MESSAGE = "Property Identifier is required";
+    
     public static final String APPLICATIONTYPE_MANDATORY_CODE = "wcms.0042";
     public static final String APPLICATIONTYPE_INVALID_FIELD_NAME = "applicationType";
     public static final String APPLICATIONTYPE_INVALID_ERROR_MESSAGE = "Please provide valid Application Type";

@@ -230,7 +230,7 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 
         String finalIdQuery = routerQueryBuilder.checkIDQuery(routerTypeReq);
         List<Map<String, Object>>  id = jdbcTemplate.queryForList(finalIdQuery, preparedStatementValues.toArray());
-		if(count.size() > 0){
+		if(count.size() > 0 && id.size()!=0){
             Long idFromDb = (Long) id.get(0).get("id");
             if(count.get(0) > 0 && idFromDb != routerTypeReq.getRouterType().getId()) {
 				return true; 

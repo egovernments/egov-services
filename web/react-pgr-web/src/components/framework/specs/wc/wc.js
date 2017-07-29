@@ -3,7 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"version": "v1",
 		"url": "/wcms-connection/connection/_create",
-		"idJsonPath":"Connection[0].id",
+		"idJsonPath":"Connection[0].acknowledgementNumber",
 		"useTimestamp": true,
 		"tenantIdRequired": true, //Instead of boolean value give json path
 		"objectName": "Connection",
@@ -435,8 +435,7 @@ var dat = {
 	"wc.view": {
 		"numCols": 12/3,
 		"version": "v1",
-		"url": "/wcms/masters/categorytype/_search?id={id}",
-		"url": "/wcms-connection/connection/_create",
+		"url": "/wcms/masters/categorytype/_search?acknowledgementNumber={acknowledgementNumber}",
 		"useTimestamp": true,
 		"tenantIdRequired": true, //Instead of boolean value give json path
 		"objectName": "Connection",

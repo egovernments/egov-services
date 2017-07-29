@@ -1,6 +1,7 @@
 package org.egov.egf.master.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,13 @@ public class FunctionJdbcRepository extends JdbcRepository {
 			params.append("id =:id");
 			paramValues.put("id", functionSearchEntity.getId());
 		}
+		if (functionSearchEntity.getIds() != null) {
+                          if (params.length() > 0) {
+                                  params.append(" and ");
+                          }
+                          params.append("id in(:ids) ");
+                          paramValues.put("ids", new ArrayList<String>(Arrays.asList(functionSearchEntity.getIds().split(","))));
+                }
 		if (functionSearchEntity.getName() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

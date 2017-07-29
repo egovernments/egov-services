@@ -39,28 +39,79 @@ const styles = {
   }
 };
 
+
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
+const getNameByCode = function(object, code, property = "") {
+  if (code == "" || code == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].code == code) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].code == code) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 class ViewProperty extends Component {
   constructor(props) {
        super(props);
        this.state = {
-		resultList:[],
-		propertytypes: [],
-		apartments:[],
-		departments:[],
-		floortypes:[],
-		rooftypes:[],
-		walltypes:[],
-		woodtypes:[],
-		structureclasses:[],
-		occupancies:[],
-		ward:[],
-		locality:[],
-		zone:[],
-		block:[],
-		street:[],
-		revanue:[],
-		election:[],
-		usages:[],
+			resultList:[],
+			unitType:[{code:"FLAT", name:'Flat'},{code:"ROOM", name:'Room'}],
+			floorNumber:[{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
+			gaurdianRelation: [{code:'FATHER', Name:'Father'}, {code:'HUSBAND', Name:'Husband'}, {code:'MOTHER', Name:'Mother'}, {code:'OTHERS', Name:'Others'} ],
+		    gender:[{code:'MALE', Name:'Male'}, {code:'FEMALE', Name:'Female'}, {code:'OTHERS', Name:'Others'}],
+			ownerType:[{code:'Ex_Service_man', Name:'Ex-Service man'}, {code:'Freedom_Fighter', Name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', Name:"Freedom figher's wife"}],
+			propertytypes: [],
+			apartments:[],
+			departments:[],
+			floortypes:[],
+			rooftypes:[],
+			walltypes:[],
+			woodtypes:[],
+			structureclasses:[],
+			occupancies:[],
+			ward:[],
+			locality:[],
+			zone:[],
+			block:[],
+			street:[],
+			revanue:[],
+			election:[],
+			usages:[],
+			creationReason:[{code:'NEWPROPERTY', Name:'New Property'}, {code:'SUBDIVISION', Name:'Bifurcation'}]
        }
       
    }
@@ -134,14 +185,119 @@ class ViewProperty extends Component {
         woodtypes:[]
       })
     })
+	
+	
+	Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({locality : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            locality : []
+          })
+          console.log(err)
+        })
+
+         Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
+          console.log(res);
+          currentThis.setState({apartments:res.apartments})
+        }).catch((err)=> {
+           currentThis.setState({
+            apartments:[]
+          })
+          console.log(err)
+        }) 
+
+       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({zone : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            zone : []
+          })
+          console.log(err)
+        })
+
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({ward : res.Boundary})
+        }).catch((err)=> {
+          currentThis.setState({
+            ward : []
+          })
+          console.log(err)
+        })
+
+         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({block : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({street : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({revanue : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({election : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
 
 
-	  
-	  
-	  
-	  
-	  
-  
+
+        Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
+          console.log(res);
+          currentThis.setState({structureclasses: res.structureClasses})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('pt-property/property/occuapancies/_search').then((res)=>{
+          console.log(res);
+          currentThis.setState({occupancies : res.occuapancyMasters})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
+          console.log(res);
+          currentThis.setState({usages : res.usageMasters})
+        }).catch((err)=> {
+          console.log(err)
+        })
+		
+		var temp = this.state.floorNumber;
+		
+		for(var i=5;i<=34;i++){
+			var label = 'th';
+			if((i-4)==1){
+				label = 'st';
+			} else if ((i-4)==2){
+				label = 'nd';
+			} else if ((i-4)==3){
+				label = 'rd';
+			}
+			var commonFloors = {
+				code:i,
+				name:(i-4)+label+" Floor"
+			}
+			temp.push(commonFloors);
+			
+		}
+
+		
     let properties = [
     {
       "id": 1,
@@ -488,7 +644,8 @@ class ViewProperty extends Component {
   properties[0].propertyDetail.floors = units;
   
   this.setState({
-	  resultList: properties
+	  resultList: properties,
+	  floorNumber:temp
   })
   
 }
@@ -509,6 +666,8 @@ class ViewProperty extends Component {
   render() {
 	  
 	 let { resultList } = this.state;
+	 
+	 let currentThis = this;
 	 	  
 	 return(
 		<div className="viewProperty">
@@ -559,7 +718,7 @@ class ViewProperty extends Component {
 												  Property Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												 {item.propertyDetail.propertyType || 'NA'}
+												 {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -589,7 +748,7 @@ class ViewProperty extends Component {
 												  Reason for Creation
 											  </Col>
 											  <Col xs={8} md={6}>
-												   {item.creationReason || 'NA'}
+												   {getNameByCode(this.state.creationReason, item.creationReason) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -624,7 +783,7 @@ class ViewProperty extends Component {
 												   Effective Date
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.occupancyDate}
+												  {item.occupancyDate ? new Date(item.occupancyDate).getDate()+'/'+(new Date(item.occupancyDate).getMonth()+1)+'/'+new Date(item.occupancyDate).getFullYear() : 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -634,7 +793,7 @@ class ViewProperty extends Component {
 												  Apartment/Complex Name
 											  </Col>
 											  <Col xs={8} md={6}>
-												
+												  {item.propertyDetail.apartment || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -654,7 +813,8 @@ class ViewProperty extends Component {
 												  Registration Doc Date
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.propertyDetail.regdDocDate}
+												{item.propertyDetail.regdDocDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+(new Date(item.propertyDetail.regdDocDate).getMonth()+1)+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
+ 
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -664,7 +824,7 @@ class ViewProperty extends Component {
 												  Assessment Date
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.assessmentDate}
+												  {item.assessmentDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+new Date(item.propertyDetail.regdDocDate).getMonth()+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -827,7 +987,7 @@ class ViewProperty extends Component {
 																  Gender
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gender ? owner.gender : 'NA'}
+																  {owner.gender ? getNameByCode(this.state.gender, owner.gender) : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>								  
@@ -851,7 +1011,7 @@ class ViewProperty extends Component {
 																   Guardian Relation
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gaurdianRelation ? owner.gaurdianRelation : 'NA'}
+																  {owner.gaurdianRelation ? getNameByCode(this.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -970,7 +1130,7 @@ class ViewProperty extends Component {
 												   Floor Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.propertyDetail.floorType}
+												  {getNameById(this.state.floortypes ,item.propertyDetail.floorType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -980,7 +1140,7 @@ class ViewProperty extends Component {
 												   Wall Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.propertyDetail.wallType}
+												  {getNameById(this.state.walltypes ,item.propertyDetail.wallType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>							  
@@ -994,7 +1154,7 @@ class ViewProperty extends Component {
 												   Roof Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												{item.propertyDetail.roofType}
+												{getNameById(this.state.rooftypes ,item.propertyDetail.roofType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -1004,7 +1164,8 @@ class ViewProperty extends Component {
 												   Wood Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												{item.propertyDetail.woodType}
+											  
+												{getNameById(this.state.floortypes ,item.propertyDetail.woodType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -1052,12 +1213,12 @@ class ViewProperty extends Component {
                                               if(i){
                                                 return (<tr key={index}>
                                                     <td>{index}</td>
-                                                    <td>{i.floorNo}</td>
-													<td>{i.unitType}</td>
+                                                    <td>{getNameByCode(currentThis.state.floorNumber, i.floorNo+1) || 'NA'}</td>
+													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || 'NA'}</td>
 													<td>{i.flatNo ? i.flatNo : ''}</td>
-                                                    <td>{i.unitNo}</td>
-                                                    <td>{i.structure}</td>
-                                                    <td>{i.usageType}</td>
+                                                    <td>{i.unitNo || 'NA'}</td>
+                                                    <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || 'NA'}</td>
+                                                    <td>{getNameByCode(currentThis.state.usage ,i.usageType) || 'NA'}</td>
                                                     <td>{i.usageSubType}</td>
                                                     <td>{i.firmName}</td>
                                                     <td>{i.occupancyType}</td>

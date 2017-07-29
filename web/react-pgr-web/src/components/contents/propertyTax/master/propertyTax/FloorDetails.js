@@ -349,7 +349,7 @@ calcArea = (e, type) => {
 		if(floorDetails.hasOwnProperty('floor')) {
 			if(type == 'length' && floorDetails.floor.hasOwnProperty('width')){
 			
-				f.target.value = parseInt(e.target.value) * parseInt(floorDetails.floor.width)
+				f.target.value = parseFloat(e.target.value) * parseFloat(floorDetails.floor.width)
 		
 				if(!f.target.value){ 
 					hasLW = false;
@@ -362,7 +362,7 @@ calcArea = (e, type) => {
 				
 			} else if(type == 'width' 	&& floorDetails.floor.hasOwnProperty('length')){
 			
-				f.target.value = parseInt(floorDetails.floor.length) * parseInt(e.target.value)
+				f.target.value = parseFloat(floorDetails.floor.length) * parseFloat(e.target.value)
 				
 				if(!f.target.value){ 
 					hasLW = false;

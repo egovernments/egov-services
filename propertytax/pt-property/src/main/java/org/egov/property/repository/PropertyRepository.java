@@ -58,6 +58,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -1529,7 +1530,26 @@ public class PropertyRepository {
 			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
 			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 			property.setAuditDetails(auditDetails);
+			List<Demand> demands = new ArrayList<Demand>();
+		
+			if ( row.get("demands")!=null){
+				ObjectMapper mapper = new ObjectMapper();
+				TypeReference<List<DemandId>> typeReference = new TypeReference<List<DemandId>>() {
+				};
+				try {
+					List<DemandId> demandIds = mapper.readValue(row.get("demands").toString(), typeReference);
 
+					for ( DemandId demandId : demandIds){
+						Demand demand = new Demand();
+						demand.setId(demandId.getId());
+						demands.add(demand);
+					}
+				} catch (Exception e) {
+					logger.error("error"+e);
+				}
+			}
+
+			property.setDemands(demands);
 			properties.add(property);
 
 		}

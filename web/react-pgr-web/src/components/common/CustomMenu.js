@@ -84,7 +84,7 @@ class CustomMenu extends Component {
     }
 
 
-    // console.log(menuItems);
+    // console.log(_.orderBy(menuItems, ['orderNumber'], ['asc']));
     this.setState({
       menuItems,
       path:""
@@ -140,7 +140,8 @@ class CustomMenu extends Component {
     }
 
 
-    // console.log(menuItems);
+    // console.log(_.orderBy(menuItems, ['orderNumber'], ['asc']));
+    menuItems=_.orderBy(menuItems, ['orderNumber'], ['asc']);
     this.setState({
       menuItems,
       path

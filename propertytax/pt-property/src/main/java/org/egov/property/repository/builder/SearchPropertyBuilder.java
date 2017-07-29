@@ -38,14 +38,14 @@ public class SearchPropertyBuilder {
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
-			String ownerName, int demandFrom, int demandTo, String propertyId, List<Object> preparedStatementValues) {
+			String ownerName, int demandFrom, int demandTo, String propertyId,String applicationNo, List<Object> preparedStatementValues) {
 
 		StringBuffer searchPropertySql = new StringBuffer();
 
 		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 
 		if (ownerName != null && !ownerName.isEmpty())
-			userSearchRequestInfo.put("userName", ownerName);
+			userSearchRequestInfo.put("name", ownerName);
 
 		if (mobileNumber != null && !mobileNumber.isEmpty())
 
@@ -163,7 +163,7 @@ public class SearchPropertyBuilder {
 		// then we need to put the default page size and page number
 		//
 
-		if (pageNumber == -1)
+		if (pageNumber == -1 || pageNumber == 0)
 			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
 
 		if (pageSize == -1)
@@ -189,20 +189,26 @@ public class SearchPropertyBuilder {
 
 	}
 
-	public static final String BASE_QUERY = "select * from egpt_property prop";
+	public static final String BASE_QUERY = "select * from egpt_property prop LEFT JOIN egpt_propertydetails prd on prd.property= prop.id";
 
 	public String getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
-			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize) {
+			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize,String applicationNo) {
 
 		StringBuffer searchQuery = new StringBuffer();
 		searchQuery.append(BASE_QUERY);
 
 		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
-			searchQuery.append(" JOIN egpt_address Addr on Addr.property =  prop.id WHERE ");
+			searchQuery.append(" LEFT JOIN egpt_address Addr on Addr.property =  prop.id WHERE ");
 			searchQuery.append("Addr.addressnumber =? AND");
 			preparedStatementValues.add(houseNoBldgApt);
 		} else {
 			searchQuery.append(" WHERE");
+		}
+		
+		if ( applicationNo!= null && !applicationNo.isEmpty()){
+			
+			searchQuery.append(" prd.applicationno=? AND");
+			preparedStatementValues.add(applicationNo);
 		}
 
 		if (upicNo != null && !upicNo.isEmpty()) {
@@ -227,7 +233,7 @@ public class SearchPropertyBuilder {
 
 		searchQuery.append(" ORDER BY upicnumber");
 
-		if (pageNumber == -1)
+		if (pageNumber == -1 || pageNumber == 0)
 			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
 
 		if (pageSize == -1)

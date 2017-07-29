@@ -153,7 +153,7 @@ class viewOrUpdateServiceType extends Component {
             _this.props.setLoadingStatus("hide");
             _this.setInitialState({..._state, modify: true});
           }
-        } 
+        }
 
         Api.commonApiPost("/pgr-master/service/v1/_search", {}, {}).then(function(response) {
             checkCountAndSetState("data", response.Service);
@@ -196,7 +196,7 @@ class viewOrUpdateServiceType extends Component {
       return(
         <div className="serviceTypeCreate">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Grievance Type List</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>

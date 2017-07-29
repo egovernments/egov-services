@@ -401,6 +401,7 @@ public class ValidatorUtils {
         checkPipeSizeValues(errorFields, donationRequest);
         checkDonationAmountValues(errorFields, donationRequest);
         checkFromToDateValues(errorFields, donationRequest);
+        checkMaxPipesizeAndMinPipeSize(errorFields, donationRequest);
         checkPropertyTypeAndUsageTypeExist(errorFields, donationRequest);
         checkCategoryTypeAndPipeSizeExist(errorFields, donationRequest);
         addTenantIdValidationErrors(donationRequest.getDonation().getTenantId(), errorFields);
@@ -445,6 +446,26 @@ public class ValidatorUtils {
                     .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
         }
+    }
+
+    private void checkMaxPipesizeAndMinPipeSize(final List<ErrorField> errorFields, final DonationRequest donationRequest) {
+        if (donationRequest.getDonation().getMinPipeSize() > 0
+                && donationRequest.getDonation().getMaxPipeSize() > 0)
+            if (donationRequest.getDonation().getMinPipeSize() > donationRequest.getDonation().getMaxPipeSize()) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DONATION_MINPIPESIZE_MAXPIPESIZE_CODE)
+                        .message(WcmsConstants.DONATION_MINPIPESIZE_MAXPIPESIZE_ERROR_MESSAGE)
+                        .field(WcmsConstants.DONATION_MINPIPESIZE_MAXPIPESIZE_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
+
+            else if (donationRequest.getDonation().getMinPipeSize().equals(donationRequest.getDonation().getMaxPipeSize())) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DONATION_MINPIPESIZE_MAXPIPESIZE_EQUAL_CODE)
+                        .message(WcmsConstants.DONATION_MINPIPESIZE_MAXPIPESIZE__EQUAL_ERROR_MESSAGE)
+                        .field(WcmsConstants.DONATION_MINPIPESIZE_MAXPIPESIZE__EQUALFIELD_NAME).build();
+                errorFields.add(errorField);
+
+            }
+
     }
 
     private void checkDonationAmountValues(final List<ErrorField> errorFields, final DonationRequest donationRequest) {

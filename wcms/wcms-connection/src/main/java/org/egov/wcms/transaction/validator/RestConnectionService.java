@@ -52,6 +52,7 @@ import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.Property;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
@@ -256,9 +257,15 @@ public class RestConnectionService {
                     "Error while Fetching Data from PropertyTax", requestInfo);
         }
 
-        if (propResp != null && propResp.getProperties()!=null && !propResp.getProperties().isEmpty())
+        Property propertyObj=waterRequestReq.getConnection().getProperty();
+        if (propResp != null && propResp.getProperties()!=null && !propResp.getProperties().isEmpty()){
             waterRequestReq.getConnection().setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
-
+        if(!propResp.getProperties().get(0).getOwners().isEmpty()){
+        propertyObj.setNameOfApplicant(propResp.getProperties().get(0).getOwners().get(0).getName());
+        propertyObj.setEmail(propResp.getProperties().get(0).getOwners().get(0).getEmailId());
+        propertyObj.setMobileNumber(propResp.getProperties().get(0).getOwners().get(0).getMobileNumber());
+        }
+        }
         return propResp;
     }
 

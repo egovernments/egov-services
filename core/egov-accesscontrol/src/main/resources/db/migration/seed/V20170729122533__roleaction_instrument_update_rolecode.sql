@@ -1,0 +1,2 @@
+update eg_roleaction set rolecode='SUPERUSER' where actionid in (select id from eg_action where parentmodule in (select id::text from service where code in ('Instrument Account Code','Instrument Type','Surrender Reason'))) and rolecode= 'Super User';
+update eg_roleaction set rolecode='SUPERUSER' where actionid in (select id from eg_action where parentmodule in (select id::text from service where code in ('Create Instrument'))) and rolecode= 'Super User';

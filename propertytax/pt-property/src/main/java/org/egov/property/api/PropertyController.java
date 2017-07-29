@@ -85,7 +85,7 @@ public class PropertyController {
 	public PropertyResponse propertySearch(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(value = "tenantId", required = true) String tenantId,
 			@RequestParam(value = "active", required = false) Boolean active,
-			@RequestParam(value = "upicNo", required = false) String upicNo,
+			@RequestParam(value = "upicNumber", required = false) String upicNumber,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@RequestParam(value = "sort", required = false) String[] sort,
@@ -122,7 +122,7 @@ public class PropertyController {
 		if (demandTo == null)
 			demandTo = -1;
 
-		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNo, pageSize,
+		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNumber, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
 				locality, ownerName, demandFrom, demandTo, propertyId,applicationNo);
 

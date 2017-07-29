@@ -51,13 +51,13 @@ export default class UiLabel extends Component {
  	renderLabel = (item) => {
  		return (
       <div>
- 			<Row>
-          <Col xs={12}>
-            <label><span style={{"fontWeight":"bold"}}>{item.label}</span></label>
-          </Col>
-          <Col xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "-"}</Col>
-      </Row>
-      <br/>
+   			<Row>
+            <Col xs={12}>
+              <label><span style={{"fontWeight":"bold"}}>{item.label}</span></label>
+            </Col>
+            <Col xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "-"}</Col>
+        </Row>
+        <br/>
       </div>
  		);
  	}

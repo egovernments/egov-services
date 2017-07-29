@@ -860,7 +860,9 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange: (value, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
-    if(property === 'addressId'){
+    if(property === 'serviceCategory'){
+      dispatch({type: "HANDLE_CHANGE", property: 'serviceCode', value: '', isRequired : true, pattern: ''});
+    }else if(property === 'addressId'){
       dispatch({type: "ADD_MANDATORY", property: 'addressId', value: '', isRequired : true, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lng', value: '', isRequired : false, pattern: ''});

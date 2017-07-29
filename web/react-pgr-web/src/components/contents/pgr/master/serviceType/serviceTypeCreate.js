@@ -737,7 +737,7 @@ class ServiceTypeCreate extends Component {
               </div>
           </form>
           <Dialog
-               title={this.state.id != '' ? "Service Group Updated Successfully" : "Service Group Added Successfully"}
+               title={this.state.id != '' ? "Grievance Type Updated Successfully" : "Grievance Type Created Successfully"}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}

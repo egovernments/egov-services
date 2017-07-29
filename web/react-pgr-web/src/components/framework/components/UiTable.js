@@ -56,7 +56,7 @@ class UiTable extends Component {
   				<Card>
 		          <CardHeader title={<strong> {translate("ui.table.title")} </strong>}/>
 		          <CardText>
-		          <Table id="searchTable" bordered responsive>
+		          <Table id="searchTable" bordered responsive className="table-striped">
 		          <thead>
 		            <tr>
 		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {

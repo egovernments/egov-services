@@ -79,7 +79,7 @@ export default class UiDynamicTable extends Component {
    				<Card>
 			      <CardHeader title={<strong> {item.label} </strong>}/>
 			        <CardText>
-			          <Table className="dynamicTable" bordered responsive>
+			          <Table className="dynamicTable" bordered responsive className="table-striped">
 				          <thead>
 				            <tr>
 				              {item.header && item.header.length && item.header.map((item2, i) => {

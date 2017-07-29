@@ -43,7 +43,24 @@ class ViewProperty extends Component {
   constructor(props) {
        super(props);
        this.state = {
-		 resultList:[]
+		resultList:[],
+		propertytypes: [],
+		apartments:[],
+		departments:[],
+		floortypes:[],
+		rooftypes:[],
+		walltypes:[],
+		woodtypes:[],
+		structureclasses:[],
+		occupancies:[],
+		ward:[],
+		locality:[],
+		zone:[],
+		block:[],
+		street:[],
+		revanue:[],
+		election:[],
+		usages:[],
        }
       
    }
@@ -55,6 +72,75 @@ class ViewProperty extends Component {
   }
 
   componentDidMount() {
+	  
+	var currentThis = this;
+
+		let {toggleSnackbarAndSetText} = this.props;
+	  
+	Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+        currentThis.setState({propertytypes:res.propertyTypes})
+    }).catch((err)=> {
+        currentThis.setState({
+          propertytypes:[]
+        })
+		toggleSnackbarAndSetText(true, err.message);
+    }) 
+
+	Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
+	  currentThis.setState({
+		departments:res.departments
+	  })
+	}).catch((err)=> {
+	  console.log(err)
+		toggleSnackbarAndSetText(true, err.message);
+	})
+	
+	Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+	  res.floorTypes.unshift({code:-1, name:'None'})
+      currentThis.setState({floortypes:res.floorTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        floortypes:[]
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+      currentThis.setState({rooftypes: res.roofTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        rooftypes: []
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+      currentThis.setState({walltypes: res.wallTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        walltypes:[]
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+      currentThis.setState({woodtypes: res.woodTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        woodtypes:[]
+      })
+    })
+
+
+	  
+	  
+	  
+	  
+	  
   
     let properties = [
     {
@@ -387,6 +473,19 @@ class ViewProperty extends Component {
       "demands": null
     }
   ]
+  
+  var units = [];
+  
+  var floors = properties[0].propertyDetail.floors;
+  
+  for(var i = 0; i<floors.length; i++){
+	  for(var j = 0; j<floors[i].units.length;j++){
+		  floors[i].units[j].floorNo = floors[i].floorNo;
+		  units.push(floors[i].units[j])
+	  }
+  }
+  
+  properties[0].propertyDetail.floors = units;
   
   this.setState({
 	  resultList: properties
@@ -917,158 +1016,76 @@ class ViewProperty extends Component {
 				
 						  <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Floor Details</div>} />
-								  {item.propertyDetail.floors.length !=0 && item.propertyDetail.floors.map((floor, index)=>(
-									<div key={index}> <h5 style={{marginLeft:'30px'}}> Floor Number {floor.floorNo || 'NA'}</h5>
-										{floor.units.length !=0 && floor.units.map((unit, index)=>{
-											return(
-													<CardText key={index}>
-													<Col md={6} xs={12}>
-														<ListGroup>
+								<CardText>
+									<Col xs={12} md={12}>
+									 <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
+                                          <thead style={{backgroundColor:"#607b84",color:"white"}}>
+                                            <tr>
+                                              <th>#</th>
+											  <th>Floor No.</th>
+                                              <th>Unit Type</th>
+											  <th>Flat No.</th>
+                                              <th>Unit No.</th>
+                                              <th>Construction Type</th>
+                                              <th>Usage Type</th>
+                                              <th>Usage Sub Type</th>
+                                              <th>Firm Name</th>
+                                              <th>Occupancy</th>
+                                              <th>Occupant Name</th>
+                                              <th>Annual Rent</th>
+                                              <th>Manual ARV</th>
+                                              <th>Construction Date</th>
+                                              <th>Effective From Date</th>
+                                              <th>Unstructured land</th>
+                                              <th>Length</th>
+                                              <th>Breadth</th>
+                                              <th>Plinth Area</th>
+                                              <th>Occupancy Certificate Number</th>
+                                              <th>Building Permission Number</th>
+                                              <th>Building Permission Date</th>
+                                              <th>Plinth Area In Building Plan</th>
+                                              <th style={{minWidth:70}}></th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {item.propertyDetail.floors.length !=0  && item.propertyDetail.floors.map(function(i, index){
+                                              if(i){
+                                                return (<tr key={index}>
+                                                    <td>{index}</td>
+                                                    <td>{i.floorNo}</td>
+													<td>{i.unitType}</td>
+													<td>{i.flatNo ? i.flatNo : ''}</td>
+                                                    <td>{i.unitNo}</td>
+                                                    <td>{i.structure}</td>
+                                                    <td>{i.usageType}</td>
+                                                    <td>{i.usageSubType}</td>
+                                                    <td>{i.firmName}</td>
+                                                    <td>{i.occupancyType}</td>
+                                                    <td>{i.occupierName}</td>
+                                                    <td>{i.annualRent}</td>
+                                                    <td>{i.manualArv}</td>
+                                                    <td>{i.constCompletionDate}</td>
+                                                    <td>{i.occupancyDate}</td>
+                                                    <td>{i.isStructured}</td>
+                                                    <td>{i.length}</td>
+                                                    <td>{i.width}</td>
+                                                    <td>{i.builtupArea}</td>
+                                                    <td>{i.occupancyCertiNumber}</td>
+                                                    <td>{i.bpaNo}</td>
+                                                    <td>{i.bpaDate}</td>
+                                                    <td>{i.bpaBuiltupArea}</td>
+                                                    <td>
 														
-														<ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Classification of Building
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.structure || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>							  
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Nature of Usage
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.usage || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Firm Name
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.firmName || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Occupancy
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.occupancyType || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Occupant Name
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.occupierName || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Construction Date	
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.constCompletionDate || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Effective From Date	
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.occupancyDate || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-													  </ListGroup>
-													</Col>
-													<Col md={6} xs={12}>
-														<ListGroup>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Unstructured land
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.isStructured || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Length
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.length || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Breadth
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.width || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Plinth area (Sq.Mtrs)
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.builtupArea || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Building Permission no
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.bpaNo}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Building Permission Date
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {unit.bpaDate || 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-													  </ListGroup>
-													</Col>
-													<div className="clearfix"></div>
-											  </CardText>
-											)
-										})}
-										<hr/>
-									  </div>
-								  ))}
-                              
+                                                    </td>
+                                                  </tr>)
+                                              }
+
+                                            })}
+                                          </tbody>
+                                          </Table>
+										  </Col>
+										  <div className="clearfix"></div>
+                              </CardText>
                           </Card>
 						    <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Tax Details</div>} />
@@ -1111,6 +1128,13 @@ class ViewProperty extends Component {
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
+	
+	setLoadingStatus: (loadingStatus) => {
+     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+   },
+   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
   
  });
 

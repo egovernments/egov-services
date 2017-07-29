@@ -846,7 +846,7 @@ calcArea = (e, type) => {
 																	value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
 																}
 															  }
-															  handleChangeNextOne(e,"floor" ,"buildingPermissionDate", false, "")}}
+															  handleChangeNextOne(e,"floor" ,"bpaDate", false, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}

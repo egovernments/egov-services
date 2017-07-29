@@ -265,6 +265,8 @@ class PropertyTaxSearch extends Component {
 
 	let currentThis = this;
 	
+	let {history} = this;
+	
     const viewTabel=()=>
     {
       return (
@@ -293,9 +295,7 @@ class PropertyTaxSearch extends Component {
 			  if(item){
 				  return(<tr>
 					  <td>{index+1}</td> 
-					  <td onClick={
-						  this.history.push(`/propertyTax/view-property/${item.upicNumber}`)
-					  }>{item.upicNumber}</td>
+					  <td>{item.upicNumber}</td>
 					  <td>{item.owners[0].name}</td>
 					  <td>{item.address.addressNumber}</td>
 					  <td>{item.address.addressLine1}</td>

@@ -114,7 +114,8 @@ class ViewProperty extends Component {
 			revanue:[],
 			election:[],
 			usages:[],
-			creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}]
+			creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}],
+			taxDetails: []
        }
       
    }
@@ -344,13 +345,25 @@ class ViewProperty extends Component {
 			
 		}
 		
-		  
 		  this.setState({
 			  floorNumber: temp
 		  })
-
+		  
+		var taxDetailQuery = [{"id": "47"}, {"id": "48"}, {"id": "49"}, {"id": "50"}];
 		
-   
+		
+		var tQuery = {
+			businessService :'propertyTax',
+			demandId: [41,45]
+		}
+		
+        Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
+          console.log('taxDetails',res);
+          //currentThis.setState({taxDetails : res.usageMasters})
+        }).catch((err)=> {
+          console.log(err)
+		  console.log('taxDetailsError',err);
+        })
   
 }
 

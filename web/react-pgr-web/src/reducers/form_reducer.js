@@ -26,10 +26,10 @@ export default(state = defaultState, action) => {
 	  
 	  
 	case "ADD_REQUIRED" : 
-	var b = state.validationData.required.required.indexOf(action.property);
-	if(b==-1){
-		state.validationData.required.required.push(action.property);
-	}
+		var b = state.validationData.required.required.indexOf(action.property);
+		if(b==-1){
+			state.validationData.required.required.push(action.property);
+		}
 		
 		return {
 			...state,
@@ -51,6 +51,35 @@ export default(state = defaultState, action) => {
 		return {
 			...state
 		}
+		
+		
+	case "ADD_FLOOR_REQUIRED" : 
+		var b = state.validatePropertyFloor.required.required.indexOf(action.property);
+		if(b==-1){
+			state.validatePropertyFloor.required.required.push(action.property);
+		}
+		
+		return {
+			...state,
+		}
+		
+    case "REMOVE_FLOOR_REQUIRED" : 
+	
+		var a = state.validatePropertyFloor.required.required.indexOf(action.property);
+		var b = state.validatePropertyFloor.required.current.indexOf(action.property);
+		
+		console.log('isthere', a)
+		if(a!=-1){
+			state.validatePropertyFloor.required.required.splice(a,1);
+		}
+		
+		if(b!=-1){
+			state.validatePropertyFloor.required.current.splice(b,1);
+		}
+			
+		return {
+			...state
+		}		
 
     case "PUSH_ONE":
 

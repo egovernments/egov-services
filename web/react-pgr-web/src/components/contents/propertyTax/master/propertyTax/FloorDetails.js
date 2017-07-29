@@ -507,12 +507,22 @@ calcArea = (e, type) => {
 																	value={floorDetails.floor ? floorDetails.floor.roomInFlat : ""}
 																	onChange={(event, index, value) => {
 																		(value == -1) ?  value = '' : '';
+																		
+																	    if(value == 1){
+																			if(floorDetails.floor.hasOwnProperty('flatNo')){
+																				floorDetails.floor.flatNo = '';
+																			}
+																			this.props.addFloorDepandencyFields('flatNo');
+																		} else {
+																			this.props.removeFloorDepandencyFields('flatNo');
+																		}
+																		
 																		var e = {
 																		  target: {
 																			value: value
 																		  }
 																		};
-																		handleChangeNextOne(e,"floor" ,"roomInFlat", false, "");
+																		handleChangeFloor(e,"floor" ,"roomInFlat", false, "");
 																		if(value == 2) {
 																		  this.setState({addRoom:false});
 																		}
@@ -533,7 +543,7 @@ calcArea = (e, type) => {
 																	  floatingLabelText="Flat Number"
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
-																	  onChange={(e) => {handleChangeNextOne(e,"floor" ,"flatNo", false, /^\d+$/g)}}
+																	  onChange={(e) => {handleChangeFloor(e,"floor" ,"flatNo", true, /^\d+$/g)}}
 																	  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 																	  underlineStyle={styles.underlineStyle}
 																	  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1132,16 +1142,16 @@ const mapDispatchToProps = dispatch => ({
     })
   },
   
-	addDepandencyFields: (property) => {
+	addFloorDepandencyFields: (property) => {
 		dispatch({
-			type: 'ADD_REQUIRED',
+			type: 'ADD_FLOOR_REQUIRED',
 			property
 		})
 	},
 
-	removeDepandencyFields: (property) => {
+	removeFloorDepandencyFields: (property) => {
 		dispatch({
-			type: 'REMOVE_REQUIRED',
+			type: 'REMOVE_FLOOR_REQUIRED',
 			property
 		})
 	},

@@ -82,6 +82,13 @@ public class ServiceGroupQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" id IN " + getIdQuery(serviceGroupGetRequest.getId()));
 		}
+
+		if (serviceGroupGetRequest.getKeyword() != null){
+			isAppendAndClause = true;
+			selectQuery.append(getComplaintCategoryByKeyword(serviceGroupGetRequest.getKeyword()));
+			preparedStatementValues.add(serviceGroupGetRequest.getKeyword());
+
+		}
 /*
 		if (serviceGroupRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -136,5 +143,9 @@ public class ServiceGroupQueryBuilder {
 
 	public static String checkIfNameTenantIdAvailableUpdate() { 
 		return "SELECT count(*) FROM egpgr_complainttype_category WHERE upper(name) = ? AND tenantid = ? AND id NOT IN (?) " ;
+	}
+
+	private static String getComplaintCategoryByKeyword(String keyword){
+		return " and id in (select category from egpgr_complainttype where code in (select servicecode from servicetype_keyword where keyword = ? ))" ;
 	}
 }

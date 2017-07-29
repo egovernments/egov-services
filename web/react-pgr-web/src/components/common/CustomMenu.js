@@ -127,14 +127,14 @@ class CustomMenu extends Component {
     for (var i = 0; i < actionList.length; i++) {
       // actionList[i].path.startsWith(path)
       if (actionList[i].path!="" && actionList[i].path.startsWith(path+".")) {
-        let splitArray=actionList[i].path.split(path)[1].split(".");
-        if (splitArray.length>2) {
-            if (!_.some(menuItems,{ 'name':splitArray[1]} )) {
-              menuItems.push({path:path+"."+splitArray[1],name:splitArray[1],url:"",queryParams:actionList[i].queryParams,orderNumber:actionList[i].orderNumber});
+        let splitArray=actionList[i].path.split(path+".")[1].split(".");
+        if (splitArray.length>1) {
+            if (!_.some(menuItems,{ 'name':splitArray[0]} )) {
+              menuItems.push({path:path+"."+splitArray[0],name:splitArray[0],url:"",queryParams:actionList[i].queryParams,orderNumber:actionList[i].orderNumber});
             }
             // tempPath=path+"."+splitArray[1];
         } else{
-          menuItems.push({path:path+"."+splitArray[1],name:actionList[i].displayName,url:actionList[i].url,queryParams:actionList[i].queryParams,orderNumber:actionList[i].orderNumber});
+          menuItems.push({path:path+"."+splitArray[0],name:actionList[i].displayName,url:actionList[i].url,queryParams:actionList[i].queryParams,orderNumber:actionList[i].orderNumber});
         }
       }
     }

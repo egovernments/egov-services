@@ -328,9 +328,15 @@ createPropertyTax = () => {
 				createProperty.owners[i].ownertype = null;
 			}
 			
+			if(!createProperty.owners[i].hasOwnProperty('ownerType') || createProperty.owners[i].ownerType == ''){
+				createProperty.owners[i].ownerType = null;
+			}
+			
 			if(!createProperty.owners[i].hasOwnProperty('emailId') || createProperty.owners[i].emailId == ''){
 				createProperty.owners[i].emailId = null;
 			}
+			
+		
 		}
 	}
 	

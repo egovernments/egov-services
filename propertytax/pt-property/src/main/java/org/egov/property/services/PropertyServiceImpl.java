@@ -59,8 +59,6 @@ public class PropertyServiceImpl implements PropertyService {
 	@Autowired
 	Environment environment;
 
-	@Autowired
-	RestTemplate restTemplate;
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
@@ -131,6 +129,8 @@ public class PropertyServiceImpl implements PropertyService {
 		idGeneration.setIdRequests(idRequests);
 		idGeneration.setRequestInfo(requestInfo);
 		String response = null;
+		
+		RestTemplate restTemplate = new RestTemplate();
 		try {
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 		} catch (Exception ex) {
@@ -242,23 +242,27 @@ public class PropertyServiceImpl implements PropertyService {
 
 			List<User> ownerInfos = new ArrayList<>();
 
-			List<PropertyUser> propertyUsers = propertyRepository.getPropertyUserByProperty(propertyId);
-			List<Integer> userIds = new ArrayList<>();
-
-			for (PropertyUser propertyUser : propertyUsers) {
-
-				userIds.add(propertyUser.getOwner());
+			
+			if ( !(property.getOwners().size() > 0)){
+				
+				List<PropertyUser> propertyUsers = propertyRepository.getPropertyUserByProperty(propertyId);
+				List<Integer> userIds = new ArrayList<>();
+	
+				for (PropertyUser propertyUser : propertyUsers) {
+	
+					userIds.add(propertyUser.getOwner());
+				}
+				
+				List<User> userOfProperty = getUserObjectForUserIds(userIds, users);
+	
+				// get owner info for property
+	
+				for (User propertyUser : userOfProperty) {
+					ownerInfos.add(propertyUser);
+				}
+	
+				property.setOwners(ownerInfos);
 			}
-
-			List<User> userOfProperty = getUserObjectForUserIds(userIds, users);
-
-			// get owner info for property
-
-			for (User propertyUser : userOfProperty) {
-				ownerInfos.add(propertyUser);
-			}
-
-			property.setOwners(ownerInfos);
 			List<Unit> flats = new ArrayList<>();
 			List<Unit> rooms = new ArrayList<>();
 			PropertyDetail propertyDetail = propertyRepository.getPropertyDetailsByProperty(propertyId);

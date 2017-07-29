@@ -225,7 +225,7 @@ public class AssetRepository {
 
         final String query = assetQueryBuilder.getUpdateQuery();
 
-        logger.info("asset update query::" + query);
+        logger.debug("asset update query::" + query);
 
         String modeOfAcquisition = null;
         String status = null;
@@ -247,11 +247,11 @@ public class AssetRepository {
                 asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getCode(),
                 asset.getTenantId() };
         try {
-            logger.info("query1::" + query + "," + Arrays.toString(obj));
+            logger.debug("query1::" + query + "," + Arrays.toString(obj));
             final int i = jdbcTemplate.update(query, obj);
-            logger.info("output of update query : " + i);
+            logger.debug("output of update query : " + i);
         } catch (final Exception ex) {
-            logger.info("the exception from update asset : " + ex);
+            logger.debug("the exception from update asset : " + ex);
         }
         final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(AssetStatusObjectName.ASSETMASTER,
                 Status.DISPOSED, asset.getTenantId());

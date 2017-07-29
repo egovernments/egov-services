@@ -1,8 +1,5 @@
 package org.egov.workflow.persistence.repository.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.workflow.domain.model.ServiceType;
 import org.egov.workflow.web.contract.BoundaryIdType;
 import org.egov.workflow.web.contract.RouterType;
@@ -11,6 +8,9 @@ import org.egov.workflow.web.contract.RouterTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class RouterQueryBuilder {
@@ -179,7 +179,7 @@ public class RouterQueryBuilder {
 	}
 	
 	public String checkCombinationExistsQuery(RouterTypeReq routerTypeReq){ 
-		String query = " SELECT count(*) FROM egpgr_router WHERE tenantid = '" + routerTypeReq.getRouterType().getTenantId() + "' AND position = " + routerTypeReq.getRouterType().getPosition(); 
+		String query = " SELECT count(*) FROM egpgr_router WHERE tenantid = '" + routerTypeReq.getRouterType().getTenantId() + "' AND position = " + routerTypeReq.getRouterType().getPosition();
 		RouterType rType = routerTypeReq.getRouterType();
 		StringBuilder builder = new StringBuilder(query);
 		if(null != rType.getServices()) { 
@@ -210,9 +210,43 @@ public class RouterQueryBuilder {
 		}
 		return builder.toString();
 	}
-	
 
-	
+    public String checkIDQuery(RouterTypeReq routerTypeReq){
+        String query = " SELECT id FROM egpgr_router WHERE tenantid = '" + routerTypeReq.getRouterType().getTenantId() + "' AND position = " + routerTypeReq.getRouterType().getPosition();
+        RouterType rType = routerTypeReq.getRouterType();
+        StringBuilder builder = new StringBuilder(query);
+        if(null != rType.getServices()) {
+            builder.append(" AND complainttypeid IN (");
+            for(int i = 0 ; i < rType.getServices().size() ; i++ ){
+                if(i==0 && i==rType.getServices().size()-1) {
+                    builder.append(rType.getServices().get(i).getId());
+                } else if(i== rType.getServices().size()-1) {
+                    builder.append(rType.getServices().get(i).getId());
+                } else {
+                    builder.append(","+rType.getServices().get(i).getId());
+                }
+            }
+            builder.append(")");
+        }
+        if(null != rType.getBoundaries()) {
+            builder.append(" AND bndryid IN (");
+            for(int i = 0 ; i < rType.getBoundaries().size() ; i++ ){
+                if(i==0 && i==rType.getBoundaries().size()-1) {
+                    builder.append(rType.getBoundaries().get(i).getBoundaryType());
+                } else if(i== rType.getBoundaries().size()-1) {
+                    builder.append(rType.getBoundaries().get(i).getBoundaryType());
+                } else {
+                    builder.append(","+rType.getBoundaries().get(i).getBoundaryType());
+                }
+            }
+            builder.append(")");
+        }
+        return builder.toString();
+    }
+
+
+
+
 
 }
 

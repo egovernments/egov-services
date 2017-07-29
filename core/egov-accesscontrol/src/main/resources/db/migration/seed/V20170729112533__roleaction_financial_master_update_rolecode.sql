@@ -1,0 +1,1 @@
+update eg_roleaction set rolecode = 'SUPERUSER' where actionid in (select id from eg_action where parentmodule in (select id::text from  service where parentmodule = (select id::text from  service where code = 'Financials_Masters'))) and rolecode = 'Super User';

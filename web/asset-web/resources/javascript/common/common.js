@@ -314,10 +314,10 @@ function getDropdown(name, cb, params) {
                 var queryString = { tenantId };
                 if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
-                commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", queryString, function(err, res) {
+                commonApiPost("asset-services", "", "GET_MODE_OF_ACQUISITION", queryString, function(err, res) {
                     if (res) {
-                        localStorage.setItem("acquisitionList", JSON.stringify(res));
-                        cb(res);
+                        localStorage.setItem("acquisitionList", JSON.stringify(res.ModeOfAcquisition));
+                        cb(res.ModeOfAcquisition);
                     } else {
                         cb([]);
                     }
@@ -416,10 +416,10 @@ function getDropdown(name, cb, params) {
                 var queryString = { tenantId };
                 if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
-                commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", queryString, function(err, res) {
+                commonApiPost("asset-services", "", "GET_ASSET_CATEGORY_TYPE", queryString, function(err, res) {
                     if (res) {
-                        localStorage.setItem("asset_category_type", JSON.stringify(res));
-                        cb(res);
+                        localStorage.setItem("asset_category_type", JSON.stringify(res.AssetCategoryType));
+                        cb(res.AssetCategoryType);
                     } else {
                         cb({});
                     }
@@ -450,10 +450,10 @@ function getDropdown(name, cb, params) {
                 var queryString = { tenantId };
                 if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
-                commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", queryString, function(err, res) {
+                commonApiPost("asset-services", "", "GET_DEPRECIATION_METHOD", queryString, function(err, res) {
                     if (res) {
-                        localStorage.setItem("depreciationMethod", JSON.stringify(res));
-                        cb(res);
+                        localStorage.setItem("depreciationMethod", JSON.stringify(res.DepreciationMethod));
+                        cb(res.DepreciationMethod);
                     } else {
                         cb({});
                     }

@@ -308,6 +308,6 @@ public class ReceiptDetailQueryBuilder {
     }
     
     public String insertInstrumentId(){
-    	return "update set instrumentheader = ? where receiptheader = ?";
+    	return "insert into egcl_receiptinstrument(instrumentheader, receiptheader, tenantId) values (?,?,?)";
     }
 }

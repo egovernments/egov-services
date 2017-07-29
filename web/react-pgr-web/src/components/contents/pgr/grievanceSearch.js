@@ -342,7 +342,7 @@ class grievanceSearch extends Component {
   	}
   	const showTable = function() {
 			return (
-				<Table style={{color:"black",fontWeight: "normal"}} bordered responsive>
+				<Table style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
 			    <thead >
 			      <tr>
 			        <th>Grievance Number</th>

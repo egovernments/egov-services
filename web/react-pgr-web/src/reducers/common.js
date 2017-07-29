@@ -18,6 +18,7 @@ let menuConvention={
   "Grievance Redressal.Masters.Router.UPDATE COMPLAINT ROUTER":"/pgr/searchRouter/edit",
   "Grievance Redressal.Masters.Router.SEARCH COMPLAINT ROUTER":"/pgr/searchRouter/view",
 
+  "Grievance Redressal.Masters.Grievance Category.Create Service Group": "/pgr/createServiceGroup",
   "Grievance Redressal.Masters.Grievance Category.Update Service Group":"/pgr/serviceGroup/edit",
   "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"/pgr/serviceGroup/view",
 
@@ -79,7 +80,7 @@ export default (state = defaultState, action) => {
     case 'REDIRECT':
       return { ...state, redirectTo: null };
     case 'LOGOUT':
-      return { ...state, redirectTo: '/', token: null, currentUser: null, showMenu: false };
+      return { ...state, redirectTo: '/'+action.tenantId, token: null, currentUser: null, showMenu: false };
     case 'SETTINGS_SAVED':
       return {
         ...state,

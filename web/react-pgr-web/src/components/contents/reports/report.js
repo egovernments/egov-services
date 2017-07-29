@@ -14,16 +14,18 @@ class Report extends Component {
 
   initData()
   {
-    let {setMetaData,setFlag,showTable}=this.props;
+    let {setMetaData,setFlag,showTable,setForm}=this.props;
 
     let response=Api.commonApiPost("pgr-master/report/metadata/_get",{},{tenantId:"default",reportName:this.props.match.params.reportName}).then(function(response)
     {
-    
+
       setFlag(1);
       showTable(false);
       setMetaData(response)
+      // setForm();
     },function(err) {
-        console.log(err);
+        // console.log(err);
+        alert("Try again later");
     });
   }
 
@@ -76,6 +78,25 @@ const mapDispatchToProps = dispatch => ({
   showTable:(state)=>
   {
     dispatch({type:"SHOW_TABLE",state});
+  },
+  setForm: (required=[],pattern=[]) => {
+    console.log(required);
+    dispatch({
+      type: "SET_FORM",
+      form:{},
+      fieldErrors:{},
+      isFormValid:false,
+      validationData: {
+        required: {
+          current: [],
+          required: required
+        },
+        pattern: {
+          current: [],
+          required: pattern
+        }
+      }
+    });
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

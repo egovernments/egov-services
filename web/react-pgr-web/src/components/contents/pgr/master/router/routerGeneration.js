@@ -384,7 +384,7 @@ class routerGeneration extends Component {
 	        <Card>
 	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
 	          <CardText>
-		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
 		         <thead>
 		            <tr>
 		              <th>#</th>

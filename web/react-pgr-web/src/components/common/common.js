@@ -2,6 +2,7 @@ var localationData = {
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
   "reports.pgr.wardtype":"Ward Type",
+  "wc.create.name": "Name",
   "wc.create.groups.applicantDetails.title":"Applicant Particulars",
   "wc.create.groups.applicantDetails.propertyIdentifier":"PT Assessment Number",
   "wc.create.groups.applicantDetails.nameOfApplicant":"Name of Applicant",
@@ -74,20 +75,7 @@ var localationData = {
   "wc.create.groups.fileDetails.fields.WhiteRationCard":"White Ration Card",
   "wc.create.groups.fileDetails.fields.CourtFeeStamp":" 20Rs Court Fee Stamp",
   "wc.create.groups.connectionDetails.billingType":"Billing Type",
-  "wc.create.groups.connectionDetails.supplyType":"Supply Type",
-  "reports.pgr.locality.name":"Locality Name",
-  "reports.pgr.complaint.crn":"CRN",
-  "reports.pgr.complaint.createddate":"Registerd Date",
-  "reports.pgr.complaint.complainantname":"Name",
-  "reports.pgr.complaint.address":"Address",
-  "reports.pgr.complaint.details":"Detalis",
-  "reports.pgr.complaint.status":"Status",
-  "reports.pgr.complaint.feedback":"Feedback",
-  "reports.pgr.complaint.issla":"Is SLA",
-  "reports.pgr.complaint.name":"Name",
-  "reports.pgr.complaint.userposition":"User Position",
-  "wc.create.groups.connectionDetails.waterTreatment":"Water Treatment",
-  "wc.create.groups.approvalDetails.fields.Assignee":"Assignee"
+  "wc.create.groups.connectionDetails.supplyType":"Supply Type"
 }
 
 export function translate(locale_text){

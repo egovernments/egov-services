@@ -75,7 +75,8 @@ var localationData = {
   "wc.create.groups.fileDetails.fields.WhiteRationCard":"White Ration Card",
   "wc.create.groups.fileDetails.fields.CourtFeeStamp":" 20Rs Court Fee Stamp",
   "wc.create.groups.connectionDetails.billingType":"Billing Type",
-  "wc.create.groups.connectionDetails.supplyType":"Supply Type"
+  "wc.create.groups.connectionDetails.supplyType":"Supply Type",
+  "wc.create.groups.applicantDetails.acknowledgementNumber":"Acknowledgement Number"
 }
 
 export function translate(locale_text){

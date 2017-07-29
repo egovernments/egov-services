@@ -105,7 +105,7 @@ public class AssetRepository {
 
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = assetQueryBuilder.getQuery(assetCriteria, preparedStatementValues);
-        List<Asset> assets = null;
+        List<Asset> assets = new ArrayList<Asset>();
         try {
             logger.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
             assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);

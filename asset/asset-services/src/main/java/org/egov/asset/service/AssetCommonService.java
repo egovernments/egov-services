@@ -40,4 +40,9 @@ public class AssetCommonService {
         } else
             return null;
     }
+
+    public void validateDepreciationRateValue(final Double depreciationRate) {
+        if (depreciationRate != null && Double.compare(depreciationRate, Double.valueOf("0.0")) < 0)
+            throw new RuntimeException("Depreciation rate can not be negative.");
+    }
 }

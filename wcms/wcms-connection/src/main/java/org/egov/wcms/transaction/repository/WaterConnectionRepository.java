@@ -227,7 +227,7 @@ public class WaterConnectionRepository {
                 connection.getPipesizeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), connection.getStatus(), connection.getStateId(),
+                new Date(new java.util.Date().getTime()), connection.getStateId(),
                 connection.getDemandid(), connection.getAcknowledgementNumber() };
         }
         else{

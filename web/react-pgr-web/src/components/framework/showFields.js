@@ -20,6 +20,7 @@ import UiPanCard from './components/UiPanCard'
 import UiLabel from './components/UiLabel'
 import UiRadioButton from './components/UiRadioButton'
 import UiTextSearch from './components/UiTextSearch'
+import UiDocumentList from './components/UiDocumentList'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 
 export default class ShowFields extends Component {
@@ -138,6 +139,8 @@ export default class ShowFields extends Component {
         return <UiRadioButton ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'textSearch':
         return <UiTextSearch ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
+      case 'documentList':
+        return <UiDocumentList ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
     }
   }
 

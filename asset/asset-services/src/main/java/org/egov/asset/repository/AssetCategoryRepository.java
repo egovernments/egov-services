@@ -48,7 +48,7 @@ public class AssetCategoryRepository {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String queryStr = assetCategoryQueryBuilder.getQuery(assetCategoryCriteria, preparedStatementValues);
 
-        List<AssetCategory> assetCategory = null;
+        List<AssetCategory> assetCategory = new ArrayList<AssetCategory>();
         try {
             assetCategory = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetCategoryRowMapper);
         } catch (final Exception exception) {

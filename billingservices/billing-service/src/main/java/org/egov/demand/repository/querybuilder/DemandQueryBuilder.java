@@ -41,6 +41,8 @@ package org.egov.demand.repository.querybuilder;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.egov.demand.model.DemandCriteria;
@@ -101,6 +103,33 @@ public class DemandQueryBuilder {
 	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE egbs_demanddetail SET "
 			+ "id=?,demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,"
 			+ "lastModifiedby=?,lastModifiedtime=?,tenantid=? WHERE id=? AND tenantid=?;";
+	
+	public String getDemandQueryForConsumerCodes(Map<String,Set<String>> businessConsumercodeMap,String tenantId){
+		
+		StringBuilder query = new StringBuilder(BASE_DEMAND_QUERY);
+		
+		query.append("demand.tenantid='"+tenantId+"' ");
+		boolean orFlag = false;
+		for (Entry<String, Set<String>> consumerCode : businessConsumercodeMap.entrySet()) {
+			
+			String businessService = consumerCode.getKey();
+			Set<String> consumerCodes = consumerCode.getValue();
+			
+			if(consumerCodes!=null && !consumerCodes.isEmpty()){
+				
+				if(orFlag)
+					query.append("OR");
+				else
+					query.append("AND");
+				
+				query.append(" demand.businessservice='"+businessService+"' AND demand.consumercode IN ("
+						+getIdQueryForStrings(consumerCodes));
+				orFlag=true;
+			}
+		}
+		
+		return query.toString();
+				}
 
 	public String getDemandQuery(DemandCriteria demandCriteria,Set<String> ownerIds, List<Object> preparedStatementValues) {
 

@@ -11,7 +11,7 @@ export default class UiLabel extends Component {
        }
   }
 
-  componentDidMount() {
+  setVal = () => {
     let {item, useTimestamp} = this.props;
     let self = this;
     var val = this.props.getVal(item.jsonPath);
@@ -38,6 +38,14 @@ export default class UiLabel extends Component {
           console.log(err);
       });
     }
+  }
+
+  componentDidMount() {
+    this.setVal();
+  }
+
+  componentDidUpdate() {
+    this.setVal();
   }
 
  	renderLabel = (item) => {

@@ -26,7 +26,8 @@ var dat = {
 						  "autoCompleteDependancy": {
 						    "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
 						    "autoFillFields": {
-						      "Connection.asset.nameOfApplicant": "propety.test.val"
+						      "Connection.asset.mobileNumber": "properties..owners..mobileNumber"
+
 						    }
 						  },
 						  "requiredErrMsg": "",

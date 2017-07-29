@@ -156,7 +156,7 @@ public class ReceivingModeTypeRepository {
         return receivingModeList;
     }
 
-    public boolean checkReceivingModeTypeByNameAndCode(final String code, final String name, final String tenantId, final Long id) {
+    public boolean checkReceivingModeTypeByNameAndCode(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
 
         preparedStatementValues.add(tenantId);
@@ -170,15 +170,15 @@ public class ReceivingModeTypeRepository {
         final List<Map<String, Object>> centerTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
         if (!centerTypes.isEmpty()) {
-            Long idFromDB = (Long) centerTypes.get(0).get("id");
-            if (idFromDB != id)
+            String codeFromDB = (String) centerTypes.get(0).get("code");
+            if (!codeFromDB.equalsIgnoreCase(code))
                 return true;
         }
         return false;
 
     }
 
-    public boolean checkReceivingModeTypeByName(final String code, final String name, final String tenantId, final Long id) {
+    public boolean checkReceivingModeTypeByName(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
 
         preparedStatementValues.add(tenantId);
@@ -194,8 +194,8 @@ public class ReceivingModeTypeRepository {
                 preparedStatementValues.toArray());
 
         if (!centerTypes.isEmpty()) {
-            Long idFromDb = (Long) centerTypes.get(0).get("id");
-            if (id != null && idFromDb != id)
+            String codeFromDb = (String) centerTypes.get(0).get("code");
+            if (!codeFromDb.equalsIgnoreCase(code))
                 return true;
         }
 

@@ -195,16 +195,16 @@ public class ServiceTypeRepository {
         return false;
     }
 
-    public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId, final Long id) {
+    public boolean checkComplaintNameIfExists(final String serviceCode, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(serviceName.toUpperCase());
+        preparedStatementValues.add(serviceCode.toUpperCase());
         preparedStatementValues.add(tenantId);
         final String query = ServiceTypeQueryBuilder.checkServiceNameIfExists();
         final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
         if (!serviceTypes.isEmpty()) {
-            Long idFromDb = (Long) serviceTypes.get(0).get("id");
-            if (idFromDb != id)
+            String codeFromDb = (String) serviceTypes.get(0).get("code");
+            if (!codeFromDb.equalsIgnoreCase(serviceCode))
                 return true;
         }
         return false;

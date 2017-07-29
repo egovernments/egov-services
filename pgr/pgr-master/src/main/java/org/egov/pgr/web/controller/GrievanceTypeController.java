@@ -222,8 +222,8 @@ public class GrievanceTypeController {
     private void addGrievanceNameValidator(final ServiceRequest serviceTypeRequest,
                                            final List<ErrorField> errorFields) {
         if (errorFields.size() == 0) {
-            if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceName(),
-                    serviceTypeRequest.getService().getTenantId() ,serviceTypeRequest.getService().getId())) {
+            if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceCode(),
+                    serviceTypeRequest.getService().getTenantId())) {
                 final ErrorField errorField = ErrorField.builder()
                         .code(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_CODE)
                         .message(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE)

@@ -123,10 +123,17 @@ class Report extends Component {
 
   makeAjaxCall = (formData, url) => {
     let self = this;
+    delete formData.ResponseInfo;
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
       self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
+      setTimeout(function() {
+        if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+          var hash = window.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idPath; 
+          self.props.setRoute(hash);
+        }
+      }, 1500);
     }, function(err) {
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);
@@ -406,7 +413,8 @@ const mapDispatchToProps = dispatch => ({
   },
   setDropDownData:(fieldName,dropDownData)=>{
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
-  }
+  },
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

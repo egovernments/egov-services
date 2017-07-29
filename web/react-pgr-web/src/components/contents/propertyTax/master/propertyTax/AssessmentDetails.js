@@ -312,7 +312,7 @@ handleDepartment = (e) => {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Property Sub-type *"
+                                                  floatingLabelText="Property Sub-type"
                                                   errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertySubType}</span> : ""}
                                                   value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ""}
                                                   onChange={(event, index, value) => {
@@ -322,7 +322,7 @@ handleDepartment = (e) => {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "propertySubType", true, "")}
+                                                      handleChange(e, "propertySubType", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}

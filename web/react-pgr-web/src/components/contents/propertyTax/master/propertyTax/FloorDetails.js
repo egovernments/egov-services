@@ -738,6 +738,12 @@ calcArea = (e, type) => {
 														  value={floorDetails.floor ? floorDetails.floor.isStructured : ""}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
+															  
+															  if(value == 'YES'){
+																  value = true;
+															  } else if(value == 'NO'){
+																  value = false;
+															  }
 															  var e = {
 																target: {
 																  value: value

@@ -46,7 +46,7 @@ public class UserUtil {
         userSearchRequestInfo.put("RequestInfo", requestInfo);
 		  // search user
         
-        logger.info("UserUtil searchUrl ---->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
+        logger.info("UserUtil searchUrl --username-->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
                 + userSearchRequestInfo);
         userResponse = restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
         logger.info("UserUtil userResponse ---->> " + userResponse);
@@ -64,7 +64,7 @@ public class UserUtil {
             }
 
             // search user
-            logger.info("UserUtil searchUrl ---->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
+            logger.info("UserUtil searchUrl ---multiparam->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
                     + userSearchRequestInfo);
             userResponse = restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo,
                     UserResponseInfo.class);
@@ -83,7 +83,7 @@ public class UserUtil {
             }
 
         }
-
+        logger.info("User id --------Final---------- "+userResponse.getUser());
         if (userResponse.getUser().size() > 1) {
 
             List<User> userFromReponse = userResponse.getUser();
@@ -105,10 +105,7 @@ public class UserUtil {
                     .collect(Collectors.toList());
 
             user.setId(result.get(0).getId());
-        } else {
-            if(userResponse.getUser() != null && userResponse.getUser().get(0) != null)
-                logger.info("User id ------------------ "+userResponse.getUser().get(0).getId());
-
+        } else if (userResponse.getUser().size() == 1)  {
             user.setId(userResponse.getUser().get(0).getId());
         }
 

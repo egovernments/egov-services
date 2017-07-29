@@ -371,7 +371,7 @@ class CreateAsset extends React.Component {
         e.preventDefault();
         // console.log(zone);
         // console.log(this.state.assetCategory);
-        var tempInfo=this.state.assetCategory;
+        var tempInfo=this.state.assetCategory, type = getUrlVars()["type"];
         // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
         var body = {
             "RequestInfo":requestInfo,
@@ -379,7 +379,7 @@ class CreateAsset extends React.Component {
         };
 
         $.ajax({
-            url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
+            url:baseUrl+"/asset-services/assetCategories/" + (type == "update" ? "_update" : "_create") + "?tenantId=" + tenantId,
             type: 'POST',
             dataType: 'json',
             data:JSON.stringify(body),
@@ -389,7 +389,7 @@ class CreateAsset extends React.Component {
             },
             success: function(res) {
               localStorage.removeItem("assetCategories");
-              window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
+              window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${type}`;
             },
             error: function(err) {
               var _err = err["responseJSON"].Error.message || "";

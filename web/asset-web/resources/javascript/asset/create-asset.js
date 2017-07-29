@@ -555,7 +555,7 @@ class CreateAsset extends React.Component {
             showError(err);
         } else {
             $.ajax({
-                url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=" + tenantId,
+                url: baseUrl + "/asset-services/assets/" + (type == "update" ? "_update" : "_create") + "?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data: JSON.stringify(_body),
@@ -770,7 +770,7 @@ class CreateAsset extends React.Component {
               ...this.state.assetSet,
               [pName]: innerJSON,
               version: version || this.state.assetSet.version || "",
-              depreciationRate: pName == "assetCategory" ? (depRate || "") : (this.state.assetSet.depreciationRate || "")
+              depreciationRate: pName == "assetCategory" ? (typeof depRate != "undefined" ? depRate : "") : (typeof this.state.assetSet.depreciationRate != "undefined" ? this.state.assetSet.depreciationRate : "")
           }
       })
 
@@ -2076,10 +2076,10 @@ class CreateAsset extends React.Component {
                   {!enableYearWiseDepreciation && <div className="col-sm-6" style={{"display": !enableYearWiseDepreciation ? "block" : "none"}}>
                       <div className="row">
                         <div className="col-sm-6 label-text">
-                          <label for="name">Depreciation Rate <span>*</span> </label>
+                          <label for="name">Depreciation Rate </label>
                         </div>
                         <div className="col-sm-6 label-view-text">
-                          <input required id="depreciationRate" name="depreciationRate" value={depreciationRate} type="number"
+                          <input id="depreciationRate" name="depreciationRate" value={depreciationRate} type="number"
                             onChange={(e)=>{handleChange(e, "depreciationRate")}} disabled={readonly} />
                         </div>
                       </div>

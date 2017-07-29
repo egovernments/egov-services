@@ -91,7 +91,7 @@ class ViewServiceType extends Component {
 
      _this = this;
 
-     Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+     Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword:'complaint'}).then(function(response) {
          _this.setState({
            categorySource: response.ServiceGroups
          })

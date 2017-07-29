@@ -11,7 +11,7 @@ export default class UiLabel extends Component {
        }
   }
 
-  componentDidMount() {
+  setVal = () => {
     let {item, useTimestamp} = this.props;
     let self = this;
     var val = this.props.getVal(item.jsonPath);
@@ -40,16 +40,24 @@ export default class UiLabel extends Component {
     }
   }
 
+  componentDidMount() {
+    this.setVal();
+  }
+
+  componentDidUpdate() {
+    this.setVal();
+  }
+
  	renderLabel = (item) => {
  		return (
       <div>
- 			<Row>
-          <Col xs={12}>
-            <label><span style={{"fontWeight":"bold"}}>{item.label}</span></label>
-          </Col>
-          <Col xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "-"}</Col>
-      </Row>
-      <br/>
+   			<Row>
+            <Col xs={12}>
+              <label><span style={{"fontWeight":"bold"}}>{item.label}</span></label>
+            </Col>
+            <Col xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "-"}</Col>
+        </Row>
+        <br/>
       </div>
  		);
  	}

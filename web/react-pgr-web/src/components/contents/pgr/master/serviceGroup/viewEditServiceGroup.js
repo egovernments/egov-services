@@ -118,7 +118,7 @@ class ViewEditServiceGroup extends Component {
       var body = {}
       let  current = this;
       current.props.setLoadingStatus("loading");
-      Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{},body).then(function(response){
+      Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword : 'complaint'},body).then(function(response){
           current.setState({
             data:response.ServiceGroups,
             modify: true

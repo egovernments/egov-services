@@ -110,7 +110,7 @@ class ServiceTypeCreate extends Component {
 
     componentDidMount() {
         let self = this;
-      Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+      Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword:'complaint'}).then(function(response) {
         console.log("response",response);
           self.setState({
             category: response.ServiceGroups

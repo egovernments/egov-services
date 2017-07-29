@@ -4,7 +4,7 @@ var dat = {
 		"url": "/wcms/masters/documenttype-applicationtype/_create",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "donation",
+		"objectName": "Donation",
 		"groups": [
 			{
 				"label": "wc.create.donation.title",
@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "donation.propertyType",
+						"jsonPath": "Donation.propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -24,7 +24,7 @@ var dat = {
 					},
           {
 								"name": "CategoryType",
-								"jsonPath": "donation.categoryType",
+								"jsonPath": "Donation.categoryType",
 								"label": "wc.create.groups.connectionDetails.categoryType",
 								"pattern": "",
 								"type": "singleValueList",
@@ -36,7 +36,7 @@ var dat = {
 					},
           {
 						"name": "UsageType",
-						"jsonPath": "donation.usageType",
+						"jsonPath": "Donation.usageType",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -48,7 +48,7 @@ var dat = {
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "donation.minHscPipeSizeType",
+						"jsonPath": "Donation.minHscPipeSizeType",
 						"label": "Min H.S.C Pipe Size :",
 						"pattern": "",
 						"type": "singleValueList",
@@ -60,7 +60,7 @@ var dat = {
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "donation.maxHscPipeSizeType",
+						"jsonPath": "Donation.maxHscPipeSizeType",
 						"label": "Max H.S.C Pipe Size",
 						"pattern": "",
 						"type": "singleValueList",
@@ -72,7 +72,7 @@ var dat = {
 					},
           {
             "name": "donationAmount",
-            "jsonPath": "donation.donationAmount",
+            "jsonPath": "Donation.donationAmount",
             "label": "Donation Amount",
             "pattern": "",
             "type": "number",
@@ -83,7 +83,7 @@ var dat = {
           },
 					{
             "name": "fromDate",
-            "jsonPath": "donation.fromDate",
+            "jsonPath": "Donation.fromDate",
             "label": "From Date",
             "pattern": "",
             "type": "datePicker",
@@ -94,7 +94,7 @@ var dat = {
           },
 					{
             "name": "fromDate",
-            "jsonPath": "donation.toDate",
+            "jsonPath": "Donation.toDate",
             "label": "To Date",
             "pattern": "",
             "type": "datePicker",

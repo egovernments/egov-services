@@ -79,12 +79,12 @@ public class ReceivingModeTypeService {
 
 	}
 	
-    public boolean checkReceivingModeTypeByNameAndCode(final String code,final String name, final String tenantId) {
-        return receivingModeRepository.checkReceivingModeTypeByNameAndCode(code,name,tenantId);
+    public boolean checkReceivingModeTypeByNameAndCode(final String code,final String name, final String tenantId,final Long id) {
+        return receivingModeRepository.checkReceivingModeTypeByNameAndCode(code,name,tenantId,id);
     }
     
-    public boolean checkReceivingModeTypeByName(final String code,final String name, final String tenantId) {
-        return receivingModeRepository.checkReceivingModeTypeByName(code,name,tenantId);
+    public boolean checkReceivingModeTypeByName(final String code,final String name, final String tenantId ,final Long id) {
+        return receivingModeRepository.checkReceivingModeTypeByName(code,name,tenantId,id);
     }
     
     

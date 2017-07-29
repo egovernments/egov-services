@@ -125,8 +125,8 @@ public class ServiceTypeService {
     	return grievanceRepository.checkServiceCodeIfExists(serviceCode, tenantId);
     }
     
-    public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId) { 
-    	return grievanceRepository.checkComplaintNameIfExists(serviceName, tenantId); 
+    public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId ,final Long id) {
+    	return grievanceRepository.checkComplaintNameIfExists(serviceName, tenantId , id);
     }
 
 }

@@ -4,7 +4,7 @@ var dat = {
 		"url": "/wcms/masters/propertytype-usagetype/_create",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "propertyUsage",
+		"objectName": "PropertyTypeUsageType",
 		"groups": [
 			{
 				"label": "wc.create.propertyUsage.title",
@@ -12,11 +12,11 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "propertyUsage.propertyType",
+						"jsonPath": "PropertyTypeUsageType.propertyType",
 						"label": "wc.create.propertytype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..id|$..name",
+						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -24,11 +24,11 @@ var dat = {
 					},
 					{
 						"name": "usageType",
-						"jsonPath": "propertyUsage.usageType",
+						"jsonPath": "PropertyTypeUsageType.usageType",
 						"label": "wc.create.usageType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/usages/_search?|$..id|$..name",
+						"url": "/pt-property/property/usages/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -36,7 +36,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "propertyUsage.active",
+							"jsonPath": "PropertyTypeUsageType.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

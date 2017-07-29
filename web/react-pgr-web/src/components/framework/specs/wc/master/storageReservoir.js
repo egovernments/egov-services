@@ -4,7 +4,7 @@ var dat = {
 		"url": "/wcms/masters/storagereservoir/_create",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "storageReservoir",
+		"objectName": "StorageReservoir",
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "storageReservoir.name",
+							"jsonPath": "StorageReservoir[0].name",
 							"label": "Storage Reservoir",
 							"pattern": "",
 							"type": "text",
@@ -23,7 +23,7 @@ var dat = {
 						},
 						{
 							"name": "reservoirType",
-							"jsonPath": "storageReservoir.reservoirType",
+							"jsonPath": "StorageReservoir[0].reservoirType",
 							"label": "Reservoir Type",
 							"pattern": "",
 							"type": "singleValueList",
@@ -35,11 +35,11 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "storageReservoir.locationName",
+							"jsonPath": "StorageReservoir[0].locationName",
 							"label": "Location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
+							"url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=Locality&hierarchyTypeName=LOCATION|$..name|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -47,11 +47,11 @@ var dat = {
 						},
 						{
 							"name": "wardName",
-							"jsonPath": "storageReservoir.wardName",
+							"jsonPath": "StorageReservoir[0].wardName",
 							"label": "Ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
+							"url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$..name|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -59,11 +59,11 @@ var dat = {
 						},
 						{
 							"name": "zoneName",
-							"jsonPath": "storageReservoir.zoneName",
+							"jsonPath": "StorageReservoir[0].zoneName",
 							"label": "Zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
+							"url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=Zone&hierarchyTypeName=REVENUE|$..name|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -71,7 +71,7 @@ var dat = {
 						},
 						{
 							"name": "noOfMainDistributionLines",
-							"jsonPath": "storageReservoir.noOfMainDistributionLines",
+							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
 							"label": "Number of main distribution line",
 							"pattern": "",
 							"type": "text",
@@ -82,7 +82,7 @@ var dat = {
 						},
 						{
 							"name": "noOfConnection",
-							"jsonPath": "storageReservoir.noOfConnection",
+							"jsonPath": "StorageReservoir[0].noOfConnection",
 							"label": "Number of connection from reservoir",
 							"pattern": "",
 							"type": "text",
@@ -93,7 +93,7 @@ var dat = {
 						},
 						{
 							"name": "noOfSubLines",
-							"jsonPath": "storageReservoir.noOfSubLines",
+							"jsonPath": "StorageReservoir[0].noOfSubLines",
 							"label": "Number of sub lines",
 							"pattern": "",
 							"type": "text",
@@ -104,7 +104,7 @@ var dat = {
 						},
 						{
 							"name": "capacity",
-							"jsonPath": "storageReservoir.capacity",
+							"jsonPath": "StorageReservoir[0].capacity",
 							"label": "Storage Capacity of Reservoir(in MLD)",
 							"pattern": "",
 							"type": "number",
@@ -122,7 +122,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/storagereservoir/_search",
 		"tenantIdRequired": true,
-		"objectName": "storageReservoir",
+		"objectName": "StorageReservoir",
 		"groups": [
 			{
 				"label": "wc.search.storageReservoir.title",
@@ -130,7 +130,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "storageReservoir.name",
+							"jsonPath": "StorageReservoir.name",
 							"label": "Category Type",
 							"pattern": "",
 							"type": "text",
@@ -141,7 +141,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "storageReservoir.active",
+							"jsonPath": "StorageReservoir.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

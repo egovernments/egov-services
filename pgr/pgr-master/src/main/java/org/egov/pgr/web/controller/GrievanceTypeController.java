@@ -222,7 +222,7 @@ public class GrievanceTypeController {
     private void addGrievanceNameValidator(final ServiceRequest serviceTypeRequest,
                                            final List<ErrorField> errorFields) {
         if (errorFields.size() == 0) {
-            if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceCode(),
+            if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceName(),
                     serviceTypeRequest.getService().getTenantId())) {
                 final ErrorField errorField = ErrorField.builder()
                         .code(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_CODE)

@@ -111,7 +111,7 @@ public class AssetService {
 
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
-        logger.info("assetRequest createAsync::" + assetRequest);
+        logger.debug("assetRequest createAsync::" + assetRequest);
         String value = null;
 
         try {
@@ -119,7 +119,7 @@ public class AssetService {
         } catch (final JsonProcessingException e) {
             logger.info("JsonProcessingException assetrequest for kafka : " + e);
         }
-        logger.info("assetRequest value::" + value);
+        logger.debug("assetRequest value::" + value);
 
         assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), KafkaTopicName.SAVEASSET.toString(),
                 value);
@@ -141,7 +141,7 @@ public class AssetService {
         final Asset asset = assetRequest.getAsset();
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
-        logger.info("assetRequest updateAsync::" + assetRequest);
+        logger.debug("assetRequest updateAsync::" + assetRequest);
         String value = null;
 
         try {
@@ -168,14 +168,23 @@ public class AssetService {
     private void setDepriciationRateAndEnableYearWiseDepreciation(final Asset asset) {
         final List<YearWiseDepreciation> yearWiseDepreciation = asset.getYearWiseDepreciation();
 
+        logger.debug("Year wise depreciations from Request :: " + yearWiseDepreciation);
+
         final Boolean enableYearWiseDepreciation = asset.getEnableYearWiseDepreciation();
 
-        if (enableYearWiseDepreciation != null && !yearWiseDepreciation.isEmpty() && enableYearWiseDepreciation)
+        logger.debug("Enable year wise depreciaition from Request :: " + enableYearWiseDepreciation);
+        
+        logger.debug("Asset ID from Request :: "+asset.getId());
+        if (enableYearWiseDepreciation != null && enableYearWiseDepreciation && yearWiseDepreciation != null
+                && !yearWiseDepreciation.isEmpty())
             for (final YearWiseDepreciation depreciationRate : yearWiseDepreciation)
                 depreciationRate.setAssetId(asset.getId());
         else if (enableYearWiseDepreciation != null && !enableYearWiseDepreciation) {
             asset.setEnableYearWiseDepreciation(false);
-            asset.setDepreciationRate(assetCommonService.getDepreciationRate(asset.getDepreciationRate()));
+            final Double depreciationRate = assetCommonService.getDepreciationRate(asset.getDepreciationRate());
+
+            logger.debug("Depreciation rate for asset create :: " + depreciationRate);
+            asset.setDepreciationRate(depreciationRate);
         }
     }
 }

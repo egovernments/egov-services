@@ -85,7 +85,9 @@ var localationData = {
   "reports.pgr.complaint.feedback":"Feedback",
   "reports.pgr.complaint.issla":"Is SLA",
   "reports.pgr.complaint.name":"Name",
-  "reports.pgr.complaint.userposition":"User Position"
+  "reports.pgr.complaint.userposition":"User Position",
+  "wc.create.groups.connectionDetails.waterTreatment":"Water Treatment",
+  "wc.create.groups.approvalDetails.fields.Assignee":"Assignee"
 }
 
 export function translate(locale_text){

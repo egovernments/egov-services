@@ -136,7 +136,7 @@ class ViewServiceGroup extends Component {
                                           <Col xs={8} md={10}>
                                               {viewServiceGroup.name ? viewServiceGroup.name : ''}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>

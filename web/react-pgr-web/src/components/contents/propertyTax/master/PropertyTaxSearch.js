@@ -121,7 +121,7 @@ class PropertyTaxSearch extends Component {
    
 	 var currentThis = this;
 
-       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           currentThis.setState({location : res.Boundary})
         }).catch((err)=> {
            currentThis.setState({
@@ -131,7 +131,7 @@ class PropertyTaxSearch extends Component {
         })
 		
 		
-       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
@@ -188,7 +188,7 @@ class PropertyTaxSearch extends Component {
 
   search(e)
   {
-      let {showTable,changeButtonText, propertyTaxSearch, setLoadingStatus, toggleDailogAndSetText }=this.props;
+      let {showTable,changeButtonText, propertyTaxSearch, setLoadingStatus, toggleSnackbarAndSetText }=this.props;
       e.preventDefault();
 	  
 	  setLoadingStatus('loading');
@@ -198,7 +198,7 @@ class PropertyTaxSearch extends Component {
       Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
 		setLoadingStatus('hide');
 		if(res.hasOwnProperty('Errors')){
-			toggleDailogAndSetText(true, "Something went wrong. Please try again.")
+			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
 		} else {
 			flag=1;
 			changeButtonText("Search Again");
@@ -211,7 +211,7 @@ class PropertyTaxSearch extends Component {
 	
       }).catch((err)=> {
 			setLoadingStatus('hide');
-			toggleDailogAndSetText(true, err.message)
+			toggleSnackbarAndSetText(true, err.message)
       })
 		 
      
@@ -265,6 +265,8 @@ class PropertyTaxSearch extends Component {
 
 	let currentThis = this;
 	
+	let {history} = this.props;
+	
     const viewTabel=()=>
     {
       return (
@@ -293,12 +295,12 @@ class PropertyTaxSearch extends Component {
 			  if(item){
 				  return(<tr>
 					  <td>{index+1}</td> 
-					  <td onClick={
-						  this.history.push(`/propertyTax/view-property/${item.upicNumber}`)
-					  }>{item.upicNumber}</td>
-					  <td>{item.owners[0].name}</td>
-					  <td>{item.address.addressNumber}</td>
-					  <td>{item.address.addressLine1}</td>
+					  <td onClick={() => {
+						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
+					  }}>{item.upicNumber || ''}</td>
+					  <td>{item.owners[0] ? item.owners[0].name : ''}</td>
+					  <td>{item.address.addressNumber || ''}</td>
+					  <td>{item.address.addressLine1 || ''}</td>
 					  <td>-</td>
 					  <td>{item.address.addressNumber? item.address.addressNumber+', ' : ''} {item.address.addressLine1 ? item.address.addressLine1+', ' : ''} 
 						  {item.address.addressLine2 ? item.address.addressLine2+', ':''}{item.address.landmark ? item.address.landmark+',':''}
@@ -306,12 +308,13 @@ class PropertyTaxSearch extends Component {
 						  </td>
 					  <td>0</td>
 					  <td>0</td>
-					  <td>{getNameByCode(currentThis.state.propertytypes ,item.propertyDetail.propertyType)}</td>
-					  <td>{item.propertyDetail.category}</td>
+					  <td>{getNameByCode(currentThis.state.propertytypes ,item.propertyDetail.propertyType) || ''}</td>
+					  <td>{item.propertyDetail.category || ''}</td>
 					  <td>
 						<DropdownButton title="Action" id="dropdown-3" pullRight>
-							<MenuItem>Create</MenuItem>
-							<MenuItem>Update</MenuItem>
+							<MenuItem onClick={()=>{
+								history.push(`/propertyTax/view-property/${item.id}/view`);
+							}}>View</MenuItem>
 						</DropdownButton>
 					  </td>
 					</tr>)
@@ -585,7 +588,10 @@ const mapDispatchToProps = dispatch => ({
    },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
-  }
+  },
+    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertyTaxSearch);

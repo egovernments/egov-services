@@ -78,7 +78,7 @@ public class AssetCategoryService {
         } catch (final Exception ex) {
             logger.info("the exception in assetcategory service create async method : " + ex);
         }
-        final List<AssetCategory> assetCategories = new ArrayList<>();
+        final List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
         assetCategories.add(assetCategory);
 
         return getAssetCategoryResponse(assetCategories, assetCategoryRequest.getRequestInfo());
@@ -107,7 +107,7 @@ public class AssetCategoryService {
         } catch (final Exception ex) {
             logger.info("the exception in assetcategory service updateasync method : " + ex);
         }
-        final List<AssetCategory> assetCategories = new ArrayList<>();
+        final List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
         assetCategories.add(assetCategory);
 
         return getAssetCategoryResponse(assetCategories, assetCategoryRequest.getRequestInfo());

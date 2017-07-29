@@ -60,6 +60,9 @@ module.exports = {
         return instance.post(url, body).then(function(response) {
             return response.data;
         }).catch(function(response) {
+			
+			console.log(response);
+			
             if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
                 var _err = response.response.data[0].error.message || "";
                 if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
@@ -77,8 +80,10 @@ module.exports = {
                 localStorage.clear();
                 localStorage.setItem('locale', locale);
                 window.location.hash = "#/";
-            } else {
-                throw new Error("Something went wrong, please try again later.");
+            } else if(response){
+				throw new Error(response);
+			}else {
+                throw new Error("Server returned unexpected error. Please contact system administrator.");
             }
         });
     },
@@ -100,7 +105,7 @@ module.exports = {
         return instance.get(url).then(function(response) {
             return response.data;
         }).catch(function(response) {
-            if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
+	if (response && response.response && response.response.data && response.response.data[0] && (response.response.data[0].error || response.response.data[0].Errors[0])) {
                 var _err = response.response.data[0].error.message || "";
                 if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
                     for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {

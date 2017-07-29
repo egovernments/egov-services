@@ -407,6 +407,7 @@ class grievanceView extends Component{
           {
             //console.log(item.roles, item.actions, this.state.systemStatus, this.state.serviceCode);
             if(item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf(this.state.systemStatus) > -1){
+              //item.dataType = 'datetime';
               return (
                 <Fields key={index} error={currentThis.props.fieldErrors[item.code]} obj={item} value={currentThis.props.grievanceView[item.code] ? currentThis.props.grievanceView[item.code] : currentThis.state[item.code]} handler={currentThis.props.handleChange}/>
               );

@@ -349,9 +349,17 @@ public class WcmsConstants {
     public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName ,sourceTypeName and pipeSize";
     public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,SourceType and PipeSize Inmm has already been mapped";
     
-    public static final String PIPESIZE_INMM_INVALID_CODE = "wcms.0045";
+    public static final String PIPESIZE_INMM_INVALID_CODE = "wcms.0065";
     public static final String PIPESIZE_INMM_FIELD_NAME = "pipeSize";
     public static final String PIPESIZE_INMM_INVALID_ERROR_MESSAGE = "Please provide valid Pipe Size(mm)";
+    
+    public static final String DONATION_MINPIPESIZE_MAXPIPESIZE_CODE = "wcms.0067";
+    public static final String DONATION_MINPIPESIZE_MAXPIPESIZE_FIELD_NAME = "minPipeSize,maxPipeSize";
+    public static final String DONATION_MINPIPESIZE_MAXPIPESIZE_ERROR_MESSAGE = "Minimum PipeSize should not be greater than the maximum PipeSize";
+    
+    public static final String DONATION_MINPIPESIZE_MAXPIPESIZE_EQUAL_CODE = "wcms.0068";
+    public static final String DONATION_MINPIPESIZE_MAXPIPESIZE__EQUALFIELD_NAME = "minPipeSize,maxPipeSize";
+    public static final String DONATION_MINPIPESIZE_MAXPIPESIZE__EQUAL_ERROR_MESSAGE = "Minimum PipeSize should not be same as maximum PipeSize";
     
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";

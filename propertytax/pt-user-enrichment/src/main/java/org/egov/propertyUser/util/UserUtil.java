@@ -106,6 +106,9 @@ public class UserUtil {
 
             user.setId(result.get(0).getId());
         } else {
+            if(userResponse.getUser() != null && userResponse.getUser().get(0) != null)
+                logger.info("User id ------------------ "+userResponse.getUser().get(0).getId());
+
             user.setId(userResponse.getUser().get(0).getId());
         }
 

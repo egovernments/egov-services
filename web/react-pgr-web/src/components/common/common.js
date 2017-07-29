@@ -2,6 +2,7 @@ var localationData = {
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
   "reports.pgr.wardtype":"Ward Type",
+  "wc.create.name": "Name",
   "wc.create.groups.applicantDetails.title":"Applicant Particulars",
   "wc.create.groups.applicantDetails.propertyIdentifier":"PT Assessment Number",
   "wc.create.groups.applicantDetails.nameOfApplicant":"Name of Applicant",

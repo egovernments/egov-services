@@ -147,7 +147,7 @@ public class WaterConnectionQueryBuilder {
 
         return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
                 + "categorytype = ?,hscpipesizetype = ?,sourcetype = ?,connectionstatus =?,"
-                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,status=?,stateid=?,demandid=? "
+                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=?,demandid=? "
                 + " where acknowledgmentnumber = ?";
     }
     public static String updateConnectionByConsumerNumberQuery() {

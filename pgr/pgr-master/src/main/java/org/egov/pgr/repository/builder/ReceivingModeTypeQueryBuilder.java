@@ -174,13 +174,13 @@ public class ReceivingModeTypeQueryBuilder {
 
 	public static String checkReceivinModeTypeByNameAndCode() {
 
-		return "select id from egpgr_receivingmode where tenantid=? and code=? ";
+		return "select code from egpgr_receivingmode where tenantid=? and code=? ";
 
 	}
 	
 	public static String checkReceivinModeTypeByName() {
 
-		return "select id from egpgr_receivingmode where tenantid=? and upper(name) =? ";
+		return "select code from egpgr_receivingmode where tenantid=? and upper(name) =? ";
 
 	}
 	

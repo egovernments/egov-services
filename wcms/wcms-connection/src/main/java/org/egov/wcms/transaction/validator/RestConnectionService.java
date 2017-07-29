@@ -236,7 +236,7 @@ public class RestConnectionService {
     }
 
     public PropertyResponse getPropertyDetailsByUpicNo(WaterConnectionReq waterRequestReq) {
-        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
+        final RequestInfo requestInfo =waterRequestReq.getRequestInfo();
         StringBuilder url = new StringBuilder();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
@@ -245,16 +245,27 @@ public class RestConnectionService {
                 .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
         PropertyResponse propResp = null;
         try {
-            propResp = new RestTemplate().postForObject(url.toString(), wrapper,
+           propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
+            System.out.println(propResp!=null ?( propResp.toString() +""+propResp.getProperties().size()):"iisue while binding pt to watertax");
         } catch (Exception e) {
+            
+            System.out.println(propResp!=null? propResp.toString():"issue with propResp in exception block in WT");
+            
             throw new WaterConnectionException("Error while Fetching Data from PropertyTax",
                     "Error while Fetching Data from PropertyTax", requestInfo);
         }
 
-        if (propResp != null && propResp.getProperties()!=null && !propResp.getProperties().isEmpty())
+       
+        if (propResp != null && propResp.getProperties()!=null && !propResp.getProperties().isEmpty()){
             waterRequestReq.getConnection().setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
-
+        if(!propResp.getProperties().get(0).getOwners().isEmpty()){
+            waterRequestReq.getConnection().getProperty().setNameOfApplicant(propResp.getProperties().get(0).getOwners().get(0).getName());
+            waterRequestReq.getConnection().getProperty().setEmail(propResp.getProperties().get(0).getOwners().get(0).getEmailId());
+            waterRequestReq.getConnection().getProperty().setMobileNumber(propResp.getProperties().get(0).getOwners().get(0).getMobileNumber());
+            waterRequestReq.getConnection().getProperty().setZone(propResp.getProperties().get(0).getBoundary()!=null?propResp.getProperties().get(0).getBoundary().getRevenueBoundary().getName():null);
+        }
+        }
         return propResp;
     }
 

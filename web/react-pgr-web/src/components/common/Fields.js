@@ -63,10 +63,13 @@ export default class Fields extends Component{
             </Col>
           );
         case "datetime":
-        //console.log(this.props.value, this.props.value.split(' '));
-          let date = this.props.value.split(' ')[0];
-          let time = this.props.value.split(' ')[1];
-          //console.log((this.props.value && date && time) ? new Date(date.split('-')[2], date.split('-')[1]-1, date.split('-')[0], time.split(':')[0], time.split(':')[1], time.split(':')[2]) : '');
+          //console.log(this.props.value, this.props.value.split(' '));
+          let date, time;
+          if(this.props.value){
+            date = this.props.value.split(' ')[0];
+            time = this.props.value.split(' ')[1];
+            //console.log((this.props.value && date && time) ? new Date(date.split('-')[2], date.split('-')[1]-1, date.split('-')[0], time.split(':')[0], time.split(':')[1], time.split(':')[2]) : '');
+          }
           return (
             <Col xs={12} md={3}>
               <DatePicker fullWidth={true} ref={obj.code} floatingLabelText={description} value={(this.props.value && date && time) ? new Date(date.split('-')[2], date.split('-')[1]-1, date.split('-')[0], time.split(':')[0], time.split(':')[1], time.split(':')[2]) : ''}

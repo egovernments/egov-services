@@ -50,6 +50,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/categorytype/_search",
 		"tenantIdRequired": true,
+		"useTimestamp": true,
 		"objectName": "CategoryType",
 		"groups": [
 			{
@@ -80,7 +81,14 @@ var dat = {
 						}
 				]
 			}
-		]
+		],
+		"result": {
+			"header": [{label: "wc.search.result.name"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"values": ["name", "description", "active"],
+			"resultPath": "CategoryTypes",
+			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
+			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			}
 	},
 	"wc.view": {
 		"numCols": 12/3,
@@ -133,9 +141,10 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/categorytype/_search?id={id}",
+		"url":"/wcms/masters/categorytype/{CategoryTypes[0].code}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "CategoryTypes",
 		"groups": [
 			{
 				"label": "wc.create.categorytype.title",

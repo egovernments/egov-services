@@ -1,11 +1,13 @@
 package org.egov.asset.web.validator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.service.AssetCategoryService;
+import org.egov.asset.service.AssetCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +19,27 @@ public class AssetCategoryValidator {
     @Autowired
     private AssetCategoryService assetCategoryService;
 
+    @Autowired
+    private AssetCommonService assetCommonService;
+
     private static final Logger logger = LoggerFactory.getLogger(AssetCategoryValidator.class);
 
     public void validateAssetCategory(final AssetCategoryRequest assetCategoryRequest) {
 
-        final List<AssetCategory> assetCategories = findByName(assetCategoryRequest.getAssetCategory().getName(),
-                assetCategoryRequest.getAssetCategory().getTenantId());
+        final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
+        final List<AssetCategory> assetCategories = findByName(assetCategory.getName(), assetCategory.getTenantId());
 
         if (!assetCategories.isEmpty())
             throw new RuntimeException("Duplicate asset category name");
+
+        validateDepreciationRate(assetCategory);
+
+    }
+
+    private void validateDepreciationRate(final AssetCategory assetCategory) {
+        final Double depreciationRate = assetCategory.getDepreciationRate();
+        assetCommonService.validateDepreciationRateValue(depreciationRate);
+        assetCategory.setDepreciationRate(assetCommonService.getDepreciationRate(depreciationRate));
     }
 
     public List<AssetCategory> findByName(final String name, final String tenantId) {
@@ -33,7 +47,7 @@ public class AssetCategoryValidator {
         final AssetCategoryCriteria categoryCriteria = new AssetCategoryCriteria();
         categoryCriteria.setName(name);
         categoryCriteria.setTenantId(tenantId);
-        List<AssetCategory> assetCategories = null;
+        List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
 
         try {
             assetCategories = assetCategoryService.search(categoryCriteria);
@@ -51,7 +65,7 @@ public class AssetCategoryValidator {
         categoryCriteria.setTenantId(tenantId);
         categoryCriteria.setId(id);
         categoryCriteria.setCode(code);
-        List<AssetCategory> assetCategories = null;
+        List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
 
         try {
             assetCategories = assetCategoryService.search(categoryCriteria);
@@ -69,6 +83,8 @@ public class AssetCategoryValidator {
                 assetCategory.getTenantId());
         if (assetCategories.isEmpty())
             throw new RuntimeException("Invalid Asset Category Code for Asset :: " + assetCategory.getName());
+        
+        validateDepreciationRate(assetCategory);
     }
 
 }

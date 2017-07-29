@@ -349,7 +349,7 @@ calcArea = (e, type) => {
 		if(floorDetails.hasOwnProperty('floor')) {
 			if(type == 'length' && floorDetails.floor.hasOwnProperty('width')){
 			
-				f.target.value = parseInt(e.target.value) * parseInt(floorDetails.floor.width)
+				f.target.value = parseFloat(e.target.value) * parseFloat(floorDetails.floor.width)
 		
 				if(!f.target.value){ 
 					hasLW = false;
@@ -362,7 +362,7 @@ calcArea = (e, type) => {
 				
 			} else if(type == 'width' 	&& floorDetails.floor.hasOwnProperty('length')){
 			
-				f.target.value = parseInt(floorDetails.floor.length) * parseInt(e.target.value)
+				f.target.value = parseFloat(floorDetails.floor.length) * parseFloat(e.target.value)
 				
 				if(!f.target.value){ 
 					hasLW = false;
@@ -750,8 +750,9 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-															  <MenuItem value={true} primaryText="Yes" />
-															  <MenuItem value={false} primaryText="No" />
+															<MenuItem value={-1} primaryText="None" />
+															  <MenuItem value='YES' primaryText="Yes" />
+															  <MenuItem value='NO' primaryText="No" />
 														</SelectField>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
@@ -846,7 +847,7 @@ calcArea = (e, type) => {
 																	value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
 																}
 															  }
-															  handleChangeNextOne(e,"floor" ,"buildingPermissionDate", false, "")}}
+															  handleChangeNextOne(e,"floor" ,"bpaDate", false, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}

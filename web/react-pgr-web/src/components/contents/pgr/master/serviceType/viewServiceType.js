@@ -149,7 +149,7 @@ class ViewServiceType extends Component {
       return(
         <div className="viewServiceType">
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Service< /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Grievance Type< /div>} />
                   <CardText style={{padding:0}}>
 
                       <Grid>

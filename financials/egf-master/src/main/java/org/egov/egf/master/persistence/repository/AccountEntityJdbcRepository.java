@@ -1,6 +1,7 @@
 package org.egov.egf.master.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,13 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 			params.append("id =:id");
 			paramValues.put("id", accountEntitySearchEntity.getId());
 		}
+	        if (accountEntitySearchEntity.getIds() != null) {
+	              if (params.length() > 0) {
+	                      params.append(" and ");
+	              }
+	              params.append("id in(:ids) ");
+	              paramValues.put("ids", new ArrayList<String>(Arrays.asList(accountEntitySearchEntity.getIds().split(","))));
+	        }
 		if (accountEntitySearchEntity.getAccountDetailTypeId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

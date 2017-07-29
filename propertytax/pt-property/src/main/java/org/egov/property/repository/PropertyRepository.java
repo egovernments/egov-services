@@ -464,15 +464,15 @@ public class PropertyRepository {
 	public Map<String, Object> searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber, String aadhaarNumber,
 			String houseNoBldgApt, int revenueZone, int revenueWard, int locality, String ownerName, int demandFrom,
-			int demandTo, String propertyId) {
+			int demandTo, String propertyId,String applicationNo) {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 
-		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null)) {
+		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null || applicationNo!=null)) {
 
 			List<Property> properties = getPropertyBYUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
-					pageNumber, pageSize, requestInfo);
+					pageNumber, pageSize, requestInfo,applicationNo);
 			searchPropertyMap.put("properties", properties);
 			searchPropertyMap.put("users", null);
 
@@ -480,7 +480,7 @@ public class PropertyRepository {
 
 			Map<String, Object> propertyMap = searchPropertyBuilder.createSearchPropertyQuery(requestInfo, tenantId,
 					active, upicNo, pageSize, pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt,
-					revenueZone, revenueWard, locality, ownerName, demandFrom, demandTo, propertyId,
+					revenueZone, revenueWard, locality, ownerName, demandFrom, demandTo, propertyId,applicationNo,
 					preparedStatementValues);
 			List<Property> properties = getProperty(propertyMap.get("Sql").toString(), preparedStatementValues);
 
@@ -494,12 +494,12 @@ public class PropertyRepository {
 	}
 
 	private List<Property> getPropertyBYUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
-			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo) {
+			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo,String applicationNo) {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
 		String query = searchPropertyBuilder.getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
-				preparedStatementvalues, pageSize, pageNumber);
+				preparedStatementvalues, pageSize, pageNumber,applicationNo);
 
 		List<Property> properties = getProperty(query, preparedStatementvalues);
 		properties.forEach(property -> {

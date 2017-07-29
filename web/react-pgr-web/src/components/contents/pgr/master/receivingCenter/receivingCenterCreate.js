@@ -169,7 +169,7 @@ class CreateReceivingCenter extends Component {
         <div className="createReceivingCenter">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create/Update Receiving Center < /div>} />
+                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create / Update Receiving Center < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
@@ -263,7 +263,7 @@ class CreateReceivingCenter extends Component {
               </div>
           </form>
           <Dialog
-               title="Data Added Successfully"
+               title="Receiving Center Saved Successfully"
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
@@ -273,7 +273,7 @@ class CreateReceivingCenter extends Component {
                open={this.state.open}
                onRequestClose={this.handleClose}
              >
-              Data Added Successfully
+              Receiving Center Saved Successfully
          </Dialog>
         </div>)
     }

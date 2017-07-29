@@ -191,13 +191,13 @@ public class PropertyServiceImpl implements PropertyService {
 	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
-			String ownerName, Integer demandFrom, Integer demandTo, String propertyId) throws Exception {
+			String ownerName, Integer demandFrom, Integer demandTo, String propertyId,String applicationNo) throws Exception {
 
 		List<Property> updatedPropety = null;
 
 		Map<String, Object> map = propertyRepository.searchProperty(requestInfo, tenantId, active, upicNo, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo, propertyId);
+				locality, ownerName, demandFrom, demandTo, propertyId,applicationNo);
 
 		List<Property> property = (List<Property>) map.get("properties");
 		List<User> users = (List<User>) map.get("users");

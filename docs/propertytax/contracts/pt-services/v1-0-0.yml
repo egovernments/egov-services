@@ -135,6 +135,15 @@ paths:
           required: false
           type: integer
           format: int64
+        - name: applicationNo
+          in: query
+          required: false
+          description: The application no for a property.
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
       responses:
         200:
           description: Successful response

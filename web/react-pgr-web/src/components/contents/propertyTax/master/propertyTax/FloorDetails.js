@@ -594,7 +594,7 @@ calcArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Usage sub type *"
+														  floatingLabelText="Usage sub type"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usageSubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usageSubType}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usageSubType : ""}
 														  onChange={(event, index, value) => {
@@ -604,7 +604,7 @@ calcArea = (e, type) => {
 																  value: value
 																}
 															  };
-															  handleChangeFloor(e,"floor" ,"usageSubType", true, "")}
+															  handleChangeNextOne(e,"floor" ,"usageSubType", false, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}

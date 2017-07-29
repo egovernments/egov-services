@@ -940,6 +940,7 @@ class ViewProperty extends Component {
                                                     <td>{i.bpaDate ? new Date(i.bpaDate).getDate()+'/'+(new Date(i.bpaDate).getMonth()+1)+'/'+new Date(i.bpaDate).getFullYear() : 'NA' }</td>
                                                     <td>{i.bpaBuiltupArea || 'NA'}</td>
                                                   </tr>)
+												  
                                               }
 
                                             })}

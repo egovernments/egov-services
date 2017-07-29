@@ -11,33 +11,41 @@ export default class ShowField extends Component
 {
   constructor(props) {
        super(props);
-       this.state={
-         value:""
-       }
+      //  this.state={
+      //    value:""
+      //  }
    }
 
   renderFields = (obj) =>{
-    if (obj.type=="url") {
-      console.log(obj.defaultValue);
-    }
     // console.log(obj);
-    //console.log('came to renderfields',obj.code);
     let des = translate(obj.label);
+
     let mandatory = obj.hasOwnProperty("isMandatory")?(obj.isMandatory? " *" : ""):"*";
     let description = des + mandatory;
 
     let dropDownData=[];
-    obj.defaultValue=typeof(obj.defaultValue)=="object"?obj.defaultValue:JSON.parse(obj.defaultValue)
-    for (var variable in obj.defaultValue) {
-      // console.log(variable);
 
-      dropDownData.push({
-        key:variable,
-        // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
-        value:obj.defaultValue[variable]
+      // obj.defaultValue=typeof(obj.defaultValue)=="object"?obj.defaultValue:{};
+      if (typeof(obj.defaultValue)=="object") {
+        for (var variable in obj.defaultValue) {
+          // console.log(variable);
 
-      })
-    }
+          dropDownData.push({
+            key:variable,
+            // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
+            value:obj.defaultValue[variable]
+
+          })
+        }
+      }
+
+
+
+    // console.log(obj);
+    //console.log('came to renderfields',obj.code);
+
+
+
 
     // console.log(dropDownData);
     // let DateTimeFormat;
@@ -61,7 +69,7 @@ export default class ShowField extends Component
       case "date" :
         return(
           <Col xs={12} md={3}>
-            <DatePicker fullWidth={true}  floatingLabelText={description}  onChange={(first, object)=>{
+            <DatePicker fullWidth={true}  floatingLabelText={description} value={typeof(obj.value)=="object"?obj.value:{}} onChange={(first, object)=>{
 
               let e={
                 target:{
@@ -93,10 +101,10 @@ export default class ShowField extends Component
       case "singlevaluelist":
         return(
           <Col xs={12} md={3}>
-            <SelectField fullWidth={true} floatingLabelText={description} value={this.state.value} onChange={(event, key, value) => {
-              this.setState({
-                value
-              })
+            <SelectField fullWidth={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+              // this.setState({
+              //   value
+              // })
               let e={
                 target:{
                   value
@@ -114,10 +122,10 @@ export default class ShowField extends Component
         case "url":
           return(
             <Col xs={12} md={3}>
-              <SelectField fullWidth={true} floatingLabelText={description} value={this.state.value} onChange={(event, key, value) => {
-                this.setState({
-                  value
-                })
+              <SelectField fullWidth={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+                // this.setState({
+                //   value
+                // })
                 let e={
                   target:{
                     value
@@ -140,9 +148,6 @@ export default class ShowField extends Component
     }
   }
   render(){
-    if (this.props.obj.type=="url") {
-        console.log(this.props.obj.defaultValue);
-    }
     return (
       <div>
         {this.renderFields(this.props.obj)}

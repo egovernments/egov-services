@@ -199,4 +199,10 @@ public class ReceivingModeTypeQueryBuilder {
 		
 		return "select id from egpgr_receivingmode_channel where receivingmodecode=? and channel=?";
 	}
+
+	public static String getAllNameAndCodeReceivingMode() {
+
+		return "select code,name from egpgr_receivingmode  ";
+
+	}
 }

@@ -130,6 +130,8 @@ class AssessmentDetails extends Component {
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
+	
+	let {toggleSnackbarAndSetText} = this.props;
 
       Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
 		  res.propertyTypes.unshift({id:-1, name:'None'});
@@ -139,11 +141,16 @@ class AssessmentDetails extends Component {
         currentThis.setState({
           propertytypes:[]
         })
+		toggleSnackbarAndSetText(true, err.message);
         console.log(err)
       })
   } 
 
 handleDepartment = (e) => {
+	
+	let {toggleSnackbarAndSetText, setLoadingStatus} = this.props;
+		
+		setLoadingStatus('loading');
 	
 	var currentThis = this;
 	
@@ -163,8 +170,11 @@ handleDepartment = (e) => {
 		  currentThis.setState({
 			departments:res.departments
 		  })
+		setLoadingStatus('hide');
 		}).catch((err)=> {
 		  console.log(err)
+		  	toggleSnackbarAndSetText(true, err.message);
+			setLoadingStatus('hide');
 		})
 
 } 
@@ -502,6 +512,13 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
+  
+   setLoadingStatus: (loadingStatus) => {
+     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+   },
+   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
 
 });
 

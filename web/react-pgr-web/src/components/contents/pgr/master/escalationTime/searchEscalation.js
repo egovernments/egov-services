@@ -288,7 +288,7 @@ class SearchEscalation extends Component {
    	        <Card>
    	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
    	          <CardText>
-   		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+   		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
    		         <thead>
    		            <tr>
                     <th>{translate("pgr.lbl.grievance.type")}</th>

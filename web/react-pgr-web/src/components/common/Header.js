@@ -111,9 +111,10 @@ const RightIcon = (props) => {
                 // });
                 document.title = "Egovernments";
                 var locale = localStorage.getItem('locale');
+                var tenantId=localStorage.getItem('tenantId');
                 localStorage.clear();
                 localStorage.setItem('locale',locale);
-                props.logout();
+                props.logout(tenantId);
             }} leftIcon={<i className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
 
@@ -885,7 +886,7 @@ const mapDispatchToProps = dispatch => ({
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),
     setLabels: payload => dispatch({type: 'LABELS', payload}),
-    logout:()=>dispatch({type:'LOGOUT'}),
+    logout:(tenantId)=>dispatch({type:'LOGOUT',tenantId}),
     // onUpdateAuth: (value, key) => dispatch({type: 'UPDATE_FIELD_AUTH', key, value}),
     // onLogin: (username, password) => {
     //     dispatch({

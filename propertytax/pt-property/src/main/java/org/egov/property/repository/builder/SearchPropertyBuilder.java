@@ -31,6 +31,7 @@ public class SearchPropertyBuilder {
 	@Autowired
 	RestTemplate restTemplate;
 
+	
 	String BASE_SEARCH_QUERY = "select * from egpt_property prop "
 			+ "JOIN egpt_property_owner puser on puser.property = prop.id where";
 
@@ -44,7 +45,7 @@ public class SearchPropertyBuilder {
 		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 
 		if (ownerName != null && !ownerName.isEmpty())
-			userSearchRequestInfo.put("user.name", ownerName);
+			userSearchRequestInfo.put("userName", ownerName);
 
 		if (mobileNumber != null && !mobileNumber.isEmpty())
 
@@ -188,4 +189,93 @@ public class SearchPropertyBuilder {
 
 	}
 
+	public static final String BASE_QUERY = "select * from egpt_property prop";
+
+	public String getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
+			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize) {
+
+		StringBuffer searchQuery = new StringBuffer();
+		searchQuery.append(BASE_QUERY);
+
+		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
+			searchQuery.append(" JOIN egpt_address Addr on Addr.property =  prop.id WHERE ");
+			searchQuery.append("Addr.addressnumber =? AND");
+			preparedStatementValues.add(houseNoBldgApt);
+		} else {
+			searchQuery.append(" WHERE");
+		}
+
+		if (upicNo != null && !upicNo.isEmpty()) {
+			searchQuery.append(" prop.upicnumber = ? AND ");
+			preparedStatementValues.add(upicNo);
+		}
+
+		if (oldUpicNo != null && !oldUpicNo.isEmpty()) {
+			searchQuery.append(" prop.oldupicnumber=? AND");
+			preparedStatementValues.add(oldUpicNo);
+		}
+
+		if (propertyId != null && !propertyId.isEmpty()) {
+			searchQuery.append(" prop.id=?::bigint AND");
+			preparedStatementValues.add(Long.valueOf(propertyId.toString().trim()));
+		}
+
+		if (tenantId != null && !tenantId.isEmpty()) {
+			searchQuery.append(" prop.tenantId=?");
+			preparedStatementValues.add(tenantId);
+		}
+
+		searchQuery.append(" ORDER BY upicnumber");
+
+		if (pageNumber == -1)
+			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
+
+		if (pageSize == -1)
+			pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+
+		int offset = 0;
+		int limit = pageNumber * pageSize;
+
+		if (pageNumber <= 1)
+			offset = (limit - pageSize);
+		else
+			offset = (limit - pageSize) + 1;
+
+		searchQuery.append(" offset ?  limit ?");
+		preparedStatementValues.add(offset);
+		preparedStatementValues.add(limit);
+
+		return searchQuery.toString();
+
+	}
+
+	public String getpropertyByAdress(String houseNoBldgApt, List<Object> preparedStatementValues) {
+
+		StringBuffer query = new StringBuffer("select * from egpt_address where addressnumber=?");
+		preparedStatementValues.add(houseNoBldgApt);
+
+		return query.toString();
+	}
+
+	public static String getpropertyIdByAddress(Long addressId, List<Object> preparedStatementValues) {
+
+		StringBuffer query = new StringBuffer("select property from egpt_address where property = ?");
+		preparedStatementValues.add(addressId);
+
+		return query.toString();
+	}
+
+	public String getPropertyBypropertyId(Long propertyId) {
+
+		StringBuffer query = new StringBuffer("select * from egpt_property where id=" + propertyId);
+
+		return query.toString();
+	}
+
+	public static String getOwnersByproperty(Long propertyId, List<Object> preparedStatementValues) {
+
+		StringBuffer query = new StringBuffer("select * from egpt_property_owner where property=?");
+		preparedStatementValues.add(propertyId);
+		return query.toString();
+	}
 }

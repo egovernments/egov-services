@@ -750,8 +750,8 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-															  <MenuItem value={1} primaryText="Yes" />
-															  <MenuItem value={2} primaryText="No" />
+															  <MenuItem value={true} primaryText="Yes" />
+															  <MenuItem value={false} primaryText="No" />
 														</SelectField>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
@@ -870,7 +870,7 @@ calcArea = (e, type) => {
 
 													<Col xs={12} style={{textAlign:"right"}}>
 														<br/>
-														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid}  backgroundColor="#0b272e" labelColor={white} onClick={()=>{
+														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid}  primary={true} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
 															 this.props.resetObject("floor", false);
 															 setTimeout(()=>{
@@ -879,7 +879,7 @@ calcArea = (e, type) => {
 															}	
 														}/>}
 														{ (editIndex > -1) &&
-															<RaisedButton type="button" label="Update Room" disabled={!isFloorValid} backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+															<RaisedButton type="button" label="Update Room" disabled={!isFloorValid} primary={true}  onClick={()=> {
 																  this.props.updateObject("floors","floor",  editIndex);
 																  this.props.resetObject("floor", false);
 																  isEditIndex(-1);

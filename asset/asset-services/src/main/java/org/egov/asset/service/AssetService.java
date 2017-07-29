@@ -49,6 +49,7 @@ import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.YearWiseDepreciation;
+import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
@@ -64,108 +65,126 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class AssetService {
 
-	private static final Logger logger = LoggerFactory.getLogger(AssetService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AssetService.class);
 
-	@Autowired
-	private AssetRepository assetRepository;
+    @Autowired
+    private AssetRepository assetRepository;
 
-	@Autowired
-	private AssetProducer assetProducer;
+    @Autowired
+    private AssetProducer assetProducer;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
-		logger.info("AssetService getAssets");
-		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
-		return getAssetResponse(assets, requestInfo);
-	}
+    @Autowired
+    private AssetCommonService assetCommonService;
 
-	public String getAssetName(final String tenantId, final String name) {
-		logger.info("AssetService getAssetName");
-		return assetRepository.findAssetName(tenantId, name);
-	}
+    public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
+        logger.info("AssetService getAssets");
+        final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+        return getAssetResponse(assets, requestInfo);
+    }
 
-	public AssetResponse create(final AssetRequest assetRequest) {
-		final Asset asset = assetRepository.create(assetRequest);
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		return getAssetResponse(assets, assetRequest.getRequestInfo());
-	}
+    public String getAssetName(final String tenantId, final String name) {
+        logger.info("AssetService getAssetName");
+        return assetRepository.findAssetName(tenantId, name);
+    }
 
-	public AssetResponse createAsync(final AssetRequest assetRequest) {
+    public AssetResponse create(final AssetRequest assetRequest) {
+        final Asset asset = assetRepository.create(assetRequest);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        return getAssetResponse(assets, assetRequest.getRequestInfo());
+    }
 
-		assetRequest.getAsset().setCode(assetRepository.getAssetCode());
-		Long assetId = Long.valueOf(assetRepository.getNextAssetId().longValue());
-		assetRequest.getAsset().setId(assetId);
+    public AssetResponse createAsync(final AssetRequest assetRequest) {
+        final Asset asset = assetRequest.getAsset();
+        asset.setCode(assetRepository.getAssetCode());
+        final Long assetId = Long.valueOf(assetRepository.getNextAssetId().longValue());
+        asset.setId(assetId);
 
-		List<YearWiseDepreciation> yearWiseDepreciation = assetRequest.getAsset().getYearWiseDepreciation();
+        setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
-		if(assetRequest.getAsset().getEnableYearWiseDepreciation()!=null && yearWiseDepreciation != null){
-			
-			if (!yearWiseDepreciation.isEmpty()&&assetRequest.getAsset().getEnableYearWiseDepreciation()) {
-				for (YearWiseDepreciation depreciationRate : yearWiseDepreciation) {
-					depreciationRate.setAssetId(assetId);
-				}
-			}
-		} else {
-			assetRequest.getAsset().setEnableYearWiseDepreciation(false);
-		}
+        logger.debug("assetRequest createAsync::" + assetRequest);
+        String value = null;
 
-		// TODO validate assetcategory for an asset
-		logger.info("assetRequest createAsync::" + assetRequest);
-		String value = null;
+        try {
+            value = objectMapper.writeValueAsString(assetRequest);
+        } catch (final JsonProcessingException e) {
+            logger.info("JsonProcessingException assetrequest for kafka : " + e);
+        }
+        logger.debug("assetRequest value::" + value);
 
-		try {
-			value = objectMapper.writeValueAsString(assetRequest);
-		} catch (final JsonProcessingException e) {
-			logger.info("JsonProcessingException assetrequest for kafka : " + e);
-		}
-		logger.info("assetRequest value::" + value);
+        assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), KafkaTopicName.SAVEASSET.toString(),
+                value);
 
-		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), "save-asset", value);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        return getAssetResponse(assets, assetRequest.getRequestInfo());
+    }
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(assetRequest.getAsset());
-		return getAssetResponse(assets, assetRequest.getRequestInfo());
-	}
+    public AssetResponse update(final AssetRequest assetRequest) {
 
-	public AssetResponse update(final AssetRequest assetRequest) {
+        final Asset asset = assetRepository.update(assetRequest);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        return getAssetResponse(assets, assetRequest.getRequestInfo());
+    }
 
-		final Asset asset = assetRepository.update(assetRequest);
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		return getAssetResponse(assets, assetRequest.getRequestInfo());
-	}
+    public AssetResponse updateAsync(final AssetRequest assetRequest) {
+        final Asset asset = assetRequest.getAsset();
+        setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
-	public AssetResponse updateAsync(final AssetRequest assetRequest) {
+        logger.debug("assetRequest updateAsync::" + assetRequest);
+        String value = null;
 
-		logger.info("assetRequest createAsync::" + assetRequest);
-		String value = null;
+        try {
+            value = objectMapper.writeValueAsString(assetRequest);
+        } catch (final JsonProcessingException e) {
+            logger.info("JsonProcessingException assetrequest for update for kafka : " + e);
+        }
 
-		try {
-			value = objectMapper.writeValueAsString(assetRequest);
-		} catch (final JsonProcessingException e) {
-			logger.info("JsonProcessingException assetrequest for update for kafka : " + e);
-		}
+        assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(),
+                KafkaTopicName.UPDATEASSET.toString(), value);
 
-		assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(), "update-asset", value);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        return getAssetResponse(assets, assetRequest.getRequestInfo());
+    }
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(assetRequest.getAsset());
-		return getAssetResponse(assets, assetRequest.getRequestInfo());
-	}
+    private AssetResponse getAssetResponse(final List<Asset> assets, final RequestInfo requestInfo) {
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setAssets(assets);
+        assetResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
+        return assetResponse;
+    }
 
-	private AssetResponse getAssetResponse(final List<Asset> assets, final RequestInfo requestInfo) {
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setAssets(assets);
-		assetResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
-		return assetResponse;
-	}
+    private void setDepriciationRateAndEnableYearWiseDepreciation(final Asset asset) {
+        final List<YearWiseDepreciation> yearWiseDepreciation = asset.getYearWiseDepreciation();
+
+        logger.debug("Year wise depreciations from Request :: " + yearWiseDepreciation);
+
+        final Boolean enableYearWiseDepreciation = asset.getEnableYearWiseDepreciation();
+
+        logger.debug("Enable year wise depreciaition from Request :: " + enableYearWiseDepreciation);
+        
+        logger.debug("Asset ID from Request :: "+asset.getId());
+        if (enableYearWiseDepreciation != null && enableYearWiseDepreciation && yearWiseDepreciation != null
+                && !yearWiseDepreciation.isEmpty())
+            for (final YearWiseDepreciation depreciationRate : yearWiseDepreciation)
+                depreciationRate.setAssetId(asset.getId());
+        else if (enableYearWiseDepreciation != null && !enableYearWiseDepreciation) {
+            asset.setEnableYearWiseDepreciation(false);
+            final Double depreciationRate = assetCommonService.getDepreciationRate(asset.getDepreciationRate());
+
+            logger.debug("Depreciation rate for asset create :: " + depreciationRate);
+            asset.setDepreciationRate(depreciationRate);
+        }
+    }
 }

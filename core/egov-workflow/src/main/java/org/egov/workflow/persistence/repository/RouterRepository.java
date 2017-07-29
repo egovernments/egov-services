@@ -39,13 +39,6 @@
  */
 package org.egov.workflow.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.egov.workflow.domain.model.PersistRouter;
 import org.egov.workflow.domain.model.PersistRouterReq;
 import org.egov.workflow.domain.model.ServiceType;
@@ -61,6 +54,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Repository
 public class RouterRepository {
@@ -157,11 +153,6 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 		return persistRouter;
 	}
 
-	
-	
-	
-
-	
 	public List<RouterType> findForCriteria(final RouterTypeGetReq routerTypeGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = routerQueryBuilder.getQuery(routerTypeGetRequest, preparedStatementValues);
@@ -230,12 +221,18 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 	}
 	
 	public boolean checkCombinationExists(RouterTypeReq routerTypeReq) {
-		String finalQuery = routerQueryBuilder.checkCombinationExistsQuery(routerTypeReq); 
+        final List<Object> preparedStatementValues = new ArrayList<>();
+
+        String finalQuery = routerQueryBuilder.checkCombinationExistsQuery(routerTypeReq);
 		LOGGER.info("Verification Query : " + finalQuery);
-		List<Integer> count = jdbcTemplate.queryForList(finalQuery, Integer.class);
+        List<Integer> count = jdbcTemplate.queryForList(finalQuery, Integer.class);
 		LOGGER.info("Count: "+ count.toString());
-		if(count.size() > 0){ 
-			if(count.get(0) > 0) {
+
+        String finalIdQuery = routerQueryBuilder.checkIDQuery(routerTypeReq);
+        List<Map<String, Object>>  id = jdbcTemplate.queryForList(finalIdQuery, preparedStatementValues.toArray());
+		if(count.size() > 0){
+            Long idFromDb = (Long) id.get(0).get("id");
+            if(count.get(0) > 0 && idFromDb != routerTypeReq.getRouterType().getId()) {
 				return true; 
 			} else {
 				return false;

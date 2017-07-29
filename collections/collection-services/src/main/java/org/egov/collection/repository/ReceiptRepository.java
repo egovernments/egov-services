@@ -151,17 +151,14 @@ public class ReceiptRepository {
 	}
 	
 	public boolean persistReceipt(Map<String, Object> parametersMap, 
-			     Map<String, Object>[] parametersReceiptDetails, long receiptHeader, long instrumentId){
+			     Map<String, Object>[] parametersReceiptDetails, long receiptHeader, String instrumentId){
 		boolean isInsertionSuccessful = false;
-		try{
+		
 			persistToReceiptHeader(parametersMap);
 			persistToReceiptDetails(parametersReceiptDetails, receiptHeader);
-		//	persistIntoReceiptInstrument(instrumentId, receiptHeader);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("Persistingreceipt FAILED! ",e.getCause());
-			return isInsertionSuccessful;
-		}
+		//	persistIntoReceiptInstrument(instrumentId, receiptHeader, parametersMap.get("tenantid").toString()); ////uncomment for instrument integration
+
+		isInsertionSuccessful = true;
 		return isInsertionSuccessful;
 
 
@@ -291,11 +288,11 @@ public class ReceiptRepository {
 		return statusList;
 	}
 
-	public void persistIntoReceiptInstrument(Long instrumentId,
-			Long receiptHeaderId) {
+	public void persistIntoReceiptInstrument(String instrumentId,
+			Long receiptHeaderId, String tenantId) {
 		logger.info("Persisting into receipt Instrument");
 		String queryString = receiptDetailQueryBuilder.insertInstrumentId();
-		jdbcTemplate.update(queryString, new Object[] {instrumentId, receiptHeaderId});
+		jdbcTemplate.update(queryString, new Object[] {instrumentId, receiptHeaderId,tenantId});
 	}
 
 	public Boolean updateReceipt(ReceiptReq receiptRequest) {

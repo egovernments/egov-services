@@ -341,7 +341,7 @@ class Dashboard extends Component {
                     <Row>
 
 				<div  className="tableLayout">
-            <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+            <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
 						 <thead>
 							<tr>
 							  <th>#</th>

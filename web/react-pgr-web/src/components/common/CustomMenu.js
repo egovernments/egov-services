@@ -151,7 +151,8 @@ class CustomMenu extends Component {
     let {actionList}=this.props;
     let menuItems=[];
     for (var i = 0; i < actionList.length; i++) {
-      if (actionList[i].path!="" && actionList[i].path.startsWith(path)) {
+      // actionList[i].path.startsWith(path)
+      if (actionList[i].path!="" && actionList[i].path.search(path)>-1 && actionList[i].path.search(path+" ")==-1) {
         let splitArray=actionList[i].path.split(path)[1].split(".");
         if (splitArray.length>2) {
             if (!_.some(menuItems,{ 'name':splitArray[1]} )) {
@@ -329,10 +330,10 @@ class CustomMenu extends Component {
             if (!item.url) {
               return (
                         <MenuItem
-                             style={{whiteSpace: "initial", fontSize: "14px"}}
+                             style={{whiteSpace: "initial"}}
                              key={index}
                              leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
+                             primaryText={item.name}
                              rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
                              onTouchTap={()=>{menuChangeTwo(!item.path?item.name:item.path)}}
                           />
@@ -344,10 +345,10 @@ class CustomMenu extends Component {
                 return(
                       <Link  key={index} to={menuConvention[item.path]} >
                         <MenuItem
-                            style={{whiteSpace: "initial", fontSize: "14px"}}
+                            style={{whiteSpace: "initial"}}
                              onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
                              leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
+                             primaryText={item.name}
                           />
                       </Link>
                     )
@@ -367,9 +368,9 @@ class CustomMenu extends Component {
                 return (
                          <a key={index} href={base+item.url} target="_blank">
                            <MenuItem
-                                style={{whiteSpace: "initial", fontSize: "14px"}}
+                                style={{whiteSpace: "initial"}}
                                 leftIcon={<i className="material-icons">view_module</i>}
-                                primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
+                                primaryText={item.name}
                              />
                           </a>
                         )
@@ -389,10 +390,10 @@ class CustomMenu extends Component {
               return(
                     <Link  key={index} to={menuConvention[item.path]} >
                       <MenuItem
-                          style={{whiteSpace: "initial", fontSize: "14px"}}
+                          style={{whiteSpace: "initial"}}
                            onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
                            leftIcon={<i className="material-icons">view_module</i>}
-                           primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
+                           primaryText={item.name}
                         />
                     </Link>
                   )
@@ -412,9 +413,9 @@ class CustomMenu extends Component {
               return (
                        <a key={index} href={base+item.url} target="_blank">
                          <MenuItem
-                              style={{whiteSpace: "initial", fontSize: "14px"}}
+                              style={{whiteSpace: "initial"}}
                               leftIcon={<i className="material-icons">view_module</i>}
-                              primaryText={<span style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{item.name}</span>}
+                              primaryText={item.name}
                            />
                         </a>
                       )

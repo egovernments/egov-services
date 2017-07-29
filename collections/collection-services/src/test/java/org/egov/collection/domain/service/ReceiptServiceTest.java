@@ -176,10 +176,10 @@ public class ReceiptServiceTest {
 				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
 		Mockito.doNothing().when(receiptRepository).persistToReceiptHeader(parametersMap);
 		Mockito.doNothing().when(receiptRepository).persistToReceiptDetails(parametersReceiptDetails, 1L);
-		Mockito.when(receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, 1L)).thenReturn(true);
+		Mockito.when(receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, "instrumentId")).thenReturn(true);
 
 		assertNotNull(receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
-				receiptReq.getTenantId(), Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId())));
+				receiptReq.getTenantId(), receiptReq.getReceipt().get(0).getInstrument().getId()));
 		
 	}
 	
@@ -219,10 +219,10 @@ public class ReceiptServiceTest {
 				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenThrow(Exception.class);
 		Mockito.doNothing().when(receiptRepository).persistToReceiptHeader(parametersMap);
 		Mockito.doNothing().when(receiptRepository).persistToReceiptDetails(parametersReceiptDetails, 1L);
-		Mockito.when(receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, 1L)).thenReturn(true);
+		Mockito.when(receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, "instrumentId")).thenReturn(true);
 
 		receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
-				receiptReq.getTenantId(), Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId()));
+				receiptReq.getTenantId(), receiptReq.getReceipt().get(0).getInstrument().getId());
 		
 	}
 	

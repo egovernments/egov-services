@@ -77,7 +77,7 @@ class ShowField extends Component {
   }
 
   drillDown=(e,i,i2,item,item1)=>{
-     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText} = this.props;
+     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute} = this.props;
      let object=reportResult.reportHeader[i2];
 
     //  console.log(object);
@@ -85,18 +85,18 @@ class ShowField extends Component {
 
     if (object.defaultValue && object.defaultValue.search("_parent")>-1) {
         let splitArray=object.defaultValue.split("&");
-        let searchParams=[]
-
-
-        for (var variable in searchForm) {
-
-          searchParams.push({
-            name:variable,
-            // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
-            input:typeof(searchForm[variable])=="object"?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59"):searchForm[variable]
-
-          })
-        }
+        // let searchParams=[]
+        //
+        //
+        // for (var variable in searchForm) {
+        //
+        //   searchParams.push({
+        //     name:variable,
+        //     // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
+        //     input:typeof(searchForm[variable])=="object"?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59"):searchForm[variable]
+        //
+        //   })
+        // }
 
         // let  queryString={};
 
@@ -133,7 +133,7 @@ class ShowField extends Component {
         }
 
         // console.log(queryString);
-        console.log(splitArray[0].split("=")[1]);
+        // console.log(splitArray[0].split("=")[1]);
 
         let response=Api.commonApiPost("pgr-master/report/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
         {
@@ -143,6 +143,10 @@ class ShowField extends Component {
         },function(err) {
             console.log(err);
         });
+    }
+    else if(object.defaultValue && object.defaultValue.search("_url")>-1) {
+      // console.log(item1);
+      setRoute(`/pgr/viewGrievance/${item1}`);
     }
     else {
       alert("No drilldown reports.")
@@ -225,7 +229,7 @@ class ShowField extends Component {
   }
 }
 
-const mapStateToProps = state => ({isTableShow:state.form.showTable,metaData:state.report.metaData,reportResult:state.report.reportResult,flag:state.report.flag,searchForm:state.form.form});
+const mapStateToProps = state => ({isTableShow:state.form.showTable,metaData:state.report.metaData,reportResult:state.report.reportResult,flag:state.report.flag,searchForm:state.form.form,searchParams:state.report.searchParams});
 
 const mapDispatchToProps = dispatch => ({
   setReportResult:(reportResult)=>{
@@ -236,7 +240,8 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
-  }
+  },
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShowField);

@@ -19,7 +19,7 @@ public class ChartOfAccountsRepository {
 
     private String url;
 
-    public ChartOfAccountsRepository(final RestTemplate restTemplate,@Value("${egov.egfmaster.service.host}") final String egfServiceHost,
+    public ChartOfAccountsRepository(final RestTemplate restTemplate,@Value("${egov.egfmasters.hostname}") final String egfServiceHost,
                                      @Value("${coa.search.uri}") final String url) {
         this.restTemplate = restTemplate;
         this.url = egfServiceHost + url;

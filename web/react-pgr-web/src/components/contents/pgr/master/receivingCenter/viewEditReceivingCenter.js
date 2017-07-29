@@ -162,7 +162,7 @@ class ViewEditServiceGroup extends Component {
                     <Grid>
                         <Row>
                             <Col xs={12} md={12}>
-                                <Table id="searchTable" bordered responsive>
+                                <Table id="searchTable" bordered responsive className="table-striped">
                                     <thead>
                                         <tr>
                                           <th>ID</th>

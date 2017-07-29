@@ -69,6 +69,48 @@ public class FundJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (fundSearchEntity.getId() != null) {
+                    if (params.length() > 0) {
+                            params.append(" and ");
+                    }
+                    params.append("id =:id");
+                    paramValues.put("id", fundSearchEntity.getId());
+                }
+                if (fundSearchEntity.getCode() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("code =:code");
+                        paramValues.put("code", fundSearchEntity.getCode());
+                }
+                if (fundSearchEntity.getName() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("name =:name");
+                        paramValues.put("name", fundSearchEntity.getName());
+                }
+                if (fundSearchEntity.getIdentifier() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("description =:description");
+                        paramValues.put("description", fundSearchEntity.getIdentifier());
+                }
+                if (fundSearchEntity.getActive() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("active =:active");
+                        paramValues.put("active", fundSearchEntity.getActive());
+                }
+                if (fundSearchEntity.getLevel() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("type =:type");
+                        paramValues.put("type", fundSearchEntity.getLevel());
+                }
 
 		Pagination<Fund> page = new Pagination<>();
 		if (fundSearchEntity.getOffset() != null) {

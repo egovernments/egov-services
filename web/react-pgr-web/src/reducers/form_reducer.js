@@ -596,7 +596,6 @@ console.log('Here', validatePropertyFloor);
   // console.log(validationData.required.current)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  console.log(validatePropertyFloor.required.required.length, validatePropertyFloor.required.current.length);
   return {
     errorText: errorText,
     validatePropertyFloor: validatePropertyFloor,

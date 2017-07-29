@@ -2,6 +2,7 @@ package org.egov.egf.instrument.domain.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
@@ -140,13 +141,17 @@ public class InstrumentService {
         }
         return errors;
 
-    }
+    } 
 
     public List<Instrument> fetchRelated(List<Instrument> instruments) {
-        if (instruments != null)
+   
+    	//entity.setId(UUID.randomUUID().toString().replace("-", ""));
+    	 if (instruments != null)
             for (Instrument instrument : instruments) {
+            	
+            	instrument.setId(UUID.randomUUID().toString().replace("-", ""));
                 // fetch related items
-                if (instrument.getInstrumentType() != null) {
+            /*    if (instrument.getInstrumentType() != null) {
                     InstrumentType instrumentType = instrumentTypeRepository.findById(instrument.getInstrumentType());
                     if (instrumentType == null) {
                         throw new InvalidDataException("instrumentType", "instrumentType.invalid",
@@ -184,7 +189,7 @@ public class InstrumentService {
                                 " Invalid surrendarReason");
                     }
                     instrument.setSurrendarReason(surrendarReason);
-                }
+                }*/
 
             }
 

@@ -33,19 +33,25 @@ const styles = {
 
 class Footer extends Component {
   render() {
-    return (
-      <div className="Footer" style={styles.paper}>
-          <Col xs={12} lg={12}>
-          <Row>
-              <Col xs={12} sm={5}>Copyright &#169; 2017 eGovernments Foundation.<sup>&#174;</sup></Col>
-              <Col xs={12} sm={7}>
-                <div style={styles.floatRight}></div>
+
+    const renderFooterData = function() {
+      if(!localStorage.token)
+        return (
+          <div className="Footer" style={styles.paper}>
+              <Col xs={12} lg={12}>
+              <Row>
+                  <Col xs={12} sm={5}><span>Copyright &#169; 2017 eGovernments Foundation.<sup>&#174;</sup></span> </Col>
+                  <Col xs={12} sm={7}>
+                    <div style={styles.floatRight}></div>
+                  </Col>
+              </Row>
               </Col>
-          </Row>
-          </Col>
+          </div>
+        );
+    }
 
-
-      </div>
+    return (
+      <div>{renderFooterData()}</div>
     );
   }
 }

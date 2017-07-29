@@ -241,6 +241,22 @@ class CreateProperty extends Component {
           })
           console.log(err)
         })
+		
+		var query = {
+			tenantId: 'default'
+		}
+		
+		Api.commonApiPost('egov-common-workflows/process/_search',query, {}).then((res)=>{
+          console.log(res);
+          currentThis.setState({zone : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            zone : []
+          })
+          console.log(err)
+        })
+		
+		
   }
 
   componentWillUnmount() {
@@ -284,7 +300,7 @@ createPropertyTax = () => {
 	if(createProperty && createProperty.hasOwnProperty('owners')) {		
 		for(var i=0;i<createProperty.owners.length;i++){
 			createProperty.owners[i].locale = userRequest.locale;
-			createProperty.owners[i].type = userRequest.type;
+			createProperty.owners[i].type = 'CITIZEN';
 			createProperty.owners[i].active = true;
 			createProperty.owners[i].tenantId = 'default';
 			if(createProperty.owners[i].isPrimaryOwner == "PrimaryOwner") {
@@ -436,17 +452,13 @@ createPropertyTax = () => {
       }
 	  
 	  var fileStoreArray = [];
-	  
-	  var hasFiles = true;
 	  			
 	   if(currentThis.props.files.length !=0){
-			hasFiles = false;
 			if(currentThis.props.files.length === 0){
 				console.log('No file uploads');
-				hasFiles = true;
 				
 			}else{
-				hasFiles = false;
+
 				console.log('still file upload pending', currentThis.props.files.length);
 				
 			  for(let i=0;i<currentThis.props.files.length;i++){
@@ -480,7 +492,18 @@ createPropertyTax = () => {
 					console.log(body);
 					  if(i === (currentThis.props.files.length - 1)){
 						console.log('All files succesfully uploaded');
-						hasFiles = true;
+						 Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
+							currentThis.setState({
+								ack: res.properties.applicationNo
+							});
+							localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
+							this.props.history.push('acknowledgement');
+							setLoadingStatus('hide');
+						  }).catch((err)=> {
+							console.log(err)
+							setLoadingStatus('hide');
+							toggleSnackbarAndSetText(true, err.message);
+						  })
 					  }
 					
 				},function(err) {
@@ -489,24 +512,24 @@ createPropertyTax = () => {
 			  }
 			}
 		  } else {
-			  hasFiles = true;
+			   Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
+				currentThis.setState({
+					ack: res.properties.applicationNo
+				});
+				localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
+				this.props.history.push('acknowledgement');
+				setLoadingStatus('hide');
+			  }).catch((err)=> {
+				console.log(err)
+				setLoadingStatus('hide');
+				toggleSnackbarAndSetText(true, err.message);
+			  })
 		  }
 		  
-	if(hasFiles) {
+	 
 			  
-		 Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
-			currentThis.setState({
-				ack: res.properties.applicationNo
-			});
-			localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-			this.props.history.push('acknowledgement');
-			setLoadingStatus('hide');
-		  }).catch((err)=> {
-			console.log(err)
-			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message);
-		  })
-		}
+		
+		
 	}	  
 		  
 	
@@ -585,9 +608,8 @@ createActivate = () => {
 				  <Amenities />                  
 				  <ConstructionTypes/>
 				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : 
-					 <div> {!this.state.addFloor && <div><Card className="uiCard">
-						<CardText>
-							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:10}}  primary={true}
+					 <div> {!this.state.addFloor && <div className="uiCard">
+							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:5}}  primary={true}
 								  onClick={()=>{
 									this.setState({
 									  addFloor: true
@@ -595,8 +617,7 @@ createActivate = () => {
 								  }}
 							  />
 							  <div className="clearfix"></div>                    
-						</CardText>
-					  </Card>
+						
 	
 					   </div>
 					  }
@@ -788,7 +809,7 @@ const mapDispatchToProps = dispatch => ({
     })
   },
   
-    setLoadingStatus: (loadingStatus) => {
+   setLoadingStatus: (loadingStatus) => {
      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
    },
    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {

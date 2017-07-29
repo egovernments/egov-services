@@ -18,6 +18,7 @@ let menuConvention={
   "Grievance Redressal.Masters.Router.UPDATE COMPLAINT ROUTER":"/pgr/searchRouter/edit",
   "Grievance Redressal.Masters.Router.SEARCH COMPLAINT ROUTER":"/pgr/searchRouter/view",
 
+  "Grievance Redressal.Masters.Grievance Category.Create Service Group": "/pgr/createServiceGroup",
   "Grievance Redressal.Masters.Grievance Category.Update Service Group":"/pgr/serviceGroup/edit",
   "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"/pgr/serviceGroup/view",
 
@@ -48,7 +49,8 @@ let menuConvention={
     "Water Charge.WCMS Masters.TreatmentPlant.CreatTreatmentPlantApi":"/create/wc/treatmentPlants",
     "Water Charge.WCMS Masters.Supply Type Master.CreateSupplyTypeMasterApi":"/create/wc/supplyType",
     "Water Charge.WCMS Masters.Source Type Master.CreateSourceTypeMasterApi":"/create/wc/waterSourceType",
-
+	"Property Tax.New Property.CreateNewProperty":"/propertyTax/create-property",
+	"Property Tax.Existing Property.SearchProperty":"/propertyTax/search"
 
 
 }
@@ -78,7 +80,7 @@ export default (state = defaultState, action) => {
     case 'REDIRECT':
       return { ...state, redirectTo: null };
     case 'LOGOUT':
-      return { ...state, redirectTo: '/', token: null, currentUser: null, showMenu: false };
+      return { ...state, redirectTo: '/'+action.tenantId, token: null, currentUser: null, showMenu: false };
     case 'SETTINGS_SAVED':
       return {
         ...state,

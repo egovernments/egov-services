@@ -583,7 +583,7 @@ componentWillUpdate() {
                   </Row>
               </CardText>
    	          <CardText>
-   		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+   		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
    		          <thead >
    		            <tr>
 						<th>{translate('pgr.lbl.fromposition')}</th>

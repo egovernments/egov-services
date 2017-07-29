@@ -303,10 +303,33 @@ createPropertyTax = () => {
 			createProperty.owners[i].type = 'CITIZEN';
 			createProperty.owners[i].active = true;
 			createProperty.owners[i].tenantId = 'default';
+			createProperty.owners[i].salutation = null;
+			createProperty.owners[i].pan = null;
+			createProperty.owners[i].roles =[  
+											 {  
+												"code":"CITIZEN",
+												"name":"Citizen"
+											 }
+										  ];
+			
 			if(createProperty.owners[i].isPrimaryOwner == "PrimaryOwner") {
 				createProperty.owners[i].isPrimaryOwner = true;
+				createProperty.owners[i].issecondaryowner = false;
 			} else {
 				createProperty.owners[i].isPrimaryOwner = false;
+				createProperty.owners[i].issecondaryowner = true;
+			}
+			
+			if(!createProperty.owners[i].hasOwnProperty('ownershippercentage') || createProperty.owners[i].ownershippercentage == ''){
+				createProperty.owners[i].ownershippercentage = null;
+			}
+			
+			if(!createProperty.owners[i].hasOwnProperty('ownertype') || createProperty.owners[i].ownertype == ''){
+				createProperty.owners[i].ownertype = null;
+			}
+			
+			if(!createProperty.owners[i].hasOwnProperty('emailId') || createProperty.owners[i].emailId == ''){
+				createProperty.owners[i].emailId = null;
 			}
 		}
 	}
@@ -607,24 +630,7 @@ createActivate = () => {
 				  <AssessmentDetails />				  
 				  <Amenities />                  
 				  <ConstructionTypes/>
-				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : 
-					 <div> {!this.state.addFloor && <div className="uiCard">
-							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:5}}  primary={true}
-								  onClick={()=>{
-									this.setState({
-									  addFloor: true
-									});
-								  }}
-							  />
-							  <div className="clearfix"></div>                    
-						
-	
-					   </div>
-					  }
-					  	 
-					  </div>
-				  }
-				  {(this.state.addFloor && (getNameByCode(this.state.propertytypes, createProperty.propertyType) != "Vacant Land")) && <FloorDetails/>}
+				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : <FloorDetails/>}
 				  <DocumentUpload />
 				  <Workflow />
 				  

@@ -91,12 +91,31 @@ chip: {
 
 class OwnerDetails extends Component { 
 
+constructor(props) {
+	super(props);
+	this.state = {
+		gaurdianRelation: [{code:-1, name:'None'}, {code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
+		gender:[{code:-1, name:'None'},{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
+		ownerType:[{code:-1, name:'None'},{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}]
+	}
+}
+
 	componentDidMount() {
 		
 	}
 
 
   render() {
+	  
+	  const renderOption = function(list,listName="") {
+			if(list)
+			{
+				return list.map((item)=>
+				{
+					return (<MenuItem key={item.code} value={item.code} primaryText={item.name}/>)
+				})
+			}
+		}
 
 
     let {
@@ -206,10 +225,7 @@ class OwnerDetails extends Component {
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
-							<MenuItem value={-1} primaryText="None"/>
-                            <MenuItem value="Male" primaryText="Male"/>
-                            <MenuItem value="Female" primaryText="Female"/>
-                            <MenuItem value="Others" primaryText="Others"/>  
+							{renderOption(this.state.gender)}
                           </SelectField>
                         </Col>
                         <Col xs={12} md={3} sm={6}>
@@ -252,11 +268,7 @@ class OwnerDetails extends Component {
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
-							<MenuItem value={-1} primaryText="None"/>
-                            <MenuItem value={1} primaryText="Father"/>
-                            <MenuItem value={2} primaryText="Husband"/>
-                            <MenuItem value={3} primaryText="Mother"/>
-                            <MenuItem value={4} primaryText="Others"/>
+							{renderOption(this.state.gaurdianRelation)}
                           </SelectField>
                         </Col>
                         <Col xs={12} md={3} sm={6}>
@@ -296,10 +308,7 @@ class OwnerDetails extends Component {
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
-							<MenuItem value={-1} primaryText="None"/>
-                            <MenuItem value="Ex_Service_man" primaryText="Ex-Service man"/>
-                            <MenuItem value="Freedom_Fighter" primaryText="Freedom Fighter"/>
-                            <MenuItem value="Freedom_fighers_wife" primaryText="Freedom figher's wife"/>
+							{renderOption(this.state.ownerType)}
                           </SelectField>
                         </Col>
 

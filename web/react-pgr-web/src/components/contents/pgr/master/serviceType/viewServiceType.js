@@ -18,40 +18,16 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-var flag = 0;
 const styles = {
   headerStyle : {
     fontSize : 19
   },
+  addBorderBottom:{
+    borderBottom: '1px solid #eee',
+    padding: '10px'
+  },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
-  },
-  bold: {
-    fontWeight: "bolder"
   }
 };
 
@@ -148,102 +124,67 @@ class ViewServiceType extends Component {
 
       return(
         <div className="viewServiceType">
-              <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Grievance Type< /div>} />
-                  <CardText style={{padding:0}}>
-
-                      <Grid>
-                          <br/>
-                          <Card>
-                              <CardText>
-                                  <ListGroup>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               ID
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewServiceType.id ? viewServiceType.id : ''}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("core.lbl.add.name")}
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewServiceType.serviceName ? viewServiceType.serviceName : ''}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("core.lbl.code")}
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               Category
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {getNameById(categorySource,viewServiceType.category) ? getNameById(categorySource,viewServiceType.category) : ''}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               Active
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewServiceType.active? 'true' : 'false'}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("core.lbl.description")}
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewServiceType.description? viewServiceType.description : ''}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               SLA Hours
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewServiceType.slaHours? viewServiceType.slaHours : ''}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               Has Financial Impact
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewServiceType.hasFinancialImpact? 'true' : 'false'}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                  </ListGroup>
-                              </CardText>
-                          </Card>
-                      </Grid>
-                  </CardText>
-              </Card>
-        </div>)
+          <Grid style={{width:'100%'}}>
+            <Card style={{margin:'15px 0'}}>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+                 View Grievance Type
+               < /div>}/>
+               <CardText style={{padding:'8px 16px 0'}}>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    {translate("core.lbl.add.name")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewServiceType.serviceName ? viewServiceType.serviceName : ''}
+                   </Col>
+                   <Col xs={6} md={3}>
+                     {translate("core.lbl.code")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}
+                   </Col>
+                 </Row>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    {translate("core.lbl.description")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewServiceType.description? viewServiceType.description : ''}
+                   </Col>
+                   <Col xs={6} md={3}>
+                     {translate("pgr.lbl.active")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewServiceType.active? 'true' : 'false'}
+                   </Col>
+                 </Row>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    Category
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {getNameById(categorySource,viewServiceType.category) ? getNameById(categorySource,viewServiceType.category) : ''}
+                   </Col>
+                   <Col xs={6} md={3}>
+                     SLA Hours
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewServiceType.slaHours? viewServiceType.slaHours : ''}
+                   </Col>
+                 </Row>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    Has Financial Impact
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewServiceType.hasFinancialImpact? 'true' : 'false'}
+                   </Col>
+                 </Row>
+               </CardText>
+            </Card>
+          </Grid>
+        </div>
+      )
     }
 }
 

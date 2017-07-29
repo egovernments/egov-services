@@ -75,10 +75,10 @@ class CustomMenu extends Component {
         let splitArray=actionList[i].path.split(".");
         if (splitArray.length>1) {
             if (!_.some(menuItems,{ 'name':splitArray[0]} )) {
-              menuItems.push({path:"",name:splitArray[0],url:""});
+              menuItems.push({path:"",name:splitArray[0],url:"",queryParams:actionList[i].queryParams,orderNumber:actionList[i].orderNumber});
             }
         } else{
-          menuItems.push({path:"",name:actionList.displayName,url:actionList.url});
+          menuItems.push({path:"",name:actionList.displayName,url:actionList.url,queryParams:actionList[i].queryParams,orderNumber:actionList[i].orderNumber});
         }
       }
     }
@@ -97,32 +97,6 @@ class CustomMenu extends Component {
       }
   }
 
-  componentDidUpdate()
-  {
-
-  }
-
-  // menuLeaves=(items)=>{
-  //   // console.log(items);
-  //   let menu=[];
-  //   if (items) {
-  //     for (var i=0;i<items.length;i++) {
-  //       if (items[i].hasOwnProperty("items")) {
-  //         // console.log("if :");
-  //         // console.log(items[i]);
-  //         this.menuLeaves(items[i].items.length>0?items[i].items[0].items:[]);
-  //       }
-  //       else {
-  //         // console.log("else :");
-  //         // console.log(items[i]);
-  //          menu.push(items[i]);
-  //
-  //       }
-  //     }
-  //   }
-  //
-  //   return menu;
-  // }
 
   changeModulesActions(modules,items)
   {
@@ -152,15 +126,15 @@ class CustomMenu extends Component {
     let menuItems=[];
     for (var i = 0; i < actionList.length; i++) {
       // actionList[i].path.startsWith(path)
-      if (actionList[i].path!="" && actionList[i].path.search(path)>-1 && actionList[i].path.search(path+" ")==-1) {
+      if (actionList[i].path!="" && actionList[i].path.startsWith(path+".")) {
         let splitArray=actionList[i].path.split(path)[1].split(".");
         if (splitArray.length>2) {
             if (!_.some(menuItems,{ 'name':splitArray[1]} )) {
-              menuItems.push({path:path+"."+splitArray[1],name:splitArray[1],url:""});
+              menuItems.push({path:path+"."+splitArray[1],name:splitArray[1],url:"",queryParams:actionList[i].queryParams,orderNumber:actionList[i].orderNumber});
             }
             // tempPath=path+"."+splitArray[1];
         } else{
-          menuItems.push({path:path+"."+splitArray[1],name:actionList[i].displayName,url:actionList[i].url});
+          menuItems.push({path:path+"."+splitArray[1],name:actionList[i].displayName,url:actionList[i].url,queryParams:actionList[i].queryParams,orderNumber:actionList[i].orderNumber});
         }
       }
     }
@@ -205,34 +179,7 @@ class CustomMenu extends Component {
     let {handleToggle,actionList,menuConvention}=this.props;
     let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions,path,menuItems}=this.state;
     let {menuChange,changeLevel,menuChangeTwo}=this;
-    // console.log(actionList);
-    // console.log(menuItems.length>0?menuItems[0].title:"");
-    // const constructMenu=(items)=>{
-    //   // console.log(items);
-    //   let menu=[];
-    //   if (items) {
-    //     for (var i=0;i<items.length;i++) {
-    //       if (items[i].hasOwnProperty("items")) {
-    //         // console.log("if :");
-    //         // console.log(items[i]);
-    //         menu.push(<MenuItem
-    //           primaryText={items[i].name}
-    //           rightIcon={<ArrowDropRight />}
-    //           menuItems={constructMenu(items[i].items.length>0?items[i].items[0].items:[])} />)
-    //       }
-    //       else {
-    //         // console.log("else :");
-    //         // console.log(items[i]);
-    //         menu.push(<MenuItem primaryText={items[i].name} />)
-    //       }
-    //     }
-    //   }
-    //
-    //
-    //   return menu;
-    // }
-    // console.log(menuItems);
-    // console.log(parentLevel);
+
     const checkUrl = function(item) {
       if(item.url == '/pgr/createReceivingCenter' && window.location.href.indexOf("/pgr/createReceivingCenter")>-1) {
           window.urlCheck = true;
@@ -251,75 +198,7 @@ class CustomMenu extends Component {
       }
     }
 
-    const showMenu=()=>{
 
-      if(searchText.length==0)
-      {
-
-        return menuItems.map((item,index)=>{
-            if (item.level==level) {
-              if (item.url) {
-                return(
-                  <Link  key={index} to={item.url} >
-                    <MenuItem
-                        style={{whiteSpace: "initial"}}
-                         onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
-                         leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-                         primaryText={item.name}
-                      />
-                  </Link>
-
-
-                )
-
-              } else {
-                return (
-                      <MenuItem
-
-                           key={index}
-                           leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-                           primaryText={item.name}
-                           rightIcon={<i className="material-icons">{item.rightIcon}</i>}
-                           onTouchTap={()=>{menuChange(item.nextLevel, item.level)}}
-                        />
-                    )
-              }
-
-            }
-        })
-        return(
-          <div>
-            <MenuItem
-
-                 leftIcon={<i className="material-icons">view_module</i>}
-                 primaryText={menuItems.length>0?menuItems[0].title:""}
-                 rightIcon={<ArrowDropRight />}
-                  />
-
-            </div>
-        )
-      }
-      else {
-
-          return menuItems.map((item,index)=>{
-                if (item.url && item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
-                  return(
-                    <Link   key={index} to={item.url} >
-                      <MenuItem
-                          style={{whiteSpace: "initial"}}
-                           onTouchTap={()=>{handleToggle(false)}}
-                           leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-                           primaryText={item.name}
-                        />
-                    </Link>
-                  )
-                }
-
-          })
-
-
-      }
-    }
 
     const showMenuTwo=()=>{
 
@@ -354,7 +233,7 @@ class CustomMenu extends Component {
                     )
               } else {
                 let base="";
-                if (item.path.search("EIS.")>-1 || item.path.search("ess.")>-1) {
+                if (item.path.search("Employee Management.")>-1 || item.path.search("ess.")>-1) {
                   base=window.location.origin+"/hr-web";
                   // console.log(base);
                 }
@@ -366,7 +245,7 @@ class CustomMenu extends Component {
                     base=window.location.origin+"/asset-web";
                 }
                 return (
-                         <a key={index} href={base+item.url} target="_blank">
+                         <a key={index} href={base+item.url+((item.queryParams!="" && item.queryParams)?"?"+item.queryParams:"")} target="_blank">
                            <MenuItem
                                 style={{whiteSpace: "initial"}}
                                 leftIcon={<i className="material-icons">view_module</i>}
@@ -458,7 +337,7 @@ class CustomMenu extends Component {
                         onTouchTap={()=>{changeLevel(path)}}
                       />}
 
-            {/*showMenu()*/}
+
 
             {showMenuTwo()}
 
@@ -477,3 +356,132 @@ const mapDispatchToProps = dispatch => ({
   setRoute:(route)=>dispatch({type:'SET_ROUTE',route})
 })
 export default connect(mapStateToProps,mapDispatchToProps)(CustomMenu);
+
+/*showMenu()*/
+
+// const showMenu=()=>{
+//
+//   if(searchText.length==0)
+//   {
+//
+//     return menuItems.map((item,index)=>{
+//         if (item.level==level) {
+//           if (item.url) {
+//             return(
+//               <Link  key={index} to={item.url} >
+//                 <MenuItem
+//                     style={{whiteSpace: "initial"}}
+//                      onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
+//                      leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+//                      primaryText={item.name}
+//                   />
+//               </Link>
+//
+//
+//             )
+//
+//           } else {
+//             return (
+//                   <MenuItem
+//
+//                        key={index}
+//                        leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+//                        primaryText={item.name}
+//                        rightIcon={<i className="material-icons">{item.rightIcon}</i>}
+//                        onTouchTap={()=>{menuChange(item.nextLevel, item.level)}}
+//                     />
+//                 )
+//           }
+//
+//         }
+//     })
+//     return(
+//       <div>
+//         <MenuItem
+//
+//              leftIcon={<i className="material-icons">view_module</i>}
+//              primaryText={menuItems.length>0?menuItems[0].title:""}
+//              rightIcon={<ArrowDropRight />}
+//               />
+//
+//         </div>
+//     )
+//   }
+//   else {
+//
+//       return menuItems.map((item,index)=>{
+//             if (item.url && item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+//               return(
+//                 <Link   key={index} to={item.url} >
+//                   <MenuItem
+//                       style={{whiteSpace: "initial"}}
+//                        onTouchTap={()=>{handleToggle(false)}}
+//                        leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+//                        primaryText={item.name}
+//                     />
+//                 </Link>
+//               )
+//             }
+//
+//       })
+//
+//
+//   }
+// }
+
+// console.log(actionList);
+// console.log(menuItems.length>0?menuItems[0].title:"");
+// const constructMenu=(items)=>{
+//   // console.log(items);
+//   let menu=[];
+//   if (items) {
+//     for (var i=0;i<items.length;i++) {
+//       if (items[i].hasOwnProperty("items")) {
+//         // console.log("if :");
+//         // console.log(items[i]);
+//         menu.push(<MenuItem
+//           primaryText={items[i].name}
+//           rightIcon={<ArrowDropRight />}
+//           menuItems={constructMenu(items[i].items.length>0?items[i].items[0].items:[])} />)
+//       }
+//       else {
+//         // console.log("else :");
+//         // console.log(items[i]);
+//         menu.push(<MenuItem primaryText={items[i].name} />)
+//       }
+//     }
+//   }
+//
+//
+//   return menu;
+// }
+// console.log(menuItems);
+// console.log(parentLevel);
+
+
+// componentDidUpdate()
+// {
+//
+// }
+
+// menuLeaves=(items)=>{
+//   // console.log(items);
+//   let menu=[];
+//   if (items) {
+//     for (var i=0;i<items.length;i++) {
+//       if (items[i].hasOwnProperty("items")) {
+//         // console.log("if :");
+//         // console.log(items[i]);
+//         this.menuLeaves(items[i].items.length>0?items[i].items[0].items:[]);
+//       }
+//       else {
+//         // console.log("else :");
+//         // console.log(items[i]);
+//          menu.push(items[i]);
+//
+//       }
+//     }
+//   }
+//
+//   return menu;
+// }

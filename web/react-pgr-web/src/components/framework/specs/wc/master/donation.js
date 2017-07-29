@@ -1,10 +1,10 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype-applicationtype/_create",
+		"url": "/wcms/masters/donation/_create",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "donation",
+		"objectName": "Donation",
 		"groups": [
 			{
 				"label": "wc.create.donation.title",
@@ -12,11 +12,11 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "donation.propertyType",
+						"jsonPath": "Donation.propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..id|$..name",
+						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -24,55 +24,55 @@ var dat = {
 					},
           {
 								"name": "CategoryType",
-								"jsonPath": "donation.categoryType",
+								"jsonPath": "Donation.category",
 								"label": "wc.create.groups.connectionDetails.categoryType",
 								"pattern": "",
 								"type": "singleValueList",
 								"isRequired": false,
 								"isDisabled": false,
-								"url": "/wcms/masters/categorytype/_search?|$..id|$..name",
+								"url": "/wcms/masters/categorytype/_search?|$..name|$..name",
 								"requiredErrMsg": "",
 								"patternErrMsg": ""
 					},
           {
 						"name": "UsageType",
-						"jsonPath": "donation.usageType",
+						"jsonPath": "Donation.usageType",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/pt-property/property/usages/_search?|$..id|$..name",
+						"url": "/pt-property/property/usages/_search?|$..name|$..name",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "donation.minHscPipeSizeType",
+						"jsonPath": "Donation.minPipeSize",
 						"label": "Min H.S.C Pipe Size :",
 						"pattern": "",
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?|$..id|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "donation.maxHscPipeSizeType",
+						"jsonPath": "Donation.maxPipeSize",
 						"label": "Max H.S.C Pipe Size",
 						"pattern": "",
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?|$..id|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
           {
             "name": "donationAmount",
-            "jsonPath": "donation.donationAmount",
+            "jsonPath": "Donation.donationAmount",
             "label": "Donation Amount",
             "pattern": "",
             "type": "number",
@@ -83,7 +83,7 @@ var dat = {
           },
 					{
             "name": "fromDate",
-            "jsonPath": "donation.fromDate",
+            "jsonPath": "Donation.fromDate",
             "label": "From Date",
             "pattern": "",
             "type": "datePicker",
@@ -94,7 +94,7 @@ var dat = {
           },
 					{
             "name": "fromDate",
-            "jsonPath": "donation.toDate",
+            "jsonPath": "Donation.toDate",
             "label": "To Date",
             "pattern": "",
             "type": "datePicker",
@@ -102,7 +102,18 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
+					{
+						"name": "Active",
+						"jsonPath": "Donation.active",
+						"label": "Active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 				]
 			}
 		]

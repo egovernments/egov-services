@@ -1,23 +1,26 @@
-{
-  "responseInfo": {
-    "resMsgId": "placeholder",
-    "status": "200",
-    "apiId": null,
-    "ver": null,
-    "key": null,
-    "tenantId": null
-  },
-   "bankBranches": [
-    {
-      "code": "bankBranchCode",
-      "name": "bankBranchName"
-    }
-  ],
-  "page": {
-    "totalResults": 1,
-    "totalPages": 1,
-    "pageSize": 0,
-    "currentPage": 0,
-    "offSet": 0
-  }
-}
+"bankBranches":[
+   {
+      "id":"1",
+      "code":"code",
+      "name":"name",
+      "bank":{
+         "id":"1"
+      },
+      "address":"Bangalore",
+      "address2":"Bangalore",
+      "city":"Bangalore",
+      "state":"Bangalore",
+      "pincode":"Bangalore",
+      "phone":"Bangalore",
+      "fax":"Bangalore",
+      "contactPerson":"Bangalore",
+      "active":true,
+      "description":"Bangalore",
+      "micr":"Bangalore",
+      "createdBy":null,
+      "createdDate":null,
+      "lastModifiedBy":null,
+      "lastModifiedDate":null,
+      "tenantId":"default"
+   }
+]

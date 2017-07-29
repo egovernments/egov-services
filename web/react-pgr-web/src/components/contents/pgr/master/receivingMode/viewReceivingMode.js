@@ -18,40 +18,16 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-var flag = 0;
 const styles = {
   headerStyle : {
     fontSize : 19
   },
+  addBorderBottom:{
+    borderBottom: '1px solid #eee',
+    padding: '10px'
+  },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
-  },
-  bold: {
-    fontWeight: "bolder"
   }
 };
 
@@ -65,10 +41,6 @@ class viewReceivingSet extends Component {
           data:''
       }
     }
-
-    close(){
-     window.open(window.location, '_self').close();
-   }
 
     componentWillMount() {
 
@@ -108,84 +80,53 @@ class viewReceivingSet extends Component {
 
       return(
         <div className="viewReceivingSet">
-              <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >{translate("pgr.lbl.view")} {translate("pgr.lbl.receivingmode")}< /div>} />
-                  <CardText style={{padding:0}}>
-
-                      <Grid>
-                          <br/>
-                          <Card>
-                              <CardText>
-                                  <ListGroup>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               ID
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewReceivingSet.id ? viewReceivingSet.id : ''}
-                                          </Col>
-                                        </Row> 
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("core.lbl.add.name")}
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewReceivingSet.name ? viewReceivingSet.name : ''}
-                                          </Col>
-                                        </Row> 
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("core.lbl.code")}
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewReceivingSet.code ? viewReceivingSet.code : ''}
-                                          </Col>
-                                        </Row> 
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("core.lbl.description")}
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewReceivingSet.description? viewReceivingSet.description : ''}
-                                          </Col>
-                                        </Row> 
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("pgr.lbl.active")}
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewReceivingSet.active? "True" : "False"}
-                                          </Col>
-                                        </Row> 
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               Channel
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewReceivingSet.channels ? viewReceivingSet.channels : ''}
-                                          </Col>
-                                        </Row> 
-                                      </ListGroupItem>
-                                  </ListGroup>
-                              </CardText>
-                          </Card>
-                      </Grid>
-                  </CardText>
-              </Card>
-              <div style={{textAlign:'center'}}>
-              </div>
-        </div>)
+          <Grid style={{width:'100%'}}>
+            <Card style={{margin:'15px 0'}}>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+                 {translate("pgr.lbl.view")} {translate("pgr.lbl.receivingmode")}
+               < /div>}/>
+               <CardText style={{padding:'8px 16px 0'}}>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    {translate("core.lbl.add.name")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewReceivingSet.name ? viewReceivingSet.name : ''}
+                   </Col>
+                   <Col xs={6} md={3}>
+                     {translate("core.lbl.code")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewReceivingSet.code ? viewReceivingSet.code : ''}
+                   </Col>
+                 </Row>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    {translate("core.lbl.description")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewReceivingSet.description? viewReceivingSet.description : ''}
+                   </Col>
+                   <Col xs={6} md={3}>
+                     {translate("pgr.lbl.active")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewReceivingSet.active? "True" : "False"}
+                   </Col>
+                 </Row>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    Channel
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {viewReceivingSet.channels ? viewReceivingSet.channels : ''}
+                   </Col>
+                 </Row>
+               </CardText>
+            </Card>
+          </Grid>
+        </div>
+      )
     }
 }
 

@@ -3,7 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"version": "v1",
 		"url": "/wcms-connection/connection/_create",
-		"idJsonPath":"Connection[0].id",
+		"idJsonPath":"Connection[0].acknowledgementNumber",
 		"useTimestamp": true,
 		"tenantIdRequired": true, //Instead of boolean value give json path
 		"objectName": "Connection",
@@ -435,8 +435,7 @@ var dat = {
 	"wc.view": {
 		"numCols": 12/3,
 		"version": "v1",
-		"url": "/wcms/masters/categorytype/_search?id={id}",
-		"url": "/wcms-connection/connection/_create",
+		"url": "/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}",
 		"useTimestamp": true,
 		"tenantIdRequired": true, //Instead of boolean value give json path
 		"objectName": "Connection",
@@ -449,13 +448,24 @@ var dat = {
 				"multiple": false,
 				"fields": [
 					{
+						"name": "acknowledgementNumber",
+						"jsonPath": "Connection[0].acknowledgementNumber",
+						"label": "wc.create.groups.applicantDetails.acknowledgementNumber",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
 							"name": "AssessmentNumber",
-							"jsonPath": "connection.property.propertyIdentifier",
+							"jsonPath": "Connection[0].property.propertyidentifier",
 							"label": "wc.create.groups.applicantDetails.propertyIdentifier",
 							"pattern": "",
 							"type": "textSearch",
 							"isRequired": true,
-							"isDisabled": false,
+							"isDisabled": true,
 							"autoCompleteDependancy": {
 								"autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
 								"autoFillFields": {
@@ -593,7 +603,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "PropertyType",
-						"jsonPath": "Connection.property.propertyType",
+						"jsonPath": "Connection[0].property.propertyType",
 						"label": "wc.create.groups.connectionDetails.propertyType",
 						"pattern": "",
 						"type": "singleValueList",

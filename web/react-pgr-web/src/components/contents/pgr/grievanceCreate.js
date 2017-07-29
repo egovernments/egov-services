@@ -213,7 +213,7 @@ class grievanceCreate extends Component {
 
   grievanceCategory = () => {
     //Grievance Category
-    Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response)
+    Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword:'complaint'}).then(function(response)
     {
       _this.setState({grievanceCategory : response.ServiceGroups});
       if(localStorage.getItem('type') === null)

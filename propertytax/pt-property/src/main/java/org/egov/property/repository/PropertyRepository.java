@@ -27,7 +27,6 @@ import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
 import org.egov.models.VacantLandDetail;
 import org.egov.property.model.PropertyLocationRowMapper;
-import org.egov.property.model.PropertyUser;
 import org.egov.property.repository.builder.AddressBuilder;
 import org.egov.property.repository.builder.BoundaryBuilder;
 import org.egov.property.repository.builder.DocumentBuilder;
@@ -44,6 +43,8 @@ import org.egov.property.repository.builder.UserBuilder;
 import org.egov.property.repository.builder.VacantLandDetailBuilder;
 import org.egov.property.utility.TimeStampUtil;
 import org.postgresql.util.PGobject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -57,6 +58,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -77,6 +79,8 @@ public class PropertyRepository {
 
 	@Autowired
 	Environment environment;
+
+	private static final Logger logger = LoggerFactory.getLogger(PropertyRepository.class);
 
 	/**
 	 * property query formation
@@ -464,15 +468,16 @@ public class PropertyRepository {
 	public Map<String, Object> searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber, String aadhaarNumber,
 			String houseNoBldgApt, int revenueZone, int revenueWard, int locality, String ownerName, int demandFrom,
-			int demandTo, String propertyId,String applicationNo) {
+			int demandTo, String propertyId, String applicationNo) {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 
-		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null || applicationNo!=null)) {
+		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null
+				|| applicationNo != null)) {
 
 			List<Property> properties = getPropertyBYUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
-					pageNumber, pageSize, requestInfo,applicationNo);
+					pageNumber, pageSize, requestInfo, applicationNo);
 			searchPropertyMap.put("properties", properties);
 			searchPropertyMap.put("users", null);
 
@@ -480,7 +485,7 @@ public class PropertyRepository {
 
 			Map<String, Object> propertyMap = searchPropertyBuilder.createSearchPropertyQuery(requestInfo, tenantId,
 					active, upicNo, pageSize, pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt,
-					revenueZone, revenueWard, locality, ownerName, demandFrom, demandTo, propertyId,applicationNo,
+					revenueZone, revenueWard, locality, ownerName, demandFrom, demandTo, propertyId, applicationNo,
 					preparedStatementValues);
 			List<Property> properties = getProperty(propertyMap.get("Sql").toString(), preparedStatementValues);
 
@@ -494,12 +499,12 @@ public class PropertyRepository {
 	}
 
 	private List<Property> getPropertyBYUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
-			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo,String applicationNo) {
+			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo) {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
 		String query = searchPropertyBuilder.getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
-				preparedStatementvalues, pageSize, pageNumber,applicationNo);
+				preparedStatementvalues, pageSize, pageNumber, applicationNo);
 
 		List<Property> properties = getProperty(query, preparedStatementvalues);
 		properties.forEach(property -> {
@@ -520,12 +525,9 @@ public class PropertyRepository {
 		List<Object> preparedStatementvalues = new ArrayList<>();
 		String ownersQuery = SearchPropertyBuilder.getOwnersByproperty(propertyId, preparedStatementvalues);
 		List<User> owners = null;
-		try {
-			owners = jdbcTemplate.query(ownersQuery, preparedStatementvalues.toArray(),
-					new BeanPropertyRowMapper(User.class));
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+
+		owners = jdbcTemplate.query(ownersQuery, preparedStatementvalues.toArray(),
+				new BeanPropertyRowMapper(User.class));
 
 		List<User> users = new ArrayList<>();
 		owners.forEach(owner -> {
@@ -540,8 +542,8 @@ public class PropertyRepository {
 			userSearchRequestInfo.put("id", userIds);
 			userSearchRequestInfo.put("RequestInfo", requestInfo);
 
-			System.out.println("userSearchRequestInfo :" + userSearchRequestInfo);
-			System.out.println("userSearchUrl :" + userSearchUrl);
+			logger.info("userSearchRequestInfo :" + userSearchRequestInfo);
+			logger.info("userSearchUrl :" + userSearchUrl);
 
 			UserResponseInfo userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
@@ -571,12 +573,12 @@ public class PropertyRepository {
 		return address;
 	}
 
-	public List<PropertyUser> getPropertyUserByProperty(Long propertyId) {
-		List<PropertyUser> propertyUsers = null;
+	public List<User> getPropertyUserByProperty(Long propertyId) {
+		List<User> propertyUsers = null;
 		try {
 
 			propertyUsers = jdbcTemplate.query(UserBuilder.PROPERTY_OWNER_BY_PROPERTY_ID_QUERY,
-					new Object[] { propertyId }, new BeanPropertyRowMapper(PropertyUser.class));
+					new Object[] { propertyId }, new BeanPropertyRowMapper(User.class));
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
@@ -585,11 +587,11 @@ public class PropertyRepository {
 
 	}
 
-	public PropertyUser getPropertyUserByUser(Long userId) {
-		PropertyUser propertyUser = null;
+	public User getPropertyUserByUser(Long userId) {
+		User propertyUser = null;
 		try {
-			propertyUser = (PropertyUser) jdbcTemplate.queryForObject(UserBuilder.PROPERTY_OWNER_BY_USER_ID_QUERY,
-					new Object[] { userId }, new BeanPropertyRowMapper(PropertyUser.class));
+			propertyUser = (User) jdbcTemplate.queryForObject(UserBuilder.PROPERTY_OWNER_BY_USER_ID_QUERY,
+					new Object[] { userId }, new BeanPropertyRowMapper(User.class));
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
@@ -635,8 +637,12 @@ public class PropertyRepository {
 			propertyLocation = (PropertyLocation) jdbcTemplate.queryForObject(
 					BoundaryBuilder.PROPERTY_LOCATION_BY_PROPERTY_QUERY, new Object[] { propertyId },
 					new PropertyLocationRowMapper());
-		} catch (EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException e1) {
 			return null;
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 		if (propertyLocation != null && propertyLocation.getId() != null && propertyLocation.getId() > 0)
 			propertyLocation.setAuditDetails(getAuditDetailsForBoundary(propertyLocation.getId()));
@@ -1524,7 +1530,26 @@ public class PropertyRepository {
 			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
 			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 			property.setAuditDetails(auditDetails);
+			List<Demand> demands = new ArrayList<Demand>();
+		
+			if ( row.get("demands")!=null){
+				ObjectMapper mapper = new ObjectMapper();
+				TypeReference<List<DemandId>> typeReference = new TypeReference<List<DemandId>>() {
+				};
+				try {
+					List<DemandId> demandIds = mapper.readValue(row.get("demands").toString(), typeReference);
 
+					for ( DemandId demandId : demandIds){
+						Demand demand = new Demand();
+						demand.setId(demandId.getId());
+						demands.add(demand);
+					}
+				} catch (Exception e) {
+					logger.error("error"+e);
+				}
+			}
+
+			property.setDemands(demands);
 			properties.add(property);
 
 		}

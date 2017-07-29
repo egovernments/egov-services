@@ -295,7 +295,7 @@ class PropertyTaxSearch extends Component {
 			  if(item){
 				  return(<tr>
 					  <td>{index+1}</td> 
-					  <td onClick={() => {
+					  <td style={{color:'blue'}} onClick={() => {
 						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
 					  }}>{item.upicNumber || ''}</td>
 					  <td>{item.owners[0] ? item.owners[0].name : ''}</td>
@@ -336,6 +336,13 @@ class PropertyTaxSearch extends Component {
             <CardText>
              
                   <Grid>
+					<Row>
+						<Col xs={12} md={6}>
+                          <TextField errorText={fieldErrors.applicationNo
+                          ? fieldErrors.applicationNo
+                          : ""} id="applicationNo" value={propertyTaxSearch.applicationNo?propertyTaxSearch.applicationNo:""} onChange={(e) => handleChange(e, "applicationNo", false, '')} hintText="AP-PT-2017/07/29-004679-17" floatingLabelText="Application number" />
+                      </Col>
+					</Row>
                     <Row>
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.houseNoBldgApt

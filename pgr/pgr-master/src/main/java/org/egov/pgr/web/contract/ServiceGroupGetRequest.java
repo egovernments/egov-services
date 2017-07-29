@@ -76,4 +76,6 @@ public class ServiceGroupGetRequest {
 
 	private String sortOrder;
 
+	private String keyword ;
+
 }

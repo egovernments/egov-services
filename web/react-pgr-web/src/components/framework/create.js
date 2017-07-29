@@ -130,7 +130,7 @@ class Report extends Component {
       self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idPath; 
+          var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath); 
           self.props.setRoute(hash);
         }
       }, 1500);
@@ -167,7 +167,12 @@ class Report extends Component {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
 
-      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
+        }
+      } else 
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
     }
 
     if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {

@@ -281,7 +281,7 @@ class Workflow extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Approver Name"
+                                                  floatingLabelText="Approver Name *"
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
@@ -291,7 +291,7 @@ class Workflow extends Component {
                                                         value: value
                                                       }
                                                     };
-                                                    handleChange(e, "approver", false, "")}}
+                                                    handleChange(e, "approver", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}

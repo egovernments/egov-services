@@ -343,6 +343,7 @@ public class WaterConnectionRepository {
     public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
+        LOGGER.info("Get Connection Details Query : " + fetchQuery);
         final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
                 new WaterConnectionRowMapper());
         return connectionList;

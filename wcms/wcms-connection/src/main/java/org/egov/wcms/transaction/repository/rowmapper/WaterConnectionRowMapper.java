@@ -78,8 +78,10 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         connection.setPropertyIdentifier(rs.getString("conn_propid"));  
         connection.setCreatedDate(rs.getString("createdtime"));
         Property prop = new Property();
-        prop.setUsageType(rs.getString("conn_usgtype")); 
-        prop.setPropertyType(rs.getString("conn_proptype"));  
+        prop.setUsageType(rs.getString("usagetypecode")); 
+        prop.setUsageTypeId(rs.getString("conn_usgtype"));
+        prop.setPropertyType(rs.getString("propertytypecode")); 
+        prop.setPropertyTypeId(rs.getString("conn_proptype"));
         prop.setAddress(rs.getString("conn_propaddress"));  
         prop.setPropertyidentifier(rs.getString("conn_propid"));
         connection.setProperty(prop);

@@ -244,7 +244,7 @@ public class WaterConnectionService {
 				propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
 			}
 		} catch (Exception e) {
-			logger.error("Encountered an Exception :" + e);
+			logger.error("Encountered an Exception :" + e.getMessage());
 		}
 		waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
 		return waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);

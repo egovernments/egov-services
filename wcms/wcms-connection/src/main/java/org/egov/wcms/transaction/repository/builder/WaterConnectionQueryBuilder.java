@@ -266,7 +266,7 @@ public class WaterConnectionQueryBuilder {
 		
 		if (null != waterConnectionGetReq.getPropertyIdentifierList() && waterConnectionGetReq.getPropertyIdentifierList().size() > 0) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" propertyidentifier.id IN " + getPropertyIdentifierQuery(waterConnectionGetReq.getPropertyIdentifierList()));
+			selectQuery.append(" connection.propertyidentifier IN " + getPropertyIdentifierQuery(waterConnectionGetReq.getPropertyIdentifierList()));
 		}
 /*
 		if (serviceGroupRequest.getName() != null) {

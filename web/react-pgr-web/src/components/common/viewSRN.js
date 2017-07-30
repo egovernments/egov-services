@@ -63,7 +63,7 @@ class viewsrn extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-             {translate('pgr.lbl.srn')} : {this.props.srn.serviceRequestId}
+             CRN(Complaint Request No.) : {this.props.srn.serviceRequestId}
            < /div>}/>
            <CardText style={{padding:'8px 16px 0'}}>
               <Row style={styles.addBorderBottom}>

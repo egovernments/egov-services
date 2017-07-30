@@ -274,7 +274,6 @@ class receivingModeCreate extends Component {
 
 
 const mapStateToProps = state => {
-  console.log(state.form.form);
   return ({receivingmodeSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,isDialogOpen: state.form.dialogOpen, msg: state.form.msg});
 }
 

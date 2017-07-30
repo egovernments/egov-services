@@ -93,7 +93,7 @@ class ServiceTypeCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id, keywords : 'complaint'},body).then(function(response){
                 console.log("response",response);
                   console.log("response object",response.Service[0]);
                 current.setState({data:response.Service})

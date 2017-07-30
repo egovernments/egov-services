@@ -35,7 +35,7 @@ const styles = {
     width:100
   },
   bold: {
-	  fontWeight:500
+	  margin:'15px 0'
   }
 };
 
@@ -386,6 +386,7 @@ class ViewProperty extends Component {
 	 let { resultList } = this.state;
 	 
 	 var totalAmount=0;
+	 var taxCollected = 0;
 	 
 	 let currentThis = this;
 	 	  
@@ -400,155 +401,85 @@ class ViewProperty extends Component {
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Property Details</div>} />
                               <CardText>
 								
-									<Col md={6} xs={12}>
-										<ListGroup>
-										  <ListGroupItem>
+									<Col md={12} xs={12}>
+									
+										 
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Old Assessment Number
+											  <Col xs={12} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Old Assessment Number</div>
+												   {item.oldUpicNumber || 'NA'}
 											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.oldUpicNumber || 'NA'}
+											
+											
+											  <Col xs={12} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Assessment Number</div>
+												   {item.upicNumber || 'NA'}
+											  </Col>
+										
+											
+											  <Col xs={12} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Annual Rental Value</div>
+												   NA
+											  </Col>
+											
+											  <Col xs={12} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Property Type</div>
+												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || 'NA'}
 											  </Col>
 											</Row>
-										  </ListGroupItem>
-										<ListGroupItem>
+										 
+										
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Assessment Number
-											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.upicNumber || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Annual Rental Value
-											  </Col>
-											  <Col xs={8} md={6}>
-												  
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Property Type
-											  </Col>
-											  <Col xs={8} md={6}>
-												 {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Extent of Site (Sq.Mtrs)
-											  </Col>
-											  <Col xs={8} md={6}>
+											  <Col xs={4} md={3} style={styles.bold}>
+												 <div style={{fontWeight:500}}> Extent of Site (Sq.Mtrs)</div>
 												  {item.propertyDetail.sitalArea || 'NA'}
 											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Registration Doc No
-											  </Col>
-											  <Col xs={8} md={6}>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Registration Doc No</div>
 												  {item.propertyDetail.regdDocNo || 'NA'}
 											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Reason for Creation
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Reason for Creation</div>
+												  {getNameByCode(this.state.creationReason, item.creationReason) || 'NA'}
 											  </Col>
-											  <Col xs={8} md={6}>
-												   {getNameByCode(this.state.creationReason, item.creationReason) || 'NA'}
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Assessment number of parent property</div>
 											  </Col>
-											</Row>
-										  </ListGroupItem>
-									  </ListGroup>
-									</Col>
-									<Col md={6} xs={12}>
-										<ListGroup>
-								
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Assessment number of parent property
+											</Row> 
+											<Row>											
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Exemption Category</div>
+												   {item.propertyDetail.exemptionReason || 'NA'}
 											  </Col>
-											  <Col xs={8} md={6}>
-												
+											  <Col xs={4} md={3} style={styles.bold}>
+												    <div style={{fontWeight:500}}>Effective Date</div>
+												   {item.occupancyDate ? new Date(item.occupancyDate).getDate()+'/'+(new Date(item.occupancyDate).getMonth()+1)+'/'+new Date(item.occupancyDate).getFullYear() : 'NA'}
 											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Exemption Category
-											  </Col>
-											  <Col xs={8} md={6}>
-												{item.propertyDetail.exemptionReason || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Effective Date
-											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.occupancyDate ? new Date(item.occupancyDate).getDate()+'/'+(new Date(item.occupancyDate).getMonth()+1)+'/'+new Date(item.occupancyDate).getFullYear() : 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Apartment/Complex Name
-											  </Col>
-											  <Col xs={8} md={6}>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Apartment/Complex Name</div>
 												  {item.propertyDetail.apartment || 'NA'}
 											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Property Department
-											  </Col>
-											  <Col xs={8} md={6}>
+										
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Property Department</div>
 												  {item.propertyDetail.department || 'NA'}
 											  </Col>
 											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
+										 
+										 
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Registration Doc Date
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Registration Doc Date</div>
+												  {item.propertyDetail.regdDocDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+(new Date(item.propertyDetail.regdDocDate).getMonth()+1)+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
+
 											  </Col>
-											  <Col xs={8} md={6}>
-												{item.propertyDetail.regdDocDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+(new Date(item.propertyDetail.regdDocDate).getMonth()+1)+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
- 
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Assessment Date
-											  </Col>
-											  <Col xs={8} md={6}>
+											
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Assessment Date</div>
 												  {item.assessmentDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+new Date(item.propertyDetail.regdDocDate).getMonth()+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
 											  </Col>
 											</Row>
-										  </ListGroupItem>
-									  </ListGroup>
+										
 									</Col>
 									<div className="clearfix"></div>
                               </CardText>
@@ -558,107 +489,62 @@ class ViewProperty extends Component {
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Address Details</div>} />
                               <CardText>
 								
-									<Col md={6} xs={12}>
-										<ListGroup>
-										  <ListGroupItem>
+									<Col md={12} xs={12}>
+										
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Door No
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Door No</div>
+												   {item.address.addressNumber}
 											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.address.addressNumber}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										<ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Property Address
-											  </Col>
-											  <Col xs={8} md={6}>
-												 {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
+										
+											
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Property Address</div>
+												    {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
 												 {item.address.addressLine1 ? item.address.addressLine1+', ' : '' }
 												 {item.address.addressLine2 ? item.address.addressLine2+', ':''}
 												 {item.address.landmark ? item.address.landmark+', ' : ''}
-												 {item.address.city ? item.address.city+', ' : ''}
+												 {item.address.city ? item.address.city : ''}
 											  </Col>
+											
+											
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Zone</div>
+												   {getNameById(this.state.zone, item.boundary.revenueBoundary.id) || 'NA'}
+											  </Col>
+										
+											
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Block</div>
+												   NA
+											  </Col>
+											 
 											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Zone
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Election Ward</div>
+												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || 'NA'}
 											  </Col>
-											  <Col xs={8} md={6}>
-												 {item.boundary.revenueBoundary.name || 'NA'}
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}> Correspondence Address</div>
+												   NA
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Ward</div>
+												   NA
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Locality</div>
+												    {getNameById(this.state.locality,item.address.addressLine1) || 'NA'}
 											  </Col>
 											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
+									
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Block
-											  </Col>
-											  <Col xs={8} md={6}>
-													
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>EB Block</div>
+												  NA
 											  </Col>
 											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Election Ward
-											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.boundary.adminBoundary.name || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>										  
-									  </ListGroup>
-									</Col>
-									<Col md={6} xs={12}>
-										<ListGroup>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Correspondence Address
-											  </Col>
-											  <Col xs={8} md={6}>
-												
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Ward
-											  </Col>
-											  <Col xs={8} md={6}>
-												
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Locality
-											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.address.addressLine1 || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  EB Block
-											  </Col>
-											  <Col xs={8} md={6}>
-												
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-									  </ListGroup>
 									</Col>
 									<div className="clearfix"></div>
                               </CardText>
@@ -669,83 +555,42 @@ class ViewProperty extends Component {
 								  {item.owners.length !=0 && item.owners.map((owner, index)=> {
 									  return(
 												<CardText key={index}>
-													<Col md={6} xs={12}>
-														<ListGroup>
-														  <ListGroupItem>
+													<Col md={12} xs={12}>
+														
 															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Aadhaar No
-															  </Col>
-															  <Col xs={8} md={6}>
+															  <Col xs={4} md={3} style={styles.bold}>
+																  <div style={{fontWeight:500}}> Aadhaar No</div>
 																  {owner.aadhaarNumber ? owner.aadhaarNumber : 'NA'}
+															  </Col>	
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>Mobile Number (without +91)</div>
+																   {owner.mobileNumber ? owner.mobileNumber : 'NA'}
 															  </Col>
-															</Row>
-														  </ListGroupItem>
-														<ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Mobile Number (without +91)
+															  <Col xs={4} md={3} style={styles.bold}>
+																  <div style={{fontWeight:500}}> Owner Name</div>
+																   {owner.name ? owner.name : 'NA'}
 															  </Col>
-															  <Col xs={8} md={6}>
-																  {owner.mobileNumber ? owner.mobileNumber : 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Owner Name
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {owner.name ? owner.name : 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																  Gender
-															  </Col>
-															  <Col xs={8} md={6}>
+															  <Col xs={4} md={3} style={styles.bold}>
+																  <div style={{fontWeight:500}}>Gender</div>
 																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : 'NA'}
 															  </Col>
 															</Row>
-														  </ListGroupItem>								  
-													  </ListGroup>
-													</Col>
-													<Col md={6} xs={12}>
-														<ListGroup>
-														  <ListGroupItem>
+												
 															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Email Address
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {owner.emailId ? owner.emailId : 'NA'}
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>Email Address</div>
+																   {owner.emailId ? owner.emailId : 'NA'}
+															  </Col>	
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>Guardian Relation</div>
+																   {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
+															  </Col>				
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>Guardian</div>
+																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : 'NA'}
 															  </Col>
 															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Guardian Relation
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>
-														  <ListGroupItem>
-															<Row>
-															  <Col xs={4} md={6} style={styles.bold}>
-																   Guardian
-															  </Col>
-															  <Col xs={8} md={6}>
-																  {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : 'NA'}
-															  </Col>
-															</Row>
-														  </ListGroupItem>  
-													  </ListGroup>
+														
 													</Col>
 													<div className="clearfix"></div>
 											  </CardText>
@@ -757,83 +602,45 @@ class ViewProperty extends Component {
 						  <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Amenities</div>} />
                               <CardText>
-									<Col md={6} xs={12}>
-										<ListGroup>
-										  <ListGroupItem>
+									<Col md={12} xs={12}>
+										
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Lift
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Lift</div>
+												   {item.lift || 'NA'}
 											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.lift || 'NA'}
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Toilets</div>
+												    {item.toilet || 'NA'}
 											  </Col>
-											</Row>
-										  </ListGroupItem>
-										<ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Toilets
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Water Tap</div>
+												    {item.waterTap || 'NA'}
 											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.toilet || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Water Tap
-											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.waterTap || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Electricity
-											  </Col>
-											  <Col xs={8} md={6}>
+										
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Electricity</div>
 												  {item.electricity || 'NA'}
 											  </Col>
 											</Row>
-										  </ListGroupItem>								  
-									  </ListGroup>
-									</Col>
-									<Col md={6} xs={12}>
-										<ListGroup>
-										  <ListGroupItem>
+										 
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Attached Bathroom
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Attached Bathroom</div>
+												   {item.attachedBathroom || 'NA'}
 											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.attachedBathroom || 'NA'}
+					
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Water Harvesting</div>
+												    {item.waterHarvesting || 'NA'}
 											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Water Harvesting
-											  </Col>
-											  <Col xs={8} md={6}>
-												  {item.waterHarvesting || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												  Cable Connection
-											  </Col>
-											  <Col xs={8} md={6}>
+											
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Cable Connection</div>
 												  {item.cableConnection || 'NA'}
 											  </Col>
 											</Row>
-										  </ListGroupItem>  
-									  </ListGroup>
+									
 									</Col>
 									<div className="clearfix"></div>
                               </CardText>
@@ -842,54 +649,27 @@ class ViewProperty extends Component {
 						  <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Construction Type</div>} />
                               <CardText>
-									<Col md={6} xs={12}>
-										<ListGroup>
-										  <ListGroupItem>
+									<Col md={12} xs={12}>
+										
 											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Floor Type
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Floor Type</div>
+												   {getNameByCode(this.state.floortypes ,item.propertyDetail.floorType) || 'NA'}
 											  </Col>
-											  <Col xs={8} md={6}>
-												  {getNameByCode(this.state.floortypes ,item.propertyDetail.floorType) || 'NA'}
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Wall Type</div>
+												    {getNameByCode(this.state.walltypes ,item.propertyDetail.wallType) || 'NA'}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Roof Type</div>
+												   {getNameByCode(this.state.rooftypes ,item.propertyDetail.roofType) || 'NA'}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Wood Type</div>
+												   {getNameByCode(this.state.woodtypes ,item.propertyDetail.woodType) || 'NA'}
 											  </Col>
 											</Row>
-										  </ListGroupItem>
-										<ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Wall Type
-											  </Col>
-											  <Col xs={8} md={6}>
-												  {getNameByCode(this.state.walltypes ,item.propertyDetail.wallType) || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>							  
-									  </ListGroup>
-									</Col>
-									<Col md={6} xs={12}>
-										<ListGroup>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Roof Type
-											  </Col>
-											  <Col xs={8} md={6}>
-												{getNameByCode(this.state.rooftypes ,item.propertyDetail.roofType) || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-										  <ListGroupItem>
-											<Row>
-											  <Col xs={4} md={6} style={styles.bold}>
-												   Wood Type
-											  </Col>
-											  <Col xs={8} md={6}>
-											  
-												{getNameByCode(this.state.floortypes ,item.propertyDetail.woodType) || 'NA'}
-											  </Col>
-											</Row>
-										  </ListGroupItem>
-									  </ListGroup>
+										 
 									</Col>
 									<div className="clearfix"></div>
                               </CardText>
@@ -977,7 +757,6 @@ class ViewProperty extends Component {
 												  <th>Property Tax</th>
 												  <th>Education Cess</th>
 												  <th>Library Cess</th>
-												  <th>Unauthorized Penalty</th>
 												  <th>Total Tax</th>
 												  <th>Total Tax Due</th>
 												</tr>
@@ -1016,14 +795,17 @@ class ViewProperty extends Component {
 															}
 														})}
 														</td>
-														<td></td>
+													
 														<td>
 														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
 															
 															totalAmount += parseFloat(i.taxAmount);
-															
+															taxCollected += parseFloat(i.collectionAmount);
 														})}
 														{totalAmount}
+														</td>
+														<td>
+														{totalAmount - taxCollected}
 														</td>
 													</tr>
 												)
@@ -1037,9 +819,9 @@ class ViewProperty extends Component {
 							</Card>
 							<div style={{textAlign:'center', paddingTop:10}}> 
 								
-									<RaisedButton type="button" primary={true} label="View DCB" style={{margin:'0 5px'}} />
-									<RaisedButton type="button" primary={true} label="Search Property" style={{margin:'0 5px'}} />
-									<RaisedButton type="button" primary={true} label="Print" style={{margin:'0 5px'}} />																							
+									<RaisedButton type="button" primary={true} label="Search Property" style={{margin:'0 5px'}}  onClick={()=>{
+										this.props.history.push('/propertyTax/search/')
+									}}/>
 								
 							</div>
 		</Grid>)

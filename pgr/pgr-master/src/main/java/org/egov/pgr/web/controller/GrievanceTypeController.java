@@ -223,7 +223,7 @@ public class GrievanceTypeController {
                                            final List<ErrorField> errorFields) {
         if (errorFields.size() == 0) {
             if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceName(),
-                    serviceTypeRequest.getService().getTenantId())) {
+                    serviceTypeRequest.getService().getTenantId(),serviceTypeRequest.getService().getServiceCode())) {
                 final ErrorField errorField = ErrorField.builder()
                         .code(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_CODE)
                         .message(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE)

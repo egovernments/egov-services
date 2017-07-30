@@ -227,7 +227,7 @@ public class ServiceTypeQueryBuilder {
     }
 
     public static String checkServiceNameIfExists() {
-    	return " SELECT name,id from egpgr_complainttype WHERE upper(name) = ? and tenantid = ? ";
+    	return " SELECT name,code from egpgr_complainttype WHERE upper(name) = ? and tenantid = ? ";
     }
 
     public static String selectServiceNameAndCodeNotInQuery() {

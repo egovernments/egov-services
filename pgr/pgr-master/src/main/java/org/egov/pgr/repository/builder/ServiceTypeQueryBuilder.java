@@ -109,6 +109,7 @@ public class ServiceTypeQueryBuilder {
         }
 
         if (serviceGetRequest.getKeywords() !=null){
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" comp.code in (select servicecode from servicetype_keyword where keyword = ? )");
             preparedStatementValues.add(serviceGetRequest.getKeywords());
         }

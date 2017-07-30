@@ -59,7 +59,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType.name",
+							"jsonPath": "name",
 							"label": "Category Type",
 							"pattern": "",
 							"type": "text",
@@ -70,7 +70,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType.active",
+							"jsonPath": "active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
@@ -141,10 +141,11 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/categorytype/_search?id={id}",
-		"url":"/wcms/masters/categorytype/{CategoryTypes[0].code}/_update",
+		"url":"/wcms/masters/categorytype/{CategoryType.code}/_update",
+		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryTypes",
+		"objectName": "CategoryType",
 		"groups": [
 			{
 				"label": "wc.create.categorytype.title",
@@ -152,7 +153,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryTypes[0].name",
+							"jsonPath": "CategoryType.name",
 							"label": "Category Type",
 							"pattern": "",
 							"type": "text",
@@ -163,7 +164,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryTypes[0].description",
+							"jsonPath": "CategoryType.description",
 							"label": "Description",
 							"pattern": "",
 							"type": "text",
@@ -174,7 +175,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryTypes[0].active",
+							"jsonPath": "CategoryType.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

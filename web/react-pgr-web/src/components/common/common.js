@@ -66,9 +66,9 @@ var localationData = {
   "employee.createPosition.groups.fields.accumulative.value2" : "No",
 
   "wc.create.documenttype.title": "Create Position",
-  "wc.create.applicationtype" : "Department",
-  "wc.create.documenttype" : "Designation",
-  "wc.create.positiontype" : "Position",
+  "wc.create.applicationtype" : "Application Type",
+  "wc.create.documenttype" : "Document Type",
+  "wc.create.positiontype" : "Position Type",
   "wc.create.groups.radio" : "Outsourced Post",
   "wc.create.groups.fileDetails.fields.PTaxReciept":"P. Tax Reciept",
   "wc.create.groups.fileDetails.fields.DistributionLineLocationMap":"Distribution Line Location Map",

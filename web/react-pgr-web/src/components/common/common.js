@@ -91,7 +91,13 @@ var localationData = {
   "reports.pgr.complaint.userposition":"User Position",
   "reports.pgr.complaint.userposition":"User Position",
   "wc.create.groups.connectionDetails.waterTreatment":"Water Treatment",
-  "wc.create.groups.approvalDetails.fields.Assignee":"Assignee"
+  "wc.create.groups.approvalDetails.fields.Assignee":"Assignee",
+  "reports.common.businesskey": "Type",
+  "reports.common.comments": "Comments",
+  "reports.common.createddate": "Created Date",
+  "reports.common.id": "Id",
+  "reports.common.status": "Status",
+  "reports.common.natureoftask": "Nature Of Task" 
 }
 
 export function translate(locale_text){

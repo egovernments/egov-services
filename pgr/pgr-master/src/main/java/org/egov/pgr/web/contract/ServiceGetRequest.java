@@ -39,20 +39,13 @@
  */
 package org.egov.pgr.web.contract;
 
-import java.util.List;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.List;
 
 @Getter
 @Setter
@@ -70,10 +63,10 @@ public class ServiceGetRequest {
     private String code;
 
     private Boolean active;
-    
-    private Long categoryId; 
-    
-    private String type; 
+
+    private Long categoryId;
+
+    private String type;
 
     @NotNull
     private String tenantId;
@@ -87,5 +80,7 @@ public class ServiceGetRequest {
     private Short pageSize;
 
     private Short pageNumber;
+
+    private String keywords;
 
 }

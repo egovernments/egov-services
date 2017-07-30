@@ -419,7 +419,7 @@ var dat = {
 						{
 						"name": "initiatorPosition",
 						"jsonPath": "Connection.workflowDetails.initiatorPosition",
-						"label": "wc.create.groups.approvalDetails.fields.comments",
+						"label": "wc.create.groups.approvalDetails.fields",
 						"pattern": "",
 						"type": "number",
 						"isRequired": false,

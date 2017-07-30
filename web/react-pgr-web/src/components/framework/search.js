@@ -126,7 +126,8 @@ class Report extends Component {
   rowClickHandler = (index) => {
     var value = this.state.values[index];
     var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
-    _url = _url.replace("{id}", value.id);
+    var key = _url.split("{")[1].split("}")[0];
+    _url = _url.replace("{" + key + "}", _.get(value, key));
     this.props.setRoute(_url);
   }
 

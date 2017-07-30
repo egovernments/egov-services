@@ -220,31 +220,35 @@ public class WaterConnectionService {
         return task;
     }
 
-    public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
-        List<Long> propertyIdentifierList = new ArrayList<>();
-        if (null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) {
-            restConnectionService.getPropertyDetailsByName(waterConnectionGetReq);
-            propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
-        }
-        if (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) {
-            restConnectionService.getPropertyDetailsByMobileNumber(waterConnectionGetReq);
-            propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
-        }
-        if (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()) {
-            restConnectionService.getPropertyDetailsByLocality(waterConnectionGetReq);
-            propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
-        }
-        if (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty()) {
-            restConnectionService.getPropertyDetailsByRevenueWard(waterConnectionGetReq);
-            propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
-        }
-        if (null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()) {
-            restConnectionService.getPropertyDetailsByDoorNumber(waterConnectionGetReq);
-            propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
-        }
-        waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
-        return waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
-    }
+	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
+		List<Long> propertyIdentifierList = new ArrayList<>();
+		try {
+			if (null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) {
+				restConnectionService.getPropertyDetailsByName(waterConnectionGetReq);
+				propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+			}
+			if (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) {
+				restConnectionService.getPropertyDetailsByMobileNumber(waterConnectionGetReq);
+				propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+			}
+			if (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()) {
+				restConnectionService.getPropertyDetailsByLocality(waterConnectionGetReq);
+				propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+			}
+			if (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty()) {
+				restConnectionService.getPropertyDetailsByRevenueWard(waterConnectionGetReq);
+				propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+			}
+			if (null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()) {
+				restConnectionService.getPropertyDetailsByDoorNumber(waterConnectionGetReq);
+				propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+			}
+		} catch (Exception e) {
+			logger.error("Encountered an Exception :" + e);
+		}
+		waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
+		return waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
+	}
 
     public void propertyIdentifierListPreparator(WaterConnectionGetReq waterConnectionGetReq, List<Long> propertyIdentifierList) {
         if (null != waterConnectionGetReq.getPropertyIdentifier() && !waterConnectionGetReq.getPropertyIdentifier().isEmpty()) {

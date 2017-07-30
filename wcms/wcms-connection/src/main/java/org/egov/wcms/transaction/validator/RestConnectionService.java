@@ -282,7 +282,7 @@ public class RestConnectionService {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
@@ -303,7 +303,7 @@ public class RestConnectionService {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
@@ -324,7 +324,7 @@ public class RestConnectionService {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
@@ -345,7 +345,7 @@ public class RestConnectionService {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
@@ -366,7 +366,7 @@ public class RestConnectionService {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());

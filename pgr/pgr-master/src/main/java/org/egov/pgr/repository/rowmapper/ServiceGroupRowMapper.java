@@ -56,6 +56,7 @@ public class ServiceGroupRowMapper implements RowMapper<ServiceGroup> {
 		serviceGroup.setName(rs.getString("name"));
 		serviceGroup.setDescription(rs.getString("description"));
 		serviceGroup.setTenantId(rs.getString("tenantId"));
+		serviceGroup.setKeyword(rs.getString("keyword"));
 		return serviceGroup;
 	}
 }

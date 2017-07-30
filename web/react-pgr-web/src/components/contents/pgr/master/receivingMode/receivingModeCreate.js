@@ -84,7 +84,7 @@ class receivingModeCreate extends Component {
 
              Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{id:this.props.match.params.id},body).then(function(response){
 
-                 _this.setState({data:response.ReceivingModeType[0]})
+                 _this.setState({data:response.ReceivingModeType[0]});
                  setForm(response.ReceivingModeType[0])
              }).catch((error)=>{
                  console.log(error);
@@ -168,8 +168,6 @@ class receivingModeCreate extends Component {
      receivingmodeSet,
      fieldErrors,isDialogOpen,msg} = this.props;
 
-     console.log(this.props)
-
    return (
     <div className="receivingModeCreate">
          <form autoComplete="off" onSubmit={(e) => {addOrUpdate(e)}}>
@@ -211,7 +209,6 @@ class receivingModeCreate extends Component {
                           multiple="true"
                           errorText={fieldErrors.channels ? fieldErrors.channels : ""}
                           value={receivingmodeSet.channels ? receivingmodeSet.channels : ""}
-                          id="channel"
                           onChange={(e, index, value) => {
                              var e = {
                                target: {
@@ -277,6 +274,7 @@ class receivingModeCreate extends Component {
 
 
 const mapStateToProps = state => {
+  console.log(state.form.form);
   return ({receivingmodeSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,isDialogOpen: state.form.dialogOpen, msg: state.form.msg});
 }
 
@@ -286,7 +284,7 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
     validationData: {
       required: {
         current: [],
-        required: ["name","code","description","channel"]
+        required: ["name","code","description","channels"]
       },
       pattern: {
          current: [],
@@ -310,8 +308,8 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["name","code","description","channel"],
-          required:["name","code","description","channel"]
+          current: ["name","code","description","channels"],
+          required:["name","code","description","channels"]
         },
         pattern: {
           current: [],

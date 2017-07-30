@@ -131,7 +131,7 @@ class Report extends Component {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
     Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
-        var formData = {...this.props.formData};
+        var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
         }

@@ -87,11 +87,11 @@ var dat = {
 					},
 					{
 						"name": "documenttype",
-						"jsonPath": "DocumentTypeApplicationType.documentType",
+						"jsonPath": "DocumentTypeApplicationType.documentTypeId",
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?|$..code|$..name",
+						"url": "/wcms/masters/documenttype/_search?|$..id|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",

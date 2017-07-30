@@ -451,7 +451,6 @@ class createRouter extends Component {
                           dataSource={this.state.complaintSource}
                           dataSourceConfig={this.state.complaintSourceConfig}
                           menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                          disabled={readonly || updateonly}
                           errorText={fieldErrors.complaintType || ""}
                           searchText={searchTextCom}
                           value={routerCreateSet.complaintType || ""}
@@ -469,7 +468,6 @@ class createRouter extends Component {
                      </Col>
                      <Col xs={12} md={8}>
                       <SelectField
-                        disabled={readonly || updateonly}
                         fullWidth={true}
                         floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
                         errorText={fieldErrors.boundaryType || ""}
@@ -486,7 +484,6 @@ class createRouter extends Component {
                      </Col>
                      <Col xs={12} md={8}>
                       <AutoComplete
-                        disabled={readonly || updateonly}
                           hintText=""
                           floatingLabelText={translate("pgr.lbl.boundary") + " *"}
                           fullWidth={true}
@@ -511,7 +508,6 @@ class createRouter extends Component {
                      </Col>
                      <Col xs={12} md={8}>
                       <AutoComplete
-                        disabled={readonly}
                           hintText=""
                           floatingLabelText={translate("pgr.lbl.position") + " *"}
                           fullWidth={true}

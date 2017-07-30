@@ -135,7 +135,8 @@ class ServiceGroupCreate extends Component {
            "name" :this.props.createServiceGroup.name,
            "code" :this.props.createServiceGroup.code,
            "description" :this.props.createServiceGroup.description,
-           "tenantId":"default"
+           "tenantId":"default",
+           "keyword": "complaint"
           }
       }
 

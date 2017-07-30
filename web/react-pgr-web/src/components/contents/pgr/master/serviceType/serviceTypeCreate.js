@@ -152,7 +152,7 @@ class ServiceTypeCreate extends Component {
 	  let pgr = this.props.location.pathname.match("pgr");
 
 	  if(pgr){
-		  console.log(this.props.location.pathname, pgr);
+		  //console.log(this.props.location.pathname, pgr);
 		  keyword = "Complaint";
 	  } else {
 		  keyword = "Deliverable";
@@ -166,7 +166,7 @@ class ServiceTypeCreate extends Component {
            "active" :this.props.createServiceType.active,
            "type" :this.props.createServiceType.type,
            "keywords": [
-                "Complaint"
+                "complaint"
               ],
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,

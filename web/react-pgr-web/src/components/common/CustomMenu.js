@@ -172,6 +172,13 @@ class CustomMenu extends Component {
     }
   }
 
+  changeRoute=(route)=>{
+      let {setRoute}=this.props;
+
+      // setRoute("/");
+      setRoute(route);
+  }
+
 
 
 
@@ -179,7 +186,7 @@ class CustomMenu extends Component {
     // console.log(this.state.searchText);
     let {handleToggle,actionList,menuConvention}=this.props;
     let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions,path,menuItems}=this.state;
-    let {menuChange,changeLevel,menuChangeTwo}=this;
+    let {menuChange,changeLevel,menuChangeTwo,changeRoute}=this;
 
     const checkUrl = function(item) {
       if(item.url == '/pgr/createReceivingCenter' && window.location.href.indexOf("/pgr/createReceivingCenter")>-1) {
@@ -222,15 +229,18 @@ class CustomMenu extends Component {
             }
             else {
               if (menuConvention.hasOwnProperty(item.path)) {
+                // {/*<Link  key={index} to={menuConvention[item.path]} >*/}
+                  // {/*</Link>*/}
                 return(
-                      <Link  key={index} to={menuConvention[item.path]} >
+
                         <MenuItem
-                            style={{whiteSpace: "initial"}}
-                             onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
+                             style={{whiteSpace: "initial"}}
+                             key={index}
+                             onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false); changeRoute(menuConvention[item.path])}}
                              leftIcon={<i className="material-icons">view_module</i>}
                              primaryText={item.name}
                           />
-                      </Link>
+
                     )
               } else {
                 let base="";
@@ -264,16 +274,16 @@ class CustomMenu extends Component {
       else {
 
           return actionList.map((item,index)=>{
-              if (item.url && item.displayName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+              if (item.path && item.url && item.displayName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
 
             if (menuConvention.hasOwnProperty(item.path)) {
               return(
-                    <Link  key={index} to={menuConvention[item.path]} >
+                    <Link  key={index} to={menuConvention[item.path]}>
                       <MenuItem
                           style={{whiteSpace: "initial"}}
-                           onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
+                           onTouchTap={()=>{checkUrl(item); document.title=item.displayName; handleToggle(false)}}
                            leftIcon={<i className="material-icons">view_module</i>}
-                           primaryText={item.name}
+                           primaryText={item.displayName}
                         />
                     </Link>
                   )
@@ -295,7 +305,7 @@ class CustomMenu extends Component {
                          <MenuItem
                               style={{whiteSpace: "initial"}}
                               leftIcon={<i className="material-icons">view_module</i>}
-                              primaryText={item.name}
+                              primaryText={item.displayName}
                            />
                         </a>
                       )

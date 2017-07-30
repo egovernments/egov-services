@@ -12,18 +12,11 @@ import UiButton from './components/UiButton';
 import {fileUpload, getInitiatorPosition} from './utility/utility';
 
 var specifications={};
-try {
-  var hash = window.location.hash.split("/");
-  if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-    specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-  } else {
-    specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-  }
-} catch(e) {
-
-}
 let reqRequired = [];
 class Report extends Component {
+  state={
+    pathname:""
+  }
   constructor(props) {
     super(props);
   }
@@ -64,6 +57,16 @@ class Report extends Component {
   }
 
   initData() {
+    try {
+      var hash = window.location.hash.split("/");
+      if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+        specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+      } else {
+        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+      }
+    } catch(e) {
+
+    }
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let self = this;
     let hashLocation = window.location.hash;
@@ -95,11 +98,28 @@ class Report extends Component {
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
     }
+    this.setState({
+      pathname:this.props.history.location.pathname
+    })
   }
 
   componentDidMount() {
       this.initData();
   }
+
+  componentWillReceiveProps(nextProps)
+  {
+    if (this.state.pathname!=nextProps.history.location.pathname) {
+      this.initData();
+    }
+  }
+
+  // componentDidUpdate(nextProps,prevProps)
+  // {
+  //   if (this.props.history.location.pathname!=nextProps.history.location.pathname) {
+  //     this.initData();
+  //   }
+  // }
 
   autoComHandler = (autoObject, path) => {
     let self = this;
@@ -130,7 +150,7 @@ class Report extends Component {
       self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath); 
+          var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
           self.props.setRoute(hash);
         }
       }, 1500);
@@ -171,7 +191,7 @@ class Report extends Component {
         for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
           formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
         }
-      } else 
+      } else
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
     }
 

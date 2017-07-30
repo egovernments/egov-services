@@ -190,6 +190,18 @@ class FloorDetails extends Component {
 	  
 	    var allRooms = floorDetails.floors;
 		
+		if(allRooms) {
+			for(var i = 0; i<allRooms.length;i++){
+			if(allRooms[i].isStructured == 'YES'){
+				allRooms[i].isStructured = true;
+			} else {
+				allRooms[i].isStructured = false;
+			}
+		}
+		
+		}
+		
+		
 		if(!allRooms){
 			return false;
 		}
@@ -454,7 +466,7 @@ calcArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														 <SelectField  className="fullWidth selectOption"
-															floatingLabelText="Unit Type"
+															floatingLabelText="Unit Type *"
 															errorText={fieldErrors.floor ? (fieldErrors.floor.unitType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.unitType}</span>:"" ): ""}
 															value={floorDetails.floor ? floorDetails.floor.unitType : ""}
 															onChange={(event, index, value) => {
@@ -495,12 +507,22 @@ calcArea = (e, type) => {
 																	value={floorDetails.floor ? floorDetails.floor.roomInFlat : ""}
 																	onChange={(event, index, value) => {
 																		(value == -1) ?  value = '' : '';
+																		
+																	    if(value == 1){
+																			if(floorDetails.floor.hasOwnProperty('flatNo')){
+																				floorDetails.floor.flatNo = '';
+																			}
+																			this.props.addFloorDepandencyFields('flatNo');
+																		} else {
+																			this.props.removeFloorDepandencyFields('flatNo');
+																		}
+																		
 																		var e = {
 																		  target: {
 																			value: value
 																		  }
 																		};
-																		handleChangeFloor(e,"floor" ,"roomInFlat", true, "");
+																		handleChangeFloor(e,"floor" ,"roomInFlat", false, "");
 																		if(value == 2) {
 																		  this.setState({addRoom:false});
 																		}
@@ -521,7 +543,7 @@ calcArea = (e, type) => {
 																	  floatingLabelText="Flat Number"
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
-																	  onChange={(e) => {handleChangeNextOne(e,"floor" ,"flatNo", false, /^\d+$/g)}}
+																	  onChange={(e) => {handleChangeFloor(e,"floor" ,"flatNo", true, /^\d+$/g)}}
 																	  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 																	  underlineStyle={styles.underlineStyle}
 																	  underlineFocusStyle={styles.underlineFocusStyle}
@@ -594,7 +616,7 @@ calcArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Usage sub type *"
+														  floatingLabelText="Usage sub type"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usageSubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usageSubType}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usageSubType : ""}
 														  onChange={(event, index, value) => {
@@ -604,7 +626,7 @@ calcArea = (e, type) => {
 																  value: value
 																}
 															  };
-															  handleChangeFloor(e,"floor" ,"usageSubType", true, "")}
+															  handleChangeNextOne(e,"floor" ,"usageSubType", false, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -738,6 +760,7 @@ calcArea = (e, type) => {
 														  value={floorDetails.floor ? floorDetails.floor.isStructured : ""}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
+															  
 															  var e = {
 																target: {
 																  value: value
@@ -750,8 +773,9 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-															  <MenuItem value={true} primaryText="Yes" />
-															  <MenuItem value={false} primaryText="No" />
+															<MenuItem value={-1} primaryText="None" />
+															  <MenuItem value='YES' primaryText="Yes" />
+															  <MenuItem value='NO' primaryText="No" />
 														</SelectField>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
@@ -952,6 +976,11 @@ calcArea = (e, type) => {
                                                     <td>{i.bpaBuiltupArea}</td>
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
+															if(i.isStructured){
+																i.isStructured = 'YES'
+															} else {
+																i.isStructured = 'NO'
+															}
 															editObject("floor",i, true);
 															toggleSnackbarAndSetText(true, 'Edit room details and update.')
 															isEditIndex(index);
@@ -1113,16 +1142,16 @@ const mapDispatchToProps = dispatch => ({
     })
   },
   
-	addDepandencyFields: (property) => {
+	addFloorDepandencyFields: (property) => {
 		dispatch({
-			type: 'ADD_REQUIRED',
+			type: 'ADD_FLOOR_REQUIRED',
 			property
 		})
 	},
 
-	removeDepandencyFields: (property) => {
+	removeFloorDepandencyFields: (property) => {
 		dispatch({
-			type: 'REMOVE_REQUIRED',
+			type: 'REMOVE_FLOOR_REQUIRED',
 			property
 		})
 	},

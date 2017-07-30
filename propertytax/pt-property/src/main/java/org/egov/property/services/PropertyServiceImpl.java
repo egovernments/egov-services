@@ -33,7 +33,6 @@ import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
-import org.egov.property.model.PropertyUser;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
 import org.egov.property.utility.PropertyValidator;
@@ -245,12 +244,12 @@ public class PropertyServiceImpl implements PropertyService {
 			
 			if ( !(property.getOwners().size() > 0)){
 				
-				List<PropertyUser> propertyUsers = propertyRepository.getPropertyUserByProperty(propertyId);
+				List<User> propertyUsers = propertyRepository.getPropertyUserByProperty(propertyId);
 				List<Integer> userIds = new ArrayList<>();
 	
-				for (PropertyUser propertyUser : propertyUsers) {
+				for (User propertyUser : propertyUsers) {
 	
-					userIds.add(propertyUser.getOwner());
+					userIds.add(Integer.valueOf(propertyUser.getOwner().toString()));
 				}
 				
 				List<User> userOfProperty = getUserObjectForUserIds(userIds, users);

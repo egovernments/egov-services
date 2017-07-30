@@ -57,9 +57,6 @@ import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
 import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.demand.repository.rowmapper.DemandRowMapper;
 import org.egov.demand.web.contract.DemandRequest;
-import org.egov.demand.web.controller.DemandController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -71,8 +68,6 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 @Slf4j
 public class DemandRepository {
-
-	private static final Logger logger = LoggerFactory.getLogger(DemandRepository.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -86,6 +81,12 @@ public class DemandRepository {
 		String searchDemandQuery = demandQueryBuilder.getDemandQuery(demandCriteria, ownerIds, preparedStatementValues);
 		return jdbcTemplate.query(searchDemandQuery, preparedStatementValues.toArray(), new DemandRowMapper());
 	}
+	
+	public List<Demand> getDemandsForConsumerCodes(Map<String,Set<String>> businessConsumercodeMap,String tenantId){
+		
+		String sql = demandQueryBuilder.getDemandQueryForConsumerCodes(businessConsumercodeMap, tenantId);
+		return jdbcTemplate.query(sql,new DemandRowMapper());
+	}
 
 	public List<DemandDetail> getDemandDetails(DemandDetailCriteria demandDetailCriteria) {
 
@@ -96,15 +97,15 @@ public class DemandRepository {
 
 	public void save(DemandRequest demandRequest) {
 
-		logger.info("DemandRepository save, the request object : " + demandRequest);
+		log.info("DemandRepository save, the request object : " + demandRequest);
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		for (Demand demand : demands) {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
-		logger.info("DemandRepository save, demands ---->> "+demands+" \n demanddetails ---->> "+demandDetails);
+		log.info("DemandRepository save, demands ---->> "+demands+" \n demanddetails ---->> "+demandDetails);
 		insertBatch(demands, demandDetails);
-		logger.info("Demands saved >>>> ");
+		log.info("Demands saved >>>> ");
 	}
 	
 	public void update(DemandRequest demandRequest) {

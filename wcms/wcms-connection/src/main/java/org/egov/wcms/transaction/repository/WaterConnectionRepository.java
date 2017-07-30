@@ -227,7 +227,7 @@ public class WaterConnectionRepository {
                 connection.getPipesizeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), connection.getStatus(), connection.getStateId(),
+                new Date(new java.util.Date().getTime()), connection.getStateId(),
                 connection.getDemandid(), connection.getAcknowledgementNumber() };
         }
         else{
@@ -343,6 +343,7 @@ public class WaterConnectionRepository {
     public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
+        LOGGER.info("Get Connection Details Query : " + fetchQuery);
         final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
                 new WaterConnectionRowMapper());
         return connectionList;

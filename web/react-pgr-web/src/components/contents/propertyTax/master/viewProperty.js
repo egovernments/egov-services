@@ -63,6 +63,9 @@ const getNameById = function(object, id, property = "") {
 }
 
 const getNameByCode = function(object, code, property = "") {
+	
+	console.log(object, code);
+	
   if (code == "" || code == null) {
         return "";
     }
@@ -91,9 +94,9 @@ class ViewProperty extends Component {
 			resultList:[],
 			unitType:[{code:"FLAT", name:'Flat'},{code:"ROOM", name:'Room'}],
 			floorNumber:[{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
-			gaurdianRelation: [{code:'FATHER', Name:'Father'}, {code:'HUSBAND', Name:'Husband'}, {code:'MOTHER', Name:'Mother'}, {code:'OTHERS', Name:'Others'} ],
-		    gender:[{code:'MALE', Name:'Male'}, {code:'FEMALE', Name:'Female'}, {code:'OTHERS', Name:'Others'}],
-			ownerType:[{code:'Ex_Service_man', Name:'Ex-Service man'}, {code:'Freedom_Fighter', Name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', Name:"Freedom figher's wife"}],
+			gaurdianRelation: [{code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
+		    gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
+			ownerType:[{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}],
 			propertytypes: [],
 			apartments:[],
 			departments:[],
@@ -111,7 +114,8 @@ class ViewProperty extends Component {
 			revanue:[],
 			election:[],
 			usages:[],
-			creationReason:[{code:'NEWPROPERTY', Name:'New Property'}, {code:'SUBDIVISION', Name:'Bifurcation'}]
+			creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}],
+			taxDetails: []
        }
       
    }
@@ -125,9 +129,53 @@ class ViewProperty extends Component {
   componentDidMount() {
 	  
 	var currentThis = this;
-
-		let {toggleSnackbarAndSetText} = this.props;
+		
+	 let {showTable,changeButtonText, propertyTaxSearch, setLoadingStatus, toggleSnackbarAndSetText }=this.props;
+      	  
+	  setLoadingStatus('loading');
 	  
+	   var query;
+	  
+	  if(this.props.match.params.type){
+		  query = {
+			  propertyId: this.props.match.params.searchParam
+		  };
+	  } else {
+		   query = {
+			  upicNumber: this.props.match.params.searchParam
+		  };
+	  }
+
+	  
+      Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
+		setLoadingStatus('hide');
+		if(res.hasOwnProperty('Errors')){
+			toggleSnackbarAndSetText(true, "Server returned unexpected error. Please contact system administrator.")
+		} else {
+			  var units = [];
+  
+			  var floors = res.properties[0].propertyDetail.floors;
+			  
+			  for(var i = 0; i<floors.length; i++){
+				  for(var j = 0; j<floors[i].units.length;j++){
+					  floors[i].units[j].floorNo = floors[i].floorNo;
+					  units.push(floors[i].units[j])
+				  }
+			  }
+			  
+			  res.properties[0].propertyDetail.floors = units;
+			  
+			  this.setState({
+				  resultList: res.properties,
+			  })
+		}
+	
+      }).catch((err)=> {
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message)
+      })	
+		
+		
 	Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
         currentThis.setState({propertytypes:res.propertyTypes})
     }).catch((err)=> {
@@ -296,357 +344,27 @@ class ViewProperty extends Component {
 			temp.push(commonFloors);
 			
 		}
-
 		
-    let properties = [
-    {
-      "id": 1,
-      "tenantId": "default",
-      "upicNumber": "upicnumber",
-      "oldUpicNumber": "",
-      "vltUpicNumber": "",
-      "creationReason": "NEWPROPERTY",
-      "address": {
-        "id": 1,
-        "tenantId": "default",
-        "latitude": null,
-        "longitude": null,
-        "addressId": null,
-        "addressNumber": "40/179-7-1",
-        "addressLine1": "Muttarasupalli",
-        "addressLine2": "Revenue Ward No 40",
-        "landmark": null,
-        "city": "Kadapa",
-        "pincode": "516001",
-        "detail": null,
-        "auditDetails": {
-          "createdBy": "74",
-          "lastModifiedBy": "74",
-          "createdTime": 1501140313055,
-          "lastModifiedTime": 1501140313055
-        }
-      },
-      "owners": [
-        {
-          "id": 282,
-          "userName": "9302930208",
-          "password": null,
-          "salutation": null,
-          "name": "Tester12",
-          "gender": "FEMALE",
-          "mobileNumber": "9302930208",
-          "emailId": null,
-          "altContactNumber": null,
-          "pan": null,
-          "aadhaarNumber": null,
-          "permanentAddress": null,
-          "permanentCity": null,
-          "permanentPincode": null,
-          "correspondenceCity": null,
-          "correspondencePincode": null,
-          "correspondenceAddress": null,
-          "active": true,
-          "dob": null,
-          "pwdExpiryDate": "25-10-2017 12:55:11",
-          "locale": "en_IN",
-          "type": "CITIZEN",
-          "signature": null,
-          "accountLocked": false,
-          "roles": [
-            {
-              "id": 1,
-              "name": "Citizen",
-              "code": "CITIZEN",
-              "description": null,
-              "auditDetails": null,
-              "tenantId": null
-            }
-          ],
-          "fatherOrHusbandName": null,
-          "bloodGroup": null,
-          "identificationMark": null,
-          "photo": null,
-          "auditDetails": null,
-          "otpReference": null,
-          "tenantId": null,
-          "isPrimaryOwner": null,
-          "isSecondaryOwner": null,
-          "ownerShipPercentage": null,
-          "ownerType": null
-        }
-      ],
-      "propertyDetail": {
-        "id": 1,
-        "source": "MUNICIPAL_RECORDS",
-        "regdDocNo": null,
-        "regdDocDate": null,
-        "reason": "CREATE",
-        "status": "ACTIVE",
-        "isVerified": false,
-        "verificationDate": null,
-        "isExempted": false,
-        "exemptionReason": null,
-        "propertyType": "PRIVATE",
-        "category": "RESIDENTIAl",
-        "usage": null,
-        "department": null,
-        "apartment": null,
-        "siteLength": 0.0,
-        "siteBreadth": 0.0,
-        "sitalArea": 0.0,
-        "totalBuiltupArea": 0.0,
-        "undividedShare": 0.0,
-        "noOfFloors": 0,
-        "isSuperStructure": false,
-        "landOwner": null,
-        "floorType": null,
-        "woodType": null,
-        "roofType": null,
-        "wallType": null,
-        "floors": [
-          {
-            "id": 1,
-            "floorNo": "0",
-            "units": [
-              {
-                "id": 1,
-                "unitNo": 0,
-                "units": null,
-                "unitType": "FLAT",
-                "length": 0.0,
-                "width": 0.0,
-                "builtupArea": 73.0,
-                "assessableArea": 73.0,
-                "bpaBuiltupArea": 0.0,
-                "bpaNo": null,
-                "bpaDate": null,
-                "usage": "RESD",
-                "occupancyType": null,
-                "occupierName": null,
-                "firmName": null,
-                "rentCollected": 0.0,
-                "structure": "RCCPOSHBUILDING",
-                "age": "0TO25",
-                "exemptionReason": null,
-                "isStructured": true,
-                "occupancyDate": "2017-05-21 00:00:00",
-                "constCompletionDate": null,
-                "manualArv": 0.0,
-                "arv": 0.0,
-                "electricMeterNo": null,
-                "waterMeterNo": null,
-                "parentid": 0,
-                "isAuthorised": true,
-                "auditDetails": {
-                  "createdBy": "74",
-                  "lastModifiedBy": "74",
-                  "createdTime": 1501140313055,
-                  "lastModifiedTime": 1501140313055
-                }
-              },
-              {
-                "id": 2,
-                "unitNo": 0,
-                "units": null,
-                "unitType": "FLAT",
-                "length": 0.0,
-                "width": 0.0,
-                "builtupArea": 53.0,
-                "assessableArea": 53.0,
-                "bpaBuiltupArea": 0.0,
-                "bpaNo": null,
-                "bpaDate": null,
-                "usage": "RESD",
-                "occupancyType": null,
-                "occupierName": null,
-                "firmName": null,
-                "rentCollected": 0.0,
-                "structure": "RCCPOSHBUILDING",
-                "age": "0TO25",
-                "exemptionReason": null,
-                "isStructured": true,
-                "occupancyDate": "2017-05-21 00:00:00",
-                "constCompletionDate": null,
-                "manualArv": 0.0,
-                "arv": 0.0,
-                "electricMeterNo": null,
-                "waterMeterNo": null,
-                "parentid": 0,
-                "isAuthorised": true,
-                "auditDetails": {
-                  "createdBy": "74",
-                  "lastModifiedBy": "74",
-                  "createdTime": 1501140313055,
-                  "lastModifiedTime": 1501140313055
-                }
-              }
-            ],
-            "auditDetails": {
-              "createdBy": "74",
-              "lastModifiedBy": "74",
-              "createdTime": 1501140313055,
-              "lastModifiedTime": 1501140313055
-            }
-          },
-          {
-            "id": 2,
-            "floorNo": "0",
-            "units": [
-              {
-                "id": 1,
-                "unitNo": 0,
-                "units": null,
-                "unitType": "FLAT",
-                "length": 0.0,
-                "width": 0.0,
-                "builtupArea": 73.0,
-                "assessableArea": 73.0,
-                "bpaBuiltupArea": 0.0,
-                "bpaNo": null,
-                "bpaDate": null,
-                "usage": "RESD",
-                "occupancyType": null,
-                "occupierName": null,
-                "firmName": null,
-                "rentCollected": 0.0,
-                "structure": "RCCPOSHBUILDING",
-                "age": "0TO25",
-                "exemptionReason": null,
-                "isStructured": true,
-                "occupancyDate": "2017-05-21 00:00:00",
-                "constCompletionDate": null,
-                "manualArv": 0.0,
-                "arv": 0.0,
-                "electricMeterNo": null,
-                "waterMeterNo": null,
-                "parentid": 0,
-                "isAuthorised": true,
-                "auditDetails": {
-                  "createdBy": "74",
-                  "lastModifiedBy": "74",
-                  "createdTime": 1501140313055,
-                  "lastModifiedTime": 1501140313055
-                }
-              },
-              {
-                "id": 2,
-                "unitNo": 0,
-                "units": null,
-                "unitType": "FLAT",
-                "length": 0.0,
-                "width": 0.0,
-                "builtupArea": 53.0,
-                "assessableArea": 53.0,
-                "bpaBuiltupArea": 0.0,
-                "bpaNo": null,
-                "bpaDate": null,
-                "usage": "RESD",
-                "occupancyType": null,
-                "occupierName": null,
-                "firmName": null,
-                "rentCollected": 0.0,
-                "structure": "RCCPOSHBUILDING",
-                "age": "0TO25",
-                "exemptionReason": null,
-                "isStructured": true,
-                "occupancyDate": "2017-05-21 00:00:00",
-                "constCompletionDate": null,
-                "manualArv": 0.0,
-                "arv": 0.0,
-                "electricMeterNo": null,
-                "waterMeterNo": null,
-                "parentid": 0,
-                "isAuthorised": true,
-                "auditDetails": {
-                  "createdBy": "74",
-                  "lastModifiedBy": "74",
-                  "createdTime": 1501140313055,
-                  "lastModifiedTime": 1501140313055
-                }
-              }
-            ],
-            "auditDetails": {
-              "createdBy": "74",
-              "lastModifiedBy": "74",
-              "createdTime": 1501140313055,
-              "lastModifiedTime": 1501140313055
-            }
-          }
-        ],
-        "documents": [
-          
-        ],
-        "stateId": "232",
-        "applicationNo": "AP-PT-2017/07/27-003398-01",
-        "taxCalculations": "[{\"toDate\": \"30/09/2017 23:59:59\", \"fromDate\": \"01/04/2017 00:00:00\", \"unitTaxes\": [{\"unitNo\": 0, \"unitTaxes\": {\"totalTax\": 295.0, \"manualARV\": null, \"rebateValue\": null, \"depreciation\": 3.0, \"calculatedARV\": 1445.9, \"effectiveDate\": \"01/04/2017 00:00:00\", \"headWiseTaxes\": [{\"taxDays\": 183, \"taxName\": \"EDU_CESS\", \"taxValue\": 58.0}, {\"taxDays\": 183, \"taxName\": \"PT_TAX\", \"taxValue\": 203.0}, {\"taxDays\": 183, \"taxName\": \"LIB_CESS\", \"taxValue\": 5.0}], \"occupancyDate\": \"21/05/2017\", \"residentialARV\": null, \"nonResidentialARV\": null}, \"floorNumber\": \"0\", \"usageFactor\": 1.0, \"assessableArea\": 73.0, \"subUsageFactor\": null, \"structureFactor\": 1.5}, {\"unitNo\": 0, \"unitTaxes\": {\"totalTax\": 1226.0, \"manualARV\": null, \"rebateValue\": null, \"depreciation\": 9.0, \"calculatedARV\": 4732.45, \"effectiveDate\": \"01/04/2017 00:00:00\", \"headWiseTaxes\": [{\"taxDays\": 183, \"taxName\": \"EDU_CESS\", \"taxValue\": 237.0}, {\"taxDays\": 183, \"taxName\": \"PT_TAX\", \"taxValue\": 852.0}, {\"taxDays\": 183, \"taxName\": \"LIB_CESS\", \"taxValue\": 18.0}], \"occupancyDate\": \"21/05/2017\", \"residentialARV\": null, \"nonResidentialARV\": null}, \"floorNumber\": \"0\", \"usageFactor\": 1.0, \"assessableArea\": 53.0, \"subUsageFactor\": null, \"structureFactor\": 1.5}], \"effectiveDate\": \"01/04/2017 00:00:00\", \"propertyTaxes\": {\"totalTax\": 1373.0, \"manualARV\": 0.0, \"rebateValue\": null, \"depreciation\": 12.0, \"calculatedARV\": 6179.0, \"effectiveDate\": \"01/04/2017 00:00:00\", \"headWiseTaxes\": [{\"taxDays\": 183, \"taxName\": \"EDU_CESS\", \"taxValue\": 295.0}, {\"taxDays\": 183, \"taxName\": \"PT_TAX\", \"taxValue\": 1055.0}, {\"taxDays\": 183, \"taxName\": \"LIB_CESS\", \"taxValue\": 23.0}], \"occupancyDate\": \"21/05/2017\", \"residentialARV\": null, \"nonResidentialARV\": null}}]",
-        "workFlowDetails": null,
-        "auditDetails": {
-          "createdBy": "74",
-          "lastModifiedBy": "74",
-          "createdTime": 1501140313055,
-          "lastModifiedTime": 1501140313055
-        }
-      },
-      "vacantLand": null,
-      "assessmentDate": "",
-      "occupancyDate": "2017-04-01 00:00:00.0",
-      "gisRefNo": "",
-      "isAuthorised": false,
-      "isUnderWorkflow": false,
-      "boundary": {
-        "id": 1,
-        "revenueBoundary": {
-          "id": 2,
-          "name": "Zone-1"
-        },
-        "locationBoundary": {
-          "id": 21,
-          "name": null
-        },
-        "adminBoundary": {
-          "id": 178,
-          "name": "Election-Ward"
-        },
-        "northBoundedBy": "",
-        "eastBoundedBy": "",
-        "westBoundedBy": "",
-        "southBoundedBy": "southboundedby",
-        "auditDetails": {
-          "createdBy": "74",
-          "lastModifiedBy": "74",
-          "createdTime": 1501140313055,
-          "lastModifiedTime": 1501140313055
-        }
-      },
-      "active": true,
-      "channel": "SYSTEM",
-      "auditDetails": {
-        "createdBy": "74",
-        "lastModifiedBy": "74",
-        "createdTime": 1501140313055,
-        "lastModifiedTime": 1501140313055
-      },
-      "demands": null
-    }
-  ]
-  
-  var units = [];
-  
-  var floors = properties[0].propertyDetail.floors;
-  
-  for(var i = 0; i<floors.length; i++){
-	  for(var j = 0; j<floors[i].units.length;j++){
-		  floors[i].units[j].floorNo = floors[i].floorNo;
-		  units.push(floors[i].units[j])
-	  }
-  }
-  
-  properties[0].propertyDetail.floors = units;
-  
-  this.setState({
-	  resultList: properties,
-	  floorNumber:temp
-  })
+		  this.setState({
+			  floorNumber: temp
+		  })
+		  
+		var taxDetailQuery = [{"id": "47"}, {"id": "48"}, {"id": "49"}, {"id": "50"}];
+		
+		
+		var tQuery = {
+			businessService :'Property Tax',
+			consumerCode:'AP-PT-2017/07/26-000230-12'
+		}		
+		
+		
+        Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
+          console.log('taxDetails',res);
+          //currentThis.setState({taxDetails : res.usageMasters})
+        }).catch((err)=> {
+          console.log(err)
+		  console.log('taxDetailsError',err);
+        })
   
 }
 
@@ -870,7 +588,7 @@ class ViewProperty extends Component {
 												   Zone
 											  </Col>
 											  <Col xs={8} md={6}>
-												 {item.boundary.revenueBoundary.name}
+												 {item.boundary.revenueBoundary.name || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -890,7 +608,7 @@ class ViewProperty extends Component {
 												  Election Ward
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {item.boundary.adminBoundary.name}
+												  {item.boundary.adminBoundary.name || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>										  
@@ -987,7 +705,7 @@ class ViewProperty extends Component {
 																  Gender
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gender ? getNameByCode(this.state.gender, owner.gender) : 'NA'}
+																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>								  
@@ -1011,7 +729,7 @@ class ViewProperty extends Component {
 																   Guardian Relation
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gaurdianRelation ? getNameByCode(this.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
+																  {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>
@@ -1021,7 +739,7 @@ class ViewProperty extends Component {
 																   Guardian
 															  </Col>
 															  <Col xs={8} md={6}>
-																  {owner.gaurdian ? owner.gaurdian : 'NA'}
+																  {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : 'NA'}
 															  </Col>
 															</Row>
 														  </ListGroupItem>  
@@ -1130,7 +848,7 @@ class ViewProperty extends Component {
 												   Floor Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {getNameById(this.state.floortypes ,item.propertyDetail.floorType) || 'NA'}
+												  {getNameByCode(this.state.floortypes ,item.propertyDetail.floorType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -1140,7 +858,7 @@ class ViewProperty extends Component {
 												   Wall Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												  {getNameById(this.state.walltypes ,item.propertyDetail.wallType) || 'NA'}
+												  {getNameByCode(this.state.walltypes ,item.propertyDetail.wallType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>							  
@@ -1154,7 +872,7 @@ class ViewProperty extends Component {
 												   Roof Type
 											  </Col>
 											  <Col xs={8} md={6}>
-												{getNameById(this.state.rooftypes ,item.propertyDetail.roofType) || 'NA'}
+												{getNameByCode(this.state.rooftypes ,item.propertyDetail.roofType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -1165,7 +883,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={8} md={6}>
 											  
-												{getNameById(this.state.floortypes ,item.propertyDetail.woodType) || 'NA'}
+												{getNameByCode(this.state.floortypes ,item.propertyDetail.woodType) || 'NA'}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -1205,40 +923,38 @@ class ViewProperty extends Component {
                                               <th>Building Permission Number</th>
                                               <th>Building Permission Date</th>
                                               <th>Plinth Area In Building Plan</th>
-                                              <th style={{minWidth:70}}></th>
                                             </tr>
                                           </thead>
                                           <tbody>
                                             {item.propertyDetail.floors.length !=0  && item.propertyDetail.floors.map(function(i, index){
                                               if(i){
+												  console.log(i)
                                                 return (<tr key={index}>
                                                     <td>{index}</td>
-                                                    <td>{getNameByCode(currentThis.state.floorNumber, i.floorNo+1) || 'NA'}</td>
+                                                    <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || 'NA'}</td>
 													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || 'NA'}</td>
 													<td>{i.flatNo ? i.flatNo : ''}</td>
                                                     <td>{i.unitNo || 'NA'}</td>
                                                     <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.usage ,i.usageType) || 'NA'}</td>
-                                                    <td>{i.usageSubType}</td>
-                                                    <td>{i.firmName}</td>
-                                                    <td>{i.occupancyType}</td>
-                                                    <td>{i.occupierName}</td>
-                                                    <td>{i.annualRent}</td>
-                                                    <td>{i.manualArv}</td>
-                                                    <td>{i.constCompletionDate}</td>
-                                                    <td>{i.occupancyDate}</td>
-                                                    <td>{i.isStructured}</td>
-                                                    <td>{i.length}</td>
-                                                    <td>{i.width}</td>
-                                                    <td>{i.builtupArea}</td>
-                                                    <td>{i.occupancyCertiNumber}</td>
-                                                    <td>{i.bpaNo}</td>
-                                                    <td>{i.bpaDate}</td>
-                                                    <td>{i.bpaBuiltupArea}</td>
-                                                    <td>
-														
-                                                    </td>
+                                                    <td>{getNameByCode(currentThis.state.usages ,i.usage) || 'NA'}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || 'NA'}</td>
+                                                    <td>{i.firmName || 'NA'}</td>
+                                                    <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || 'NA'}</td>
+                                                    <td>{i.occupierName || 'NA'}</td>
+                                                    <td>{i.annualRent || 'NA'}</td>
+                                                    <td>{parseFloat(i.manualArv) || 'NA'}</td>
+                                                    <td>{i.constCompletionDate ? new Date(i.constCompletionDate).getDate()+'/'+(new Date(i.constCompletionDate).getMonth()+1)+'/'+new Date(i.constCompletionDate).getFullYear() : 'NA' }</td>
+                                                    <td>{i.occupancyDate ? new Date(i.occupancyDate).getDate()+'/'+(new Date(i.occupancyDate).getMonth()+1)+'/'+new Date(i.occupancyDate).getFullYear() : 'NA' }</td>
+                                                    <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| 'NA'}</td>
+                                                    <td>{parseFloat(i.length) || 'NA'}</td>
+                                                    <td>{parseFloat(i.width) || 'NA'}</td>
+                                                    <td>{i.builtupArea || 'NA'}</td>
+                                                    <td>{i.occupancyCertiNumber || 'NA'}</td>
+                                                    <td>{i.bpaNo || 'NA'}</td>
+                                                    <td>{i.bpaDate ? new Date(i.bpaDate).getDate()+'/'+(new Date(i.bpaDate).getMonth()+1)+'/'+new Date(i.bpaDate).getFullYear() : 'NA' }</td>
+                                                    <td>{i.bpaBuiltupArea || 'NA'}</td>
                                                   </tr>)
+												  
                                               }
 
                                             })}

@@ -72,7 +72,6 @@ import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
-import org.egov.demand.web.controller.DemandController;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -311,14 +310,29 @@ public class DemandService {
 	}
 
 	public DemandResponse getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
+		
+		UserSearchRequest userSearchRequest = null;
+		List<Owner> owners = null;
+		List<Demand> demands = null;
 
-		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
-				.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
-				.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).build();
-		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
-		Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
-		List<Demand> demands = demandRepository.getDemands(demandCriteria, ownerIds);
-		if (!demands.isEmpty())
+		if (demandCriteria.getEmail() != null || demandCriteria.getMobileNumber() != null) {
+
+			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+					.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
+					.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).build();
+			// TODO GET PAGE SIZE VALUE FROM CONFIG DONT HARD CODE
+			owners = ownerRepository.getOwners(userSearchRequest);
+			Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
+			demands = demandRepository.getDemands(demandCriteria, ownerIds);
+		} else {
+			demands = demandRepository.getDemands(demandCriteria, null);
+			List<Long> ownerIds = new ArrayList<>(
+					demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
+			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+					.tenantId(demandCriteria.getTenantId()).id(ownerIds).pageSize(500).build();
+			owners = ownerRepository.getOwners(userSearchRequest);
+		}
+		if (demands!=null && !demands.isEmpty())
 			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}

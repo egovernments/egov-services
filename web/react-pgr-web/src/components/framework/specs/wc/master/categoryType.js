@@ -50,6 +50,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/categorytype/_search",
 		"tenantIdRequired": true,
+		"useTimestamp": true,
 		"objectName": "CategoryType",
 		"groups": [
 			{
@@ -80,7 +81,14 @@ var dat = {
 						}
 				]
 			}
-		]
+		],
+		"result": {
+			"header": [{label: "wc.search.result.name"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"values": ["name", "description", "active"],
+			"resultPath": "CategoryTypes",
+			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
+			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			}
 	},
 	"wc.view": {
 		"numCols": 12/3,
@@ -137,54 +145,6 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "CategoryTypes",
-		"groups": [
-			{
-				"label": "wc.create.categorytype.title",
-				"name": "createCategoryType",
-				"fields": [
-						{
-							"name": "name",
-							"jsonPath": "CategoryTypes[0].name",
-							"label": "Category Type",
-							"pattern": "",
-							"type": "text",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "description",
-							"jsonPath": "CategoryTypes[0].description",
-							"label": "Description",
-							"pattern": "",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "Active",
-							"jsonPath": "CategoryTypes[0].active",
-							"label": "Active",
-							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}
-				]
-			}
-		]
-	},
-	"wc.search": {
-		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/categorytype/_search?id={id}",
-		"tenantIdRequired": true,
-		"useTimestamp": true,
-		"objectName": "CategoryType",
 		"groups": [
 			{
 				"label": "wc.create.categorytype.title",

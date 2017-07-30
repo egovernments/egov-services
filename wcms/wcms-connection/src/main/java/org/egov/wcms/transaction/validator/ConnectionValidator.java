@@ -45,7 +45,6 @@ import java.util.List;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.DocumentOwner;
-import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
@@ -159,7 +158,7 @@ public class ConnectionValidator {
             .field(WcmsConnectionConstants.CONNECTION_METERED_INVALID_FIELD_NAME).build();
         errorFields.add(errorField);
         }
-        else if (waterConnectionRequest.getConnection().getProperty()!=null && 
+        /*else if (waterConnectionRequest.getConnection().getProperty()!=null && 
                 waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()==null && 
                         ("").equals(waterConnectionRequest.getConnection().getProperty().getPropertyidentifier())
                 ) {
@@ -167,7 +166,7 @@ public class ConnectionValidator {
                     .message(WcmsConnectionConstants.PROPERTYIDENTIFIER_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConnectionConstants.PROPERTYIDENTIFIER_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } 
+        } */
 		if (!waterConnectionRequest.getConnection().getIsLegacy()) {
 			if (waterConnectionRequest.getConnection().getDocuments() == null
 					|| waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
@@ -188,7 +187,7 @@ public class ConnectionValidator {
 			}
 		}
 
-        if (!errorFields.isEmpty() && errorFields.size() > 0)
+        if (errorFields.size() > 0)
             return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                     .message(WcmsConnectionConstants.INVALID_REQUEST_MESSAGE)
                     .errorFields(errorFields).build();

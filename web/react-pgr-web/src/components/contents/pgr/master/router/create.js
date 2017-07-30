@@ -23,31 +23,15 @@ const styles = {
   headerStyle : {
     fontSize : 19
   },
+  addBorderBottom:{
+    borderBottom: '1px solid #eee',
+    padding: '10px'
+  },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
   }
 };
+
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
         return "";
@@ -99,7 +83,7 @@ class createRouter extends Component {
         boundaryInitialList: [],
        	open: false,
        	readonly: false,
-        updateonly: false
+        updateonly: true
        }
        this.loadBoundaries = this.loadBoundaries.bind(this);
        this.create = this.create.bind(this);
@@ -147,11 +131,13 @@ class createRouter extends Component {
           searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType) || "";
           searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
           setForm(routerType);
-          if(type == "view")
+          if(type == "view"){
+            console.log('view page');
             self.setState({
               readonly: true
             });
-          else {
+          }else {
+            console.log('edit page');
             self.setState({
               updateonly: true
             });
@@ -224,7 +210,7 @@ class createRouter extends Component {
     Api.commonApiPost("/pgr-master/service/v1/_search", {type: "all"}).then(function(response) {
         self.setState({
           complaintSource: response.Service
-        })
+        });
     }, function(err) {
       self.setState({
           complaintSource: []
@@ -287,6 +273,86 @@ class createRouter extends Component {
   	})
   }
 
+  getComplaintTypeName(id){
+    if(id){
+      var data = this.state.complaintSource.find( function( ele ) {
+          return ele.id == id;
+      } );
+      console.log(id, data);
+      if(data){
+        return (
+          <div>
+          {data.serviceName}
+          </div>
+        );
+      }else{
+      return(
+        null
+      )
+    }
+    }
+  }
+
+  getBoundaryTypeName(id){
+    if(id){
+      var data = this.state.boundaryTypeList.find( function( ele ) {
+          return ele.id == id;
+      } );
+      console.log(id, data);
+      if(data){
+        return (
+          <div>
+          {data.name}
+          </div>
+        );
+      }else{
+        return (
+          null
+        );
+      }
+    }
+  }
+
+  getBoundaryName(id){
+    if(id){
+      var data = this.state.boundarySource.find( function( ele ) {
+          return ele.id == id;
+      } );
+      console.log(id, data);
+      if(data){
+        return (
+          <div>
+          {data.name}
+          </div>
+        );
+      }else{
+        return (
+          null
+        );
+      }
+    }
+  }
+
+  getPositionName(id){
+    if(id){
+      var data = this.state.positionSource.find( function( ele ) {
+          return ele.id == id;
+      } );
+      console.log(id, data);
+      if(data){
+        return (
+          <div>
+          {data.name}
+          </div>
+        );
+      }else{
+        return (
+          null
+        );
+      }
+    }
+  }
+
   render() {
   	_this = this;
   	let {
@@ -314,7 +380,9 @@ class createRouter extends Component {
        	readonly,
         updateonly
   	} = this.state;
-    console.log(routerCreateSet);
+
+    console.log(readonly, updateonly);
+
   	const showBtn = function() {
   		if(!readonly) {
 
@@ -323,131 +391,171 @@ class createRouter extends Component {
   		}
   	}
 
-
-
-  	return (
-  		<div className="routerGeneration">
-         <form autoComplete="off" onSubmit={(e) => {create(e)}}>
-           <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {(match.params && match.params.type == "view" ? translate("pgr.lbl.view.router") : match.params && match.params.type == "edit" ? translate("pgr.lbl.edit.router") : translate("pgr.lbl.create.router"))} </div>}/>
-              <CardText style={{padding:0}}>
-                 <Grid>
-                   <Row>
-                   <Col xs={12} md={8}>
-                   	<AutoComplete
-                        hintText=""
-                        floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
-                        fullWidth={true}
-                        filter={AutoComplete.caseInsensitiveFilter}
-                        dataSource={this.state.complaintSource}
-                        dataSourceConfig={this.state.complaintSourceConfig}
-                        menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        disabled={readonly || updateonly}
-                        errorText={fieldErrors.complaintType || ""}
-                        searchText={searchTextCom}
-                        value={routerCreateSet.complaintType || ""}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
-                        onNewRequest={(chosenRequest, index) => {
-                          searchTextCom = chosenRequest.serviceName
-	                        var e = {
-	                          target: {
-	                            value: chosenRequest.id
-	                          }
-	                        };
-	                        handleChange(e, "complaintType", true, "");
-	                       }}
-	                      />
+    if(this.state.readonly){
+      return(
+        <div>
+          <Grid style={{width:'100%'}}>
+            <Card style={{margin:'15px 0'}}>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+                 {(match.params && match.params.type == "view" ? translate("pgr.lbl.view.router") : match.params && match.params.type == "edit" ? translate("pgr.lbl.edit.router") : translate("pgr.lbl.create.router"))}
+               < /div>}/>
+               <CardText style={{padding:'8px 16px 0'}}>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    {translate("pgr.lbl.grievance.type")}
                    </Col>
-                   <Col xs={12} md={8}>
-                   	<SelectField
-                      disabled={readonly || updateonly}
-                      fullWidth={true}
-                      floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
-                      errorText={fieldErrors.boundaryType || ""}
-                      value={(routerCreateSet.boundaryType + "") || ""}
-                      onChange={(e, i, val) => {
-	                					var e = {target: {value: val}};
-	                					loadBoundaries(val);
-                            searchTextBoun = "";
-	                					handleChange(e, "boundaryType", true, "")}}>
-	                					{boundaryTypeList.map((item, index) => (
-			                                <MenuItem value={item.id} key={index} primaryText={item.name} />
-			                            ))}
-                     </SelectField>
+                   <Col xs={6} md={3}>
+                    {this.getComplaintTypeName(routerCreateSet.complaintType)}
                    </Col>
-                   <Col xs={12} md={8}>
-                   	<AutoComplete
-                   		disabled={readonly || updateonly}
-                        hintText=""
-                        floatingLabelText={translate("pgr.lbl.boundary") + " *"}
-                        fullWidth={true}
-                        filter={AutoComplete.caseInsensitiveFilter}
-                        dataSource={this.state.boundarySource}
-                        dataSourceConfig={this.state.allSourceConfig}
-                        menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        errorText={fieldErrors.boundary || ""}
-                        value={routerCreateSet.boundary || ""}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundary")}}
-                        searchText={searchTextBoun}
-                        onNewRequest={(chosenRequest, index) => {
-                          searchTextBoun = chosenRequest.name;
-	                        var e = {
-	                          target: {
-	                            value: chosenRequest.id
-	                          }
-	                        };
-	                        handleChange(e, "boundary", true, "");
-	                       }}
-	                      />
+                   <Col xs={6} md={3}>
+                     {translate("pgr.lbl.boundarytype")}
                    </Col>
-                   <Col xs={12} md={8}>
-                   	<AutoComplete
-                   		disabled={readonly}
-                        hintText=""
-                        floatingLabelText={translate("pgr.lbl.position") + " *"}
-                        fullWidth={true}
-                        filter={AutoComplete.caseInsensitiveFilter}
-                        dataSource={this.state.positionSource}
-                        dataSourceConfig={this.state.allSourceConfig}
-                        menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        errorText={fieldErrors.position || ""}
-                        value={routerCreateSet.position || ""}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
-                        searchText={searchTextPos}
-                        onNewRequest={(chosenRequest, index) => {
-                          searchTextPos = chosenRequest.name;
-	                        var e = {
-	                          target: {
-	                            value: chosenRequest.id
-	                          }
-	                        };
-	                        handleChange(e, "position", true, "");
-	                       }}
-	                      />
+                   <Col xs={6} md={3}>
+                    {this.getBoundaryTypeName(routerCreateSet.boundaryType)}
                    </Col>
-                  </Row>
-                 </Grid>
-              </CardText>
-           </Card>
-           <div style={{textAlign: 'center'}}>
-             {showBtn()}
-           </div>
-         </form>
-         <Dialog
-          title="Success"
-          actions={[<FlatButton
-				        label={translate("core.lbl.close")}
-				        primary={true}
-				        onTouchTap={handleOpenNClose}
-				      />]}
-          modal={false}
-          open={open}
-          onRequestClose={handleOpenNClose}
-        >
-          {match.params && match.params.type == "edit" ?  translate("pgr.lbl.router.update.success") : translate("pgr.lbl.router.create.success")}
-        </Dialog>
+                 </Row>
+                 <Row style={styles.addBorderBottom}>
+                   <Col xs={6} md={3}>
+                    {translate("pgr.lbl.boundary")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {this.getBoundaryName(routerCreateSet.boundary)}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {translate("pgr.lbl.position")}
+                   </Col>
+                   <Col xs={6} md={3}>
+                    {this.getPositionName(routerCreateSet.position)}
+                   </Col>
+                 </Row>
+               </CardText>
+            </Card>
+          </Grid>
         </div>
-  	);
+      )
+    }else if(this.state.updateonly){
+      return (
+        <div className="routerGeneration">
+           <form autoComplete="off" onSubmit={(e) => {create(e)}}>
+             <Card style={styles.marginStyle}>
+              <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {(match.params && match.params.type == "view" ? translate("pgr.lbl.view.router") : match.params && match.params.type == "edit" ? translate("pgr.lbl.edit.router") : translate("pgr.lbl.create.router"))} </div>}/>
+                <CardText style={{padding:0}}>
+                   <Grid>
+                     <Row>
+                     <Col xs={12} md={8}>
+                      <AutoComplete
+                          hintText=""
+                          floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
+                          fullWidth={true}
+                          filter={AutoComplete.caseInsensitiveFilter}
+                          dataSource={this.state.complaintSource}
+                          dataSourceConfig={this.state.complaintSourceConfig}
+                          menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
+                          errorText={fieldErrors.complaintType || ""}
+                          searchText={searchTextCom}
+                          value={routerCreateSet.complaintType || ""}
+                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
+                          onNewRequest={(chosenRequest, index) => {
+                            searchTextCom = chosenRequest.serviceName
+                            var e = {
+                              target: {
+                                value: chosenRequest.id
+                              }
+                            };
+                            handleChange(e, "complaintType", true, "");
+                           }}
+                          />
+                     </Col>
+                     <Col xs={12} md={8}>
+                      <SelectField
+                        fullWidth={true}
+                        floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
+                        errorText={fieldErrors.boundaryType || ""}
+                        value={(routerCreateSet.boundaryType + "") || ""}
+                        onChange={(e, i, val) => {
+                              var e = {target: {value: val}};
+                              loadBoundaries(val);
+                              searchTextBoun = "";
+                              handleChange(e, "boundaryType", true, "")}}>
+                              {boundaryTypeList.map((item, index) => (
+                                        <MenuItem value={item.id} key={index} primaryText={item.name} />
+                                    ))}
+                       </SelectField>
+                     </Col>
+                     <Col xs={12} md={8}>
+                      <AutoComplete
+                          hintText=""
+                          floatingLabelText={translate("pgr.lbl.boundary") + " *"}
+                          fullWidth={true}
+                          filter={AutoComplete.caseInsensitiveFilter}
+                          dataSource={this.state.boundarySource}
+                          dataSourceConfig={this.state.allSourceConfig}
+                          menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
+                          errorText={fieldErrors.boundary || ""}
+                          value={routerCreateSet.boundary || ""}
+                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundary")}}
+                          searchText={searchTextBoun}
+                          onNewRequest={(chosenRequest, index) => {
+                            searchTextBoun = chosenRequest.name;
+                            var e = {
+                              target: {
+                                value: chosenRequest.id
+                              }
+                            };
+                            handleChange(e, "boundary", true, "");
+                           }}
+                          />
+                     </Col>
+                     <Col xs={12} md={8}>
+                      <AutoComplete
+                          hintText=""
+                          floatingLabelText={translate("pgr.lbl.position") + " *"}
+                          fullWidth={true}
+                          filter={AutoComplete.caseInsensitiveFilter}
+                          dataSource={this.state.positionSource}
+                          dataSourceConfig={this.state.allSourceConfig}
+                          menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
+                          errorText={fieldErrors.position || ""}
+                          value={routerCreateSet.position || ""}
+                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
+                          searchText={searchTextPos}
+                          onNewRequest={(chosenRequest, index) => {
+                            searchTextPos = chosenRequest.name;
+                            var e = {
+                              target: {
+                                value: chosenRequest.id
+                              }
+                            };
+                            handleChange(e, "position", true, "");
+                           }}
+                          />
+                     </Col>
+                    </Row>
+                   </Grid>
+                </CardText>
+             </Card>
+             <div style={{textAlign: 'center'}}>
+               {showBtn()}
+             </div>
+           </form>
+           <Dialog
+            title="Success"
+            actions={[<FlatButton
+                  label={translate("core.lbl.close")}
+                  primary={true}
+                  onTouchTap={handleOpenNClose}
+                />]}
+            modal={false}
+            open={open}
+            onRequestClose={handleOpenNClose}
+          >
+            {match.params && match.params.type == "edit" ?  translate("pgr.lbl.router.update.success") : translate("pgr.lbl.router.create.success")}
+          </Dialog>
+          </div>
+      );
+    }else{
+      return null;
+    }
   }
 }
 

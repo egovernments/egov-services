@@ -87,7 +87,7 @@ const getNameById = function(object, id, property = "") {
     return "";
 }
 
-const getNameByServiceCode = function(object, serviceCode, property = "") { 
+const getNameByServiceCode = function(object, serviceCode, property = "") {
 
   if (serviceCode == "" || serviceCode == null) {
         return "";
@@ -159,8 +159,8 @@ class DefineEscalation extends Component {
             positionSource: []
           })
       });
-	  
-	  
+
+
 		Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
 			self.setState({
 			  grievanceType: response.complaintTypes
@@ -170,8 +170,8 @@ class DefineEscalation extends Component {
 			  grievanceType: []
 			})
 		});
-		
-		
+
+
 		Api.commonApiPost("/egov-common-masters/departments/_search", {}).then(function(response) {
 			self.setState({
 			  departments: response.Department
@@ -185,8 +185,8 @@ class DefineEscalation extends Component {
     Api.commonApiPost("/hr-masters/designations/_search",{}).then(function(response) {
         self.setState({localDesignation : response.Designation});
         },function(err) {
-      
-    }); 
+
+    });
 }
 
 componentWillUpdate() {
@@ -195,7 +195,7 @@ componentWillUpdate() {
 
 
     componentDidUpdate() {
- 
+
          $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
@@ -204,7 +204,7 @@ componentWillUpdate() {
              "emptyTable": "No Records"
           }
     });
-    
+
     }
 
 
@@ -225,7 +225,7 @@ componentWillUpdate() {
       let query = {
         fromPosition:this.props.defineEscalation.fromPosition
       }
-	  
+
       Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
            setLoadingStatus('hide');
 
@@ -233,7 +233,8 @@ componentWillUpdate() {
               flag = 1;
               current.setState({
                 resultList: response.escalationHierarchies,
-                isSearchClicked: true
+                isSearchClicked: true,
+                noData : false
               })
 
           } else {
@@ -247,52 +248,52 @@ componentWillUpdate() {
       })
   }
 
- 
+
 	handleDepartment = (data) => {
-		
+
 		 let {toggleSnackbarAndSetText, emptyProperty} = this.props;
-		
+
 		 var currentThis = this;
 	    currentThis.setState({designations : []});
 		  currentThis.setState({toPosition : []});
-		
+
 		console.log(data);
 		let query = {
 			id : data.department
 		}
-	
+
 		  Api.commonApiPost("/hr-masters/designations/_search",query).then(function(response)
 		  {
 			currentThis.setState({designations : response.Designation});
 		  },function(err) {
 			toggleSnackbarAndSetText(true, err);
-		  });	
+		  });
   }
-  
-  handleDesignation = (data) => { 
+
+  handleDesignation = (data) => {
 
   let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
-		
+
 		var current = this;
 		this.setState({toPosition : []});
-		
+
 		let query = {
 			departmentId:data.department,
 			designationId:data.designation
 		}
-		
+
 		console.log(this.props.defineEscalation);
-	
+
 		  Api.commonApiPost("/hr-masters/positions/_search",query).then(function(response) {
 			setLoadingStatus('hide');
 			current.setState({toPosition : response.Position});
 		  },function(err) {
 			  toggleSnackbarAndSetText(true, err.message);
 			  setLoadingStatus('hide');
-		  });	
+		  });
   }
-  
-  
+
+
   updateEscalation = () => {
 
     let {setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText, emptyProperty} = this.props;
@@ -370,19 +371,20 @@ componentWillUpdate() {
         let query = {
         fromPosition:current.props.defineEscalation.fromPosition
 		}
-		
+
 		emptyProperty("serviceCode");
 		emptyProperty("department");
 		emptyProperty("designation");
 		emptyProperty("toPosition");
-    
+
                 Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
                     setLoadingStatus('hide');
                     if (response.escalationHierarchies[0] != null) {
                         flag = 1;
                         current.setState({
                           resultList: response.escalationHierarchies,
-                          isSearchClicked: true
+                          isSearchClicked: true,
+                          noData: false
                         })
 
                     } else {
@@ -394,13 +396,13 @@ componentWillUpdate() {
                      setLoadingStatus('hide');
 						toggleSnackbarAndSetText(true, error.message);
                 })
-       
+
     }).catch((error)=>{
 		  setLoadingStatus('hide');
          toggleSnackbarAndSetText(true, error.message);
     })
   }
-  
+
   editObject = (index) => {
       let {setLoadingStatus} = this.props;
       setLoadingStatus('loading');
@@ -411,7 +413,7 @@ componentWillUpdate() {
       this.handleDesignation(this.state.resultList[index]);
   }
 
-  
+
   localHandleChange = (e, property, isRequired, pattern) => {
     if(this.state.escalationForm.hasOwnProperty('fromPosition')){
       this.setState({
@@ -524,7 +526,7 @@ componentWillUpdate() {
 									<MenuItem value={item.id} key={index} primaryText={item.name} />
 								 )
 							})}
-                           
+
                         </SelectField>
                     </Col>
                     <Col xs={12} md={3} sm={6}>
@@ -654,7 +656,7 @@ componentWillUpdate() {
                      </CardText>
                   </Card>
                   }
-                  {viewTable()}
+                  {this.state.noData ? '' : viewTable()}
               </CardText>
           </Card>
           </form>
@@ -719,7 +721,7 @@ const mapDispatchToProps = dispatch => ({
 		  }
 		});
   },
-  
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({
       type: "HANDLE_CHANGE",
@@ -742,7 +744,7 @@ const mapDispatchToProps = dispatch => ({
      setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-	
+
 	 toggleDailogAndSetText: (dailogState,msg) => {
       dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState, msg});
     },

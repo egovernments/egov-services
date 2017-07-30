@@ -8,6 +8,8 @@ import java.util.Map;
 import org.egov.models.RequestInfo;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,14 +33,17 @@ public class SearchPropertyBuilder {
 	@Autowired
 	RestTemplate restTemplate;
 
-	
-	String BASE_SEARCH_QUERY = "select * from egpt_property prop "
+	private static final Logger logger = LoggerFactory.getLogger(SearchPropertyBuilder.class);
+
+	String BASE_SEARCH_QUERY = "select prop.* from egpt_property prop "
 			+ "JOIN egpt_property_owner puser on puser.property = prop.id where";
 
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
-			String ownerName, int demandFrom, int demandTo, String propertyId,String applicationNo, List<Object> preparedStatementValues) {
+			String ownerName, int demandFrom, int demandTo, String propertyId, String applicationNo,
+			List<Object> preparedStatementValues) {// TODO remove unused
+													// argument [Pranav]
 
 		StringBuffer searchPropertySql = new StringBuffer();
 
@@ -66,6 +71,8 @@ public class SearchPropertyBuilder {
 
 		if (ownerName != null || mobileNumber != null || aadhaarNumber != null || tenantId != null) {
 
+			logger.info("userSearchUrl :: " + userSearchUrl);
+			logger.info("userSearchRequestInfo:: " + userSearchRequestInfo);
 			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
 		}
@@ -189,24 +196,26 @@ public class SearchPropertyBuilder {
 
 	}
 
-	public static final String BASE_QUERY = "select * from egpt_property prop LEFT JOIN egpt_propertydetails prd on prd.property= prop.id";
+	public static final String BASE_QUERY = "select prop.* from egpt_property prop "
+			+ "JOIN egpt_propertydetails prd on prd.property= prop.id";
 
 	public String getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
-			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize,String applicationNo) {
+			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize,
+			String applicationNo) {
 
 		StringBuffer searchQuery = new StringBuffer();
 		searchQuery.append(BASE_QUERY);
 
 		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
-			searchQuery.append(" LEFT JOIN egpt_address Addr on Addr.property =  prop.id WHERE ");
+			searchQuery.append(" JOIN egpt_address Addr on Addr.property =  prop.id WHERE ");
 			searchQuery.append("Addr.addressnumber =? AND");
 			preparedStatementValues.add(houseNoBldgApt);
 		} else {
 			searchQuery.append(" WHERE");
 		}
-		
-		if ( applicationNo!= null && !applicationNo.isEmpty()){
-			
+
+		if (applicationNo != null && !applicationNo.isEmpty()) {
+
 			searchQuery.append(" prd.applicationno=? AND");
 			preparedStatementValues.add(applicationNo);
 		}
@@ -253,29 +262,6 @@ public class SearchPropertyBuilder {
 
 		return searchQuery.toString();
 
-	}
-
-	public String getpropertyByAdress(String houseNoBldgApt, List<Object> preparedStatementValues) {
-
-		StringBuffer query = new StringBuffer("select * from egpt_address where addressnumber=?");
-		preparedStatementValues.add(houseNoBldgApt);
-
-		return query.toString();
-	}
-
-	public static String getpropertyIdByAddress(Long addressId, List<Object> preparedStatementValues) {
-
-		StringBuffer query = new StringBuffer("select property from egpt_address where property = ?");
-		preparedStatementValues.add(addressId);
-
-		return query.toString();
-	}
-
-	public String getPropertyBypropertyId(Long propertyId) {
-
-		StringBuffer query = new StringBuffer("select * from egpt_property where id=" + propertyId);
-
-		return query.toString();
 	}
 
 	public static String getOwnersByproperty(Long propertyId, List<Object> preparedStatementValues) {

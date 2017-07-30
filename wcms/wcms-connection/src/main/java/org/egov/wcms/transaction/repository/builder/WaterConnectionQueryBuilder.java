@@ -58,8 +58,8 @@ public class WaterConnectionQueryBuilder {
     		+ " connection.numberofftaps as conn_nooftaps, connection.parentconnectionid as conn_parentconnectionid, connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, connection.acknowledgmentnumber as conn_acknumber, connection.propertyidentifier as conn_propid, connection.usagetype as conn_usgtype, connection.propertytype as conn_proptype, connection.address " 
     		+ " as conn_propaddress, connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, category.tenantId as category_tenantId, watersource.id as watersource_id, watersource.code as watersource_code, " 
     		+ " watersource.name as watersource_name, watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId, supplytype.id as supplytype_id, supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active, "  
-    		+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId from egwtr_waterconnection connection , egwtr_category category,egwtr_water_source_type watersource,egwtr_supply_type supplytype, "  
-    		+ " egwtr_pipesize pipesize WHERE NULLIF(connection.categorytype, '')::int = category.id AND NULLIF(connection.hscpipesizetype, '')::int=pipesize.id AND NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id  ";
+    		+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId ,proptype.code as propertytypecode, usagetype.code as usagetypecode from egwtr_waterconnection connection , egwtr_category category,egwtr_water_source_type watersource,egwtr_supply_type supplytype, "  
+    		+ " egwtr_pipesize pipesize, egpt_mstr_propertytype proptype, egpt_mstr_usage usagetype  WHERE NULLIF(connection.categorytype, '')::int = category.id AND NULLIF(connection.hscpipesizetype, '')::int=pipesize.id AND NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id AND NULLIF(connection.propertytype, '')::int = proptype.id AND NULLIF(connection.usagetype, '')::int = usagetype.id  ";
 
     public static String insertDocumentQuery() {
         return "INSERT INTO egwtr_documentowner(id,document,name,filestoreid,connectionid,tenantid) values "
@@ -147,7 +147,7 @@ public class WaterConnectionQueryBuilder {
 
         return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
                 + "categorytype = ?,hscpipesizetype = ?,sourcetype = ?,connectionstatus =?,"
-                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,status=?,stateid=?,demandid=? "
+                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=?,demandid=? "
                 + " where acknowledgmentnumber = ?";
     }
     public static String updateConnectionByConsumerNumberQuery() {
@@ -160,7 +160,7 @@ public class WaterConnectionQueryBuilder {
     	return "INSERT INTO egwtr_estimationnotice_audit_log (id, waterconnectionid, tenantid, dateofletter, letternumber, letterto, letterintimationsubject, applicationnumber, applicationdate, applicantname, servicename, waternumber, sladays, penaltychargedescription1, penaltychargedescription2, createdby, createdtime) "
     			+ "values (nextval('seq_egwtr_estimationnotice_audit_log'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "; 
     }
-
+    
 
   public static String getWaterConnectionByacknowledgenumber() {
         return " select * from egwtr_waterconnection connection " + " WHERE connection.acknowledgmentnumber = ? ";
@@ -266,7 +266,7 @@ public class WaterConnectionQueryBuilder {
 		
 		if (null != waterConnectionGetReq.getPropertyIdentifierList() && waterConnectionGetReq.getPropertyIdentifierList().size() > 0) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" propertyidentifier.id IN " + getPropertyIdentifierQuery(waterConnectionGetReq.getPropertyIdentifierList()));
+			selectQuery.append(" connection.propertyidentifier IN " + getPropertyIdentifierQuery(waterConnectionGetReq.getPropertyIdentifierList()));
 		}
 /*
 		if (serviceGroupRequest.getName() != null) {

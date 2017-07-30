@@ -119,10 +119,11 @@ class Acknowledgement extends Component {
 
     let cThis = this;
 
-    return ( <Card>
-				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Acknoledgement</div>} />
-				<CardText style={styles.reducePadding} style={{paddingBottom:30}}>
-					<Card className="darkShadow" >
+    return ( 
+			<div>
+				<h3 style={{padding:15}}>Acknoledgement</h3>
+			
+					<Card className="uiCard" >
 						<CardText style={styles.reducePadding} >
 							<Grid fluid >
 								<Row style={{paddingTop:8, paddingBottom:15}}>
@@ -138,8 +139,7 @@ class Acknowledgement extends Component {
 							</Grid>
 						</CardText>
 					</Card>
-				</CardText>
-			 </Card>)
+			 </div>)
   }
 
 }

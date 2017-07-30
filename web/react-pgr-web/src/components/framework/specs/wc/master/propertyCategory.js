@@ -4,19 +4,19 @@ var dat = {
 		"url": "/wcms/masters/propertytype-categorytype/_create",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "propertyCategory",
+		"objectName": "PropertyTypeCategoryType",
 		"groups": [
 			{
 				"label": "wc.create.propertyCategory.title",
-				"name": "createpropertyCategory",
+				"name": "PropertyTypeCategoryType",
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "createpropertyCategory.propertyType",
+						"jsonPath": "PropertyTypeCategoryType.propertyTypeName",
 						"label": "wc.create.propertytype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..id|$..name",
+						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -24,11 +24,11 @@ var dat = {
 					},
 					{
 						"name": "categoryType",
-						"jsonPath": "createpropertyCategory.categoryType",
+						"jsonPath": "PropertyTypeCategoryType.categoryTypeName",
 						"label": "wc.create.categoryType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/categorytype/_search?|$..code|$..name",
+						"url": "/wcms/masters/categorytype/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -36,7 +36,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "createpropertyCategory.active",
+							"jsonPath": "PropertyTypeCategoryType.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

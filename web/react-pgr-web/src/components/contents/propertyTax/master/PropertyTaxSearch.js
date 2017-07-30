@@ -295,12 +295,12 @@ class PropertyTaxSearch extends Component {
 			  if(item){
 				  return(<tr>
 					  <td>{index+1}</td> 
-					  <td onClick={() => {
+					  <td style={{color:'blue'}} onClick={() => {
 						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
-					  }}>{item.upicNumber}</td>
-					  <td>{item.owners[0].name}</td>
-					  <td>{item.address.addressNumber}</td>
-					  <td>{item.address.addressLine1}</td>
+					  }}>{item.upicNumber || ''}</td>
+					  <td>{item.owners[0] ? item.owners[0].name : ''}</td>
+					  <td>{item.address.addressNumber || ''}</td>
+					  <td>{item.address.addressLine1 || ''}</td>
 					  <td>-</td>
 					  <td>{item.address.addressNumber? item.address.addressNumber+', ' : ''} {item.address.addressLine1 ? item.address.addressLine1+', ' : ''} 
 						  {item.address.addressLine2 ? item.address.addressLine2+', ':''}{item.address.landmark ? item.address.landmark+',':''}
@@ -308,8 +308,8 @@ class PropertyTaxSearch extends Component {
 						  </td>
 					  <td>0</td>
 					  <td>0</td>
-					  <td>{getNameByCode(currentThis.state.propertytypes ,item.propertyDetail.propertyType)}</td>
-					  <td>{item.propertyDetail.category}</td>
+					  <td>{getNameByCode(currentThis.state.propertytypes ,item.propertyDetail.propertyType) || ''}</td>
+					  <td>{item.propertyDetail.category || ''}</td>
 					  <td>
 						<DropdownButton title="Action" id="dropdown-3" pullRight>
 							<MenuItem onClick={()=>{
@@ -336,6 +336,13 @@ class PropertyTaxSearch extends Component {
             <CardText>
              
                   <Grid>
+					<Row>
+						<Col xs={12} md={6}>
+                          <TextField errorText={fieldErrors.applicationNo
+                          ? fieldErrors.applicationNo
+                          : ""} id="applicationNo" value={propertyTaxSearch.applicationNo?propertyTaxSearch.applicationNo:""} onChange={(e) => handleChange(e, "applicationNo", false, '')} hintText="AP-PT-2017/07/29-004679-17" floatingLabelText="Application number" />
+                      </Col>
+					</Row>
                     <Row>
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.houseNoBldgApt

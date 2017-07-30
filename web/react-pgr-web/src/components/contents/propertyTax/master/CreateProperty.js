@@ -328,9 +328,15 @@ createPropertyTax = () => {
 				createProperty.owners[i].ownertype = null;
 			}
 			
+			if(!createProperty.owners[i].hasOwnProperty('ownerType') || createProperty.owners[i].ownerType == ''){
+				createProperty.owners[i].ownerType = null;
+			}
+			
 			if(!createProperty.owners[i].hasOwnProperty('emailId') || createProperty.owners[i].emailId == ''){
 				createProperty.owners[i].emailId = null;
 			}
+			
+		
 		}
 	}
 	
@@ -415,10 +421,10 @@ createPropertyTax = () => {
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
 					"landOwner": null,
-					"floorType":createProperty.floorType || null,
-					"woodType": createProperty.woodType || null,
-					"roofType": createProperty.roofType || null,
-					"wallType": createProperty.wallType || null,
+					"floorType":(createProperty.propertyType != 'VACANT_LAND' ? (createProperty.floorType || null) : null),
+					"woodType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.woodType || null) : null),
+					"roofType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.roofType || null) : null),
+					"wallType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.wallType || null) : null),
 					"floors":createProperty.floorsArr || null,
 					"documents": [],
 					"stateId": null,
@@ -628,24 +634,28 @@ createActivate = () => {
 				  <OwnerDetails />
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
-				  <Amenities />                  
-				  <ConstructionTypes/>
-				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : <FloorDetails/>}
+				
+				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> :
+					<div>
+						<Amenities />                  
+						<ConstructionTypes/>				  
+						<FloorDetails/>
+					</div>}
 				  <DocumentUpload />
 				  <Workflow />
 				  
 									
 			   
-				  <Card className="uiCard">
-					<CardText style={{textAlign:'center'}}>
+				  <div style={{textAlign:'center'}} >
+				
 						<br/>
 						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  primary={true} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>
 						<div className="clearfix"></div>
-					</CardText>
-				  </Card>
+				
+				  </div>
 			
 			  </form>
 		  </div>
@@ -669,7 +679,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'propertyType', 'propertySubType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
+          required: ['reasonForCreation', 'approver','propertyType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
         },
         pattern: {
           current: [],
@@ -689,7 +699,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'usageSubType', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
         },
         pattern: {
           current: [],

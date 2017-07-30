@@ -213,7 +213,7 @@ class grievanceCreate extends Component {
 
   grievanceCategory = () => {
     //Grievance Category
-    Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response)
+    Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword:'complaint'}).then(function(response)
     {
       _this.setState({grievanceCategory : response.ServiceGroups});
       if(localStorage.getItem('type') === null)
@@ -443,8 +443,8 @@ class grievanceCreate extends Component {
 
       var srn = createresponse.serviceRequests[0].serviceRequestId;
       currentThis.setState({serviceRequestId:srn});
-      var ack = `${translate('pgr.msg.servicerequest.underprocess')}. ${translate('pgr.lbl.srn')} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
-      currentThis.setState({srn:translate('pgr.lbl.srn')+' : '+srn});
+      var ack = `Complaint Request is received and is under process. ${translate('pgr.lbl.crn')} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
+      currentThis.setState({srn:'CRN(Complaint Request No.) : '+srn});
       currentThis.setState({acknowledgement:ack});
 
       if(currentThis.props.files){

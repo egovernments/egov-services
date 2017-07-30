@@ -130,7 +130,7 @@ class Report extends Component {
       self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          var hash = window.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idPath; 
+          var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath); 
           self.props.setRoute(hash);
         }
       }, 1500);
@@ -163,12 +163,16 @@ class Report extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
-
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
 
-      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
+        }
+      } else 
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
     }
 
     if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
@@ -179,31 +183,33 @@ class Report extends Component {
     }
 
     //Check if documents, upload and get fileStoreId
-    // if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
-    //   let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
-    //   let _docs = [];
-    //   let counter = documents.length, breakOut = 0;
-    //   for(let i=0; i<documents.length; i++) {
-    //     fileUpload(documents[i], self.props.moduleName, function(err, res) {
-    //       if(breakOut == 1) return;
-    //       if(err) {
-    //         breakOut = 1;
-    //         self.props.setLoadingStatus('hide');
-    //         self.props.toggleSnackbarAndSetText(true, err, false, true);
-    //       } else {
-    //         _docs.push({
-    //           fileStoreId: res.files[0].fileStoreId
-    //         })
-    //         counter--;
-    //         if(counter == 0 && breakOut == 0) {
-    //           formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-    //           self.makeAjaxCall(formData, _url);
-    //         }
-    //       }
-    //     })
-    //   }
-    // } else {
+    if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
+      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+      let _docs = [];
+      let counter = documents.length, breakOut = 0;
+      for(let i=0; i<documents.length; i++) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
+          if(breakOut == 1) return;
+          if(err) {
+            breakOut = 1;
+            self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err, false, true);
+          } else {
+            _docs.push({
+              ...documents[i],
+              fileStoreId: res.files[0].fileStoreId
+            })
+            counter--;
+            if(counter == 0 && breakOut == 0) {
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+              self.makeAjaxCall(formData, _url);
+            }
+          }
+        })
+      }
+    } else {
       self.makeAjaxCall(formData, _url);
+    }
 
   }
 

@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.egov.enums.ChannelEnum;
 import org.egov.enums.CreationReasonEnum;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -55,6 +56,7 @@ public class Property {
 	@JsonProperty("owners")
 	@Valid
 	@NotNull
+	@NotEmpty(message="property.MIN_ONE_OWNER_REQUIRED")
 	private List<User> owners = new ArrayList<User>();
 
 	@JsonProperty("propertyDetail")

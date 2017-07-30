@@ -23,6 +23,7 @@ import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
+import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetConfigurationService;
 import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetMasterService;
@@ -52,6 +53,9 @@ public class AssetValidator {
     @Autowired
     private AssetConfigurationService assetConfigurationService;
 
+    @Autowired
+    private AssetCommonService assetCommonService;
+
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
         if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null
@@ -69,25 +73,16 @@ public class AssetValidator {
             for (final YearWiseDepreciation ywd : asset.getYearWiseDepreciation()) {
                 finacialYears.add(ywd.getFinancialYear());
                 final Double depreciationRate = ywd.getDepreciationRate();
-                if (depreciationRate == null)
-                    ywd.setDepreciationRate(Double.valueOf("0.0"));
-                else
-                    validateDepreciationRateValue(depreciationRate);
+                assetCommonService.validateDepreciationRateValue(depreciationRate);
+                ywd.setDepreciationRate(assetCommonService.getDepreciationRate(depreciationRate));
             }
             checkDuplicateFinancialYear(finacialYears);
         } else if (asset.getEnableYearWiseDepreciation() != null && !asset.getEnableYearWiseDepreciation()) {
             final Double depreciationRate = asset.getDepreciationRate();
-            if (depreciationRate == null)
-                asset.setDepreciationRate(Double.valueOf("0.0"));
-            else
-                validateDepreciationRateValue(asset.getDepreciationRate());
+            assetCommonService.validateDepreciationRateValue(asset.getDepreciationRate());
+            asset.setDepreciationRate(assetCommonService.getDepreciationRate(depreciationRate));
         }
 
-    }
-
-    private void validateDepreciationRateValue(final Double depreciationRate) {
-        if (Double.compare(depreciationRate, Double.valueOf("0.0")) < 0)
-            throw new RuntimeException("Depreciation rate can not be negative.");
     }
 
     private void checkDuplicateFinancialYear(final List<String> finacialYears) {

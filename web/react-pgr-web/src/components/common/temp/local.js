@@ -5,7 +5,7 @@ var logo = {
 };
 
 var tenantName = {
-	"default": "Your City",
+	"default": "My City",
 	"ap.kurnool": "Kurnool",
 	"panvel": "Panvel"
 }

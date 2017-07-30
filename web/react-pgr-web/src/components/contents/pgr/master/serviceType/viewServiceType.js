@@ -75,7 +75,7 @@ class ViewServiceType extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id},{}).then(function(response){
+            Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id, keywords : 'complaint'},{}).then(function(response){
                 console.log(response);
                 current.setState({data:response.Service})
                 setForm(response.Service[0])

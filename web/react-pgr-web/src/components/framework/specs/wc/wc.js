@@ -26,7 +26,11 @@ var dat = {
 						  "autoCompleteDependancy": {
 						    "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
 						    "autoFillFields": {
-						      "Connection.asset.address": "properties[0].owners[0].mobileNumber"
+						      "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
+									"Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
+									"Connection.asset.email":"properties[0].owners[0].emailId",
+									"Connection.asset.aadhaarNumber":"properties[0].owners[0].aadhaarNumber",
+									"Connection.asset.":"properties[0].propertyDetail.noOfFloors"
 
 						    }
 						  },
@@ -131,8 +135,8 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
-							"name": "adharNumber",
-							"jsonPath": "Connection.asset.adharNumber",
+							"name": "noOfFloors",
+							"jsonPath": "Connection.asset.noOfFloors",
 							"label": "No of floors",
 							"pattern": "",
 							"type": "number",
@@ -296,7 +300,7 @@ var dat = {
 
 						{
 							"name": "waterTreatment",
-							"jsonPath": "Connection[0].waterTreatment",
+							"jsonPath": "Connection.waterTreatment",
 							"label": "wc.create.groups.connectionDetails.waterTreatment",
 							"pattern": "",
 							"type": "singleValueList",
@@ -415,7 +419,7 @@ var dat = {
 						{
 						"name": "initiatorPosition",
 						"jsonPath": "Connection.workflowDetails.initiatorPosition",
-						"label": "wc.create.groups.approvalDetails.fields.comments",
+						"label": "wc.create.groups.approvalDetails.fields",
 						"pattern": "",
 						"type": "number",
 						"isRequired": false,
@@ -931,15 +935,15 @@ var dat = {
 		"url": "/wcms-connection/connection/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "Connection",
 		"groups": [
 			{
 				"label": "wc.search.categorytype.title",
 				"name": "createCategoryType",
 				"fields": [
 						{
-							"name": "name",
-							"jsonPath": "CategoryType.name",
+							"name": "acknowledgementNumber",
+							"jsonPath": "acknowledgementNumber",
 							"label": "Acknowledgement Number",
 							"pattern": "",
 							"type": "text",
@@ -947,16 +951,83 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
+						},
+						{
+							"name": "consumerNumber",
+							"jsonPath": "consumerNumber",
+							"label": "Consumer Number",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "name",
+							"jsonPath": "name",
+							"label": "Name",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "mobileNumber",
+							"jsonPath": "mobileNumber",
+							"label": "Mobile Number",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "locality",
+							"jsonPath": "locality",
+							"label": "Locality",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "legacyConsumerNumber",
+							"jsonPath": "revenueWard",
+							"label": "Revenue Ward",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "doorNumber",
+							"jsonPath": "doorNumber",
+							"label": "Door Number",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						}
+
 				]
 			}
 		],
 		"result": {
-			"header": [{label: "wc.search.result.name"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["name", "description", "active"],
-			"resultPath": "CategoryTypes",
-			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
-			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			"header": [{label: "wc.search.result.acknowledgementNumber"}, {label: "wc.search.result.usageType"},{label: "wc.search.result.connectionStatus"},{label: "wc.search.result.propertyidentifier"}],
+			"values": ["acknowledgementNumber","property.usageType", "connectionStatus","property.propertyidentifier"],
+			"resultPath": "Connection",
+			"rowClickUrlUpdate": "/update/wc/{acknowledgementNumber}",
+			"rowClickUrlView": "/view/wc/{acknowledgementNumber}"
 			}
 	}
 

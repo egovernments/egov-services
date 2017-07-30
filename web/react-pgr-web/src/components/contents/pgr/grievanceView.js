@@ -227,9 +227,9 @@ class grievanceView extends Component{
   }
   allServices = () => {
     if(localStorage.getItem('type') === 'EMPLOYEE'){
-      Api.commonApiPost("/pgr/services/v1/_search", {type:'ALL'}).then(function(response)
+      Api.commonApiPost("/pgr-master/service/v1/_search", {type:'all', keywords : 'complaint'}).then(function(response)
       {
-        currentThis.setState({complaintTypes : response.complaintTypes});
+        currentThis.setState({complaintTypes : response.Service});
         //check update is enabled?
         currentThis.checkUpdateEnabled();
       },function(err) {

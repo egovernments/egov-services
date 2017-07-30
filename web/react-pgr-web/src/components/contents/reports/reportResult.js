@@ -176,7 +176,7 @@ class ShowField extends Component {
         <Card>
           <CardHeader title={< strong > Result < /strong>}/>
           <CardText>
-          <Table id="reportTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+          <Table id="reportTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
           <thead style={{backgroundColor:"#f2851f",color:"white"}}>
             <tr>
               {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>

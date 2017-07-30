@@ -190,7 +190,7 @@ class searchRouter extends Component {
         checkCountAndCall("positionSource", []);
     });
 
-    Api.commonApiPost("/pgr-master/service/v1/_search", {type:'all'}).then(function(response) {
+    Api.commonApiPost("/pgr-master/service/v1/_search", {type:'all', keywords : 'complaint'}).then(function(response) {
        checkCountAndCall("complaintSource", response.Service);
     },function(err) {
        checkCountAndCall("complaintSource", []);

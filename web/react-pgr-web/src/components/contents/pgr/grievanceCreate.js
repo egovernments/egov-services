@@ -142,7 +142,7 @@ class grievanceCreate extends Component {
 
    loadGrievanceType(value){
      var currentThis = this;
-     Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : value, keywords : 'complaint'}).then(function(response)
      {
        currentThis.setState({grievanceType : response.Service});
      },function(err) {
@@ -839,7 +839,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "HANDLE_CHANGE", property: 'serviceCategory', value: group, isRequired : true, pattern: ''});
 
     var currentThis = _this;
-    Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : group}).then(function(response)
+    Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : group, keywords : 'complaint'}).then(function(response)
     {
       currentThis.setState({grievanceType : response.Service});
       dispatch({type: "HANDLE_CHANGE", property: 'serviceCode', value: sCode, isRequired : true, pattern: ''});

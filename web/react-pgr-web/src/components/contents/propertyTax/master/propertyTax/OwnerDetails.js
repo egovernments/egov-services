@@ -275,10 +275,10 @@ constructor(props) {
                           <TextField  className="fullWidth"
                             hintText="Guardian name"
                             floatingLabelText="Guardian *"
-                            errorText={fieldErrors.owner ?(fieldErrors.owner.gaurdian? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.gaurdian}</span>:""): ""}
-                            value={ownerDetails.owner ? ownerDetails.owner.gaurdian:""}
+                            errorText={fieldErrors.owner ?(fieldErrors.owner.fatherOrHusbandName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.fatherOrHusbandName}</span>:""): ""}
+                            value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName:""}
                             onChange={(e) => {
-								handleChangeOwner(e,  "owner",  "gaurdian", true, "")
+								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", true, "")
 								//handleChangeNextOne(e,  "owner",  "gaurdian", false, "")
 							}}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

@@ -561,7 +561,7 @@ calcArea = (e, type) => {
 														  hintText="102"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^\d{3}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^\d{0,3}$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}

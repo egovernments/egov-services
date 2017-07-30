@@ -115,7 +115,7 @@ class ViewProperty extends Component {
 			election:[],
 			usages:[],
 			creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}],
-			taxDetails: []
+			demands: []
        }
       
    }
@@ -359,11 +359,11 @@ class ViewProperty extends Component {
 		
 		
         Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
-          console.log('taxDetails',res);
-          //currentThis.setState({taxDetails : res.usageMasters})
+          console.log('demands',res);
+          currentThis.setState({demands : res.Demands})
         }).catch((err)=> {
+			currentThis.setState({demands : []})
           console.log(err)
-		  console.log('taxDetailsError',err);
         })
   
 }
@@ -384,6 +384,8 @@ class ViewProperty extends Component {
   render() {
 	  
 	 let { resultList } = this.state;
+	 
+	 var totalAmount=0;
 	 
 	 let currentThis = this;
 	 	  
@@ -574,11 +576,11 @@ class ViewProperty extends Component {
 												   Property Address
 											  </Col>
 											  <Col xs={8} md={6}>
-												 {item.address.addressNumber ? item.address.addressNumber+', ' : 'NA' }
-												 {item.address.addressLine1 ? item.address.addressLine1+', ' : 'NA' }
-												 {item.address.addressLine2 ? item.address.addressLine2+', ':'NA'}
-												 {item.address.landmark ? item.address.landmark+', ' : 'NA'}
-												 {item.address.city ? item.address.city+', ' : 'NA'}
+												 {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
+												 {item.address.addressLine1 ? item.address.addressLine1+', ' : '' }
+												 {item.address.addressLine2 ? item.address.addressLine2+', ':''}
+												 {item.address.landmark ? item.address.landmark+', ' : ''}
+												 {item.address.city ? item.address.city+', ' : ''}
 											  </Col>
 											</Row>
 										  </ListGroupItem>
@@ -981,6 +983,51 @@ class ViewProperty extends Component {
 												</tr>
 											</thead>
 											<tbody>
+											{currentThis.state.demands.length !=0 && currentThis.state.demands.map((item, index)=>{
+												
+												return(
+													<tr key={index}>
+														<td></td>
+														<td>
+														
+														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
+															if(i.taxHeadMasterCode == "PT_TAX") {
+																return(
+																<span key={index}>{i.taxAmount}</span>
+																)
+															}
+														})}
+														</td>
+														<td>
+														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
+															if(i.taxHeadMasterCode == "EDU_CESS") {
+																return(
+																<span key={index}>{i.taxAmount}</span>
+																)
+															}
+														})}
+														</td>
+														<td>
+														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
+															if(i.taxHeadMasterCode == "LIB_CESS") {
+																return(
+																<span key={index}>{i.taxAmount}</span>
+																)
+															}
+														})}
+														</td>
+														<td></td>
+														<td>
+														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
+															
+															totalAmount += parseFloat(i.taxAmount);
+															
+														})}
+														{totalAmount}
+														</td>
+													</tr>
+												)
+											})}
 											</tbody>
 										</Table>
 										<div className="clearfix"></div>

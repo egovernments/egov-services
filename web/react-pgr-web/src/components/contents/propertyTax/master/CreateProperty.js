@@ -324,10 +324,6 @@ createPropertyTax = () => {
 				createProperty.owners[i].ownershippercentage = null;
 			}
 			
-			if(!createProperty.owners[i].hasOwnProperty('ownertype') || createProperty.owners[i].ownertype == ''){
-				createProperty.owners[i].ownertype = null;
-			}
-			
 			if(!createProperty.owners[i].hasOwnProperty('ownerType') || createProperty.owners[i].ownerType == ''){
 				createProperty.owners[i].ownerType = null;
 			}

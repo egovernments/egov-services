@@ -71,6 +71,7 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         connection.setNumberOfPersons(rs.getInt("conn_noofperson"));  
         connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
         connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
+        connection.setWaterTreatment((null!=rs.getString("watertreatmentname") && rs.getString("watertreatmentname")!="")? rs.getString("watertreatmentname")  : "" );
         connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
         connection.setIsLegacy(rs.getBoolean("conn_islegacy")); 
         connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));  

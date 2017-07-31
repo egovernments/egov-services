@@ -453,7 +453,6 @@ calcArea = (e, type) => {
 																  value: value
 																}
 															  };
-																
 															  handleChangeFloor(e, "floor","floorNo", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

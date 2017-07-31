@@ -2,6 +2,8 @@ package org.egov.demand.web.contract;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -23,9 +25,9 @@ public class DemandReasonCriteria {
 	private String taxCategory;
 	private String taxReason;
 	private String taxPeriod;
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	 @DateTimeFormat(pattern="dd/MM/yyyy")
 	private String fromDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	 @DateTimeFormat(pattern="dd/MM/yyyy")
 	private String toDate;
 	private String tenantId;
 	private String installmentType;

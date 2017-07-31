@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif !important;
 }
 
 table th, table td {
@@ -37,8 +37,7 @@ table th, table td {
 }
 
 label {
-    font-weight: normal !important;
-    color: #aaa !important;
+    font-weight: normal;
 }
 
 .datepicker>div {

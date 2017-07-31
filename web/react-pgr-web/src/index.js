@@ -15,7 +15,6 @@ import './styles/index.css';
 import './styles/application.css';
 import './styles/vistyle.css';
 import './styles/bootstrap.min.css';
-import './styles/bootstrap-theme.min.css';
 import './styles/jquery.dataTables.min.css';
 import './styles/buttons.dataTables.min.css';
 

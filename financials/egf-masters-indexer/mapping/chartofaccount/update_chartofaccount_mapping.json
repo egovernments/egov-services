@@ -12,16 +12,16 @@
         "glcode": {
             "type": "keyword"
         },
-        "accountcodepurpose": {
+        "accountCodePurpose": {
             "type": "object"
         },
         "description": {
             "type": "keyword"
         },
-        "isactiveforposting": {
+        "isActiveForPosting": {
             "type": "boolean"
         },
-        "parentid": {
+        "parentId": {
             "type": "object"
         },
 	"type": {
@@ -30,33 +30,33 @@
         "classification": {
             "type": "long"
         },
-        "functionrequired": {
+        "functionRequired": {
             "type": "boolean"
         },
-        "budgetcheckrequired": {
+        "budgetCheckRequired": {
             "type": "boolean"
         },
-        "majorcode": {
+        "majorCode": {
             "type": "keyword"
         },
-        "issubledger": {
+        "isSubledger": {
             "type": "boolean"
         },
-        "createdby": {
+        "createdBy": {
             "type": "object"
         },
-        "lastmodifiedby": {
+        "lastModifiedBy": {
             "type": "object"
         },
-        "createddate": {
+        "createdDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "lastmodifieddate": {
+        "lastModifiedDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "tenantid": {
+        "tenantId": {
             "type": "keyword"
         }
     }

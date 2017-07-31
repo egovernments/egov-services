@@ -12,33 +12,33 @@
         "code": {
             "type": "keyword"
         },
-        "parentid": {
+        "parentId": {
             "type": "object"
         },
         "level": {
             "type": "long"
         },
-        "isparent": {
+        "isParent": {
             "type": "boolean"
         },
         "active": {
             "type": "boolean"
         },
-        "createdby": {
+        "createdBy": {
             "type": "object"
         },
-        "lastmodifiedby": {
+        "lastModifiedBy": {
             "type": "object"
         },
-        "createddate": {
+        "createdDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "lastmodifieddate": {
+        "lastModifiedDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "tenantid": {
+        "tenantId": {
             "type": "keyword"
         }
     }

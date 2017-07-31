@@ -115,12 +115,14 @@ public class PropertyRepository {
 				ps.setLong(15, getLong(property.getAuditDetails().getLastModifiedTime()));
 				List<DemandId> demandIdList = new ArrayList<DemandId>();
 
-				for (Demand demand : property.getDemands()) {
-					DemandId id = new DemandId();
-					id.setId(demand.getId());
-					demandIdList.add(id);
+				if (property.getDemands() != null) {
+					for (Demand demand : property.getDemands()) {
+						DemandId id = new DemandId();
+						id.setId(demand.getId());
+						demandIdList.add(id);
+					}
 				}
-
+				
 				Gson gson = new Gson();
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");

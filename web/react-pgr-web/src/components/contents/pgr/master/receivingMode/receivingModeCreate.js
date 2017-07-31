@@ -112,6 +112,7 @@ class receivingModeCreate extends Component {
 
   addOrUpdate(e) {
     e.preventDefault();
+    this.props.setLoadingStatus('loading');
     var _this = this;
 
     let {changeButtonText,receivingmodeSet}=this.props;
@@ -133,9 +134,10 @@ class receivingModeCreate extends Component {
           			open: true
           		});
               _this.props.resetObject('receivingmodeSet');
+              _this.props.setLoadingStatus('hide');
           }, function(err) {
-            _this.props.toggleSnackbarAndSetText(true, err.message);
             _this.props.setLoadingStatus('hide');
+            _this.props.toggleSnackbarAndSetText(true, err.message);
         	})
       } else {
           Api.commonApiPost("pgr-master/receivingmode/v1/_create", {},body).then(function(response) {
@@ -143,10 +145,11 @@ class receivingModeCreate extends Component {
               open: true
             });
             _this.props.resetObject('receivingmodeSet');
+            _this.props.setLoadingStatus('hide');
         }, function(err) {
-          _this.props.toggleSnackbarAndSetText(true, err.message);
           _this.props.setLoadingStatus('hide');
-      	})
+          _this.props.toggleSnackbarAndSetText(true, err.message);
+      	});
       }
 
 

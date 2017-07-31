@@ -62,44 +62,42 @@ import lombok.ToString;
 @Builder
 public class ServiceType {
 
-    public static final String SEQ_CATEGORY = "SEQ_EGPGR_GRIEVANCETYPE";
-    private Long id; 
-    @Length(max = 250)
-    @NotNull
-    private String tenantId;
-    
-    @NotNull
-    private String serviceCode;
-    
-    @NotNull
-    private String serviceName;
-    
-    private String description;
-    
-    private boolean metadata;
-    
-    private Boolean active;
-    
-    private String type;
-    
-    private List<String> keywords;
-    
-    private String group;
-    
-    @NotNull
-    private Integer category;
-    
-    @NotNull
-    private Integer slaHours;
-   
-    private AuditDetails auditDeatils;
+	public static final String SEQ_CATEGORY = "SEQ_EGPGR_GRIEVANCETYPE";
+	private Long id;
+	@Length(max = 250)
+	@NotNull
+	private String tenantId;
 
-    private List<Attribute> attributes;
-    
-    private boolean hasFinancialImpact; 
-    
+	@NotNull
+	private String serviceCode;
+
+	@NotNull
+	private String serviceName;
+
+	private String description;
+
+	private boolean metadata;
+
+	private Boolean active;
+
+	private String type;
+
+	private List<String> keywords;
+
+	private String group;
+
+	@NotNull
+	private Integer category;
+
+	private List<String> config;
+
+	@NotNull
+	private Integer slaHours;
+
+	private AuditDetails auditDeatils;
+
+	private List<Attribute> attributes;
+
+	private boolean hasFinancialImpact;
+
 }
-
-
-
-

@@ -79,6 +79,4 @@ public class BankContract extends AuditableContract {
 	@Size(max = 50)
 	private String type;
 
-	private FundContract fund;
-
 }

@@ -129,7 +129,7 @@ public class PropertyRepository {
 						demandIdList.add(id);
 					}
 				}
-				
+
 				Gson gson = new Gson();
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
@@ -1663,9 +1663,9 @@ public class PropertyRepository {
 				}
 				ps.setString(6, notice.getNoticeNumber());
 				ps.setString(7, notice.getApplicationNo());
-				if ( notice.getApplicationDate()!=null && !notice.getApplicationDate().isEmpty())
-				ps.setTimestamp(8, getTimestamp(notice.getApplicationDate(), "yyyy-MM-dd hh:mm:ss.SSS"));
-				else{
+				if (notice.getApplicationDate() != null && !notice.getApplicationDate().isEmpty())
+					ps.setTimestamp(8, getTimestamp(notice.getApplicationDate(), "yyyy-MM-dd hh:mm:ss.SSS"));
+				else {
 					ps.setTimestamp(8, null);
 				}
 				return ps;
@@ -1694,7 +1694,7 @@ public class PropertyRepository {
 		};
 
 		final KeyHolder holderDocumentType = new GeneratedKeyHolder();
-	
+
 		jdbcTemplate.update(pscDocumentType, holderDocumentType);
 
 		noticeId = holderDocumentType.getKey().intValue();
@@ -1803,8 +1803,8 @@ public class PropertyRepository {
 				final PreparedStatement ps = connection.prepareStatement(SpecialNoticeBuilder.INSERT_NOTICE_ADDRESS,
 						new String[] { "sno" });
 				ps.setLong(1, Long.valueOf(String.valueOf(noticeId)));
-				if ( notice.getAddress()!=null && notice.getAddress().getId()!=null)
-				ps.setLong(2, notice.getAddress().getId());
+				if (notice.getAddress() != null && notice.getAddress().getId() != null)
+					ps.setLong(2, notice.getAddress().getId());
 				else
 					ps.setLong(2, 0l);
 				return ps;

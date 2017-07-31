@@ -97,7 +97,14 @@ var localationData = {
   "reports.common.createddate": "Created Date",
   "reports.common.id": "Id",
   "reports.common.status": "Status",
-  "reports.common.natureoftask": "Nature Of Task" 
+  "reports.common.natureoftask": "Nature Of Task",
+  "wc.search.result.acknowledgementNumber":"Acknowledgement Number",
+  "ui.table.title":"Search New Connection",
+  "wc.search.result.usageType":"Usage Type",
+  "wc.search.result.connectionStatus":"Connection Status",
+  "wc.search.result.propertyidentifier":"Property Identifier",
+  "wc.search.searchnewconnection.title":"Search New Connection",
+  "wc.search.result.applicationType":"Application Type"
 }
 
 export function translate(locale_text){

@@ -938,7 +938,7 @@ var dat = {
 		"objectName": "Connection",
 		"groups": [
 			{
-				"label": "wc.search.categorytype.title",
+				"label": "wc.search.searchnewconnection.title",
 				"name": "createCategoryType",
 				"fields": [
 						{
@@ -1023,8 +1023,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.search.result.acknowledgementNumber"}, {label: "wc.search.result.usageType"},{label: "wc.search.result.connectionStatus"},{label: "wc.search.result.propertyidentifier"}],
-			"values": ["acknowledgementNumber","property.usageType", "connectionStatus","property.propertyidentifier"],
+			"header": [{label: "wc.search.result.acknowledgementNumber"},{label: "wc.search.result.applicationType"}, {label: "wc.search.result.usageType"},{label: "wc.search.result.connectionStatus"},{label: "wc.search.result.propertyidentifier"}],
+			"values": ["acknowledgementNumber","applicationType","property.usageType", "connectionStatus","property.propertyidentifier"],
 			"resultPath": "Connection",
 			"rowClickUrlUpdate": "/update/wc/{acknowledgementNumber}",
 			"rowClickUrlView": "/view/wc/{acknowledgementNumber}"

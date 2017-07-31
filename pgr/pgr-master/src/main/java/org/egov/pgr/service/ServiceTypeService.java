@@ -83,6 +83,7 @@ public class ServiceTypeService {
             logger.info("Service Type service::" + serviceRequest);
             serviceRequestValue = mapper.writeValueAsString(serviceRequest);
             logger.info("Service Type Value::" + serviceRequestValue);
+            
         } catch (final JsonProcessingException e) {
             logger.error("Exception Encountered : " + e);
         }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -46,11 +47,16 @@ public class UpicNoGeneration {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 				// Add query parameter
 				.queryParam("code", property.getTenantId());
+		
+		SearchTenantResponse searchTenantResponse= null;
 		try {
-			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(
+			String response  = restTemplate.postForObject(
 					builder.buildAndExpand().toUri(), requestInfo,
-					SearchTenantResponse.class);
-			if (searchTenantResponse.getTenant().size() > 0) {
+					String.class);
+			if (response!=null && !response.isEmpty()) {
+				
+				ObjectMapper mapper = new ObjectMapper();
+				searchTenantResponse = mapper.readValue(response, SearchTenantResponse.class);
 				City city = searchTenantResponse.getTenant().get(0).getCity();
 				String cityCode = city.getCode();
 				String upicFormat = environment.getProperty("upic.number.format");

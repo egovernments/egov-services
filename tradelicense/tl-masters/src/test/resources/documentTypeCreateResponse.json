@@ -13,7 +13,7 @@
 		"name": null,
 		"mandatory": true,
 		"enabled": true,
-		"application_type": null,
+		"applicationType": null,
 		"auditDetails": {
 			"createdBy": null,
 			"lastModifiedBy": null,

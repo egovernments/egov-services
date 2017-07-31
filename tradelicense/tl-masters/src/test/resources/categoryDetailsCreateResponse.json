@@ -1,5 +1,5 @@
 {
-	"ResponseInfo": {
+	"responseInfo": {
 		"apiId": null,
 		"ver": null,
 		"ts": null,
@@ -11,7 +11,7 @@
 		"tenantId": "default",
 		"name": null,
 		"code": null,
-		"parentId": 1,
+		"parentId": null,
 		"businessNature": null,
 		 "details": [{
            	"feeType": null,

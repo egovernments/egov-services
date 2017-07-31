@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.models.AuditDetails;
-import org.egov.models.Category;
-import org.egov.models.CategoryRequest;
-import org.egov.models.CategoryResponse;
 import org.egov.models.DocumentType;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
@@ -24,8 +21,11 @@ import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.services.CategoryService;
 import org.egov.tradelicense.services.DocumentTypeService;
+import org.egov.tradelicense.services.FeeMatrixService;
 import org.egov.tradelicense.services.PenaltyRateService;
+import org.egov.tradelicense.services.UOMService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +42,22 @@ import org.springframework.test.web.servlet.MockMvc;
 public class DocumentTypeControllerTest {
 
 	@MockBean
-	private DocumentTypeService documentTypeService;
-	
-	@MockBean
-	private PropertiesManager propertiesManager;
+	private CategoryService categoryService;
 
+	@MockBean
+	FeeMatrixService feeMatrixService;
+
+	@MockBean
+	private UOMService uomService;
 
 	@MockBean
 	private PenaltyRateService penaltyRateService;
+
+	@MockBean
+	DocumentTypeService documentTypeService;
+
+	@MockBean
+	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -72,14 +80,14 @@ public class DocumentTypeControllerTest {
 
 		try {
 
-			when(documentTypeService.createDocumentType( any(DocumentTypeRequest.class)))
-			.thenReturn(documentTypeResponse);
+			when(documentTypeService.createDocumentType(any(DocumentTypeRequest.class)))
+					.thenReturn(documentTypeResponse);
 
 			mockMvc.perform(post("/tradelicense/documenttype/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeCreateRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("documentTypeCreateResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("documentTypeCreateResponse.json")));
 
 		} catch (Exception e) {
 
@@ -89,8 +97,7 @@ public class DocumentTypeControllerTest {
 		assertTrue(Boolean.TRUE);
 
 	}
-	
-	
+
 	@Test
 	public void testUpdateDocumentType() throws Exception {
 
@@ -109,10 +116,10 @@ public class DocumentTypeControllerTest {
 
 		try {
 
-			when(documentTypeService.updateDocumentType(any(DocumentTypeRequest.class))).thenReturn(documenttypeResponse);
-			mockMvc.perform(post("/tradelicense/documenttype/_update")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documenttypeUpdateRequest.json")))
-					.andExpect(status().isOk())
+			when(documentTypeService.updateDocumentType(any(DocumentTypeRequest.class)))
+					.thenReturn(documenttypeResponse);
+			mockMvc.perform(post("/tradelicense/documenttype/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("documenttypeUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("documenttypeUpdateResponse.json")));
 
@@ -125,8 +132,7 @@ public class DocumentTypeControllerTest {
 		assertTrue(Boolean.TRUE);
 
 	}
-	
-	
+
 	@Test
 	public void testSearchDocumentType() throws Exception {
 

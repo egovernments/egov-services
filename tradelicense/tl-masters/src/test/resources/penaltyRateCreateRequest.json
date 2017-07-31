@@ -13,10 +13,10 @@
       "penaltyRates":[  
          {  
             "tenantId":"default",
-            "applicationTypeId":null,
-            "fromRange":null,
-            "toRange":null,
-            "rate": null,
+            "applicationType": "New",
+            "fromRange":-9999,
+            "toRange":0,
+            "rate": 100,
             "auditDetails" : {
             	"createdBy": null,
             	"lastModifiedBy": null,

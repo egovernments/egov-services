@@ -13,10 +13,10 @@
        "documentTypes": [
 		  {
 		    "tenantId": "default",
-		    "name": null,
+		    "name": "license document",
 		    "mandatory": true,
 		    "enabled": true,
-		    "application_type": null,
+		    "applicationType": "New",
 		    "auditDetails" : {
             	"createdBy": null,
             	"lastModifiedBy": null,

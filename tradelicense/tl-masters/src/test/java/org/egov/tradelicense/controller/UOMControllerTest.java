@@ -22,6 +22,8 @@ import org.egov.models.UOMResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.services.CategoryService;
+import org.egov.tradelicense.services.DocumentTypeService;
+import org.egov.tradelicense.services.FeeMatrixService;
 import org.egov.tradelicense.services.PenaltyRateService;
 import org.egov.tradelicense.services.UOMService;
 import org.junit.Test;
@@ -41,18 +43,24 @@ public class UOMControllerTest {
 
 	@MockBean
 	private CategoryService categoryService;
+	
+	@MockBean
+	FeeMatrixService feeMatrixService;
 
 	@MockBean
 	private UOMService uomService;
 
 	@MockBean
 	private PenaltyRateService penaltyRateService;
-
-	@Autowired
-	private MockMvc mockMvc;
+	
+	@MockBean
+	DocumentTypeService documentTypeService;
 	
 	@MockBean
 	private PropertiesManager propertiesManager;
+	
+	@Autowired
+	private MockMvc mockMvc;
 
 	@Test
 	public void testCreateUom() throws Exception {

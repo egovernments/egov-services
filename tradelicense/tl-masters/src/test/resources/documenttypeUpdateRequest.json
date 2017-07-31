@@ -17,7 +17,7 @@
             "name": "New",
             "mandatory": true,
             "enabled": true,
-            "application_type": "New",
+            "applicationType": "New",
             "auditDetails": {
                 "createdBy": "shubham1",
                 "lastModifiedBy": "shubham1",

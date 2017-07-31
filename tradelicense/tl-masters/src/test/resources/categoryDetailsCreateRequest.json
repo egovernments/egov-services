@@ -9,14 +9,14 @@
 	},
 	"categories": [{
 		"tenantId": "default",
-		"name": null,
-		"code": null,
+		"name": "flammables",
+		"code": "flammables",
 		"parentId": 1,
-		"businessNature": null,
+		"businessNature": "Permenant",
 		 "details": [{
-           	"feeType": null,
-           	"rateType": null,
-           	"uomId": null
+           	"feeType": "License",
+           	"rateType": "Flat_By_Range",
+           	"uomId": 1
            }],
 		"auditDetails": {
 			"createdBy": null,

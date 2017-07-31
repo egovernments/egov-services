@@ -13,8 +13,8 @@
       "uoms":[  
          {  
             "tenantId":"default",
-            "name":null,
-            "code":null,
+            "name":"HP Motor",
+            "code":"HP Motor",
             "active": null,
             "auditDetails" : {
             	"createdBy": null,

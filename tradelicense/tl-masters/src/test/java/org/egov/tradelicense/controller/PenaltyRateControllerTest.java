@@ -20,7 +20,10 @@ import org.egov.models.PenaltyRateResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
+import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.services.CategoryService;
+import org.egov.tradelicense.services.DocumentTypeService;
+import org.egov.tradelicense.services.FeeMatrixService;
 import org.egov.tradelicense.services.PenaltyRateService;
 import org.egov.tradelicense.services.UOMService;
 import org.junit.Test;
@@ -42,10 +45,19 @@ public class PenaltyRateControllerTest {
 	private CategoryService categoryService;
 
 	@MockBean
+	FeeMatrixService feeMatrixService;
+
+	@MockBean
 	private UOMService uomService;
 
 	@MockBean
 	private PenaltyRateService penaltyRateService;
+
+	@MockBean
+	DocumentTypeService documentTypeService;
+
+	@MockBean
+	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -144,7 +156,7 @@ public class PenaltyRateControllerTest {
 							.thenReturn(penaltyRateResponse);
 
 			mockMvc.perform(post("/tradelicense/penaltyrate/_search").param("tenantId", "default")
-					.param("applicationTypeId", "New").contentType(MediaType.APPLICATION_JSON)
+					.param("applicationType", "New").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("penaltyRateSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("penaltyRateSearchResponse.json")));

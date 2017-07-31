@@ -26,9 +26,9 @@ public class DemandReasonCriteria {
 	private String taxReason;
 	private String taxPeriod;
 	 @DateTimeFormat(pattern="dd/MM/yyyy")
-	private String fromDate;
+	private Date fromDate;
 	 @DateTimeFormat(pattern="dd/MM/yyyy")
-	private String toDate;
+	private Date toDate;
 	private String tenantId;
 	private String installmentType;
 }

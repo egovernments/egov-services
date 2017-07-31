@@ -14,16 +14,31 @@ import org.springframework.validation.FieldError;
 
 @Component
 public class ErrorHandler {
-	
-	public ResponseEntity<?> handleBindingErrors(RequestInfo requestInfo, BindingResult bindingResultsForRequestInfo,
-			BindingResult bindingResultsForSearchCriteria) {
+
+	// Search
+	public ResponseEntity<?> handleBindingErrorsForSearch(RequestInfo requestInfo,
+			BindingResult bindingResultsForRequestInfo, BindingResult bindingResultsForSearchCriteria) {
 		if (bindingResultsForRequestInfo != null && bindingResultsForRequestInfo.hasErrors()) {
-			return getMissingParameterErrorResponse(bindingResultsForRequestInfo,
-					requestInfo);
+			return getMissingParameterErrorResponse(bindingResultsForRequestInfo, requestInfo);
 		}
 		if (bindingResultsForSearchCriteria != null && bindingResultsForSearchCriteria.hasErrors()) {
-			return getMissingParameterErrorResponse(bindingResultsForSearchCriteria,
-					requestInfo);
+			return getMissingParameterErrorResponse(bindingResultsForSearchCriteria, requestInfo);
+		}
+		return null;
+	}
+
+	// Create
+	public ResponseEntity<?> handleBindingErrorsForCreate(RequestInfo requestInfo, BindingResult bindingResult) {
+		if (bindingResult != null && bindingResult.hasErrors()) {
+			return getMissingParameterErrorResponse(bindingResult, requestInfo);
+		}
+		return null;
+	}
+
+	// Update
+	public ResponseEntity<?> handleBindingErrorsForUpdate(RequestInfo requestInfo, BindingResult bindingResult) {
+		if (bindingResult != null && bindingResult.hasErrors()) {
+			return getMissingParameterErrorResponse(bindingResult, requestInfo);
 		}
 		return null;
 	}
@@ -76,7 +91,7 @@ public class ErrorHandler {
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
-		responseInfo.setStatus(HttpStatus.OK.toString());
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
@@ -103,7 +118,7 @@ public class ErrorHandler {
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
-		responseInfo.setStatus(HttpStatus.OK.toString());
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());

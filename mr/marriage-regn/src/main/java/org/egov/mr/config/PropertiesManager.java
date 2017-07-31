@@ -85,4 +85,13 @@ public class PropertiesManager {
 	@Value("${egov.mr.services.regnnumber_sequence}")
 	private String regnNumberSequence;
 	
+	// kafka key access
+	@Value("${kafka.key.marriagedocumenttype}")
+	private String marriageDocumentTypeKey;
+	
+	@Value("${kafka.topics.create.marriagedocumenttype}")
+	private String createMarriageDocumentTypeTopicName;
+	
+	@Value("${kafka.topics.update.marriagedocumenttype}")
+	private String updateMarriageDocumentTypeTopicName;
 }

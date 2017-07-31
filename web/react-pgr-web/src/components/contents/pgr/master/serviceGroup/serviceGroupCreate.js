@@ -126,8 +126,9 @@ class ServiceGroupCreate extends Component {
 
     submitForm = (e) => {
 
-      e.preventDefault()
-        var current = this;
+      e.preventDefault();
+      this.props.setLoadingStatus('loading');
+      var current = this;
 
       var body = {
           "ServiceGroup":{
@@ -143,10 +144,10 @@ class ServiceGroupCreate extends Component {
       if(this.props.match.params.id){
 
           Api.commonApiPost("/pgr-master/serviceGroup/v1/_update",{},body).then(function(response){
-              console.log(response);
               current.setState({
                 open: true
               });
+              current.props.setLoadingStatus('hide');
           }, function(err) {
             current.props.toggleSnackbarAndSetText(true, err.message);
             current.props.setLoadingStatus('hide');
@@ -158,6 +159,7 @@ class ServiceGroupCreate extends Component {
                 open: true
               });
               current.props.resetObject('createServiceGroup');
+              current.props.setLoadingStatus('hide');
           }, function(err) {
             current.props.toggleSnackbarAndSetText(true, err.message);
             current.props.setLoadingStatus('hide');
@@ -241,7 +243,7 @@ class ServiceGroupCreate extends Component {
               </div>
           </form>
           <Dialog
-               title={this.state.id != '' ? "Grievance Category Updated Successfully" : "Grievance Category Added Successfully"}
+               title={this.state.id != '' ? "Grievance Category Updated Successfully" : "Grievance Category Created Successfully"}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}

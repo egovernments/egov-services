@@ -12,7 +12,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "documentType.name",
-							"label": "Document Type*",
+							"label": "wc.create.documentType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -23,7 +23,7 @@ var dat = {
 						{
 							"name": "description",
 							"jsonPath": "documentType.description",
-							"label": "Description",
+							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -34,7 +34,7 @@ var dat = {
 						{
 							"name": "Active",
 							"jsonPath": "documentType.active",
-							"label": "Active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -54,13 +54,13 @@ var dat = {
 		"objectName": "DocumentType",
 		"groups": [
 			{
-				"label": "wc.search.categorytype.title",
+				"label": "wc.search.documentType.title",
 				"name": "createCategoryType",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "DocumentType.name",
-							"label": "Document Type",
+							"label": "wc.create.documentType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -71,7 +71,7 @@ var dat = {
 						{
 							"name": "Active",
 							"jsonPath": "DocumentType.active",
-							"label": "Active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -83,11 +83,11 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.search.result.name"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"header": [{label: "wc.search.result.documentType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
 			"values": ["name", "description", "active"],
 			"resultPath": "DocumentTypes",
-			"rowClickUrlUpdate": "/update/wc/documenttype/{id}",
-			"rowClickUrlView": "/view/wc/documenttype/{id}"
+			"rowClickUrlUpdate": "/update/wc/documentType/{id}",
+			"rowClickUrlView": "/view/wc/documentType/{id}"
 			}
 	},
 	"wc.view": {
@@ -98,13 +98,13 @@ var dat = {
 		"objectName": "DocumentTypes",
 		"groups": [
 			{
-				"label": "wc.create.DocumentTypes.title",
+				"label": "wc.view.DocumentTypes.title",
 				"name": "DocumentTypes",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "DocumentTypes[0].name",
-							"label": "Document Type",
+							"label": "wc.create.documentType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -115,7 +115,7 @@ var dat = {
 						{
 							"name": "description",
 							"jsonPath": "DocumentTypes[0].description",
-							"label": "Description",
+							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -126,7 +126,7 @@ var dat = {
 						{
 							"name": "Active",
 							"jsonPath": "DocumentTypes[0].active",
-							"label": "Active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -141,19 +141,20 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/documenttype/_search?id={id}",
-		"url":"/wcms/masters/documenttype/{DocumentTypes[0].code}/_update",
+		"url":"/wcms/masters/documenttype/{DocumentType.code}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "DocumentTypes",
+		"isResponseArray":true,
+		"objectName": "DocumentType",
 		"groups": [
 			{
-				"label": "wc.create.DocumentTypes.title",
+				"label": "wc.update.DocumentTypes.title",
 				"name": "DocumentTypes",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "DocumentTypes[0].name",
-							"label": "Document Type",
+							"jsonPath": "DocumentType.name",
+							"label": "wc.create.documentType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -163,8 +164,8 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "DocumentTypes[0].description",
-							"label": "Description",
+							"jsonPath": "DocumentType.description",
+							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -174,8 +175,8 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "DocumentTypes[0].active",
-							"label": "Active",
+							"jsonPath": "DocumentType.active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,

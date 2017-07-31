@@ -50,7 +50,12 @@ let menuConvention={
     "Water Charge.WCMS Masters.Supply Type Master.CreateSupplyTypeMasterApi":"/create/wc/supplyType",
     "Water Charge.WCMS Masters.Source Type Master.CreateSourceTypeMasterApi":"/create/wc/waterSourceType",
 	"Property Tax.New Property.CreateNewProperty":"/propertyTax/create-property",
-	"Property Tax.Existing Property.SearchProperty":"/propertyTax/search"
+	"Property Tax.Existing Property.SearchProperty":"/propertyTax/search",
+  "Water Charge.Water Transactions.SearchWaterConnectionAPI":"/search/wc/view",
+  "Water Charge.WCMS Masters.CategoryMasters.View Category Type":"/search/wc/categoryType/view",
+  "Water Charge.WCMS Masters.CategoryMasters.Update Catgeory Type":"/search/wc/categoryType/update",
+  "Water Charge.WCMS Masters.Document Type Master.SearchDocumentTypeMaster":"/search/wc/documentType/view",
+  "Water Charge.WCMS Masters.Document Type Master.DocumentTypeModify":"/search/wc/documentType/update",
 
 
 }
@@ -65,7 +70,8 @@ const defaultState = {
   showMenu: false,
   actionList:JSON.parse(localStorage.getItem("actions")) || [],
   showHome: false,
-  menuConvention:menuConvention
+  menuConvention:menuConvention,
+  tenantInfo:[]
 };
 
 export default (state = defaultState, action) => {
@@ -77,6 +83,15 @@ export default (state = defaultState, action) => {
         appLoaded: true,
         currentUser: action.payload ? action.payload.UserRequest : null
       };
+
+    case "SET_TENANT_INFO":
+      return {
+        ...state,
+        tenantInfo:action.tenantInfo
+      }
+
+      break;
+
     case 'REDIRECT':
       return { ...state, redirectTo: null };
     case 'LOGOUT':

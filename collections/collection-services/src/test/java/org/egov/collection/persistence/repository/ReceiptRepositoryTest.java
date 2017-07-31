@@ -131,6 +131,7 @@ public class ReceiptRepositoryTest {
 	@Test
 	public void test_should_persist_to_receiptheader(){
 		Map<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put("tenantid", "default");
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];
 
 		ReceiptReq receiptReq = getReceiptRequest();

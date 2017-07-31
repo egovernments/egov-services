@@ -156,7 +156,7 @@ public class ReceiptRepository {
 		
 			persistToReceiptHeader(parametersMap);
 			persistToReceiptDetails(parametersReceiptDetails, receiptHeader);
-		//	persistIntoReceiptInstrument(instrumentId, receiptHeader, parametersMap.get("tenantid").toString()); ////uncomment for instrument integration
+			persistIntoReceiptInstrument(instrumentId, receiptHeader, parametersMap.get("tenantid").toString()); ////uncomment for instrument integration
 
 		isInsertionSuccessful = true;
 		return isInsertionSuccessful;

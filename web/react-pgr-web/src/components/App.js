@@ -17,7 +17,7 @@ import Snackbar from 'material-ui/Snackbar';
 import LoadingIndicator from './common/LoadingIndicator';
 import router from "../router";
 //api import
-// import api from "../api/commonAPIS"
+import Api from "../api/api"
 
 
 window.urlCheck = false;
@@ -77,6 +77,8 @@ class App extends Component {
 
 
 
+
+
       // console.log(this.props.location);
       // if (!window.localStorage.getItem("token") && this.props.location.pathname!="/") {
       //     // console.log("Login");
@@ -95,7 +97,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    let {history}=this.props;
+    let {history,setTenantInfo}=this.props;
     // let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
     // console.log(commonState);
     //if (!window.localStorage.getItem("token")) {
@@ -137,8 +139,26 @@ class App extends Component {
 
       // console.log("hit");
 
-      if(localStorage.getItem("token") && localStorage.getItem("userRequest")) {
+
+
+      if(localStorage.getItem("token") && localStorage.getItem("userRequest"))
+      {
         this.props.onLoad({UserRequest: JSON.parse(localStorage.getItem("userRequest"))}, localStorage.getItem("token"));
+        Api.commonApiPost("tenant/v1/tenant/_search", {code:localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default'}).then(function(res){
+          // console.log(res);
+          setTenantInfo(res.tenant);
+        }, function(err){
+            console.log(err);
+        })
+      }
+      else {
+        var hash = window.location.hash.split("/");
+        Api.commonApiPost("tenant/v1/tenant/_search", {code:typeof(hash[1])!="undefined"?hash[1]:'default'}).then(function(res){
+          // console.log(res);
+          setTenantInfo(res.tenant);
+        }, function(err){
+            console.log(err);
+        })
       }
   }
 
@@ -236,6 +256,10 @@ const mapDispatchToProps = dispatch => ({
     },
     setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+    },
+    setTenantInfo:(tenantInfo)=>
+    {
+      dispatch({type:"SET_TENANT_INFO",tenantInfo});
     }
 });
 

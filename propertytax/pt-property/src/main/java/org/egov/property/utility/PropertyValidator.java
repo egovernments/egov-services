@@ -15,8 +15,10 @@ import org.egov.models.ResponseInfoFactory;
 import org.egov.models.Unit;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.exception.InvalidCodeException;
+import org.egov.property.exception.InvalidFloorException;
 import org.egov.property.exception.InvalidPropertyBoundaryException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
+import org.egov.property.exception.InvalidVacantLandException;
 import org.egov.property.repository.BoundaryRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,7 +174,6 @@ public class PropertyValidator {
 		if (property.getPropertyDetail().getFloors() != null) {
 			for (Floor floor : property.getPropertyDetail().getFloors()) {
 				for (Unit unit : floor.getUnits()) {
-
 					if (unit != null)
 						validateUnitData(property.getTenantId(), unit, requestInfo);
 
@@ -239,6 +240,17 @@ public class PropertyValidator {
 			if (!isWallTypeExists)
 				throw new InvalidCodeException(env.getProperty("invalid.input.walltype"), requestInfo);
 		}
+
+		if (property.getPropertyDetail().getPropertyType()
+				.equalsIgnoreCase(env.getProperty("egov.property.type.vacantLand"))) {
+			if (property.getVacantLand() == null)
+				throw new InvalidVacantLandException(env.getProperty("invalid.property.vacantland"), requestInfo);
+
+		} else if (property.getPropertyDetail().getFloors() == null
+				|| property.getPropertyDetail().getFloors().size() <= 0) {
+
+			throw new InvalidFloorException(env.getProperty("invalid.property.floor"), requestInfo);
+		}
 	}
 
 	/**
@@ -283,8 +295,6 @@ public class PropertyValidator {
 			if (!structureExists) {
 				throw new InvalidCodeException(env.getProperty("invalid.input.structure"), requestInfo);
 			}
-			
-			//if(unit.get)
 		}
 	}
 }

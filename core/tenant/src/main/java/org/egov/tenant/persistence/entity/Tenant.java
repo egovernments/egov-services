@@ -66,9 +66,9 @@ public class Tenant {
                 .twitterUrl(twitterUrl)
                 .facebookUrl(facebookUrl)
                 .emailId(emailId)
-                .address("address")
-                .contactNumber("contactNumber")
-                .helpLineNumber("helpLineNumber")
+                .address(address)
+                .contactNumber(contactNumber)
+                .helpLineNumber(helplineNumber)
                 .build();
     }
 }

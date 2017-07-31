@@ -123,14 +123,15 @@ class DefineEscalationTime extends Component {
 
       let self = this;
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
-          setLoadingStatus('hide');
           self.setState({
             grievanceTypeSource: response.complaintTypes
-          })
+          });
+          setLoadingStatus('hide');
       }, function(err) {
         self.setState({
             grievanceTypeSource: []
-          })
+          });
+          setLoadingStatus('hide');
       });
 
       Api.commonApiPost("/hr-masters/designations/_search").then(function(response) {
@@ -183,7 +184,6 @@ class DefineEscalationTime extends Component {
         }
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",query,{}).then(function(response){
-             setLoadingStatus('hide');
           if (response.EscalationTimeType[0] != null && response.EscalationTimeType[0].id !=null ) {
 
               flag = 1;
@@ -199,6 +199,7 @@ class DefineEscalationTime extends Component {
                 isSearchClicked: false
             })
           }
+          setLoadingStatus('hide');
       }).catch((error)=>{
 		   current.setState({
                 resultList:[],
@@ -238,7 +239,7 @@ class DefineEscalationTime extends Component {
       }
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
-         setLoadingStatus('hide');
+
 
           if (response.EscalationTimeType[0] != null) {
               flag = 1;
@@ -252,6 +253,7 @@ class DefineEscalationTime extends Component {
               noData: true,
             })
           }
+          setLoadingStatus('hide');
       }).catch((error)=>{
 			setLoadingStatus('hide');
 			toggleSnackbarAndSetText(true, error.message);
@@ -293,7 +295,6 @@ class DefineEscalationTime extends Component {
 	emptyProperty('designation');
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
-         setLoadingStatus('hide');
 
           if (response.EscalationTimeType[0] != null) {
               flag = 1;
@@ -308,6 +309,7 @@ class DefineEscalationTime extends Component {
               noData: true,
             })
           }
+          setLoadingStatus('hide');
       }).catch((error)=>{
             	   setLoadingStatus('hide');
         toggleSnackbarAndSetText(true, error.message);

@@ -282,8 +282,6 @@ componentWillUpdate() {
 			designationId:data.designation
 		}
 
-		console.log(this.props.defineEscalation);
-
 		  Api.commonApiPost("/hr-masters/positions/_search",query).then(function(response) {
 			setLoadingStatus('hide');
 			current.setState({toPosition : response.Position});
@@ -321,8 +319,6 @@ componentWillUpdate() {
 		emptyProperty("designation");
 		emptyProperty("toPosition");
                 Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
-                    setLoadingStatus('hide');
-					console.log(response.escalationHierarchies);
                     if (response.escalationHierarchies[0] != null) {
                         flag = 1;
                         current.setState({
@@ -335,6 +331,7 @@ componentWillUpdate() {
                         noData: true,
                       })
                     }
+                    setLoadingStatus('hide');
                 }).catch((error)=>{
 					  setLoadingStatus('hide');
 						toggleSnackbarAndSetText(true, error.message);
@@ -378,7 +375,6 @@ componentWillUpdate() {
 		emptyProperty("toPosition");
 
                 Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
-                    setLoadingStatus('hide');
                     if (response.escalationHierarchies[0] != null) {
                         flag = 1;
                         current.setState({
@@ -392,6 +388,7 @@ componentWillUpdate() {
                         noData: true,
                       })
                     }
+                    setLoadingStatus('hide');
                 }).catch((error)=>{
                      setLoadingStatus('hide');
 						toggleSnackbarAndSetText(true, error.message);

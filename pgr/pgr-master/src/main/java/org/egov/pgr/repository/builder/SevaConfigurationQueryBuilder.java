@@ -77,7 +77,7 @@ public class SevaConfigurationQueryBuilder {
 			SevaConfigurationGetRequest sevaConfigurationGetRequest) {
 
 		if (sevaConfigurationGetRequest.getId() == null && sevaConfigurationGetRequest.getEffectiveFrom() == null
-				&& sevaConfigurationGetRequest.getName() == null && sevaConfigurationGetRequest.getTenantId() == null)
+				&& sevaConfigurationGetRequest.getKeyName() == null && sevaConfigurationGetRequest.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -94,10 +94,10 @@ public class SevaConfigurationQueryBuilder {
 			selectQuery.append(" ck.id IN " + getIdQuery(sevaConfigurationGetRequest.getId()));
 		}
 
-		if (sevaConfigurationGetRequest.getName() != null) {
+		if (sevaConfigurationGetRequest.getKeyName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ck.keyName = ?");
-			preparedStatementValues.add(sevaConfigurationGetRequest.getName());
+			preparedStatementValues.add(sevaConfigurationGetRequest.getKeyName());
 		}
 
 		if (sevaConfigurationGetRequest.getEffectiveFrom() != null) {

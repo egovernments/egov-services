@@ -72,7 +72,7 @@ public class DemandReasonService {
 			query.setString("installmenttype", demandReasonCriteria.getInstallmentType());
 		}
 		if (demandReasonCriteria.getFromDate() != null) {
-				query.setDate("fromDate", demandReasonCriteria.getFromDate());
+				query.setTimestamp("fromDate", demandReasonCriteria.getFromDate());
 		}
 		if (demandReasonCriteria.getToDate() != null) {
 			Date date = getEndOfDay(demandReasonCriteria.getToDate());

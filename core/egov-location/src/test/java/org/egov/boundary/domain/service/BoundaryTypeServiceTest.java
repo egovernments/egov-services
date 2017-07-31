@@ -1,6 +1,9 @@
 package org.egov.boundary.domain.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -33,6 +36,26 @@ public class BoundaryTypeServiceTest {
 
 		assertEquals("City 1", boundarytypeList.get(0).getName());
 	}
+	
+	@Test
+	public void testshouldGetAllBoundaryByTenantIdAndTypeIds(){
+		
+		when(boundaryTypeRepository.findAllByTenantIdAndName(any(String.class),any(String.class)))
+		.thenReturn(getExpectedBoundaryTypeDetails());
+		
+		List<Long> list = new ArrayList<Long>();
+		list.add(1l);
+		list.add(2l);
+		
+		List<BoundaryType> boundaryTypeList = boundaryTypeService.getAllBoundarytypesByNameAndTenant("default","Test");
+		
+		assertTrue(boundaryTypeList.size() == 2);
+		assertFalse(boundaryTypeList.isEmpty());
+		assertTrue(boundaryTypeList != null);
+		assertTrue(boundaryTypeList.get(0).getName().equals("City 1"));
+	}
+
+	
 
 	private List<BoundaryType> getExpectedBoundaryTypeDetails() {
 		final List<BoundaryType> boundaryTypeList = new ArrayList<>();

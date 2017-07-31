@@ -42,7 +42,7 @@ export default class ShowFields extends Component {
     switch (uiFramework) {
       case "google":
         return groups.map((group, groupIndex)=>{
-          return (<Card key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+          return (<Card className="uiCard" key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
                     <CardHeader style={{paddingBottom:0}} title={group.label} showExpandableButton={true} actAsExpander={true}/>
                     <CardText style={{padding:0}} expandable={true}>
                     <Grid>

@@ -4,7 +4,7 @@ public class UnitBuilder {
 
 	public static final String INSERT_UNIT_QUERY = "INSERT INTO egpt_unit ("
 			+ "unitNo, unitType, length,width,builtupArea,assessableArea,"
-			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancy,occupierName,firmName,rentCollected, structure, age,"
+			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
 			+ "floor,isAuthorised) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -15,7 +15,7 @@ public class UnitBuilder {
 
 		unitSql.append("UPDATE egpt_unit").append(" SET unitNo = ?, unitType = ?, length = ?, width = ?,")
 				.append(" builtupArea = ?, assessableArea = ?, bpaBuiltupArea = ?,")
-				.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancy = ?, occupierName = ?,")
+				.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancytype = ?, occupierName = ?,")
 				.append(" firmName = ?, rentCollected = ?, structure = ?, age = ?,")
 				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
 				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
@@ -29,7 +29,7 @@ public class UnitBuilder {
 
 	public static final String INSERT_ROOM_QUERY = "INSERT INTO egpt_unit ("
 			+ "unitNo, unitType, length,width,builtupArea,assessableArea,"
-			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancy,occupierName,firmName,rentCollected, structure, age,"
+			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
 			+ "floor,parentid,isAuthorised) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -40,7 +40,7 @@ public class UnitBuilder {
 
 		unitSql.append("UPDATE egpt_unit").append(" SET unitNo = ?, unitType = ?, length = ?, width = ?,")
 				.append(" builtupArea = ?, assessableArea = ?, bpaBuiltupArea = ?,")
-				.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancy = ?, occupierName = ?,")
+				.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancytype = ?, occupierName = ?,")
 				.append(" firmName = ?, rentCollected = ?, structure = ?, age = ?,")
 				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
 				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
@@ -55,14 +55,14 @@ public class UnitBuilder {
 
 	public static final String INSERT_UNITHISTORY_QUERY = "INSERT INTO egpt_unit_history ("
 			+ "unitNo, unitType, length,width,builtupArea,assessableArea,"
-			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancy,occupierName,firmName,rentCollected, structure, age,"
+			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
 			+ "floor,isAuthorised,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String INSERT_ROOMHISTORY_QUERY = "INSERT INTO egpt_unit_history ("
 			+ "unitNo, unitType, length,width,builtupArea,assessableArea,"
-			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancy,occupierName,firmName,rentCollected, structure, age,"
+			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
 			+ "floor,parentid,isAuthorised,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";

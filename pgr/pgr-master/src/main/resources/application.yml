@@ -669,7 +669,7 @@ ReportDefinitions:
     type: string
     source: submission
     linkedReport:
-      reportName: DrillDownDepartmentGrievanceTypeGetUserNamePositionGetComplaints
+      reportName: DrillDownDepartmentGrievanceTypeGetUserNamePosition
       linkedColumn: _parent?reportName={reportName}&complainttype={name}
   - name: registered
     label: reports.pgr.status.registered

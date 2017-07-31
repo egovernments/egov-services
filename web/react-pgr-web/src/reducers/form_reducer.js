@@ -23,63 +23,63 @@ const defaultState = {
 
 export default(state = defaultState, action) => {
   switch (action.type) {
-	  
-	  
-	case "ADD_REQUIRED" : 
+
+
+	case "ADD_REQUIRED" :
 		var b = state.validationData.required.required.indexOf(action.property);
 		if(b==-1){
 			state.validationData.required.required.push(action.property);
 		}
-		
+
 		return {
 			...state,
 		}
-	case "REMOVE_REQUIRED" : 
-	
+	case "REMOVE_REQUIRED" :
+
 		var a = state.validationData.required.required.indexOf(action.property);
 		var b = state.validationData.required.current.indexOf(action.property);
-		
+
 		console.log('isthere', a)
 		if(a!=-1){
 			state.validationData.required.required.splice(a,1);
 		}
-		
+
 		if(b!=-1){
 			state.validationData.required.current.splice(b,1);
 		}
-			
+
 		return {
 			...state
 		}
-		
-		
-	case "ADD_FLOOR_REQUIRED" : 
+
+
+	case "ADD_FLOOR_REQUIRED" :
 		var b = state.validatePropertyFloor.required.required.indexOf(action.property);
 		if(b==-1){
 			state.validatePropertyFloor.required.required.push(action.property);
 		}
-		
+
 		return {
 			...state,
 		}
-		
-    case "REMOVE_FLOOR_REQUIRED" : 
-	
+
+    case "REMOVE_FLOOR_REQUIRED" :
+
 		var a = state.validatePropertyFloor.required.required.indexOf(action.property);
 		var b = state.validatePropertyFloor.required.current.indexOf(action.property);
-		
+
 		console.log('isthere', a)
 		if(a!=-1){
 			state.validatePropertyFloor.required.required.splice(a,1);
 		}
-		
+
 		if(b!=-1){
 			state.validatePropertyFloor.required.current.splice(b,1);
 		}
-			
+
 		return {
 			...state
-		}		
+		}
 
     case "PUSH_ONE":
 
@@ -253,7 +253,7 @@ export default(state = defaultState, action) => {
           validationData: validationData.validationData,
           isFormValid: validationData.isFormValid
         }
-		
+
 	 case "HANDLE_CHANGE_OWNER":
 
        let validatePropertyOwner;
@@ -279,9 +279,9 @@ export default(state = defaultState, action) => {
           },
           validatePropertyOwner: validatePropertyOwner.validatePropertyOwner,
           isOwnerValid: validatePropertyOwner.isOwnerValid
-        }	
+        }
 
-		
+
 	 case "HANDLE_CHANGE_FLOOR":
 
        let validatePropertyFloor;
@@ -308,7 +308,7 @@ export default(state = defaultState, action) => {
 			validatePropertyFloor: validatePropertyFloor.validatePropertyFloor,
 			isFloorValid: validatePropertyFloor.isFloorValid
         }
-		
+
     case "HANDLE_CHANGE_NEXT_TWO":
       let validationData = undefined;
       validationData = validate(action.isRequired, action.pattern, action.propertyTwo, action.value, state.validationData);
@@ -397,7 +397,7 @@ export default(state = defaultState, action) => {
         ...state
       }
     }
-	
+
     case "RESET_STATE":
       return {
         form: {},
@@ -413,7 +413,7 @@ export default(state = defaultState, action) => {
         showTable:false,
         buttonText:"Search"
       }
-	  
+
     case 'FIELD_ERRORS':
       return {
         ...state,
@@ -457,7 +457,7 @@ export default(state = defaultState, action) => {
 function validate(isRequired, pattern, name, value, validationData) {
   let errorText = "";
   if (isRequired) {
-    if (value.length || value) {
+    if (value.toString().trim().length > 0) {
       if (_.indexOf(validationData.required.current, name) == -1) {
         validationData.required.current.push(name);
       }
@@ -468,7 +468,7 @@ function validate(isRequired, pattern, name, value, validationData) {
       errorText = "This is field is required";
     }
   }
-  if (pattern.toString().length > 0) {
+  if (pattern.toString().trim().length > 0) {
     if (value != "") {
       if (pattern.test(value)) {
         // if (_.indexOf(validationData.pattern.current, name) == -1) {
@@ -503,7 +503,7 @@ function validate(isRequired, pattern, name, value, validationData) {
   // console.log(validationData.required.current)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  console.log(validationData.required.required.length, validationData.required.current.length);
+  // console.log(validationData.required.required.length, validationData.required.current.length);
   return {
     errorText: errorText,
     validationData: validationData,
@@ -513,7 +513,7 @@ function validate(isRequired, pattern, name, value, validationData) {
 
 
 function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
-	
+
 console.log('Here', validatePropertyOwner);
 
   let errorText = "";
@@ -574,7 +574,7 @@ console.log('Here', validatePropertyOwner);
 
 
 function validate3(isRequired, pattern, name, value, validatePropertyFloor) {
-	
+
 console.log('Here', validatePropertyFloor);
 
   let errorText = "";

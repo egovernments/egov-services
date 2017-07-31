@@ -51,7 +51,9 @@ let menuConvention={
     "Water Charge.WCMS Masters.Source Type Master.CreateSourceTypeMasterApi":"/create/wc/waterSourceType",
 	"Property Tax.New Property.CreateNewProperty":"/propertyTax/create-property",
 	"Property Tax.Existing Property.SearchProperty":"/propertyTax/search",
-  "Water Charge.Water Transactions.SearchWaterConnectionAPI":"/search/wc/view"
+  "Water Charge.Water Transactions.SearchWaterConnectionAPI":"/search/wc/view",
+  "Water Charge.WCMS Masters.CategoryMasters.View Category Type":"/search/wc/categoryType/view",
+  "Water Charge.WCMS Masters.CategoryMasters.Update Catgeory Type":"/search/wc/categoryType/update"
 
 
 }

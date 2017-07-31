@@ -104,7 +104,18 @@ var localationData = {
   "wc.search.result.connectionStatus":"Connection Status",
   "wc.search.result.propertyidentifier":"Property Identifier",
   "wc.search.searchnewconnection.title":"Search New Connection",
-  "wc.search.result.applicationType":"Application Type"
+  "wc.search.result.applicationType":"Application Type",
+  "wc.search.categorytype.title":"Search Category Type",
+  "wc.search.result.name":"Name",
+  "wc.search.result.description":"Description",
+  "wc.search.result.active":"Active",
+  "wc.view.categorytype.title":"View Category Type",
+  "wc.search.result.categoryType":"Category Type",
+  "wc.create.documentType.title":"Create Document Type",
+  "wc.create.categorytype":"Category Type",
+  "wc.create.active":"Active",
+  "wc.create.description":"Description",
+  "wc.update.categorytype.title":"Update Category Type"
 }
 
 export function translate(locale_text){

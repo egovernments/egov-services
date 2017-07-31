@@ -76,7 +76,7 @@ public class SevaConfigurationGetRequest {
 	private List<Long> id;
 
 	@Size(min = 3, max = 50)
-	private String name;
+	private String keyName;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date effectiveFrom;

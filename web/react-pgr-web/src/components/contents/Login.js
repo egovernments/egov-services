@@ -204,7 +204,7 @@ class Login extends Component {
         }
 
 
-   Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes,enabled:true}).then(function(response){
+        Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes,enabled:true}).then(function(response){
 
 				//console.log(response)
 		  localStorage.setItem("actions", JSON.stringify(response.actions));
@@ -456,7 +456,8 @@ class Login extends Component {
         handleChange,
         isFormValid,
         fieldErrors,
-        history
+        history,
+        tenantInfo
       }=this.props;
       let {
         loginRequest,
@@ -616,7 +617,7 @@ class Login extends Component {
                           <p>{translate('pgr.msg.creategrievance.avail.onlineservices')}</p>
                         </div>
                       </Col>
-                      
+
                       <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
                         <IconButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">mode_edit</i>
@@ -646,7 +647,7 @@ class Login extends Component {
                         </IconButton>
                         <div style={styles.floatLeft}>
                           <h4>{translate('pgr.lbl.grievancecell')}</h4>
-                          <p>{translate('Call 1800-425-9766 to register your grievance')}</p>
+                          <p>{translate('Call '+ tenantInfo.length && tenantInfo[0].helpLineNumber +' to register your grievance')}</p>
                         </div>
                       </Col>
                     </Row>
@@ -660,15 +661,15 @@ class Login extends Component {
                       <FontIcon style={styles.iconSize}>
                         <i className="material-icons">location_on</i>
                       </FontIcon>
-                      <p>Kurnool Municipal Corporation, N.R.Peta, Kurnool - 518004 , Andhra Pradesh - India.</p>
+                      <p>{tenantInfo.length && tenantInfo[0].address}</p>
                       <a href="#">Find us on google maps</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon   style={styles.iconSize}>
                         <i className="material-icons">phone</i>
                       </FontIcon>
-                      <p>08518-221847</p>
-                      <a href="mailto:mc.kurnool@cdma.gov.in" >mc.kurnool@cdma.gov.in</a>
+                      <p>{tenantInfo.length && tenantInfo[0].contactNumber}</p>
+                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0].email} >mc.kurnool@cdma.gov.in</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon style={styles.iconSize}>
@@ -839,7 +840,7 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = state => ({  credential: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+const mapStateToProps = state => ({  credential: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,tenantInfo:state.common.tenantInfo});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {

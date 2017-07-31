@@ -65,7 +65,8 @@ const defaultState = {
   showMenu: false,
   actionList:JSON.parse(localStorage.getItem("actions")) || [],
   showHome: false,
-  menuConvention:menuConvention
+  menuConvention:menuConvention,
+  tenantInfo:[]
 };
 
 export default (state = defaultState, action) => {
@@ -77,6 +78,15 @@ export default (state = defaultState, action) => {
         appLoaded: true,
         currentUser: action.payload ? action.payload.UserRequest : null
       };
+
+    case "SET_TENANT_INFO":
+      return {
+        ...state,
+        tenantInfo:action.tenantInfo
+      }
+
+      break;
+
     case 'REDIRECT':
       return { ...state, redirectTo: null };
     case 'LOGOUT':

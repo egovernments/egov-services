@@ -77,7 +77,7 @@ public class DemandReasonService {
 		if (demandReasonCriteria.getToDate() != null) {
 			Date date = getEndOfDay(demandReasonCriteria.getToDate());
 					LOGGER.info("demandreason toDate-------" +date);
-					query.setDate("toDate", date);
+					query.setTimestamp("toDate", date);
 		}
 		return (List<EgDemandReason>) query.list();
 	}

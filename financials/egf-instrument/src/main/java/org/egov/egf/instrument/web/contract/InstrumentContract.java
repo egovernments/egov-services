@@ -154,11 +154,11 @@ public class InstrumentContract extends AuditableContract {
 	private String drawer;
 
 	/*
-	 * surrendarReason is the reason from the defined list seleted while
+	 * surrenderReason is the reason from the defined list seleted while
 	 * surrendering a payment cheque. Depending on the reason, the cheque can be
 	 * re-used or not is decided.
 	 */
-	private SurrenderReasonContract surrendarReason;
+	private SurrenderReasonContract surrenderReason;
 
 	/*
 	 * serialNo is the series of the cheque numbers from which the instrument is

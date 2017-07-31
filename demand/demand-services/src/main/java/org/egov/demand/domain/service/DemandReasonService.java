@@ -75,15 +75,20 @@ public class DemandReasonService {
 				query.setDate("fromDate", demandReasonCriteria.getFromDate());
 		}
 		if (demandReasonCriteria.getToDate() != null) {
-			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.HOUR_OF_DAY,23);
-			cal.set(Calendar.MINUTE,59);
-			cal.set(Calendar.SECOND,59);
-
-			Date date = demandReasonCriteria.getToDate();
-			date = cal.getTime();
-				query.setDate("toDate", date);
+			Date date = getEndOfDay(demandReasonCriteria.getToDate());
+					LOGGER.info("demandreason toDate-------" +date);
+					query.setDate("toDate", date);
 		}
 		return (List<EgDemandReason>) query.list();
+	}
+	
+	public static Date getEndOfDay(Date date) {
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(date);
+	    calendar.set(Calendar.HOUR_OF_DAY, 23);
+	    calendar.set(Calendar.MINUTE, 59);
+	    calendar.set(Calendar.SECOND, 59);
+	    calendar.set(Calendar.MILLISECOND, 999);
+	    return calendar.getTime();
 	}
 }

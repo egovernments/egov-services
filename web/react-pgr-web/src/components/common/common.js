@@ -99,7 +99,7 @@ var localationData = {
   "reports.common.status": "Status",
   "reports.common.natureoftask": "Nature Of Task",
   "wc.search.result.acknowledgementNumber":"Acknowledgement Number",
-  "ui.table.title":"Search New Connection",
+  "ui.table.title":"Search Result",
   "wc.search.result.usageType":"Usage Type",
   "wc.search.result.connectionStatus":"Connection Status",
   "wc.search.result.propertyidentifier":"Property Identifier",
@@ -115,7 +115,23 @@ var localationData = {
   "wc.create.categorytype":"Category Type",
   "wc.create.active":"Active",
   "wc.create.description":"Description",
-  "wc.update.categorytype.title":"Update Category Type"
+  "wc.update.categorytype.title":"Update Category Type",
+  "wc.create.documentType":"Document Type",
+  "wc.search.documentType.title":"Search Document Type",
+  "wc.search.result.documentType":"Document Type",
+  "wc.view.DocumentTypes.title":"View Document Types",
+  "wc.update.DocumentTypes.title":"Update Document Types",
+  "wc.create.donation.title":"Create Donation",
+  "wc.create.propertyType":"Property Type",
+  "wc.create.minPipeSize":"Min H.S.C Pipe Size :",
+  "wc.create.maxPipeSize":"Max H.S.C Pipe Size",
+  "wc.create.donationAmount":"Donation Amount",
+  "wc.create.fromDate":"From Date",
+  "wc.create.toDate":"To Date",
+  "wc.search.Donation.title":"Search Donation",
+  "wc.create.DocumentTypeApplicationType.title":"Create Document Type Application Type",
+  "wc.create.mandatory":"Mandatory",
+  "wc.update.DocumentTypeApplicationTypes.title":"Update Document Type Application Types"
 }
 
 export function translate(locale_text){

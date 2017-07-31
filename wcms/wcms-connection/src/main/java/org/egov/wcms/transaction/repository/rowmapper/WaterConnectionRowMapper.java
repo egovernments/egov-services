@@ -71,6 +71,7 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         connection.setNumberOfPersons(rs.getInt("conn_noofperson"));  
         connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
         connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
+        connection.setWaterTreatment((null!=rs.getString("watertreatmentname") && rs.getString("watertreatmentname")!="")? rs.getString("watertreatmentname")  : "" );
         connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
         connection.setIsLegacy(rs.getBoolean("conn_islegacy")); 
         connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));  
@@ -84,6 +85,9 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         prop.setPropertyTypeId(rs.getString("conn_proptype"));
         prop.setAddress(rs.getString("conn_propaddress"));  
         prop.setPropertyidentifier(rs.getString("conn_propid"));
+        if(null != rs.getString("propertyowner") && rs.getString("propertyowner")!= ""){
+        	prop.setNameOfApplicant(rs.getString("propertyowner"));
+        }
         connection.setProperty(prop);
    /*     connection.setAssetIdentifier(rs.getString("assetidentifier"));
         connection.setStatus(rs.getString("status"));

@@ -40,6 +40,8 @@ paths:
           
           Maximum result size is restricted based on the maxlength of TradeLicense as defined in TradeLicenseResponse model.
           
+          Each TradeLicense in the Reponse will contain SupportDocuments and FeeDetails only for Legacy Trade License
+          
           Search results will be sorted by the sortProperty Provided in the parameters
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
@@ -178,6 +180,7 @@ paths:
             3. Adhaar Number is not mandatory, If entered it will validated, Invalid number fails trade license creation
             4. feeDetails will be considered for creation only when legacy is TRUE, In case of Not adding FeeDetails since 2012-2013 to current year, Creation of Trade License Fails.
             5. supportDocuments for a given Trade License will created. In case of not attaching the Mandatory Supported Documents creation of Trade License Fails.
+            6. localityId, wardId, categoryId, subCategoryId, uomId are Validated for existance, On Non existance of any of these entered values in the respective tables, Creation of TradeLicense will fail.
           
       parameters:
         - name: TradeLicenseRequest
@@ -315,8 +318,8 @@ definitions:
         format: int64
         description: Unique indentifier of the Unit of Measure
       uomValue:
-        type: integer
-        format: int64
+        type: number
+        format: double
         description: The numeric value for the given UOM, based on which the license fees is calculated.
       remarks: 
         type: string
@@ -376,7 +379,7 @@ definitions:
   OwnerShipType:
     type: string
     enum:
-      - STATE_GOVERNEMNT
+      - STATE_GOVERNMENT
       - RENTED
   TradeLicenseRequest:
       description: Contract class to receive request. Array of TradeLicense items are used in case of create, whereas single TradeLicense item is used for update

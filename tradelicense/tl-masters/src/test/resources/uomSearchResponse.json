@@ -1,0 +1,19 @@
+{
+    "responseInfo": {
+       
+    },
+    "uoms": [
+        {
+            "tenantId": "default",
+            "name": null,
+            "code": null,
+            "active": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{  
+   "RequestInfo":{  
+         "apiId":"emp",
+         "ver":"1.0",
+         "ts":120,
+         "action":"create",
+         "did":"1",
+         "key":"abcdkey",
+         "msgId":"20170310130900",
+         "requesterId":"rajesh",
+         "authToken":"d0058c65-7c55-445e-89b3-7f5b0cfdc12b"
+      },
+      "documentTypes":[  
+         {  
+          "id": 4,
+            "tenantId": "default",
+            "name": "New",
+            "mandatory": true,
+            "enabled": true,
+            "application_type": "New",
+            "auditDetails": {
+                "createdBy": "shubham1",
+                "lastModifiedBy": "shubham1",
+                "createdTime": 1501155366341,
+                "lastModifiedTime": 1501155366341
+            }
+         }
+      ]
+}

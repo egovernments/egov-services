@@ -1,0 +1,20 @@
+{
+    "responseInfo": {
+      
+    },
+    "penaltyRates": [
+        {
+            "tenantId":"default",
+            "applicationTypeId":null,
+            "fromRange":null,
+            "toRange":null,
+            "rate": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

@@ -217,7 +217,6 @@ constructor(props) {
                                    }
                                   };
 								  handleChangeOwner(e, "owner" ,"gender", true, "")
-                                //handleChangeNextOne(e, "owner" ,"gender", false, "")
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

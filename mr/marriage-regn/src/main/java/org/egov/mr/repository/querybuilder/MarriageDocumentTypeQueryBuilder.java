@@ -12,6 +12,13 @@ public class MarriageDocumentTypeQueryBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarriageDocumentTypeQueryBuilder.class);
 
+	public final static String BATCH_INSERT_QUERY = "INSERT INTO egmr_marriage_document_type "
+			+ "(id,name,code,isactive,isindividual,isrequired,proof,appltype,tenantid)" + " values (?,?,?,?,?,?,?,?,?)";
+
+	public final static String BATCH_UPDATE_QUERY = "UPDATE egmr_marriage_document_type SET"
+			+ " name=?, isactive=?, isindividual=?, isrequired=?, proof=?, appltype=?"
+			+ " WHERE id=? AND code=? AND tenantid=?";
+
 	public final String BASEQUERY = "SELECT * FROM egmr_marriage_document_type ";
 
 	StringBuilder selectQuery;
@@ -42,7 +49,7 @@ public class MarriageDocumentTypeQueryBuilder {
 		}
 		if (marriageDocumentTypeSearchCriteria.getApplicationType() != null) {
 			addAndClauseIfRequiredFlag = addAndClauseIfRequired(addAndClauseIfRequiredFlag);
-			selectQuery.append("applicationtype=? ");
+			selectQuery.append("appltype=? ");
 			preparedStatementValues.add(marriageDocumentTypeSearchCriteria.getApplicationType());
 		}
 		addAndClauseIfRequiredFlag = addAndClauseIfRequired(addAndClauseIfRequiredFlag);
@@ -57,5 +64,10 @@ public class MarriageDocumentTypeQueryBuilder {
 			selectQuery.append("AND ");
 		}
 		return true;
+	}
+
+	// Query to generate Unique Id
+	public String getIdNextValForMarriageDocType() {
+		return "SELECT NEXTVAL('seq_marriage_document_type') ;";
 	}
 }

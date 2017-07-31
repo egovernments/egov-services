@@ -87,7 +87,6 @@ class ServiceTypeCreate extends Component {
     componentWillMount() {
 
         if(this.props.match.params.id) {
-          console.log();
             this.setState({id:this.props.match.params.id});
             var body = {}
             let  current = this;
@@ -144,9 +143,9 @@ class ServiceTypeCreate extends Component {
     }
     submitForm = (e) => {
 
-      e.preventDefault()
+      e.preventDefault();
+      this.props.setLoadingStatus('loading');
       var current = this;
-
 
 	  let keyword;
 	  let pgr = this.props.location.pathname.match("pgr");
@@ -211,7 +210,6 @@ class ServiceTypeCreate extends Component {
           }
       }
 
-      current.props.setLoadingStatus('loading');
       if(this.props.match.params.id){
           Api.commonApiPost("/pgr-master/service/v1/_update",{},body).then(function(response){
               current.setState({

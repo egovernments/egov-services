@@ -127,7 +127,7 @@ class AssessmentDetails extends Component {
   } 
 
 
-  componentDidMount() {
+ componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
 	
@@ -364,7 +364,7 @@ handleDepartment = (e) => {
 												  hintText="14"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
-                                                  onChange={(e) => {handleChange(e, "extentOfSite", true, "")}}
+                                                  onChange={(e) => {handleChange(e, "extentOfSite", true, /^\d+$/g)}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}

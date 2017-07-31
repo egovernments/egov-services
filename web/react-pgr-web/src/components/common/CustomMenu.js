@@ -26,8 +26,8 @@ import _ from "lodash";
 const style = {
   display: 'inline-block',
   margin: '14px 32px 16px 0',
-};
 
+};
 
 class CustomMenu extends Component {
   constructor(props) {
@@ -323,9 +323,10 @@ class CustomMenu extends Component {
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
           {
             <TextField
-               hintText = "&nbsp;&nbsp;Quick Find"
+               hintText = "&nbsp;&nbsp;Search"
                onChange={this.handleChange}
                value={searchText}
+			   className="searchMargin"
              />
           }
 
@@ -335,20 +336,12 @@ class CustomMenu extends Component {
 
 
         <Menu desktop={true}>
-        {(path|| searchText) && <RaisedButton
-                                      primary={true}
-                                      icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>home</i>}
-                                      style={{...style, "marginLeft": "2px"}}
-                                      onTouchTap={()=>{;handleToggle(false); changeLevel("")}}
-                                    />}
-        { path &&  <RaisedButton
-                        primary={true}
-                        icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>fast_rewind</i>}
-                        style={{...style, "float": "right", "marginRight": "2px"}}
-                        onTouchTap={()=>{changeLevel(path)}}
-                      />}
+      
+					  
+		{(path|| searchText) &&  <div className="pull-left" style={{marginLeft:12, marginBottom:10, cursor:'pointer'}}  onTouchTap={()=>{changeLevel(path)}}><i className="material-icons" style={{"color": "#757575"}}>arrow_back</i></div>}
+        { path &&  <div className="pull-right" style={{marginRight:12,marginBottom:10,cursor:'pointer'}} onTouchTap={()=>{handleToggle(false); changeLevel("")}} ><i className="material-icons" style={{"color": "#757575"}}>home</i></div>}		  
 
-
+		<div className="clearfix"></div>
 
             {showMenuTwo()}
 

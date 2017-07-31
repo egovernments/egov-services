@@ -75,7 +75,7 @@ public class Fundsource extends Auditable {
 	@Length(min = 1, max = 25)
 	private String type;
 
-	private Fundsource fundSource;
+	private Fundsource parent;
 
 	private BigDecimal llevel;
 

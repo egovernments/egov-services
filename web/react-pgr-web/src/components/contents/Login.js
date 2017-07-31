@@ -574,6 +574,7 @@ class Login extends Component {
                           <Row>
                               <Col lg={12}>
                               <h4>{translate('core.lbl.signin')}</h4>
+							  <Row>
                                 <Col lg={12}>
                                 <TextField
                                     floatingLabelText={translate('core.lbl.addmobilenumber/login')}
@@ -600,7 +601,9 @@ class Login extends Component {
                                   <RaisedButton disabled={!isFormValid} type="submit" label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" primary={true} />
                                   <FlatButton label={translate('core.lbl.forgot.password')} style={styles.buttonTopMargin} onClick={showPasswordModal}/>
                                 </Col>
+									  </Row>
                               </Col>
+						
                           </Row>
                           </CardText>
                     </Card>
@@ -638,7 +641,7 @@ class Login extends Component {
                             value={srn}
                             onChange={(e) => {handleStateChange(e, "srn")}}
                           />
-                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchGrievance(e)}} primary={true}/>
+                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchGrievance(e)}} secondary={true} className="searchButton"/>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>

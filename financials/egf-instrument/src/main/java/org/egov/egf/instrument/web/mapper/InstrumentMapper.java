@@ -32,8 +32,8 @@ public class InstrumentMapper {
 		if (contract.getInstrumentType() != null)
 			instrument.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
 
-		if (contract.getSurrendarReason() != null)
-			instrument.setSurrendarReason(srMapper.toDomain(contract.getSurrendarReason()));
+		if (contract.getSurrenderReason() != null)
+			instrument.setSurrenderReason(srMapper.toDomain(contract.getSurrenderReason()));
 
 		if (contract.getInstrumentVouchers() != null) {
 
@@ -79,8 +79,8 @@ public class InstrumentMapper {
 		if (instrument.getInstrumentType() != null)
 			contract.setInstrumentType(typeMapper.toContract(instrument.getInstrumentType()));
 
-		if (instrument.getSurrendarReason() != null)
-			contract.setSurrendarReason(srMapper.toContract(instrument.getSurrendarReason()));
+		if (instrument.getSurrenderReason() != null)
+			contract.setSurrenderReason(srMapper.toContract(instrument.getSurrenderReason()));
 
 		if (instrument.getInstrumentVouchers() != null) {
 
@@ -127,8 +127,8 @@ public class InstrumentMapper {
 		if (contract.getInstrumentType() != null)
 			instrumentSearch.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
 
-		if (contract.getSurrendarReason() != null)
-			instrumentSearch.setSurrendarReason(srMapper.toDomain(contract.getSurrendarReason()));
+		if (contract.getSurrenderReason() != null)
+			instrumentSearch.setSurrenderReason(srMapper.toDomain(contract.getSurrenderReason()));
 
 		if (contract.getInstrumentVouchers() != null) {
 
@@ -176,8 +176,8 @@ public class InstrumentMapper {
 		if (instrumentSearch.getInstrumentType() != null)
 			contract.setInstrumentType(typeMapper.toContract(instrumentSearch.getInstrumentType()));
 
-		if (instrumentSearch.getSurrendarReason() != null)
-			contract.setSurrendarReason(srMapper.toContract(instrumentSearch.getSurrendarReason()));
+		if (instrumentSearch.getSurrenderReason() != null)
+			contract.setSurrenderReason(srMapper.toContract(instrumentSearch.getSurrenderReason()));
 
 		if (instrumentSearch.getInstrumentVouchers() != null) {
 

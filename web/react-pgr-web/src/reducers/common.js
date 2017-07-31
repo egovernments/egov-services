@@ -53,7 +53,9 @@ let menuConvention={
 	"Property Tax.Existing Property.SearchProperty":"/propertyTax/search",
   "Water Charge.Water Transactions.SearchWaterConnectionAPI":"/search/wc/view",
   "Water Charge.WCMS Masters.CategoryMasters.View Category Type":"/search/wc/categoryType/view",
-  "Water Charge.WCMS Masters.CategoryMasters.Update Catgeory Type":"/search/wc/categoryType/update"
+  "Water Charge.WCMS Masters.CategoryMasters.Update Catgeory Type":"/search/wc/categoryType/update",
+  "Water Charge.WCMS Masters.Document Type Master.SearchDocumentTypeMaster":"/search/wc/documentType/view",
+  "Water Charge.WCMS Masters.Document Type Master.DocumentTypeModify":"/search/wc/documentType/update",
 
 
 }

@@ -1,0 +1,34 @@
+{
+    "responseInfo": {
+    	"apiId":null,
+     	"ver":null,
+      	"ts":null,
+      	"resMsgId":null,
+       	"msgId":null,
+        "status":null
+    },
+    "feeMatrices": [
+        {
+            "tenantId": "default",
+            "applicationType": null,
+            "categoryId": null,
+            "businessNature": null,
+            "subCategoryId": null,
+            "financialYear": null,
+            "effectiveFrom":null,
+            "effectiveTo":null,
+            "feeMatrixDetails": [{
+            	"feeMatrixId" : null,
+            	"uomFrom" : null,
+            	"uomTo" : null,
+            	"amount" : null
+            }],
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

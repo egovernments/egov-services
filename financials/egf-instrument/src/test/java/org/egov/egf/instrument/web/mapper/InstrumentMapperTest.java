@@ -52,7 +52,7 @@ public class InstrumentMapperTest {
 		assertEquals(expectedDomain.getDrawer(), domain().getDrawer());
 		assertEquals(expectedDomain.getFinancialStatus().getCode(), domain().getFinancialStatus().getCode());
 		assertEquals(expectedDomain.getInstrumentType().getId(), domain().getInstrumentType().getId());
-		assertEquals(expectedDomain.getSurrendarReason().getId(), domain().getSurrendarReason().getId());
+		assertEquals(expectedDomain.getSurrenderReason().getId(), domain().getSurrenderReason().getId());
 		assertEquals(expectedDomain.getInstrumentVouchers().iterator().next().getInstrument().getId(),
 				domain().getInstrumentVouchers().iterator().next().getInstrument().getId());
 
@@ -81,7 +81,7 @@ public class InstrumentMapperTest {
 		assertEquals(expectedContract.getDrawer(), contract().getDrawer());
 		assertEquals(expectedContract.getFinancialStatus().getCode(), contract().getFinancialStatus().getCode());
 		assertEquals(expectedContract.getInstrumentType().getId(), contract().getInstrumentType().getId());
-		assertEquals(expectedContract.getSurrendarReason().getId(), contract().getSurrendarReason().getId());
+		assertEquals(expectedContract.getSurrenderReason().getId(), contract().getSurrenderReason().getId());
 		assertEquals(expectedContract.getInstrumentVouchers().iterator().next().getInstrument().getId(),
 				contract().getInstrumentVouchers().iterator().next().getInstrument().getId());
 
@@ -111,7 +111,7 @@ public class InstrumentMapperTest {
 		assertEquals(expectedSearchDomain.getFinancialStatus().getCode(),
 				searchDomain().getFinancialStatus().getCode());
 		assertEquals(expectedSearchDomain.getInstrumentType().getId(), searchDomain().getInstrumentType().getId());
-		assertEquals(expectedSearchDomain.getSurrendarReason().getId(), searchDomain().getSurrendarReason().getId());
+		assertEquals(expectedSearchDomain.getSurrenderReason().getId(), searchDomain().getSurrenderReason().getId());
 		assertEquals(expectedSearchDomain.getInstrumentVouchers().iterator().next().getInstrument().getId(),
 				searchDomain().getInstrumentVouchers().iterator().next().getInstrument().getId());
 
@@ -142,8 +142,8 @@ public class InstrumentMapperTest {
 		assertEquals(expectedSearchContract.getFinancialStatus().getCode(),
 				searchContract().getFinancialStatus().getCode());
 		assertEquals(expectedSearchContract.getInstrumentType().getId(), searchContract().getInstrumentType().getId());
-		assertEquals(expectedSearchContract.getSurrendarReason().getId(),
-				searchContract().getSurrendarReason().getId());
+		assertEquals(expectedSearchContract.getSurrenderReason().getId(),
+				searchContract().getSurrenderReason().getId());
 		assertEquals(expectedSearchContract.getInstrumentVouchers().iterator().next().getInstrument().getId(),
 				searchContract().getInstrumentVouchers().iterator().next().getInstrument().getId());
 
@@ -173,7 +173,7 @@ public class InstrumentMapperTest {
 		instrument.setDrawer("drawer");
 		instrument.setFinancialStatus(FinancialStatusContract.builder().code("code").build());
 		instrument.setInstrumentType(InstrumentType.builder().id("id").build());
-		instrument.setSurrendarReason(SurrenderReason.builder().id("id").build());
+		instrument.setSurrenderReason(SurrenderReason.builder().id("id").build());
 
 		Set<InstrumentVoucher> instrumentVouchers = new HashSet<>();
 
@@ -205,7 +205,7 @@ public class InstrumentMapperTest {
 		contract.setDrawer("drawer");
 		contract.setFinancialStatus(FinancialStatusContract.builder().code("code").build());
 		contract.setInstrumentType(InstrumentTypeContract.builder().id("id").build());
-		contract.setSurrendarReason(SurrenderReasonContract.builder().id("id").build());
+		contract.setSurrenderReason(SurrenderReasonContract.builder().id("id").build());
 
 		Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<>();
 
@@ -237,7 +237,7 @@ public class InstrumentMapperTest {
 		instrumentSearch.setDrawer("drawer");
 		instrumentSearch.setFinancialStatus(FinancialStatusContract.builder().code("code").build());
 		instrumentSearch.setInstrumentType(InstrumentType.builder().id("id").build());
-		instrumentSearch.setSurrendarReason(SurrenderReason.builder().id("id").build());
+		instrumentSearch.setSurrenderReason(SurrenderReason.builder().id("id").build());
 
 		Set<InstrumentVoucher> instrumentVouchers = new HashSet<>();
 
@@ -271,7 +271,7 @@ public class InstrumentMapperTest {
 		contract.setDrawer("drawer");
 		contract.setFinancialStatus(FinancialStatusContract.builder().code("code").build());
 		contract.setInstrumentType(InstrumentTypeContract.builder().id("id").build());
-		contract.setSurrendarReason(SurrenderReasonContract.builder().id("id").build());
+		contract.setSurrenderReason(SurrenderReasonContract.builder().id("id").build());
 
 		Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<>();
 

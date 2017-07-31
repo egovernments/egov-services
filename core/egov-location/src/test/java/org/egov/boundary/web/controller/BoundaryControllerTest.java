@@ -8,13 +8,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.persistence.entity.Boundary;
+import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.web.contract.factory.ResponseInfoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +37,7 @@ public class BoundaryControllerTest {
 
 	@MockBean
 	private BoundaryService boundaryService;
-	
+
 	@MockBean
 	private BoundaryTypeService boundaryTypeService;
 
@@ -106,19 +109,148 @@ public class BoundaryControllerTest {
 	}
 
 	@Test
-	public void testShouldReturnBadRequestWhenTenantIdAndBoundaryIdsNotProvided() throws Exception {
-		when(boundaryService.getAllBoundariesByBoundaryIdsAndTenant(any(String.class), anyListOf(Long.class)))
-				.thenReturn(null);
-		mockMvc.perform(post("/boundarys/_search").contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isBadRequest());
+	public void testShouldReturnBadRequestWhenTenantIsNotThere() throws Exception {
+		mockMvc.perform(post("/boundarys/_search").header("X-CORRELATION-ID", "someId")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
 	}
 
 	@Test
-	public void testShouldReturnBadRequestWhenTenantIdAndBoundaryIdsAreEmpty() throws Exception {
-		when(boundaryService.getAllBoundariesByBoundaryIdsAndTenant(any(String.class), anyListOf(Long.class)))
-				.thenReturn(null);
-		mockMvc.perform(post("/boundarys/_search").param("tenantId", "").param("boundaryIds", "")
+	public void testShouldReturnBadRequestWhenTenantIsEmpty() throws Exception {
+		mockMvc.perform(post("/boundarys/_search").param("tenantId", "").header("X-CORRELATION-ID", "someId")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void testShouldReturnBoundariesWhenTenanIdNotNull() throws Exception {
+
+		List<Boundary> boundaryList = getBoundaries();
+		when(boundaryService.getAllBoundaryByTenantId("default")).thenReturn(boundaryList);
+
+		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").header("X-CORRELATION-ID", "someId")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+	}
+
+	@Test
+	public void testShouldReturnBoundariesWhenTenanIdAndBoundaryTypeNotNull() throws Exception {
+
+		List<Long> list = new ArrayList<Long>();
+	
+		list.add(1l);
+		
+		List<Boundary> boundaryList = getBoundaries();
+		
+		when(boundaryTypeService.getAllBoundarytypesByNameAndTenant("City","default")).thenReturn(getBoundaryTypeList());
+		
+		when(boundaryService.getAllBoundaryByTenantIdAndTypeIds("default",list)).thenReturn(boundaryList);
+
+		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").param("boundaryType", "City")
+				.header("X-CORRELATION-ID", "someId")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void testShouldReturnBoundariesWhenTenanIdAndBoundaryIdsAndTypeNotNull() throws Exception {
+
+		List<Long> list = new ArrayList<Long>();
+	
+		list.add(1l);
+		
+		List<Boundary> boundaryList = getBoundaries();
+		
+		when(boundaryService.getAllBoundariesByNumberAndType("default",1l,list)).thenReturn(boundaryList);
+
+		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").param("boundaryIds", "1").param("boundaryNum", "1")
+				.header("X-CORRELATION-ID", "someId")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void testShouldReturnBoundariesWhenTenanIdAndBoundaryIdsNotNull() throws Exception {
+
+		List<Long> list = new ArrayList<Long>();
+	
+		list.add(1l);
+		
+		List<Boundary> boundaryList = getBoundaries();
+		
+		when(boundaryService.getAllBoundariesByBoundaryIdsAndTenant("default",list)).thenReturn(boundaryList);
+
+		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").param("boundaryIds", "1")
+				.header("X-CORRELATION-ID", "someId")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+	}
+	
+	
+	@Test
+	public void testShouldReturnBoundariesWhenTenanIdAndBoundaryNumberNotNull() throws Exception {
+
+		List<Long> list = new ArrayList<Long>();
+	
+		list.add(1l);
+		
+		List<Boundary> boundaryList = getBoundaries();
+		
+		when(boundaryService.getAllBoundaryByTenantIdAndNumber("default",1l)).thenReturn(boundaryList);
+
+		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").param("boundaryNum", "1")
+				.header("X-CORRELATION-ID", "someId")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+	}
+	
+	
+	@Test
+	public void testShouldReturnBoundariesWhenTenanIdAndBoundaryTypeNotNullAndTypeNotExistInDb () throws Exception {
+
+		List<Long> list = new ArrayList<Long>();
+	
+		list.add(1l);
+		
+		List<Boundary> boundaryList = getBoundaries();
+		
+		when(boundaryTypeService.getAllBoundarytypesByNameAndTenant("City","default")).thenReturn(new ArrayList<BoundaryType>());
+		
+		when(boundaryService.getAllBoundaryByTenantIdAndTypeIds("default",list)).thenReturn(boundaryList);
+
+		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").param("boundaryType", "City")
+				.header("X-CORRELATION-ID", "someId")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
+	}
+	
+
+	private List<Boundary> getBoundaries() {
+
+		List<Boundary> boundaryList = new ArrayList<Boundary>();
+
+		Boundary boundary1 = new Boundary();
+		
+		boundary1.setId(1l);
+		boundary1.setTenantId("default");
+		boundary1.setName("TestBoundaryOne");
+
+		Boundary boundary2 = new Boundary();
+
+		boundary2.setId(2l);
+		boundary2.setName("TestBoundaryTwo");
+		boundary2.setTenantId("default");
+
+		boundaryList.add(boundary1);
+		boundaryList.add(boundary2);
+		return boundaryList;
+
+	}
+	
+	private List<BoundaryType> getBoundaryTypeList(){
+		
+		List<BoundaryType> boundaryTypeList = new ArrayList<BoundaryType>();
+		
+		BoundaryType type1 = new BoundaryType();
+		
+		type1.setId(1l);
+		type1.setLocalName("TestOne");
+		
+		boundaryTypeList.add(type1);
+		
+		return boundaryTypeList;
 	}
 
 	private String getFileContents(String fileName) {

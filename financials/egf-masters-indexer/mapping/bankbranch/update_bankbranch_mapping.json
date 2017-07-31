@@ -36,7 +36,7 @@
         "fax": {
             "type": "keyword"
         },
-        "contactperson": {
+        "contactPerson": {
             "type": "keyword"
         },
         "active": {
@@ -48,21 +48,21 @@
 	"micr": {
             "type": "keyword"
         },
-        "createdby": {
+        "createdBy": {
             "type": "object"
         },
-        "lastmodifiedby": {
+        "lastModifiedBy": {
             "type": "object"
         },
-        "createddate": {
+        "createdDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "lastmodifieddate": {
+        "lastModifiedDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "tenantid": {
+        "tenantId": {
             "type": "keyword"
         }
     }

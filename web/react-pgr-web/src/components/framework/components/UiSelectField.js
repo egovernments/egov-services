@@ -16,9 +16,8 @@ class UiSelectField extends Component {
 			 }
    	}
 
-	componentDidMount()
-	{
-		let {item, setDropDownData, useTimestamp}=this.props;
+   	initDat(props) {
+   		let {item, setDropDownData, useTimestamp}=props;
 		// console.log(this.props.item);
 		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1 && item.url.search("{")==-1)
 		{
@@ -70,6 +69,16 @@ class UiSelectField extends Component {
 					console.log(err);
 			});
 		}
+   	}
+
+   	componentWillReceiveProps(nextProps, nextState) {
+   		if(!_.isEqual(nextProps, this.props)) {
+   			this.initDat(nextProps);
+   		}
+   	}
+
+	componentDidMount() {
+		this.initDat(this.props);	
 	}
 
 

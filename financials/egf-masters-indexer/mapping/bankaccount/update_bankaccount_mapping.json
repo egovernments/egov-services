@@ -6,45 +6,45 @@
         "id": {
             "type": "keyword"
         },
-        "bankbranch": {
+        "bankBranch": {
             "type": "object"
         },
-        "chartofaccount": {
+        "chartOfAccount": {
             "type": "object"
         },
         "fund": {
             "type": "object"
         },
-        "accountnumber": {
+        "accountNumber": {
             "type": "keyword"
         },
-        "accounttype": {
+        "accountType": {
             "type": "keyword"
         },
         "description": {
             "type": "keyword"
         },
-        "payto": {
+        "payTo": {
             "type": "keyword"
         },
 	"type": {
+            "type": "keyword"
+        },
+        "createdBy": {
             "type": "object"
         },
-        "createdby": {
+        "lastModifiedBy": {
             "type": "object"
         },
-        "lastmodifiedby": {
-            "type": "object"
-        },
-        "createddate": {
+        "createdDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "lastmodifieddate": {
+        "lastModifiedDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "tenantid": {
+        "tenantId": {
             "type": "keyword"
         }
     }

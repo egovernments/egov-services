@@ -15,35 +15,35 @@
         "scheme": {
             "type": "object"
         },
-        "validfrom": {
+        "validFrom": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "validto": {
+        "validTo": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "departmentid": {
+        "departmentId": {
             "type": "keyword"
         },
         "active": {
             "type": "boolean"
         },
-        "createdby": {
+        "createdBy": {
             "type": "object"
         },
-        "lastmodifiedby": {
+        "lastModifiedBy": {
             "type": "object"
         },
-        "createddate": {
+        "createdDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "lastmodifieddate": {
+        "lastModifiedDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "tenantid": {
+        "tenantId": {
             "type": "keyword"
         }
     }

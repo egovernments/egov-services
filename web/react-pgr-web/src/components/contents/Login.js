@@ -669,7 +669,7 @@ class Login extends Component {
                         <i className="material-icons">phone</i>
                       </FontIcon>
                       <p>{tenantInfo.length && tenantInfo[0].contactNumber}</p>
-                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0].email} >mc.kurnool@cdma.gov.in</a>
+                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0].email} >{tenantInfo.length && tenantInfo[0].email}</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon style={styles.iconSize}>

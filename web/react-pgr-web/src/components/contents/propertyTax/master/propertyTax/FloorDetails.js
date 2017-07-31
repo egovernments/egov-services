@@ -685,7 +685,7 @@ calcArea = (e, type) => {
 														/>
 													</Col>
 													
-													{(floorDetails.floor? !getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : false) 
+													{(floorDetails.floor ? !getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : true) 
 													
 													&& <Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
@@ -761,6 +761,10 @@ calcArea = (e, type) => {
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
 															  
+															  floorDetails.floor.length = '';
+															  floorDetails.floor.width = '';
+															  floorDetails.floor.builtupArea = '';
+															  
 															  var e = {
 																target: {
 																  value: value
@@ -793,6 +797,7 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor.isStructured == 'YES') ? true : false}
 														/>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
@@ -810,6 +815,7 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor.isStructured == 'YES') ? true : false}
 														/>
 													</Col>
 													
@@ -828,7 +834,7 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={this.state.hasLengthWidth}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor.isStructured == 'NO') ? true : false}
 														/>
 													</Col>
 
@@ -837,7 +843,7 @@ calcArea = (e, type) => {
 														  floatingLabelText="Occupancy Certificate Number"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"occupancyCertiNumber", false, /^\d[a-zA-Z0-9]{9}$/g)}}
+														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -851,7 +857,7 @@ calcArea = (e, type) => {
 														  floatingLabelText="Building Permission number"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.bpaNo? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaNo}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.bpaNo : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"bpaNo", false, /^\d[a-zA-Z0-9]{14}$/g)}}
+														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"bpaNo", false, /^[a-z0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -883,7 +889,7 @@ calcArea = (e, type) => {
 														  floatingLabelText="Plinth area in Building plan"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.bpaBuiltupArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaBuiltupArea}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.bpaBuiltupArea : ""}
-														  onChange={(e) => {handleChangeNextOne(e, "floor","bpaBuiltupArea", false,  /^\d{6}$/g)}}
+														  onChange={(e) => {handleChangeNextOne(e, "floor","bpaBuiltupArea", false,  /^\d+$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -952,28 +958,28 @@ calcArea = (e, type) => {
                                               if(i){
                                                 return (<tr key={index}>
                                                     <td>{index}</td>
-                                                    <td>{getNameById(_this.state.floorNumber ,i.floorNo)}</td>
-													<td>{getNameById(_this.state.unitType ,i.unitType)}</td>
-													<td>{i.flatNo ? i.flatNo : ''}</td>
-                                                    <td>{i.unitNo}</td>
-                                                    <td>{i.structure}</td>
-                                                    <td>{i.usageType}</td>
-                                                    <td>{i.usageSubType}</td>
-                                                    <td>{i.firmName}</td>
-                                                    <td>{i.occupancyType}</td>
-                                                    <td>{i.occupierName}</td>
-                                                    <td>{i.annualRent}</td>
-                                                    <td>{i.manualArv}</td>
-                                                    <td>{i.constCompletionDate}</td>
-                                                    <td>{i.occupancyDate}</td>
-                                                    <td>{i.isStructured}</td>
-                                                    <td>{i.length}</td>
-                                                    <td>{i.width}</td>
-                                                    <td>{i.builtupArea}</td>
-                                                    <td>{i.occupancyCertiNumber}</td>
+                                                    <td>{getNameById(_this.state.floorNumber ,i.floorNo) || 'NA'}</td>
+													<td>{getNameById(_this.state.unitType ,i.unitType)  || 'NA'}</td>
+													<td>{i.flatNo ? i.flatNo : 'NA'}</td>
+                                                    <td>{i.unitNo || 'NA'}</td>
+                                                    <td>{i.structure || 'NA'}</td>
+                                                    <td>{i.usage || 'NA'}</td>
+                                                    <td>{i.usageSubType || 'NA'}</td>
+                                                    <td>{i.firmName || 'NA'}</td>
+                                                    <td>{i.occupancyType || 'NA'}</td>
+                                                    <td>{i.occupierName || 'NA'}</td>
+                                                    <td>{i.annualRent || 'NA'}</td>
+                                                    <td>{i.manualArv || 'NA'}</td>
+                                                    <td>{i.constCompletionDate || 'NA'}</td>
+                                                    <td>{i.occupancyDate || 'NA'}</td>
+                                                    <td>{i.isStructured || 'NA'}</td>
+                                                    <td>{i.length || 'NA'}</td>
+                                                    <td>{i.width || 'NA'}</td>
+                                                    <td>{i.builtupArea || 'NA'}</td>
+                                                    <td>{i.occupancyCertiNumber || 'NA'}</td>
                                                     <td>{i.bpaNo}</td>
-                                                    <td>{i.bpaDate}</td>
-                                                    <td>{i.bpaBuiltupArea}</td>
+                                                    <td>{i.bpaDate || 'NA'}</td>
+                                                    <td>{i.bpaBuiltupArea || 'NA'}</td>
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
 															if(i.isStructured){

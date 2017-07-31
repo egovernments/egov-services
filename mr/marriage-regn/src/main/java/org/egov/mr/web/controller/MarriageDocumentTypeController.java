@@ -1,22 +1,14 @@
 package org.egov.mr.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
-import org.egov.mr.model.MarriageDocumentType;
 import org.egov.mr.service.MarriageDocumentTypeService;
-import org.egov.mr.web.contract.MarriageDocTypeResponse;
+import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
 import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.ErrorHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,11 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/marriageRegns/documents")
+@Slf4j
 public class MarriageDocumentTypeController {
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(RegistrationUnitController.class);
 
 	@Autowired
 	private ErrorHandler errorHandler;
@@ -44,45 +37,63 @@ public class MarriageDocumentTypeController {
 			@ModelAttribute @Valid MarriageDocumentTypeSearchCriteria marriageDocumentTypeSearchCriteria,
 			BindingResult bindingResultForRegnDocumentTypeSearchCriteria) {
 
-		LOGGER.info("requestInfoWrapper : " + requestInfoWrapper);
-		LOGGER.info("regnDocumentTypeSearchCriteria : " + marriageDocumentTypeSearchCriteria);
+		log.info("requestInfoWrapper : " + requestInfoWrapper);
+		log.info("regnDocumentTypeSearchCriteria : " + marriageDocumentTypeSearchCriteria);
 
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
 		// Validation
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForSearch(requestInfo,
 				bindingResultsForRequestInfoWrapper, bindingResultForRegnDocumentTypeSearchCriteria);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
+
 		// Entering service method
-		List<MarriageDocumentType> marriageDocTypesList = new ArrayList();
+		ResponseEntity<?> marriageDocumentTypeResponse = null;
 		try {
-			marriageDocTypesList = marriageDocumentTypeService.search(marriageDocumentTypeSearchCriteria);
+			marriageDocumentTypeResponse = marriageDocumentTypeService.search(marriageDocumentTypeSearchCriteria,
+					requestInfo);
 		} catch (Exception e) {
-			LOGGER.info(" Error While Procssing the Request!");
+			log.info(" Error While Procssing the Request!");
 			return errorHandler.getUnExpectedErrorResponse(bindingResultsForRequestInfoWrapper, requestInfo,
 					"Encountered : " + e.getMessage());
 		}
-		return getSuccessResponse(marriageDocTypesList, requestInfo);
+		return marriageDocumentTypeResponse;
 	}
 
-	// returning the Response to method in the same class
-	private ResponseEntity<?> getSuccessResponse(List<MarriageDocumentType> marriageDocTypesList,
-			RequestInfo requestInfo) {
-		// Setting ResponseInfo
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
-		responseInfo.setResMsgId(requestInfo.getMsgId());
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
-		responseInfo.setTs(requestInfo.getTs());
-		responseInfo.setVer(requestInfo.getVer());
+	@PostMapping
+	@RequestMapping("/_create")
+	public ResponseEntity<?> createMarriageDocumentType(
+			@RequestBody @Valid MarriageDocTypeRequest marriageDocTypeRequest, BindingResult bindingResult) {
 
-		// Setting regnUnitResponse responseInfo
-		MarriageDocTypeResponse marriageDocTypeResponse = new MarriageDocTypeResponse();
-		marriageDocTypeResponse.setResponseInfo(responseInfo);
-		// Setting regnUnitResponse registrationUnitsList
-		marriageDocTypeResponse.setMarriageDocTypes(marriageDocTypesList);
-		return new ResponseEntity<MarriageDocTypeResponse>(marriageDocTypeResponse, HttpStatus.OK);
+		log.info("Controller:: MarriageDocTypeRequest: " + marriageDocTypeRequest);
+
+		RequestInfo requestInfo = marriageDocTypeRequest.getRequestInfo();
+		// Validate for Binding Errors
+		if (bindingResult.hasErrors()) {
+			ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+					bindingResult);
+			if (errorResponseEntity != null) {
+				return errorResponseEntity;
+			}
+		}
+		return marriageDocumentTypeService.createAsync(marriageDocTypeRequest);
+
 	}
+
+	@PostMapping
+	@RequestMapping("/_update")
+	public ResponseEntity<?> updateMarriageDocumentType(
+			@RequestBody @Valid MarriageDocTypeRequest marriageDocTypeRequest, BindingResult bindingResult) {
+		RequestInfo requestInfo = marriageDocTypeRequest.getRequestInfo();
+		if (bindingResult.hasErrors()) {
+			ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+					bindingResult);
+			if (errorResponseEntity != null) {
+				return errorResponseEntity;
+			}
+		}
+		return marriageDocumentTypeService.updateAsync(marriageDocTypeRequest);
+	}
+
 }

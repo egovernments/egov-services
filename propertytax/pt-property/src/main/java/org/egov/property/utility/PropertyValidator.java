@@ -241,17 +241,16 @@ public class PropertyValidator {
 				throw new InvalidCodeException(env.getProperty("invalid.input.walltype"), requestInfo);
 		}
 
-		if (property.getPropertyDetail().getPropertyType().equalsIgnoreCase(env.getProperty("vacantLand"))) {
-			if (property.getVacantLand() != null)
+		if (property.getPropertyDetail().getPropertyType()
+				.equalsIgnoreCase(env.getProperty("egov.property.type.vacantLand"))) {
+			if (property.getVacantLand() == null)
 				throw new InvalidVacantLandException(env.getProperty("invalid.property.vacantland"), requestInfo);
+
+		} else if (property.getPropertyDetail().getFloors() == null
+				|| property.getPropertyDetail().getFloors().size() <= 0) {
+
+			throw new InvalidFloorException(env.getProperty("invalid.property.floor"), requestInfo);
 		}
-
-		if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(env.getProperty("vacantLand"))) {
-
-			if (property.getPropertyDetail().getFloors() != null)
-				throw new InvalidFloorException(env.getProperty("invalid.property.floor"), requestInfo);
-		}
-
 	}
 
 	/**

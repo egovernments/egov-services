@@ -50,6 +50,7 @@ import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.ChartOfAccountsRepository;
+import org.egov.collection.repository.InstrumentRepository;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
@@ -90,6 +91,9 @@ public class ReceiptService {
 
 	@Autowired
 	private BillingServiceRepository billingServiceRepository;
+	
+	@Autowired
+	private InstrumentRepository instrumentRepository;
 
 	public ReceiptCommonModel getReceipts(
 			ReceiptSearchCriteria receiptSearchCriteria) throws ParseException {
@@ -111,17 +115,17 @@ public class ReceiptService {
 
 	    Receipt receipt = null;
 
-/*	    String instrumentid = getInstrumentId(receiptReq);
+	    String instrumentid = instrumentRepository.getInstrumentId(receiptReq);
 	    LOGGER.info("Instrument id recieved: "+instrumentid);
 		 if(null == instrumentid || instrumentid.isEmpty()){ 
 			 return null; 
 		 }else{ 
 			receipt = create(bill, receiptReq.getRequestInfo(),
 						receiptReq.getTenantId(), instrumentid); // sync call //uncomment for instrument integration
-		}  */
+		}  
 		 
-		receipt = create(bill, receiptReq.getRequestInfo(),
-				receiptReq.getTenantId(), "instrumentid"); // sync call
+	/*	receipt = create(bill, receiptReq.getRequestInfo(),
+				receiptReq.getTenantId(), "instrumentid"); // sync call */
 		
 		LOGGER.info("Receipt receieved: "+receipt);
 		if (null != receipt){
@@ -485,39 +489,6 @@ public class ReceiptService {
 
 	public List<String> getReceiptStatus(final String tenantId) {
 		return receiptRepository.getReceiptStatus(tenantId);
-	}
-
-	public String getInstrumentId(ReceiptReq receiptReq) {
-		String instrumentId = null;
-		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getInstrumentServiceHost();
-		String baseUri = applicationProperties.getCreateInstrument();
-		builder.append(hostname).append(baseUri);
-		Receipt receipt = receiptReq.getReceipt().get(0);
-		Instrument instrument = receipt.getInstrument();
-		List<Instrument> instruments = new ArrayList<>();
-		instruments.add(instrument);
-		InstrumentRequest instrumentRequest = new InstrumentRequest();
-		instrumentRequest.setRequestInfo(receiptReq.getRequestInfo());
-		instrumentRequest.setInstruments(instruments);
-		Object response = null;
-		
-		LOGGER.info("Request to instrument create: "+instrumentRequest.toString());
-		LOGGER.info("URI Instrument create: "+builder.toString());
-		try {
-			response = restTemplate.postForObject(builder.toString(),
-					instrumentRequest, Object.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error(
-					"Couldn't create instrument in the instrument service.",
-					e.getCause());
-			return instrumentId;
-		}
-		LOGGER.info("Response from instrument service: " + response.toString());
-		
-		instrumentId = JsonPath.read(response, "$.instruments[0].id");
-		return instrumentId;
 	}
 
 	public void pushUpdateReceiptDetailsToQueque(Long id, Long stateId,

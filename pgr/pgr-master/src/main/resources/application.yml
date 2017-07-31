@@ -358,14 +358,14 @@ ReportDefinitions:
     label: reports.pgr.dateto
     type: epoch
     source: seva
-  query: SELECT us.username AS employeename, count(CASE WHEN cs.name::text = 'REGISTERED'::text
-    THEN 1 ELSE NULL::integer END) AS registered, count(CASE WHEN cs.name::text =
+  query: SELECT us.username AS employeename, count(CASE WHEN cs.status::text = 'REGISTERED'::text
+    THEN 1 ELSE NULL::integer END) AS registered, count(CASE WHEN cs.status::text =
     ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text,
     'NOTCOMPLETED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
-    count(CASE WHEN cs.name::text = ANY (ARRAY['COMPLETED'::character varying::text,
+    count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,
     'WITHDRAWN'::character varying::text, 'CLOSED'::character varying::text]) THEN
-    1 ELSE NULL::integer END) AS completed, count(CASE WHEN cs.name::text = 'REOPENED'::text
-    THEN 1 ELSE NULL::integer END) AS reopened, count(CASE WHEN cs.name::text = 'REJECTED'::text
+    1 ELSE NULL::integer END) AS completed, count(CASE WHEN cs.status::text = 'REOPENED'::text
+    THEN 1 ELSE NULL::integer END) AS reopened, count(CASE WHEN cs.status::text = 'REJECTED'::text
     THEN 1 ELSE NULL::integer END) AS rejected, sum(CASE WHEN (cs.status::text = ANY
     (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text,
     'WITHDRAWN'::character varying::text])) AND (cs.lastmodifieddate - cs.createddate)

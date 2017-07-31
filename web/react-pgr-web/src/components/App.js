@@ -139,15 +139,26 @@ class App extends Component {
 
       // console.log("hit");
 
-      Api.commonApiPost("tenant/v1/tenant/_search", {code:localStorage.getItem("token")?localStorage.getItem("tenantId"):typeof(this.props.match.params.tenantId)!="undefined"?this.props.match.params.tenantId:'default'}).then(function(res){
-        console.log(res);
-        setTenantInfo(res.tenant);
-      }, function(err){
-          console.log(err);
-      })
 
-      if(localStorage.getItem("token") && localStorage.getItem("userRequest")) {
+
+      if(localStorage.getItem("token") && localStorage.getItem("userRequest"))
+      {
         this.props.onLoad({UserRequest: JSON.parse(localStorage.getItem("userRequest"))}, localStorage.getItem("token"));
+        Api.commonApiPost("tenant/v1/tenant/_search", {code:localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default'}).then(function(res){
+          // console.log(res);
+          setTenantInfo(res.tenant);
+        }, function(err){
+            console.log(err);
+        })
+      }
+      else {
+        var hash = window.location.hash.split("/");
+        Api.commonApiPost("tenant/v1/tenant/_search", {code:typeof(hash[1])!="undefined"?hash[1]:'default'}).then(function(res){
+          // console.log(res);
+          setTenantInfo(res.tenant);
+        }, function(err){
+            console.log(err);
+        })
       }
   }
 

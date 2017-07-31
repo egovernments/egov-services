@@ -80,4 +80,7 @@ public class ServiceGroup {
 	@NotNull
 	private AuditDetails auditDetails;
 
+	@NotNull
+	private String keyword;
+
 }

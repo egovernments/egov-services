@@ -71,6 +71,8 @@ public class DemandRepository {
 		String taxReason = null;
 		LOGGER.info("month plus start date is : " + date);
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+			taxReason = propertiesManager.getTaxReasonAdvanceTax();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 			taxReason = propertiesManager.getTaxReasonGoodWillAmount();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 			return demandReasons;
@@ -165,6 +167,8 @@ public class DemandRepository {
 					demandDetail.setCollectionAmount(BigDecimal.valueOf(agreement.getCollectedGoodWillAmount()));
 			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
+				if (agreement.getCollectedSecurityDeposit() != null)
+					demandDetail.setCollectionAmount(BigDecimal.valueOf(agreement.getCollectedSecurityDeposit()));
 			}
 			if(demandDetail.getTaxAmount()!=null)
 			demandDetails.add(demandDetail);

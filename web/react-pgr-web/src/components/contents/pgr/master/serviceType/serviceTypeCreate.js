@@ -93,7 +93,7 @@ class ServiceTypeCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id, keywords : 'complaint'},body).then(function(response){
                 console.log("response",response);
                   console.log("response object",response.Service[0]);
                 current.setState({data:response.Service})
@@ -152,7 +152,7 @@ class ServiceTypeCreate extends Component {
 	  let pgr = this.props.location.pathname.match("pgr");
 
 	  if(pgr){
-		  console.log(this.props.location.pathname, pgr);
+		  //console.log(this.props.location.pathname, pgr);
 		  keyword = "Complaint";
 	  } else {
 		  keyword = "Deliverable";
@@ -166,7 +166,7 @@ class ServiceTypeCreate extends Component {
            "active" :this.props.createServiceType.active,
            "type" :this.props.createServiceType.type,
            "keywords": [
-                "Complaint"
+                "complaint"
               ],
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
@@ -689,7 +689,7 @@ class ServiceTypeCreate extends Component {
                                     id="active"
                                   />
                               </Col>
-                              {/*}<Col xs={12} md={3} sm={6}>
+                              <Col xs={12} md={3} sm={6}>
 
                                   <Checkbox
                                     label="Has Financial Impact"
@@ -707,7 +707,7 @@ class ServiceTypeCreate extends Component {
                                     id="hasFinancialImpact"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              {/*<Col xs={12} md={3} sm={6}>
 
                                                                  <Checkbox
                                                                    label="Attributes"
@@ -726,7 +726,7 @@ class ServiceTypeCreate extends Component {
                                                                  />
                                                              </Col>*/}
                               <div className="clearfix"></div>
-                                {promotionFunc()}
+                                {/*promotionFunc()*/}
 
                           </Row>
                       </Grid>

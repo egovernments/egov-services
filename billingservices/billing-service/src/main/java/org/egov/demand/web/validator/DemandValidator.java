@@ -57,6 +57,7 @@ import org.egov.demand.model.Owner;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.DemandService;
@@ -89,6 +90,9 @@ public class DemandValidator implements Validator {
 	
 	@Autowired
 	private DemandService demandService;
+	
+	@Autowired
+	private DemandRepository demandRepository;
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -112,30 +116,39 @@ public class DemandValidator implements Validator {
 	}
 
 	private void validateDemand(DemandRequest demandRequest, Errors errors) {
-		
-		for(Demand demand : demandRequest.getDemands())
-			for(DemandDetail demandDetail : demand.getDemandDetails()){
-				
+
+		Map<String, Set<String>> businessConsumerValidatorMap = new HashMap<>();
+		String tenatId = null;
+
+		for (Demand demand : demandRequest.getDemands()) {
+			tenatId = demand.getTenantId();
+			Set<String> consumerCodes = businessConsumerValidatorMap.get(demand.getBusinessService());
+			if (consumerCodes != null)
+				consumerCodes.add(demand.getConsumerCode());
+			else {
+				consumerCodes = new HashSet<>();
+				consumerCodes.add(demand.getConsumerCode());
+				businessConsumerValidatorMap.put(demand.getBusinessService(), consumerCodes);
+			}
+
+			for (DemandDetail demandDetail : demand.getDemandDetails()) {
+
 				BigDecimal tax = demandDetail.getTaxAmount();
 				BigDecimal collection = demandDetail.getCollectionAmount();
 				int i = tax.compareTo(collection);
-				if(i < 0)
-					errors.rejectValue("Demands", "",
-							"collectionAmount : "+collection+" should not be greater than taxAmount : "+tax+" for demandDetail");
+				if (i < 0)
+					errors.rejectValue("Demands", "", "collectionAmount : " + collection
+							+ " should not be greater than taxAmount : " + tax + " for demandDetail");
 			}
-		DemandCriteria demandCriteria=null;
-		DemandResponse demandResponse=null;
-		Set<String> consumerCodes=new HashSet<String>();
-		//TODO DEMAND UNIQUE VALIDATION WITH BUSINESSERVICE AND CONSUMERCODE
-//		System.out.println("Validating demand::::::::::::::::::::");
-//		for(Demand demand : demandRequest.getDemands()){
-//			consumerCodes.add(demand.getConsumerCode());
-//			demandCriteria=DemandCriteria.builder().businessService(demand.getBusinessService()).consumerCode(consumerCodes).tenantId(demand.getTenantId()).build();
-//			demandResponse=demandService.getDemands(demandCriteria,demandRequest.getRequestInfo());
-//			
-//			if(!demandResponse.getDemands().isEmpty())
-//				errors.rejectValue("Demands","","Demand you are creating is already exist");
-//		}
+		}
+		List<Demand> demands = demandRepository.getDemandsForConsumerCodes(businessConsumerValidatorMap, tenatId);
+		for (Demand demand : demands) {
+
+			Set<String> consumerCodes = businessConsumerValidatorMap.get(demand.getBusinessService());
+			if (consumerCodes.contains(demand.getConsumerCode()))
+				errors.rejectValue("Demands", "", "the consumerCode value : " + demand.getConsumerCode()
+						+ " already exists for businessService : " + demand.getBusinessService());
+		}
 	}
 
 	private void validateTaxPeriod(DemandRequest demandRequest, Errors errors) {

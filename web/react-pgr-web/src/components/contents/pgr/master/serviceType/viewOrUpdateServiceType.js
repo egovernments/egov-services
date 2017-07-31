@@ -155,14 +155,14 @@ class viewOrUpdateServiceType extends Component {
           }
         }
 
-        Api.commonApiPost("/pgr-master/service/v1/_search", {}, {}).then(function(response) {
+        Api.commonApiPost("/pgr-master/service/v1/_search", {keywords : 'complaint'}, {}).then(function(response) {
             checkCountAndSetState("data", response.Service);
         }).catch((error) => {
             checkCountAndSetState("data", []);
         })
 
 
-        Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+        Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword:'complaint'}).then(function(response) {
             checkCountAndSetState("categorySource", response.ServiceGroups);
         }, function(err) {
             checkCountAndSetState("categorySource", []);

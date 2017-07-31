@@ -65,6 +65,189 @@ var dat = {
 				]
 			}
 		]
+	},
+	"wc.search": {
+		"numCols": 12/3,
+		"url": "/wcms/masters/pipesize/_search",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "PipeSize",
+		"groups": [
+			{
+				"label": "wc.search.PipeSize.title",
+				"name": "createCategoryType",
+				"fields": [
+						{
+							"name": "name",
+							"jsonPath": "PipeSize.sizeInMilimeter",
+							"label": "H.S.C Pipe Size (mm):",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "Active",
+							"jsonPath": "PipeSize.active",
+							"label": "Active",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}
+				]
+			}
+		],
+		"result": {
+			"header": [{label: "wc.search.result.code"},{label: "wc.search.result.sizeInInch"},{label: "wc.search.result.sizeInMilimeter"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"values": ["code", "sizeInInch", "sizeInMilimeter","description","active"],
+			"resultPath": "PipeSizes",
+			"rowClickUrlUpdate": "/update/wc/pipesize/{id}",
+			"rowClickUrlView": "/view/wc/pipesize/{id}"
+			}
+	},
+	"wc.view": {
+		"numCols": 12/3,
+		"url": "/wcms/masters/pipesize/_search?id={id}",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "PipeSizes",
+		"groups": [
+			{
+				"label": "wc.view.PipeSize.title",
+				"name": "createCategoryType",
+				"fields": [
+						{
+							"name": "code",
+							"jsonPath": "PipeSizes[0].code",
+							"label": "Code",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "sizeInInch",
+							"jsonPath": "PipeSizes[0].sizeInInch",
+							"label": "H.S.C Pipe Size (Inches):",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "sizeInMilimeter",
+							"jsonPath": "PipeSizes[0].sizeInMilimeter",
+							"label": "H.S.C Pipe Size (mm):",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "description",
+							"jsonPath": "PipeSizes[0].description",
+							"label": "Description",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "active",
+							"jsonPath": "PipeSizes[0].active",
+							"label": "Active",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}
+				]
+			}
+		]
+	},
+	"wc.update": {
+		"numCols": 12/3,
+		"searchUrl": "/wcms/masters/pipesize/_search?id={id}",
+		"url":"/wcms/masters/pipesize/{PipeSizes[0].code}/_update",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "PipeSizes",
+		"groups": [
+			{
+				"label": "wc.create.categorytype.title",
+				"name": "createCategoryType",
+				"fields": [
+					{
+						"name": "name",
+						"jsonPath": "PipeSizes[0].sizeInMilimeter",
+						"label": "  H.S.C Pipe Size (mm):",
+						"pattern": "",
+						"type": "number",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"depedants":[{
+								"jsonPath":"PipeSizes[0].sizeInInch",
+								"type":"textField",
+								"pattern":"`${getVal('PipeSizes[0].sizeInMilimeter')!=''?getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
+								"rg":"",
+								"isRequired": false,
+								"requiredErrMsg": "",
+								"patternErrMsg": ""
+							}]
+					},
+					{
+						"name": "description",
+						"jsonPath": "PipeSizes[0].sizeInInch",
+						"label": "H.S.C Pipe Size (Inches):",
+						"pattern": "",
+						"type": "number",
+						"isRequired": false,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "description",
+						"jsonPath": "PipeSizes[0].description",
+						"label": "Description",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "Active",
+						"jsonPath": "PipeSizes[0].active",
+						"label": "Active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
+				]
+			}
+		]
 	}
 }
 

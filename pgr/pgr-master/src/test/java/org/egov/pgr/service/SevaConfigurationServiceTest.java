@@ -27,7 +27,7 @@ public class SevaConfigurationServiceTest {
 
 	@Test
 	public void test_should_fetch_service_type_from_db() {
-		SevaConfigurationGetRequest criteria = SevaConfigurationGetRequest.builder().name("name")
+		SevaConfigurationGetRequest criteria = SevaConfigurationGetRequest.builder().keyName("name")
 				.id(Collections.singletonList(1L)).tenantId("default").build();
 		when(sevaConfigurationRepository.findForCriteria(criteria)).thenReturn(getSearchResult());
 		Map<String, List<String>> result = sevaConfigurationService.getSevaConfigurations(criteria);

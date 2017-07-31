@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "egov",
+    "description": "An empty new project",
+    "slug": "egov-mobile-app",
+    "privacy": "public",
+    "sdkVersion": "19.0.0",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "primaryColor": "#cccccc",
+    "icon": "./assets/icons/mobile_logo.png",
+    "loading": {
+      "icon": "./assets/icons/mobile_logo.png",
+      "hideExponentText": true
+    },
+    "packagerOpts": {
+      "assetExts": ["ttf", "mp4"]
+    },
+    "ios": {
+      "bundleIdentifier": "com.egov.egov",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.egov.egov"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#000000"
+    }
+  }
+}

@@ -243,6 +243,7 @@ public class RestConnectionService {
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNo=")
                 .append(waterRequestReq.getConnection().getProperty().getPropertyidentifier())
                 .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
+        logger.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
         try {
            propResp = new RestTemplate().postForObject(url.toString(), wrapper,
@@ -277,12 +278,13 @@ public class RestConnectionService {
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?ownerName=")
                 .append(waterConnectionGetReq.getName())
                 .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        logger.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
         try {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
@@ -298,12 +300,13 @@ public class RestConnectionService {
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?mobileNumber=")
                 .append(waterConnectionGetReq.getMobileNumber())
                 .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        logger.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
         try {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
@@ -319,12 +322,13 @@ public class RestConnectionService {
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?locality=")
                 .append(waterConnectionGetReq.getLocality())
                 .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        logger.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
         try {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
@@ -340,12 +344,13 @@ public class RestConnectionService {
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?revenueWard=")
                 .append(waterConnectionGetReq.getRevenueWard())
                 .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        logger.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
         try {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
@@ -361,12 +366,13 @@ public class RestConnectionService {
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?houseNoBldgApt=")
                 .append(waterConnectionGetReq.getDoorNumber())
                 .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        logger.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
         try {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+        	logger.error("Encountered an Exception :" + e);
         }
         if (propResp != null && !propResp.getProperties().isEmpty())
             waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());

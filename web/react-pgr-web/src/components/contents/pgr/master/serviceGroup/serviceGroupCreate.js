@@ -135,7 +135,8 @@ class ServiceGroupCreate extends Component {
            "name" :this.props.createServiceGroup.name,
            "code" :this.props.createServiceGroup.code,
            "description" :this.props.createServiceGroup.description,
-           "tenantId":"default"
+           "tenantId":"default",
+           "keyword": "complaint"
           }
       }
 
@@ -240,7 +241,7 @@ class ServiceGroupCreate extends Component {
               </div>
           </form>
           <Dialog
-               title={this.state.id != '' ? "Service Group Updated Successfully" : "Service Group Added Successfully"}
+               title={this.state.id != '' ? "Grievance Category Updated Successfully" : "Grievance Category Added Successfully"}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}

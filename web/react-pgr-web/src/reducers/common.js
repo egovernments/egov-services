@@ -50,7 +50,8 @@ let menuConvention={
     "Water Charge.WCMS Masters.Supply Type Master.CreateSupplyTypeMasterApi":"/create/wc/supplyType",
     "Water Charge.WCMS Masters.Source Type Master.CreateSourceTypeMasterApi":"/create/wc/waterSourceType",
 	"Property Tax.New Property.CreateNewProperty":"/propertyTax/create-property",
-	"Property Tax.Existing Property.SearchProperty":"/propertyTax/search"
+	"Property Tax.Existing Property.SearchProperty":"/propertyTax/search",
+  "Water Charge.Water Transactions.SearchWaterConnectionAPI":"/search/wc/view"
 
 
 }
@@ -65,7 +66,8 @@ const defaultState = {
   showMenu: false,
   actionList:JSON.parse(localStorage.getItem("actions")) || [],
   showHome: false,
-  menuConvention:menuConvention
+  menuConvention:menuConvention,
+  tenantInfo:[]
 };
 
 export default (state = defaultState, action) => {
@@ -77,6 +79,15 @@ export default (state = defaultState, action) => {
         appLoaded: true,
         currentUser: action.payload ? action.payload.UserRequest : null
       };
+
+    case "SET_TENANT_INFO":
+      return {
+        ...state,
+        tenantInfo:action.tenantInfo
+      }
+
+      break;
+
     case 'REDIRECT':
       return { ...state, redirectTo: null };
     case 'LOGOUT':

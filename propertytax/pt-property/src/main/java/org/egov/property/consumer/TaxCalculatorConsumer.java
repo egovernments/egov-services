@@ -130,7 +130,7 @@ public class TaxCalculatorConsumer {
 		else {
 
 			String upicNo = upicGeneration.generateUpicNo(property, consumerRecord.value().getRequestInfo());
-			property.setUpicNumber(upicNo);
+			consumerRecord.value().getProperties().get(0).setUpicNumber(upicNo);
 			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
 					consumerRecord.value());
 		}

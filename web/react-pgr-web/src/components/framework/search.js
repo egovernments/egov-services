@@ -13,14 +13,7 @@ import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
 
 var specifications={};
-try {
-  var hash = window.location.hash.split("/");
-  if(hash.length == 4) {
-    specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-  } else {
-    specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-  }
-} catch(e) {}
+
 let reqRequired = [];
 class Report extends Component {
   constructor(props) {
@@ -59,6 +52,15 @@ class Report extends Component {
   }
 
   initData() {
+    try {
+      var hash = window.location.hash.split("/");
+      if(hash.length == 4) {
+        specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+      } else {
+        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+      }
+    } catch(e) {}
+
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let hashLocation = window.location.hash;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];

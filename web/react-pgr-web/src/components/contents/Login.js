@@ -214,7 +214,7 @@ class Login extends Component {
                   if(list.length == 0) {
                     for(var i=0; i<actions.length; i++) {
                       if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
-                        actions.split(i, 1);
+                        actions.splice(i, 1);
                         break;
                       }
                     }

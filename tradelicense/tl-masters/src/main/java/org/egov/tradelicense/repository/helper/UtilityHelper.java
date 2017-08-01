@@ -126,8 +126,10 @@ public class UtilityHelper {
 		UserInfo userInfo = requestInfo.getUserInfo();
 
 		if (userInfo != null) {
-			auditDetails.setCreatedBy(userInfo.getUsername());
-			auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+			if (userInfo.getId() != null) {
+				auditDetails.setCreatedBy(userInfo.getId().toString());
+				auditDetails.setLastModifiedBy(userInfo.getId().toString());
+			}
 		}
 
 		return auditDetails;
@@ -153,8 +155,7 @@ public class UtilityHelper {
 
 		return isExists;
 	}
-	
-	
+
 	/**
 	 * This will check whether any record exists with the given tenantId & name
 	 * in database or not
@@ -163,7 +164,8 @@ public class UtilityHelper {
 	 * @param name
 	 * @return True / false if record exists / record does n't exists
 	 */
-	public Boolean checkWhetherRecordExitswithName(String tenantId, String name, String tableName, Long id, String applicationName) {
+	public Boolean checkWhetherRecordExitswithName(String tenantId, String name, String tableName, Long id,
+			String applicationName) {
 
 		Boolean isExists = Boolean.TRUE;
 
@@ -187,7 +189,6 @@ public class UtilityHelper {
 		return isExists;
 
 	}
-
 
 	public Boolean checkWhetherDocumentTypeExists(DocumentType documentType) {
 

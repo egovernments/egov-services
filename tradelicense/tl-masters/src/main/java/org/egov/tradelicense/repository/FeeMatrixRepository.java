@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.models.AuditDetails;
-import org.egov.models.CategoryDetail;
 import org.egov.models.FeeMatrix;
 import org.egov.models.FeeMatrixDetail;
-import org.egov.tradelicense.repository.builder.CategoryQueryBuilder;
 import org.egov.tradelicense.repository.builder.FeeMatrixQueryBuilder;
 import org.egov.tradelicense.repository.helper.FeeMatrixHelper;
 import org.egov.tradelicense.utility.TimeStampUtil;
@@ -196,19 +194,5 @@ public class FeeMatrixRepository {
 		return feeMatrices;
 	}
 	
-	/**
-	 * Description : this method for search FeeMatrixDetail of a feeMatrixId
-	 * 
-	 * @param feeMatrixId
-	 * @return List<FeeMatrixDetail>
-	 */
-	public List<FeeMatrixDetail> getFeeMatrixDetailsByFeeMatrixId(Long feeMatrixId) {
-		
-		List<Object> preparedStatementValues = new ArrayList<>();
-		String feeMatrixDetailSearchQuery = FeeMatrixQueryBuilder.buildFeeMatrixDetailSearchQuery(feeMatrixId, preparedStatementValues);
-		List<FeeMatrixDetail> feeMatrixDetails = feeMatrixHelper.getFeeMatrixDetails(feeMatrixDetailSearchQuery.toString(),
-				preparedStatementValues);
-
-		return feeMatrixDetails;
-	}
+	
 }

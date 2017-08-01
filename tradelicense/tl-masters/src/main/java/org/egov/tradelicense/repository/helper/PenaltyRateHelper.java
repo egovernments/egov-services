@@ -28,10 +28,11 @@ public class PenaltyRateHelper {
 	public void validatePenaltyRange(String tenantId, PenaltyRateRequest penaltyRateRequest, boolean validateNew) {
 
 		RequestInfo requestInfo = penaltyRateRequest.getRequestInfo();
-		// Assuming ApplicationType in all PenalityRate objects will be same , considering the first one.
+		// Assuming ApplicationType in all PenalityRate objects will be same,
+		// considering the first one.
 		String applicationType = penaltyRateRequest.getPenaltyRates().get(0).getApplicationType().toString();
 		List<PenaltyRate> penaltyRates = new ArrayList<PenaltyRate>();
-		if( tenantId == null ){
+		if (tenantId == null) {
 			tenantId = penaltyRateRequest.getPenaltyRates().get(0).getTenantId();
 		}
 		try {
@@ -39,12 +40,12 @@ public class PenaltyRateHelper {
 		} catch (Exception e) {
 			throw new InvalidInputException(requestInfo);
 		}
-		
-		if( validateNew ){
+
+		if (validateNew) {
 			for (PenaltyRate penaltyRate : penaltyRateRequest.getPenaltyRates()) {
 				penaltyRates.add(penaltyRate);
 			}
-		}else{
+		} else {
 			for (PenaltyRate penaltyRate : penaltyRateRequest.getPenaltyRates()) {
 				for (int i = 0; i < penaltyRates.size(); i++) {
 					Long id = penaltyRates.get(i).getId();
@@ -54,8 +55,7 @@ public class PenaltyRateHelper {
 				}
 			}
 		}
-		
-		
+
 		penaltyRates.sort((s1, s2) -> s1.getFromRange().compareTo(s2.getFromRange()));
 		String oldApplicationType = null;
 		Long oldToRange = null;

@@ -1,5 +1,6 @@
 package org.egov.tradelicense.repository.helper;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,15 +10,147 @@ import org.egov.enums.BusinessNatureEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.FeeMatrix;
 import org.egov.models.FeeMatrixDetail;
+import org.egov.models.RequestInfo;
+import org.egov.tradelicense.exception.InvalidInputException;
+import org.egov.tradelicense.exception.InvalidRangeException;
+import org.egov.tradelicense.repository.builder.FeeMatrixQueryBuilder;
+import org.egov.tradelicense.repository.builder.UtilityBuilder;
+import org.egov.tradelicense.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 public class FeeMatrixHelper {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	@Autowired
+	Environment env;
+
+	/**
+	 * This method will validate the financial year
+	 * 
+	 * @param financialYear
+	 */
+	public void validateFinancialYear(String financialYear, RequestInfo requestInfo) {
+
+		StringBuffer financialYearURI = new StringBuffer();
+		financialYearURI.append(env.getProperty("egov.services.egf-masters.hostname"))
+				.append(env.getProperty("egov.services.egf-masters.basepath"))
+				.append(env.getProperty("egov.services.egf-masters.searchpath"));
+		URI uri = UriComponentsBuilder.fromUriString(financialYearURI.toString()).queryParam("id", financialYear)
+				.build(true).encode().toUri();
+		try {
+			
+			String financialYearResponse = restTemplate.getForObject(uri, String.class);
+
+		} catch (HttpClientErrorException ex) {
+			
+			throw new InvalidInputException(requestInfo);
+		}
+	}
+
+	/**
+	 * This method will validate category and sub category
+	 * 
+	 * @param categoryId
+	 * @param requestInfo
+	 */
+	public void validateCategory(Long categoryId, RequestInfo requestInfo) {
+
+		String tableName = ConstantUtility.CATEGORY_TABLE_NAME;
+		String query = UtilityBuilder.getCategoryIdValidationQuery(categoryId, tableName);
+		int count = 0;
+
+		try {
+			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		if (count == 0) {
+			throw new InvalidInputException(requestInfo);
+		}
+	}
+
+	/**
+	 * This method will validate sequence ranges of a fee matrix details
+	 * 
+	 * @param FeeMatrix
+	 * @param RequestInfo
+	 * @param validateNew
+	 */
+	public void validateFeeMatrixDetailsRange(FeeMatrix feeMatrix, RequestInfo requestInfo, boolean validateNew) {
+
+		List<FeeMatrixDetail> feeMatrixDetails = new ArrayList<>();
+
+		if (validateNew) {
+
+			feeMatrixDetails = feeMatrix.getFeeMatrixDetails();
+		} else {
+			Long feeMatrixId = feeMatrix.getId();
+			try {
+
+				feeMatrixDetails = getFeeMatrixDetailsByFeeMatrixId(feeMatrixId);
+			} catch (Exception e) {
+
+				throw new InvalidInputException(requestInfo);
+			}
+
+			for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
+
+				for (int i = 0; i < feeMatrixDetails.size(); i++) {
+					Long id = feeMatrixDetails.get(i).getId();
+					if (feeMatrixDetail.getId() != null && id == feeMatrixDetail.getId()) {
+						feeMatrixDetails.set(i, feeMatrixDetail);
+					}
+				}
+			}
+		}
+
+		feeMatrixDetails.sort((r1, r2) -> r1.getUomFrom().compareTo(r2.getUomFrom()));
+		Long UomFrom = null;
+		Long oldUomTo = null;
+		int count = 0;
+
+		for (FeeMatrixDetail feeMatrixDetail : feeMatrixDetails) {
+
+			UomFrom = feeMatrixDetail.getUomFrom();
+			if (count > 0) {
+				if (!UomFrom.equals(oldUomTo)) {
+					throw new InvalidRangeException(requestInfo);
+				}
+			}
+			oldUomTo = feeMatrixDetail.getUomTo();
+			count++;
+		}
+	}
+
+	/**
+	 * Description : this method for search FeeMatrixDetail of a feeMatrixId
+	 * 
+	 * @param feeMatrixId
+	 * @return List<FeeMatrixDetail>
+	 */
+	public List<FeeMatrixDetail> getFeeMatrixDetailsByFeeMatrixId(Long feeMatrixId) {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String feeMatrixDetailSearchQuery = FeeMatrixQueryBuilder.buildFeeMatrixDetailSearchQuery(feeMatrixId,
+				preparedStatementValues);
+		List<FeeMatrixDetail> feeMatrixDetails = getFeeMatrixDetails(feeMatrixDetailSearchQuery.toString(),
+				preparedStatementValues);
+
+		return feeMatrixDetails;
+	}
 
 	/**
 	 * This method will execute the given query & will build the FeeMatrixDetail

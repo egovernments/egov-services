@@ -204,7 +204,7 @@ CREATE TABLE egtl_license (
     oldLicenseNumber character varying(128),
     applicationDate timestamp without time zone NOT NULL,
     adhaarNumber character(12),
-    mobileNumber integer(10) NOT NULL,
+    mobileNumber character varying(10) NOT NULL,
     ownerName character varying(32) NOT NULL,
     fatherSpouseName character varying(32) NOT NULL,
     emailId character varying(128) NOT NULL,

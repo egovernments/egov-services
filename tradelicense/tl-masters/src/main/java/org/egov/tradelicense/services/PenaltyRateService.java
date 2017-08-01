@@ -44,6 +44,6 @@ public interface PenaltyRateService {
 	 * @throws Exception
 	 */
 	public PenaltyRateResponse getPenaltyRateMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String applicationTypeId, Integer pageSize, Integer offSet);
+			String applicationType, Integer pageSize, Integer offSet);
 
 }

@@ -219,7 +219,6 @@ class Login extends Component {
                       }
                     }
                   }
-                  
                   localStorage.setItem("actions", JSON.stringify(actions));
                   setActionList(actions);
               },

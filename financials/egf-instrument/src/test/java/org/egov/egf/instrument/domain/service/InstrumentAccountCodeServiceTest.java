@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -48,6 +49,8 @@ public class InstrumentAccountCodeServiceTest {
 
 	private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
+	private RequestInfo requestInfo = new RequestInfo();
+
 	@Before
 	public void setup() {
 		instrumentAccountCodeService = new InstrumentAccountCodeService(validator, instrumentAccountCodeRepository,
@@ -55,86 +58,56 @@ public class InstrumentAccountCodeServiceTest {
 	}
 
 	@Test
-	public final void test_save_with_out_kafka() {
+	public final void test_create() {
 
 		List<InstrumentAccountCode> expextedResult = getInstrumentAccountCodes();
 
-		InstrumentAccountCode instrumentAccountCode = expextedResult.get(0);
+		when(instrumentAccountCodeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentAccountCodeRepository.save(any(InstrumentAccountCode.class))).thenReturn(instrumentAccountCode);
-
-		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.save(expextedResult, errors);
+		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.create(expextedResult, errors,
+				requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
 	}
 
 	@Test(expected = CustomBindException.class)
-	public final void test_save_with_out_kafka_and_with_null_req() {
+	public final void test_create_and_with_null_req() {
 
 		List<InstrumentAccountCode> expextedResult = getInstrumentAccountCodes();
 
-		InstrumentAccountCode instrumentAccountCode = expextedResult.get(0);
+		when(instrumentAccountCodeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentAccountCodeRepository.save(any(InstrumentAccountCode.class))).thenReturn(instrumentAccountCode);
-
-		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.save(null, errors);
+		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.create(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
 	}
 
 	@Test
-	public final void test_update_with_out_kafka() {
+	public final void test_update_() {
 
 		List<InstrumentAccountCode> expextedResult = getInstrumentAccountCodes();
 
-		InstrumentAccountCode instrumentAccountCode = expextedResult.get(0);
+		when(instrumentAccountCodeRepository.update(any(List.class), any(RequestInfo.class)))
+				.thenReturn(expextedResult);
 
-		when(instrumentAccountCodeRepository.update(any(InstrumentAccountCode.class)))
-				.thenReturn(instrumentAccountCode);
-
-		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.update(expextedResult, errors);
+		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.update(expextedResult, errors,
+				requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
 	}
 
 	@Test(expected = CustomBindException.class)
-	public final void test_update_with_out_kafka_and_with_null_req() {
+	public final void test_update_with_null_req() {
 
 		List<InstrumentAccountCode> expextedResult = getInstrumentAccountCodes();
 
-		InstrumentAccountCode instrumentAccountCode = expextedResult.get(0);
+		when(instrumentAccountCodeRepository.update(any(List.class), any(RequestInfo.class)))
+				.thenReturn(expextedResult);
 
-		when(instrumentAccountCodeRepository.update(any(InstrumentAccountCode.class)))
-				.thenReturn(instrumentAccountCode);
-
-		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.update(null, errors);
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_create() {
-
-		List<InstrumentAccountCode> expextedResult = getInstrumentAccountCodes();
-
-		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchAndValidate(expextedResult, errors,
-				"create");
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_update() {
-
-		List<InstrumentAccountCode> expextedResult = getInstrumentAccountCodes();
-
-		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchAndValidate(expextedResult, errors,
-				"update");
+		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.update(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 

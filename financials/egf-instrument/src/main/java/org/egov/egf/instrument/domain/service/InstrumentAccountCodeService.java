@@ -1,8 +1,8 @@
 package org.egov.egf.instrument.domain.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -25,160 +25,147 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class InstrumentAccountCodeService {
 
-    public static final String ACTION_CREATE = "create";
-    public static final String ACTION_UPDATE = "update";
-    public static final String ACTION_VIEW = "view";
-    public static final String ACTION_EDIT = "edit";
-    public static final String ACTION_SEARCH = "search";
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_VIEW = "view";
+	public static final String ACTION_EDIT = "edit";
+	public static final String ACTION_SEARCH = "search";
 
-    private InstrumentAccountCodeRepository instrumentAccountCodeRepository;
+	private InstrumentAccountCodeRepository instrumentAccountCodeRepository;
 
-    private SmartValidator validator;
+	private SmartValidator validator;
 
-    private ChartOfAccountContractRepository chartOfAccountContractRepository;
+	private ChartOfAccountContractRepository chartOfAccountContractRepository;
 
-    private InstrumentTypeRepository instrumentTypeRepository;
+	private InstrumentTypeRepository instrumentTypeRepository;
 
-    @Autowired
-    public InstrumentAccountCodeService(SmartValidator validator,
-                                        InstrumentAccountCodeRepository instrumentAccountCodeRepository,
-                                        ChartOfAccountContractRepository chartOfAccountContractRepository,
-                                        InstrumentTypeRepository instrumentTypeRepository) {
-        this.validator = validator;
-        this.instrumentAccountCodeRepository = instrumentAccountCodeRepository;
-        this.chartOfAccountContractRepository = chartOfAccountContractRepository;
-        this.instrumentTypeRepository = instrumentTypeRepository;
-    }
+	@Autowired
+	public InstrumentAccountCodeService(SmartValidator validator,
+			InstrumentAccountCodeRepository instrumentAccountCodeRepository,
+			ChartOfAccountContractRepository chartOfAccountContractRepository,
+			InstrumentTypeRepository instrumentTypeRepository) {
+		this.validator = validator;
+		this.instrumentAccountCodeRepository = instrumentAccountCodeRepository;
+		this.chartOfAccountContractRepository = chartOfAccountContractRepository;
+		this.instrumentTypeRepository = instrumentTypeRepository;
+	}
 
-    @Transactional
-    public List<InstrumentAccountCode> save(List<InstrumentAccountCode> instrumentAccountCodes, BindingResult errors) {
+	@Transactional
+	public List<InstrumentAccountCode> create(List<InstrumentAccountCode> instrumentAccountCodes, BindingResult errors,
+			RequestInfo requestInfo) {
 
-        List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
+		try {
 
-        try {
+			instrumentAccountCodes = fetchRelated(instrumentAccountCodes);
 
-            instrumentAccountCodes = fetchAndValidate(instrumentAccountCodes, errors, ACTION_CREATE);
+			validate(instrumentAccountCodes, ACTION_CREATE, errors);
 
-        } catch (CustomBindException e) {
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
 
-            throw new CustomBindException(errors);
-        }
+		} catch (CustomBindException e) {
 
-        for (InstrumentAccountCode iac : instrumentAccountCodes) {
+			throw new CustomBindException(errors);
+		}
 
-            resultList.add(save(iac));
+		return instrumentAccountCodeRepository.save(instrumentAccountCodes, requestInfo);
 
-        }
+	}
 
-        return resultList;
-    }
+	@Transactional
+	public List<InstrumentAccountCode> update(List<InstrumentAccountCode> instrumentAccountCodes, BindingResult errors,
+			RequestInfo requestInfo) {
 
-    @Transactional
-    public List<InstrumentAccountCode> update(List<InstrumentAccountCode> instrumentAccountCodes,
-                                              BindingResult errors) {
+		try {
 
-        List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
+			instrumentAccountCodes = fetchRelated(instrumentAccountCodes);
 
-        try {
+			validate(instrumentAccountCodes, ACTION_UPDATE, errors);
 
-            instrumentAccountCodes = fetchAndValidate(instrumentAccountCodes, errors, ACTION_UPDATE);
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
 
-        } catch (CustomBindException e) {
+		} catch (CustomBindException e) {
 
-            throw new CustomBindException(errors);
-        }
+			throw new CustomBindException(errors);
+		}
 
-        for (InstrumentAccountCode iac : instrumentAccountCodes) {
+		return instrumentAccountCodeRepository.update(instrumentAccountCodes, requestInfo);
 
-            resultList.add(update(iac));
+	}
 
-        }
+	private BindingResult validate(List<InstrumentAccountCode> instrumentaccountcodes, String method,
+			BindingResult errors) {
 
-        return resultList;
-    }
+		try {
+			switch (method) {
+			case ACTION_VIEW:
+				// validator.validate(instrumentAccountCodeContractRequest.getInstrumentAccountCode(),
+				// errors);
+				break;
+			case ACTION_CREATE:
+				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to create must not be null");
+				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
+					validator.validate(instrumentAccountCode, errors);
+				}
+				break;
+			case ACTION_UPDATE:
+				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to update must not be null");
+				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
+					validator.validate(instrumentAccountCode, errors);
+				}
+				break;
+			default:
 
-    private BindingResult validate(List<InstrumentAccountCode> instrumentaccountcodes, String method,
-                                   BindingResult errors) {
+			}
+		} catch (IllegalArgumentException e) {
+			errors.addError(new ObjectError("Missing data", e.getMessage()));
+		}
+		return errors;
 
-        try {
-            switch (method) {
-                case ACTION_VIEW:
-                    // validator.validate(instrumentAccountCodeContractRequest.getInstrumentAccountCode(),
-                    // errors);
-                    break;
-                case ACTION_CREATE:
-                    Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to create must not be null");
-                    for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
-                        validator.validate(instrumentAccountCode, errors);
-                    }
-                    break;
-                case ACTION_UPDATE:
-                    Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to update must not be null");
-                    for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
-                        validator.validate(instrumentAccountCode, errors);
-                    }
-                    break;
-                default:
+	}
 
-            }
-        } catch (IllegalArgumentException e) {
-            errors.addError(new ObjectError("Missing data", e.getMessage()));
-        }
-        return errors;
+	public List<InstrumentAccountCode> fetchRelated(List<InstrumentAccountCode> instrumentaccountcodes) {
+		if (instrumentaccountcodes != null)
+			for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
+				// fetch related items
+				if (instrumentAccountCode.getInstrumentType() != null) {
+					InstrumentType instrumentType = instrumentTypeRepository
+							.findById(instrumentAccountCode.getInstrumentType());
+					if (instrumentType == null) {
+						throw new InvalidDataException("instrumentType", "instrumentType.invalid",
+								" Invalid instrumentType");
+					}
+					instrumentAccountCode.setInstrumentType(instrumentType);
+				}
+				if (instrumentAccountCode.getAccountCode() != null) {
+					ChartOfAccountContract accountCode = chartOfAccountContractRepository
+							.findById(instrumentAccountCode.getAccountCode());
+					if (accountCode == null) {
+						throw new InvalidDataException("accountCode", "accountCode.invalid", " Invalid accountCode");
+					}
+					instrumentAccountCode.setAccountCode(accountCode);
+				}
 
-    }
+			}
 
-    public List<InstrumentAccountCode> fetchRelated(List<InstrumentAccountCode> instrumentaccountcodes) {
-        if (instrumentaccountcodes != null)
-            for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
-                // fetch related items
-                if (instrumentAccountCode.getInstrumentType() != null) {
-                    InstrumentType instrumentType = instrumentTypeRepository
-                            .findById(instrumentAccountCode.getInstrumentType());
-                    if (instrumentType == null) {
-                        throw new InvalidDataException("instrumentType", "instrumentType.invalid",
-                                " Invalid instrumentType");
-                    }
-                    instrumentAccountCode.setInstrumentType(instrumentType);
-                }
-                if (instrumentAccountCode.getAccountCode() != null) {
-                    ChartOfAccountContract accountCode = chartOfAccountContractRepository
-                            .findById(instrumentAccountCode.getAccountCode());
-                    if (accountCode == null) {
-                        throw new InvalidDataException("accountCode", "accountCode.invalid", " Invalid accountCode");
-                    }
-                    instrumentAccountCode.setAccountCode(accountCode);
-                }
+		return instrumentaccountcodes;
+	}
 
-            }
+	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch instrumentAccountCodeSearch) {
+		return instrumentAccountCodeRepository.search(instrumentAccountCodeSearch);
+	}
 
-        return instrumentaccountcodes;
-    }
+	@Transactional
+	public InstrumentAccountCode save(InstrumentAccountCode instrumentAccountCode) {
+		return instrumentAccountCodeRepository.save(instrumentAccountCode);
+	}
 
-    @Transactional
-    public List<InstrumentAccountCode> fetchAndValidate(List<InstrumentAccountCode> instrumentaccountcodes,
-                                                        BindingResult errors, String action) {
-        instrumentaccountcodes = fetchRelated(instrumentaccountcodes);
-        validate(instrumentaccountcodes, action, errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        return instrumentaccountcodes;
-
-    }
-
-    public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch instrumentAccountCodeSearch) {
-        return instrumentAccountCodeRepository.search(instrumentAccountCodeSearch);
-    }
-
-    @Transactional
-    public InstrumentAccountCode save(InstrumentAccountCode instrumentAccountCode) {
-        return instrumentAccountCodeRepository.save(instrumentAccountCode);
-    }
-
-    @Transactional
-    public InstrumentAccountCode update(InstrumentAccountCode instrumentAccountCode) {
-        return instrumentAccountCodeRepository.update(instrumentAccountCode);
-    }
+	@Transactional
+	public InstrumentAccountCode update(InstrumentAccountCode instrumentAccountCode) {
+		return instrumentAccountCodeRepository.update(instrumentAccountCode);
+	}
 
 }

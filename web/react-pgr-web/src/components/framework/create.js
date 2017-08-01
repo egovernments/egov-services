@@ -111,7 +111,7 @@ class Report extends Component {
           endPoint = `${hash[2]}/master/${hash[3]}.json`;
         }
       $.ajax({
-      url: baseUrl+endPoint,
+      url: baseUrl+endPoint+"?timestamp="+new Date().getTime(),
       // dataType: 'application/javascript',
       success: function(results)
       {

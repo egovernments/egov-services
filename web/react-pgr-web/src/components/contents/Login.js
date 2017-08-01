@@ -208,7 +208,7 @@ class Login extends Component {
         Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes,enabled:true}).then(function(response){
           var actions = response.actions;
           $.ajax({
-              url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json",
+              url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json?timestamp="+new Date().getTime(),
               success: function(res) {
                   var list = JSON.parse(res);
                   if(list.length == 0) {
@@ -621,7 +621,7 @@ class Login extends Component {
                                 </Col>
 									  </Row>
                               </Col>
-						
+
                           </Row>
                           </CardText>
                     </Card>

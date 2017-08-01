@@ -1,17 +1,17 @@
 var dat = {
-	"wc.search": {
+	"collection.transaction": {
 		"numCols": 12/2,
 		"url":  "/billing-service/bill/_generate?tenantId=default&consumerCode=consumerCode&businessService=businessService",
 		"tenantIdRequired": true,
 		"objectName": "search",
 		"groups": [
 			{
-				"label": "wc.create.Search.title",
+				"label": "collection.create.Search.title",
 				"name": "createDocumentType",
 				"fields": [
 						{
 							"name": "mobile",
-							"jsonPath": "search.mobile",
+							"jsonPath": "collection.search.mobile",
 							"label": "Mobile",
 							"pattern": "",
 							"type": "number",
@@ -22,7 +22,7 @@ var dat = {
 						},
 						{
 							"name": "email",
-							"jsonPath": "search.email",
+							"jsonPath": "collection.search.email",
 							"label": "Email",
 							"pattern": "",
 							"type": "email",
@@ -33,7 +33,7 @@ var dat = {
 						},
             {
   						"name": "billerService",
-  						"jsonPath": "search.billerService",
+  						"jsonPath": "collection.search.billerService",
   						"label": "Billing service name",
   						"pattern": "",
   						"type": "singleValueList",
@@ -45,7 +45,7 @@ var dat = {
   						},
 						{
 							"name": "consumerCode",
-							"jsonPath": "search.consumerCode",
+							"jsonPath": "collection.search.consumerCode",
 							"label": "Consumer Code",
 							"pattern": "",
 							"type": "text",

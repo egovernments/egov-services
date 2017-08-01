@@ -183,11 +183,11 @@ public Category updateCategory(Category category) {
 	 * @param offSet
 	 * @return List<Category>
 	 */
-	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, Integer pageSize,
+	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String type, Integer categoryId, Integer pageSize,
 			Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, pageSize, offSet,
+		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, type, categoryId, pageSize, offSet,
 				preparedStatementValues);
 		List<Category> categories = getCategories(categorySearchQuery.toString(), preparedStatementValues);
 

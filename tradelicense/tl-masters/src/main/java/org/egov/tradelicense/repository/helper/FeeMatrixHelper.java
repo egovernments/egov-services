@@ -13,6 +13,8 @@ import org.egov.models.FeeMatrixDetail;
 import org.egov.models.RequestInfo;
 import org.egov.tradelicense.exception.InvalidInputException;
 import org.egov.tradelicense.exception.InvalidRangeException;
+import org.egov.tradelicense.model.FinancialYearContract;
+import org.egov.tradelicense.model.FinancialYearContractResponse;
 import org.egov.tradelicense.repository.builder.FeeMatrixQueryBuilder;
 import org.egov.tradelicense.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.utility.ConstantUtility;
@@ -20,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -50,12 +51,14 @@ public class FeeMatrixHelper {
 		URI uri = UriComponentsBuilder.fromUriString(financialYearURI.toString()).queryParam("id", financialYear)
 				.build(true).encode().toUri();
 		try {
-			
-			String financialYearResponse = restTemplate.getForObject(uri, String.class);
-
-		} catch (HttpClientErrorException ex) {
-			
-			throw new InvalidInputException(requestInfo);
+			FinancialYearContractResponse financialYearContractResponse  = restTemplate.postForObject(uri, requestInfo, FinancialYearContractResponse.class);
+			if (financialYearContractResponse!=null) {
+				System.out.println("succez");
+			} else {
+				System.out.println("failure");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

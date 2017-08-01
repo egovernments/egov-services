@@ -45,8 +45,7 @@ public class FeeMatrix {
 	private Long subCategoryId = null;
 
 	@NotNull
-	@DateTimeFormat(pattern = "YYYY-YY")
-	private String financialYear = null;
+	private Long financialYear = null;
 
 	private String effectiveFrom = null;
 

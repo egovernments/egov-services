@@ -116,7 +116,7 @@ public class CategoryContollerTest {
 		categoryDetails.add(categoryDetail);
 		category.setDetails(categoryDetails);
 		categories.add(category);
-		
+
 		CategoryResponse categoryResponse = new CategoryResponse();
 		categoryResponse.setResponseInfo(new ResponseInfo());
 		categoryResponse.setCategories(categories);
@@ -245,8 +245,8 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-							.thenReturn(categoryResponse);
+					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
+					any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/tradelicense/category/_search").param("tenantId", "default")
 					.param("type", "SUBCATEGORY").contentType(MediaType.APPLICATION_JSON)
@@ -292,8 +292,8 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-							.thenReturn(categoryResponse);
+					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
+					any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/tradelicense/category/_search").param("tenantId", "default")
 					.param("type", "SUBCATEGORY").contentType(MediaType.APPLICATION_JSON)

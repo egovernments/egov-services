@@ -15,7 +15,6 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.exception.DuplicateIdException;
 import org.egov.tradelicense.exception.InvalidInputException;
 import org.egov.tradelicense.repository.DocumentTypeRepository;
-import org.egov.tradelicense.repository.ValidatorRepository;
 import org.egov.tradelicense.repository.helper.UtilityHelper;
 import org.egov.tradelicense.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;

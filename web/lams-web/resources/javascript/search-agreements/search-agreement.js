@@ -58,9 +58,9 @@ class AgreementSearch extends React.Component {
         agreements.sort(function(d1, d2) {
           var date1 = d1.createdDate.split("/");
           var date2 = d2.createdDate.split("/");
-          if(new Date(date1[2], date1[1]-1, date1[0]).getTime() < new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
+          if(new Date(date1[2], date1[1]-1, date1[0]).getTime() > new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
             return -1;
-          } else if(new Date(date1[2], date1[1]-1, date1[0]).getTime() > new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
+          } else if(new Date(date1[2], date1[1]-1, date1[0]).getTime() < new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
             return 1;
           } else 
             return 0;

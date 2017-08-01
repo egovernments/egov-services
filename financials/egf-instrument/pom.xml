@@ -159,6 +159,7 @@
 							<classifier>client</classifier>
 							<includes>
 								<include>**/instrument/web/contract/**</include>
+								<include>**/instrument/web/requests/**</include>
 							</includes>
 						</configuration>
 					</execution>

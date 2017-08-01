@@ -53,7 +53,7 @@ class UiTable extends Component {
 
   		const renderTable = function () {
   			return (
-  				<Card>
+  				<Card className="uiCard">
 		          <CardHeader title={<strong> {translate("ui.table.title")} </strong>}/>
 		          <CardText>
 		          <Table id="searchTable" bordered responsive className="table-striped">

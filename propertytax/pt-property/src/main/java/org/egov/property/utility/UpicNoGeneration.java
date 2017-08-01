@@ -2,6 +2,7 @@ package org.egov.property.utility;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.egov.models.ErrorRes;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
@@ -10,12 +11,15 @@ import org.egov.models.Property;
 import org.egov.models.RequestInfo;
 import org.egov.property.model.City;
 import org.egov.property.model.SearchTenantResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,6 +37,8 @@ public class UpicNoGeneration {
 
 	@Autowired
 	RestTemplate restTemplate;
+	
+	private static final Logger logger = LoggerFactory.getLogger(UpicNoGeneration.class);
 
 	public String generateUpicNo(Property property, RequestInfo requestInfo) {
 
@@ -46,11 +52,18 @@ public class UpicNoGeneration {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 				// Add query parameter
 				.queryParam("code", property.getTenantId());
+		
+		SearchTenantResponse searchTenantResponse= null;
 		try {
-			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(
+			logger.info("calling tennat service url :"+tenantCodeUrl.toString()+" request is "+requestInfo);
+			String response  = restTemplate.postForObject(
 					builder.buildAndExpand().toUri(), requestInfo,
-					SearchTenantResponse.class);
-			if (searchTenantResponse.getTenant().size() > 0) {
+					String.class);
+			logger.info("after calling tennat service response :"+response);
+			if (response!=null && !response.isEmpty()) {
+				
+				ObjectMapper mapper = new ObjectMapper();
+				searchTenantResponse = mapper.readValue(response, SearchTenantResponse.class);
 				City city = searchTenantResponse.getTenant().get(0).getCity();
 				String cityCode = city.getCode();
 				String upicFormat = environment.getProperty("upic.number.format");
@@ -93,10 +106,12 @@ public class UpicNoGeneration {
 		idGeneration.setRequestInfo(requestInfo);
 		String response = null;
 		try {
+			logger.info("calling id generation service url :"+idGenerationUrl.toString()+" request is "+requestInfo);
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		logger.info("After calling the id generation service response :"+response);
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
 		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);

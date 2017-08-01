@@ -23,7 +23,7 @@ public class MarriageDocumentTypeRowMapper implements RowMapper<MarriageDocument
 		marriageDocumentType.setIsIndividual(rs.getBoolean("isindividual"));
 		marriageDocumentType.setIsRequired(rs.getBoolean("isrequired"));
 		marriageDocumentType.setProof(DocumentProof.fromValue(rs.getString("proof")));
-		marriageDocumentType.setApplicationType(ApplicationType.fromValue(rs.getString("applicationtype")));// ApplicationType.fromValue(rs.getString("applicationtype")));
+		marriageDocumentType.setApplicationType(ApplicationType.fromValue(rs.getString("appltype")));// ApplicationType.fromValue(rs.getString("applicationtype")));
 		marriageDocumentType.setTenantId(rs.getString("tenantid"));
 
 		return marriageDocumentType;

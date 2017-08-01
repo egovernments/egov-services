@@ -16,8 +16,6 @@
     "Receipt": [
         {
             "tenantId": "default",
-            "instrumentType": null,
-            "instrumentHeader": null,
             "Bill": [{
                 "id": null,
                 "payeeName": "abc",
@@ -84,8 +82,6 @@
                 ],
                 "tenantId": "default"
             }],
-            "Bank": null,
-            "BankAccount": null,
             "auditDetails": null
         
         }

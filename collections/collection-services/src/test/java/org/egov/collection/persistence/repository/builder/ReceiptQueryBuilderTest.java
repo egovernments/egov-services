@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
+import org.egov.collection.repository.querybuilder.ReceiptDetailQueryBuilder;
 import org.junit.Test;
 
 public class ReceiptQueryBuilderTest {

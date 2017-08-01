@@ -12,7 +12,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "CategoryType.name",
-							"label": "Category Type",
+							"label": "wc.create.categorytype",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -23,7 +23,7 @@ var dat = {
 						{
 							"name": "description",
 							"jsonPath": "CategoryType.description",
-							"label": "Description",
+							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -34,7 +34,7 @@ var dat = {
 						{
 							"name": "Active",
 							"jsonPath": "CategoryType.active",
-							"label": "Active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -60,7 +60,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "name",
-							"label": "Category Type",
+							"label": "wc.create.categorytype",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -71,7 +71,7 @@ var dat = {
 						{
 							"name": "Active",
 							"jsonPath": "active",
-							"label": "Active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -83,7 +83,7 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.search.result.name"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"header": [{label: "wc.search.result.categoryType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
 			"values": ["name", "description", "active"],
 			"resultPath": "CategoryTypes",
 			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
@@ -98,13 +98,13 @@ var dat = {
 		"objectName": "CategoryType",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
-				"name": "createCategoryType",
+				"label": "wc.view.categorytype.title",
+				"name": "viewCategoryType",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "CategoryTypes[0].name",
-							"label": "Category Type",
+							"label": "wc.create.categorytype",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -115,7 +115,7 @@ var dat = {
 						{
 							"name": "description",
 							"jsonPath": "CategoryTypes[0].description",
-							"label": "Description",
+							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -126,7 +126,7 @@ var dat = {
 						{
 							"name": "Active",
 							"jsonPath": "CategoryTypes[0].active",
-							"label": "Active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -148,13 +148,13 @@ var dat = {
 		"objectName": "CategoryType",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
+				"label": "wc.update.categorytype.title",
 				"name": "createCategoryType",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "CategoryType.name",
-							"label": "Category Type",
+							"label": "wc.create.categorytype",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -165,7 +165,7 @@ var dat = {
 						{
 							"name": "description",
 							"jsonPath": "CategoryType.description",
-							"label": "Description",
+							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -176,7 +176,7 @@ var dat = {
 						{
 							"name": "Active",
 							"jsonPath": "CategoryType.active",
-							"label": "Active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,

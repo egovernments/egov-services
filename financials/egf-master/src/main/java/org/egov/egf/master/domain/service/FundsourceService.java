@@ -67,12 +67,12 @@ public class FundsourceService {
 	public List<Fundsource> fetchRelated(List<Fundsource> fundsources) {
 		for (Fundsource fundsource : fundsources) {
 			// fetch related items
-			if (fundsource.getFundSource() != null) {
-				Fundsource fundSource = fundsourceRepository.findById(fundsource.getFundSource());
+			if (fundsource.getParent() != null) {
+				Fundsource fundSource = fundsourceRepository.findById(fundsource.getParent());
 				if (fundSource == null) {
 					throw new InvalidDataException("fundSource", "fundSource.invalid", " Invalid fundSource");
 				}
-				fundsource.setFundSource(fundSource);
+				fundsource.setParent(fundSource);
 			}
 
 		}

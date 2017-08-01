@@ -5,6 +5,8 @@ import javax.validation.Valid;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfoWrapper;
+import org.egov.models.SpecialNoticeRequest;
+import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.property.services.PropertyService;
@@ -40,7 +42,7 @@ public class PropertyController {
 
 	@RequestMapping(method = RequestMethod.POST, path = "_create")
 	public PropertyResponse createProperty(@Valid @RequestBody PropertyRequest propertyRequest) {
-		logger.info("PropertyController    PropertyRequest ---->> "+propertyRequest);
+		logger.info("PropertyController    PropertyRequest ---->> " + propertyRequest);
 		return propertyService.createProperty(propertyRequest);
 
 	}
@@ -99,8 +101,8 @@ public class PropertyController {
 			@RequestParam(value = "ownerName", required = false) String ownerName,
 			@RequestParam(value = "demandFrom", required = false) Integer demandFrom,
 			@RequestParam(value = "demandTo", required = false) Integer demandTo,
-			@RequestParam(value= "propertyId",required=false ) String propertyId,
-			@RequestParam(value="applicationNo",required=false) String applicationNo) throws Exception {
+			@RequestParam(value = "propertyId", required = false) String propertyId,
+			@RequestParam(value = "applicationNo", required = false) String applicationNo) throws Exception {
 		if (pageSize == null)
 			pageSize = -1;
 
@@ -124,7 +126,7 @@ public class PropertyController {
 
 		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNumber, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo, propertyId,applicationNo);
+				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo);
 
 	}
 
@@ -141,7 +143,7 @@ public class PropertyController {
 
 		return propertyService.createTitleTransfer(titleTransferRequest);
 	}
-	
+
 	/**
 	 * 
 	 * @param titleTransferRequest
@@ -153,6 +155,18 @@ public class PropertyController {
 			throws Exception {
 
 		return propertyService.updateTitleTransfer(titleTransferRequest);
+	}
+
+	/**
+	 * 
+	 * @param specialNoticeRequest
+	 * @return {@link SpecialNoticeResponse}
+	 */
+	@RequestMapping(path = "/specialnotice/_generate", method = RequestMethod.POST)
+	public SpecialNoticeResponse generateSpecialNotice(@RequestBody SpecialNoticeRequest specialNoticeRequest)
+			throws Exception {
+
+		return propertyService.generateSpecialNotice(specialNoticeRequest);
 	}
 
 }

@@ -152,7 +152,7 @@ public class Instrument extends Auditable {
 	 * surrendering a payment cheque. Depending on the reason, the cheque can be
 	 * re-used or not is decided.
 	 */
-	private SurrenderReason surrendarReason;
+	private SurrenderReason surrenderReason;
 
 	/*
 	 * serialNo is the series of the cheque numbers from which the instrument is

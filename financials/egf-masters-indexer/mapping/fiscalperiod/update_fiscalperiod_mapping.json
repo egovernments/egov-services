@@ -9,41 +9,41 @@
         "name": {
             "type": "keyword"
         },
-        "financialyear": {
+        "financialYear": {
             "type": "object"
         },
-        "startingdate": {
+        "startingDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "endingdate": {
+        "endingDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "isactiveforposting": {
+        "isActiveForPosting": {
             "type": "boolean"
         },
-        "isclosed": {
+        "isClosed": {
             "type": "boolean"
         },
         "active": {
             "type": "boolean"
         },
-        "createdby": {
+        "createdBy": {
             "type": "object"
         },
-        "lastmodifiedby": {
+        "lastModifiedBy": {
             "type": "object"
         },
-        "createddate": {
+        "createdDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "lastmodifieddate": {
+        "lastModifiedDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "tenantid": {
+        "tenantId": {
             "type": "keyword"
         }
     }

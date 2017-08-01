@@ -6,27 +6,27 @@
         "id": {
             "type": "keyword"
         },
-        "chartofaccount": {
+        "chartOfAccount": {
             "type": "object"
         },
-        "accountdetailtype": {
+        "accountDetailType": {
             "type": "object"
         },
-        "createdby": {
+        "createdBy": {
             "type": "object"
         },
-        "lastmodifiedby": {
+        "lastModifiedBy": {
             "type": "object"
         },
-        "createddate": {
+        "createdDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "lastmodifieddate": {
+        "lastModifiedDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "tenantid": {
+        "tenantId": {
             "type": "keyword"
         }
     }

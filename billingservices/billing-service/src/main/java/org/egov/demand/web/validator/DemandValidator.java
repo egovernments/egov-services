@@ -60,12 +60,10 @@ import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.service.BusinessServDetailService;
-import org.egov.demand.service.DemandService;
 import org.egov.demand.service.TaxHeadMasterService;
 import org.egov.demand.service.TaxPeriodService;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.DemandRequest;
-import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,13 +82,10 @@ public class DemandValidator implements Validator {
 
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
-	
+
 	@Autowired
 	private TaxPeriodService taxPeriodService;
-	
-	@Autowired
-	private DemandService demandService;
-	
+
 	@Autowired
 	private DemandRepository demandRepository;
 
@@ -108,19 +103,96 @@ public class DemandValidator implements Validator {
 			demandRequest = (DemandRequest) target;
 		else
 			throw new RuntimeException("Invalid Object type for Demand validator");
-		validateDemand(demandRequest, errors);
+		validateDemand(demandRequest.getDemands(), errors);
+
+		List<DemandDetail> demandDetails = new ArrayList<>();
+		for (Demand demand : demandRequest.getDemands()) {
+			demandDetails.addAll(demand.getDemandDetails());
+		}
+		validateDemandDetails(demandDetails, errors);
 		validateTaxHeadMaster(demandRequest, errors);
 		validateBusinessService(demandRequest, errors);
 		validateTaxPeriod(demandRequest, errors);
 		validateOwner(demandRequest, errors);
 	}
 
-	private void validateDemand(DemandRequest demandRequest, Errors errors) {
+	public void validateForUpdate(Object target, Errors errors) {
+
+		DemandRequest demandRequest = null;
+		if (target instanceof DemandRequest)
+			demandRequest = (DemandRequest) target;
+		else
+			throw new RuntimeException("Invalid Object type for Demand validator");
+		validateDemandForUpdate(demandRequest, errors);
+		validateTaxHeadMaster(demandRequest, errors);
+		validateBusinessService(demandRequest, errors);
+		validateTaxPeriod(demandRequest, errors);
+		validateOwner(demandRequest, errors);
+	}
+
+	private void validateDemandForUpdate(DemandRequest demandRequest, Errors errors) {
+
+		List<Demand> demands = demandRequest.getDemands();
+		String tenantId = demands.get(0).getTenantId();
+
+		List<Demand> oldDemands = new ArrayList<>();
+		List<DemandDetail> olddemandDetails = new ArrayList<>();
+		List<Demand> newDemands = new ArrayList<>();
+		List<DemandDetail> newDemandDetails = new ArrayList<>();
+
+		for (Demand demand : demandRequest.getDemands()) {
+			if (demand.getId() != null) {
+				oldDemands.add(demand);
+				for (DemandDetail demandDetail : demand.getDemandDetails()) {
+					if (demandDetail.getId() != null)
+						olddemandDetails.add(demandDetail);
+					else
+						newDemandDetails.add(demandDetail);
+				}
+			} else {
+				newDemands.add(demand);
+				newDemandDetails.addAll(demand.getDemandDetails());
+			}
+		}
+		validateOldDemands(oldDemands, olddemandDetails, errors, tenantId);
+		validateDemand(newDemands, errors);
+		validateDemandDetails(newDemandDetails, errors);
+	}
+
+	private void validateOldDemands(List<Demand> oldDemands, List<DemandDetail> olddemandDetails, Errors errors,
+			String tenantId) {
+
+		Set<String> demandIds = oldDemands.stream().map(demand -> demand.getId()).collect(Collectors.toSet());
+		DemandCriteria demandCriteria = DemandCriteria.builder().tenantId(tenantId).demandId(demandIds).build();
+		Map<String, Demand> demandMap = demandRepository.getDemands(demandCriteria, null).stream()
+				.collect(Collectors.toMap(Demand::getId, Function.identity()));
+		Map<String, DemandDetail> dbDemandDetailMap = new HashMap<>();
+
+		for (Demand demand : oldDemands) {
+			Demand dbDemand = demandMap.get(demand.getId());
+			if (dbDemand == null)
+				errors.rejectValue("Demands", "",
+						"the given demandId value  : " + demand.getId() + " is invalid and cannot be updated");
+			else {
+				for (DemandDetail demandDetail : dbDemand.getDemandDetails()) {
+					dbDemandDetailMap.put(demandDetail.getId(), demandDetail);
+				}
+			}
+		}
+
+		for (DemandDetail demandDetail : olddemandDetails) {
+			if (dbDemandDetailMap.get(demandDetail.getId()) == null)
+				errors.rejectValue("Demands", "", "the given demandDetailId value  : " + demandDetail.getId()
+						+ " is invalid and cannot be updated");
+		}
+	}
+
+	private void validateDemand(List<Demand> demands, Errors errors) {
 
 		Map<String, Set<String>> businessConsumerValidatorMap = new HashMap<>();
 		String tenatId = null;
 
-		for (Demand demand : demandRequest.getDemands()) {
+		for (Demand demand : demands) {
 			tenatId = demand.getTenantId();
 			Set<String> consumerCodes = businessConsumerValidatorMap.get(demand.getBusinessService());
 			if (consumerCodes != null)
@@ -130,19 +202,9 @@ public class DemandValidator implements Validator {
 				consumerCodes.add(demand.getConsumerCode());
 				businessConsumerValidatorMap.put(demand.getBusinessService(), consumerCodes);
 			}
-
-			for (DemandDetail demandDetail : demand.getDemandDetails()) {
-
-				BigDecimal tax = demandDetail.getTaxAmount();
-				BigDecimal collection = demandDetail.getCollectionAmount();
-				int i = tax.compareTo(collection);
-				if (i < 0)
-					errors.rejectValue("Demands", "", "collectionAmount : " + collection
-							+ " should not be greater than taxAmount : " + tax + " for demandDetail");
-			}
 		}
-		List<Demand> demands = demandRepository.getDemandsForConsumerCodes(businessConsumerValidatorMap, tenatId);
-		for (Demand demand : demands) {
+		List<Demand> dbDemands = demandRepository.getDemandsForConsumerCodes(businessConsumerValidatorMap, tenatId);
+		for (Demand demand : dbDemands) {
 
 			Set<String> consumerCodes = businessConsumerValidatorMap.get(demand.getBusinessService());
 			if (consumerCodes.contains(demand.getConsumerCode()))
@@ -151,30 +213,41 @@ public class DemandValidator implements Validator {
 		}
 	}
 
+	private void validateDemandDetails(List<DemandDetail> demandDetails, Errors errors) {
+
+		for (DemandDetail demandDetail : demandDetails) {
+
+			BigDecimal tax = demandDetail.getTaxAmount();
+			BigDecimal collection = demandDetail.getCollectionAmount();
+			int i = tax.compareTo(collection);
+			if (i < 0)
+				errors.rejectValue("Demands", "", "collectionAmount : " + collection
+						+ " should not be greater than taxAmount : " + tax + " for demandDetail");
+		}
+	}
+
 	private void validateTaxPeriod(DemandRequest demandRequest, Errors errors) {
-		
+
 		List<Demand> demands = demandRequest.getDemands();
 		Long startDate = demands.get(0).getTaxPeriodFrom();
 		Long endDate = demands.get(0).getTaxPeriodTo();
 		String tenantId = demands.get(0).getTenantId();
-		Set<String> businessServiceDetails = new HashSet<>(); 
-		
+		Set<String> businessServiceDetails = new HashSet<>();
+
 		for (Demand demand : demands) {
 			businessServiceDetails.add(demand.getBusinessService());
-			if(startDate > demand.getTaxPeriodFrom())
+			if (startDate > demand.getTaxPeriodFrom())
 				startDate = demand.getTaxPeriodFrom();
-			if(endDate < demand.getTaxPeriodTo())
+			if (endDate < demand.getTaxPeriodTo())
 				endDate = demand.getTaxPeriodTo();
 		}
-		
+
 		TaxPeriodCriteria taxPeriodCriteria = TaxPeriodCriteria.builder().service(businessServiceDetails)
 				.fromDate(startDate).toDate(endDate).tenantId(tenantId).build();
-		Map<String, List<TaxPeriod>> taxPeriodMap = taxPeriodService.searchTaxPeriods(
-				taxPeriodCriteria, demandRequest.getRequestInfo()).getTaxPeriods().stream()
+		Map<String, List<TaxPeriod>> taxPeriodMap = taxPeriodService
+				.searchTaxPeriods(taxPeriodCriteria, demandRequest.getRequestInfo()).getTaxPeriods().stream()
 				.collect(Collectors.groupingBy(TaxPeriod::getService));
-		
-	/*	if(demand.getTaxPeriodFrom().compareTo(taxPeriodCriteria.getFromDate()) = 0
-							&& demand.getTaxPeriodTo().compareTo(t.ge) = 0)*/
+
 		for (Demand demand : demands) {
 			List<TaxPeriod> taxPeriods = taxPeriodMap.get(demand.getBusinessService());
 			if (taxPeriods != null) {

@@ -395,7 +395,7 @@ class ViewProperty extends Component {
 		{resultList.length != 0 && resultList.map((item, index)=>{
 			
 		return (
-                    <Grid key={index}>
+                    <Grid fluid key={index}>
                           <br/>
                           <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Property Details</div>} />
@@ -444,6 +444,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Assessment number of parent property</div>
+												   NA
 											  </Col>
 											</Row> 
 											<Row>											
@@ -543,6 +544,10 @@ class ViewProperty extends Component {
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>EB Block</div>
 												  NA
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>Pin</div>
+													  {item.address.pincode}
 											  </Col>
 											</Row>
 									</Col>

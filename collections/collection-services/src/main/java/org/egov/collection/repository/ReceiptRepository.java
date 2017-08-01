@@ -49,7 +49,7 @@ import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
-import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
+import org.egov.collection.repository.querybuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
 import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
@@ -143,7 +143,7 @@ public class ReceiptRepository {
 		namedParameterJdbcTemplate.update(query, parametersMap);
 	}
 
-	public void persistToReceiptDetails(Map<String, Object>[] parametersReceiptDetails, long receiptHeader) {
+	public void persistToReceiptDetails(Map<String, Object>[] parametersReceiptDetails) {
 		String queryReceiptDetails = ReceiptDetailQueryBuilder
 				.insertReceiptDetails();
 			namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails,
@@ -152,11 +152,11 @@ public class ReceiptRepository {
 	
 	public boolean persistReceipt(Map<String, Object> parametersMap, 
 			     Map<String, Object>[] parametersReceiptDetails, long receiptHeader, String instrumentId){
-		boolean isInsertionSuccessful = false;
+		boolean isInsertionSuccessful;
 		
 			persistToReceiptHeader(parametersMap);
-			persistToReceiptDetails(parametersReceiptDetails, receiptHeader);
-		//	persistIntoReceiptInstrument(instrumentId, receiptHeader, parametersMap.get("tenantid").toString()); ////uncomment for instrument integration
+			persistToReceiptDetails(parametersReceiptDetails);
+			persistIntoReceiptInstrument(instrumentId, receiptHeader, parametersMap.get("tenantid").toString());
 
 		isInsertionSuccessful = true;
 		return isInsertionSuccessful;

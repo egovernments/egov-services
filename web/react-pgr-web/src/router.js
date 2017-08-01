@@ -178,10 +178,11 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/mutation-reason'} component={MutationReason}/>
           <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
-		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
-		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
+		      <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
+		      <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
           <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
+          <Route exact path= {base + '/transaction/:moduleName/:page'} component={Search}/>
 
     </Switch>
   </main>

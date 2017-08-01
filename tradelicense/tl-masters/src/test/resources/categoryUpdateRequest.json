@@ -1,0 +1,34 @@
+
+{
+ "RequestInfo": {
+ "action": "create",
+"did": "1",
+"msgId": "20170310130900",
+"requesterId": "yosadhara",
+"authToken": "2c099ea9-9919-47a2-b173-8b498aa07923",
+"apiId": "1",
+"ver": "1.0",
+"ts": 1,
+"key": "abcdkey",
+"tenantId": "default"
+},
+     "categories": [
+        {
+            "id": 10,
+            "tenantId": "default",
+            "name": "Flammables",
+            "code": "Flammables updated new7",
+            "parentId": 1,
+            "businessNature": null,
+            "details": [
+                {
+                    "id": 5,
+                    "categoryId": 10,
+                    "feeType": "License",
+                    "rateType": "Flat_By_Percentage",
+                    "uomId": 1
+                }]
+        }
+            ]
+        
+}

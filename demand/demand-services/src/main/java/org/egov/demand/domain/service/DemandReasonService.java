@@ -2,6 +2,8 @@ package org.egov.demand.domain.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -32,7 +34,6 @@ public class DemandReasonService {
 
 	public List<EgDemandReason> search(DemandReasonCriteria demandReasonCriteria) {
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		LOGGER.info("the request criteria for reason search : " + demandReasonCriteria);
 		StringBuilder queryStr = new StringBuilder();
 		queryStr.append("from EgDemandReason dr where dr.tenantId=:tenantId");
@@ -70,19 +71,24 @@ public class DemandReasonService {
 		if (demandReasonCriteria.getInstallmentType() != null) {
 			query.setString("installmenttype", demandReasonCriteria.getInstallmentType());
 		}
-
-		try {
-			if (demandReasonCriteria.getFromDate() != null) {
-				query.setDate("fromDate", dateFormat.parse(demandReasonCriteria.getFromDate()));
-			}
-			if (demandReasonCriteria.getToDate() != null) {
-				query.setDate("toDate", dateFormat.parse(demandReasonCriteria.getToDate()));
-			}
-		} catch (ParseException e) {
-			LOGGER.error("the exception in demandReasonService : " + e);
-			throw new RuntimeException(e);
+		if (demandReasonCriteria.getFromDate() != null) {
+				query.setTimestamp("fromDate", demandReasonCriteria.getFromDate());
 		}
-		
+		if (demandReasonCriteria.getToDate() != null) {
+			Date date = getEndOfDay(demandReasonCriteria.getToDate());
+					LOGGER.info("demandreason toDate-------" +date);
+					query.setTimestamp("toDate", date);
+		}
 		return (List<EgDemandReason>) query.list();
+	}
+	
+	public static Date getEndOfDay(Date date) {
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(date);
+	    calendar.set(Calendar.HOUR_OF_DAY, 23);
+	    calendar.set(Calendar.MINUTE, 59);
+	    calendar.set(Calendar.SECOND, 59);
+	    calendar.set(Calendar.MILLISECOND, 999);
+	    return calendar.getTime();
 	}
 }

@@ -262,20 +262,20 @@ public class InstrumentServiceTest {
 	}
 
 	@Test
-	public final void test_fetch_surrendarreason() {
+	public final void test_fetch_surrenderreason() {
 
 		List<Instrument> instruments = getInstruments();
 
 		SurrenderReason expextedResult = SurrenderReason.builder().name("name").description("description").id("1")
 				.build();
 
-		instruments.get(0).setSurrendarReason(expextedResult);
+		instruments.get(0).setSurrenderReason(expextedResult);
 
 		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
-		assertEquals(expextedResult, actualResult.get(0).getSurrendarReason());
+		assertEquals(expextedResult, actualResult.get(0).getSurrenderReason());
 	}
 	@Ignore
 	@Test(expected = InvalidDataException.class)
@@ -349,20 +349,20 @@ public class InstrumentServiceTest {
 	}
 	@Ignore
 	@Test(expected = InvalidDataException.class)
-	public final void test_fetch_surrendarreason_null() {
+	public final void test_fetch_surrenderreason_null() {
 
 		List<Instrument> instruments = getInstruments();
 
 		SurrenderReason expextedResult = SurrenderReason.builder().name("name").description("description").id("1")
 				.build();
 
-		instruments.get(0).setSurrendarReason(expextedResult);
+		instruments.get(0).setSurrenderReason(expextedResult);
 
 		when(surrenderReasonRepository.findById(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
-		assertEquals(expextedResult, actualResult.get(0).getSurrendarReason());
+		assertEquals(expextedResult, actualResult.get(0).getSurrenderReason());
 	}
 
 	private List<Instrument> getInstruments() {

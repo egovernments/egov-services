@@ -1994,7 +1994,7 @@ definitions:
         format: varchar
       RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      BusinessCategoryInfo:
+      BusinessCategory:
         $ref: '#/definitions/BusinessCategory'
     required:
      - tenantId    
@@ -2004,7 +2004,7 @@ definitions:
     properties:
       ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      BusinessCategoryInfo:
+      BusinessCategory:
         type: array
         items: 
          $ref: '#/definitions/BusinessCategory'
@@ -2085,7 +2085,7 @@ definitions:
         format: varchar
       RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      BusinessDetailsInfo:
+      BusinessDetails:
         $ref: '#/definitions/BusinessDetails'
   
   BusinessDetailsRes:
@@ -2093,7 +2093,7 @@ definitions:
     properties:
       ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      BusinessDetailsInfo:
+      BusinessDetails:
         type: array
         items: 
          $ref: '#/definitions/BusinessDetails'
@@ -2105,7 +2105,7 @@ definitions:
         type: number
         format: double
         description: Receivable Amount.
-      BusinessDetailsInfo:
+      BusinessDetails:
         type: object
         items: 
          $ref: '#/definitions/BusinessDetails'

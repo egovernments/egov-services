@@ -6,6 +6,7 @@
     "axios": "^0.16.1",
     "create-react-class": "^15.5.3",
     "exif-js": "^2.2.1",
+    "firebase": "^4.2.0",
     "intl-locales-supported": "^1.0.0",
     "jquery": "^3.2.1",
     "jsonpath": "^0.2.11",
@@ -40,6 +41,6 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://egov-micro-dev.egovernments.org/",
+  "proxy": "http://egov-micro-qa.egovernments.org/",
   "homepage": "."
 }

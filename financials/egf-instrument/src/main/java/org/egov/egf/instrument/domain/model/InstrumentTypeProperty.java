@@ -29,4 +29,7 @@ public class InstrumentTypeProperty extends Auditable {
 	private FinancialStatusContract statusOnUpdate;
 	@NotNull
 	private FinancialStatusContract statusOnReconcile;
+	@NotNull
+	private InstrumentType instrumentType;
+
 }

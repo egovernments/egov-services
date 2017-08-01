@@ -1,0 +1,24 @@
+{
+    "responseInfo": {
+    "apiId":null,
+     "ver":null,
+      "ts":null,
+      "resMsgId":null,
+       "msgId":null,
+        "status":null
+       
+    },
+    "categories": [
+        {
+            "tenantId": "default",
+            "name": null,
+            "code": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

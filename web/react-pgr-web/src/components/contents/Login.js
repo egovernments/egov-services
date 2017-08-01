@@ -598,8 +598,8 @@ class Login extends Component {
                                   {showError()}
                                 </Col>
                                 <Col lg={12}>
-                                  <RaisedButton disabled={!isFormValid} type="submit" label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" primary={true} />
-                                  <FlatButton label={translate('core.lbl.forgot.password')} style={styles.buttonTopMargin} onClick={showPasswordModal}/>
+                                  <RaisedButton disabled={!isFormValid} type="submit" label={translate('core.lbl.signin')} style={{width:150,marginTop: 20}}  primary={true} />
+                                  <FlatButton label={translate('core.lbl.forgot.password')} labelStyle={{fontSize:12}} style={styles.buttonTopMargin} hoverColor={{color:'#ffffff'}} onClick={showPasswordModal}/>
                                 </Col>
 									  </Row>
                               </Col>

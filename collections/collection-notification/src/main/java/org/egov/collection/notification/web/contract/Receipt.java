@@ -17,16 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Receipt {
 
-    private RequestInfo requestInfo;
-
     private String tenantId;
-    private String receiptNumber;
-    private String mobileNumber;
-    private String payeeName;
-    private BigDecimal amountPaid;
-    private String payeeEmail;
-    private String consumerCode;
-    private String businessService;
 
     @NotNull
     @JsonProperty("Bill")

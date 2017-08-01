@@ -36,9 +36,10 @@ public class EmailService {
 
    public void send(ReceiptRequest receiptRequest) {
        List<Receipt> receipts = receiptRequest.getReceipt();
-       String applicantName = receipts.get(0).getPayeeName();
        Receipt receipt = receipts.get(0);
-       String emailId = receipt.getBill().get(0).getPayeeEmail();
+       Bill bill = receipt.getBill().get(0);
+       String emailId = bill.getPayeeEmail();
+       String applicantName = bill.getPayeeName();
        final City city = tenantRepository.fetchTenantByCode(receiptRequest.getRequestInfo(),receiptRequest.getTenantId());
        sendEmailNotification(receiptRequest, applicantName,emailId,city);
 
@@ -64,6 +65,7 @@ public class EmailService {
         List<Bill> bills = receipts.get(0).getBill();
         List<BillDetail> billDetails = bills.get(0).getBillDetails();
         emailMessage.append("Dear Sir/Madam,\n\nGreetings from ").append(city.getName()).append(".").append("\n\n").append("We thank you for making a payment of Rs.");
+
 
         String consumerCode = "";
         Long receiptDate = 0l;

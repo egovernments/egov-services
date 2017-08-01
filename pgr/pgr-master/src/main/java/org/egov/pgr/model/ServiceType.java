@@ -99,5 +99,7 @@ public class ServiceType {
 	private List<Attribute> attributes;
 
 	private boolean hasFinancialImpact;
+	
+	private Boolean days;
 
 }

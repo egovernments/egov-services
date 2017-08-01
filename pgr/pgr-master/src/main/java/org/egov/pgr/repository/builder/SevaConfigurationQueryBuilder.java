@@ -57,8 +57,8 @@ public class SevaConfigurationQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT ck.keyName as key, cv.value as value" + " FROM eg_sevaconfig ck"
-			+ " JOIN eg_sevaconfigvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId";
+	private static final String BASE_QUERY = "SELECT ck.keyName as key, cv.value as value" + " FROM egseva_config ck"
+			+ " JOIN egseva_configvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(SevaConfigurationGetRequest sevaConfigurationGetRequest, List preparedStatementValues) {

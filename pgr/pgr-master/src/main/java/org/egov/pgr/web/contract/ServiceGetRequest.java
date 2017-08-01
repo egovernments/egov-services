@@ -67,6 +67,8 @@ public class ServiceGetRequest {
     private Long categoryId;
 
     private String type;
+    
+    private Boolean days;
 
     @NotNull
     private String tenantId;

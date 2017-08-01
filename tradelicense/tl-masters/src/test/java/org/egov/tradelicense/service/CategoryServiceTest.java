@@ -49,7 +49,9 @@ public class CategoryServiceTest {
 	public String type = "CATEGORY";
 	public String updatedName = "Flammables v1.1 name updated";
 	public String updatedCode = "Flammables v1.1 code updated";
-
+	public String subCatName = "Flammables2";
+	public String subCatCode = "Flammables2";
+	
 	@Test
 	public void testAcreateCategory() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -173,7 +175,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, name, code, "SUBCATEGORY", parentId, pageSize, offset);
+					new Integer[] { categoryId.intValue() }, subCatName, subCatCode, "SUBCATEGORY", parentId, pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 
@@ -193,8 +195,8 @@ public class CategoryServiceTest {
 
 		Category category = new Category();
 		category.setTenantId(tenantId);
-		category.setName(name);
-		category.setCode(code);
+		category.setName(subCatName);
+		category.setCode(subCatCode);
 		category.setParentId(categoryId);
 
 		CategoryDetail details = new CategoryDetail();
@@ -250,8 +252,8 @@ public class CategoryServiceTest {
 
 		Category category = new Category();
 		category.setTenantId(tenantId);
-		category.setName(name);
-		category.setCode(code);
+		category.setName(subCatName);
+		category.setCode(subCatCode);
 		category.setParentId(categoryId);
 
 		CategoryDetail details = new CategoryDetail();

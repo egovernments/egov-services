@@ -51,7 +51,7 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 	public FeeMatrixResponse createFeeMatrixMaster(String tenantId, FeeMatrixRequest feeMatrixRequest) {
 
 		RequestInfo requestInfo = feeMatrixRequest.getRequestInfo();
-		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetals(requestInfo);
+		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
 		for (FeeMatrix feeMatrix : feeMatrixRequest.getFeeMatrices()) {
 
 			tenantId = feeMatrix.getTenantId();
@@ -147,7 +147,7 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 	}
 
 	public FeeMatrixResponse getFeeMatrixMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer categoryId, Integer subCategoryId, String financialYear, String applicationType,
+			Integer categoryId, Integer subCategoryId, Integer financialYear, String applicationType,
 			String businessNature, Integer pageSize, Integer offSet) {
 
 		FeeMatrixResponse feeMatrixResponse = new FeeMatrixResponse();

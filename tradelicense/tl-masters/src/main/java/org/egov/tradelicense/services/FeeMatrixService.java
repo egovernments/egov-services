@@ -45,6 +45,6 @@ public interface FeeMatrixService {
 	 * @return FeeMatrixResponse
 	 */
 	public FeeMatrixResponse getFeeMatrixMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer categoryId, Integer subCategoryId, String financialYear, String applicationType,
+			Integer categoryId, Integer subCategoryId, Integer financialYear, String applicationType,
 			String businessNature, Integer pageSize, Integer offSet);
 }

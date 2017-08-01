@@ -13,7 +13,6 @@ import org.egov.models.FeeMatrixDetail;
 import org.egov.models.RequestInfo;
 import org.egov.tradelicense.exception.InvalidInputException;
 import org.egov.tradelicense.exception.InvalidRangeException;
-import org.egov.tradelicense.model.FinancialYearContract;
 import org.egov.tradelicense.model.FinancialYearContractResponse;
 import org.egov.tradelicense.repository.builder.FeeMatrixQueryBuilder;
 import org.egov.tradelicense.repository.builder.UtilityBuilder;
@@ -51,8 +50,9 @@ public class FeeMatrixHelper {
 		URI uri = UriComponentsBuilder.fromUriString(financialYearURI.toString()).queryParam("id", financialYear)
 				.build(true).encode().toUri();
 		try {
-			FinancialYearContractResponse financialYearContractResponse  = restTemplate.postForObject(uri, requestInfo, FinancialYearContractResponse.class);
-			if (financialYearContractResponse!=null) {
+			FinancialYearContractResponse financialYearContractResponse = restTemplate.postForObject(uri, requestInfo,
+					FinancialYearContractResponse.class);
+			if (financialYearContractResponse != null) {
 				System.out.println("succez");
 			} else {
 				System.out.println("failure");
@@ -139,7 +139,7 @@ public class FeeMatrixHelper {
 	}
 
 	/**
-	 * Description : this method for search FeeMatrixDetail of a feeMatrixId
+	 * Description : this method for search FeeMatrixDetail of a feeMatrix
 	 * 
 	 * @param feeMatrixId
 	 * @return List<FeeMatrixDetail>

@@ -25,6 +25,14 @@ public class PenaltyRateHelper {
 	@Autowired
 	PenaltyRateRepository penaltyRateRepository;
 
+	/**
+	 * This method will validate sequence ranges of the penalty details
+	 * 
+	 * @param tenantId
+	 * @param penaltyRateRequest
+	 * @param validateNew
+	 * 
+	 */
 	public void validatePenaltyRange(String tenantId, PenaltyRateRequest penaltyRateRequest, boolean validateNew) {
 
 		RequestInfo requestInfo = penaltyRateRequest.getRequestInfo();

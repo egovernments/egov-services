@@ -51,10 +51,11 @@ public class CategoryServiceImpl implements CategoryService {
 	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest) {
 
 		RequestInfo requestInfo = categoryRequest.getRequestInfo();
-		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetals(requestInfo);
+		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
 		for (Category category : categoryRequest.getCategories()) {
 
 			Long ParentId = category.getParentId();
+			//checking for existence of duplicate record
 			Boolean isExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
 					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, null);
 			if (isExists) {

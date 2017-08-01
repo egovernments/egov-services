@@ -10,15 +10,16 @@ import org.egov.models.DocumentTypeResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
-import org.egov.models.UserInfo;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.exception.DuplicateIdException;
 import org.egov.tradelicense.exception.InvalidInputException;
 import org.egov.tradelicense.repository.DocumentTypeRepository;
+import org.egov.tradelicense.repository.helper.DocumentTypeHelper;
 import org.egov.tradelicense.repository.helper.UtilityHelper;
 import org.egov.tradelicense.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * DocumentTypeService implementation class
@@ -36,23 +37,26 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 	DocumentTypeRepository documentTypeRepository;
 
 	@Autowired
-	ResponseInfoFactory responseInfoFactory;
-	
-	
+	DocumentTypeHelper documentTypeHelper;
+
 	@Autowired
 	UtilityHelper utilityHelper;
 
+	@Autowired
+	ResponseInfoFactory responseInfoFactory;
+
 	@Override
-	public DocumentTypeResponse createDocumentType( DocumentTypeRequest documentTypeRequest)  {
+	@Transactional
+	public DocumentTypeResponse createDocumentType(DocumentTypeRequest documentTypeRequest) {
 
 		RequestInfo requestInfo = documentTypeRequest.getRequestInfo();
-		AuditDetails auditDetails = getCreateDocumentTypeAuditDetails(requestInfo);
+		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
 		for (DocumentType documentType : documentTypeRequest.getDocumentTypes()) {
 
-			Boolean isExists = utilityHelper.checkWhetherDocumentTypeExists( documentType );
+			Boolean isExists = documentTypeHelper.checkWhetherDocumentTypeExists(documentType);
 
 			if (isExists)
-				throw new DuplicateIdException(propertiesManager.getDocumentTypeCustomMsg(),requestInfo);
+				throw new DuplicateIdException(propertiesManager.getDocumentTypeCustomMsg(), requestInfo);
 
 			try {
 				documentType.setAuditDetails(auditDetails);
@@ -70,31 +74,19 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 		return documentTypeResponse;
 	}
 
-	private AuditDetails getCreateDocumentTypeAuditDetails(RequestInfo requestInfo) {
-
-		AuditDetails auditDetails = new AuditDetails();
-		Long createdTime = new Date().getTime();
-		auditDetails.setCreatedTime(createdTime);
-		auditDetails.setLastModifiedTime(createdTime);
-		UserInfo userInfo = requestInfo.getUserInfo();
-		if (userInfo != null) {
-			auditDetails.setCreatedBy(userInfo.getUsername());
-			auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUsername());
-		}
-
-		return auditDetails;
-	}
-
 	@Override
+	@Transactional
 	public DocumentTypeResponse updateDocumentType(DocumentTypeRequest documentTypeRequest) {
 
 		for (DocumentType documentType : documentTypeRequest.getDocumentTypes()) {
 
-			Boolean isExists = utilityHelper.checkWhetherRecordExitswithName(documentType.getTenantId(), documentType.getName(),
-					ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getId(), documentType.getApplicationType().toString());
+			Boolean isExists = documentTypeHelper.checkWhetherRecordExitswithName(documentType.getTenantId(),
+					documentType.getName(), ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getId(),
+					documentType.getApplicationType().toString());
 
 			if (isExists)
-				throw new DuplicateIdException(propertiesManager.getDocumentTypeCustomMsg(),documentTypeRequest.getRequestInfo());
+				throw new DuplicateIdException(propertiesManager.getDocumentTypeCustomMsg(),
+						documentTypeRequest.getRequestInfo());
 
 			RequestInfo requestInfo = documentTypeRequest.getRequestInfo();
 			try {
@@ -122,13 +114,13 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 	}
 
 	@Override
-	public DocumentTypeResponse getDocumentType(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, Boolean enabled, String applicationType, Integer pageSize, Integer offSet) {
-
+	public DocumentTypeResponse getDocumentType(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			Boolean enabled, String applicationType, Integer pageSize, Integer offSet) {
 
 		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
 		try {
-			List<DocumentType> documentTypes = documentTypeRepository.searchDocumentType(tenantId, ids, name, enabled, applicationType, pageSize, offSet);
+			List<DocumentType> documentTypes = documentTypeRepository.searchDocumentType(tenantId, ids, name, enabled,
+					applicationType, pageSize, offSet);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			documentTypeResponse.setDocumentTypes(documentTypes);
 			documentTypeResponse.setResponseInfo(responseInfo);
@@ -136,7 +128,6 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 		} catch (Exception e) {
 			throw new InvalidInputException(requestInfo);
 		}
-
 
 		return documentTypeResponse;
 	}

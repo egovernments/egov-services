@@ -37,6 +37,7 @@ public interface CategoryService {
 	 * @param name
 	 * @param code
 	 * @param type
+	 * @param categoryId
 	 * @param pageSize
 	 * @param offSet
 	 * @return CategoryResponse

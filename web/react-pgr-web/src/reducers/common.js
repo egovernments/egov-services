@@ -64,7 +64,9 @@ let menuConvention={
   "Water Charge.WCMS Masters.Supply Type Master.ModifySupplyTypeMaster":"/search/wc/supplyType/update",
   "Water Charge.WCMS Masters.Supply Type Master.SearchWaterSupplyTypeMaster":"/search/wc/supplyType/view",
   "Water Charge.WCMS Masters.Source Type Master.ModifySourceTypeMaster":"/search/wc/waterSourceType/update",
-  "Water Charge.WCMS Masters.Source Type Master.SearchWaterSourceTypeMaster":"/search/wc/waterSourceType/view"
+  "Water Charge.WCMS Masters.Source Type Master.SearchWaterSourceTypeMaster":"/search/wc/waterSourceType/view",
+  "Water Charge.WCMS Masters.PropertyPipeSize.ModifyPropertyPipeSizeApi":"/search/wc/propertyPipeSize/update",
+  "Water Charge.WCMS Masters.PropertyPipeSize.SearchPropertyPipeSizeApi":"/search/wc/propertyPipeSize/view"
 
 }
 

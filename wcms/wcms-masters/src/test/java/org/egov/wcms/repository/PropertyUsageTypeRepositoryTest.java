@@ -163,7 +163,7 @@ public class PropertyUsageTypeRepositoryTest {
         when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(null);
         final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
         when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), propUsageTypeMapper))
-                .thenReturn(propUsageTypes);
+                .thenReturn(null);
 
         assertTrue(propUsageTypes.equals(propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest)));
     }

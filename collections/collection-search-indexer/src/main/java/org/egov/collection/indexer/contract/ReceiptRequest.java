@@ -52,6 +52,8 @@ import java.util.List;
 
 public class ReceiptRequest {
 
+    private String tenantId;
+
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 

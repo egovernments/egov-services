@@ -236,7 +236,12 @@ public class AgreementController {
 		Agreement agreement = agreementService.searchAgreement(agreementCriteria,requestInfoWrapper.getRequestInfo()).get(0);
 		LOGGER.info("after search "+ agreement);
 		agreementRequest.setAgreement(agreement);
+		if(Source.DATA_ENTRY.equals(agreement.getSource())){
+			agreement.setLegacyDemands(agreementService.prepareLegacyDemands(agreementRequest));
+
+		}else{
 		agreement.setLegacyDemands(agreementService.prepareDemands(agreementRequest));
+		}
 		LOGGER.info("after prepare denmands : "+agreement.getLegacyDemands());
 		
 

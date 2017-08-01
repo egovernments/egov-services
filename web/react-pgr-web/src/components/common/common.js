@@ -131,7 +131,10 @@ var localationData = {
   "wc.search.Donation.title":"Search Donation",
   "wc.create.DocumentTypeApplicationType.title":"Create Document Type Application Type",
   "wc.create.mandatory":"Mandatory",
-  "wc.update.DocumentTypeApplicationTypes.title":"Update Document Type Application Types"
+  "wc.update.DocumentTypeApplicationTypes.title":"Update Document Type Application Types",
+  "wc.search.DocumentTypeApplicationType.title":"Search Document Type Application Type",
+  "wc.create.applicationType":"Application Type",
+  "wc.view.DocumentTypeApplicationTypes.title":"View Document Type Application Types"
 }
 
 export function translate(locale_text){

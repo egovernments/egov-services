@@ -2,6 +2,7 @@ package org.egov.property.utility;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.egov.models.ErrorRes;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
@@ -10,6 +11,8 @@ import org.egov.models.Property;
 import org.egov.models.RequestInfo;
 import org.egov.property.model.City;
 import org.egov.property.model.SearchTenantResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,8 @@ public class UpicNoGeneration {
 
 	@Autowired
 	RestTemplate restTemplate;
+	
+	private static final Logger logger = LoggerFactory.getLogger(UpicNoGeneration.class);
 
 	public String generateUpicNo(Property property, RequestInfo requestInfo) {
 
@@ -50,9 +55,11 @@ public class UpicNoGeneration {
 		
 		SearchTenantResponse searchTenantResponse= null;
 		try {
+			logger.info("calling tennat service url :"+tenantCodeUrl.toString()+" request is "+requestInfo);
 			String response  = restTemplate.postForObject(
 					builder.buildAndExpand().toUri(), requestInfo,
 					String.class);
+			logger.info("after calling tennat service response :"+response);
 			if (response!=null && !response.isEmpty()) {
 				
 				ObjectMapper mapper = new ObjectMapper();
@@ -99,10 +106,12 @@ public class UpicNoGeneration {
 		idGeneration.setRequestInfo(requestInfo);
 		String response = null;
 		try {
+			logger.info("calling id generation service url :"+idGenerationUrl.toString()+" request is "+requestInfo);
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		logger.info("After calling the id generation service response :"+response);
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
 		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);

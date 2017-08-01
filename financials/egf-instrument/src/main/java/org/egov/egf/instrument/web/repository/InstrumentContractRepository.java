@@ -2,22 +2,19 @@ package org.egov.egf.instrument.web.repository;
 
 import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.requests.InstrumentResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class InstrumentContractRepository {
+
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-instrument/instruments/search?";
-	@Autowired
-	private ObjectMapper objectMapper;
+	public static final String SEARCH_URL = "/egf-instrument/instruments/search?";
 
-	public InstrumentContractRepository(@Value("${egf.instrument.host.url}") String hostUrl, RestTemplate restTemplate) {
+	public InstrumentContractRepository(@Value("${egf.instrument.host.url}") String hostUrl,
+			RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

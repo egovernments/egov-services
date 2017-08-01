@@ -22,7 +22,7 @@
     body {
         padding: 0;
     }
-    
+
     footer {
         background-color: #f3f4f5;
         bottom: 0;
@@ -31,33 +31,33 @@
         width: 100%;
         z-index: 999;
     }
-    
+
     footer a {
         color: rgb(116, 101, 101);
         text-decoration: none;
     }
-    
+
     footer span.copyright {
         float: left;
         font-size: 11px;
         padding: 7px;
     }
-    
+
     footer span.version {
         float: right;
         font-size: 11px;
         padding: 7px;
     }
-    
+
     footer span.copyright a {
         color: rgb(116, 101, 101);
     }
-    
+
     footer #legal {
         clear: left;
         display: block;
     }
-    
+
     .constrain {
         padding-left: 10px;
         padding-right: 10px;
@@ -306,6 +306,16 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
+                                                            <label for="townSurveyNo">Land Survey No</label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label id="asset.townSurveyNo" name="asset.townSurveyNo">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
                                                             <label for="asset.land_address">Land Address</label>
                                                         </div>
                                                         <div class="col-sm-6 label-view-text">
@@ -447,6 +457,16 @@
                                                         </div>
                                                         <div class="col-sm-6 label-view-text">
                                                             <label id="asset.name" name="asset.name">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="asset.shoppingComplexName">Shopping Complex Name </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label id="asset.shoppingComplexName" name="shoppingComplexName">NA</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1763,6 +1783,16 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="paymentCycle">Payment Cycle </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label type="number" name="paymentCycle" id="paymentCycle">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="col-sm-6 rendCalculatedMethod" id="rendCalculatedMethod">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
@@ -2032,6 +2062,16 @@
                                                         </div>
                                                         <div class="col-sm-6 label-view-text">
                                                             <label type="number" name="rent" id="rent">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="paymentCycle">Payment Cycle </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label type="number" name="paymentCycle" id="paymentCycle">NA</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2306,6 +2346,16 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="paymentCycle">Payment Cycle </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label type="number" name="paymentCycle" id="paymentCycle">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="col-sm-6" id="rendCalculatedMethod">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
@@ -2385,6 +2435,7 @@
                                         <h3>Rent Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
+
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
@@ -2766,7 +2817,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="fileTableTbody">
-                                        
+
                                     </tbody>
                                 </table>
                                 <br/>
@@ -2847,7 +2898,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="text-center" id="footer-btn-grp">
                                     <button type="button" class="btn btn-submit" id="close">Close</button>
                                     <!-- <button type="button" class="btn btn-submit" id="printNotice">Print Notice</button> -->
@@ -2911,6 +2962,17 @@
                                     <div class="row">
                                         <div class="col-sm-6 label-text">
                                             <label style="font-weight: bold" for="resurvey_number">Resurvey Number</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="townSurveyNo">Land Survey No</label>
                                         </div>
                                         <div class="col-sm-6 label-view-text">
                                             <label>NA</label>
@@ -3058,6 +3120,16 @@
                                     <div class="row">
                                         <div class="col-sm-6 label-text">
                                             <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.shoppingComplexName">Shopping Complex Name </label>
                                         </div>
                                         <div class="col-sm-6 label-view-text">
                                             <label>NA</label>
@@ -4272,6 +4344,7 @@
                                         <div class="col-sm-6 label-text">
                                             <label style="font-weight: bold" for="tenderDate">Tender/Auction Date </label>
                                         </div>
+
                                         <div class="col-sm-6 label-view-text">
                                             <label name="tenderDate">NA</label>
                                         </div>
@@ -4334,6 +4407,16 @@
                                         </div>
                                         <div class="col-sm-6 label-view-text">
                                             <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="paymentCycle">Payment Cycle </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="paymentCycle" id="paymentCycle">NA</label>
                                         </div>
                                     </div>
                                 </div>
@@ -4523,6 +4606,16 @@
                                         </div>
                                         <div class="col-sm-6 label-view-text">
                                             <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="paymentCycle">Payment Cycle </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="paymentCycle" id="paymentCycle">NA</label>
                                         </div>
                                     </div>
                                 </div>
@@ -4728,6 +4821,16 @@
                                 <div class="col-sm-6">
                                     <div class="row">
                                         <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="paymentCycle">Payment Cycle </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="paymentCycle" id="paymentCycle">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
                                             <label style="font-weight: bold" for="commencementDate">Date of Commencement </label>
                                         </div>
                                         <div class="col-sm-6 label-view-text">
@@ -4844,13 +4947,14 @@
                         <h4 style="color:#f68f31">Rent Details </h4>
                         <div class="form-section-inner">
                             <div class="row">
+
                                 <div class="col-sm-6">
                                     <div class="row">
                                         <div class="col-sm-6 label-text">
                                             <label style="font-weight: bold" for="bankGuaranteeAmount">Bank guarantee amount </label>
                                         </div>
                                         <div class="col-sm-6 label-view-text">
-                                            <label name="bankGuaranteeAmount">NA</label>
+                                            <label name="bankGuaranteeAmount" id="bankGuaranteeAmount">NA</label>
                                         </div>
                                     </div>
                                 </div>
@@ -4870,7 +4974,7 @@
                                             <label style="font-weight: bold" for="solvencyCertificateNo">Solvency Certificate No </label>
                                         </div>
                                         <div class="col-sm-6 label-view-text">
-                                            <label name="solvencyCertificateNo">NA</label>
+                                            <label name="solvencyCertificateNo" id="solvencyCertificateNo">NA</label>
                                         </div>
                                     </div>
                                 </div>
@@ -4897,7 +5001,7 @@
     <!-- <footer class="clearfix simple">
         <div class="constrain">
             <div id="legal">
-                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>®</sup></a></span>
+                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>Â®</sup></a></span>
                 <span class="version">eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</span>
             </div>
         </div>

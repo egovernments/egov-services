@@ -3,9 +3,10 @@ package org.egov.property.services;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfo;
+import org.egov.models.SpecialNoticeRequest;
+import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface PropertyService {
 
@@ -63,7 +64,7 @@ public interface PropertyService {
 	 * @throws Exception
 	 */
 	
-	public TitleTransferResponse createTitleTransfer(@RequestBody TitleTransferRequest titleTransferRequest) throws Exception;
+	public TitleTransferResponse createTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception;
 	
 	/**
 	 * This api for updating title transfer request for property
@@ -71,5 +72,13 @@ public interface PropertyService {
 	 * @return titleTransferResponse
 	 * @throws Exception
 	 */
-	public TitleTransferResponse updateTitleTransfer(@RequestBody TitleTransferRequest titleTransferRequest) throws Exception;
+	public TitleTransferResponse updateTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception;
+	
+	/**
+	 * This Api will generate the special based on the given special notice request
+	 * @param specialNoticeRequest
+	 * @return {@link SpecialNoticeResponse}
+	 * @throws Exception
+	 */
+	public SpecialNoticeResponse generateSpecialNotice(SpecialNoticeRequest specialNoticeRequest) throws Exception;
 }

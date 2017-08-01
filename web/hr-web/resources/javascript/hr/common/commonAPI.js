@@ -15,6 +15,7 @@ if (tenantId) {
   tenantId = tenantIds[tenantId] || "ap." + tenantId;
 
 }
+
 var authToken = localStorage.getItem("auth-token");
 var now = new Date();
 var year = now.getFullYear();
@@ -583,7 +584,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'relation':
             if (!localStorage.getItem("relation") || localStorage.getItem("relation") == "undefined") {
-                getCommonMaster("egov-common-masters", "genders", function(err, res) {
+                getCommonMaster("egov-common-masters", "relationships", function(err, res) {
                     if (res) {
                         localStorage.setItem("relation", JSON.stringify(res["Relationship"]));
                         cb(res["Relationship"]);

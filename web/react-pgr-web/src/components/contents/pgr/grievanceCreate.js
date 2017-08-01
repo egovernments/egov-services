@@ -631,17 +631,17 @@ class grievanceCreate extends Component {
                     </Row>
                     <Row>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(event, value) => handleChange(value, "firstName", true, '')}
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(event, value) => handleChange(value, "firstName", true, /^[a-zA-Z ]{1,50}$/, 'Should contain only alphabets and space. Max: 50 Characters')}
                         />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g)} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g, 'Enter valid 10 digit mobile number')} />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(event, value) => handleChange(value, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(event, value) => handleChange(value, "email", false, /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}  />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(event, value) => handleChange(value, "requesterAddress", false, '')} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(event, value) => handleChange(value, "requesterAddress", false, /^.{1,256}$/, 'Max: 256 Characters')} />
                       </Col>
                     </Row>
                   </Grid>
@@ -705,10 +705,10 @@ class grievanceCreate extends Component {
                   {this.state.attributes ? this.loadSD() : ''}
                   <Row>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(event, value) => handleChange(value, "description", true, /^.{10,500}$/)}/>
+                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(event, value) => handleChange(value, "description", true, /^.{10,500}$/, "Atleast 10 characters. Max: 500 Characters")}/>
                     </Col>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(event, value) => handleChange(value, "address", false, '')}/>
+                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(event, value) => handleChange(value, "address", false, /^.{1,500}$/, "Max: 500 Characters")}/>
                     </Col>
                     <Col xs={12} md={6}>
                       <AutoComplete
@@ -795,8 +795,6 @@ const mapDispatchToProps = dispatch => ({
       requiredArray = ["firstName","phone","serviceCategory","serviceCode","description","addressId"]
     }
 
-    var patternarray = ["phone","email","description"];
-
     dispatch({
       type: "RESET_STATE",
       validationData: {
@@ -806,7 +804,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: patternarray
+          required: []
         }
       }
     });
@@ -858,8 +856,8 @@ const mapDispatchToProps = dispatch => ({
   handleUpload: (e) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files[0]})
   },
-  handleChange: (value, property, isRequired, pattern) => {
-    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+  handleChange: (value, property, isRequired, pattern, errorMsg) => {
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern, errorMsg});
     if(property === 'serviceCategory'){
       dispatch({type: "HANDLE_CHANGE", property: 'serviceCode', value: '', isRequired : true, pattern: ''});
     }else if(property === 'addressId'){

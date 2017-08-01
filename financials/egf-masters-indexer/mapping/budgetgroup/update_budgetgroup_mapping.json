@@ -12,39 +12,39 @@
         "description": {
             "type": "keyword"
         },
-        "majorcode": {
+        "majorCode": {
             "type": "object"
         },
-        "maxcode": {
+        "maxCode": {
             "type": "object"
         },
-        "mincode": {
+        "minCode": {
             "type": "object"
         },
-        "accounttype": {
-            "type": "object"
+        "accountType": {
+            "type": "keyword"
         },
         "active": {
             "type": "boolean"
         },
-	"budgetingtype": {
-	    "type": "object"
+	"budgetingType": {
+	    "type": "keyword"
 	},
-        "createdby": {
+        "createdBy": {
             "type": "object"
         },
-        "lastmodifiedby": {
+        "lastModifiedBy": {
             "type": "object"
         },
-        "createddate": {
+        "createdDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "lastmodifieddate": {
+        "lastModifiedDate": {
             "type": "date",
             "format": "date_optional_time"
         },
-        "tenantid": {
+        "tenantId": {
             "type": "keyword"
         }
     }

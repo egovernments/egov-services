@@ -1,0 +1,28 @@
+{
+	"responseInfo": {
+		"apiId": null,
+		"ver": null,
+		"ts": null,
+		"resMsgId": null,
+		"msgId": null,
+		"status": null
+	},
+	"categories": [{
+		"tenantId": "default",
+		"name": null,
+		"code": null,
+		"parentId": null,
+		"businessNature": null,
+		 "details": [{
+           	"feeType": null,
+           	"rateType": null,
+           	"uomId": null
+           }],
+		"auditDetails": {
+			"createdBy": null,
+			"lastModifiedBy": null,
+			"createdTime": null,
+			"lastModifiedTime": null
+		}
+	}]
+}

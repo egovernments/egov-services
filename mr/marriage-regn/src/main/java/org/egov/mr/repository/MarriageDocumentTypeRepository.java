@@ -94,14 +94,9 @@ public class MarriageDocumentTypeRepository {
 				});
 	}
 
-	// ID
-	public Long getNextIdVal() {
-		return jdbcTemplate.queryForObject(marriageDocumentTypeQueryBuilder.getIdNextValForMarriageDocType(),
-				Long.class);
-	}
-
 	// Get Ids List
 	public List<Long> getIds(List<MarriageDocumentType> marriageDocumentTypeList) {
+		log.debug("Differentiating Update And Create Records in getIds:: MarriageDocumentTypeRepository");
 		StringBuilder idQuery = new StringBuilder("(" + marriageDocumentTypeList.get(0).getId());
 		for (int index = 1; index < marriageDocumentTypeList.size(); index++) {
 			idQuery.append("," + marriageDocumentTypeList.get(index).getId());

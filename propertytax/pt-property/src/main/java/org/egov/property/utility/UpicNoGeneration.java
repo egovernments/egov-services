@@ -2,6 +2,7 @@ package org.egov.property.utility;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.egov.models.ErrorRes;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
@@ -10,7 +11,6 @@ import org.egov.models.Property;
 import org.egov.models.RequestInfo;
 import org.egov.property.model.City;
 import org.egov.property.model.SearchTenantResponse;
-import org.egov.property.repository.PropertyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

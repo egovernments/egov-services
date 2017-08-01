@@ -52,17 +52,19 @@ class Report extends Component {
   }
 
   initData() {
+  
+    let hashLocation = window.location.hash;
     try {
       var hash = window.location.hash.split("/");
-      if(hash.length == 4) {
+      if(hash.length == 4 && hashLocation.split("/")[1]!="transaction") {
         specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-      } else {
+      } else if(hashLocation.split("/")[1]!="transaction"){
         specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+      } else {
+        specifications = require(`./specs/${hash[2]}/transaction/${hash[3]}`).default;
       }
     } catch(e) {}
-
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
-    let hashLocation = window.location.hash;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired, []);

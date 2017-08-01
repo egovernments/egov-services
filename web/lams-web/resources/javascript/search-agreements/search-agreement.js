@@ -17,6 +17,7 @@ class AgreementSearch extends React.Component {
             tenderNumber: "",
             fromDate: "",
             toDate: "",
+            acknowledgementNumber: "",
             tenantId
         },
         isSearchClicked: false,
@@ -58,9 +59,9 @@ class AgreementSearch extends React.Component {
         agreements.sort(function(d1, d2) {
           var date1 = d1.createdDate.split("/");
           var date2 = d2.createdDate.split("/");
-          if(new Date(date1[2], date1[1]-1, date1[0]).getTime() < new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
+          if(new Date(date1[2], date1[1]-1, date1[0]).getTime() > new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
             return -1;
-          } else if(new Date(date1[2], date1[1]-1, date1[0]).getTime() > new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
+          } else if(new Date(date1[2], date1[1]-1, date1[0]).getTime() < new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
             return 1;
           } else 
             return 0;
@@ -331,7 +332,7 @@ class AgreementSearch extends React.Component {
     revenueWard,
     electionWard,
     code,
-    tenderNumber,fromDate,toDate,shopComplexNumber}=this.state.searchSet;
+    tenderNumber,fromDate,toDate,shopComplexNumber, acknowledgementNumber}=this.state.searchSet;
 
     const showCollectTaxOption = function() {
       if(!hideCollectTaxOption) {
@@ -666,6 +667,20 @@ class AgreementSearch extends React.Component {
                                         </div>
                                       </div>
                                   </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label for="">Acknowledgement Number </label>
+                                        </div>
+                                        <div className="col-sm-6">
+                                            <input type="text" name="acknowledgementNumber" id="acknowledgementNumber" value={acknowledgementNumber} onChange={(e)=>{
+                                                handleChange(e, "acknowledgementNumber")
+                                            }}/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                           </div>

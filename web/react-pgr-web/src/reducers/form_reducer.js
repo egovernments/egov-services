@@ -179,7 +179,7 @@ export default(state = defaultState, action) => {
 
     case "HANDLE_CHANGE":
       validationData = undefined;
-      validationData = validate(action.isRequired, action.pattern, action.property, action.value, state.validationData);
+      validationData = validate(action.isRequired, action.pattern, action.property, action.value, state.validationData, action.errorMsg);
       return {
         ...state,
         form: {
@@ -454,7 +454,7 @@ export default(state = defaultState, action) => {
   }
 }
 
-function validate(isRequired, pattern, name, value, validationData) {
+function validate(isRequired, pattern, name, value, validationData, fielderrorMsg) {
   let errorText = "";
   if (isRequired) {
     if (value.toString().trim().length > 0) {
@@ -471,29 +471,32 @@ function validate(isRequired, pattern, name, value, validationData) {
   if (pattern.toString().trim().length > 0) {
     if (value != "") {
       if (pattern.test(value)) {
-        // if (_.indexOf(validationData.pattern.current, name) == -1) {
-        //   validationData.pattern.current.push(name);
-        // }
-
-      } else if(pattern == "/^[0-9]+$/"){
-
-		validationData.required.current = _.remove(validationData.required.current, (item) => {
+        //when pattern succeeds, remove it from pattern current array
+        validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
           return item != name
         });
-        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
-        //   return item != name
-        // });
-        errorText = "It expects numeric only";
-
+      } else if(pattern == "/^[0-9]+$/"){
+          //when pattern fails, add it in pattern current array
+          if (_.indexOf(validationData.pattern.current, name) == -1) {
+            validationData.pattern.current.push(name);
+          }
+          errorText = "It expects numeric only";
 	  } else {
         validationData.required.current = _.remove(validationData.required.current, (item) => {
           return item != name
         });
-        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
-        //   return item != name
-        // });
-        errorText = "Invalid field data";
+        //when pattern fails, add it in pattern current array
+        if (_.indexOf(validationData.pattern.current, name) == -1) {
+          validationData.pattern.current.push(name);
+        }
+        //Get cusom message and show it
+        errorText = fielderrorMsg ? fielderrorMsg : "Invalid field data";
       }
+    }else{
+      //console.log('pattern value came as empty');
+      validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        return item != name
+      });
     }
   }
   if (!isRequired && value == "") {
@@ -501,13 +504,15 @@ function validate(isRequired, pattern, name, value, validationData) {
   }
   // console.log(validationData.required.required)
   // console.log(validationData.required.current)
+  // console.log(validationData.pattern.required);
+  // console.log(validationData.pattern.current);
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
   // console.log(validationData.required.required.length, validationData.required.current.length);
   return {
     errorText: errorText,
     validationData: validationData,
-    isFormValid: (validationData.required.required.length == validationData.required.current.length)
+    isFormValid: ((validationData.required.required.length == validationData.required.current.length) && (validationData.pattern ? validationData.pattern.current.length == 0 : true))
   };
 }
 

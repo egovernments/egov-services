@@ -1,6 +1,5 @@
 package org.egov.tradelicense.services;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import org.egov.models.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.exception.DuplicateIdException;
 import org.egov.tradelicense.exception.InvalidInputException;
-import org.egov.tradelicense.exception.InvalidRangeException;
 import org.egov.tradelicense.repository.FeeMatrixRepository;
 import org.egov.tradelicense.repository.helper.FeeMatrixHelper;
 import org.egov.tradelicense.repository.helper.UtilityHelper;
@@ -43,8 +41,11 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 	UtilityHelper utilityHelper;
 
 	@Autowired
+	FeeMatrixHelper feeMatrixHelper;
+
+	@Autowired
 	private PropertiesManager propertiesManager;
-	
+
 	@Override
 	@Transactional
 	public FeeMatrixResponse createFeeMatrixMaster(String tenantId, FeeMatrixRequest feeMatrixRequest) {
@@ -58,29 +59,23 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 			Long categoryId = feeMatrix.getCategoryId();
 			Long subCategoryId = feeMatrix.getSubCategoryId();
 			String financialYear = feeMatrix.getFinancialYear();
+			// validating financial year
+			feeMatrixHelper.validateFinancialYear(financialYear, requestInfo);
+			// validating category
+			feeMatrixHelper.validateCategory(categoryId, requestInfo);
+			// validating sub category
+			feeMatrixHelper.validateCategory(subCategoryId, requestInfo);
+			// checking existence of duplicate fee matrix record
 			Boolean isExists = utilityHelper.checkWhetherDuplicateFeeMatrixRecordExits(tenantId, applicationType,
 					categoryId, subCategoryId, financialYear, ConstantUtility.FEE_MATRIX_TABLE_NAME, null);
 			if (isExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 			}
-			Long UomFrom = null;
-			Long oldUomTo = null;
-			int count = 0;
-			List<FeeMatrixDetail> feeMatrixDetails = new ArrayList<>();
-			feeMatrixDetails = feeMatrix.getFeeMatrixDetails();
-			feeMatrixDetails.sort((r1, r2) -> r1.getUomFrom().compareTo(r2.getUomFrom()));
-			for (FeeMatrixDetail feeMatrixDetail : feeMatrixDetails) {
+			// validating fee matrix details
+			feeMatrixHelper.validateFeeMatrixDetailsRange(feeMatrix, requestInfo, true);
 
-				UomFrom = feeMatrixDetail.getUomFrom();
-				if (count > 0) {
-					if (!UomFrom.equals(oldUomTo)) {
-						throw new InvalidRangeException(requestInfo);
-					}
-				}
-				oldUomTo = feeMatrixDetail.getUomTo();
-				count++;
-			}
 			try {
+
 				feeMatrix.setAuditDetails(auditDetails);
 				Long feeMatrixId = feeMatrixRepository.createFeeMatrix(tenantId, feeMatrix);
 				feeMatrix.setId(feeMatrixId);
@@ -89,7 +84,9 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 					Long feeMatrixDetailId = feeMatrixRepository.createFeeMatrixDetails(tenantId, feeMatrixDetail);
 					feeMatrixDetail.setId(feeMatrixDetailId);
 				}
+
 			} catch (Exception e) {
+
 				throw new InvalidInputException(requestInfo);
 			}
 		}
@@ -113,45 +110,25 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 			Long subCategoryId = feeMatrix.getSubCategoryId();
 			String financialYear = feeMatrix.getFinancialYear();
 			Long feeMatrixId = feeMatrix.getId();
+			// validating financial year
+			feeMatrixHelper.validateFinancialYear(financialYear, requestInfo);
+			// validating category
+			feeMatrixHelper.validateCategory(categoryId, requestInfo);
+			// validating sub category
+			feeMatrixHelper.validateCategory(subCategoryId, requestInfo);
+			// checking existence of duplicate fee matrix record
 			Boolean isExists = utilityHelper.checkWhetherDuplicateFeeMatrixRecordExits(tenantId, applicationType,
 					categoryId, subCategoryId, financialYear, ConstantUtility.FEE_MATRIX_TABLE_NAME, feeMatrixId);
 			if (isExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 			}
-			List<FeeMatrixDetail> feeMatrixDetails = new ArrayList<>();
-			try {
-				feeMatrixDetails = feeMatrixRepository.getFeeMatrixDetailsByFeeMatrixId(feeMatrixId);
-			} catch (Exception e) {
-				throw new InvalidInputException(requestInfo);
-			}
-			for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
-				for (int i = 0; i < feeMatrixDetails.size(); i++) {
-					Long id = feeMatrixDetails.get(i).getId();
-					if (feeMatrixDetail.getId() != null && id == feeMatrixDetail.getId()) {
-						feeMatrixDetails.set(i, feeMatrixDetail);
-					}
-				}
-			}
-			Long UomFrom = null;
-			Long oldUomTo = null;
-			int count = 0;
-			feeMatrixDetails.sort((r1, r2) -> r1.getUomFrom().compareTo(r2.getUomFrom()));
-			for (FeeMatrixDetail feeMatrixDetail : feeMatrixDetails) {
-
-				UomFrom = feeMatrixDetail.getUomFrom();
-				if (count > 0) {
-					if (!UomFrom.equals(oldUomTo)) {
-						throw new InvalidRangeException(requestInfo);
-					}
-				}
-				oldUomTo = feeMatrixDetail.getUomTo();
-				count++;
-			}
+			// validating fee matrix details
+			feeMatrixHelper.validateFeeMatrixDetailsRange(feeMatrix, requestInfo, false);
 			try {
 				Long updatedTime = new Date().getTime();
 				feeMatrix.getAuditDetails().setLastModifiedTime(updatedTime);
-				if(requestInfo.getUserInfo() != null)
-				feeMatrix.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+				if (requestInfo.getUserInfo() != null)
+					feeMatrix.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
 				for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
 					feeMatrixDetail = feeMatrixRepository.updateFeeMatrixDetail(feeMatrixDetail);
 				}
@@ -179,7 +156,7 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 					financialYear, applicationType, businessNature, pageSize, offSet);
 			for (int i = 0; i < feeMatrices.size(); i++) {
 				FeeMatrix feeMatrix = feeMatrices.get(i);
-				List<FeeMatrixDetail> feeMatrixDetails = feeMatrixRepository
+				List<FeeMatrixDetail> feeMatrixDetails = feeMatrixHelper
 						.getFeeMatrixDetailsByFeeMatrixId(feeMatrix.getId());
 				feeMatrix.setFeeMatrixDetails(feeMatrixDetails);
 			}

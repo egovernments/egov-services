@@ -3,6 +3,9 @@ package org.egov.property.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +20,9 @@ import org.egov.models.Demand;
 import org.egov.models.DemandId;
 import org.egov.models.Document;
 import org.egov.models.Floor;
+import org.egov.models.FloorSpec;
+import org.egov.models.HeadWiseTax;
+import org.egov.models.Notice;
 import org.egov.models.Property;
 import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
@@ -34,6 +40,7 @@ import org.egov.property.repository.builder.FloorBuilder;
 import org.egov.property.repository.builder.PropertyBuilder;
 import org.egov.property.repository.builder.PropertyDetailBuilder;
 import org.egov.property.repository.builder.SearchPropertyBuilder;
+import org.egov.property.repository.builder.SpecialNoticeBuilder;
 import org.egov.property.repository.builder.TitleTransferAddressBuilder;
 import org.egov.property.repository.builder.TitleTransferBuilder;
 import org.egov.property.repository.builder.TitleTransferDocumentBuilder;
@@ -122,7 +129,7 @@ public class PropertyRepository {
 						demandIdList.add(id);
 					}
 				}
-				
+
 				Gson gson = new Gson();
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
@@ -1533,21 +1540,21 @@ public class PropertyRepository {
 			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 			property.setAuditDetails(auditDetails);
 			List<Demand> demands = new ArrayList<Demand>();
-		
-			if ( row.get("demands")!=null){
+
+			if (row.get("demands") != null) {
 				ObjectMapper mapper = new ObjectMapper();
 				TypeReference<List<DemandId>> typeReference = new TypeReference<List<DemandId>>() {
 				};
 				try {
 					List<DemandId> demandIds = mapper.readValue(row.get("demands").toString(), typeReference);
 
-					for ( DemandId demandId : demandIds){
+					for (DemandId demandId : demandIds) {
 						Demand demand = new Demand();
 						demand.setId(demandId.getId());
 						demands.add(demand);
 					}
 				} catch (Exception e) {
-					logger.error("error"+e);
+					logger.error("error" + e);
 				}
 			}
 
@@ -1592,18 +1599,250 @@ public class PropertyRepository {
 		return object == null ? Boolean.FALSE : (Boolean) object;
 	}
 
-	/*
-	 * public Address getAddressByHouseNoBldgApt(Long houseNoBldgApt) { Address
-	 * address = null; try { address = (Address)
-	 * jdbcTemplate.queryForObject(AddressBuilder.ADDRES_BY_PROPERTY_ID_QUERY,
-	 * new Object[] { houseNoBldgApt }, new
-	 * BeanPropertyRowMapper(Address.class)); } catch
-	 * (EmptyResultDataAccessException e) { return null; } if (address != null
-	 * && address.getId() != null && address.getId() > 0)
-	 * address.setAuditDetails(getAuditDetailsForAddress(address.getId()));
+	/**
+	 * This method will check whether the upic no exists in db
 	 * 
-	 * return address;
+	 * @param upicNo
+	 * @return TRUE / FALSE if the document exists/ does not exists
 	 */
-	// }
+	public Boolean checkUpicnoExixts(String upicNo) {
 
+		Boolean isExists = Boolean.FALSE;
+		int count = 0;
+
+		String query = SpecialNoticeBuilder.UNIQUE_UPIC_NO;
+		count = jdbcTemplate.queryForObject(query, new Object[] { upicNo }, Integer.class);
+		if (count > 0)
+			isExists = Boolean.TRUE;
+
+		return isExists;
+	}
+
+	/**
+	 * This will get the upic no
+	 * 
+	 * @param upicNo
+	 * @return {@link String} Upic No
+	 */
+	public String getNoticeNumberForupic(String upicNo) {
+
+		String noticeNumber = "";
+		String query = SpecialNoticeBuilder.GET_UPIC_NO;
+		noticeNumber = jdbcTemplate.queryForObject(query, new Object[] { upicNo }, String.class);
+
+		return noticeNumber;
+	}
+
+	/**
+	 * This will save the notice object in the repository
+	 * 
+	 * @param notice
+	 * @param id
+	 * @param totalTax
+	 * @throws Exception
+	 */
+	@Transactional
+	public void saveNotice(Notice notice, Double totalTax) throws Exception {
+
+		int noticeId = 0;
+
+		final PreparedStatementCreator pscDocumentType = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection
+						.prepareStatement(SpecialNoticeBuilder.INSERT_SPECIALNOTICE_QUERY, new String[] { "id" });
+				ps.setString(1, notice.getUpicNo());
+				ps.setString(2, notice.getTenantId());
+				ps.setString(3, notice.getUlbName());
+				ps.setString(4, notice.getUlbLogo());
+				try {
+					ps.setTimestamp(5, conevrtFormat(notice.getNoticeDate()));
+				} catch (ParseException e) {
+
+					e.printStackTrace();
+				}
+				ps.setString(6, notice.getNoticeNumber());
+				ps.setString(7, notice.getApplicationNo());
+				if (notice.getApplicationDate() != null && !notice.getApplicationDate().isEmpty())
+					ps.setTimestamp(8, getTimestamp(notice.getApplicationDate(), "yyyy-MM-dd hh:mm:ss.SSS"));
+				else {
+					ps.setTimestamp(8, null);
+				}
+				return ps;
+			}
+
+			private Timestamp getTimestamp(String date, String format) {
+				Timestamp timestamp = null;
+				try {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					Date parsedDate = dateFormat.parse(date);
+					timestamp = new java.sql.Timestamp(parsedDate.getTime());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				return timestamp;
+			}
+
+			private Timestamp conevrtFormat(String date) throws ParseException {
+				Date initDate = new SimpleDateFormat("dd/MM/yyyy").parse(notice.getNoticeDate());
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				String parsedDate1 = formatter.format(initDate);
+				return getTimestamp(parsedDate1, "yyyy-MM-dd");
+
+			}
+		};
+
+		final KeyHolder holderDocumentType = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(pscDocumentType, holderDocumentType);
+
+		noticeId = holderDocumentType.getKey().intValue();
+
+		saveNoticeOwners(notice, noticeId);
+		saveNoticeAddress(notice, noticeId);
+		saveNoticeFloorSpec(notice, noticeId);
+		saveTotaltax(notice, noticeId, totalTax);
+
+	}
+
+	private void saveTotaltax(Notice notice, int noticeId, Double totalTax) {
+
+		Long taxDetailsId = 0l;
+		final PreparedStatementCreator totalTaxType = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(SpecialNoticeBuilder.INSERT_NOTICE_TAX_DETAILS,
+						new String[] { "id" });
+				ps.setLong(1, Long.valueOf(String.valueOf(noticeId)));
+				ps.setDouble(2, totalTax);
+
+				return ps;
+			}
+		};
+
+		final KeyHolder holder = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(totalTaxType, holder);
+		taxDetailsId = holder.getKey().longValue();
+
+		saveNoticeTaxWiseDetails(notice, noticeId, taxDetailsId);
+
+	}
+
+	private void saveNoticeTaxWiseDetails(Notice notice, int noticeId, Long taxDetailId) {
+
+		final int id = noticeId;
+
+		for (HeadWiseTax headWiseTax : notice.getTaxDetails().getHeadWiseTaxes()) {
+
+			final PreparedStatementCreator pscDocumentType = new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+					final PreparedStatement ps = connection.prepareStatement(
+							SpecialNoticeBuilder.INSERT_NOTICE_TAXWISE_DETAILS, new String[] { "sno" });
+					ps.setLong(1, Long.valueOf(String.valueOf(id)));
+					ps.setLong(2, taxDetailId);
+					ps.setString(3, headWiseTax.getTaxName());
+					ps.setDouble(4, headWiseTax.getTaxDays());
+					ps.setDouble(5, headWiseTax.getTaxValue());
+					return ps;
+				}
+			};
+
+			// The newly generated key will be saved in this object
+			final KeyHolder holderDocumentType = new GeneratedKeyHolder();
+
+			jdbcTemplate.update(pscDocumentType, holderDocumentType);
+
+		}
+
+	}
+
+	private void saveNoticeFloorSpec(Notice notice, int noticeId) {
+
+		for (FloorSpec floorSpec : notice.getFloors()) {
+
+			final PreparedStatementCreator pscDocumentType = new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+					final PreparedStatement ps = connection
+							.prepareStatement(SpecialNoticeBuilder.INSERT_NOTICE_FLOOR_SPEC, new String[] { "id" });
+					ps.setLong(1, Long.valueOf(String.valueOf(noticeId)));
+					ps.setString(2, floorSpec.getFloorNo());
+					ps.setString(3, floorSpec.getUnitDetails());
+					ps.setString(4, floorSpec.getUsage());
+					ps.setString(5, floorSpec.getConstruction());
+					ps.setString(6, floorSpec.getAssessableArea());
+					ps.setString(7, floorSpec.getAlv());
+					ps.setString(8, floorSpec.getRv());
+					return ps;
+				}
+			};
+
+			// The newly generated key will be saved in this object
+			final KeyHolder holderDocumentType = new GeneratedKeyHolder();
+
+			jdbcTemplate.update(pscDocumentType, holderDocumentType);
+
+		}
+
+	}
+
+	/**
+	 * This will save the notice address
+	 * 
+	 * @param notice
+	 * @param noticeId
+	 */
+	private void saveNoticeAddress(Notice notice, int noticeId) {
+
+		final PreparedStatementCreator pscDocumentType = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(SpecialNoticeBuilder.INSERT_NOTICE_ADDRESS,
+						new String[] { "sno" });
+				ps.setLong(1, Long.valueOf(String.valueOf(noticeId)));
+				if (notice.getAddress() != null && notice.getAddress().getId() != null)
+					ps.setLong(2, notice.getAddress().getId());
+				else
+					ps.setLong(2, 0l);
+				return ps;
+			}
+		};
+
+		// The newly generated key will be saved in this object
+		final KeyHolder holderDocumentType = new GeneratedKeyHolder();
+		jdbcTemplate.update(pscDocumentType, holderDocumentType);
+
+	}
+
+	/**
+	 * This will save the notice in the repository
+	 * 
+	 * @param notice
+	 * @param noticeId
+	 */
+	private void saveNoticeOwners(Notice notice, int noticeId) {
+
+		for (User owner : notice.getOwners()) {
+
+			final PreparedStatementCreator noticeOwnersType = new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+					final PreparedStatement ps = connection.prepareStatement(SpecialNoticeBuilder.INSERT_NOTICE_OWNERS,
+							new String[] { "sno" });
+					ps.setLong(1, Long.valueOf(String.valueOf(noticeId)));
+					ps.setLong(2, owner.getId());
+					return ps;
+				}
+			};
+
+			// The newly generated key will be saved in this object
+			final KeyHolder holder = new GeneratedKeyHolder();
+
+			jdbcTemplate.update(noticeOwnersType, holder);
+
+		}
+	}
 }

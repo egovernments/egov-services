@@ -109,4 +109,12 @@ public class UtilityBuilder {
 
 		return documentTypeValidationQuery.toString();
 	}
+
+	public static String getCategoryIdValidationQuery(Long categoryId, String tableName) {
+
+		StringBuffer categoryValidationQuery = new StringBuffer("select count(*) from " + tableName);
+		categoryValidationQuery.append(" where id = '" + categoryId + "'");
+
+		return categoryValidationQuery.toString();
+	}
 }

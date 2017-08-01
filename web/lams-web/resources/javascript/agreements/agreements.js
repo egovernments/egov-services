@@ -56,6 +56,7 @@ $('#close').on("click", function() {
 var CONST_API_GET_FILE = "/filestore/v1/files/id?fileStoreId=";
 var agreement = {};
 var employees = [];
+var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
 
 $(document).ready(function(){
   if(window.opener && window.opener.document) {
@@ -114,6 +115,18 @@ $("select").on("change", function() {
 
 //file change handle for file upload
 $("input[type=file]").on("change", function(evt) {
+    //2097152 = 2mb
+    if(evt.currentTarget.files[0].size > 2097152 && fileTypes.indexOf(evt.currentTarget.files[0].type) == -1) {
+        $("#documents").val('');
+        return showError("Maximum file size allowed is 2 MB.\n Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+    } else if(evt.currentTarget.files[0].size > 2097152) {
+        $("#documents").val('');
+        return showError("Maximum file size allowed is 2 MB.");
+    } else if(fileTypes.indexOf(evt.currentTarget.files[0].type) == -1) {
+        $("#documents").val('');
+        return showError("Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+    }
+
     agreement["documents"] = evt.currentTarget.files;
 });
 

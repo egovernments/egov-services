@@ -60,7 +60,11 @@ let menuConvention={
   "Water Charge.WCMS Masters.DocumentApplication.ModifyDocumentApplicationApi":"/search/wc/documentTypeApplicationType/update",
   "Water Charge.WCMS Masters.DocumentApplication.SearchDocumentApplicationApi":"/search/wc/documentTypeApplicationType/view",
   "Water Charge.WCMS Masters.Donation.ModifyDonationApi":"/search/wc/donation/update",
-  "Water Charge.WCMS Masters.Donation.SearchDonationApi":"/search/wc/donation/view"
+  "Water Charge.WCMS Masters.Donation.SearchDonationApi":"/search/wc/donation/view",
+  "Water Charge.WCMS Masters.Supply Type Master.ModifySupplyTypeMaster":"/search/wc/supplyType/update",
+  "Water Charge.WCMS Masters.Supply Type Master.SearchWaterSupplyTypeMaster":"/search/wc/supplyType/view",
+  "Water Charge.WCMS Masters.Source Type Master.ModifySourceTypeMaster":"/search/wc/waterSourceType/update",
+  "Water Charge.WCMS Masters.Source Type Master.SearchWaterSourceTypeMaster":"/search/wc/waterSourceType/view"
 
 }
 

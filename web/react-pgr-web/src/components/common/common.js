@@ -134,7 +134,18 @@ var localationData = {
   "wc.update.DocumentTypeApplicationTypes.title":"Update Document Type Application Types",
   "wc.search.DocumentTypeApplicationType.title":"Search Document Type Application Type",
   "wc.create.applicationType":"Application Type",
-  "wc.view.DocumentTypeApplicationTypes.title":"View Document Type Application Types"
+  "wc.view.DocumentTypeApplicationTypes.title":"View Document Type Application Types",
+  "wc.create.supplyType":"Supply Type",
+  "wc.create.code":"Code",
+  "wc.search.supplyType.title":"Search Supply Type",
+  "wc.view.supplytype.title":"View Supply Type",
+  "wc.update.supplyType.title":"Update Supply Type",
+  "wc.search.sourceType.title":"Search Source Type",
+  "wc.create.sourceType":"Source Type",
+  "wc.search.sourceType.title":"Search Source Type",
+  "wc.view.sourceType.title":"View Source Type",
+  "wc.update.sourceType.title":"Update Source Type",
+  "wc.create.sourceType.title":"Create Source Type"
 }
 
 export function translate(locale_text){

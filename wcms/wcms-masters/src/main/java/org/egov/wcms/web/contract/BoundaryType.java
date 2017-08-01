@@ -37,32 +37,16 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
+package org.egov.wcms.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.egov.wcms.model.TreatmentPlant;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+public class BoundaryType {
 
-@Component
-public class TreatmentPlantRowMapper implements RowMapper<TreatmentPlant> {
+    @JsonProperty("id")
+    private String id;
 
-    @Override
-    public TreatmentPlant mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final TreatmentPlant treatmentPlant = new TreatmentPlant();
-        treatmentPlant.setId(rs.getLong("treatmentplant_id"));
-        treatmentPlant.setCode(rs.getString("treatmentplant_code"));
-        treatmentPlant.setName(rs.getString("treatmentplant_name"));
-        treatmentPlant.setPlantType(rs.getString("treatmentplant_planttype"));
-        treatmentPlant.setLocationNum(rs.getString("treatmentplant_location"));
-        treatmentPlant.setWardNum(rs.getString("treatmentplant_ward"));
-        treatmentPlant.setZoneNum(rs.getString("treatmentplant_zone"));
-        treatmentPlant.setCapacity(rs.getDouble("treatmentplant_capacity"));
-        treatmentPlant.setStorageReservoirId(rs.getLong("treatmentplant_storagereservoirId"));
-        treatmentPlant.setDescription(rs.getString("treatmentplant_description"));
-        treatmentPlant.setTenantId(rs.getString("treatmentplant_tenantId"));
-        return treatmentPlant;
-    }
+    @JsonProperty("name")
+    private String name;
+
 }

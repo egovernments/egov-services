@@ -107,9 +107,9 @@ public class TreatmentPlantControllerTest {
         treatmentPlant.setTenantId("default");
         treatmentPlant.setName("test");
         treatmentPlant.setCode("12");
-        treatmentPlant.setLocationName("test1");
-        treatmentPlant.setWardName("test2");
-        treatmentPlant.setZoneName("test3");
+        treatmentPlant.setLocationNum("3");
+        treatmentPlant.setWardNum("5");
+        treatmentPlant.setZoneNum("6");
         treatmentPlant.setCapacity(2d);
         treatmentPlant.setPlantType("test");
         treatmentPlant.setStorageReservoirId(2l);

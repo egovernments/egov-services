@@ -84,7 +84,7 @@ public class TreatmentPlantRepository {
             }
             final Object[] obj = new Object[] { Long.valueOf(treatmentPlant.getCode()), treatmentPlant.getCode(),
                     treatmentPlant.getName(), treatmentPlant.getPlantType(),
-                    treatmentPlant.getLocation(), treatmentPlant.getWard(), treatmentPlant.getZone(),
+                    treatmentPlant.getLocationNum(), treatmentPlant.getWardNum(), treatmentPlant.getZoneNum(),
                     treatmentPlant.getCapacity(),
                     storageReservoirId, treatmentPlant.getDescription(),
                     Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()),
@@ -110,8 +110,8 @@ public class TreatmentPlantRepository {
                 log.info("EmptyResultDataAccessException: Query returned empty result set");
             }
             final Object[] obj = new Object[] { treatmentPlant.getName(), treatmentPlant.getPlantType(),
-                    treatmentPlant.getLocation(),
-                    treatmentPlant.getWard(), treatmentPlant.getZone(),
+                    treatmentPlant.getLocationNum(),
+                    treatmentPlant.getWardNum(), treatmentPlant.getZoneNum(),
                     treatmentPlant.getCapacity(), storageReservoirId,
                     treatmentPlant.getDescription(),
                     Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()),

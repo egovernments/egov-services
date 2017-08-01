@@ -70,15 +70,15 @@ public class StorageReservoirGetRequest {
 
     private String locationName;
 
-    private String location;
+    private String locationNum;
 
     private String wardName;
 
-    private String ward;
+    private String wardNum;
 
     private String zoneName;
 
-    private String zone;
+    private String zoneNum;
 
     private double capacity;
 

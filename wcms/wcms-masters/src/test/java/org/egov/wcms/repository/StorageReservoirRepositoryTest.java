@@ -110,9 +110,9 @@ public class StorageReservoirRepositoryTest {
         storageReservoir.setTenantId("default");
         storageReservoir.setName("test");
         storageReservoir.setCode("12");
-        storageReservoir.setLocationName("test1");
-        storageReservoir.setWardName("test2");
-        storageReservoir.setZoneName("test3");
+        storageReservoir.setLocationNum("12");
+        storageReservoir.setWardNum("22");
+        storageReservoir.setZoneNum("21");
         storageReservoir.setCapacity(2d);
         storageReservoir.setNoOfSubLines(2l);
         storageReservoir.setNoOfMainDistributionLines(2l);

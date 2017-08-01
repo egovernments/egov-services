@@ -1846,13 +1846,13 @@
           type: string
           description: Name of the plant
           maxLength: 100
-        location: 
+        locationNum: 
           type: string
           description: boundary location  where storage reservoir is located should be selected.
-        zone: 
+        zoneNum: 
           type: string
           description: boundary zone drop down should be displayed.
-        ward: 
+        wardNum: 
           type: string
           description: boundary ward drop down should be displayed.
         plantCapacity:
@@ -1880,9 +1880,9 @@
       required:
         - name
         - code
-        - location
-        - zone
-        - ward
+        - locationNum
+        - zoneNum
+        - wardNum
         - plantCapacity
         - plantType
         - tenantId
@@ -1931,13 +1931,13 @@
           type: string
           description: Name of the Storage Reservoir.
           maxLength: 100
-        location: 
+        locationNum: 
           type: string
           description: boundary location  where storage reservoir is located should be selected.
-        zone: 
+        zoneNum: 
           type: string
           description: boundary zone drop down should be displayed.
-        ward: 
+        wardNum: 
           type: string
           description: boundary ward drop down should be displayed.
         storageCapacity:
@@ -1966,9 +1966,9 @@
         - reservoirType
         - code
         - name
-        - location
-        - zone
-        - ward
+        - locationNum
+        - zoneNum
+        - wardNum
         - storageCapacity
         - tenantId
         
@@ -2073,4 +2073,3 @@
         - toUnit
         - unitRate
         - tenantId
-        

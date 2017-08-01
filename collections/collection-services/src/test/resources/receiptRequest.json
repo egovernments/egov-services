@@ -17,8 +17,6 @@
 },
 "Receipt": [{
   "tenantId": "default",
-  "instrumentType": "cash",
-  "instrumentHeader": "instrumentHeader",
   "BankAccount": {
     "BankBranch": {
       "name": "SBI"

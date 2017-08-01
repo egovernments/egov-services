@@ -30,12 +30,17 @@ html, body{
   -webkit-font-smoothing: antialiased;
 }
 
+<<<<<<< HEAD
+
+
+=======
 .menuStyle{
 
 	white-space: nowrap;
 	overflow: hidden;
 
 }
+>>>>>>> eb30f69a75830c36d308d89b9a1f0493e76eb15e
 
 
 .side-bar {
@@ -702,6 +707,33 @@ table td {
 	margin:15px;
 }
 
+<<<<<<< HEAD
+
+.menuStyle{
+
+
+}
+
+.menuStyle .onHoverText {
+    visibility: hidden;
+    width: 210px;
+		float: left;
+    background-color: rgb(245, 135, 32);
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 0px 0px;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+		margin-left: -60px;
+}
+
+.menuStyle:hover .onHoverText {
+    visibility: visible;
+}
+=======
 table thead th {
     padding: 15px 18px !important;
 	border-bottom:none !important;
@@ -736,3 +768,4 @@ table thead th {
  .searchButton button{
 	 background-color:#607d8b !important;
  }
+>>>>>>> eb30f69a75830c36d308d89b9a1f0493e76eb15e

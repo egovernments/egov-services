@@ -210,8 +210,9 @@ class Login extends Component {
           $.ajax({
               url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json",
               success: function(res) {
-                  actions = actions.concat(JSON.stringify(res));
+                  actions = actions.concat(JSON.parse(res));
                   localStorage.setItem("actions", JSON.stringify(actions));
+                  console.log(actions);
                   setActionList(actions);
               },
               error: function() {

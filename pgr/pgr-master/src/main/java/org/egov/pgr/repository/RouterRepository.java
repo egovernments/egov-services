@@ -46,11 +46,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.egov.pgr.model.Attribute;
-import org.egov.pgr.model.PersistRouter;
-import org.egov.pgr.model.PersistRouterReq;
-import org.egov.pgr.model.ServiceType;
-import org.egov.pgr.model.Value;
+import org.egov.pgr.domain.model.Attribute;
+import org.egov.pgr.domain.model.PersistRouter;
+import org.egov.pgr.domain.model.PersistRouterReq;
+import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.Value;
 import org.egov.pgr.repository.builder.RouterQueryBuilder;
 import org.egov.pgr.repository.rowmapper.PersistRouteRowMapper;
 import org.egov.pgr.repository.rowmapper.RouterRowMapper;

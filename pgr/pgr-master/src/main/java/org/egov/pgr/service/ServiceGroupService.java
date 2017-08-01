@@ -42,7 +42,7 @@ package org.egov.pgr.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.pgr.model.ServiceGroup;
+import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceGroupRepository;
 import org.egov.pgr.web.contract.ServiceGroupGetRequest;

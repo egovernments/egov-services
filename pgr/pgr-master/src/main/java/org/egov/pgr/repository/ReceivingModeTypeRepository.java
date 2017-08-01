@@ -40,7 +40,7 @@
 
 package org.egov.pgr.repository;
 
-import org.egov.pgr.model.ReceivingModeType;
+import org.egov.pgr.domain.model.ReceivingModeType;
 import org.egov.pgr.repository.builder.ReceivingModeTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ReceivingModeTypeRowMapper;
 import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;

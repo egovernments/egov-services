@@ -1,3 +1,4 @@
+package org.egov.pgr.domain.model;
 
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
@@ -39,34 +40,42 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.model.enums;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.egov.pgr.domain.model.AuditDetails;
+import org.egov.pgr.domain.model.ServiceType;
 
-public enum ChannelType {
-    WEB("WEB"), MOBILE("MOBILE");
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    private String value;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class PersistRouter {
 
-    ChannelType(final String value) {
-        this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
-
-    @JsonCreator
-    public static ChannelType fromValue(final String passedValue) {
-        for (final ChannelType obj : ChannelType.values())
-            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
-                return obj;
-        return null;
-    }
-
+	private Long id;
+	
+	private Long service;
+	
+	private Integer boundary;
+	
+	@NotNull
+	private Integer position;
+	
+	@NotNull
+	private String tenantId;
+	
+	private AuditDetails auditDetails;
+	
 }
+

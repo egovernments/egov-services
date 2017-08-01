@@ -38,7 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.model;
+package org.egov.pgr.domain.model;
 
 import javax.validation.constraints.NotNull;
 

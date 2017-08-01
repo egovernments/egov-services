@@ -37,11 +37,13 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.model;
+package org.egov.pgr.domain.model;
 
-import java.util.List;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,24 +60,18 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class Attribute {
-	
-	public static final String SEQ_CATEGORY = "SEQ_EGPGR_ATTRIBUTE";
-	
+public class AuditDetails {
+
 	@NotNull
-    private String code;
-	
-	private String datatype;
+	private Long createdBy;
 
-    private String datatypeDescription;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
 
-    private String description;
-    
-    private Boolean variable;
-    
-    private Boolean required;
-    
-    private List<Value> attributes;
-    
-    private String groupCode;
+	@NotNull
+	private Long lastModifiedBy;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
+
 }

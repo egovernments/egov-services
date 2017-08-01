@@ -44,7 +44,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.pgr.model.EscalationTimeType;
+import org.egov.pgr.domain.model.EscalationTimeType;
 import org.egov.pgr.repository.builder.EscalationTimeTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.EscalationTimeTypeRowMapper;
 import org.egov.pgr.web.contract.EscalationTimeTypeGetReq;

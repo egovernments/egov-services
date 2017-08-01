@@ -50,7 +50,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.pgr.model.ReceivingCenterType;
+import org.egov.pgr.domain.model.ReceivingCenterType;
 import org.egov.pgr.repository.builder.ReceivingCenterTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ReceivingCenterTypeRowMapper;
 import org.egov.pgr.web.contract.ReceivingCenterTypeGetReq;

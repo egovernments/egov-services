@@ -37,15 +37,14 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.model;
+package org.egov.pgr.domain.model;
+
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.contract.request.RequestInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,12 +57,25 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class PersistRouterReq {
-
+@Builder
+public class Attribute {
+	
+	public static final String SEQ_CATEGORY = "SEQ_EGPGR_ATTRIBUTE";
+	
 	@NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    private String code;
+	
+	private String datatype;
 
-    @JsonProperty("routertype")
-    private PersistRouter routerType;
+    private String datatypeDescription;
+
+    private String description;
+    
+    private Boolean variable;
+    
+    private Boolean required;
+    
+    private List<Value> attributes;
+    
+    private String groupCode;
 }

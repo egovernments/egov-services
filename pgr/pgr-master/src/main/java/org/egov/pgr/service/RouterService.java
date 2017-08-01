@@ -43,9 +43,9 @@ package org.egov.pgr.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.pgr.model.PersistRouter;
-import org.egov.pgr.model.PersistRouterReq;
-import org.egov.pgr.model.ServiceType;
+import org.egov.pgr.domain.model.PersistRouter;
+import org.egov.pgr.domain.model.PersistRouterReq;
+import org.egov.pgr.domain.model.ServiceType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.RouterRepository;
 import org.egov.pgr.web.contract.BoundaryIdType;

@@ -42,7 +42,7 @@ package org.egov.pgr.web.contract;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.model.ServiceGroup;
+import org.egov.pgr.domain.model.ServiceGroup;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

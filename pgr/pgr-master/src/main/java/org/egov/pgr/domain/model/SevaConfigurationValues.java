@@ -37,14 +37,17 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.model;
+
+package org.egov.pgr.domain.model;
+
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,37 +60,34 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class ReceivingCenterType {
-
-	public static final String SEQ_RECEIVINGCENTERTYPE = "SEQ_EGPGER_RECEIVING_CENTER";
+public class SevaConfigurationValues {
 
 	@NotNull
 	private Long id;
 
 	@NotNull
-	@Length(min = 3, max = 20)
-	private String code;
+	private Long keyId;
 
 	@NotNull
-	@Length(min = 3, max = 100)
-	private String name;
-
-	@Length(max = 250)
-	private String description;
-	
-	@NotNull
-	private Boolean iscrnrequired;
-	
-	@NotNull
-	private long orderno;
+	@Size(min = 1, max = 1000)
+	private String value;
 
 	@NotNull
-	private Boolean active;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date effectiveFrom;
 
-	private AuditDetails auditDetails;
+	@NotNull
+	private Long createdBy;
 
-	@Length(max = 250)
+	@NotNull
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private Long lastModifiedBy;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
+
 	@NotNull
 	private String tenantId;
 

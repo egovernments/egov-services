@@ -51,8 +51,8 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.pgr.model.AuditDetails;
-import org.egov.pgr.model.ReceivingModeType;
+import org.egov.pgr.domain.model.AuditDetails;
+import org.egov.pgr.domain.model.ReceivingModeType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ReceivingModeTypeRepository;
 import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;

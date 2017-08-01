@@ -44,7 +44,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
-import org.egov.pgr.model.ServiceGroup;
+import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.service.ServiceGroupService;
 import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.RequestInfoWrapper;

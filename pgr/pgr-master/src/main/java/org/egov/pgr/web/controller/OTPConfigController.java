@@ -90,7 +90,7 @@ public class OTPConfigController {
         final List<ErrorResponse> errorResponses = validateServiceGroupRequest(otpConfigRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        org.egov.pgr.model.OTPConfig otpConfig = contractToModel(otpConfigRequest);
+        org.egov.pgr.domain.model.OTPConfig otpConfig = contractToModel(otpConfigRequest);
         otpConfigService.createOTPConfig(applicationProperties.getCreateOtpConfigTopicName(), applicationProperties.getCreateOtpConfigTopicKey(), otpConfig);
         final List<OTPConfig> OTPConfigs = new ArrayList<>();
         OTPConfigs.add(otpConfigRequest.getOtpConfig());
@@ -109,7 +109,7 @@ public class OTPConfigController {
         final List<ErrorResponse> errorResponses = validateServiceGroupRequest(otpConfigRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        org.egov.pgr.model.OTPConfig otpConfig = contractToModel(otpConfigRequest);
+        org.egov.pgr.domain.model.OTPConfig otpConfig = contractToModel(otpConfigRequest);
         otpConfigService.updateOTPConfig(applicationProperties.getUpdateOtpConfigTopicName(), applicationProperties.getUpdateOtpConfigTopicKey(), otpConfig);
         final List<OTPConfig> OTPConfigs = new ArrayList<>();
         OTPConfigs.add(otpConfigRequest.getOtpConfig());
@@ -181,8 +181,8 @@ public class OTPConfigController {
         return otpConfigRes;
     }
 
-    private org.egov.pgr.model.OTPConfig contractToModel(OTPConfigReq otpConfigRequest) {
-        org.egov.pgr.model.OTPConfig otpConfig = new org.egov.pgr.model.OTPConfig();
+    private org.egov.pgr.domain.model.OTPConfig contractToModel(OTPConfigReq otpConfigRequest) {
+        org.egov.pgr.domain.model.OTPConfig otpConfig = new org.egov.pgr.domain.model.OTPConfig();
         otpConfig.setTenantId(otpConfigRequest.getOtpConfig().getTenantId());
         otpConfig.setOtpConfigEnabled(otpConfigRequest.getOtpConfig().isOtpEnabledForAnonymousComplaint());
         return otpConfig;

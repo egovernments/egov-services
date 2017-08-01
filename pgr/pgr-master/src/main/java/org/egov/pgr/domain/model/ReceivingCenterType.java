@@ -37,10 +37,7 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
-package org.egov.pgr.model;
-
-import java.util.List;
+package org.egov.pgr.domain.model;
 
 import javax.validation.constraints.NotNull;
 
@@ -61,9 +58,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class ReceivingModeType {
+public class ReceivingCenterType {
 
-	public static final String SEQ_RECEIVINGMODETYPE = "SEQ_EGPGER_RECEIVING_MODE";
+	public static final String SEQ_RECEIVINGCENTERTYPE = "SEQ_EGPGER_RECEIVING_CENTER";
 
 	@NotNull
 	private Long id;
@@ -78,11 +75,15 @@ public class ReceivingModeType {
 
 	@Length(max = 250)
 	private String description;
+	
+	@NotNull
+	private Boolean iscrnrequired;
+	
+	@NotNull
+	private long orderno;
 
 	@NotNull
 	private Boolean active;
-	
-	private List<String> channels;
 
 	private AuditDetails auditDetails;
 

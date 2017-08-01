@@ -1,5 +1,3 @@
-package org.egov.pgr.model;
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  *    accountability and the service delivery of the government  organizations.
@@ -39,18 +37,15 @@ package org.egov.pgr.model;
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
-
-import java.util.List;
+package org.egov.pgr.domain.model;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.pgr.model.AuditDetails;
-import org.egov.pgr.model.ServiceType;
-import org.egov.pgr.web.contract.BoundaryIdType;
+import org.egov.common.contract.request.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,22 +58,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class PersistRouter {
+public class PersistRouterReq {
 
-	private Long id;
-	
-	private Long service;
-	
-	private Integer boundary;
-	
 	@NotNull
-	private Integer position;
-	
-	@NotNull
-	private String tenantId;
-	
-	private AuditDetails auditDetails;
-	
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
+
+    @JsonProperty("routertype")
+    private PersistRouter routerType;
 }
-

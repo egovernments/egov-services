@@ -51,7 +51,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.pgr.model.ServiceGroup;
+import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.repository.builder.ServiceGroupQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ServiceGroupRowMapper;
 import org.egov.pgr.web.contract.ServiceGroupGetRequest;

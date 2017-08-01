@@ -37,13 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
-package org.egov.pgr.model;
-
-
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+package org.egov.pgr.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,28 +54,10 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class EscalationTimeType {
+public class OTPConfig {
 	
-    public static final String SEQ_CATEGORY = "SEQ_EGPGR_ESCILATIONTIMETYPE";
-   
-    private Long id; 
-    
-    @Length(max = 250)
-    @NotNull
-    private String tenantId;
-
-    @NotNull
-    private ServiceType grievanceType;
-    
-    @NotNull
-    private long noOfHours;
-    
-    @NotNull
-    private long designation;
-    
-    @NotNull
-    private boolean active;
-    
-    @NotNull
-    private AuditDetails auditDetails;
+	public static final String SEQ_CATEGORY = "SEQ_EGPGR_OTPCONFIG";
+	
+	private String tenantId;
+	private boolean otpConfigEnabled; 
 }

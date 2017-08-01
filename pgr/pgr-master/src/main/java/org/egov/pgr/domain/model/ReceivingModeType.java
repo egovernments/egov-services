@@ -38,16 +38,16 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.model;
+package org.egov.pgr.domain.model;
 
-import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,31 +60,33 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class SevaConfiguration {
+@Builder
+public class ReceivingModeType {
+
+	public static final String SEQ_RECEIVINGMODETYPE = "SEQ_EGPGER_RECEIVING_MODE";
 
 	@NotNull
 	private Long id;
 
 	@NotNull
-	@Size(min = 3, max = 50)
-	private String keyName;
+	@Length(min = 3, max = 20)
+	private String code;
 
 	@NotNull
-	@Size(min = 3, max = 250)
+	@Length(min = 3, max = 100)
+	private String name;
+
+	@Length(max = 250)
 	private String description;
 
 	@NotNull
-	private Long createdBy;
+	private Boolean active;
+	
+	private List<String> channels;
 
-	@NotNull
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
+	private AuditDetails auditDetails;
 
-	private Long lastModifiedBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
+	@Length(max = 250)
 	@NotNull
 	private String tenantId;
 

@@ -37,7 +37,13 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.model;
+package org.egov.pgr.domain.model;
+
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,10 +60,50 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class OTPConfig {
-	
-	public static final String SEQ_CATEGORY = "SEQ_EGPGR_OTPCONFIG";
-	
-	private String tenantId;
-	private boolean otpConfigEnabled; 
+public class ServiceType {
+
+    public static final String SEQ_CATEGORY = "SEQ_EGPGR_GRIEVANCETYPE";
+    private Long id; 
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
+    
+    @NotNull
+    private String serviceCode;
+    
+    @NotNull
+    private String serviceName;
+    
+    private String description;
+    
+    private boolean metadata;
+    
+    private Boolean active;
+    
+    private String type;
+    
+    private List<String> keywords;
+    
+    private String group;
+    
+    @NotNull
+    private Integer category;
+
+    private List<String> config;
+    
+    @NotNull
+    private Integer slaHours;
+   
+    private AuditDetails auditDeatils;
+
+    private List<Attribute> attributes;
+    
+    private boolean hasFinancialImpact;
+
+    private Boolean days;
+    
 }
+
+
+
+

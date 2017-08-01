@@ -43,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.pgr.model.ServiceType;
+import org.egov.pgr.domain.model.ServiceType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceTypeRepository;
 import org.egov.pgr.web.contract.ServiceGetRequest;

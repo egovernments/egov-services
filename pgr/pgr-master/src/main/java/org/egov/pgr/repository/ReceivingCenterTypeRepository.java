@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.pgr.model.ReceivingCenterType;
+import org.egov.pgr.domain.model.ReceivingCenterType;
 import org.egov.pgr.repository.builder.ReceivingCenterTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ReceivingCenterTypeRowMapper;
 import org.egov.pgr.web.contract.ReceivingCenterTypeGetReq;

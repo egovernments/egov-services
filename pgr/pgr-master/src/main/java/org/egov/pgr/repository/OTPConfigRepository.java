@@ -42,7 +42,7 @@ package org.egov.pgr.repository;
 import java.sql.Date;
 import java.util.List;
 
-import org.egov.pgr.model.OTPConfig;
+import org.egov.pgr.domain.model.OTPConfig;
 import org.egov.pgr.repository.rowmapper.OTPConfigRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

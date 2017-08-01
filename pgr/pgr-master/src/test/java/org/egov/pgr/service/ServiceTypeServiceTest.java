@@ -49,7 +49,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.pgr.model.ServiceType;
+import org.egov.pgr.domain.model.ServiceType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceTypeRepository;
 import org.egov.pgr.web.contract.ServiceGetRequest;

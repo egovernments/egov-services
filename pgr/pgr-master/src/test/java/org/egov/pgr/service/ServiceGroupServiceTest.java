@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.model.AuditDetails;
-import org.egov.pgr.model.ServiceGroup;
+import org.egov.pgr.domain.model.AuditDetails;
+import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceGroupRepository;
 import org.egov.pgr.web.contract.ServiceGroupGetRequest;

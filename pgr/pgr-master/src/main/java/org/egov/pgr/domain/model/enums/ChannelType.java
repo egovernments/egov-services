@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  *    accountability and the service delivery of the government  organizations.
@@ -37,69 +38,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.model;
 
-import java.util.List;
+package org.egov.pgr.domain.model.enums;
 
-import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringUtils;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+public enum ChannelType {
+    WEB("WEB"), MOBILE("MOBILE");
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-@Builder
-public class ServiceType {
+    private String value;
 
-	public static final String SEQ_CATEGORY = "SEQ_EGPGR_GRIEVANCETYPE";
-	private Long id;
-	@Length(max = 250)
-	@NotNull
-	private String tenantId;
+    ChannelType(final String value) {
+        this.value = value;
+    }
 
-	@NotNull
-	private String serviceCode;
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-	@NotNull
-	private String serviceName;
-
-	private String description;
-
-	private boolean metadata;
-
-	private Boolean active;
-
-	private String type;
-
-	private List<String> keywords;
-
-	private String group;
-
-	@NotNull
-	private Integer category;
-
-	private List<String> config;
-
-	@NotNull
-	private Integer slaHours;
-
-	private AuditDetails auditDeatils;
-
-	private List<Attribute> attributes;
-
-	private boolean hasFinancialImpact;
-	
-	private Boolean days;
+    @JsonCreator
+    public static ChannelType fromValue(final String passedValue) {
+        for (final ChannelType obj : ChannelType.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 
 }

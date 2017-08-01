@@ -37,13 +37,13 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.model;
 
-import java.util.Date;
+package org.egov.pgr.domain.model;
+
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,18 +60,28 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class AuditDetails {
+public class EscalationTimeType {
+	
+    public static final String SEQ_CATEGORY = "SEQ_EGPGR_ESCILATIONTIMETYPE";
+   
+    private Long id; 
+    
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
 
-	@NotNull
-	private Long createdBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	@NotNull
-	private Long lastModifiedBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
+    @NotNull
+    private ServiceType grievanceType;
+    
+    @NotNull
+    private long noOfHours;
+    
+    @NotNull
+    private long designation;
+    
+    @NotNull
+    private boolean active;
+    
+    @NotNull
+    private AuditDetails auditDetails;
 }

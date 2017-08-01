@@ -42,7 +42,7 @@ package org.egov.pgr.web.contract;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.model.EscalationHierarchy;
+import org.egov.pgr.domain.model.EscalationHierarchy;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -37,19 +37,37 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
 package org.egov.pgr.domain.model;
 
-public class RequestContext {
-    public static String CORRELATION_ID = "X-CORRELATION-ID";
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    private static final ThreadLocal<String> id = new ThreadLocal<>();
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class EscalationHierarchy {
+	
+	private Long fromPosition;
+	
+	private String serviceCode;
+	
+	private Long toPosition;
+	
+	private String tenantId;
+	
+	private AuditDetails auditDetails; 
+	
+	private Long department;
+	
+	private Long designation; 
 
-    public static String getId() {
-        return id.get();
-    }
-
-    public static void setId(final String correlationId) {
-        id.set(correlationId);
-    }
 }

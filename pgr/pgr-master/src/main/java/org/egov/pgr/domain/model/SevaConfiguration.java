@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.model;
+package org.egov.pgr.domain.model;
 
 import java.util.Date;
 
@@ -60,21 +60,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class SevaConfigurationValues {
+public class SevaConfiguration {
 
 	@NotNull
 	private Long id;
 
 	@NotNull
-	private Long keyId;
+	@Size(min = 3, max = 50)
+	private String keyName;
 
 	@NotNull
-	@Size(min = 1, max = 1000)
-	private String value;
-
-	@NotNull
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date effectiveFrom;
+	@Size(min = 3, max = 250)
+	private String description;
 
 	@NotNull
 	private Long createdBy;

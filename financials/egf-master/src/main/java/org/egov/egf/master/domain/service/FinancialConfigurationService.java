@@ -9,6 +9,7 @@ import org.egov.egf.master.domain.model.FinancialConfigurationSearch;
 import org.egov.egf.master.domain.repository.FinancialConfigurationRepository;
 import org.egov.egf.master.web.requests.FinancialConfigurationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -31,6 +32,9 @@ public class FinancialConfigurationService {
 
 	@Autowired
 	private SmartValidator validator;
+	
+	@Value("${fetch_data_from}")
+	private String fetchDataFrom;
 
 	private BindingResult validate(List<FinancialConfiguration> financialconfigurations, String method,
 			BindingResult errors) {
@@ -113,5 +117,9 @@ public class FinancialConfigurationService {
 	public FinancialConfiguration update(FinancialConfiguration financialConfiguration) {
 		return financialConfigurationRepository.update(financialConfiguration);
 	}
+	
+	public String fetchDataFrom() {
+            return fetchDataFrom;
+    }
 
 }

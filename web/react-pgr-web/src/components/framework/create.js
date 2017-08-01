@@ -10,9 +10,11 @@ import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload, getInitiatorPosition} from './utility/utility';
+import $ from "jquery";
 
 var specifications={};
 let reqRequired = [];
+let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
 class Report extends Component {
   state={
     pathname:""
@@ -56,22 +58,15 @@ class Report extends Component {
     }
   }
 
-  initData() {
-    try {
-      var hash = window.location.hash.split("/");
-      if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-        specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-      } else {
-        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-      }
-    } catch(e) {
-
-    }
+  displayUI(results)
+  {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
-    let self = this;
     let hashLocation = window.location.hash;
+    let self = this;
+
+    specifications =typeof(results)=="string"?JSON.parse(results):results;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-    this.setLabelAndReturnRequired(obj);
+    self.setLabelAndReturnRequired(obj);
     initForm(reqRequired, []);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
@@ -80,7 +75,7 @@ class Report extends Component {
 
     if(hashLocation.split("/").indexOf("update") > -1) {
       var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
-      var id = this.props.match.params.id || this.props.match.params.master;
+      var id = self.props.match.params.id || self.props.match.params.master;
       var query = {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };
@@ -98,9 +93,61 @@ class Report extends Component {
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
     }
+
     this.setState({
       pathname:this.props.history.location.pathname
     })
+  }
+
+  initData() {
+    var hash = window.location.hash.split("/");
+    let endPoint="";
+    let self = this;
+
+    if (hash[2]=="wc") {
+        if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+          endPoint = `${hash[2]}/${hash[2]}.json`;
+        } else {
+          endPoint = `${hash[2]}/master/${hash[3]}.json`;
+        }
+      $.ajax({
+      url: baseUrl+endPoint,
+      // dataType: 'application/javascript',
+      success: function(results)
+      {
+        self.displayUI(results);
+      },
+      error: function (results) {
+        try {
+          if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+            specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+          } else {
+            specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+          }
+        } catch(e) {
+
+        }
+        self.displayUI(specifications);
+
+
+      }})
+    }
+
+    else {
+      try {
+        if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+          specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+        } else {
+          specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+        }
+      } catch(e) {
+
+      }
+
+      self.displayUI(specifications);
+
+    }
+
   }
 
   componentDidMount() {
@@ -363,7 +410,7 @@ class Report extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields
+        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
                                     ui="google"

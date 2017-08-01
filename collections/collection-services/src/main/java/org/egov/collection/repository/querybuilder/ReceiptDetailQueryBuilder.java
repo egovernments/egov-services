@@ -37,24 +37,25 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.repository.QueryBuilder;
+package org.egov.collection.repository.querybuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import lombok.EqualsAndHashCode;
 
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import lombok.EqualsAndHashCode;
-
 @EqualsAndHashCode
 @Component
 public class ReceiptDetailQueryBuilder {
 
-	public static final Logger logger = LoggerFactory.getLogger(ReceiptDetailQueryBuilder.class);
+	public static final Logger logger = LoggerFactory
+			.getLogger(ReceiptDetailQueryBuilder.class);
 
 	private static final String BASE_QUERY = "Select rh.id as rh_id,rh.payeename as rh_payeename,"
 			+ "rh.payeeAddress as rh_payeeAddress,rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy,"
@@ -80,13 +81,15 @@ public class ReceiptDetailQueryBuilder {
 			+ "rd_actualcramountToBePaid,rd.ordernumber as rd_ordernumber,"
 			+ "rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd.isActualDemand"
 			+ " as rd_isActualDemand,rd.financialYear as rd_financialYear,rd.purpose as rd_purpose,"
-			+ "rd.tenantId as rd_tenantId" + " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
+			+ "rd.tenantId as rd_tenantId"
+			+ " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
 			+ " rh.id=rd.receiptHeader";
 
 	private static final String UPDATE_QUERY = "Update egcl_receiptheader set";
 
 	@SuppressWarnings("rawtypes")
-	public String getQueryForUpdate(Long stateId, String status, Long id, String tenantId) {
+	public String getQueryForUpdate(Long stateId, String status, Long id,
+			String tenantId) {
 		StringBuilder updateQuery = new StringBuilder(UPDATE_QUERY);
 		addSetUpValues(stateId, status, updateQuery);
 		addWhereClause(updateQuery, id, tenantId);
@@ -94,7 +97,8 @@ public class ReceiptDetailQueryBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void addWhereClause(StringBuilder updateQuery, Long id, String tenantId) {
+	private void addWhereClause(StringBuilder updateQuery, Long id,
+			String tenantId) {
 		updateQuery.append(" WHERE");
 		Boolean isAppendAndClause = false;
 		if (id != null) {
@@ -103,14 +107,15 @@ public class ReceiptDetailQueryBuilder {
 
 		}
 		if (tenantId != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, updateQuery);
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					updateQuery);
 			updateQuery.append(" tenantId = ?");
 
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
-	private void addSetUpValues(Long stateId, String status, StringBuilder updateQuery) {
+	private void addSetUpValues(Long stateId, String status,
+			StringBuilder updateQuery) {
 		Boolean isAppendCommmaSeparator = false;
 		if (stateId != null) {
 			isAppendCommmaSeparator = true;
@@ -118,26 +123,31 @@ public class ReceiptDetailQueryBuilder {
 
 		}
 		if (status != null) {
-			isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+			isAppendCommmaSeparator = addCommmaSeparatorIfRequired(
+					isAppendCommmaSeparator, updateQuery);
 			updateQuery.append(" status = ?");
 
 		}
-		isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+		isAppendCommmaSeparator = addCommmaSeparatorIfRequired(
+				isAppendCommmaSeparator, updateQuery);
 		updateQuery.append(" lastModifiedBy = ?");
 
-		isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+		isAppendCommmaSeparator = addCommmaSeparatorIfRequired(
+				isAppendCommmaSeparator, updateQuery);
 		updateQuery.append(" lastModifiedDate = ?");
 
 	}
 
-	private Boolean addCommmaSeparatorIfRequired(Boolean isAppendCommmaSeparator, StringBuilder updateQuery) {
+	private Boolean addCommmaSeparatorIfRequired(
+			Boolean isAppendCommmaSeparator, StringBuilder updateQuery) {
 		if (isAppendCommmaSeparator)
 			updateQuery.append(" ,");
 		return true;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(ReceiptSearchCriteria searchCriteria, List preparedStatementValues) throws ParseException {
+	public String getQuery(ReceiptSearchCriteria searchCriteria,
+			List preparedStatementValues) throws ParseException {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
@@ -148,8 +158,9 @@ public class ReceiptDetailQueryBuilder {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			ReceiptSearchCriteria searchCriteria) throws ParseException {
+	private void addWhereClause(StringBuilder selectQuery,
+			List preparedStatementValues, ReceiptSearchCriteria searchCriteria)
+			throws ParseException {
 
 		if (searchCriteria.getTenantId() == null)
 			return;
@@ -165,54 +176,67 @@ public class ReceiptDetailQueryBuilder {
 		}
 
 		if (searchCriteria.getReceiptNumbers() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" rh.receiptNumber IN " + getNumberQuery(searchCriteria.getReceiptNumbers()));
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					selectQuery);
+			selectQuery.append(" rh.receiptNumber IN "
+					+ getNumberQuery(searchCriteria.getReceiptNumbers()));
 		}
 
 		if (searchCriteria.getConsumerCode() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					selectQuery);
 			selectQuery.append(" rh.consumerCode = ?");
 			preparedStatementValues.add(searchCriteria.getConsumerCode());
 		}
 
 		if (searchCriteria.getStatus() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					selectQuery);
 			selectQuery.append(" rh.status = ?");
 			preparedStatementValues.add(searchCriteria.getStatus());
 		}
 
 		if (searchCriteria.getCollectedBy() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					selectQuery);
 			selectQuery.append(" rh.createdBy = ?");
-			preparedStatementValues.add(new Long(searchCriteria.getCollectedBy()));
+			preparedStatementValues.add(new Long(searchCriteria
+					.getCollectedBy()));
 		}
 
 		if (searchCriteria.getFromDate() != null) {
-			java.util.Date fromDate = new SimpleDateFormat("dd-MM-yyyy").parse(searchCriteria.getFromDate());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			java.util.Date fromDate = new SimpleDateFormat("dd-MM-yyyy")
+					.parse(searchCriteria.getFromDate());
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					selectQuery);
 			selectQuery.append(" rh.receiptDate >= ?");
 			preparedStatementValues.add(fromDate.getTime());
 		}
 
 		if (searchCriteria.getToDate() != null) {
-			java.util.Date toDate=new SimpleDateFormat("dd-MM-yyyy").parse(searchCriteria.getToDate());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			java.util.Date toDate = new SimpleDateFormat("dd-MM-yyyy")
+					.parse(searchCriteria.getToDate());
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					selectQuery);
 			selectQuery.append(" rh.receiptDate <= ?");
 			preparedStatementValues.add(toDate.getTime());
 		}
 
 		if (searchCriteria.getBusinessCode() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					selectQuery);
 			selectQuery.append(" rh.businessDetails = ?");
 			preparedStatementValues.add(searchCriteria.getBusinessCode());
 		}
-		
-		if(searchCriteria.getIds() !=null){
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" rh.id IN " + getIdQuery(searchCriteria.getIds()));
+
+		if (searchCriteria.getIds() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+					selectQuery);
+			selectQuery.append(" rh.id IN "
+					+ getIdQuery(searchCriteria.getIds()));
 		}
 	}
-	
+
 	private static String getIdQuery(List<Long> idList) {
 		StringBuilder query = new StringBuilder("(");
 		if (idList.size() >= 1) {
@@ -222,15 +246,19 @@ public class ReceiptDetailQueryBuilder {
 			}
 		}
 		return query.append(")").toString();
-}
+	}
 
-	private void addOrderByClause(StringBuilder selectQuery, ReceiptSearchCriteria criteria) {
-		String sortBy = (criteria.getSortBy() == null ? "rh.receiptDate" : "rh." + criteria.getSortBy());
-		String sortOrder = (criteria.getSortOrder() == null ? "DESC" : criteria.getSortOrder());
+	private void addOrderByClause(StringBuilder selectQuery,
+			ReceiptSearchCriteria criteria) {
+		String sortBy = (criteria.getSortBy() == null ? "rh.receiptDate"
+				: "rh." + criteria.getSortBy());
+		String sortOrder = (criteria.getSortOrder() == null ? "DESC" : criteria
+				.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag,
+			StringBuilder queryString) {
 		if (appendAndClauseFlag)
 			queryString.append(" AND");
 		return true;
@@ -248,8 +276,8 @@ public class ReceiptDetailQueryBuilder {
 		}
 		return query.append(")").toString();
 	}
-	
-	public static String getNextSeqForRcptHeader(){
+
+	public static String getNextSeqForRcptHeader() {
 		return "select NEXTVAL('SEQ_EGCL_RECEIPTHEADER')";
 	}
 
@@ -279,6 +307,8 @@ public class ReceiptDetailQueryBuilder {
 				+ ":description, :financialyear, :isactualdemand, :purpose, :tenantid)";
 	}
 
+	
+	//TODO: Vishal: Remove this unused method and do the necessary changes in the test cases  
 	public static String getreceiptHeaderId() {
 		logger.info("Returning getreceiptHeaderId query to the repository");
 
@@ -288,7 +318,8 @@ public class ReceiptDetailQueryBuilder {
 	public String getCancelQuery() {
 
 		return "Update egcl_receiptheader set status=? , reasonforcancellation=? , cancellationremarks=? ,"
-				+ " lastmodifiedby=? , lastmodifieddate=?" + " where id =? and tenantId=?";
+				+ " lastmodifiedby=? , lastmodifieddate=?"
+				+ " where id =? and tenantId=?";
 	}
 
 	public String searchQuery() {
@@ -303,11 +334,11 @@ public class ReceiptDetailQueryBuilder {
 		return "select distinct(trim(businessdetails,'&nbsp')) from egcl_receiptheader where tenantId = ?";
 	}
 
-    public String searchChartOfAccountsQuery() {
-        return "select distinct chartofaccount from egcl_receiptdetails where tenantId = ? and purpose != 'OTHERS' and description != '' ";
-    }
-    
-    public String insertInstrumentId(){
-    	return "insert into egcl_receiptinstrument(instrumentheader, receiptheader, tenantId) values (?,?,?)";
-    }
+	public String searchChartOfAccountsQuery() {
+		return "select distinct chartofaccount from egcl_receiptdetails where tenantId = ? and purpose != 'OTHERS' and description != '' ";
+	}
+
+	public String insertInstrumentId() {
+		return "insert into egcl_receiptinstrument(instrumentheader, receiptheader, tenantId) values (?,?,?)";
+	}
 }

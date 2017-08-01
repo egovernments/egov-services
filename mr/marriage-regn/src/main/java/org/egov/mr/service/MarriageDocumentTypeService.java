@@ -6,6 +6,7 @@ import java.util.List;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.MarriageDocumentType;
 import org.egov.mr.repository.MarriageDocumentTypeRepository;
+import org.egov.mr.util.SequenceIdGenService;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageDocTypeResponse;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
@@ -32,6 +33,9 @@ public class MarriageDocumentTypeService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
+	@Autowired
+	private SequenceIdGenService sequenceIdGenService;
+
 	public ResponseEntity<?> search(MarriageDocumentTypeSearchCriteria marriageDocumentTypeSearchCriteria,
 			RequestInfo requestInfo) {
 		List<MarriageDocumentType> marriageDocTypesList = marriageDocumentTypeRepository
@@ -43,10 +47,13 @@ public class MarriageDocumentTypeService {
 	public ResponseEntity<?> createAsync(MarriageDocTypeRequest marriageDocTypeRequest) {
 		log.info("Service:: MarriageDocTypeRequest: " + marriageDocTypeRequest);
 		RequestInfo requestInfo = marriageDocTypeRequest.getRequestInfo();
-		for (MarriageDocumentType mrDocType : marriageDocTypeRequest.getMarriageDocTypes()) {
-			Long id = marriageDocumentTypeRepository.getNextIdVal();
-			mrDocType.setId(id);
-			// TODO list of ids at once generate
+		List<MarriageDocumentType> marriageDocumentTypes = marriageDocTypeRequest.getMarriageDocTypes();
+		Integer size = marriageDocumentTypes.size();
+
+		// Get Ids From SequenceGenService
+		List<Long> ids = sequenceIdGenService.idSeqGen(size, "seq_marriage_document_type");
+		for (int index = 0; index < size; index++) {
+			marriageDocumentTypes.get(index).setId(ids.get(index));
 		}
 		log.info("Service after IDs set:: MarriageDocTypeRequest: " + marriageDocTypeRequest);
 		kafkaTemplate.send(propertiesManager.getCreateMarriageDocumentTypeTopicName(), marriageDocTypeRequest);

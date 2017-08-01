@@ -3,6 +3,8 @@ package org.egov.mr.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.egov.mr.model.MarriageDocumentType;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +23,10 @@ import lombok.NoArgsConstructor;
 public class MarriageDocTypeRequest {
 
 	@JsonProperty("RequestInfo")
+	@Valid
 	private RequestInfo requestInfo;
 
 	@JsonProperty("MarriageDocumentType")
+	@Valid
 	private List<MarriageDocumentType> marriageDocTypes = new ArrayList<MarriageDocumentType>();
 }

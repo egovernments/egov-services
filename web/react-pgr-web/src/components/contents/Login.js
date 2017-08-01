@@ -650,7 +650,7 @@ class Login extends Component {
                         </IconButton>
                         <div style={styles.floatLeft}>
                           <h4>{translate('pgr.lbl.grievancecell')}</h4>
-                          <p>{translate('Call '+ tenantInfo.length && tenantInfo[0].helpLineNumber +' to register your grievance')}</p>
+                          <p>{translate('Call '+ tenantInfo.length && tenantInfo[0] && tenantInfo[0].helpLineNumber +' to register your grievance')}</p>
                         </div>
                       </Col>
                     </Row>
@@ -672,7 +672,7 @@ class Login extends Component {
                         <i className="material-icons">phone</i>
                       </FontIcon>
                       <p>{tenantInfo.length && tenantInfo[0].contactNumber}</p>
-                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0].email} >{tenantInfo.length && tenantInfo[0].email}</a>
+                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0] && tenantInfo[0].email} >{tenantInfo.length && tenantInfo[0] && tenantInfo[0].email}</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon style={styles.iconSize}>

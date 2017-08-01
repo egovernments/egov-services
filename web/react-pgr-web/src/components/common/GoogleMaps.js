@@ -30,8 +30,9 @@ const AsyncGettingStartedExampleGoogleMap = _.flowRight(
   withGoogleMap,
 )(props => (
   <GoogleMap
+    options={{ scrollwheel: false}}
     ref={props.onMapMounted}
-    defaultZoom={10}
+    defaultZoom={11}
     center={props.center}
     onBoundsChanged={props.onBoundsChanged}
   >

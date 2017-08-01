@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver;
 
 @Service
 public class ReportService {
@@ -94,6 +95,24 @@ public class ReportService {
 		metadataResponses.setRequestInfo(responseInfo);
 		metadataResponses.setTenantId(tenantID);
 		metadataResponses.setReportDetails(metadataResponse.getReportDetails());
+		return new ResponseEntity<>(metadataResponses, HttpStatus.OK);
+
+	}
+	public ResponseEntity<?> getFailureResponse( final RequestInfo requestInfo,
+			String tenantID) {
+		final MetadataResponse metadataResponses = new MetadataResponse();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+		responseInfo.setResMsgId("Report Defintion not found");
+		metadataResponses.setRequestInfo(responseInfo);
+		metadataResponses.setTenantId(tenantID);
+		return new ResponseEntity<>(metadataResponses, HttpStatus.NOT_FOUND);
+
+	}
+	public ResponseEntity<?> reloadResponse( final RequestInfo requestInfo) {
+		final MetadataResponse metadataResponses = new MetadataResponse();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setResMsgId("Report reloaded successfully");
+		metadataResponses.setRequestInfo(responseInfo);
 		return new ResponseEntity<>(metadataResponses, HttpStatus.OK);
 
 	}

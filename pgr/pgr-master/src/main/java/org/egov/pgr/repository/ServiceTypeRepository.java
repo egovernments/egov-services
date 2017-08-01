@@ -39,9 +39,9 @@
  */
 package org.egov.pgr.repository;
 
-import org.egov.pgr.model.Attribute;
-import org.egov.pgr.model.ServiceType;
-import org.egov.pgr.model.Value;
+import org.egov.pgr.domain.model.Attribute;
+import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.Value;
 import org.egov.pgr.repository.builder.ServiceTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ServiceTypeRowMapper;
 import org.egov.pgr.web.contract.ServiceGetRequest;

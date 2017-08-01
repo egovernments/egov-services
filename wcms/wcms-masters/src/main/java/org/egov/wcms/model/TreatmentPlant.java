@@ -79,19 +79,12 @@ public class TreatmentPlant {
     private String plantType;
 
     @NotNull
-    private String locationName;
-
-    private String location;
+    private String locationNum;
 
     @NotNull
-    private String wardName;
-
-    private String ward;
-
-    @NotNull
-    private String zoneName;
-
-    private String zone;
+    private String wardNum;
+    
+    private String zoneNum;
 
     @NotNull
     @Min(1)

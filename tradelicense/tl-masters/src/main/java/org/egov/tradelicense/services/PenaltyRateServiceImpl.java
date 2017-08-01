@@ -45,7 +45,7 @@ public class PenaltyRateServiceImpl implements PenaltyRateService {
 
 		RequestInfo requestInfo = penaltyRateRequest.getRequestInfo();
 		penaltyRateHelper.validatePenaltyRange(tenantId, penaltyRateRequest, true);
-		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetals(requestInfo);
+		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
 		for (PenaltyRate penaltyRate : penaltyRateRequest.getPenaltyRates()) {
 			try {
 				penaltyRate.setAuditDetails(auditDetails);

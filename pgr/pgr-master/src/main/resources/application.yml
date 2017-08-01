@@ -1444,7 +1444,6 @@ ReportDefinitions:
          <= $toDate and sa.key = 'systemLocationId' and boundary.id = (select id from eg_boundary where name = $parentboundary and cs.tenantid=$tenantid and boundarytype = 10) and cs.tenantid=$tenantid 
           and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttypecode and cs.tenantid=$tenantid); 
 
-
 - reportName: AgeingByDepartment
   summary: Ageing report by department
   version: 1.0.0

@@ -219,8 +219,8 @@ class CustomMenu extends Component {
                         <MenuItem
                              style={{whiteSpace: "initial"}}
                              key={index}
-                             leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={item.name}
+                             leftIcon={<i className="material-icons marginLeft">view_module</i>}
+                             primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
                              rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
                              onTouchTap={()=>{menuChangeTwo(!item.path?item.name:item.path)}}
                           />
@@ -237,8 +237,8 @@ class CustomMenu extends Component {
                              style={{whiteSpace: "initial"}}
                              key={index}
                              onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false); changeRoute(menuConvention[item.path])}}
-                             leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={item.name}
+                             leftIcon={<i className="material-icons marginLeft">view_module</i>}
+                             primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
                           />
 
                     )
@@ -259,8 +259,8 @@ class CustomMenu extends Component {
                          <a key={index} href={base+item.url+((item.queryParams!="" && item.queryParams)?"?"+item.queryParams:"")} target="_blank">
                            <MenuItem
                                 style={{whiteSpace: "initial"}}
-                                leftIcon={<i className="material-icons">view_module</i>}
-                                primaryText={item.name}
+                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
+                                primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
                              />
                           </a>
                         )
@@ -282,8 +282,8 @@ class CustomMenu extends Component {
                       <MenuItem
                           style={{whiteSpace: "initial"}}
                            onTouchTap={()=>{checkUrl(item); document.title=item.displayName; handleToggle(false)}}
-                           leftIcon={<i className="material-icons">view_module</i>}
-                           primaryText={item.displayName}
+                           leftIcon={<i className="material-icons marginLeft">view_module</i>}
+                           primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
                         />
                     </Link>
                   )
@@ -304,8 +304,8 @@ class CustomMenu extends Component {
                        <a key={index} href={base+item.url} target="_blank">
                          <MenuItem
                               style={{whiteSpace: "initial"}}
-                              leftIcon={<i className="material-icons">view_module</i>}
-                              primaryText={item.displayName}
+                              leftIcon={<i className="material-icons marginLeft">view_module</i>}
+                              primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
                            />
                         </a>
                       )

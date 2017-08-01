@@ -35,9 +35,9 @@ public class FeeMatrixQueryBuilder {
 
 		return searchSql.toString();
 	}
-	
+
 	public static String buildSearchQuery(String tenantId, Integer[] ids, Integer categoryId, Integer subCategoryId,
-			String financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet,
+			Integer financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet,
 			List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -71,7 +71,7 @@ public class FeeMatrixQueryBuilder {
 			preparedStatementValues.add(subCategoryId);
 		}
 
-		if (financialYear != null && !financialYear.isEmpty()) {
+		if (financialYear != null) {
 			searchSql.append(" AND financialYear =? ");
 			preparedStatementValues.add(financialYear);
 		}

@@ -45,7 +45,7 @@ import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
-import org.egov.pgr.model.OTPConfig;
+import org.egov.pgr.domain.model.OTPConfig;
 import org.egov.pgr.service.EscalationHierarchyService;
 import org.egov.pgr.service.EscalationTimeTypeService;
 import org.egov.pgr.service.OTPConfigService;

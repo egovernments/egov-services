@@ -49,8 +49,8 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.pgr.config.ApplicationProperties;
-import org.egov.pgr.model.AuditDetails;
-import org.egov.pgr.model.OTPConfig;
+import org.egov.pgr.domain.model.AuditDetails;
+import org.egov.pgr.domain.model.OTPConfig;
 import org.egov.pgr.service.OTPConfigService;
 import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
 import org.egov.pgr.web.errorhandlers.ErrorHandler;
@@ -87,10 +87,10 @@ public class OTPConfigControllerTest {
 	@Test
 	public void test_should_create_otpconfig_under_given_tenant() throws Exception {
 		when(otpConfigService.createOTPConfig(any(String.class), any(String.class),
-				any(org.egov.pgr.model.OTPConfig.class))).thenReturn(prepareOTPConfigObject());
-		org.egov.pgr.model.OTPConfig otpConfig = prepareOTPConfigObject();
+				any(org.egov.pgr.domain.model.OTPConfig.class))).thenReturn(prepareOTPConfigObject());
+		org.egov.pgr.domain.model.OTPConfig otpConfig = prepareOTPConfigObject();
 		assertTrue(otpConfig.equals(otpConfigService.createOTPConfig(any(String.class), any(String.class),
-				any(org.egov.pgr.model.OTPConfig.class))));
+				any(org.egov.pgr.domain.model.OTPConfig.class))));
 		/*mockMvc.perform(post("/OTPConfig/_create").content(getFileContents("otpconfigcreaterequest.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -98,8 +98,8 @@ public class OTPConfigControllerTest {
 		verify(otpConfigService).create(otpConfig);*/
 	}
 	
-	private org.egov.pgr.model.OTPConfig prepareOTPConfigObject(){
-		org.egov.pgr.model.OTPConfig otpConfig = new org.egov.pgr.model.OTPConfig();
+	private org.egov.pgr.domain.model.OTPConfig prepareOTPConfigObject(){
+		org.egov.pgr.domain.model.OTPConfig otpConfig = new org.egov.pgr.domain.model.OTPConfig();
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(1L);
 		otpConfig.setOtpConfigEnabled(true);
@@ -126,8 +126,8 @@ public class OTPConfigControllerTest {
         }
     }
 	
-	private org.egov.pgr.model.OTPConfig prepareOTPConfigFirstList(){
-		org.egov.pgr.model.OTPConfig otpConfig = new org.egov.pgr.model.OTPConfig();
+	private org.egov.pgr.domain.model.OTPConfig prepareOTPConfigFirstList(){
+		org.egov.pgr.domain.model.OTPConfig otpConfig = new org.egov.pgr.domain.model.OTPConfig();
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(1L);
 		otpConfig.setOtpConfigEnabled(true);

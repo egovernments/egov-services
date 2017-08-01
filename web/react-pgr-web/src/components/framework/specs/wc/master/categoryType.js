@@ -83,8 +83,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.search.result.categoryType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["name", "description", "active"],
+			"header": [{label: "wc.create.code"},{label: "wc.search.result.categoryType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"values": ["code","name", "description", "active"],
 			"resultPath": "CategoryTypes",
 			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
 			"rowClickUrlView": "/view/wc/categoryType/{id}"

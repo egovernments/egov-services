@@ -72,8 +72,9 @@ public class StorageReservoirRepository {
         log.info("storageReservoirRequest::" + storageReservoirRequest);
         final String storageReservoirInsert = StorageReservoirQueryBuilder.insertStorageReserviorQuery();
         for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir()) {
-            final Object[] obj = new Object[] { Long.valueOf(storageReservoir.getCode()),storageReservoir.getCode(),storageReservoir.getName(), storageReservoir.getReservoirType(),
-                    storageReservoir.getLocation(), storageReservoir.getWard(), storageReservoir.getZone(),
+            final Object[] obj = new Object[] { Long.valueOf(storageReservoir.getCode()), storageReservoir.getCode(),
+                    storageReservoir.getName(), storageReservoir.getReservoirType(),
+                    storageReservoir.getLocationNum(), storageReservoir.getWardNum(), storageReservoir.getZoneNum(),
                     storageReservoir.getCapacity(),
                     storageReservoir.getNoOfSubLines(), storageReservoir.getNoOfMainDistributionLines(),
                     storageReservoir.getNoOfConnection(),
@@ -91,8 +92,8 @@ public class StorageReservoirRepository {
         final String storageReservoirUpdate = StorageReservoirQueryBuilder.updateStorageReserviorQuery();
         for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir()) {
             final Object[] obj = new Object[] { storageReservoir.getName(), storageReservoir.getReservoirType(),
-                    storageReservoir.getLocation(),
-                    storageReservoir.getWard(), storageReservoir.getZone(),
+                    storageReservoir.getLocationNum(),
+                    storageReservoir.getWardNum(), storageReservoir.getZoneNum(),
                     storageReservoir.getCapacity(), storageReservoir.getNoOfSubLines(),
                     storageReservoir.getNoOfMainDistributionLines(),
                     storageReservoir.getNoOfConnection(),
@@ -108,6 +109,7 @@ public class StorageReservoirRepository {
         final String queryStr = storageReservoirQueryBuilder.getQuery(storageReservoirGetRequest, preparedStatementValues);
         final List<StorageReservoir> storageReservoirList = jdbcTemplate.query(queryStr,
                 preparedStatementValues.toArray(), storageReservoirRowMapper);
+
         return storageReservoirList;
     }
 

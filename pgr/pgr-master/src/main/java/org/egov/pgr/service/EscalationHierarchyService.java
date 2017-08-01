@@ -42,8 +42,8 @@ package org.egov.pgr.service;
 
 import java.util.List;
 
-import org.egov.pgr.model.AuditDetails;
-import org.egov.pgr.model.EscalationHierarchy;
+import org.egov.pgr.domain.model.AuditDetails;
+import org.egov.pgr.domain.model.EscalationHierarchy;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.EscalationHierarchyRespository;
 import org.egov.pgr.web.contract.EscalationHierarchyGetReq;

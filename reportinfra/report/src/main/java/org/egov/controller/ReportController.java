@@ -39,25 +39,32 @@ public class ReportController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
+		try{
 		MetadataResponse mdr = reportService.getMetaData(metaDataRequest);
 		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
+		} catch(NullPointerException e){
+			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
+		}
 	}
 	
 	@PostMapping("/report/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
-		
+		try {
 		ReportResponse reportResponse = reportService.getReportData(reportRequest);
 		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
+		} catch(NullPointerException e){
+			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
+		}
 	}
 	
 	@PostMapping("/report/_reload")
 	@ResponseBody
-	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final RequestInfo reportRequest,
+	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {
 		ReportApp.loadYaml();
-		return new ResponseEntity<>(HttpStatus.OK);
+		return reportService.reloadResponse(reportRequest.getRequestInfo());
 	}
 	
 }

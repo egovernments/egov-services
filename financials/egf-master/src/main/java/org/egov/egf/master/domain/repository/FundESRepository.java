@@ -13,7 +13,6 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -25,16 +24,11 @@ public class FundESRepository {
 
 	private static final String DEFAULT_SORT_FIELD = "name";
 	private TransportClient esClient;
-	private String indexName;
-	private String documentType;
-	private FundQueryFactory fundQueryFactory;
+	private ElasticSearchQueryFactory elasticSearchQueryFactory;
 
-	public FundESRepository(TransportClient esClient, @Value("${es.fund.index.name}") String indexName,
-			@Value("${es.fund.document.type}") String documentType, FundQueryFactory fundQueryFactory) {
+	public FundESRepository(TransportClient esClient, ElasticSearchQueryFactory elasticSearchQueryFactory) {
 		this.esClient = esClient;
-		this.indexName = indexName;
-		this.documentType = documentType;
-		this.fundQueryFactory = fundQueryFactory;
+		this.elasticSearchQueryFactory = elasticSearchQueryFactory;
 	}
 
 	public Pagination<Fund> search(FundSearchContract fundSearchContract) {
@@ -78,8 +72,8 @@ public class FundESRepository {
 	}
 
 	private SearchRequestBuilder getSearchRequest(FundSearchContract criteria) {
-		final BoolQueryBuilder boolQueryBuilder = fundQueryFactory.create(criteria);
-		final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(indexName).setTypes(documentType)
+		final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchFund(criteria);
+		final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(Fund.class.getSimpleName().toLowerCase()).setTypes(Fund.class.getSimpleName().toLowerCase())
 				.addSort(DEFAULT_SORT_FIELD, SortOrder.ASC).setQuery(boolQueryBuilder);
 		return searchRequestBuilder;
 	}

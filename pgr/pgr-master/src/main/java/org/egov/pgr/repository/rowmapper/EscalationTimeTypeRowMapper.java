@@ -43,7 +43,7 @@ package org.egov.pgr.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.egov.pgr.model.EscalationTimeType;
+import org.egov.pgr.domain.model.EscalationTimeType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

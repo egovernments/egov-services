@@ -160,8 +160,8 @@
                                         <exclude>org.egov.pgr.consumers.*</exclude>
                                         <exclude>org.egov.pgr.producers.*</exclude>
                                         <exclude>org.egov.pgr.domain.model.RequestContext</exclude>
-                                        <exclude>org.egov.pgr.model.*</exclude>
-                                        <exclude>org.egov.pgr.model.enums.*</exclude>
+                                        <exclude>org.egov.pgr.domain.model.*</exclude>
+                                        <exclude>org.egov.pgr.domain.model.enums.*</exclude>
                                         <exclude>org.egov.pgr.repository.rowmapper.*</exclude>
                                         <exclude>org.egov.pgr.util.PgrMasterConstants</exclude>
                                         <exclude>org.egov.pgr.web.contract.*</exclude>

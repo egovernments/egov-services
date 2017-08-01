@@ -43,8 +43,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.pgr.model.AuditDetails;
-import org.egov.pgr.model.ServiceType;
+import org.egov.pgr.domain.model.AuditDetails;
+import org.egov.pgr.domain.model.ServiceType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

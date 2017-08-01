@@ -42,7 +42,7 @@ package org.egov.pgr.service;
 
 import java.util.List;
 
-import org.egov.pgr.model.ReceivingCenterType;
+import org.egov.pgr.domain.model.ReceivingCenterType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ReceivingCenterTypeRepository;
 import org.egov.pgr.web.contract.ReceivingCenterTypeGetReq;

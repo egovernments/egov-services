@@ -5,11 +5,12 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ CategoryServiceTest.class, 
+@SuiteClasses({ UomServiceTest.class,
 	DocumentTypeServiceTest.class,
-	FeeMatrixServiceTest.class,
+	CategoryServiceTest.class,
 	PenaltyRateServiceTest.class,
-	UomServiceTest.class})
+	FeeMatrixServiceTest.class
+	})
 public class MasterServiceTestSuite {
 
 }

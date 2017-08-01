@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.web.contract;
 
+
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -60,12 +62,13 @@ public class Boundary {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("boundaryTypeName")
-    private String boundaryTypeName;
+    @JsonProperty("boundaryType")
+    private BoundaryType boundaryType;
+    
+    @JsonProperty("boundaryNum")
+    private String boundaryNum;
 
-    @JsonProperty("hierarchyTypeName")
-    private String hierarchyTypeName;
-
+  
     @JsonProperty("tenantId")
     private String tenantId;
 

@@ -42,7 +42,7 @@ package org.egov.pgr.service;
 
 import java.util.List;
 
-import org.egov.pgr.model.EscalationTimeType;
+import org.egov.pgr.domain.model.EscalationTimeType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.EscalationTimeTypeRepository;
 import org.egov.pgr.web.contract.EscalationTimeTypeGetReq;

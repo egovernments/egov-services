@@ -44,8 +44,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.pgr.model.AuditDetails;
-import org.egov.pgr.model.EscalationHierarchy;
+import org.egov.pgr.domain.model.AuditDetails;
+import org.egov.pgr.domain.model.EscalationHierarchy;
 import org.egov.pgr.repository.builder.EscalationHierarchyQueryBuilder;
 import org.egov.pgr.repository.rowmapper.EscalationHierarchyRowMapper;
 import org.egov.pgr.web.contract.EscalationHierarchyGetReq;

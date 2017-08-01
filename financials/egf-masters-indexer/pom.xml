@@ -79,6 +79,13 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>org.egov</groupId>
+			<artifactId>egf-instrument</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>client</classifier>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>tracer</artifactId>
 			<version>0.18.1</version>

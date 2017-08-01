@@ -46,9 +46,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.pgr.model.Attribute;
-import org.egov.pgr.model.ServiceType;
-import org.egov.pgr.model.Value;
+import org.egov.pgr.domain.model.Attribute;
+import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;

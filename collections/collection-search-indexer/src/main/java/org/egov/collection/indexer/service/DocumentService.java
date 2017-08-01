@@ -41,10 +41,15 @@ package org.egov.collection.indexer.service;
 
 import org.egov.collection.indexer.contract.*;
 import org.egov.collection.indexer.enricher.ReceiptRequestDocumentEnricher;
+import org.egov.collection.indexer.repository.BusinessDetailsRepository;
+import org.egov.collection.indexer.repository.UserRepository;
 import org.egov.collection.indexer.repository.contract.ReceiptRequestDocument;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +57,15 @@ import java.util.List;
 public class DocumentService {
     private List<ReceiptRequestDocumentEnricher> documentEnrichers;
 
-    public DocumentService(List<ReceiptRequestDocumentEnricher> documentEnrichers) {
+    private BusinessDetailsRepository businessDetailsRepository;
+
+    private UserRepository userRepository;
+
+    public DocumentService(List<ReceiptRequestDocumentEnricher> documentEnrichers,
+                           BusinessDetailsRepository businessDetailsRepository,UserRepository userRepository) {
         this.documentEnrichers = documentEnrichers;
+        this.businessDetailsRepository = businessDetailsRepository;
+        this.userRepository = userRepository;
     }
 
     public List<ReceiptRequestDocument> enrich(ReceiptRequest receiptRequest) {
@@ -62,9 +74,15 @@ public class DocumentService {
         Receipt receipt = receipts.get(0);
         final List<Bill> bills = receipt.getBill();
         List<BillDetail> billDetails = bills.get(0).getBillDetails();
+        RequestInfo requestInfo = receiptRequest.getRequestInfo();
+        List<User> users = userRepository.getUsersById(Arrays.asList(requestInfo.getUserInfo().getId()), requestInfo,receiptRequest.getTenantId());
+
         for(BillDetail billDetail: billDetails) {
+            BusinessDetailsResponse businessDetailsResponse = businessDetailsRepository.getBusinessDetails(Arrays.asList( billDetail.getBusinessService()),
+                    receiptRequest.getTenantId(),requestInfo);
+            List<BusinessDetailsRequestInfo> businessDetails =  businessDetailsResponse.getBusinessDetails();
             ReceiptRequestDocument document = new ReceiptRequestDocument();
-            document.setTenantId(receipt.getTenantId());
+            document.setTenantId(receiptRequest.getTenantId());
             document.setPaymentMode(receipt.getInstrumentType());
             document.setConsumerName(bills.get(0).getPayeeName());
             document.setConsumerType(billDetail.getConsumerType());
@@ -72,8 +90,10 @@ public class DocumentService {
             document.setReceiptNumber(billDetail.getReceiptNumber());
             document.setReceiptDate(new Date(billDetail.getReceiptDate().getTime()));
             document.setChannel(billDetail.getChannel());
-            document.setBillingService(billDetail.getBusinessService());
-            document.setTotalAmount(billDetail.getTotalAmount());
+            document.setBillingService(!businessDetails.isEmpty() ? businessDetails.get(0).getName() : null);
+            document.setTotalAmount(billDetail.getAmountPaid());
+            document.setStatus(billDetail.getStatus());
+            document.setReceiptCreator(!users.isEmpty() ? users.get(0).getName() : null);
             document.setPurpose(billDetail.getBillAccountDetails().get(0).getPurpose());
             documents.add(document);
         }

@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.pgr.model.ReceivingModeType;
+import org.egov.pgr.domain.model.ReceivingModeType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

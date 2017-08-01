@@ -562,7 +562,7 @@ class grievanceView extends Component{
                 <Col xs={12} md={3}>
                   <div className="input-group">
                       <input type="file" className="form-control" ref="file" onChange={(e)=>handleUploadValidation(e, ['doc','docx','xls','xlsx','rtf','pdf','jpeg','jpg','png','txt','zip','dxf'])}/>
-                      <span className="input-group-addon" onClick={() => this.refs.file.value = ''}><i className="glyphicon glyphicon-trash specific"></i></span>
+                      <span className="input-group-addon" onClick={() => {this.refs.file.value = ''; this.props.handleFileEmpty();}}><i className="glyphicon glyphicon-trash specific"></i></span>
                   </div>
                 </Col>
               </Row> : ""}

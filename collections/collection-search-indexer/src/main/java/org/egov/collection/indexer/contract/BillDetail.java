@@ -103,6 +103,8 @@ public class BillDetail {
 
     private BigDecimal amountPaid;
 
+    private String status;
+
     @JsonProperty("BillAccountDetail")
     private List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();//for billing-service
 

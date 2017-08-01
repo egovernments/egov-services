@@ -41,7 +41,7 @@ package org.egov.pgr.repository.builder;
 
 import java.util.List;
 
-import org.egov.pgr.model.EscalationHierarchy;
+import org.egov.pgr.domain.model.EscalationHierarchy;
 import org.egov.pgr.web.contract.EscalationHierarchyGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

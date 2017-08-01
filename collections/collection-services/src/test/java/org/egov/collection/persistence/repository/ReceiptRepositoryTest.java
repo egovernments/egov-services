@@ -63,7 +63,7 @@ import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
+import org.egov.collection.repository.querybuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
 import org.egov.collection.web.contract.BankAccount;
 import org.egov.collection.web.contract.BankBranch;
@@ -172,12 +172,10 @@ public class ReceiptRepositoryTest {
 	public void test_should_persist_to_receiptdetails(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
 		int[] result = {1,2};
-		boolean isInsertionSuccessful = false;
 		String queryReceiptDetails = ReceiptDetailQueryBuilder.insertReceiptDetails();
 		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
-		
-		receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
-		assertNotNull(parametersReceiptDetails);		
+		receiptRepository.persistToReceiptDetails(parametersReceiptDetails);
+		assertNotNull(parametersReceiptDetails);	
 		
 	}
 	
@@ -260,7 +258,6 @@ public class ReceiptRepositoryTest {
 				.debitAmount(BigDecimal.valueOf(700)).purpose(Purpose.REBATE).build();
 		
 		BankBranch bankBranch = BankBranch.builder().name("SBI").build();
-		BankAccount bankAccount = BankAccount.builder().bankBranch(bankBranch).build();
 
 		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
 				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
@@ -277,8 +274,7 @@ public class ReceiptRepositoryTest {
 		
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
-		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo))
-				.bankAccount(bankAccount).auditDetails(auditDetails).build();
+		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).auditDetails(auditDetails).build();
 		
 		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
 	}

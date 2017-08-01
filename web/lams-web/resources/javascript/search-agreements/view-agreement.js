@@ -361,7 +361,7 @@ $(document).ready(function() {
     $("select").on("change", function() {
         // console.log(this.value);
         renewAgreement[this.id] = this.value;
-        if(this.id == "rentIncrementMethod")
+        if(this.id == "rentIncrementMethod.percentage")
             fillValueToObject(this);
         if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
             employees = commonApiPost("hr-employee", "employees", "_search", {

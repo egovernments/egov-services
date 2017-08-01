@@ -47,7 +47,7 @@ public class CategoryQueryBuilder {
 		return searchSql.toString();
 	}
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, Integer pageSize,
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String type, Integer categoryId, Integer pageSize,
 			Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -79,6 +79,17 @@ public class CategoryQueryBuilder {
 		if (name != null && !name.isEmpty()) {
 			searchSql.append(" AND name =? ");
 			preparedStatementValues.add(name);
+		}
+		
+		if(categoryId != null ){
+			searchSql.append(" AND parentId =? ");
+			preparedStatementValues.add(categoryId);
+		} else {
+			if(type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY")){
+				searchSql.append(" AND parentId IS NOT NULL ");
+			} else {
+				searchSql.append(" AND parentId IS NULL ");
+			}
 		}
 
 		if (pageSize == null)

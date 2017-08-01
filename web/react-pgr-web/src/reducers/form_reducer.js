@@ -204,10 +204,9 @@ export default(state = defaultState, action) => {
       };
 
       case 'FILE_EMPTY':
-      filearray = [];
       return {
           ...state,
-          files: filearray
+          files: []
       };
 
       case 'FILE_REMOVE':

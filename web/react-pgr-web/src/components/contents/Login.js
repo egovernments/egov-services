@@ -20,6 +20,7 @@ import {Redirect} from 'react-router-dom'
 import Api from '../../api/api';
 import {translate} from '../common/common';
 import IconButton from 'material-ui/IconButton';
+import $ from 'jquery';
 var axios = require('axios');
 
 const styles = {
@@ -205,16 +206,33 @@ class Login extends Component {
 
 
         Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes,enabled:true}).then(function(response){
-
-				//console.log(response)
-		  localStorage.setItem("actions", JSON.stringify(response.actions));
-			setActionList(response.actions)
-        },function(err) {
+          var actions = response.actions;
+          $.ajax({
+              url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json",
+              success: function(res) {
+                  var list = JSON.parse(res);
+                  if(list.length == 0) {
+                    for(var i=0; i<actions.length; i++) {
+                      if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
+                        actions.splice(i, 1);
+                        break;
+                      }
+                    }
+                  }
+                  localStorage.setItem("actions", JSON.stringify(actions));
+                  setActionList(actions);
+              },
+              error: function() {
+                  localStorage.setItem("actions", JSON.stringify(actions));
+                  setActionList(actions);
+              }
+          })
+        }, function(err) {
             console.log(err);
         });
 
       }).catch(function(response) {
-		  current.props.setLoadingStatus('hide');
+		    current.props.setLoadingStatus('hide');
         self.setState({
           errorMsg: "Please check your username and password"
         });
@@ -650,7 +668,7 @@ class Login extends Component {
                         </IconButton>
                         <div style={styles.floatLeft}>
                           <h4>{translate('pgr.lbl.grievancecell')}</h4>
-                          <p>{translate('Call '+ tenantInfo.length && tenantInfo[0].helpLineNumber +' to register your grievance')}</p>
+                          <p>{translate('Call '+ tenantInfo.length && tenantInfo[0] && tenantInfo[0].helpLineNumber +' to register your grievance')}</p>
                         </div>
                       </Col>
                     </Row>
@@ -672,7 +690,7 @@ class Login extends Component {
                         <i className="material-icons">phone</i>
                       </FontIcon>
                       <p>{tenantInfo.length && tenantInfo[0].contactNumber}</p>
-                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0].email} >{tenantInfo.length && tenantInfo[0].email}</a>
+                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0] && tenantInfo[0].email} >{tenantInfo.length && tenantInfo[0] && tenantInfo[0].email}</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon style={styles.iconSize}>

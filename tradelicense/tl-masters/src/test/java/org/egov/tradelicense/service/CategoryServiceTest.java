@@ -42,13 +42,16 @@ public class CategoryServiceTest {
 	private PropertiesManager propertiesManager;
 
 	public static Long categoryId = 1l;
+	public Integer parentId = null;
 	public String tenantId = "default";
 	public String name = "Flammables";
 	public String code = "Flammables";
 	public String type = "CATEGORY";
 	public String updatedName = "Flammables v1.1 name updated";
 	public String updatedCode = "Flammables v1.1 code updated";
-
+	public String subCatName = "Flammables2";
+	public String subCatCode = "Flammables2";
+	
 	@Test
 	public void testAcreateCategory() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -102,12 +105,11 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, name, code, type, pageSize, offset);
-			
-			if (categoryResponse.getCategories().size() == 0){
-					assertTrue(false);
+					new Integer[] { categoryId.intValue() }, name, code, type, parentId, pageSize, offset);
+
+			if (categoryResponse.getCategories().size() == 0) {
+				assertTrue(false);
 			}
-				
 
 			assertTrue(true);
 
@@ -160,9 +162,7 @@ public class CategoryServiceTest {
 		}
 
 	}
-	
-	
-	
+
 	@Test
 	public void testzsearchCategoryDetails() {
 
@@ -175,7 +175,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, name, code, "SUBCATEGORY", pageSize, offset);
+					new Integer[] { categoryId.intValue() }, subCatName, subCatCode, "SUBCATEGORY", parentId, pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 
@@ -187,7 +187,6 @@ public class CategoryServiceTest {
 
 	}
 
-	
 	@Test
 	public void testCycreateCategoryDetails() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -196,22 +195,21 @@ public class CategoryServiceTest {
 
 		Category category = new Category();
 		category.setTenantId(tenantId);
-		category.setName(name);
-		category.setCode(code);
+		category.setName(subCatName);
+		category.setCode(subCatCode);
 		category.setParentId(categoryId);
-		
-		
-		 CategoryDetail details = new CategoryDetail();
-	        details.setId(Long.valueOf(5));
-	        details.setCategoryId(categoryId);
-	        details.setFeeType(FeeTypeEnum.fromValue("License"));
-	        details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
-	        details.setUomId(Long.valueOf(1));
-	        
-	        List<CategoryDetail> catDetails = new ArrayList<CategoryDetail>();
-	        catDetails.add(details);
-	        
-	        category.setDetails(catDetails);
+
+		CategoryDetail details = new CategoryDetail();
+		details.setId(Long.valueOf(5));
+		details.setCategoryId(categoryId);
+		details.setFeeType(FeeTypeEnum.fromValue("License"));
+		details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
+		details.setUomId(Long.valueOf(1));
+
+		List<CategoryDetail> catDetails = new ArrayList<CategoryDetail>();
+		catDetails.add(details);
+
+		category.setDetails(catDetails);
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -245,8 +243,7 @@ public class CategoryServiceTest {
 		}
 
 	}
-	
-	
+
 	@Test
 	public void testCyxcreateduplicateCategoryDetails() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -255,22 +252,21 @@ public class CategoryServiceTest {
 
 		Category category = new Category();
 		category.setTenantId(tenantId);
-		category.setName(name);
-		category.setCode(code);
+		category.setName(subCatName);
+		category.setCode(subCatCode);
 		category.setParentId(categoryId);
-		
-		
-		 CategoryDetail details = new CategoryDetail();
-	        details.setId(Long.valueOf(5));
-	        details.setCategoryId(categoryId);
-	        details.setFeeType(FeeTypeEnum.fromValue("License"));
-	        details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
-	        details.setUomId(Long.valueOf(1));
-	        
-	        List<CategoryDetail> catDetails = new ArrayList<CategoryDetail>();
-	        catDetails.add(details);
-	        
-	        category.setDetails(catDetails);
+
+		CategoryDetail details = new CategoryDetail();
+		details.setId(Long.valueOf(5));
+		details.setCategoryId(categoryId);
+		details.setFeeType(FeeTypeEnum.fromValue("License"));
+		details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
+		details.setUomId(Long.valueOf(1));
+
+		List<CategoryDetail> catDetails = new ArrayList<CategoryDetail>();
+		catDetails.add(details);
+
+		category.setDetails(catDetails);
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -360,7 +356,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, updatedName, code, type, pageSize, offset);
+					new Integer[] { categoryId.intValue() }, updatedName, code, type, parentId, pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 
@@ -466,7 +462,8 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, updatedName, updatedCode, type, pageSize, offset);
+					new Integer[] { categoryId.intValue() }, updatedName, updatedCode, type, parentId, pageSize,
+					offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 

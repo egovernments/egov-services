@@ -112,19 +112,19 @@ public class StorageReservoirQueryBuilder {
         if (storageReservoirGetRequest.getLocationName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.location = ?");
-            preparedStatementValues.add(storageReservoirGetRequest.getLocation());
+            preparedStatementValues.add(storageReservoirGetRequest.getLocationName());
         }
 
         if (storageReservoirGetRequest.getWardName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.ward = ?");
-            preparedStatementValues.add(storageReservoirGetRequest.getWard());
+            preparedStatementValues.add(storageReservoirGetRequest.getWardName());
         }
 
         if (storageReservoirGetRequest.getZoneName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.zone = ?");
-            preparedStatementValues.add(storageReservoirGetRequest.getZone());
+            preparedStatementValues.add(storageReservoirGetRequest.getZoneName());
         }
     }
 

@@ -811,11 +811,9 @@ const mapDispatchToProps = dispatch => ({
   },
   ADD_MANDATORY : (property) => {
      dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : true, pattern: ''});
-     //dispatch({type: "HANDLE_CHANGE", property, value:'', isRequired:false, pattern:''});
   },
   REMOVE_MANDATORY : (property) => {
      dispatch({type: "REMOVE_MANDATORY", property, value: '', isRequired : true, pattern: ''});
-     //dispatch({type: "HANDLE_CHANGE", property, value:'', isRequired:false, pattern:''});
   },
   handleAutoCompleteKeyUp : (e) => {
     var currentThis = _this;

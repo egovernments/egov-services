@@ -11,6 +11,8 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import { withRouter } from 'react-router';
 import Api from '../../api/api';
 import {logo, tenantName} from './temp/local';
+import {getTitleCase} from '../framework/utility/utility';
+import $ from 'jquery';
 // import {history} from 'react-router-dom'
 
 // import {Grid, Row, Col} from 'react-bootstrap';
@@ -19,6 +21,18 @@ import {logo, tenantName} from './temp/local';
 import CustomMenu from './CustomMenu';
 
 var base='/';
+var tenantContent = {
+  "details" : {
+    "panavel" : {
+      "name" : "Panvel",
+      "logo" : "./temp/images/panvelLogo.jpg"
+    },
+    "default" : {
+      "name" : "My City",
+      "logo" : "./temp/images/yourCity.jpg"
+    }
+  }
+};
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
@@ -44,32 +58,48 @@ const styles = {
 const getTenantId = () => {
   if(localStorage.getItem("tenantId")) {
     return localStorage.getItem("tenantId");
-  } else {
-    var queryString = window.location.href.split("?");
-    if(queryString && queryString[1] && /tenantId/.test(queryString[1])) {
-      var queries = queryString[1].split("&");
-      for(var i=0; i<queries.length; i++) {
-        if(/tenantId/.test(queries[i])) {
-          return queries[i].split("=")[1];
+  } 
+
+  return window.location.hash.split("#/")[1];
+}
+
+
+const getThemefile = function(tenantId, cb) {
+    $.ajax({
+        url: "https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",
+        success: function(res) {
+            var tenantContext = JSON.parse(res)["details"][tenantId];
+            cb(tenantContext);
+        },
+        error: function() {
+            var tenantContext = tenantContent[tenantId];
+            cb(tenantContext);
         }
-      }
-    }
-    return 'default';
-  }
+    })
 }
 
-const Logo = () => {
-  if(logo[getTenantId()]) {
-    return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
-  } else if(logo["default"]) {
-    return (<img width="64" src={logo["default"]} style={styles.mainLogo} alt="logo"/>);
+const Logo = (props) => {
+  /*if(props.tenantInfo && props.tenantInfo[0] && props.tenantInfo[0].imageId) {
+
+  } else */
+  if(props.tenantContext && props.tenantContext.logo) {
+    return (<img width="64" src={props.tenantContext.logo} style={styles.mainLogo} alt="logo"/>);
   } else {
-    return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
+    if(logo[getTenantId()]) {
+        return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
+    } else if(logo["default"]) {
+        return (<img width="64" src={logo["default"]} style={styles.mainLogo} alt="logo"/>);
+    } else {
+        return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
+    }
   }
 }
 
-const getTitle = () => {
-  return tenantName[getTenantId()] || "Your City";
+const getTitle = (tenantInfo, tenantContext) => {
+    if(tenantContext) {
+        return tenantContext.name;
+    } else
+        return tenantInfo && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.name ? getTitleCase(tenantInfo[0].city.name) : (tenantName[getTenantId()] || "My City");
 }
 
 const RightIcon = (props) => {
@@ -109,7 +139,7 @@ const RightIcon = (props) => {
                 //  },function(err) {
                 //    console.log(err);
                 // });
-                document.title = "Egovernments";
+                document.title = "Dashboard";
                 var locale = localStorage.getItem('locale');
                 var tenantId=localStorage.getItem('tenantId');
                 localStorage.clear();
@@ -145,7 +175,9 @@ class Header extends Component {
     super(props);
     this.state = {
       open: false,
-      menuItems: []
+      menuItems: [],
+      reRender: false,
+      tenantContext: {}
     };
   }
 
@@ -154,708 +186,36 @@ class Header extends Component {
     self.props.handleToggle(!self.props.showMenu);
   };
 
-  componentDidMount()
-  {
+  initDat() {
 
-	  console.log(this.props);
+  }
+
+  componentDidMount() {
+    var self = this;
+    getThemefile(getTenantId(), function(context) {
+        self.setState({
+            reRender: true,
+            tenantContext: context
+        });
+    });
+
     //When api ready asssign api response to menuItems
     let menuItems=[];
-    // [{
-    //         id:0,
-    //         name:'Application',
-    //         displayName:"Application",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:null,
-    //         level:0,
-    //         nextLevel:1,
-    //        },
-    //        {
-    //         id:1,
-    //         name:'PGR',
-    //         displayName:"PGR",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:0,
-    //         level:1,
-    //         nextLevel:2,
-    //       },
-    //       {
-    //         id:2,
-    //         name:'Grievance',
-    //         displayName:"Grievance",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:1,
-    //         level:2,
-    //         nextLevel:3,
-    //       },
-    //       {
-    //         id:3,
-    //         name:'Masters',
-    //         displayName:"Masters",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:1,
-    //         level:2,
-    //         nextLevel:4,
-    //       },
-    //       {
-    //         id:4,
-    //         name:'Search Grievance',
-    //         displayName:"Search Grievance",
-    //         url:base + "pgr/searchGrievance",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:2,
-    //         level:3,
-    //
-    //       },
-    //       // {
-    //       //   id:4,
-    //       //   name:'My Pending Grievance',
-    //       //   displayName:"My Pending Grievance",
-    //       //   url:base + "pgr/viewGrievance",
-    //       //   enabled:"true",
-    //       //   orderNumber:2,
-    //       //   queryParams:"",
-    //       //   leftIcon:'view_module',
-    //       //   rightIcon:'',
-    //       //   parentModule:2,
-    //       //   level:3,
-    //       // },
-    //       {
-    //         id:5,
-    //         name:'Officials Register Grievance',
-    //         displayName:"Officials Register Grievance",
-    //         url:base + "pgr/createGrievance",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:2,
-    //         level:3,
-    //       },
-    //       {
-    //         id:6,
-    //         name:'Grievance Type',
-    //         displayName:"Grievance Type",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:2,
-    //         level:4,
-    //         nextLevel:5,
-    //       },
-    //       {
-    //         id:7,
-    //         name:'Router',
-    //         displayName:"Router",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:2,
-    //         level:4,
-    //         nextLevel:6,
-    //       },
-    //       {
-    //         id:8,
-    //         name:'Escalation Time',
-    //         displayName:"Escalation Time",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:2,
-    //         level:4,
-    //         nextLevel:7,
-    //       },
-    //       {
-    //         id:8,
-    //         name:'Escalation',
-    //         displayName:"Escalation",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:4,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:2,
-    //         level:4,
-    //         nextLevel:8,
-    //       },
-    //       {
-    //         id:9,
-    //         name:'Create Grievance Type',
-    //         displayName:"Create Grievance Type",
-    //         url:base + "pgr/createServiceType",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         parentModule:4,
-    //         level:5,
-    //       },
-    //       {
-    //         id:10,
-    //         name:'View Grievance Type',
-    //         displayName:"View Grievance Type",
-    //         url:base + "pgr/viewOrUpdateServiceType/view",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         parentModule:4,
-    //         level:5,
-    //       },
-    //       {
-    //         id:11,
-    //         name:'Update Grievance Type',
-    //         displayName:"Update Grievance Type",
-    //         url:base + "pgr/viewOrUpdateServiceType/edit",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:5,
-    //       },
-    //       {
-    //         id:9,
-    //         name:'Create Router',
-    //         displayName:"Create Router",
-    //         url:base + "pgr/createRouter",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:6,
-    //       },
-    //       {
-    //         id:10,
-    //         name:'View Router',
-    //         displayName:"View Router",
-    //         url:base + "pgr/searchRouter/view",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:6,
-    //       },
-    //       {
-    //         id:11,
-    //         name:'Update Router',
-    //         displayName:"Update Router",
-    //         url:base + "pgr/searchRouter/edit",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:6,
-    //       },
-    //       {
-    //         id:12,
-    //         name:'Bulk Router Genaration',
-    //         displayName:"Bulk Router Genaration",
-    //         url:base + "pgr/routerGeneration",
-    //         enabled:"true",
-    //         orderNumber:4,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:4,
-    //         level:6,
-    //       },
-    //       {
-    //         id:13,
-    //         name:'Create/Update Escalation Time',
-    //         displayName:"Create/Update Escalation Time",
-    //         url:base + "pgr/defineEscalationTime",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:7,
-    //       },
-    //       {
-    //         id:14,
-    //         name:'Search Escalation Time',
-    //         displayName:"View Escalation Time",
-    //         url:base + "pgr/searchEscalationTime",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:7,
-    //       },/*
-    //       {
-    //         id:15,
-    //         name:'Update Escalation Time',
-    //         displayName:"Update Escalation Time",
-    //         url:base + "pgr/defineEscalationTime",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:7,
-    //       },*/
-    //       {
-    //         id:16,
-    //         name:'Create Escalation',
-    //         displayName:"Create Escalation",
-    //         url:base + "pgr/defineEscalation",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:8,
-    //       },
-    //       {
-    //         id:17,
-    //         name:'View Escalation',
-    //         displayName:"View Escalation",
-    //         url:base + "pgr/viewEscalation",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:8,
-    //       },
-    //       // {
-    //       //   id:18,
-    //       //   name:'Update Escalation',
-    //       //   displayName:"Update Escalation",
-    //       //   url:"",
-    //       //   enabled:"true",
-    //       //   orderNumber:3,
-    //       //   queryParams:"",
-    //       //   leftIcon:'view_module',
-    //       //   rightIcon:'keyboard_arrow_right',
-    //       //   parentModule:4,
-    //       //   level:8,
-    //       // },
-    //       {
-    //         id:19,
-    //         name:'Bulk Escalation',
-    //         displayName:"Bulk Escalation",
-    //         url:base + "pgr/bulkEscalationGeneration",
-    //         enabled:"true",
-    //         orderNumber:4,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:8,
-    //       },
-    //       {
-    //         id:20,
-    //         name:'Receiving Center',
-    //         displayName:"Receiving Center",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:4,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:2,
-    //         level:4,
-    //         nextLevel:9,
-    //       },
-    //       {
-    //         id:21,
-    //         name:'Receiving Mode',
-    //         displayName:"Receiving Mode",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:4,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:2,
-    //         level:4,
-    //         nextLevel:10,
-    //       },
-    //       {
-    //         id:22,
-    //         name:'Create Receiving Center',
-    //         displayName:"Create Receiving Center",
-    //         url:base + "pgr/createReceivingCenter",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:9,
-    //       },
-    //       {
-    //         id:23,
-    //         name:'View Receiving Center',
-    //         displayName:"View Receiving Center",
-    //         url:base + "pgr/receivingCenter/view",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:4,
-    //         level:9,
-    //       },
-    //       {
-    //         id:24,
-    //         name:'Update Receiving Center',
-    //         displayName:"Update Receiving Center",
-    //         url:base + "pgr/receivingCenter/edit",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:9,
-    //       },
-    //       {
-    //         id:25,
-    //         name:'Create Receiving Mode',
-    //         displayName:"Create Receiving Mode",
-    //         url:base + "pgr/receivingModeCreate",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:10,
-    //       },
-    //       {
-    //         id:26,
-    //         name:'View Receiving Mode',
-    //         displayName:"View Receiving Mode",
-    //         url:base + "pgr/viewOrUpdateReceivingMode/view",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:10,
-    //       },
-    //       {
-    //         id:27,
-    //         name:'Update Receiving Mode',
-    //         displayName:"Update Receiving Mode",
-    //         url:base + "pgr/viewOrUpdateReceivingMode/update",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:10,
-    //       },
-    //       {
-    //         id:28,
-    //         name:'Reports',
-    //         displayName:"Reports",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:1,
-    //         level:2,
-    //         nextLevel:11,
-    //       },
-    //       {
-    //         id:29,
-    //         name:'Grivience By Id',
-    //         displayName:"Grivience By Id",
-    //         url:base + "report/GrievanceByType",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:1,
-    //         level:11
-    //       },
-    //       {
-    //         id:34,
-    //         name:'DrillDown By Department',
-    //         displayName:"DrillDown By Department",
-    //         url:base + "report/DrillDownByDepartment",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:1,
-    //         level:11
-    //       },
-    //       {
-    //         id:35,
-    //         name:'DrillDown By Boundary',
-    //         displayName:"DrillDown By Boundary",
-    //         url:base + "report/DrillDownByBoundary",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:1,
-    //         level:11
-    //       },
-    //       {
-    //         id:36,
-    //         name:'Grievance By Functionary',
-    //         displayName:"Grievance By Functionary",
-    //         url:base + "report/GrievanceByFunctionary",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:1,
-    //         level:11
-    //       },
-    //       {
-    //         id:37,
-    //         name:'Ageing By Boundary',
-    //         displayName:"Ageing By Boundary",
-    //         url:base + "report/AgeingByBoundary",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:1,
-    //         level:11
-    //       },
-    //       {
-    //         id:38,
-    //         name:'Ageing By Department',
-    //         displayName:"Ageing By Department",
-    //         url:base + "report/AgeingByDepartment",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:1,
-    //         level:11
-    //       },
-    //       {
-    //         id:39,
-    //         name:'Router Escalation',
-    //         displayName:"Router Escalation",
-    //         url:base + "report/RouterEscalation",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:1,
-    //         level:11
-    //       },
-    //         {
-    //         id:30,
-    //         name:'Category',
-    //         displayName:"Category",
-    //         url:"",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'keyboard_arrow_right',
-    //         parentModule:2,
-    //         level:4,
-    //         nextLevel:12,
-    //       },
-    //       {
-    //         id:31,
-    //         name:'Create Category',
-    //         displayName:"Create Category",
-    //         url:base + "pgr/createServiceGroup",
-    //         enabled:"true",
-    //         orderNumber:1,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:12,
-    //       },
-    //       {
-    //         id:32,
-    //         name:'View Category',
-    //         displayName:"View",
-    //         url:base + "pgr/serviceGroup/view",
-    //         enabled:"true",
-    //         orderNumber:2,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:12,
-    //       },
-    //       {
-    //         id:33,
-    //         name:'Update Category',
-    //         displayName:"Update Category",
-    //         url:base + "pgr/serviceGroup/edit",
-    //         enabled:"true",
-    //         orderNumber:3,
-    //         queryParams:"",
-    //         leftIcon:'view_module',
-    //         rightIcon:'',
-    //         parentModule:4,
-    //         level:12,
-    //       }
-    //
-    //
-    // ]
-    // let menuItems = [
-    //   {
-    //     title: 'Application',
-    //     id: 'menuID',
-    //     icon: 'fa fa-reorder',
-    //     items: [
-    //       {
-    //         name: 'Lease And Agreement',
-    //         id: 'itemID',
-    //         icon: 'fa fa-laptop',
-    //         link: '#',
-    //         items: [
-    //           {
-    //             title: 'Land And Lease',
-    //             icon: 'fa fa-laptop',
-    //             items: [
-    //               {
-    //                 name: 'Transactions',
-    //                 icon: 'fa fa-desktop',
-    //                 link: '#',
-    //                 items: [
-    //                   {
-    //                     title: 'Transactions',
-    //                     icon: 'fa fa-desktop',
-    //                     link: '#',
-    //                     items: [
-    //                       {
-    //                         name: 'Search Assets',
-    //                         icon: 'fa fa-phone',
-    //                         link: './app/search-assets/search-asset.html'
-    //                       }, {
-    //                         name: 'Search Agreements',
-    //                         icon: 'fa fa-phone',
-    //                         link: './app/search-agreement/search-agreement.html'
-    //                       }
-    //                     ]
-    //                   }
-    //                 ]
-    //               }, {
-    //                 name: 'Reports',
-    //                 icon: 'fa fa-desktop',
-    //                 link: '#',
-    //                 items: [
-    //                   {
-    //                     title: 'Reports',
-    //                     icon: 'fa fa-desktop',
-    //                     link: '#',
-    //                     items: [
-    //                       {
-    //                         name: 'DCB Drill down reports',
-    //                         icon: 'fa fa-phone',
-    //                         link: './app/reports/DCB-Drill-down-report.html'
-    //                       }
-    //                     ]
-    //                   }
-    //                 ]
-    //               }
-    //             ]
-    //           }
-    //         ]
-    //       }
-    //     ]
-    //   }
-    // ]
     this.setState({menuItems})
   }
 
   render() {
+    let {tenantContext} = this.state;
     return (
       <div className="Header">
-        <AppBar title={<div><Logo/> {getTitle()} </div>}
+        <AppBar title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> {getTitle(this.props.tenantInfo, tenantContext)} </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false} >
-          {/*<div id="menu"></div>*/}
-          {this.props.actionList.length>0 && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
+         {this.props.actionList.length>0 && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
         </Drawer>
-
-        {/*
-            <MenuItem>
-              <Link to="/PropertyTaxSearch">
-                  Property Tax
-              </Link>
-            </MenuItem>
-            <div id="menu" className="homepage" style={{minHeight: "242px", width: "250px", height: "242px", minWidth: "250px"}}></div>
-            <Menu isOpen={ true }>
-               <a id="home" className="menu-item" href="/">Home</a>
-               <a id="about" className="menu-item" href="/about">About</a>
-               <a id="contact" className="menu-item" href="/contact">Contact</a>
-               <a onClick={ this.showSettings } className="menu-item--small" href="">Settings</a>
-           </Menu>
-
-          */}
-        {/*<div> Your userid is invalid, please check its format</div>*/}
-        {/*  <div className="text-right" id="google_translate_element"></div>*/}
       </div>
     );
   }
@@ -873,8 +233,8 @@ const mapStateToProps = state => ({
     // msg: state.form.msg,
     showMenu: state.common.showMenu,
     actionList:state.common.actionList,
-
-    showHome: state.common.showHome
+    showHome: state.common.showHome,
+    tenantInfo: state.common.tenantInfo
 
 });
 
@@ -910,7 +270,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Header);
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Header));
 
 // import IconMenu from 'material-ui/IconMenu';
 // import MenuItem from 'material-ui/MenuItem';

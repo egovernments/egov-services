@@ -46,10 +46,13 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.repository.builder.StorageReservoirQueryBuilder;
 import org.egov.wcms.repository.rowmapper.StorageReservoirRowMapper;
 import org.egov.wcms.web.contract.StorageReservoirGetRequest;
+import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -74,6 +77,40 @@ public class StorageReservoirRepositoryTest {
 
     @InjectMocks
     private StorageReservoirRepository storageReservoirRepository;
+
+    @Test
+    public void test_Should_Create_StorageReservoir() {
+
+        final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        storageReservoirRequest.setRequestInfo(requestInfo);
+        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+        final StorageReservoir storageReservoir = getStorageReservoir();
+        storageReservoirList.add(storageReservoir);
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(storageReservoirRequest
+                .equals(storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest)));
+    }
+
+    @Test
+    public void test_Should_Update_StorageReservoir() {
+
+        final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        storageReservoirRequest.setRequestInfo(requestInfo);
+        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+        final StorageReservoir storageReservoir = getStorageReservoir();
+        storageReservoirList.add(storageReservoir);
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(storageReservoirRequest
+                .equals(storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest)));
+    }
 
     @Test
     public void test_Should_Search_StorageReservoir() {
@@ -110,9 +147,9 @@ public class StorageReservoirRepositoryTest {
         storageReservoir.setTenantId("default");
         storageReservoir.setName("test");
         storageReservoir.setCode("12");
-        storageReservoir.setLocationName("test1");
-        storageReservoir.setWardName("test2");
-        storageReservoir.setZoneName("test3");
+        storageReservoir.setLocationNum("12");
+        storageReservoir.setWardNum("22");
+        storageReservoir.setZoneNum("21");
         storageReservoir.setCapacity(2d);
         storageReservoir.setNoOfSubLines(2l);
         storageReservoir.setNoOfMainDistributionLines(2l);

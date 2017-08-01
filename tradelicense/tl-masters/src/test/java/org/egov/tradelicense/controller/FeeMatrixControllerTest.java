@@ -166,7 +166,7 @@ public class FeeMatrixControllerTest {
 		try {
 
 			when(feeMatrixService.getFeeMatrixMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(Integer.class), any(Integer.class), any(String.class), any(String.class), any(String.class),
+					any(Integer.class), any(Integer.class), any(Integer.class), any(String.class), any(String.class),
 					any(Integer.class), any(Integer.class))).thenReturn(feeMatrixResponse);
 
 			mockMvc.perform(post("/tradelicense/feematrix/_search").param("tenantId", "default")

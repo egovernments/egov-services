@@ -48,8 +48,8 @@ public class RegistrationUnitController {
 		RequestInfo requestInfo = regnUnitRequest.getRequestInfo();
 
 		// Validation
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
-				regnUnitRequestBindingResults, null);
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+				regnUnitRequestBindingResults);
 
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
@@ -80,7 +80,7 @@ public class RegistrationUnitController {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
 		// Validation
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForSearch(requestInfo,
 				bindingResultsForRequestInfoWrapper, bindingResultsForSearchCriteria);
 
 		if (errorResponseEntity != null)
@@ -109,8 +109,8 @@ public class RegistrationUnitController {
 		RequestInfo requestInfo = regnUnitRequest.getRequestInfo();
 
 		// Validation
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
-				regnUnitRequestBindingResults, null);
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForUpdate(requestInfo,
+				regnUnitRequestBindingResults);
 
 		if (errorResponseEntity != null)
 			return errorResponseEntity;

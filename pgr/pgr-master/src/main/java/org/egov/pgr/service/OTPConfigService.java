@@ -42,7 +42,7 @@ package org.egov.pgr.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.pgr.model.OTPConfig;
+import org.egov.pgr.domain.model.OTPConfig;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.OTPConfigRepository;
 import org.slf4j.Logger;

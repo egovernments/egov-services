@@ -57,7 +57,7 @@ else {
 function getTheme(tenantId)
 {
   $.ajax({
-  url: "https://raw.githubusercontent.com/abhiegov/test/master/tenantTheme.json",
+  url: "https://raw.githubusercontent.com/abhiegov/test/master/tenantTheme.json?timestamp="+new Date().getTime(),
   // dataType: 'application/javascript',
   success: function(results)
   {

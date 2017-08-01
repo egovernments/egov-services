@@ -11,7 +11,7 @@ public class InstrumentAccountCodeContractRepository {
 	
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-instrument/instrumentaccountcodes/search?";
+	public static final String SEARCH_URL = "/egf-instrument/instrumentaccountcodes/search?";
 
 	public InstrumentAccountCodeContractRepository(@Value("${egf.instrument.host.url}") String hostUrl,
 			RestTemplate restTemplate) {

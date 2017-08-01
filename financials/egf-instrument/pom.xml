@@ -217,7 +217,6 @@
 										<!-- fix me  -->
 										<exclude>org.egov.egf.instrument.persistence.queue.*</exclude>
 										<exclude>org.egov.egf.instrument.web.advice.CustomControllerAdvice</exclude>
-										<exclude>org.egov.egf.instrument.web.repository.*</exclude>
 
 										<exclude>org.egov.egf.instrument.web.contract.*</exclude>
 										<exclude>org.egov.egf.instrument.persistence.entity.*</exclude>

@@ -87,7 +87,7 @@ public class FundRepositoryTest {
         Pagination<Fund> expectedResult = new Pagination<>();
         expectedResult.setPageSize(500);
         expectedResult.setOffset(0);
-        when(financialConfigurationService.fetchDataFrom()).thenReturn("es");
+        when(financialConfigurationService.fetchDataFrom()).thenReturn("db");
         when(fundJdbcRepository.search(any(FundSearch.class))).thenReturn(expectedResult);
         Pagination<Fund> actualResult = fundRepository.search(getFundSearch());
         assertEquals(expectedResult, actualResult);

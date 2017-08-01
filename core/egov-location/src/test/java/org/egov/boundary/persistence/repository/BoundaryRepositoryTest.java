@@ -79,4 +79,89 @@ public class BoundaryRepositoryTest {
 		assertTrue(boundarys.get(0).getLocalName().equals("Srikakulam  Municipality"));
 		assertTrue(boundarys.get(0).isHistory() == false);
 	}
+	
+	
+	@Test
+	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
+	
+	public void testShouldFindAllBoundariesByNumberAndType(){
+		
+		List<Long> list = new ArrayList<Long>();
+		list.add(1l);
+		List<Boundary> boundarys = boundaryJpaRepository.findAllBoundariesByNumberAndType("default", 1l,list);
+		
+		assertTrue(boundarys.size() == 1);
+		assertTrue(boundarys!=null);
+		assertTrue(boundarys.get(0).getId() == 1);
+		assertTrue(boundarys.get(0).getName().equals("Srikakulam  Municipality"));
+		assertTrue(boundarys.get(0).getBoundaryNum().equals(1l));
+		assertTrue(boundarys.get(0).getBoundaryType().getId().equals(1l));
+		assertTrue(boundarys.get(0).getLocalName().equals("Srikakulam  Municipality"));
+		assertTrue(boundarys.get(0).isHistory() == false);
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
+	public void testShouldGetAllBoundaryByTenantIdAndNumber(){
+		
+		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber("default", 1l);
+		
+		assertTrue(boundarys.size() == 1);
+		assertTrue(boundarys!=null);
+		assertTrue(boundarys.get(0).getId() == 1);
+		assertTrue(boundarys.get(0).getName().equals("Srikakulam  Municipality"));
+		assertTrue(boundarys.get(0).getBoundaryNum().equals(1l));
+		assertTrue(boundarys.get(0).getBoundaryType().getId().equals(1l));
+		assertTrue(boundarys.get(0).getLocalName().equals("Srikakulam  Municipality"));
+		assertTrue(boundarys.get(0).isHistory() == false);
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
+	public void testShouldNoGetAllBoundaryByTenantIdAndNumber(){
+		
+		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber("default", 2l);
+		
+		assertTrue(boundarys.isEmpty());
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
+	public void testShouldGetAllBoundaryByTenantIdAndTypeIds(){
+		
+		List<Long> list = new ArrayList<Long>();
+		list.add(1l);
+		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantIdAndTypeIds("default",list);
+		
+		assertTrue(boundarys.size() == 1);
+		assertTrue(boundarys!=null);
+		assertTrue(boundarys.get(0).getId() == 1);
+		assertTrue(boundarys.get(0).getName().equals("Srikakulam  Municipality"));
+		assertTrue(boundarys.get(0).getBoundaryNum().equals(1l));
+		assertTrue(boundarys.get(0).getBoundaryType().getId().equals(1l));
+		assertTrue(boundarys.get(0).getLocalName().equals("Srikakulam  Municipality"));
+		assertTrue(boundarys.get(0).isHistory() == false);
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
+	public void testShouldGetAllBoundaryByTenantAndNumAndTypeAndTypeIds(){
+		
+		List<Long> list = new ArrayList<Long>();
+		list.add(1l);
+		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds("default",1l,list,list);
+		
+		assertTrue(boundarys.size() == 1);
+		assertTrue(boundarys!=null);
+		assertTrue(boundarys.get(0).getId() == 1);
+		assertTrue(boundarys.get(0).getName().equals("Srikakulam  Municipality"));
+		assertTrue(boundarys.get(0).getBoundaryNum().equals(1l));
+		assertTrue(boundarys.get(0).getBoundaryType().getId().equals(1l));
+		assertTrue(boundarys.get(0).getLocalName().equals("Srikakulam  Municipality"));
+		assertTrue(boundarys.get(0).isHistory() == false);
+		assertTrue(boundarys.get(0).getBoundaryType().getId() == 1l);
+		assertTrue(boundarys.get(0).getBoundaryType().getName().equals("City"));
+		assertTrue(boundarys.get(0).getBoundaryType().getHierarchy() == 1l);
+	}
+	
 }

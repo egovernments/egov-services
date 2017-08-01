@@ -30,17 +30,13 @@ html, body{
   -webkit-font-smoothing: antialiased;
 }
 
-<<<<<<< HEAD
 
-
-=======
 .menuStyle{
 
 	white-space: nowrap;
 	overflow: hidden;
 
 }
->>>>>>> eb30f69a75830c36d308d89b9a1f0493e76eb15e
 
 
 .side-bar {
@@ -707,7 +703,7 @@ table td {
 	margin:15px;
 }
 
-<<<<<<< HEAD
+
 
 .menuStyle{
 
@@ -733,7 +729,7 @@ table td {
 .menuStyle:hover .onHoverText {
     visibility: visible;
 }
-=======
+
 table thead th {
     padding: 15px 18px !important;
 	border-bottom:none !important;
@@ -753,19 +749,18 @@ table thead th {
 	  border-right:0 !important;
  }
 
- 
+
  .searchMargin {
 	 padding:0 15px;
 	 background-image:url('../images/search_icon.svg');
 	 background-repeat: no-repeat;
      background-position: 218px 12px;
  }
- 
+
  .searchMargin hr {
 	     width: 88% !important;
  }
- 
+
  .searchButton button{
 	 background-color:#607d8b !important;
  }
->>>>>>> eb30f69a75830c36d308d89b9a1f0493e76eb15e

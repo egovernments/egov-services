@@ -52,6 +52,7 @@ class Report extends Component {
   }
 
   initData() {
+  
     let hashLocation = window.location.hash;
     try {
       var hash = window.location.hash.split("/");

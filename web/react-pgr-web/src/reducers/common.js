@@ -53,8 +53,14 @@ let menuConvention={
 	"Property Tax.Existing Property.SearchProperty":"/propertyTax/search",
   "Water Charge.Water Transactions.SearchWaterConnectionAPI":"/search/wc/view",
   "Water Charge.WCMS Masters.CategoryMasters.View Category Type":"/search/wc/categoryType/view",
-  "Water Charge.WCMS Masters.CategoryMasters.Update Catgeory Type":"/search/wc/categoryType/update"
-
+  "Water Charge.WCMS Masters.CategoryMasters.Update Catgeory Type":"/search/wc/categoryType/update",
+  "Water Charge.WCMS Masters.Document Type Master.SearchDocumentTypeMaster":"/search/wc/documentType/view",
+  "Water Charge.WCMS Masters.Document Type Master.DocumentTypeModify":"/search/wc/documentType/update",
+  "Water Charge.WCMS Masters.DocumentApplication.CreatDocumentApplicationApi":"/create/wc/documentTypeApplicationType",
+  "Water Charge.WCMS Masters.DocumentApplication.ModifyDocumentApplicationApi":"/search/wc/documentTypeApplicationType/update",
+  "Water Charge.WCMS Masters.DocumentApplication.SearchDocumentApplicationApi":"/search/wc/documentTypeApplicationType/view",
+  "Water Charge.WCMS Masters.Donation.ModifyDonationApi":"/search/wc/donation/update",
+  "Water Charge.WCMS Masters.Donation.SearchDonationApi":"/search/wc/donation/view"
 
 }
 

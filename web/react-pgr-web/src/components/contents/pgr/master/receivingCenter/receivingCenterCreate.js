@@ -99,7 +99,7 @@ class CreateReceivingCenter extends Component {
     submitForm = (e) => {
 
       e.preventDefault()
-
+      this.props.setLoadingStatus('loading');
       var current = this;
 
       var body = {
@@ -114,7 +114,7 @@ class CreateReceivingCenter extends Component {
            "tenantId":"default"
           }
       }
-      current.props.setLoadingStatus('loading');
+
       if(this.props.match.params.id){
           Api.commonApiPost("/pgr-master/receivingcenter/v1/_update",{},body).then(function(response){
               current.setState({
@@ -122,21 +122,21 @@ class CreateReceivingCenter extends Component {
               });
               current.props.setLoadingStatus('hide');
           }).catch((err)=>{
-              current.props.toggleSnackbarAndSetText(true, err.message);
               current.props.setLoadingStatus('hide');
+              current.props.toggleSnackbarAndSetText(true, err.message);
           })
       } else {
           Api.commonApiPost("/pgr-master/receivingcenter/v1/_create",{},body).then(function(response){
-              current.props.setLoadingStatus('hide');
               current.setState({
                 open: true
               })
               let {initForm}=current.props;
               initForm();
-          }).catch((err)=>{
-              current.props.toggleSnackbarAndSetText(true, err.message);
               current.props.setLoadingStatus('hide');
-          })
+          }).catch((err)=>{
+              current.props.setLoadingStatus('hide');
+              current.props.toggleSnackbarAndSetText(true, err.message);
+          });
       }
     }
 

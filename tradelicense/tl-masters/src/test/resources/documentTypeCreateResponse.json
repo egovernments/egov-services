@@ -1,0 +1,24 @@
+{
+	"responseInfo": {
+		"apiId": null,
+		"ver": null,
+		"ts": null,
+		"resMsgId": null,
+		"msgId": null,
+		"status": null
+	},
+	"documentTypes": [{
+		"id": null,
+		"tenantId": "default",
+		"name": null,
+		"mandatory": true,
+		"enabled": true,
+		"applicationType": null,
+		"auditDetails": {
+			"createdBy": null,
+			"lastModifiedBy": null,
+			"createdTime": null,
+			"lastModifiedTime": null
+		}
+	}]
+}

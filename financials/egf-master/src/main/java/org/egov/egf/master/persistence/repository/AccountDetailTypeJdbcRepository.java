@@ -98,12 +98,12 @@ public class AccountDetailTypeJdbcRepository extends JdbcRepository {
 			params.append("description =:description");
 			paramValues.put("description", accountDetailTypeSearchEntity.getDescription());
 		}
-		if (accountDetailTypeSearchEntity.getTableName() != null) {
+		if (accountDetailTypeSearchEntity.getTablename() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("tableName =:tableName");
-			paramValues.put("tableName", accountDetailTypeSearchEntity.getTableName());
+			paramValues.put("tableName", accountDetailTypeSearchEntity.getTablename());
 		}
 		if (accountDetailTypeSearchEntity.getActive() != null) {
 			if (params.length() > 0) {

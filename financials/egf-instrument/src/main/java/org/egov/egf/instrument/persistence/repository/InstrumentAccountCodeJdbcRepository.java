@@ -82,14 +82,14 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("instrumentType =:instrumentType");
+			params.append("instrumentTypeId =:instrumentType");
 			paramValues.put("instrumentType", instrumentAccountCodeSearchEntity.getInstrumentTypeId());
 		}
 		if (instrumentAccountCodeSearchEntity.getAccountCodeId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("accountCode =:accountCode");
+			params.append("accountCodeId =:accountCode");
 			paramValues.put("accountCode", instrumentAccountCodeSearchEntity.getAccountCodeId());
 		}
 		if (instrumentAccountCodeSearchEntity.getIds() != null) {
@@ -108,15 +108,13 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 			page.setPageSize(instrumentAccountCodeSearchEntity.getPageSize());
 		}
 
-		/*
-		 * if (params.length() > 0) {
-		 *
-		 * searchQuery = searchQuery.replace(":condition", " where " +
-		 * params.toString());
-		 *
-		 * } else {
-		 */
-		searchQuery = searchQuery.replace(":condition", "");
+		if (params.length() > 0) {
+
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 

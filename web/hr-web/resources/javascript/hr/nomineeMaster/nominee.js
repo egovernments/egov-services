@@ -5,7 +5,7 @@ class Nominee extends React.Component{
       this.state = {
           allNomineeValue: {
               "tenantId": tenantId,
-              "employeeid": {
+              "employee": {
                   id: "",
                   name: "",
                   code: ""
@@ -172,28 +172,41 @@ class Nominee extends React.Component{
       }
     })
   } else if (name === "bank"){
-      commonApiPost("egf-masters", "bankbranches", "_search", {
+      if(val) {
+        commonApiPost("egf-masters", "bankbranches", "_search", {
           tenantId,
           "bank": val
-      }, function(err, res) {
-          if(res) {
-            self.setState({
-              branchList: res.bankBranches,
-              nomineeSet:{
-                ...self.state.nomineeSet,
-                [name]: val
-              }
-            })
-          } else {
+        }, function(err, res) {
+            if(res) {
               self.setState({
-                branchList: [],
+                branchList: res.bankBranches,
                 nomineeSet:{
                   ...self.state.nomineeSet,
-                  [name]: val
+                  [name]: val,
+                  bankBranch: ""
                 }
               })
+            } else {
+                self.setState({
+                  branchList: [],
+                  nomineeSet:{
+                    ...self.state.nomineeSet,
+                    [name]: val,
+                    bankBranch: ""
+                  }
+                })
+            }
+        })
+      } else {
+        self.setState({
+          branchList: [],
+          nomineeSet:{
+            ...self.state.nomineeSet,
+            [name]: val,
+            bankBranch: ""
           }
-      })
+        })
+      }
     } else {
         this.setState({
           nomineeSet:{
@@ -286,7 +299,7 @@ class Nominee extends React.Component{
           _this.setState({
             allNomineeValue: {
              ..._this.state.allNomineeValue,
-               employeeid: {
+               employee: {
                  id:id,
                  name: obj.name,
                  code: obj.code
@@ -349,7 +362,7 @@ class Nominee extends React.Component{
               showSuccess("Nominee Created successfully.");
               _this.setState({allNomineeValue: {
                   "tenantId": tenantId,
-                  "employeeid": {
+                  "employee": {
                       id: "",
                       name: "",
                       code: ""
@@ -594,7 +607,7 @@ class Nominee extends React.Component{
                 <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="employed"> Is Employee <span>*</span></label>
+                    <label for="employed"> Is Employed <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                       <input type="checkbox" name="employed" value={employed} onChange={(e)=>{ handleChange(e,"employed", true)}} checked={employed? true : false}/>
@@ -693,8 +706,8 @@ class Nominee extends React.Component{
                             <label for="name">Employee Name</label>
                         </div>
                             <div className="col-sm-6">
-                              <input type="text" name="name" value={allNomineeValue.employeeid.name}
-                              onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","name")}} disabled/>
+                              <input type="text" name="name" value={allNomineeValue.employee.name}
+                              onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employee","name")}} disabled/>
                             </div>
                         </div>
                     </div>
@@ -704,8 +717,8 @@ class Nominee extends React.Component{
                                 <label for="">Employee Code</label>
                                   </div>
                                     <div className="col-sm-6">
-                                      <input type="text" name="code" id="code" value={allNomineeValue.employeeid.code}
-                                      onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","code")}} disabled/>
+                                      <input type="text" name="code" id="code" value={allNomineeValue.employee.code}
+                                      onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employee","code")}} disabled/>
                                     </div>
                                 </div>
                             </div>

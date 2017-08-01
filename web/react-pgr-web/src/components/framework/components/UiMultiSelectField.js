@@ -14,8 +14,14 @@ class UiMultiSelectField extends Component {
 			}
    	}
 
-   	componentDidMount() {
-		let {item, setDropDownData, useTimestamp}=this.props;
+   	componentWillReceiveProps(nextProps, nextState) {
+   		if(!_.isEqual(nextProps, this.props)) {
+   			this.initDat(nextProps);
+   		}
+   	}
+   	
+   	initDat(props) {
+   		let {item, setDropDownData, useTimestamp}=props;
 		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1)
 		{
 			let splitArray=item.url.split("?");
@@ -41,6 +47,10 @@ class UiMultiSelectField extends Component {
 				console.log(err);
 			});
 		}
+   	}
+
+   	componentDidMount() {
+		this.initDat(this.props);
 	}
 
 	renderMultiSelect = (item) => {

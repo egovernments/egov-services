@@ -152,7 +152,7 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField
                             hintText="434345456545"
-                            floatingLabelText="Aadhar No *"
+                            floatingLabelText="Aadhaar No *"
                             errorText={fieldErrors.owner ? (fieldErrors.owner.aadhaarNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.aadhaarNumber}</span>: "") : ""}
                             value={ownerDetails.owner ? ownerDetails.owner.aadhaarNumber:""}
                             onChange={(e) => {
@@ -217,7 +217,6 @@ constructor(props) {
                                    }
                                   };
 								  handleChangeOwner(e, "owner" ,"gender", true, "")
-                                //handleChangeNextOne(e, "owner" ,"gender", false, "")
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -405,7 +404,7 @@ constructor(props) {
                                     <td>{i.emailId}</td>
                                     <td>{i.gaurdianRelation}</td>
                                     <td>{i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False"}</td>
-                                    <td>{i.gaurdian}</td>
+                                    <td>{i.fatherOrHusbandName}</td>
                                     <td>{i.ownerType}</td>
                                     <td>{i.ownerShipPercentage}</td>
                                     <td>

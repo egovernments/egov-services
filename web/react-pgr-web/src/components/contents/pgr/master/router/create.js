@@ -239,6 +239,7 @@ class createRouter extends Component {
 
   create(e) {
   	e.preventDefault();
+    this.props.setLoadingStatus('loading');
   	var self = this;
   	var routerType = {
   		position: self.props.routerCreateSet.position,
@@ -253,7 +254,6 @@ class createRouter extends Component {
    		tenantId: localStorage.getItem("tenantId")
   	};
 
-    self.props.setLoadingStatus('loading');
   	Api.commonApiPost("/workflow/router/v1/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
   		if(!self.props.routerCreateSet.id) {
         self.props.initForm();
@@ -268,9 +268,9 @@ class createRouter extends Component {
   		});
       self.props.setLoadingStatus('hide');
   	}, function(err) {
-      self.props.toggleSnackbarAndSetText(true, err.message);
       self.props.setLoadingStatus('hide');
-  	})
+      self.props.toggleSnackbarAndSetText(true, err.message);
+  	});
   }
 
   getComplaintTypeName(id){

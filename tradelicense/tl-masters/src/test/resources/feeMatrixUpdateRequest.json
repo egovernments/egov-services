@@ -1,0 +1,40 @@
+{  
+   "RequestInfo":{  
+         "apiId":"emp",
+         "ver":"1.0",
+         "ts":120,
+         "action":"create",
+         "did":"1",
+         "key":"abcdkey",
+         "msgId":"20170310130900",
+         "requesterId":"rajesh",
+         "authToken":"d0058c65-7c55-445e-89b3-7f5b0cfdc12b"
+      },
+      "feeMatrices":[  
+         {
+            "tenantId": "default",
+            "applicationType": "Renew",
+            "categoryId": 1,
+            "businessNature": "Permanent",
+            "subCategoryId": 2,
+            "financialYear": "2017-18",
+            "effectiveFrom":"29/07/17",
+            "effectiveTo":"29/07/17",
+            "feeMatrixDetails": [{
+            	"uomFrom": 10,
+                "uomTo": 20,
+                "amount": 100
+            },{
+            	"uomFrom": 20,
+                "uomTo": 50,
+                "amount": 200
+            }],
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+      ]
+}

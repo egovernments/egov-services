@@ -121,7 +121,7 @@ class Acknowledgement extends Component {
 
     return ( 
 			<div>
-				<h3 style={{padding:15}}>Acknoledgement</h3>
+				<h3 style={{padding:15}}>Acknowledgement</h3>
 			
 					<Card className="uiCard" >
 						<CardText style={styles.reducePadding} >
@@ -131,7 +131,7 @@ class Acknowledgement extends Component {
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center'}}>
 											<h3>Application Submited</h3>
-											Your new property application has been submited : <span style={{fontWeight:500}}>{this.state.ack}</span>
+											Your new property application has been submitted : <span style={{fontWeight:500}}>{this.state.ack}</span>
 										</Col>
 									  </Row>
 									</Col>

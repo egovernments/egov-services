@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,6 +31,7 @@ import org.egov.models.FloorTypeResponse;
 import org.egov.models.MutationMaster;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
+import org.egov.models.Notice;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
@@ -41,6 +43,8 @@ import org.egov.models.ResponseInfo;
 import org.egov.models.RoofType;
 import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
+import org.egov.models.SpecialNoticeRequest;
+import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.StructureClass;
 import org.egov.models.StructureClassRequest;
 import org.egov.models.StructureClassResponse;
@@ -54,8 +58,8 @@ import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
 import org.egov.property.PtPropertyApplication;
-import org.egov.property.api.PropertyMasterController;
 import org.egov.property.services.Masterservice;
+import org.egov.property.services.PropertyService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +71,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PropertyMasterController.class)
+@WebMvcTest
 @ContextConfiguration(classes = { PtPropertyApplication.class })
 public class PropertyMasterControllerTest {
 
@@ -76,6 +80,9 @@ public class PropertyMasterControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@MockBean
+	PropertyService propertyService;
 
 	@Test
 	public void testShouldCreateMasterFloorType() {
@@ -1397,6 +1404,32 @@ public class PropertyMasterControllerTest {
 					.content(getFileContents("searchDocumentTypeRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("searchDocumentTypeResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
+	}
+	
+	@Test
+	public void generateSpecialNoticeTest() {
+		SpecialNoticeResponse specialNoticeResponse = new SpecialNoticeResponse();
+		Notice notice = new Notice();
+
+		notice.setTenantId("AP.TESTONE");
+		notice.setUpicNo("1015111122");
+
+		specialNoticeResponse.setNotice(notice);
+		specialNoticeResponse.setResponseInfo(new ResponseInfo());
+
+		try {
+			when(propertyService.generateSpecialNotice(any(SpecialNoticeRequest.class)))
+					.thenReturn(specialNoticeResponse);
+
+			mockMvc.perform(post("/properties/specialnotice/_generate").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("generateSpecialNoticeRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("generateSpecialNoticeResponse.json")));
 		} catch (Exception e) {
 			assertTrue(false);
 		}

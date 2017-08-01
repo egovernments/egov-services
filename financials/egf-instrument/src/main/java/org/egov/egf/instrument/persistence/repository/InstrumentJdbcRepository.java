@@ -101,14 +101,14 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("instrumentType =:instrumentType");
+			params.append("instrumentTypeid =:instrumentType");
 			paramValues.put("instrumentType", instrumentSearchEntity.getInstrumentTypeId());
 		}
 		if (instrumentSearchEntity.getBankId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("bank =:bank");
+			params.append("bankid =:bank");
 			paramValues.put("bank", instrumentSearchEntity.getBankId());
 		}
 		if (instrumentSearchEntity.getBranchName() != null) {
@@ -122,14 +122,14 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("bankAccount =:bankAccount");
+			params.append("bankAccountid =:bankAccount");
 			paramValues.put("bankAccount", instrumentSearchEntity.getBankAccountId());
 		}
 		if (instrumentSearchEntity.getFinancialStatusId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("financialStatus =:financialStatus");
+			params.append("financialStatusid =:financialStatus");
 			paramValues.put("financialStatus", instrumentSearchEntity.getFinancialStatusId());
 		}
 		if (instrumentSearchEntity.getTransactionType() != null) {
@@ -153,12 +153,12 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 			params.append("drawer =:drawer");
 			paramValues.put("drawer", instrumentSearchEntity.getDrawer());
 		}
-		if (instrumentSearchEntity.getSurrendarReasonId() != null) {
+		if (instrumentSearchEntity.getSurrenderReasonId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("surrendarReason =:surrendarReason");
-			paramValues.put("surrendarReason", instrumentSearchEntity.getSurrendarReasonId());
+			params.append("surrenderReasonid =:surrenderReason");
+			paramValues.put("surrenderReason", instrumentSearchEntity.getSurrenderReasonId());
 		}
 		if (instrumentSearchEntity.getSerialNo() != null) {
 			if (params.length() > 0) {
@@ -167,7 +167,7 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 			params.append("serialNo =:serialNo");
 			paramValues.put("serialNo", instrumentSearchEntity.getSerialNo());
 		}
-		 
+
 		if (instrumentSearchEntity.getIds() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -184,15 +184,13 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 			page.setPageSize(instrumentSearchEntity.getPageSize());
 		}
 
-		/*
-		 * if (params.length() > 0) {
-		 *
-		 * searchQuery = searchQuery.replace(":condition", " where " +
-		 * params.toString());
-		 *
-		 * } else {
-		 */
-		searchQuery = searchQuery.replace(":condition", "");
+		if (params.length() > 0) {
+
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 

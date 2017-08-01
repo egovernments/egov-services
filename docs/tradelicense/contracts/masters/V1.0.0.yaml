@@ -25,6 +25,18 @@ paths:
           
           Maximum result size is restricted based on the maxlength of Category as defined in CategoryResponse model.
           
+          1. To get All categories in the system, Paramters should be
+              type -> CATEGORY
+              categoryId -> null
+          2. To get All SubCategories in the system , Paramters should be
+              categoryId -> null
+              type-> SUBCATEGORY
+          3. To get SubCategories of a Given Category ex => id of catogery is 10, Paramters should be
+            categoryId -> 10
+            type-> SUBCATEGORY ( optional )
+          
+          In the above three cases, along with categoryId and type, other paramters ids,name,code are considered and queried with AND condition.  
+            
           By default results will be sorted by Category/SubCategory Name
         tags: 
           - Category
@@ -49,14 +61,19 @@ paths:
             in: query
             description: code of the Category/SubCategory
             maxLength: 50
+          - name: categoryId
+            type: integer
+            in: query
+            format: int64
+            description: set unique Identifier of a Category to fetch the sub categories of provided category. type will not be considered when categoryId is passed.
           - name: type
             type: string
             in: query
+            default: CATEGORY
             description: set value "CATEGORY" in cases when Only Category(s) are needed, "SUBCATEGORY" will be set in cases when Only SubCategory(s) are needed.
             enum:
             - CATEGORY
             - SUBCATEGORY
-            required: true
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
@@ -531,6 +548,108 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /status/_search:
+      post:
+        summary: Get the list of License Status(s)
+        description: |
+          Search and get LiceseStatus(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed LicenseStatus(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of LicenseStatus(s) as defined in LicenseStatusResponse model.
+          
+          By default results will be sorted Name of the status
+        tags: 
+          - LicenseStatus
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: name
+            type: string
+            in: query
+            description: Name of the License Status
+            maxLength: 128
+            minLength: 4
+          - name: code
+            type: string
+            in: query
+            description: Unique code of the License Status
+            maxLength: 128
+            minLength: 4 
+          - name: active
+            type: boolean
+            in: query
+            description: True will be set in cases where only active License Status are needed and False will be set when inactive License Status are needed and no value will be set when all License Status are needed.
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: LicenseStatus(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/LicenseStatusResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /status/_create:
+      post:
+        summary: Create new LicenseStatus(s)
+        description: |
+          To create new LicenseStatus(s) in the system. API supports bulk creation with max limit as defined in the LicenseStatusRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one LicenseStatus, please pass array with one LicenseStatus object. 
+          
+           LicenseStatus for a given tenantId, code and name there will be only one LicenseStatus in the System. Trying to create new LicenseStatus with the same combination creation of LicenseStatus Fails.
+           
+           
+        tags: 
+          - LicenseStatus
+        parameters:
+          - name: licenseStatusRequest
+            in: body
+            description: LicenseStatus Request with LicenseStatus(s) to be created with RequestInfo
+            schema:
+              $ref: '#/definitions/LicenseStatusRequest'
+        responses:
+          201:
+            description: LicenseStatus Response with ReponseInfo and Array of LicenseStatus(s) created Successfully
+            schema:
+              $ref: '#/definitions/LicenseStatusResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /status/_update:
+      post:
+        summary: Update any of the LicenseStatus
+        description: |
+          This API will update all LicenseStatus related details based on their Id.  API supports bulk update with max limit as defined in the LicenseStatusRequest. Following rules apply -
+            1.  LicenseStatus for a given tenantId, code and name there should be only one entry in the system, If update of LicenseStatus causing duplication of above combination API fails to Update the LicenseStatus
+            
+        tags: 
+          - LicenseStatus
+        parameters:
+          - name: LicenseStatusRequest
+            in: body
+            description: LicenseStatus Request with RequestInfo and Array LicenseStatus(s) to be updated
+            schema:
+              $ref: '#/definitions/LicenseStatusRequest'
+        responses:
+          200:
+            description: LicenseStatus(s) updated Successfully
+            schema:
+              $ref: '#/definitions/LicenseStatusResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     
 definitions:
     Category:
@@ -791,8 +910,8 @@ definitions:
           format: int64
           description: to in the range of the days for penality calculation
         rate:
-          type: integer
-          format: int64
+          type: number
+          format: double
           description: rate to be applied when delay falls in the given range of days
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
@@ -915,16 +1034,69 @@ definitions:
           format: int64
           description: UOM end value
         amount:
-          type: integer
-          format: int64
+          type: number
+          format: double
           description: amount applied for UOM range uomfrom to uomto
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - feeMatrixId
       - uomFrom
       - uomTo
       - amount
-     
-    
+    LicenseStatus:
+      type: object
+      properties:
+        id: 
+          type: integer
+          format: int64
+          description: Unique Identifier of the Status
+        name:
+          type: string
+          maxLength: 256
+          description: Unique Name of the Status
+        code:
+          type: string
+          maxLength: 50
+          description: Unique code of the Status
+        active:
+          type: boolean
+          default: true
+          description: True will be set for Active Status False will be set for InActive Status
+        tenantId:
+          type: string
+          description: tenant id of the LicenseStatus
+          maxLength: 128
+          minLength: 4
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - name
+      - code
+      - tenantId
+    LicenseStatusRequest:
+      description: Contract class to receive request. Array of LicenseStatus items are used in case of create, whereas single LicenseStatus item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        licenseStatuses:
+          description: Used for search result and create only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/LicenseStatus'
+    LicenseStatusResponse:
+      description: Contract class to send response. Array of LicenseStatus items are used in case of search results or response for create, whereas single LicenseStatus item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        licenseStatuses:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/LicenseStatus'
 parameters:
     pageSize:
       name: pageSize

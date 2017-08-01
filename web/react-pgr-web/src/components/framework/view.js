@@ -13,16 +13,7 @@ import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
 
 var specifications={};
-try {
-  var hash = window.location.hash.split("/");
-  if(hash.length == 4) {
-    specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-  } else {
-    specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-  }
-} catch(e) {
-  
-}
+
 let reqRequired = [];
 class Report extends Component {
   constructor(props) {
@@ -49,6 +40,17 @@ class Report extends Component {
   }
 
   initData() {
+    try {
+      var hash = window.location.hash.split("/");
+      if(hash.length == 4) {
+        specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+      } else {
+        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+      }
+    } catch(e) {
+      
+    }
+
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
@@ -66,7 +68,7 @@ class Report extends Component {
     var query = {
       [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[1].split("=")[0]]: value
     };
-    
+
     Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
       self.props.setFormData(res);
     }, function(err){
@@ -80,8 +82,8 @@ class Report extends Component {
 
   getVal = (path) => {
     var val = _.get(this.props.formData, path);
-    return  val && (typeof val == "string" || typeof val == "number") ? val : "";
-  } 
+    return  val && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+  }
 
   printer = () => {
     window.print();

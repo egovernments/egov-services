@@ -4,15 +4,15 @@ var dat = {
 		"url": "/wcms/masters/documenttype-applicationtype/_create",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "documentTypeApplicationType",
+		"objectName": "DocumentTypeApplicationType",
 		"groups": [
 			{
-				"label": "wc.create.documenttype.title",
+				"label": "wc.create.DocumentTypeApplicationType.title",
 				"name": "createdocumentTypeApplicationType",
 				"fields": [
 					{
 						"name": "applicationType",
-						"jsonPath": "createdocumentTypeApplicationType.applicationType",
+						"jsonPath": "DocumentTypeApplicationType.applicationType",
 						"label": "wc.create.applicationtype",
 						"pattern": "",
 						"type": "singleValueList",
@@ -24,11 +24,11 @@ var dat = {
 					},
 					{
 						"name": "documenttype",
-						"jsonPath": "createdocumentTypeApplicationType.documentType",
+						"jsonPath": "DocumentTypeApplicationType.documentType",
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?|$..code|$..name",
+						"url": "/wcms/masters/documenttype/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -36,8 +36,8 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "createdocumentTypeApplicationType.active",
-							"label": "Active",
+							"jsonPath": "DocumentTypeApplicationType.active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -48,8 +48,8 @@ var dat = {
 						},
 						{
 							"name": "mandatory",
-							"jsonPath": "createdocumentTypeApplicationType.mandatory",
-							"label": "Mandatory",
+							"jsonPath": "DocumentTypeApplicationType.mandatory",
+							"label": "wc.create.mandatory",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -70,13 +70,13 @@ var dat = {
 		"objectName": "DocumentTypeApplicationType",
 		"groups": [
 			{
-				"label": "wc.search.categorytype.title",
-				"name": "createCategoryType",
+				"label": "wc.search.DocumentTypeApplicationType.title",
+				"name": "searchDocumentTypeApplicationType",
 				"fields": [
 					{
 						"name": "applicationType",
-						"jsonPath": "DocumentTypeApplicationType.applicationType",
-						"label": "wc.create.applicationtype",
+						"jsonPath": "applicationType",
+						"label": "wc.create.applicationType",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/wcms/masters/master/_getapplicationtypes?|$..key|$..object",
@@ -87,11 +87,11 @@ var dat = {
 					},
 					{
 						"name": "documenttype",
-						"jsonPath": "DocumentTypeApplicationType.documentTypeId",
+						"jsonPath": "documentType",
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?|$..id|$..name",
+						"url": "/wcms/masters/documenttype/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -99,8 +99,8 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "DocumentTypeApplicationType.active",
-							"label": "Active",
+							"jsonPath": "active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -110,8 +110,8 @@ var dat = {
 						},
 						{
 							"name": "Mandatory",
-							"jsonPath": "DocumentTypeApplicationType.mandatory",
-							"label": "Mandatory",
+							"jsonPath": "mandatory",
+							"label": "wc.create.mandatory",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -123,8 +123,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "documentType"}, {label: "applicationType"}, {label: "wc.search.result.active"},{label: "wc.search.result.mandatory"}],
-			"values": ["documentType", "applicationType", "active","mandatory"],
+			"header": [{label: "wc.create.applicationType"},{label: "wc.create.documentType"}, {label: "wc.create.active"},{label: "wc.create.mandatory"}],
+			"values": ["applicationType","documentType", "active","mandatory"],
 			"resultPath": "DocumentTypeApplicationTypes",
 			"rowClickUrlUpdate": "/update/wc/documentTypeApplicationType/{id}",
 			"rowClickUrlView": "/view/wc/documentTypeApplicationType/{id}"
@@ -138,13 +138,13 @@ var dat = {
 		"objectName": "DocumentTypeApplicationTypes",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
-				"name": "createCategoryType",
+				"label": "wc.view.DocumentTypeApplicationTypes.title",
+				"name": "viewDocumentTypeApplicationTypes",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "DocumentTypeApplicationTypes[0].applicationType",
-							"label": "Application Type",
+							"label": "wc.create.applicationType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -155,7 +155,7 @@ var dat = {
 						{
 							"name": "documentType",
 							"jsonPath": "DocumentTypeApplicationTypes[0].documentType",
-							"label": "Document Type",
+							"label": "wc.create.documentType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -166,7 +166,7 @@ var dat = {
 						{
 							"name": "Active",
 							"jsonPath": "DocumentTypeApplicationTypes[0].active",
-							"label": "Active",
+							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -177,7 +177,7 @@ var dat = {
 						{
 							"name": "Mandatory",
 							"jsonPath": "DocumentTypeApplicationTypes[0].mandatory",
-							"label": "mandatory",
+							"label": "wc.create.mandatory",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -192,7 +192,7 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/documenttype-applicationtype/_search?id={id}",
-		"url":"/wcms/masters/documenttype-applicationtype/{DocumentTypeApplicationType.code}/_update",
+		"url":"/wcms/masters/documenttype-applicationtype/{DocumentTypeApplicationType.id}/_update",
 		"tenantIdRequired": true,
 		"isResponseArray":true,
 		"useTimestamp": true,
@@ -200,7 +200,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.update.DocumentTypeApplicationTypes.title",
-				"name": "createCategoryType",
+				"name": "updateDocumentTypeApplicationTypes",
 				"fields": [
 					{
 						"name": "applicationType",
@@ -216,11 +216,11 @@ var dat = {
 					},
 					{
 						"name": "documenttype",
-						"jsonPath": "DocumentTypeApplicationType.documentTypeId",
+						"jsonPath": "DocumentTypeApplicationType.documentType",
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?|$..id|$..name",
+						"url": "/wcms/masters/documenttype/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",

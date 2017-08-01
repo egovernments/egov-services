@@ -280,7 +280,7 @@ class VacantLand extends Component {
 									    <SelectField  className="fullWidth selectOption"
 											hintText=""
 											floatingLabelText="Layout Approval Authority *"
-											errorText={fieldErrors.layoutApprovalAuthority ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutApprovalAuthority}</span> : ""}
+											errorText={fieldErrors.layoutApprovalAuthority ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.layoutApprovalAuthority}</span> : ""}
 											value={vacantLand.layoutApprovalAuthority ? vacantLand.layoutApprovalAuthority : ""}
 											onChange={(event, index, value) => {
 												var e = {
@@ -294,7 +294,6 @@ class VacantLand extends Component {
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 											underlineStyle={styles.underlineStyle}
 											underlineFocusStyle={styles.underlineFocusStyle}
-											className="fullWidth"
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 											>
 												<MenuItem value={1} primaryText="Options"/>

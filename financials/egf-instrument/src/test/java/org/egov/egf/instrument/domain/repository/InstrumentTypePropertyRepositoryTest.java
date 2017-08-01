@@ -102,7 +102,7 @@ public class InstrumentTypePropertyRepositoryTest {
 
 	private InstrumentTypePropertyEntity getInstrumentTypePropertyEntity() {
 		InstrumentTypePropertyEntity entity = new InstrumentTypePropertyEntity();
-		entity.setTransactionTypeId(TransactionType.Credit.name());
+		entity.setTransactionType(TransactionType.Credit.name());
 		entity.setReconciledOncreate(true);
 		entity.setStatusOnCreateId("statusId");
 		entity.setStatusOnReconcileId("statusId");

@@ -210,9 +210,17 @@ class Login extends Component {
           $.ajax({
               url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json",
               success: function(res) {
-                  actions = actions.concat(JSON.parse(res));
+                  var list = JSON.parse(res);
+                  if(list.length == 0) {
+                    for(var i=0; i<actions.length; i++) {
+                      if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
+                        actions.split(i, 1);
+                        break;
+                      }
+                    }
+                  }
+                  
                   localStorage.setItem("actions", JSON.stringify(actions));
-                  console.log(actions);
                   setActionList(actions);
               },
               error: function() {

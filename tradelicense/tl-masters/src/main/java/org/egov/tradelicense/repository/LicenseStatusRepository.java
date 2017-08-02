@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.models.AuditDetails;
-import org.egov.models.UOM;
+import org.egov.models.LicenseStatus;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.repository.builder.UomQueryBuilder;
+import org.egov.tradelicense.repository.builder.LicenseStatusQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -19,15 +19,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+
+
 /**
- * Repository class for create/update/search UOM master
+ * Repository class for create/update/search LicenseStatus master
  * 
- * @author Pavan Kumar Kamma
+ * @author Shubham pratap Singh
  *
  */
 
 @Repository
-public class UOMRepository {
+public class LicenseStatusRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -36,32 +38,33 @@ public class UOMRepository {
 	private PropertiesManager propertiesManager;
 
 	/**
-	 * Description : this method will create UOM in database
+	 * Description : this method will create LicenseStatus in database
 	 * 
-	 * @param UOM
-	 * @return UOMId
+	 * @param licenseStatus
+	 * @return LicenseStatusId
 	 */
-	public Long createUom(UOM uom) {
+	public Long createLicenseStatus(LicenseStatus licenseStatus) {
 
-		Long createdTime = new Date().getTime();
-		String uomInsert = UomQueryBuilder.INSERT_UOM_QUERY;
+		String LicenseStatusInsert = LicenseStatusQueryBuilder.INSERT_LICENSE_STATUS_QUERY;
+		AuditDetails auditDetails = licenseStatus.getAuditDetails();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(uomInsert, new String[] { "id" });
+				final PreparedStatement ps = connection.prepareStatement(LicenseStatusInsert, new String[] { "id" });
 
-				ps.setString(1, uom.getTenantId());
-				ps.setString(2, uom.getCode());
-				ps.setString(3, uom.getName());
-				if (uom.getActive() != null) {
-					ps.setBoolean(4, uom.getActive());
-				} else {
-					ps.setNull(4, java.sql.Types.NULL);
+				ps.setString(1, licenseStatus.getTenantId());
+				ps.setString(2, licenseStatus.getName());
+				ps.setString(3, licenseStatus.getCode());
+				if(licenseStatus.getActive() != null){
+					ps.setBoolean(4, licenseStatus.getActive());
 				}
-				ps.setString(5, uom.getAuditDetails().getCreatedBy());
-				ps.setString(6, uom.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, createdTime);
-				ps.setLong(8, createdTime);
+				else{
+					ps.setBoolean(4, true);
+				}
+				ps.setString(5, auditDetails.getCreatedBy());
+				ps.setString(6, auditDetails.getLastModifiedBy());
+				ps.setLong(7, auditDetails.getCreatedTime());
+				ps.setLong(8, auditDetails.getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -73,44 +76,47 @@ public class UOMRepository {
 		return Long.valueOf(holder.getKey().intValue());
 	}
 
+
 	/**
-	 * Description : this method will update UOM in database
+	 * Description : this method will update LicenseStatus in database
 	 * 
-	 * @param UOM
-	 * @return UOM
+	 * @param LicenseStatus
+	 * @return LicenseStatus
 	 */
-	public UOM updateUom(UOM uom) {
+	public LicenseStatus updateLicenseStatus(LicenseStatus licenseStatus) {
 
 		Long updatedTime = new Date().getTime();
-		String uomUpdateSql = UomQueryBuilder.UPDATE_UOM_QUERY;
+		String LicenseStatusUpdateSql = LicenseStatusQueryBuilder.UPDATE_LICENSE_STATUS_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(uomUpdateSql);
+				final PreparedStatement ps = connection.prepareStatement(LicenseStatusUpdateSql);
 
-				ps.setString(1, uom.getTenantId());
-				ps.setString(2, uom.getCode());
-				ps.setString(3, uom.getName());
-				if (uom.getActive() != null) {
-					ps.setBoolean(4, uom.getActive());
-				} else {
-					ps.setNull(4, java.sql.Types.NULL);
+				ps.setString(1, licenseStatus.getTenantId());
+				ps.setString(2, licenseStatus.getCode());
+				ps.setString(3, licenseStatus.getName());
+				if(licenseStatus.getActive() != null){
+					ps.setBoolean(4, licenseStatus.getActive());
 				}
-				ps.setString(5, uom.getAuditDetails().getLastModifiedBy());
+				else{
+					ps.setBoolean(4, true);
+				}
+				ps.setString(5, licenseStatus.getAuditDetails().getLastModifiedBy());
 				ps.setLong(6, updatedTime);
-				ps.setLong(7, uom.getId());
+				ps.setLong(7, licenseStatus.getId());
 
 				return ps;
 			}
 		};
 
 		jdbcTemplate.update(psc);
-		return uom;
+		return licenseStatus;
 	}
 
+
 	/**
-	 * Description : This method for search UOM
+	 * Description : This method for search LicenseStatus
 	 * 
 	 * @param tenantId
 	 * @param ids
@@ -119,9 +125,9 @@ public class UOMRepository {
 	 * @param active
 	 * @param pageSize
 	 * @param offSet
-	 * @return List<UOM>
+	 * @return List<LicenseStatus>
 	 */
-	public List<UOM> searchUom(String tenantId, Integer[] ids, String name, String code, String active,
+	public List<LicenseStatus> searchLicenseStatus(String tenantId, Integer[] ids, String name, String code, String active,
 			Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
@@ -131,44 +137,45 @@ public class UOMRepository {
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
-		String uomSearchQuery = UomQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, pageSize, offSet,
+		String LicenseStatusSearchQuery = LicenseStatusQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, pageSize, offSet,
 				preparedStatementValues);
-		List<UOM> uoms = getUoms(uomSearchQuery.toString(), preparedStatementValues);
+		List<LicenseStatus> LicenseStatuslst = getLicenseStatusSearchQuery(LicenseStatusSearchQuery.toString(), preparedStatementValues);
 
-		return uoms;
+		return LicenseStatuslst;
 	}
 
-	/**
-	 * This method will execute the given query & will build the UOM object
-	 * 
-	 * @param query
-	 *            String that need to be executed
-	 * @return {@link UOM} List of UOM
-	 */
-	private List<UOM> getUoms(String query, List<Object> preparedStatementValues) {
 
-		List<UOM> uoms = new ArrayList<>();
+	/**
+	 * This method will execute the given query & will build the LicenseStatus objects
+	 * 
+	 * @param query String that need to be executed
+	 * @return {@link LicenseStatus} List of LicenseStatus
+	 */
+	private List<LicenseStatus> getLicenseStatusSearchQuery(String query, List<Object> preparedStatementValues) {
+
+		List<LicenseStatus> LicenseStatuslst = new ArrayList<>();
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
 		for (Map<String, Object> row : rows) {
 
-			UOM uom = new UOM();
-			uom.setId(getLong(row.get("id")));
-			uom.setTenantId(getString(row.get("tenantid")));
-			uom.setCode(getString(row.get("code")));
-			uom.setName(getString(row.get("name")));
-			uom.setActive((Boolean) row.get("active"));
+			LicenseStatus licenseStatus = new LicenseStatus();
+			licenseStatus.setId(getLong(row.get("id")));
+			licenseStatus.setTenantId(getString(row.get("tenantid")));
+			licenseStatus.setCode(getString(row.get("code")));
+			licenseStatus.setName(getString(row.get("name")));
+			licenseStatus.setActive((Boolean) row.get("active"));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
 			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
 			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
-			uom.setAuditDetails(auditDetails);
+			licenseStatus.setAuditDetails(auditDetails);
 
-			uoms.add(uom);
+			LicenseStatuslst.add(licenseStatus);
 		}
 
-		return uoms;
+		return LicenseStatuslst;
 	}
+
 
 	/**
 	 * This method will cast the given object to String
@@ -203,4 +210,5 @@ public class UOMRepository {
 	private Long getLong(Object object) {
 		return object == null ? 0 : Long.parseLong(object.toString());
 	}
+
 }

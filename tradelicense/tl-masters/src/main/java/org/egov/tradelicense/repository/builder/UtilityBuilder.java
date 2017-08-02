@@ -120,4 +120,18 @@ public class UtilityBuilder {
 
 		return categoryValidationQuery.toString();
 	}
+	
+	public static String getUniqueLicenseStatusValidationQuery(String tenantId, String name,
+			String code, Long id, String tableName ) {
+
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
+		uniqueQuery.append(" where name = '" + name + "'");
+		uniqueQuery.append(" AND tenantId = '" + tenantId + "'");
+		uniqueQuery.append(" AND code = '" + code + "'");
+		if (id != null) {
+			uniqueQuery.append(" AND id !=" + id);
+		}
+
+		return uniqueQuery.toString();
+	}
 }

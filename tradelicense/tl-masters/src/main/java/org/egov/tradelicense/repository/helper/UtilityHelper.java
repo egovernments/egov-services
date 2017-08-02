@@ -57,11 +57,29 @@ public class UtilityHelper {
 		auditDetails.setLastModifiedTime(createdTime);
 		UserInfo userInfo = requestInfo.getUserInfo();
 
-		if (userInfo != null) {
-			if (userInfo.getId() != null) {
-				auditDetails.setCreatedBy(userInfo.getId().toString());
-				auditDetails.setLastModifiedBy(userInfo.getId().toString());
-			}
+		if (userInfo != null && userInfo.getId() != null) {
+			auditDetails.setCreatedBy(userInfo.getId().toString());
+			auditDetails.setLastModifiedBy(userInfo.getId().toString());
+		}
+
+		return auditDetails;
+	}
+
+	/**
+	 * This will generate the audit details for the update master services
+	 * 
+	 * @param AuditDetails
+	 * @param RequestInfo
+	 * @return AuditDetails
+	 */
+	public AuditDetails getUpdateMasterAuditDetails(AuditDetails auditDetails, RequestInfo requestInfo) {
+
+		Long updatedTime = new Date().getTime();
+		auditDetails.setLastModifiedTime(updatedTime);
+		UserInfo userInfo = requestInfo.getUserInfo();
+
+		if (userInfo != null && userInfo.getId() != null) {
+			auditDetails.setLastModifiedBy(userInfo.getId().toString());
 		}
 
 		return auditDetails;
@@ -98,5 +116,38 @@ public class UtilityHelper {
 		}
 
 		return isExists;
+	}
+	
+	/**
+	 * This will check whether any record exists with the given tenantId & name
+	 * in database or not
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @return True / false if record exists / record does n't exists
+	 */
+	public Boolean checkWhetherLicenseStatusExists(String tenantId, String name, String code, Long id, String tableName) {
+
+		Boolean isExists = Boolean.TRUE;
+
+		String query = UtilityBuilder.getUniqueLicenseStatusValidationQuery(tenantId, name, code, id, tableName);
+
+		int count = 0;
+
+		try {
+
+			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+
+		}
+
+		if (count == 0)
+			isExists = Boolean.FALSE;
+
+		return isExists;
+
 	}
 }

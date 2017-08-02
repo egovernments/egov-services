@@ -64,5 +64,8 @@ public class PropertiesManager {
 
 	@Value("${egov.services.egf-masters.searchpath}")
 	private String financialServiceSearchPath;
+	
+	@Value("${duplicate.license.status}")
+	private String licenseStatusCustomMsg;
 
 }

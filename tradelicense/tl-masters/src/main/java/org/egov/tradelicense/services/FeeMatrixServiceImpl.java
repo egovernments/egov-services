@@ -1,6 +1,5 @@
 package org.egov.tradelicense.services;
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.models.AuditDetails;
@@ -131,14 +130,15 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 			// validating fee matrix details
 			feeMatrixHelper.validateFeeMatrixDetailsRange(feeMatrix, requestInfo, false);
 			try {
-				Long updatedTime = new Date().getTime();
-				feeMatrix.getAuditDetails().setLastModifiedTime(updatedTime);
-				if (requestInfo.getUserInfo() != null)
-					feeMatrix.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+				
+				AuditDetails auditDetails = feeMatrix.getAuditDetails();
+				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
+				feeMatrix.setAuditDetails(auditDetails);
 				for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
 					feeMatrixDetail = feeMatrixRepository.updateFeeMatrixDetail(feeMatrixDetail);
 				}
 				feeMatrix = feeMatrixRepository.updateFeeMatrix(tenantId, feeMatrix);
+				
 			} catch (Exception e) {
 				throw new InvalidInputException(requestInfo);
 			}

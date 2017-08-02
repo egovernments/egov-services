@@ -1,6 +1,5 @@
 package org.egov.tradelicense.services;
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.models.AuditDetails;
@@ -82,6 +81,7 @@ public class UOMServiceImpl implements UOMService {
 	@Transactional
 	public UOMResponse updateUomMaster(UOMRequest uomRequest) {
 
+		RequestInfo requestInfo = uomRequest.getRequestInfo();
 		for (UOM uom : uomRequest.getUoms()) {
 
 			Boolean isExists = utilityHelper.checkWhetherDuplicateRecordExits(uom.getTenantId(), uom.getCode(),
@@ -89,13 +89,12 @@ public class UOMServiceImpl implements UOMService {
 
 			if (isExists)
 				throw new DuplicateIdException(propertiesManager.getUomCustomMsg(),uomRequest.getRequestInfo());
-
-			RequestInfo requestInfo = uomRequest.getRequestInfo();
+			
 			try {
-
-				Long updatedTime = new Date().getTime();
-				uom.getAuditDetails().setLastModifiedTime(updatedTime);
-				uom.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+				
+				AuditDetails auditDetails = uom.getAuditDetails();
+				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
+				uom.setAuditDetails(auditDetails);
 				uom = uomRepository.updateUom(uom);
 
 			} catch (Exception e) {
@@ -115,7 +114,7 @@ public class UOMServiceImpl implements UOMService {
 
 	@Override
 	public UOMResponse getUomMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code,
-			Boolean active, Integer pageSize, Integer offSet) {
+			String active, Integer pageSize, Integer offSet) {
 
 		UOMResponse uomResponse = new UOMResponse();
 

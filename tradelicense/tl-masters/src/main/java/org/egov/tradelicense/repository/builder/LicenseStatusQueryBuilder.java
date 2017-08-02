@@ -2,22 +2,24 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
+/**
+ * This Class contains INSERT, UPDATE and SELECT queries for LicenseStatus API's
+ * 
+ * @author Shubham pratap Singh
+ * 
+ */
+
 import org.egov.tradelicense.utility.ConstantUtility;
 
-/**
- * This Class contains INSERT, UPDATE and SELECT queries for UOM API's
- * 
- * @author Pavan Kumar Kamma
- */
-public class UomQueryBuilder {
+public class LicenseStatusQueryBuilder {
 
-	private static final String uomTableName = ConstantUtility.UOM_TABLE_NAME;
+	private static final String licenseStatusTableName = ConstantUtility.LICENSE_STATUS_TABLE_NAME;
 
-	public static final String INSERT_UOM_QUERY = "INSERT INTO " + uomTableName
-			+ " (tenantId, code, name, active, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+	public static final String INSERT_LICENSE_STATUS_QUERY = "INSERT INTO " + licenseStatusTableName
+			+ " (tenantId, name, code, active, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
 			+ " VALUES(?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_UOM_QUERY = "UPDATE " + uomTableName
+	public static final String UPDATE_LICENSE_STATUS_QUERY = "UPDATE " + licenseStatusTableName
 			+ " SET tenantId = ?, code = ?, name = ?, active = ?," + " lastModifiedBy = ?, lastModifiedTime = ?"
 			+ " WHERE id = ?";
 
@@ -25,7 +27,7 @@ public class UomQueryBuilder {
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from " + uomTableName + " where ");
+		searchSql.append("select * from " + licenseStatusTableName + " where ");
 		searchSql.append(" tenantId = ? ");
 		preparedStatementValues.add(tenantId);
 
@@ -56,13 +58,17 @@ public class UomQueryBuilder {
 		}
 
 		if (active != null) {
+
 			if (active.equalsIgnoreCase("false")) {
 				searchSql.append(" AND active =? ");
 				preparedStatementValues.add(false);
-			} else if (active.equalsIgnoreCase("true")) {
+			}
+
+			else if (active.equalsIgnoreCase("true")) {
 				searchSql.append(" AND active =? ");
 				preparedStatementValues.add(true);
 			}
+
 		}
 
 		if (pageSize != null) {
@@ -76,5 +82,7 @@ public class UomQueryBuilder {
 		}
 
 		return searchSql.toString();
+
 	}
+
 }

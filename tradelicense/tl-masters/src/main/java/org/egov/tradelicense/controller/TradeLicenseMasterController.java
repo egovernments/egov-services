@@ -8,6 +8,8 @@ import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
 import org.egov.models.FeeMatrixRequest;
 import org.egov.models.FeeMatrixResponse;
+import org.egov.models.LicenseStatusRequest;
+import org.egov.models.LicenseStatusResponse;
 import org.egov.models.PenaltyRateRequest;
 import org.egov.models.PenaltyRateResponse;
 import org.egov.models.RequestInfoWrapper;
@@ -16,6 +18,7 @@ import org.egov.models.UOMResponse;
 import org.egov.tradelicense.services.CategoryService;
 import org.egov.tradelicense.services.DocumentTypeService;
 import org.egov.tradelicense.services.FeeMatrixService;
+import org.egov.tradelicense.services.LicenseStatusService;
 import org.egov.tradelicense.services.PenaltyRateService;
 import org.egov.tradelicense.services.UOMService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,9 @@ public class TradeLicenseMasterController {
 
 	@Autowired
 	FeeMatrixService feeMatrixService;
+	
+	@Autowired
+	LicenseStatusService licenseStatusService;
 
 	/**
 	 * Description : This api for creating category master
@@ -150,7 +156,7 @@ public class TradeLicenseMasterController {
 	public UOMResponse getUomMaster(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) Boolean active, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) String active, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
 		return uomService.getUomMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, active, pageSize,
@@ -318,5 +324,62 @@ public class TradeLicenseMasterController {
 
 		return feeMatrixService.getFeeMatrixMaster(requestInfo.getRequestInfo(), tenantId, ids, categoryId,
 				subcategoryId, financialYear, applicationType, businessNature, pageSize, offSet);
+	}
+	
+	/**
+	 * Description : This api for creating LicenseStatus master
+	 * 
+	 * @param LicenseStatusRequest
+	 * @return LicenseStatusResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/status/_create", method = RequestMethod.POST)
+	public LicenseStatusResponse createLicenseStatusMaster(@Valid @RequestBody LicenseStatusRequest licenseStatusRequest) throws Exception {
+
+		return licenseStatusService.createLicenseStatusMaster(licenseStatusRequest);
+	}
+
+	/**
+	 * Description : This api for updating LicenseStatus master
+	 * 
+	 * 
+	 * @param LicenseStatusRequest
+	 * @return LicenseStatusResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/status/_update", method = RequestMethod.POST)
+	public LicenseStatusResponse updateLicenseStatusMaster(@Valid @RequestBody LicenseStatusRequest licenseStatusRequest) throws Exception {
+
+		return licenseStatusService.updateLicenseStatusMaster(licenseStatusRequest);
+	}
+
+
+	
+	/**
+	 * Description : This api for searching LicenseStatus master
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param active
+	 * @param pageSize
+	 * @param offSet
+	 * @return LicenseStatusResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/status/_search", method = RequestMethod.POST)
+	public LicenseStatusResponse getLicenseStatusMaster(@RequestBody RequestInfoWrapper requestInfo,
+			@RequestParam(required = true) String tenantId,
+			@RequestParam(required = false) Integer[] ids,
+			@RequestParam(required = false) String name,
+			@RequestParam(required = false) String code,
+			@RequestParam(required = false) String active,
+			@RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) Integer offSet) throws Exception {
+
+		return licenseStatusService.getLicenseStatusMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, active, pageSize,
+				offSet);
 	}
 }

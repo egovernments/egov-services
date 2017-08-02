@@ -45,6 +45,6 @@ public interface UOMService {
 	 * @throws Exception
 	 */
 	public UOMResponse getUomMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code,
-			Boolean active, Integer pageSize, Integer offSet);
+			String active, Integer pageSize, Integer offSet);
 
 }

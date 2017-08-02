@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.egov.models.AuditDetails;
 import org.egov.models.UOM;
+import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.repository.builder.UomQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,6 +31,9 @@ public class UOMRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	/**
 	 * Description : this method will create UOM in database
@@ -117,6 +121,12 @@ public class UOMRepository {
 			Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+		}
+		if (offSet == null) {
+			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
+		}
 		String uomSearchQuery = UomQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, pageSize, offSet,
 				preparedStatementValues);
 		List<UOM> uoms = getUoms(uomSearchQuery.toString(), preparedStatementValues);

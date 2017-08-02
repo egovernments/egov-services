@@ -238,8 +238,8 @@ public class InstrumentAccountCodeRepositoryTest {
 	private List<InstrumentAccountCode> getInstrumentAccountCodes() {
 		List<InstrumentAccountCode> instrumentAccountCodes = new ArrayList<InstrumentAccountCode>();
 		InstrumentAccountCode instrumentAccountCode = InstrumentAccountCode.builder()
-				.instrumentType(InstrumentType.builder().active(true).name("instrumenttype").build())
-				.accountCode(ChartOfAccountContract.builder().glcode("glcode").build()).build();
+				.instrumentType(InstrumentType.builder().active(true).id("instrumenttypeid").build())
+				.accountCode(ChartOfAccountContract.builder().id("accountcodeid").build()).build();
 		instrumentAccountCode.setTenantId("default");
 		instrumentAccountCodes.add(instrumentAccountCode);
 		return instrumentAccountCodes;

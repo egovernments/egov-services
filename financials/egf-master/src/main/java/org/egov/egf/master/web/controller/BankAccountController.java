@@ -7,7 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.BankAccount;
@@ -51,7 +51,7 @@ public class BankAccountController {
 		List<BankAccountContract> bankAccountContracts = new ArrayList<>();
 		BankAccountContract contract;
 
-		bankAccountRequest.getRequestInfo().setAction(EgfConstants.ACTION_CREATE);
+		bankAccountRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
 		for (BankAccountContract bankAccountContract : bankAccountRequest.getBankAccounts()) {
 			bankAccount = new BankAccount();
@@ -85,7 +85,7 @@ public class BankAccountController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		bankAccountRequest.getRequestInfo().setAction(EgfConstants.ACTION_UPDATE);
+		bankAccountRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		BankAccountResponse bankAccountResponse = new BankAccountResponse();
 		List<BankAccount> bankaccounts = new ArrayList<>();

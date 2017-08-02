@@ -2,9 +2,7 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
-import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.utility.ConstantUtility;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for FeeMatrix API's
@@ -12,14 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Pavan Kumar Kamma
  */
 public class FeeMatrixQueryBuilder {
-	
-	@Autowired
-	private static PropertiesManager propertiesManager;
 
 	private static final String feeMatrixTableName = ConstantUtility.FEE_MATRIX_TABLE_NAME;
 	private static final String feeMatrixDetailTableName = ConstantUtility.FEE_MATRIX_DETAIL_TABLE_NAME;
-	private static final String defaultPageSize = propertiesManager.getDefaultPageSize();
-	private static final String defaultOffset = propertiesManager.getDefaultOffset();
 
 	public static final String INSERT_FEE_MATRIX_QUERY = "INSERT INTO " + feeMatrixTableName
 			+ " (tenantId, applicationType, categoryId, businessNature, subCategoryId, financialYear, effectiveFrom, effectiveTo, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
@@ -98,19 +91,15 @@ public class FeeMatrixQueryBuilder {
 			preparedStatementValues.add(businessNature);
 		}
 
-		if (pageSize == null) {
-			pageSize = Integer.valueOf(defaultPageSize);
+		if (pageSize != null) {
+			searchSql.append(" limit ? ");
+			preparedStatementValues.add(pageSize);
 		}
 
-		searchSql.append(" limit ? ");
-		preparedStatementValues.add(pageSize);
-
-		if (offSet == null) {
-			offSet = Integer.valueOf(defaultOffset);
+		if (offSet != null) {
+			searchSql.append(" offset ? ");
+			preparedStatementValues.add(offSet);
 		}
-
-		searchSql.append(" offset ? ");
-		preparedStatementValues.add(offSet);
 
 		return searchSql.toString();
 	}

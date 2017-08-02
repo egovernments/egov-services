@@ -40,7 +40,7 @@ public class FinancialConfigurationValueRepository {
 	/*public void add(FinancialConfigurationValueRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase(EgfConstants.ACTION_CREATE)) {
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
 			message.put("financialconfigurationvalue_create", request);
 		} else {
 			message.put("financialconfigurationvalue_update", request);

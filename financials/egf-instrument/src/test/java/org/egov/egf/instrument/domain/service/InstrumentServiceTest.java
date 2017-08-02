@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -64,6 +65,8 @@ public class InstrumentServiceTest {
 
 	private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
+	private RequestInfo requestInfo = new RequestInfo();
+
 	@Before
 	public void setup() {
 		instrumentService = new InstrumentService(validator, instrumentRepository, surrenderReasonRepository,
@@ -72,82 +75,52 @@ public class InstrumentServiceTest {
 	}
 
 	@Test
-	public final void test_save_with_out_kafka() {
+	public final void test_create() {
 
 		List<Instrument> expextedResult = getInstruments();
 
-		Instrument instrument = expextedResult.get(0);
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentRepository.save(any(Instrument.class))).thenReturn(instrument);
-
-		List<Instrument> actualResult = instrumentService.save(expextedResult, errors);
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
 	}
 
 	@Test(expected = CustomBindException.class)
-	public final void test_save_with_out_kafka_and_with_null_req() {
+	public final void test_save_with_null_req() {
 
 		List<Instrument> expextedResult = getInstruments();
 
-		Instrument instrument = expextedResult.get(0);
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentRepository.save(any(Instrument.class))).thenReturn(instrument);
-
-		List<Instrument> actualResult = instrumentService.save(null, errors);
+		List<Instrument> actualResult = instrumentService.create(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
 	}
 
 	@Test
-	public final void test_update_with_out_kafka() {
+	public final void test_update_() {
 
 		List<Instrument> expextedResult = getInstruments();
 
-		Instrument instrument = expextedResult.get(0);
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentRepository.update(any(Instrument.class))).thenReturn(instrument);
-
-		List<Instrument> actualResult = instrumentService.update(expextedResult, errors);
+		List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
 	}
 
 	@Test(expected = CustomBindException.class)
-	public final void test_update_with_out_kafka_and_with_null_req() {
+	public final void test_update_with_null_req() {
 
 		List<Instrument> expextedResult = getInstruments();
 
-		Instrument instrument = expextedResult.get(0);
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentRepository.update(any(Instrument.class))).thenReturn(instrument);
-
-		List<Instrument> actualResult = instrumentService.update(null, errors);
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_create() {
-
-		List<Instrument> expextedResult = getInstruments();
-
-		List<Instrument> actualResult = instrumentService.fetchAndValidate(expextedResult, errors, "create");
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_update() {
-
-		List<Instrument> expextedResult = getInstruments();
-
-		List<Instrument> actualResult = instrumentService.fetchAndValidate(expextedResult, errors, "update");
+		List<Instrument> actualResult = instrumentService.update(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -277,6 +250,7 @@ public class InstrumentServiceTest {
 
 		assertEquals(expextedResult, actualResult.get(0).getSurrenderReason());
 	}
+
 	@Ignore
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_instrumenttype_null() {
@@ -294,6 +268,7 @@ public class InstrumentServiceTest {
 
 		assertEquals(expextedResult, actualResult.get(0).getInstrumentType());
 	}
+
 	@Ignore
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_bank_null() {
@@ -347,6 +322,7 @@ public class InstrumentServiceTest {
 
 		assertEquals(expextedResult, actualResult.get(0).getFinancialStatus());
 	}
+
 	@Ignore
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_surrenderreason_null() {

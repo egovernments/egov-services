@@ -41,7 +41,6 @@ package org.egov.collection.indexer.enricher;
 
 
 import org.egov.collection.indexer.contract.City;
-import org.egov.collection.indexer.contract.Receipt;
 import org.egov.collection.indexer.contract.ReceiptRequest;
 import org.egov.collection.indexer.repository.TenantRepository;
 import org.egov.collection.indexer.repository.contract.ReceiptRequestDocument;

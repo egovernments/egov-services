@@ -1,8 +1,8 @@
 package org.egov.egf.instrument.domain.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
@@ -20,134 +20,122 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class SurrenderReasonService {
 
-    public static final String ACTION_CREATE = "create";
-    public static final String ACTION_UPDATE = "update";
-    public static final String ACTION_VIEW = "view";
-    public static final String ACTION_EDIT = "edit";
-    public static final String ACTION_SEARCH = "search";
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_VIEW = "view";
+	public static final String ACTION_EDIT = "edit";
+	public static final String ACTION_SEARCH = "search";
 
-    @Autowired
-    private SurrenderReasonRepository surrenderReasonRepository;
+	@Autowired
+	private SurrenderReasonRepository surrenderReasonRepository;
 
-    @Autowired
-    private SmartValidator validator;
+	@Autowired
+	private SmartValidator validator;
 
-    @Autowired
-    public SurrenderReasonService(SmartValidator validator, SurrenderReasonRepository surrenderReasonRepository) {
-        this.validator = validator;
-        this.surrenderReasonRepository = surrenderReasonRepository;
-    }
+	@Autowired
+	public SurrenderReasonService(SmartValidator validator, SurrenderReasonRepository surrenderReasonRepository) {
+		this.validator = validator;
+		this.surrenderReasonRepository = surrenderReasonRepository;
+	}
 
-    @Transactional
-    public List<SurrenderReason> save(List<SurrenderReason> surrenderReasons, BindingResult errors) {
+	@Transactional
+	public List<SurrenderReason> create(List<SurrenderReason> surrenderReasons, BindingResult errors,
+			RequestInfo requestInfo) {
 
-        List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
+		try {
 
-        try {
+			surrenderReasons = fetchRelated(surrenderReasons);
 
-            surrenderReasons = fetchAndValidate(surrenderReasons, errors, ACTION_CREATE);
+			validate(surrenderReasons, ACTION_CREATE, errors);
 
-        } catch (CustomBindException e) {
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
 
-            throw new CustomBindException(errors);
-        }
+		} catch (CustomBindException e) {
 
-        for (SurrenderReason sr : surrenderReasons) {
+			throw new CustomBindException(errors);
+		}
 
-            resultList.add(save(sr));
+		return surrenderReasonRepository.save(surrenderReasons, requestInfo);
 
-        }
+	}
 
-        return resultList;
-    }
+	@Transactional
+	public List<SurrenderReason> update(List<SurrenderReason> surrenderReasons, BindingResult errors,
+			RequestInfo requestInfo) {
 
-    @Transactional
-    public List<SurrenderReason> update(List<SurrenderReason> surrenderReasons, BindingResult errors) {
+		try {
 
-        List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
+			surrenderReasons = fetchRelated(surrenderReasons);
 
-        try {
+			validate(surrenderReasons, ACTION_UPDATE, errors);
 
-            surrenderReasons = fetchAndValidate(surrenderReasons, errors, ACTION_UPDATE);
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
 
-        } catch (CustomBindException e) {
+		} catch (CustomBindException e) {
 
-            throw new CustomBindException(errors);
-        }
+			throw new CustomBindException(errors);
+		}
 
-        for (SurrenderReason sr : surrenderReasons) {
+		return surrenderReasonRepository.update(surrenderReasons, requestInfo);
 
-            resultList.add(update(sr));
+	}
 
-        }
+	private BindingResult validate(List<SurrenderReason> surrenderreasons, String method, BindingResult errors) {
 
-        return resultList;
-    }
+		try {
+			switch (method) {
+			case ACTION_VIEW:
+				// validator.validate(surrenderReasonContractRequest.getSurrenderReason(),
+				// errors);
+				break;
+			case ACTION_CREATE:
+				Assert.notNull(surrenderreasons, "SurrenderReasons to create must not be null");
+				for (SurrenderReason surrenderReason : surrenderreasons) {
+					validator.validate(surrenderReason, errors);
+				}
+				break;
+			case ACTION_UPDATE:
+				Assert.notNull(surrenderreasons, "SurrenderReasons to update must not be null");
+				for (SurrenderReason surrenderReason : surrenderreasons) {
+					validator.validate(surrenderReason, errors);
+				}
+				break;
+			default:
 
-    private BindingResult validate(List<SurrenderReason> surrenderreasons, String method, BindingResult errors) {
+			}
+		} catch (IllegalArgumentException e) {
+			errors.addError(new ObjectError("Missing data", e.getMessage()));
+		}
+		return errors;
 
-        try {
-            switch (method) {
-                case ACTION_VIEW:
-                    // validator.validate(surrenderReasonContractRequest.getSurrenderReason(),
-                    // errors);
-                    break;
-                case ACTION_CREATE:
-                    Assert.notNull(surrenderreasons, "SurrenderReasons to create must not be null");
-                    for (SurrenderReason surrenderReason : surrenderreasons) {
-                        validator.validate(surrenderReason, errors);
-                    }
-                    break;
-                case ACTION_UPDATE:
-                    Assert.notNull(surrenderreasons, "SurrenderReasons to update must not be null");
-                    for (SurrenderReason surrenderReason : surrenderreasons) {
-                        validator.validate(surrenderReason, errors);
-                    }
-                    break;
-                default:
+	}
 
-            }
-        } catch (IllegalArgumentException e) {
-            errors.addError(new ObjectError("Missing data", e.getMessage()));
-        }
-        return errors;
+	public List<SurrenderReason> fetchRelated(List<SurrenderReason> surrenderreasons) {
+		if (surrenderreasons != null)
+			for (SurrenderReason surrenderReason : surrenderreasons) {
+				// fetch related items
 
-    }
+			}
 
-    public List<SurrenderReason> fetchRelated(List<SurrenderReason> surrenderreasons) {
-        if (surrenderreasons != null)
-            for (SurrenderReason surrenderReason : surrenderreasons) {
-                // fetch related items
+		return surrenderreasons;
+	}
 
-            }
+	public Pagination<SurrenderReason> search(SurrenderReasonSearch surrenderReasonSearch) {
+		return surrenderReasonRepository.search(surrenderReasonSearch);
+	}
 
-        return surrenderreasons;
-    }
+	@Transactional
+	public SurrenderReason save(SurrenderReason surrenderReason) {
+		return surrenderReasonRepository.save(surrenderReason);
+	}
 
-    @Transactional
-    public List<SurrenderReason> fetchAndValidate(List<SurrenderReason> surrenderreasons, BindingResult errors,
-                                                  String action) {
-        surrenderreasons = fetchRelated(surrenderreasons);
-        validate(surrenderreasons, action, errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        return surrenderreasons;
-
-    }
-
-    public Pagination<SurrenderReason> search(SurrenderReasonSearch surrenderReasonSearch) {
-        return surrenderReasonRepository.search(surrenderReasonSearch);
-    }
-
-    @Transactional
-    public SurrenderReason save(SurrenderReason surrenderReason) {
-        return surrenderReasonRepository.save(surrenderReason);
-    }
-
-    @Transactional
-    public SurrenderReason update(SurrenderReason surrenderReason) {
-        return surrenderReasonRepository.update(surrenderReason);
-    }
+	@Transactional
+	public SurrenderReason update(SurrenderReason surrenderReason) {
+		return surrenderReasonRepository.update(surrenderReason);
+	}
 
 }

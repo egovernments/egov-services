@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.FinancialConfiguration;
@@ -36,17 +36,17 @@ public class FinancialConfigurationService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(financialConfigurationContractRequest.getFinancialConfiguration(),
 				// errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(financialconfigurations, "FinancialConfigurations to create must not be null");
 				for (FinancialConfiguration financialConfiguration : financialconfigurations) {
 					validator.validate(financialConfiguration, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(financialconfigurations, "FinancialConfigurations to update must not be null");
 				for (FinancialConfiguration financialConfiguration : financialconfigurations) {
 					validator.validate(financialConfiguration, errors);
@@ -75,7 +75,7 @@ public class FinancialConfigurationService {
 	public List<FinancialConfiguration> add(List<FinancialConfiguration> financialconfigurations,
 			BindingResult errors) {
 		financialconfigurations = fetchRelated(financialconfigurations);
-		validate(financialconfigurations, EgfConstants.ACTION_CREATE, errors);
+		validate(financialconfigurations, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -87,7 +87,7 @@ public class FinancialConfigurationService {
 	public List<FinancialConfiguration> update(List<FinancialConfiguration> financialconfigurations,
 			BindingResult errors) {
 		financialconfigurations = fetchRelated(financialconfigurations);
-		validate(financialconfigurations, EgfConstants.ACTION_UPDATE, errors);
+		validate(financialconfigurations, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

@@ -11,14 +11,12 @@ import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.service.InstrumentService;
-import org.egov.egf.instrument.persistence.queue.repository.InstrumentQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentMapper;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.instrument.web.requests.InstrumentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,13 +35,8 @@ public class InstrumentController {
 	public static final String ACTION_UPDATE = "update";
 	public static final String PLACEHOLDER = "placeholder";
 
-	private static String persistThroughKafka;
-
 	@Autowired
 	private InstrumentService instrumentService;
-
-	@Autowired
-	private InstrumentQueueRepository instrumentQueueRepository;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -67,33 +60,11 @@ public class InstrumentController {
 			instruments.add(instrument);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		instruments = instrumentService.create(instruments, errors, instrumentRequest.getRequestInfo());
 
-			instruments = instrumentService.fetchAndValidate(instruments, errors, ACTION_CREATE);
-
-			for (Instrument i : instruments) {
-				contract = mapper.toContract(i);
-				contract.setCreatedDate(new Date());
-				instrumentContracts.add(contract);
-			}
-
-			instrumentRequest.setInstruments(instrumentContracts);
-			instrumentQueueRepository.addToQue(instrumentRequest);
-
-		} else {
-
-			instruments = instrumentService.save(instruments, errors);
-
-			for (Instrument i : instruments) {
-				contract = mapper.toContract(i);
-				instrumentContracts.add(contract);
-			}
-
-			instrumentRequest.setInstruments(instrumentContracts);
-
-			instrumentQueueRepository.addToSearchQue(instrumentRequest);
-
+		for (Instrument i : instruments) {
+			contract = mapper.toContract(i);
+			instrumentContracts.add(contract);
 		}
 
 		instrumentResponse.setInstruments(instrumentContracts);
@@ -121,33 +92,13 @@ public class InstrumentController {
 			instruments.add(instrument);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		instruments = instrumentService.update(instruments, errors, instrumentRequest.getRequestInfo());
 
-			instruments = instrumentService.fetchAndValidate(instruments, errors, ACTION_UPDATE);
-
-			for (Instrument i : instruments) {
-				contract = mapper.toContract(i);
-				instrumentContracts.add(contract);
-			}
-
-			instrumentRequest.setInstruments(instrumentContracts);
-			instrumentQueueRepository.addToQue(instrumentRequest);
-
-		} else {
-
-			instruments = instrumentService.update(instruments, errors);
-
-			for (Instrument i : instruments) {
-				contract = mapper.toContract(i);
-				instrumentContracts.add(contract);
-			}
-
-			instrumentRequest.setInstruments(instrumentContracts);
-
-			instrumentQueueRepository.addToSearchQue(instrumentRequest);
-
+		for (Instrument i : instruments) {
+			contract = mapper.toContract(i);
+			instrumentContracts.add(contract);
 		}
+
 		instrumentResponse.setInstruments(instrumentContracts);
 
 		return instrumentResponse;
@@ -184,11 +135,6 @@ public class InstrumentController {
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
-
-	@Value("${persist.through.kafka}")
-	public void setPersistThroughKafka(String persistThroughKafka) {
-		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

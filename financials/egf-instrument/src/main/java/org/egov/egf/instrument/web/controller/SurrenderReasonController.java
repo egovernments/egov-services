@@ -11,14 +11,12 @@ import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.model.SurrenderReasonSearch;
 import org.egov.egf.instrument.domain.service.SurrenderReasonService;
-import org.egov.egf.instrument.persistence.queue.repository.SurrenderReasonQueueRepository;
 import org.egov.egf.instrument.web.contract.SurrenderReasonContract;
 import org.egov.egf.instrument.web.contract.SurrenderReasonSearchContract;
 import org.egov.egf.instrument.web.mapper.SurrenderReasonMapper;
 import org.egov.egf.instrument.web.requests.SurrenderReasonRequest;
 import org.egov.egf.instrument.web.requests.SurrenderReasonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,11 +34,6 @@ public class SurrenderReasonController {
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
 	public static final String PLACEHOLDER = "placeholder";
-
-	private static String persistThroughKafka;
-
-	@Autowired
-	private SurrenderReasonQueueRepository surrenderReasonQueueRepository;
 
 	@Autowired
 	private SurrenderReasonService surrenderReasonService;
@@ -68,33 +61,12 @@ public class SurrenderReasonController {
 			surrenderreasons.add(surrenderReason);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		surrenderreasons = surrenderReasonService.create(surrenderreasons, errors,
+				surrenderReasonRequest.getRequestInfo());
 
-			surrenderreasons = surrenderReasonService.fetchAndValidate(surrenderreasons, errors, ACTION_CREATE);
-
-			for (SurrenderReason sr : surrenderreasons) {
-				contract = mapper.toContract(sr);
-				contract.setCreatedDate(new Date());
-				surrenderReasonContracts.add(contract);
-			}
-
-			surrenderReasonRequest.setSurrenderReasons(surrenderReasonContracts);
-			surrenderReasonQueueRepository.addToQue(surrenderReasonRequest);
-
-		} else {
-
-			surrenderreasons = surrenderReasonService.save(surrenderreasons, errors);
-
-			for (SurrenderReason sr : surrenderreasons) {
-				contract = mapper.toContract(sr);
-				contract.setCreatedDate(new Date());
-				surrenderReasonContracts.add(contract);
-			}
-
-			surrenderReasonRequest.setSurrenderReasons(surrenderReasonContracts);
-			surrenderReasonQueueRepository.addToSearchQue(surrenderReasonRequest);
-
+		for (SurrenderReason sr : surrenderreasons) {
+			contract = mapper.toContract(sr);
+			surrenderReasonContracts.add(contract);
 		}
 
 		surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
@@ -123,35 +95,13 @@ public class SurrenderReasonController {
 			surrenderreasons.add(surrenderReason);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		surrenderreasons = surrenderReasonService.update(surrenderreasons, errors,
+				surrenderReasonRequest.getRequestInfo());
 
-			surrenderreasons = surrenderReasonService.fetchAndValidate(surrenderreasons, errors, ACTION_UPDATE);
-
-			for (SurrenderReason sr : surrenderreasons) {
-				contract = mapper.toContract(sr);
-				contract.setCreatedDate(new Date());
-				surrenderReasonContracts.add(contract);
-			}
-
-			surrenderReasonRequest.setSurrenderReasons(surrenderReasonContracts);
-			surrenderReasonQueueRepository.addToQue(surrenderReasonRequest);
-
-		} else {
-
-			surrenderreasons = surrenderReasonService.update(surrenderreasons, errors);
-
-			for (SurrenderReason sr : surrenderreasons) {
-				contract = mapper.toContract(sr);
-				contract.setCreatedDate(new Date());
-				surrenderReasonContracts.add(contract);
-			}
-
-			surrenderReasonRequest.setSurrenderReasons(surrenderReasonContracts);
-			surrenderReasonQueueRepository.addToSearchQue(surrenderReasonRequest);
-
+		for (SurrenderReason sr : surrenderreasons) {
+			contract = mapper.toContract(sr);
+			surrenderReasonContracts.add(contract);
 		}
-
 		surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
 
 		return surrenderReasonResponse;
@@ -188,11 +138,6 @@ public class SurrenderReasonController {
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
-
-	@Value("${persist.through.kafka}")
-	public void setPersistThroughKafka(String persistThroughKafka) {
-		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

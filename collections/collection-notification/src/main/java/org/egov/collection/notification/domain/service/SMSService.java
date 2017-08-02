@@ -9,7 +9,6 @@ import org.egov.collection.notification.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.text.bidi.BidiLine;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

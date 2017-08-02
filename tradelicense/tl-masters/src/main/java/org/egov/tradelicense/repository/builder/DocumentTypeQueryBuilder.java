@@ -2,9 +2,7 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
-import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.utility.ConstantUtility;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for DocumentType API's
@@ -12,14 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Shubham pratap Singh
  */
 public class DocumentTypeQueryBuilder {
-	
-	@Autowired
-	private static PropertiesManager propertiesManager;
 
 	private static final String documentTypeTableName = ConstantUtility.DOCUMENT_TYPE_TABLE_NAME;
-	private static final String defaultPageSize = propertiesManager.getDefaultPageSize();
-	private static final String defaultOffset = propertiesManager.getDefaultOffset();
-	
+
 	public static final String INSERT_DOCUMENT_TYPE_QUERY = "INSERT INTO " + documentTypeTableName
 			+ " (tenantId, name, mandatory, enabled, applicationType, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
 			+ " VALUES(?,?,?,?,?,?,?,?,?)";
@@ -32,7 +25,7 @@ public class DocumentTypeQueryBuilder {
 			String applicationType, Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from "+ documentTypeTableName +" where ");
+		searchSql.append("select * from " + documentTypeTableName + " where ");
 		searchSql.append(" tenantId = ? ");
 		preparedStatementValues.add(tenantId);
 		if (ids != null && ids.length > 0) {
@@ -66,19 +59,15 @@ public class DocumentTypeQueryBuilder {
 			preparedStatementValues.add(applicationType);
 		}
 
-		if (pageSize == null) {
-			pageSize = Integer.valueOf(defaultPageSize);
+		if (pageSize != null) {
+			searchSql.append(" limit ? ");
+			preparedStatementValues.add(pageSize);
 		}
 
-		searchSql.append(" limit ? ");
-		preparedStatementValues.add(pageSize);
-
-		if (offSet == null) {
-			offSet = Integer.valueOf(defaultOffset);
+		if (offSet != null) {
+			searchSql.append(" offset ? ");
+			preparedStatementValues.add(offSet);
 		}
-
-		searchSql.append(" offset ? ");
-		preparedStatementValues.add(offSet);
 
 		return searchSql.toString();
 	}

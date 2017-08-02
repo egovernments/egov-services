@@ -7,7 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.SubScheme;
@@ -51,7 +51,7 @@ public class SubSchemeController {
 		List<SubSchemeContract> subSchemeContracts = new ArrayList<>();
 		SubSchemeContract contract;
 
-		subSchemeRequest.getRequestInfo().setAction(EgfConstants.ACTION_CREATE);
+		subSchemeRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
 		for (SubSchemeContract subSchemeContract : subSchemeRequest.getSubSchemes()) {
 			subScheme = new SubScheme();
@@ -85,7 +85,7 @@ public class SubSchemeController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		subSchemeRequest.getRequestInfo().setAction(EgfConstants.ACTION_UPDATE);
+		subSchemeRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		SubSchemeResponse subSchemeResponse = new SubSchemeResponse();
 		List<SubScheme> subschemes = new ArrayList<>();

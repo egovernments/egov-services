@@ -2,9 +2,7 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
-import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.utility.ConstantUtility;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for Category API's
@@ -13,13 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CategoryQueryBuilder {
 
-	@Autowired
-	private static PropertiesManager propertiesManager;
-
 	private static final String categoryTableName = ConstantUtility.CATEGORY_TABLE_NAME;
 	private static final String categoryDetailTableName = ConstantUtility.CATEGORY_DETAIL_TABLE_NAME;
-	private static final String defaultPageSize = propertiesManager.getDefaultPageSize();
-	private static final String defaultOffset = propertiesManager.getDefaultOffset();
 
 	public static final String INSERT_CATEGORY_QUERY = "INSERT INTO " + categoryTableName
 			+ " (tenantId, name, code, parentId, businessNature, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
@@ -40,23 +33,21 @@ public class CategoryQueryBuilder {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + categoryDetailTableName + " where ");
+
 		if (categoryId != null) {
 			searchSql.append(" categoryId = ? ");
 			preparedStatementValues.add(categoryId);
 		}
-		if (pageSize == null) {
-			pageSize = Integer.valueOf(defaultPageSize);
+
+		if (pageSize != null) {
+			searchSql.append(" limit ? ");
+			preparedStatementValues.add(pageSize);
 		}
 
-		searchSql.append(" limit ? ");
-		preparedStatementValues.add(pageSize);
-
-		if (offSet == null) {
-			offSet = Integer.valueOf(defaultOffset);
+		if (offSet != null) {
+			searchSql.append(" offset ? ");
+			preparedStatementValues.add(offSet);
 		}
-
-		searchSql.append(" offset ? ");
-		preparedStatementValues.add(offSet);
 
 		return searchSql.toString();
 	}
@@ -106,19 +97,15 @@ public class CategoryQueryBuilder {
 			}
 		}
 
-		if (pageSize == null) {
-			pageSize = Integer.valueOf(defaultPageSize);
+		if (pageSize != null) {
+			searchSql.append(" limit ? ");
+			preparedStatementValues.add(pageSize);
 		}
 
-		searchSql.append(" limit ? ");
-		preparedStatementValues.add(pageSize);
-
-		if (offSet == null) {
-			offSet = Integer.valueOf(defaultOffset);
+		if (offSet != null) {
+			searchSql.append(" offset ? ");
+			preparedStatementValues.add(offSet);
 		}
-		
-		searchSql.append(" offset ? ");
-		preparedStatementValues.add(offSet);
 
 		return searchSql.toString();
 	}

@@ -74,7 +74,13 @@ public class AllotteeRepository {
 		userSearchRequest.setEmailId(allottee.getEmailId());
 		userSearchRequest.setMobileNumber(allottee.getMobileNumber());
 		userSearchRequest.setTenantId(allottee.getTenantId());
-		userSearchRequest.setUserName(allottee.getUserName());
+		if(allottee.getUserName() != null){
+		    userSearchRequest.setUserName(allottee.getUserName());
+		}
+		else{
+			String userName = allottee.getName().replaceAll(" ","").substring(0, 50) + allottee.getMobileNumber();
+		    userSearchRequest.setUserName(userName);
+		}
 		logger.info("url for allottee api post call :: " + url
 				+ "the request object for isAllotteeExist is userSearchRequest ::: " + userSearchRequest);
 		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);
@@ -86,7 +92,7 @@ public class AllotteeRepository {
 
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceCreatePAth();
-		
+		String userName = allottee.getName().replaceAll(" ", "").substring(0, 50) + allottee.getMobileNumber();
 		Role role = new Role();
 		role.setCode("CITIZEN");
 		role.setName("CITIZEN");
@@ -96,7 +102,7 @@ public class AllotteeRepository {
 				
 		UserRequest userRequest = UserRequest.buildUserRequestFromAllotte(allottee);
 		userRequest.setRoles(roles);
-		userRequest.setUserName(allottee.getName() + allottee.getMobileNumber());
+		userRequest.setUserName(userName);
 		userRequest.setPassword(allottee.getMobileNumber().toString());
 		userRequest.setGender(Gender.FEMALE);
 		userRequest.setType(UserType.CITIZEN);

@@ -1375,7 +1375,8 @@ ReportDefinitions:
     eg_boundary boundary, egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass, eg_user us WHERE cs.servicecode = ctype.code and cs.department=dept.id 
     and cs.positionid = pos.id and cs.createddate >= $fromDate and cs.createddate
     <= $toDate and sa.key = 'systemLocationId' and boundary.id = (select id from eg_boundary where name = $parentboundary and cs.tenantid=$tenantid and boundarytype = 10) and dept.name = $deptname and 
-    cs.positionid = ass.positionid and ass.employeeid=us.id and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid) GROUP BY us.username,pos.name;
+    cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true 
+    and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid) GROUP BY us.username,pos.name;
  
 
 

@@ -72,7 +72,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PopertyTypePipeSizeController.class)
+@WebMvcTest(PropertyTypePipeSizeController.class)
 @Import(TestConfiguration.class)
 public class PropertyTypePipeSizeTypeControllerTest {
 
@@ -95,7 +95,7 @@ public class PropertyTypePipeSizeTypeControllerTest {
     private ValidatorUtils validatorUtils;
 
     @InjectMocks
-    private PopertyTypePipeSizeController popertyPipeSizeController;
+    private PropertyTypePipeSizeController popertyPipeSizeController;
 
     @Test(expected = Exception.class)
     public void test_Should_Search_PropertyPipeSize() throws Exception {

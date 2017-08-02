@@ -73,9 +73,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PropertyCategoryController.class)
+@WebMvcTest(PropertyTypeCategoryTypeController.class)
 @Import(TestConfiguration.class)
-public class PropertyCategoryControllerTest {
+public class PropertyTypeCategoryTypeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -96,7 +96,7 @@ public class PropertyCategoryControllerTest {
     private ResponseInfoFactory responseInfoFactory;
 
     @InjectMocks
-    private PropertyCategoryController propertyCategoryController;
+    private PropertyTypeCategoryTypeController propertyCategoryController;
 
     @Test(expected = Exception.class)
     public void test_Should_Search_PropertyCategory() throws Exception {

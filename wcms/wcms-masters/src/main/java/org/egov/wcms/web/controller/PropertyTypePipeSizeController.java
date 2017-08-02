@@ -37,7 +37,6 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
 package org.egov.wcms.web.controller;
 
 import java.util.ArrayList;
@@ -49,12 +48,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.service.PropertyCategoryService;
+import org.egov.wcms.model.PropertyTypePipeSize;
+import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.util.ValidatorUtils;
-import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeResponse;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -75,11 +74,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@RequestMapping("/propertytype-categorytype")
-public class PropertyCategoryController {
+@RequestMapping("/propertytype-pipesize")
+public class PropertyTypePipeSizeController {
 
     @Autowired
-    private PropertyCategoryService propertyCategoryService;
+    private PropertyTypePipeSizeService propertPipeSizeService;
 
     @Autowired
     private ErrorHandler errHandler;
@@ -95,51 +94,56 @@ public class PropertyCategoryController {
 
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final PropertyTypeCategoryTypeReq propertyCategoryRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid final PropertyTypePipeSizeRequest propertyPipeSizeRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        log.info("propertyCategoryRequest::" + propertyCategoryRequest);
+        log.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
 
         final List<ErrorResponse> errorResponses = validatorUtils
-                .validatePropertyCategoryRequest(propertyCategoryRequest);
+                .validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
-                applicationProperties.getCreatePropertyCategoryTopicName(), "property-category-create",
-                propertyCategoryRequest);
-        return getSuccessResponse(propertyCategory, "Created", propertyCategoryRequest.getRequestInfo());
+        final PropertyTypePipeSize propertyPipeSize = propertPipeSizeService.createPropertyPipeSize(
+                applicationProperties.getCreatePropertyPipeSizeTopicName(), "propertypipesize-create",
+                propertyPipeSizeRequest);
+        final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
+        propertyPipeSizes.add(propertyPipeSize);
+        return getSuccessResponse(propertyPipeSizes, "Created", propertyPipeSizeRequest.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/{propertyCategoryId}/_update")
+    @PostMapping(value = "/{propertyPipeSizeId}/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypeCategoryTypeReq propertyCategoryRequest,
-            final BindingResult errors, @PathVariable("propertyCategoryId") final Long propertyCategoryId) {
+    public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypePipeSizeRequest propertyPipeSizeRequest,
+            final BindingResult errors, @PathVariable("propertyPipeSizeId") final Long propertyPipeSizeId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        log.info("propertyCategoryRequest::" + propertyCategoryRequest);
-        propertyCategoryRequest.getPropertyTypeCategoryType().setId(propertyCategoryId);
+        log.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
+        propertyPipeSizeRequest.getPropertyTypePipeSize().setId(propertyPipeSizeId);
 
         final List<ErrorResponse> errorResponses = validatorUtils
-                .validatePropertyCategoryRequest(propertyCategoryRequest);
+                .validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
-                applicationProperties.getUpdatePropertyCategoryTopicName(), "property-category-update",
-                propertyCategoryRequest);
-        return getSuccessResponse(propertyCategory, null, propertyCategoryRequest.getRequestInfo());
+        final PropertyTypePipeSize propertyPipeSize = propertPipeSizeService.createPropertyPipeSize(
+                applicationProperties.getUpdatePropertyPipeSizeTopicName(), "propertypipesize-update",
+                propertyPipeSizeRequest);
+        final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
+        propertyPipeSizes.add(propertyPipeSize);
+        return getSuccessResponse(propertyPipeSizes, null, propertyPipeSizeRequest.getRequestInfo());
     }
 
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final PropertyCategoryGetRequest propertyCategoryGetRequest,
+    public ResponseEntity<?> search(
+            @ModelAttribute @Valid final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest,
             final BindingResult modelAttributeBindingResult,
             @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
@@ -153,42 +157,30 @@ public class PropertyCategoryController {
         if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
-        log.info("Request: " + propertyCategoryGetRequest);
-        PropertyTypeCategoryTypesRes propertyCategoryResponse = null;
+        // Call service
+        List<PropertyTypePipeSize> propertyPipeSizeList = null;
         try {
-            propertyCategoryResponse = propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest);
+            propertyPipeSizeList = propertPipeSizeService.getPropertyPipeSizes(propertyPipeSizeGetRequest);
         } catch (final Exception exception) {
-            log.error("Error while processing request " + propertyCategoryGetRequest, exception);
+            log.error("Error while processing request " + propertyPipeSizeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponseForList(propertyCategoryResponse, requestInfo);
+        return getSuccessResponse(propertyPipeSizeList, null, requestInfo);
 
     }
 
-    private ResponseEntity<?> getSuccessResponse(final PropertyTypeCategoryTypeReq propertyCategoryRequest,
+    private ResponseEntity<?> getSuccessResponse(final List<PropertyTypePipeSize> propertyPipeSizeList,
             final String mode, final RequestInfo requestInfo) {
-        final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
-        final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
-        propertyCategories.add(propertyCategoryRequest.getPropertyTypeCategoryType());
+        final PropertyTypePipeSizeResponse propertyPipeSizeResponse = new PropertyTypePipeSizeResponse();
+        propertyPipeSizeResponse.setPropertyTypePipeSizes(propertyPipeSizeList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());
         else
             responseInfo.setStatus(HttpStatus.OK.toString());
-        propertyCategoryResponse.setResponseInfo(responseInfo);
-        propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);
-
-        return new ResponseEntity<>(propertyCategoryResponse, HttpStatus.OK);
-
-    }
-
-    private ResponseEntity<?> getSuccessResponseForList(final PropertyTypeCategoryTypesRes propertyCategoryResponse,
-            final RequestInfo requestInfo) {
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        propertyCategoryResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(propertyCategoryResponse, HttpStatus.OK);
+        propertyPipeSizeResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(propertyPipeSizeResponse, HttpStatus.OK);
 
     }
 

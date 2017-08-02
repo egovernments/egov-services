@@ -388,8 +388,9 @@ ReportDefinitions:
     (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double
     precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,
     egpgr_complainttype ctype, egeis_assignment ass, eg_user us WHERE cs.positionid
-    = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code and cs.createddate >= $fromDate and
-    cs.createddate <= $toDate GROUP BY us.username;
+    = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code
+    and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true 
+    and cs.createddate >= $fromDate and cs.createddate <= $toDate GROUP BY us.username;
   
     
 - reportName: DrillDownComplaintDetailByFunctionary
@@ -449,7 +450,8 @@ ReportDefinitions:
     label: reports.pgr.username
     type: epoch
     source: seva
-  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us where ctype.code=cs.servicecode and cs.status=$status and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.positionid = ass.positionid and ass.employeeid=us.id and us.username =$username
+  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us 
+         where ctype.code=cs.servicecode and cs.status=$status and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true and us.username =$username
   
 - reportName: DrillDownComplaintDetailByFunctionaryWithINSLA
   summary: DrillDown ComplaintDetail By Functionary Report
@@ -508,7 +510,8 @@ ReportDefinitions:
     label: reports.pgr.username
     type: epoch
     source: seva
-  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us where ctype.code=cs.servicecode and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.positionid = ass.positionid and ass.employeeid=us.id and us.username =$username
+  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us 
+         where ctype.code=cs.servicecode and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true and us.username =$username
          AND cs.status::text = ANY (ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text]) 
          AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double precision)
          AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision)
@@ -570,7 +573,8 @@ ReportDefinitions:
     label: reports.pgr.username
     type: epoch
     source: seva
-  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us where ctype.code=cs.servicecode and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.positionid = ass.positionid and ass.employeeid=us.id and us.username =$username
+  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us 
+         where ctype.code=cs.servicecode and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true and us.username =$username
          AND cs.status::text = ANY(ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text])
          AND (cs.lastmodifieddate - cs.createddate) > ('01:00:00'::interval * ctype.slahours::double precision) 
          AND (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double precision)
@@ -1184,7 +1188,7 @@ ReportDefinitions:
     source: egpgr_complainttype
     linkedReport:
       reportName: DrillDownByBoundaryLocalityDepartmentUserNamePositionGetComplaints
-      linkedColumn: _parent?reportName={reportName}&complainttype={name}
+      linkedColumn: _parent?reportName={reportName}&complainttypecode={name}
   - name: registered
     label: reports.pgr.status.registered
     type: number

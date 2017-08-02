@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.EgfConstants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
@@ -20,12 +21,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class FundService {
 
-    public static final String ACTION_CREATE = "create";
-    public static final String ACTION_UPDATE = "update";
-    public static final String ACTION_VIEW = "view";
-    public static final String ACTION_EDIT = "edit";
-    public static final String ACTION_SEARCH = "search";
-
     @Autowired
     private FundRepository fundRepository;
 
@@ -40,7 +35,7 @@ public class FundService {
 
             funds = fetchRelated(funds);
 
-            validate(funds, ACTION_CREATE, errors);
+            validate(funds, EgfConstants.ACTION_CREATE, errors);
 
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
@@ -63,7 +58,7 @@ public class FundService {
 
             funds = fetchRelated(funds);
 
-            validate(funds, ACTION_UPDATE, errors);
+            validate(funds, EgfConstants.ACTION_UPDATE, errors);
 
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
@@ -82,16 +77,16 @@ public class FundService {
 
         try {
             switch (method) {
-            case ACTION_VIEW:
+            case EgfConstants.ACTION_VIEW:
                 // validator.validate(fundContractRequest.getFund(), errors);
                 break;
-            case ACTION_CREATE:
+            case EgfConstants.ACTION_CREATE:
                 Assert.notNull(funds, "Funds to create must not be null");
                 for (Fund fund : funds) {
                     validator.validate(fund, errors);
                 }
                 break;
-            case ACTION_UPDATE:
+            case EgfConstants.ACTION_UPDATE:
                 Assert.notNull(funds, "Funds to update must not be null");
                 for (Fund fund : funds) {
                     validator.validate(fund, errors);

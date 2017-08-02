@@ -19,7 +19,6 @@ import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.TransactionType;
 import org.egov.egf.instrument.domain.service.InstrumentService;
-import org.egov.egf.instrument.persistence.queue.repository.InstrumentQueueRepository;
 import org.egov.egf.instrument.utils.RequestJsonReader;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.junit.Test;
@@ -45,9 +44,6 @@ public class InstrumentControllerTest {
 
 	@MockBean
 	private InstrumentService instrumentService;
-
-	@MockBean
-	private InstrumentQueueRepository instrumentQueueRepository;
 
 	@Captor
 	private ArgumentCaptor<InstrumentRequest> captor;

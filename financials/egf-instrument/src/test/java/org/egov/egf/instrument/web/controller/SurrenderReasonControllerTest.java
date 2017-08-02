@@ -16,7 +16,6 @@ import org.egov.egf.instrument.TestConfiguration;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.model.SurrenderReasonSearch;
 import org.egov.egf.instrument.domain.service.SurrenderReasonService;
-import org.egov.egf.instrument.persistence.queue.repository.SurrenderReasonQueueRepository;
 import org.egov.egf.instrument.utils.RequestJsonReader;
 import org.egov.egf.instrument.web.requests.SurrenderReasonRequest;
 import org.junit.Test;
@@ -42,9 +41,6 @@ public class SurrenderReasonControllerTest {
 
 	@MockBean
 	private SurrenderReasonService surrenderReasonService;
-
-	@MockBean
-	private SurrenderReasonQueueRepository surrenderReasonQueueRepository;
 
 	@Captor
 	private ArgumentCaptor<SurrenderReasonRequest> captor;

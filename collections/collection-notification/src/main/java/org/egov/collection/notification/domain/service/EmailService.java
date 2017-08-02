@@ -84,7 +84,7 @@ public class EmailService {
             BusinessDetailsResponse response = businessDetailsRepository.getBusinessDetails(Arrays.asList(billDetail.getBusinessService()) ,bill.getTenantId(),requestInfo);
             businessDetails.append(response.getBusinessDetails().get(0).getName());
             urls.append(propertiesManager.getCollectionServiceHost()).append(propertiesManager.getCollectionServiceUrl())
-                    .append("?receiptNumbers=").append(billDetail.getReceiptNumber());
+                    .append("?receiptNumbers=").append(billDetail.getReceiptNumber()).append("&tenantId=").append(bill.getTenantId());
         }
         emailMessage.append("Dear Consumer,").append("\n\n").append("We have received payment of ").append(amountPaid).append(" for the consumer codes ")
                 .append(consumerCodes).append(" which belong to the service ").append(businessDetails).append(".").append("\n\n");

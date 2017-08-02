@@ -436,8 +436,10 @@ paths:
           in: query
           description: Boundary Unique Number.
           required: false
-          type: integer
-          format: int64    
+          type: array
+          items:
+            type: integer
+            format: int64  
         - name: boundaryType
           in: query
           description: Type Of the Boundary Like City,Ward,Zone.

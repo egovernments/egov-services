@@ -1,7 +1,6 @@
 package org.egov.boundary.web.controller;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -157,7 +156,7 @@ public class BoundaryControllerTest {
 		
 		List<Boundary> boundaryList = getBoundaries();
 		
-		when(boundaryService.getAllBoundariesByNumberAndType("default",1l,list)).thenReturn(boundaryList);
+		when(boundaryService.getAllBoundariesByNumberAndType("default",list,list)).thenReturn(boundaryList);
 
 		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").param("boundaryIds", "1").param("boundaryNum", "1")
 				.header("X-CORRELATION-ID", "someId")
@@ -190,7 +189,7 @@ public class BoundaryControllerTest {
 		
 		List<Boundary> boundaryList = getBoundaries();
 		
-		when(boundaryService.getAllBoundaryByTenantIdAndNumber("default",1l)).thenReturn(boundaryList);
+		when(boundaryService.getAllBoundaryByTenantIdAndNumber("default",list)).thenReturn(boundaryList);
 
 		mockMvc.perform(post("/boundarys/_search").param("tenantId", "default").param("boundaryNum", "1")
 				.header("X-CORRELATION-ID", "someId")

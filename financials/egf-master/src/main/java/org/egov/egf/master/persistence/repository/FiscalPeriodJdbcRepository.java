@@ -60,7 +60,7 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(fiscalPeriodSearchEntity.getSortBy(), FiscalPeriodEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (fiscalPeriodSearchEntity.getSortBy() != null && !fiscalPeriodSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + fiscalPeriodSearchEntity.getSortBy();
 		}

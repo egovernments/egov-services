@@ -299,7 +299,7 @@ public class BoundaryController {
 	@ResponseBody
 	public ResponseEntity<?> boundarySearch(@RequestParam(value = "tenantId", required = true) String tenantId,
 			@RequestParam(value = "boundaryIds", required = false) final List<Long> boundaryIds,
-			@RequestParam(value = "boundaryNum", required = false) final Long boundaryNum,
+			@RequestParam(value = "boundaryNum", required = false) final List<Long> boundaryNum,
 			@RequestParam(value = "boundaryType", required = false) final String boundaryType) {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
@@ -319,7 +319,7 @@ public class BoundaryController {
 			}
 		}
 
-		if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum != 0 && boundaryType != null
+		if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum.size() != 0 && boundaryType != null
 				&& boundaryType != "" && boundaryIds != null && !boundaryIds.isEmpty() && boundaryIds.size() > 0) {
 
 			List<Boundary> allBoundarys = mapToContractBoundaryList(
@@ -327,7 +327,7 @@ public class BoundaryController {
 							boundaryTypeList));
 
 			return getBoundarySearchSuccessResponse(boundaryResponse, allBoundarys);
-		} else if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum != 0 && boundaryType != null
+		} else if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum.size() != 0 && boundaryType != null
 				&& boundaryType != "") {
 
 			List<Boundary> allBoundarys = mapToContractBoundaryList(
@@ -342,7 +342,7 @@ public class BoundaryController {
 					boundaryService.getAllBoundariesByBoundaryIdsAndTenant(tenantId, boundaryIds));
 			return getBoundarySearchSuccessResponse(boundaryResponse, allBoundarys);
 
-		} else if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum != 0) {
+		} else if (tenantId != null && tenantId != "" && boundaryNum != null && boundaryNum.size() != 0) {
 
 			List<Boundary> allBoundarys = mapToContractBoundaryList(
 					boundaryService.getAllBoundaryByTenantIdAndNumber(tenantId, boundaryNum));

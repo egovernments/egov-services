@@ -17,9 +17,21 @@ import lombok.NoArgsConstructor;
 @Component
 @Builder
 public class MarriageDocument {
+	
+	
+	private String id ;
+	
 	@NotNull
-	private Long documentType = null;
+	private String documentType = null;
 
 	@NotNull
 	private String location = null;
+	
+	@NotNull
+	private String tenantId = null;
+	
+	@NotNull
+	private String reissueCertificateId ;
+	
+	private AuditDetails  auditDetails;
 }

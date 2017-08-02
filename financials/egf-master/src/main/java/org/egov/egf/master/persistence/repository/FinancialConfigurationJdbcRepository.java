@@ -61,7 +61,7 @@ public class FinancialConfigurationJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(financialConfigurationSearchEntity.getSortBy(), FinancialConfigurationEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (financialConfigurationSearchEntity.getSortBy() != null
 				&& !financialConfigurationSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + financialConfigurationSearchEntity.getSortBy();

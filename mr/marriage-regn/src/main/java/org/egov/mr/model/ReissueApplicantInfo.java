@@ -1,5 +1,7 @@
 package org.egov.mr.model;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Component;
@@ -27,7 +29,7 @@ public class ReissueApplicantInfo {
 	private String email;
 
 	@NotNull
-	private Double fee;
+	private BigDecimal fee;
 
 	private String aadhaar;
 

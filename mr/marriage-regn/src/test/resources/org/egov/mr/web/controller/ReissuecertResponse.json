@@ -1,0 +1,162 @@
+{
+    "responseInfo": {
+        "resMsgId": "resMsgId",
+        "status": "200",
+        "apiId": "uief87324",
+        "ver": "v12",
+        "ts": null,
+        "key": "successful",
+        "tenantId": "ap.kurnool"
+    },
+    "reissueApplications": [
+        {
+            "id": "1",
+            "regnNo": "1",
+            "applicantInfo": {
+                "name": "qwertyuiuy",
+                "address": "kjhgfdsghjk",
+                "mobileNo": "xcvbnmnbvc",
+                "email": null,
+                "fee": 34,
+                "aadhaar": "dfghjgfd"
+            },
+            "documents": [
+                {
+                    "id": "1",
+                    "documentType": "wertyu",
+                    "location": "ertyuiuytr",
+                    "tenantId": "ap.kurnool",
+                    "reissueCertificateId": "1",
+                    "auditDetails": {
+                        "createdBy": "qwerty",
+                        "lastModifiedBy": "wertyu",
+                        "createdTime": 234567,
+                        "lastModifiedTime": 1234567
+                    }
+                },
+                {
+                    "id": "2",
+                    "documentType": "dfghjhg",
+                    "location": "ertyuiuytrtyu",
+                    "tenantId": "ap.kurnool",
+                    "reissueCertificateId": "1",
+                    "auditDetails": {
+                        "createdBy": "sdfghjkjhg",
+                        "lastModifiedBy": "sdfghgf",
+                        "createdTime": 23456,
+                        "lastModifiedTime": 7654567
+                    }
+                },
+                {
+                    "id": "3",
+                    "documentType": "kjhgfdghjk",
+                    "location": "jhghtuyui",
+                    "tenantId": "ap.kurnool",
+                    "reissueCertificateId": "1",
+                    "auditDetails": {
+                        "createdBy": "vghjikiouiyu",
+                        "lastModifiedBy": "guhiuoy",
+                        "createdTime": 123456,
+                        "lastModifiedTime": 456788
+                    }
+                }
+            ],
+            "applicationNumber": "cvbvbn",
+            "reissueApplStatus": null,
+            "stateId": "cvbnbv",
+            "approvalDetails": {
+                "department": 456,
+                "designation": 456,
+                "assignee": 456,
+                "action": "4bvdfgh",
+                "status": "jhgfgh",
+                "comments": "hhhhhhhhhg"
+            },
+            "demands": [
+                9876543
+            ],
+            "tenantId": "ap.kurnool",
+            "certificates": [
+                {
+                    "certificateNo": "wertyui",
+                    "certificateDate": 2345678,
+                    "certificateType": null,
+                    "regnNumber": "1",
+                    "bridegroomPhoto": "kjhgf",
+                    "bridePhoto": "jhgfds",
+                    "husbandName": "jhgfdsasdfg",
+                    "husbandAddress": "sdfghj",
+                    "wifeName": "zxcfghj",
+                    "wifeAddress": "3456778",
+                    "marriageDate": 23456789876,
+                    "marriageVenueAddress": "3456787",
+                    "regnDate": 98765,
+                    "regnSerialNo": "sdfgh",
+                    "regnVolumeNo": "bvcxsdfg",
+                    "certificatePlace": "zxcvhte",
+                    "templateVersion": "ytrew",
+                    "applicationNumber": "asdfgh",
+                    "tenantId": "ap.kurnool"
+                },
+                {
+                    "certificateNo": "wertyui",
+                    "certificateDate": 2345678,
+                    "certificateType": null,
+                    "regnNumber": "1",
+                    "bridegroomPhoto": "kjhgf",
+                    "bridePhoto": "jhgfds",
+                    "husbandName": "jhgfdsasdfg",
+                    "husbandAddress": "sdfghj",
+                    "wifeName": "zxcfghj",
+                    "wifeAddress": "3456778",
+                    "marriageDate": 23456789876,
+                    "marriageVenueAddress": "3456787",
+                    "regnDate": 98765,
+                    "regnSerialNo": "sdfgh",
+                    "regnVolumeNo": "bvcxsdfg",
+                    "certificatePlace": "zxcvhte",
+                    "templateVersion": "ytrew",
+                    "applicationNumber": "asdfgh",
+                    "tenantId": "ap.kurnool"
+                },
+                {
+                    "certificateNo": "wertyui",
+                    "certificateDate": 2345678,
+                    "certificateType": null,
+                    "regnNumber": "1",
+                    "bridegroomPhoto": "kjhgf",
+                    "bridePhoto": "jhgfds",
+                    "husbandName": "jhgfdsasdfg",
+                    "husbandAddress": "sdfghj",
+                    "wifeName": "zxcfghj",
+                    "wifeAddress": "3456778",
+                    "marriageDate": 23456789876,
+                    "marriageVenueAddress": "3456787",
+                    "regnDate": 98765,
+                    "regnSerialNo": "sdfgh",
+                    "regnVolumeNo": "bvcxsdfg",
+                    "certificatePlace": "zxcvhte",
+                    "templateVersion": "ytrew",
+                    "applicationNumber": "asdfgh",
+                    "tenantId": "ap.kurnool"
+                }
+            ],
+            "rejectionReason": "jhgf",
+            "remarks": "bvcxfdghj",
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "qwerty",
+                "lastModifiedBy": "wertyu",
+                "createdTime": 234567,
+                "lastModifiedTime": 1234567
+            }
+        }
+    ],
+    "page": {
+        "totalResults": 1,
+        "totalPages": null,
+        "pageSize": null,
+        "currentPage": null,
+        "offSet": null
+    }
+}

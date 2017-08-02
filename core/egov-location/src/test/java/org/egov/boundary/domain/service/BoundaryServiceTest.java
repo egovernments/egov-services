@@ -96,14 +96,14 @@ public class BoundaryServiceTest {
 	@Test
 	public void testShouldGetAllBoundariesByNumberAndType(){
 		
-		when(boundaryJpaRepository.findAllBoundariesByNumberAndType(any(String.class),any(Long.class),anyListOf(Long.class)))
+		when(boundaryJpaRepository.findAllBoundariesByNumberAndType(any(String.class),anyListOf(Long.class),anyListOf(Long.class)))
 		.thenReturn(getBoundaries());
 		
 		List<Long> list = new ArrayList<Long>();
 		list.add(1l);
 		list.add(2l);
 		
-		List<Boundary> boundaryList = boundaryService.getAllBoundariesByNumberAndType("default", 1l,list);
+		List<Boundary> boundaryList = boundaryService.getAllBoundariesByNumberAndType("default",list,list);
 		
 		assertTrue(boundaryList.size() == 2);
 		assertFalse(boundaryList.isEmpty());
@@ -134,14 +134,14 @@ public class BoundaryServiceTest {
 	@Test
 	public void testshouldGetAllBoundaryByTenantIdAndNumber(){
 		
-		when(boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber(any(String.class),any(Long.class)))
+		when(boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber(any(String.class),anyListOf(Long.class)))
 		.thenReturn(getBoundaries());
 		
 		List<Long> list = new ArrayList<Long>();
 		list.add(1l);
 		list.add(2l);
 		
-		List<Boundary> boundaryList = boundaryService.getAllBoundaryByTenantIdAndNumber("default",1l);
+		List<Boundary> boundaryList = boundaryService.getAllBoundaryByTenantIdAndNumber("default",list);
 		
 		assertTrue(boundaryList.size() == 2);
 		assertFalse(boundaryList.isEmpty());

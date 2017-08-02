@@ -267,14 +267,27 @@ class Login extends Component {
     })
    }
 
-   handleStateChange(e, name) {
-    if(/\./.test(name)) {
+   handleStateChange(e, name, pattern, errorMsg) {
+     pattern = pattern || '';
+     if(/\./.test(name)) {
+      let errorText='';
+      //signup validation
       var names = name.split(".");
+      if (pattern.toString().trim().length > 0) {
+        if(pattern.test(e.target.value)){
+          //pattern validation succeeded
+          errorText = '';
+        }else{
+          //pattern validation failed
+          errorText = errorMsg;
+        }
+      }
       this.setState({
         mobErrorMsg: "",
         [names[0]]: {
           ...this.state[names[0]],
-          [names[1]]: e.target.value
+          [names[1]]: e.target.value,
+          [names[1]+'Msg'] : errorText
         }
       })
     } else {
@@ -450,14 +463,14 @@ class Login extends Component {
               self.setState({
                 open3: false,
                 signUpErrorMsg: "",
-                optSent: false,
-                open4: true
-              })
+                optSent: false
+              });
+              self.props.toggleDailogAndSetText(true, translate('core.account.created.successfully'));
             }, function(err) {
-              self.props.toggleSnackbarAndSetText(true, err.message);
-            })
+              self.props.toggleDailogAndSetText(true, err.message);
+            });
         }, function(err) {
-          self.props.toggleSnackbarAndSetText(true, err.message);
+          self.props.toggleDailogAndSetText(true, err.message);
         })
       }
    }
@@ -466,6 +479,31 @@ class Login extends Component {
      setRoute('/pgr/createGrievance');
      setHome(true);
    }
+
+   isAllFields = () => {
+     let {signUpObject} = this.state;
+     if(signUpObject.mobileNumber && signUpObject.name && signUpObject.password && signUpObject.confirmPassword && signUpObject.otp){
+       if(this.passwordValidation() === ''){
+           return true;
+       }else{
+         return false;
+       }
+     }
+     else
+       return false;
+   }
+
+   passwordValidation = () => {
+     let pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+     if(this.state.signUpObject.password.trim().length > 0 && this.state.signUpObject.confirmPassword.trim().length > 0){
+       if(pattern.test(this.state.signUpObject.password) && (this.state.signUpObject.password === this.state.signUpObject.confirmPassword)){
+         return '';
+       }else{
+         return 'Password should match';
+       }
+     }
+   }
+
    render() {
       //console.log("IN LOGIN");
       let {
@@ -508,7 +546,6 @@ class Login extends Component {
         optSent,
         signUpObject
       } = this.state;
-
       // if (token) {
       //     return (
       //       <Redirect to="/dashboard"/>
@@ -552,15 +589,6 @@ class Login extends Component {
         }
       }
 
-      const isAllFields = function() {
-        if(signUpObject.mobileNumber && signUpObject.name && signUpObject.password && signUpObject.confirmPassword) {
-          return true;
-        }
-
-        return false;
-      }
-
-
         return(
           <div>
           {this.state.localeready ?
@@ -596,20 +624,24 @@ class Login extends Component {
                                 <Col lg={12}>
                                 <TextField
                                     floatingLabelText={translate('core.lbl.addmobilenumber/login')}
-                                    style={styles.fullWidth}
-                                    errorText={fieldErrors.username
-                                      ? fieldErrors.username
-                                      : ""} id="username" value={credential.username?credential.username:""} onChange={(e) => handleChange(e, "username", true, "")} hintText="eg:-8992233223"
+                                    errorText={fieldErrors.username ? fieldErrors.username : ""}
+                                    id="username"
+                                    fullWidth={true}
+                                    autocomplete="off"
+                                    value={credential.username?credential.username:""}
+                                    onChange={(e) => handleChange(e, "username", true, "")}
                                 />
                                 </Col>
                                 <Col lg={12}>
                                 <TextField tabindex="0"
                                     floatingLabelText={translate('core.lbl.password')}
                                     type="password"
-                                    style={styles.fullWidth}
-                                    errorText={fieldErrors.password
-                                      ? fieldErrors.password
-                                      : ""} id="password" value={credential.password?credential.password:""} onChange={(e) => handleChange(e, "password", true, "")} hintText="eg:-*******"
+                                    fullWidth={true}
+                                    autocomplete="new-password"
+                                    errorText={fieldErrors.password ? fieldErrors.password : ""}
+                                    id="password"
+                                    value={credential.password?credential.password:""}
+                                    onChange={(e) => handleChange(e, "password", true, "")}
                                 />
                                 </Col>
                                 <Col lg={12}>
@@ -757,13 +789,6 @@ class Login extends Component {
               onRequestClose={(e) => {handleClose("open2")}}
               autoHideDuration={4000}
             />
-            <Snackbar
-              open={this.state.open4}
-              message={translate('core.account.created.successfully')}
-              style={{"textAlign": "center"}}
-              autoHideDuration={4000}
-              onRequestClose={(e) => {handleClose("open4")}}
-            />
             <Dialog
               title={translate('pgr.title.create.account')}
               autoScrollBodyContent="true"
@@ -774,64 +799,67 @@ class Login extends Component {
                   onTouchTap={(e) => {handleClose("open3")}}
                 />,
                 <FlatButton
-                  label={!optSent ? translate('pgr.lbl.generate.otp') : translate('core.lbl.signup')}
+                  label={optSent ? translate('core.lbl.signup') : translate('pgr.lbl.generate.otp')}
                   secondary={true}
-                  disabled={!isAllFields()}
+                  disabled={signUpObject.mobileNumberMsg === undefined ? true : signUpObject.mobileNumberMsg ? true : optSent ? !this.isAllFields() : false}
                   onTouchTap={(e)=>{!optSent ? generateSignUpOTP() : signUp()}}
                 />
               ]}
               modal={true}
               open={open3}
               onRequestClose={(e) => {handleClose("open3")}}
-              contentStyle={{"width": "500"}}
+              contentStyle={{"maxWidth": "500px"}}
             >
                 <Row>
                   <Col xs={12} md={12}>
                     <TextField
                         floatingLabelText={translate('core.lbl.mobilenumber')}
-                        style={styles.fullWidth}
+                        fullWidth={true}
+                        autocomplete="off"
                         value={signUpObject.mobileNumber}
-                        type="number"
                         disabled={optSent}
-                        onChange={(e) => handleStateChange(e, "signUpObject.mobileNumber")}
+                        errorText={signUpObject.mobileNumberMsg ? signUpObject.mobileNumberMsg : ""}
+                        onChange={(e) => handleStateChange(e, "signUpObject.mobileNumber", /^\d{10}$/g, 'Enter valid 10 digit mobile number')}
                     />
                   </Col>
                   <Col xs={12} md={12}>
                     <TextField
                         floatingLabelText={translate('core.lbl.password')}
-                        style={styles.fullWidth}
+                        fullWidth={true}
                         value={signUpObject.password}
-                        disabled={optSent}
+                        autocomplete="new-password"
                         type="password"
-                        onChange={(e) => handleStateChange(e, "signUpObject.password")}
+                        errorText={signUpObject.passwordMsg ? signUpObject.passwordMsg : ""}
+                        onChange={(e) => handleStateChange(e, "signUpObject.password", /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/, 'Should be combination of alphabet, special characters and numbers. Atleast 8 - 20 characters')}
                     />
                   </Col>
                   <Col xs={12} md={12}>
                     <TextField
                         floatingLabelText={translate('core.lbl.confirm.password')}
-                        style={styles.fullWidth}
+                        fullWidth={true}
                         value={signUpObject.confirmPassword}
-                        disabled={optSent}
+                        autocomplete="new-password"
                         type="password"
+                        errorText={!signUpObject.passwordMsg ? this.passwordValidation() : '' }
                         onChange={(e) => handleStateChange(e, "signUpObject.confirmPassword")}
                     />
                   </Col>
                   <Col xs={12} md={12}>
                     <TextField
                         floatingLabelText={translate('core.lbl.fullname')}
-                        style={styles.fullWidth}
+                        fullWidth={true}
                         value={signUpObject.name}
-                        disabled={optSent}
-                        onChange={(e) => handleStateChange(e, "signUpObject.name")}
+                        errorText={signUpObject.nameMsg ? signUpObject.nameMsg : ""}
+                        onChange={(e) => handleStateChange(e, "signUpObject.name", /^[a-zA-Z ]{1,50}$/, 'Should contain only alphabets and space. Max: 50 Characters')}
                     />
                   </Col>
                   <Col xs={12} md={12}>
                     <TextField
                         floatingLabelText={translate('core.lbl.email')}
-                        style={styles.fullWidth}
+                        fullWidth={true}
                         value={signUpObject.emailId}
-                        disabled={optSent}
-                        onChange={(e) => handleStateChange(e, "signUpObject.emailId")}
+                        errorText={signUpObject.emailId ? signUpObject.emailIdMsg ? signUpObject.emailIdMsg : "" : ''}
+                        onChange={(e) => handleStateChange(e, "signUpObject.emailId", /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}
                     />
                   </Col>
                   <Col xs={12} md={12}>
@@ -839,7 +867,7 @@ class Login extends Component {
                       (optSent) ?
                         (<TextField
                           floatingLabelText={translate('core.lbl.otp')}
-                          style={styles.fullWidth}
+                          fullWidth={true}
                           value={signUpObject.otp}
                           onChange={(e) => handleStateChange(e, "signUpObject.otp")}
                         />) : ""
@@ -883,6 +911,9 @@ const mapDispatchToProps = dispatch => ({
       "access_token": token, "UserRequest": userRequest
     };
     dispatch({type: "LOGIN", error, payload})
+  },
+  toggleDailogAndSetText: (dailogState,msg) => {
+    dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});

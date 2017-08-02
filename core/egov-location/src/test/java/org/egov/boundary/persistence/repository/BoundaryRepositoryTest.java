@@ -88,7 +88,7 @@ public class BoundaryRepositoryTest {
 		
 		List<Long> list = new ArrayList<Long>();
 		list.add(1l);
-		List<Boundary> boundarys = boundaryJpaRepository.findAllBoundariesByNumberAndType("default", 1l,list);
+		List<Boundary> boundarys = boundaryJpaRepository.findAllBoundariesByNumberAndType("default", list,list);
 		
 		assertTrue(boundarys.size() == 1);
 		assertTrue(boundarys!=null);
@@ -104,7 +104,9 @@ public class BoundaryRepositoryTest {
 	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
 	public void testShouldGetAllBoundaryByTenantIdAndNumber(){
 		
-		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber("default", 1l);
+		List<Long> list = new ArrayList<Long>();
+		list.add(1l);
+		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber("default",list);
 		
 		assertTrue(boundarys.size() == 1);
 		assertTrue(boundarys!=null);
@@ -118,9 +120,11 @@ public class BoundaryRepositoryTest {
 	
 	@Test
 	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
-	public void testShouldNoGetAllBoundaryByTenantIdAndNumber(){
+	public void testShouldNotGetAllBoundaryByTenantIdAndNumber(){
 		
-		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber("default", 2l);
+		List<Long> list = new ArrayList<Long>();
+		list.add(2l);
+		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber("default", list);
 		
 		assertTrue(boundarys.isEmpty());
 	}
@@ -149,7 +153,7 @@ public class BoundaryRepositoryTest {
 		
 		List<Long> list = new ArrayList<Long>();
 		list.add(1l);
-		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds("default",1l,list,list);
+		List<Boundary> boundarys = boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds("default",list,list,list);
 		
 		assertTrue(boundarys.size() == 1);
 		assertTrue(boundarys!=null);

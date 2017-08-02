@@ -54,6 +54,7 @@ public class ApplicationProperties {
 	private static final String MARRIAGE_REGN_SEARCH_PAGESIZE_DEFAULT = "egov.services.marriage.regn.search.pagesize.default";
 	private static final String MARRIAGE_REGN_SEARCH_PAGENO_MAX = "egov.services.marriage.regn.search.pageno.max";
 	private static final String MARRIAGE_REGN_SEARCH_PAGESIZE_MAX = "egov.services.marriage.regn.search.pagesize.max";
+	private static final String MARRIAGE_CERT_SEARCH_PAGESIZE_DEFAULT = "egov.services.marriage.cert.search.pagesize.default";
 
 	private static final String EMP_SEQ_ASSIGNMENT = "egov.services.emp.seq.assignment";
 
@@ -70,6 +71,9 @@ public class ApplicationProperties {
 
 	public String marriageRegnSearchPageSizeMax() {
 		return this.environment.getProperty(MARRIAGE_REGN_SEARCH_PAGESIZE_MAX);
+	}
+	public String marriageCertSearchPageSizeDefault() {
+		return this.environment.getProperty(MARRIAGE_CERT_SEARCH_PAGESIZE_DEFAULT);
 	}
 
 	/*public String empSeqAssignment() {

@@ -60,7 +60,7 @@ public class FunctionJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(functionSearchEntity.getSortBy(), FunctionEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + functionSearchEntity.getSortBy();
 		}

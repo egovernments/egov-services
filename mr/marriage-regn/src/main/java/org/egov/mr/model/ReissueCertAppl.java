@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.mr.model.enums.ApplicationStatus;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -18,8 +19,10 @@ import lombok.NoArgsConstructor;
 @Component
 @Builder
 public class ReissueCertAppl {
+	
+	
+	private String id;
 
-	@NotNull
 	private String regnNo;
 
 	private ReissueApplicantInfo applicantInfo;
@@ -27,9 +30,12 @@ public class ReissueCertAppl {
 	private List<MarriageDocument> documents = new ArrayList<MarriageDocument>();
 
 	private String applicationNumber;
-
+	
+	@NotNull
+	private ApplicationStatus reissueApplStatus;
+	
 	private String stateId;
-
+	
 	private ApprovalDetails approvalDetails;
 
 	private List<Long> demands = new ArrayList<Long>();
@@ -37,5 +43,13 @@ public class ReissueCertAppl {
 	@NotNull
 	private String tenantId;
 
-	private List<MarriageCertificate> certificates = new ArrayList<MarriageCertificate>();
+	private MarriageCertificate certificate;
+	
+	private String rejectionReason;
+	
+	private String remarks;
+	
+	private Boolean isActive;
+	
+	private AuditDetails auditDetails;
 }

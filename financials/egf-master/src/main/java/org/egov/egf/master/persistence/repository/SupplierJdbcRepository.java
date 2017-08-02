@@ -60,7 +60,7 @@ public class SupplierJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(supplierSearchEntity.getSortBy(), SupplierEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (supplierSearchEntity.getSortBy() != null && !supplierSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + supplierSearchEntity.getSortBy();
 		}

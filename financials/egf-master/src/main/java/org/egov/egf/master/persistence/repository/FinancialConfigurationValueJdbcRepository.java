@@ -1,14 +1,11 @@
 package org.egov.egf.master.persistence.repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.egf.master.domain.model.FinancialConfigurationValue;
 import org.egov.egf.master.persistence.entity.FinancialConfigurationValueEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

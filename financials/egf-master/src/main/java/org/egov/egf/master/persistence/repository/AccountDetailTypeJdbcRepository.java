@@ -60,7 +60,7 @@ public class AccountDetailTypeJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(accountDetailTypeSearchEntity.getSortBy(), AccountDetailTypeEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (accountDetailTypeSearchEntity.getSortBy() != null && !accountDetailTypeSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + accountDetailTypeSearchEntity.getSortBy();
 		}

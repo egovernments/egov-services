@@ -20,7 +20,7 @@ public class BusinessDetailsRepository {
 
     private String url;
 
-    public BusinessDetailsRepository(RestTemplate restTemplate, @Value("${egov.common.service.host}") final String commonServiceHost,
+    public BusinessDetailsRepository(RestTemplate restTemplate, @Value("${egov.services.common-masters.host}") final String commonServiceHost,
                                      @Value("${egov.services.get_businessdetails_by_codes}") final String url) {
         this.restTemplate = restTemplate;
         this.commonServiceHost =commonServiceHost;

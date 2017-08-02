@@ -64,6 +64,7 @@ public class AllotteeRepository {
 
 	public AllotteeResponse getAllottees(Allottee allottee, RequestInfo requestInfo) {
 
+		logger.info("inside get allottee");
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceSearchPath();
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
@@ -78,7 +79,8 @@ public class AllotteeRepository {
 		    userSearchRequest.setUserName(allottee.getUserName());
 		}
 		else{
-			String userName = allottee.getName().replaceAll(" ","").substring(0, 50) + allottee.getMobileNumber();
+			int maxLength = 50;
+			String userName = allottee.getName().replaceAll(" ","").substring(0, Math.min(allottee.getName().length(), maxLength)) + allottee.getMobileNumber();
 		    userSearchRequest.setUserName(userName);
 		}
 		logger.info("url for allottee api post call :: " + url
@@ -90,9 +92,11 @@ public class AllotteeRepository {
 
 	public AllotteeResponse createAllottee(Allottee allottee, RequestInfo requestInfo) {
 
+		logger.info("inside create allottee");
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceCreatePAth();
-		String userName = allottee.getName().replaceAll(" ", "").substring(0, 50) + allottee.getMobileNumber();
+		int maxLength = 50;
+		String userName = allottee.getName().replaceAll(" ","").substring(0, Math.min(allottee.getName().length(), maxLength)) + allottee.getMobileNumber();
 		Role role = new Role();
 		role.setCode("CITIZEN");
 		role.setName("CITIZEN");

@@ -17,6 +17,7 @@ import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
+import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.common.contract.request.RequestInfo;
@@ -101,7 +102,8 @@ public class DisposalService {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
 
-        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetDisposalTopicName(), disposalRequest);
+        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetDisposalTopicName(),
+                KafkaTopicName.SAVEDISPOSAL.toString(), disposalRequest);
         final List<Disposal> disposals = new ArrayList<Disposal>();
         disposals.add(disposalRequest.getDisposal());
         return getResponse(disposals, disposalRequest.getRequestInfo());

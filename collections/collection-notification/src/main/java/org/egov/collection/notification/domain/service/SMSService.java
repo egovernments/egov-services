@@ -9,7 +9,6 @@ import org.egov.collection.notification.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.text.bidi.BidiLine;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -76,7 +75,7 @@ public class SMSService {
         }
         Date receiptCreateDate = new Date(receiptDate);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        smsString.append("Dear Consumer,").append("\n\n").append("Payment received.Info: Consumer code ").append(consumerCodes.toString())
+        smsString.append("Dear Consumer,").append("\n").append("Payment received.Info: Consumer code ").append(consumerCodes.toString())
                 .append(" for Amount").append(amountPaid).append(" respectively on ").append(format.format(receiptCreateDate))
                 .append("\n").append(city.getName());
         return smsString.toString();

@@ -168,7 +168,7 @@ const Main = () => {
        <Route exact path={base+'/wc/documentTypeApplicationType/:id'} component={ViewDocumentTypeApplicationType}/>
 
 
-           <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
+          <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
           <Route exact path={base+'/propertyTax/search'} component={PropertyTaxSearch}/>
           <Route exact path={base+'/propertyTax/test'} component={Test}/>
           <Route exact path={base+'/propertyTax/floor-type'} component={FloorType}/>
@@ -180,8 +180,8 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/mutation-reason'} component={MutationReason}/>
           <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
-		      <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
-		      <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
+		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
+		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
           <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>

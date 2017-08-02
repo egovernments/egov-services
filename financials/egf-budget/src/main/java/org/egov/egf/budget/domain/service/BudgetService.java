@@ -1,8 +1,8 @@
 package org.egov.egf.budget.domain.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -45,49 +45,49 @@ public class BudgetService {
 	}
 
 	@Transactional
-	public List<Budget> save(List<Budget> budgets, BindingResult errors) {
-
-		List<Budget> resultList = new ArrayList<Budget>();
+	public List<Budget> create(List<Budget> budgets, BindingResult errors,
+			RequestInfo requestInfo) {
 
 		try {
 
-			budgets = fetchAndValidate(budgets, errors, ACTION_CREATE);
+			budgets = fetchRelated(budgets);
+
+			validate(budgets, ACTION_CREATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
 
 		} catch (CustomBindException e) {
 
 			throw new CustomBindException(errors);
 		}
 
-		for (Budget b : budgets) {
+		return budgetRepository.save(budgets, requestInfo);
 
-			resultList.add(save(b));
-
-		}
-
-		return resultList;
 	}
 
 	@Transactional
-	public List<Budget> update(List<Budget> budgets, BindingResult errors) {
-
-		List<Budget> resultList = new ArrayList<Budget>();
+	public List<Budget> update(List<Budget> budgets, BindingResult errors,
+			RequestInfo requestInfo) {
 
 		try {
 
-			budgets = fetchAndValidate(budgets, errors, ACTION_UPDATE);
+			budgets = fetchRelated(budgets);
+
+			validate(budgets, ACTION_UPDATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
 
 		} catch (CustomBindException e) {
 
 			throw new CustomBindException(errors);
 		}
 
-		for (Budget b : budgets) {
+		return budgetRepository.update(budgets, requestInfo);
 
-			resultList.add(update(b));
-
-		}
-
-		return resultList;
 	}
 
 	public BindingResult validate(List<Budget> budgets, String method, BindingResult errors) {
@@ -160,20 +160,6 @@ public class BudgetService {
 		return budgets;
 	}
 
-	@Transactional
-	public List<Budget> fetchAndValidate(List<Budget> budgets, BindingResult errors, String action) {
-
-		budgets = fetchRelated(budgets);
-
-		validate(budgets, action, errors);
-
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-
-		return budgets;
-
-	}
 
 	public Pagination<Budget> search(BudgetSearch budgetSearch) {
 		return budgetRepository.search(budgetSearch);

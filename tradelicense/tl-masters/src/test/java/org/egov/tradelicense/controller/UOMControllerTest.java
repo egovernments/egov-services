@@ -62,6 +62,10 @@ public class UOMControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	
+	/**
+	 * Description : Test method for createUom() method
+	 */
 	@Test
 	public void testCreateUom() throws Exception {
 
@@ -97,6 +101,10 @@ public class UOMControllerTest {
 
 	}
 
+	
+	/**
+	 * Description : Test method for updateUom() method
+	 */
 	@Test
 	public void testUpdateUom() throws Exception {
 
@@ -132,6 +140,9 @@ public class UOMControllerTest {
 
 	}
 
+	/**
+	 * Description : Test method for searchUom() method
+	 */
 	@Test
 	public void testSearchUom() throws Exception {
 

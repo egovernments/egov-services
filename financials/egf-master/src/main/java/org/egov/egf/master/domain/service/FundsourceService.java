@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -21,12 +22,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class FundsourceService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private FundsourceRepository fundsourceRepository;
 
@@ -38,17 +33,17 @@ public class FundsourceService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(fundsourceContractRequest.getFundsource(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(fundsources, "Fundsources to create must not be null");
 				for (Fundsource fundsource : fundsources) {
 					validator.validate(fundsource, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(fundsources, "Fundsources to update must not be null");
 				for (Fundsource fundsource : fundsources) {
 					validator.validate(fundsource, errors);
@@ -83,7 +78,7 @@ public class FundsourceService {
 	@Transactional
 	public List<Fundsource> add(List<Fundsource> fundsources, BindingResult errors) {
 		fundsources = fetchRelated(fundsources);
-		validate(fundsources, ACTION_CREATE, errors);
+		validate(fundsources, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -94,7 +89,7 @@ public class FundsourceService {
 	@Transactional
 	public List<Fundsource> update(List<Fundsource> fundsources, BindingResult errors) {
 		fundsources = fetchRelated(fundsources);
-		validate(fundsources, ACTION_UPDATE, errors);
+		validate(fundsources, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

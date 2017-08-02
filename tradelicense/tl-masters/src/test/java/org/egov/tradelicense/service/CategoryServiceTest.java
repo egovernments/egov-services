@@ -15,11 +15,16 @@ import org.egov.models.CategoryRequest;
 import org.egov.models.CategoryResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
+import org.egov.models.UOM;
+import org.egov.models.UOMRequest;
+import org.egov.models.UOMResponse;
 import org.egov.models.UserInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.exception.DuplicateIdException;
 import org.egov.tradelicense.services.CategoryService;
+import org.egov.tradelicense.services.UOMService;
+import org.flywaydb.core.internal.dbsupport.JdbcTemplate;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +45,16 @@ public class CategoryServiceTest {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-
+	
+	@Autowired
+	private static JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	UOMService uomRepository;
+	
+	
+	
+	
 	public static Long categoryId = 1l;
 	public Integer parentId = null;
 	public String tenantId = "default";
@@ -51,11 +65,46 @@ public class CategoryServiceTest {
 	public String updatedCode = "Flammables v1.1 code updated";
 	public String subCatName = "Flammables2";
 	public String subCatCode = "Flammables2";
+	public static UOMResponse uomResponse;
+	public static Long uomId =0L;
 	
+	
+	public  void insertvalues(){
+		try{
+			UOM uom = new UOM();
+			uom.setTenantId("default");
+			uom.setName("shubham");
+			uom.setCode("nitin");
+			uom.setActive(true);
+			long createdTime = new Date().getTime();
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("pavan");
+			auditDetails.setLastModifiedBy("pavan");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
+
+			uom.setAuditDetails(auditDetails);
+			RequestInfo requestInfo = getRequestInfoObject();
+			UOMRequest uomRequest = new UOMRequest();
+			List uoms = new ArrayList<UOM>();
+			uoms.add(uom);
+			uomRequest.setUoms( uoms);
+			uomRequest.setRequestInfo(requestInfo);
+			uomResponse = uomRepository.createUomMaster(uomRequest);
+			uomId = uomResponse.getUoms().get(0).getId();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Description :  test method for service createCategory master 
+	 */
 	@Test
 	public void testAcreateCategory() {
 		RequestInfo requestInfo = getRequestInfoObject();
-
+		
 		List<Category> categories = new ArrayList<>();
 
 		Category category = new Category();
@@ -92,7 +141,15 @@ public class CategoryServiceTest {
 		}
 
 	}
+	
+	
 
+
+	
+	/**
+	 * Description :  test method for service searchCategory Master
+	 *  
+	 */
 	@Test
 	public void testAsearchCategory() {
 
@@ -119,6 +176,11 @@ public class CategoryServiceTest {
 
 	}
 
+	
+	/**
+	 * Description :  test method for service createCategory
+	 *  master to check DuplicateRecord check
+	 */
 	@Test
 	public void testAcreateDuplicateCategory() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -163,6 +225,11 @@ public class CategoryServiceTest {
 
 	}
 
+	
+	/**
+	 * Description :  test method for service searchCategory Details Master
+	 *  
+	 */
 	@Test
 	public void testzsearchCategoryDetails() {
 
@@ -187,10 +254,19 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description :  test method for service createCategory Details Master
+	 *  
+	 */
 	@Test
 	public void testCycreateCategoryDetails() {
+		try {
+			this.insertvalues();
 		RequestInfo requestInfo = getRequestInfoObject();
-
+		/*jdbcTemplate.executeStatement("insert into tradetest.egtl_mstr_uom values(1,'default',"
+				+ "'Flammables v1.1 name updateed',"
+				+ "'Flammables v1.1 code updated',true,"
+				+ "null,'shubham','1501579402970','1501579402970')");*/
 		List<Category> categories = new ArrayList<>();
 
 		Category category = new Category();
@@ -204,7 +280,7 @@ public class CategoryServiceTest {
 		details.setCategoryId(categoryId);
 		details.setFeeType(FeeTypeEnum.fromValue("License"));
 		details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
-		details.setUomId(Long.valueOf(1));
+		details.setUomId(uomId);
 
 		List<CategoryDetail> catDetails = new ArrayList<CategoryDetail>();
 		catDetails.add(details);
@@ -225,7 +301,7 @@ public class CategoryServiceTest {
 		categoryRequest.setCategories(categories);
 		categoryRequest.setRequestInfo(requestInfo);
 
-		try {
+	
 			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
@@ -244,6 +320,11 @@ public class CategoryServiceTest {
 
 	}
 
+	
+	/**
+	 * Description :  test method for service createCategory Details Master
+	 *  
+	 */
 	@Test
 	public void testCyxcreateduplicateCategoryDetails() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -301,6 +382,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description :  test method for service UpdateCategory Details Master to check modify name
+	 *  
+	 */
 	@Test
 	public void testBmodifyCategoryName() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -344,6 +429,11 @@ public class CategoryServiceTest {
 
 	}
 
+	
+	/**
+	 * Description : test method for service updateCategory
+	 *               Details Master to check modify name
+	 */
 	@Test
 	public void testBsearchUpdatedCategoryName() {
 
@@ -368,6 +458,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service updateCategory
+	 *               Details Master to check modify code
+	 */
 	@Test
 	public void testCmodifyCategoryCode() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -407,6 +501,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service updateCategory
+	 *               Details Master to check modify code
+	 */
 	@Test
 	public void testCmodifyDuplicateCategoryCode() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -450,6 +548,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service updateCategory
+	 *               Details Master to check modify code
+	 */
 	@Test
 	public void testCsearchUpdatedCategoryCode() {
 
@@ -475,6 +577,9 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : method to create requestInfo Object
+	 */
 	private RequestInfo getRequestInfoObject() {
 		RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setApiId("emp");

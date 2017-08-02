@@ -26,7 +26,9 @@ public class SpecialNoticeBuilder {
 	
 	public static final String UNIQUE_UPIC_NO ="select count(*) from egpt_specialnotice where upicNo = ?";
 	
-	public static final String GET_UPIC_NO = "select upicNo from egpt_specialnotice where upicNo =? LIMIT 1";
+	public static final String GET_UPIC_NO = "select upicNo from egpt_specialnotice where upicNo =?";
+	
+	public static final String GET_NOTICE_NUMBER = "select noticenumber from egpt_specialnotice where upicNo =? LIMIT 1";
 	
 
 }

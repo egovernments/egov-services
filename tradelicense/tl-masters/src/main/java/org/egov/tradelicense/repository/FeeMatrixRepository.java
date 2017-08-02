@@ -9,6 +9,7 @@ import java.util.List;
 import org.egov.models.AuditDetails;
 import org.egov.models.FeeMatrix;
 import org.egov.models.FeeMatrixDetail;
+import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.repository.builder.FeeMatrixQueryBuilder;
 import org.egov.tradelicense.repository.helper.FeeMatrixHelper;
 import org.egov.tradelicense.utility.TimeStampUtil;
@@ -34,6 +35,9 @@ public class FeeMatrixRepository {
 
 	@Autowired
 	FeeMatrixHelper feeMatrixHelper;
+	
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	/**
 	 * Description : this method will create FeeMatrix in database
@@ -183,9 +187,15 @@ public class FeeMatrixRepository {
 	 * @return List<FeeMatrix>
 	 */
 	public List<FeeMatrix> searchFeeMatrix(String tenantId, Integer[] ids, Integer categoryId, Integer subCategoryId,
-			Integer financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet) {
+			String financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+		}
+		if (offSet == null) {
+			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
+		}
 		String feeMatrixSearchQuery = FeeMatrixQueryBuilder.buildSearchQuery(tenantId, ids, categoryId, subCategoryId,
 				financialYear, applicationType, businessNature, pageSize, offSet, preparedStatementValues);
 		List<FeeMatrix> feeMatrices = feeMatrixHelper.getFeeMatrices(feeMatrixSearchQuery.toString(),

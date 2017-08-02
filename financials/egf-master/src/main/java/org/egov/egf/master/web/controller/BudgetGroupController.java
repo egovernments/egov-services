@@ -7,6 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.BudgetGroup;
@@ -50,7 +51,7 @@ public class BudgetGroupController {
 		List<BudgetGroupContract> budgetGroupContracts = new ArrayList<>();
 		BudgetGroupContract contract;
 
-		budgetGroupRequest.getRequestInfo().setAction("create");
+		budgetGroupRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
 		for (BudgetGroupContract budgetGroupContract : budgetGroupRequest.getBudgetGroups()) {
 			budgetGroup = new BudgetGroup();
@@ -84,7 +85,7 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		budgetGroupRequest.getRequestInfo().setAction("update");
+		budgetGroupRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		BudgetGroupResponse budgetGroupResponse = new BudgetGroupResponse();
 		List<BudgetGroup> budgetgroups = new ArrayList<>();

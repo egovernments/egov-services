@@ -3,6 +3,7 @@ package org.egov.egf.master.domain.repository;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.FinancialStatus;
 import org.egov.egf.master.domain.model.FinancialStatusSearch;
@@ -46,7 +47,7 @@ public class FinancialStatusRepository {
 	public void add(FinancialStatusRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
 			message.put("financialstatus_create", request);
 		} else {
 			message.put("financialstatus_update", request);

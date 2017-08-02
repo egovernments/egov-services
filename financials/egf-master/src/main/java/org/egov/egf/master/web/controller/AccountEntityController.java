@@ -7,6 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.AccountEntity;
@@ -50,7 +51,7 @@ public class AccountEntityController {
 		List<AccountEntityContract> accountEntityContracts = new ArrayList<>();
 		AccountEntityContract contract;
 
-		accountEntityRequest.getRequestInfo().setAction("create");
+		accountEntityRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
 		for (AccountEntityContract accountEntityContract : accountEntityRequest.getAccountEntities()) {
 			accountEntity = new AccountEntity();
@@ -84,7 +85,7 @@ public class AccountEntityController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		accountEntityRequest.getRequestInfo().setAction("update");
+		accountEntityRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		AccountEntityResponse accountEntityResponse = new AccountEntityResponse();
 		List<AccountEntity> accountentities = new ArrayList<>();

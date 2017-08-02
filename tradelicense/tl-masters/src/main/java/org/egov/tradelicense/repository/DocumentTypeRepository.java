@@ -11,6 +11,7 @@ import java.util.Map;
 import org.egov.enums.ApplicationTypeEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.DocumentType;
+import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.repository.builder.DocumentTypeQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +32,9 @@ public class DocumentTypeRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	/**
 	 * Description : this method will create DocumentType in database
@@ -117,6 +121,12 @@ public class DocumentTypeRepository {
 			String applicationType, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+		}
+		if (offSet == null) {
+			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
+		}
 		String documentTypeSearchQuery = DocumentTypeQueryBuilder.buildSearchQuery(tenantId, ids, name, enabled,
 				applicationType, pageSize, offSet, preparedStatementValues);
 		List<DocumentType> documentTypes = getDocumentType(documentTypeSearchQuery.toString(), preparedStatementValues);

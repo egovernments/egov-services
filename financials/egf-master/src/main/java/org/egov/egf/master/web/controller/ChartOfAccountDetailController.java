@@ -7,6 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
@@ -51,7 +52,7 @@ public class ChartOfAccountDetailController {
 		List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<>();
 		ChartOfAccountDetailContract contract;
 
-		chartOfAccountDetailRequest.getRequestInfo().setAction("create");
+		chartOfAccountDetailRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
 		for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailRequest
 				.getChartOfAccountDetails()) {
@@ -87,7 +88,7 @@ public class ChartOfAccountDetailController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		chartOfAccountDetailRequest.getRequestInfo().setAction("update");
+		chartOfAccountDetailRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		ChartOfAccountDetailResponse chartOfAccountDetailResponse = new ChartOfAccountDetailResponse();
 		List<ChartOfAccountDetail> chartofaccountdetails = new ArrayList<>();

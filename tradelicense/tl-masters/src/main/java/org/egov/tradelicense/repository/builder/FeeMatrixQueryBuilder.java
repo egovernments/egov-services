@@ -2,6 +2,8 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
+import org.egov.tradelicense.utility.ConstantUtility;
+
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for FeeMatrix API's
  * 
@@ -9,25 +11,28 @@ import java.util.List;
  */
 public class FeeMatrixQueryBuilder {
 
-	public static final String INSERT_FEE_MATRIX_QUERY = "INSERT INTO egtl_mstr_fee_matrix"
+	private static final String feeMatrixTableName = ConstantUtility.FEE_MATRIX_TABLE_NAME;
+	private static final String feeMatrixDetailTableName = ConstantUtility.FEE_MATRIX_DETAIL_TABLE_NAME;
+
+	public static final String INSERT_FEE_MATRIX_QUERY = "INSERT INTO " + feeMatrixTableName
 			+ " (tenantId, applicationType, categoryId, businessNature, subCategoryId, financialYear, effectiveFrom, effectiveTo, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
 			+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_FEE_MATRIX_QUERY = "UPDATE egtl_mstr_fee_matrix"
+	public static final String UPDATE_FEE_MATRIX_QUERY = "UPDATE " + feeMatrixTableName
 			+ " SET tenantId = ?, applicationType = ?, categoryId = ?, businessNature = ?,"
 			+ " subCategoryId = ?, financialYear = ?, effectiveFrom = ?, effectiveTo = ?, lastModifiedBy = ?, lastModifiedTime = ?"
 			+ " WHERE id = ?";
 
-	public static final String INSERT_FEE_MATRIX_DETAIL_QUERY = "INSERT INTO egtl_fee_matrix_details"
+	public static final String INSERT_FEE_MATRIX_DETAIL_QUERY = "INSERT INTO " + feeMatrixDetailTableName
 			+ " (feeMatrixId, uomFrom, uomTo, amount)" + " VALUES(?,?,?,?)";
 
-	public static final String UPDATE_FEE_MATRIX_DETAIL_QUERY = "UPDATE egtl_fee_matrix_details"
+	public static final String UPDATE_FEE_MATRIX_DETAIL_QUERY = "UPDATE " + feeMatrixDetailTableName
 			+ " SET feeMatrixId = ?, uomFrom = ?, uomTo = ?, amount = ?" + " WHERE id = ?";
 
 	public static final String buildFeeMatrixDetailSearchQuery(Long feeMatrixId, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from egtl_fee_matrix_details where ");
+		searchSql.append("select * from " + feeMatrixDetailTableName + " where ");
 		if (feeMatrixId != null) {
 			searchSql.append(" feeMatrixId = ? ");
 			preparedStatementValues.add(feeMatrixId);
@@ -37,11 +42,11 @@ public class FeeMatrixQueryBuilder {
 	}
 
 	public static String buildSearchQuery(String tenantId, Integer[] ids, Integer categoryId, Integer subCategoryId,
-			Integer financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet,
+			String financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet,
 			List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from egtl_mstr_fee_matrix where ");
+		searchSql.append("select * from " + feeMatrixTableName + " where ");
 		searchSql.append(" tenantId = ? ");
 		preparedStatementValues.add(tenantId);
 
@@ -71,7 +76,7 @@ public class FeeMatrixQueryBuilder {
 			preparedStatementValues.add(subCategoryId);
 		}
 
-		if (financialYear != null) {
+		if (financialYear != null && !financialYear.isEmpty()) {
 			searchSql.append(" AND financialYear =? ");
 			preparedStatementValues.add(financialYear);
 		}
@@ -86,17 +91,15 @@ public class FeeMatrixQueryBuilder {
 			preparedStatementValues.add(businessNature);
 		}
 
-		if (pageSize == null)
-			pageSize = 30;
+		if (pageSize != null) {
+			searchSql.append(" limit ? ");
+			preparedStatementValues.add(pageSize);
+		}
 
-		searchSql.append(" limit ? ");
-		preparedStatementValues.add(pageSize);
-
-		if (offSet == null)
-			offSet = 0;
-
-		searchSql.append(" offset ? ");
-		preparedStatementValues.add(offSet);
+		if (offSet != null) {
+			searchSql.append(" offset ? ");
+			preparedStatementValues.add(offSet);
+		}
 
 		return searchSql.toString();
 	}

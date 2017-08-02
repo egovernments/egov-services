@@ -17,7 +17,6 @@ import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.service.InstrumentAccountCodeService;
-import org.egov.egf.instrument.persistence.queue.repository.InstrumentAccountCodeQueueRepository;
 import org.egov.egf.instrument.utils.RequestJsonReader;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
@@ -44,9 +43,6 @@ public class InstrumentAccountCodeControllerTest {
 
 	@MockBean
 	private InstrumentAccountCodeService instrumentAccountCodeService;
-
-	@MockBean
-	private InstrumentAccountCodeQueueRepository instrumentAccountCodeQueueRepository;
 
 	@Captor
 	private ArgumentCaptor<InstrumentAccountCodeRequest> captor;

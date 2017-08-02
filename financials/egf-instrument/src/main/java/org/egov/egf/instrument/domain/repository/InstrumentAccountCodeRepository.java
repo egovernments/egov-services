@@ -81,7 +81,7 @@ public class InstrumentAccountCodeRepository {
 			request.setRequestInfo(requestInfo);
 			request.setInstrumentAccountCodes(new ArrayList<>());
 
-			for (InstrumentAccountCode iac : instrumentAccountCodes) {
+			for (InstrumentAccountCode iac : resultList) {
 
 				request.getInstrumentAccountCodes().add(mapper.toContract(iac));
 
@@ -129,7 +129,7 @@ public class InstrumentAccountCodeRepository {
 			request.setRequestInfo(requestInfo);
 			request.setInstrumentAccountCodes(new ArrayList<>());
 
-			for (InstrumentAccountCode iac : instrumentAccountCodes) {
+			for (InstrumentAccountCode iac : resultList) {
 
 				request.getInstrumentAccountCodes().add(mapper.toContract(iac));
 

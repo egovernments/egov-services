@@ -22,38 +22,47 @@ public class PropertiesManager {
 
 	@Value("${duplicate.code}")
 	private String duplicateCode;
-	
+
 	@Value("${invalid.range.code}")
 	private String invalidRangeCode;
-	
+
 	@Value("${success.status}")
 	private String successStatus;
-	
+
 	@Value("${failed.status}")
 	private String failedStatus;
-	
+
 	@Value("${default.page.size}")
 	private String defaultPageSize;
-	
+
 	@Value("${default.page.number}")
 	private String defaultPageNumber;
-	
+
 	@Value("${default.offset}")
 	private String defaultOffset;
-	
+
 	@Value("${duplicate.documentType.name}")
 	private String documentTypeCustomMsg;
-	
+
 	@Value("${duplicate.uom.code}")
 	private String uomCustomMsg;
-	
+
 	@Value("${duplicate.category.code}")
 	private String categoryCustomMsg;
-	
+
 	@Value("${duplicate.subcategory.code}")
 	private String subCategoryCustomMsg;
-	
-	
+
 	@Value("${duplicate.businessnature.code}")
 	private String businessNatureCustomMsg;
+
+	@Value("${egov.services.egf-masters.hostname}")
+	private String financialServiceHostName;
+
+	@Value("${egov.services.egf-masters.basepath}")
+	private String financialServiceBasePath;
+
+	@Value("${egov.services.egf-masters.searchpath}")
+	private String financialServiceSearchPath;
+
 }

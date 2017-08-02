@@ -92,6 +92,23 @@ public class DemandRepository {
 		}
 		return demandReasons;
 	}
+	
+	/*
+	 * to get demand reason RENT upto current installment in Add/Edit Demand
+	 */
+	
+	public List<DemandReason> getLegacyDemandReason(AgreementRequest agreementRequest) {
+
+		List<DemandReason> demandReasons = new ArrayList<>();
+		String taxReason = null;
+		taxReason = propertiesManager.getTaxReasonRent();
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+		Date date = cal.getTime();
+		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+		return demandReasons;
+
+	}
 
 	private List<DemandReason> getDemandReasonsForTaxReason(AgreementRequest agreementRequest, Date date,
 			String taxReason) {

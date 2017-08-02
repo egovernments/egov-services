@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.TestConfiguration;
@@ -35,6 +36,8 @@ public class InstrumentTypeServiceTest {
 	@Mock
 	private InstrumentTypeRepository instrumentTypeRepository;
 
+	private RequestInfo requestInfo = new RequestInfo();
+
 	private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
 	@Before
@@ -47,11 +50,9 @@ public class InstrumentTypeServiceTest {
 
 		List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		InstrumentType instrumentType = expextedResult.get(0);
+		when(instrumentTypeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentTypeRepository.save(any(InstrumentType.class))).thenReturn(instrumentType);
-
-		List<InstrumentType> actualResult = instrumentTypeService.save(expextedResult, errors);
+		List<InstrumentType> actualResult = instrumentTypeService.create(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -62,11 +63,9 @@ public class InstrumentTypeServiceTest {
 
 		List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		InstrumentType instrumentType = expextedResult.get(0);
+		when(instrumentTypeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentTypeRepository.save(any(InstrumentType.class))).thenReturn(instrumentType);
-
-		List<InstrumentType> actualResult = instrumentTypeService.save(null, errors);
+		List<InstrumentType> actualResult = instrumentTypeService.create(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -77,11 +76,9 @@ public class InstrumentTypeServiceTest {
 
 		List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		InstrumentType instrumentType = expextedResult.get(0);
+		when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentTypeRepository.update(any(InstrumentType.class))).thenReturn(instrumentType);
-
-		List<InstrumentType> actualResult = instrumentTypeService.update(expextedResult, errors);
+		List<InstrumentType> actualResult = instrumentTypeService.update(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -92,33 +89,9 @@ public class InstrumentTypeServiceTest {
 
 		List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		InstrumentType instrumentType = expextedResult.get(0);
+		when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentTypeRepository.update(any(InstrumentType.class))).thenReturn(instrumentType);
-
-		List<InstrumentType> actualResult = instrumentTypeService.update(null, errors);
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_create() {
-
-		List<InstrumentType> expextedResult = getInstrumentTypes();
-
-		List<InstrumentType> actualResult = instrumentTypeService.fetchAndValidate(expextedResult, errors, "create");
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_update() {
-
-		List<InstrumentType> expextedResult = getInstrumentTypes();
-
-		List<InstrumentType> actualResult = instrumentTypeService.fetchAndValidate(expextedResult, errors, "update");
+		List<InstrumentType> actualResult = instrumentTypeService.update(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 

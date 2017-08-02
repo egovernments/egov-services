@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -25,12 +26,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class SupplierService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private SupplierRepository supplierRepository;
 
@@ -45,17 +40,17 @@ public class SupplierService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(supplierContractRequest.getSupplier(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(suppliers, "Suppliers to create must not be null");
 				for (Supplier supplier : suppliers) {
 					validator.validate(supplier, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(suppliers, "Suppliers to update must not be null");
 				for (Supplier supplier : suppliers) {
 					validator.validate(supplier, errors);
@@ -97,7 +92,7 @@ public class SupplierService {
 	@Transactional
 	public List<Supplier> add(List<Supplier> suppliers, BindingResult errors) {
 		suppliers = fetchRelated(suppliers);
-		validate(suppliers, ACTION_CREATE, errors);
+		validate(suppliers, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -108,7 +103,7 @@ public class SupplierService {
 	@Transactional
 	public List<Supplier> update(List<Supplier> suppliers, BindingResult errors) {
 		suppliers = fetchRelated(suppliers);
-		validate(suppliers, ACTION_UPDATE, errors);
+		validate(suppliers, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

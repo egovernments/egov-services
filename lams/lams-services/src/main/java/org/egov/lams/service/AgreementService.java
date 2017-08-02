@@ -1,5 +1,6 @@
 package org.egov.lams.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -340,6 +341,62 @@ public class AgreementService {
 			throw new RuntimeException("No demand reason found for given criteria");
      	logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
 		return demandReasons;
+	}
+	
+	/*
+	 * calling to prepare the demands for Data entry agreements
+	 * in Add/Edit demand
+	 */
+	public List<Demand> prepareLegacyDemands(AgreementRequest agreementRequest) {
+		List<Demand> demands = null;
+		List<DemandDetails> legacyDetails = new ArrayList<>();
+		DemandDetails demandDetail = null;
+		List<DemandReason> demandReasons = null;
+		Agreement agreement = agreementRequest.getAgreement();
+		List<String> demandIds = agreement.getDemands();
+		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+		if (demandIds == null) {
+			demands = demandRepository.getDemandList(agreementRequest, getLegacyDemandReasons(agreementRequest));
+			return demands;
+		}
+		demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+		demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+				.getDemands();
+
+		demandReasons = getLegacyDemandReasons(agreementRequest);
+		for (DemandReason demandReason : demandReasons) {
+			Boolean isDemandDetailsExist = Boolean.FALSE;
+			for (DemandDetails existingDetail : demands.get(0).getDemandDetails()) {
+
+				if (existingDetail.getTaxPeriod().equalsIgnoreCase(demandReason.getTaxPeriod())) {
+					isDemandDetailsExist = Boolean.TRUE;
+				}
+			}
+
+			if (!isDemandDetailsExist && "RENT".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail = new DemandDetails();
+				demandDetail.setCollectionAmount(BigDecimal.ZERO);
+				demandDetail.setRebateAmount(BigDecimal.ZERO);
+				demandDetail.setTaxReason(demandReason.getName());
+				demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
+				demandDetail.setTenantId(agreement.getTenantId());
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
+
+				legacyDetails.add(demandDetail);
+			}
+
+		}
+		logger.info("legacy demand details to add to existing:" + legacyDetails);
+		demands.get(0).getDemandDetails().addAll(legacyDetails);
+		return demands;
+	}
+	
+	private List<DemandReason> getLegacyDemandReasons(AgreementRequest agreementRequest){
+		List<DemandReason> legacrDemandReasons = demandRepository.getLegacyDemandReason(agreementRequest);
+		if (legacrDemandReasons.isEmpty())
+			throw new RuntimeException("No demand reason found for given criteria");
+     	logger.info("the size of demand reasons from reason search api call : " + legacrDemandReasons.size());
+		return legacrDemandReasons;
 	}
 
 	private void setInitiatorPosition(AgreementRequest agreementRequest) {

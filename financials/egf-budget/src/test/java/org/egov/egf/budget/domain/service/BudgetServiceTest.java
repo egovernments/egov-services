@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -45,6 +46,8 @@ public class BudgetServiceTest {
 
 	private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
+	private RequestInfo requestInfo = new RequestInfo();
+
 	@Before
 	public void setup() {
 		budgetService = new BudgetService(validator, budgetRepository, financialYearContractRepository);
@@ -55,26 +58,22 @@ public class BudgetServiceTest {
 
 		List<Budget> expextedResult = getBudgets();
 
-		Budget budget = expextedResult.get(0);
+		when(budgetRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(budgetRepository.save(any(Budget.class))).thenReturn(budget);
-
-		List<Budget> actualResult = budgetService.save(expextedResult, errors);
+		List<Budget> actualResult = budgetService.create(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
 	}
-	
+
 	@Test(expected = CustomBindException.class)
 	public final void test_save_with_out_kafka_and_with_null_req() {
 
 		List<Budget> expextedResult = getBudgets();
 
-		Budget budget = expextedResult.get(0);
+		when(budgetRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(budgetRepository.save(any(Budget.class))).thenReturn(budget);
-
-		List<Budget> actualResult = budgetService.save(null, errors);
+		List<Budget> actualResult = budgetService.create(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -85,11 +84,9 @@ public class BudgetServiceTest {
 
 		List<Budget> expextedResult = getBudgets();
 
-		Budget budget = expextedResult.get(0);
+		when(budgetRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(budgetRepository.update(any(Budget.class))).thenReturn(budget);
-
-		List<Budget> actualResult = budgetService.update(expextedResult, errors);
+		List<Budget> actualResult = budgetService.update(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -100,33 +97,9 @@ public class BudgetServiceTest {
 
 		List<Budget> expextedResult = getBudgets();
 
-		Budget budget = expextedResult.get(0);
+		when(budgetRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(budgetRepository.update(any(Budget.class))).thenReturn(budget);
-
-		List<Budget> actualResult = budgetService.update(null, errors);
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_create() {
-
-		List<Budget> expextedResult = getBudgets();
-
-		List<Budget> actualResult = budgetService.fetchAndValidate(expextedResult, errors, "create");
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_update() {
-
-		List<Budget> expextedResult = getBudgets();
-
-		List<Budget> actualResult = budgetService.fetchAndValidate(expextedResult, errors, "update");
+		List<Budget> actualResult = budgetService.update(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 

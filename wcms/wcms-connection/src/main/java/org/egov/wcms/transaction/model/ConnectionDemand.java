@@ -39,11 +39,7 @@
  */
 package org.egov.wcms.transaction.model;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
-
-import org.egov.wcms.transaction.demand.contract.Demand;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,133 +56,23 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class Connection {
+
+public class ConnectionDemand {
 
     @NotNull
     private long id;
 
     @NotNull
-    private String connectionType;
+    private long connectionid;
 
-    @NotNull
-    private String applicationType;
-
-    @NotNull
-    private String billingType;
-
-    @NotNull
-    private String categoryType;
-
-    private String categoryId;
-
-    @NotNull
-    private String hscPipeSizeType;
-
-    private String pipesizeId;
-    
-    private long executionDate;
-
-    @NotNull
-    private String supplyType;
-
-    private String supplyTypeId;
-
-    private String propertyIdentifier;
-
-    private String assetIdentifier;
-
-    @NotNull
-    private String sourceType;
-
-    private String sourceTypeId;
-
-    @NotNull
-    private String waterTreatment;
-
-    private String waterTreatmentId;
-
-    @NotNull
-    private String connectionStatus;
-
-    @NotNull
-    private String status;
-
-    @NotNull
-    private Long stateId;
 
     private String demandid;
-    @NotNull
-    private double sumpCapacity;
 
-    @NotNull
-    private double donationCharge;
-
-    @NotNull
-    private int numberOfTaps;
-
-    @NotNull
-    private int numberOfPersons;
-
-    @NotNull
-    private String legacyConsumerNumber;
-    
-    @NotNull
-    private String estimationNumber;
-    
-    
-    @NotNull
-    private String workOrderNumber;
-
-    @NotNull
-    private Boolean isLegacy;
-
-    @NotNull
-    private String acknowledgementNumber;
-
-    @NotNull
-    private String consumerNumber;
-
-    @NotNull
-    private String bplCardHolderName;
-
-    @NotNull
-    private long parentConnectionId;
-
-    @NotNull
-    private List<DocumentOwner> documents;
-    
-    @NotNull
-    private List<ConnectionDemand> connectionDemands;
-
-    @NotNull
-    private List<Timeline> timelines;
-
-    @NotNull
-    private Property property;
-    
-    @NotNull
-    private Demand demand;
-
-    @NotNull
-    private Asset asset;
-
-    @NotNull
-    private List<Meter> meter;
-
-    @NotNull
-    private List<EstimationCharge> estimationCharge;
-
-    @NotNull
-    private WorkOrder workOrder;
 
     @NotNull
     private AuditDetails auditDetails;
 
     @NotNull
     private String tenantId;
-
-    private WorkflowDetails workflowDetails;
-    
-    private String createdDate; 
 
 }

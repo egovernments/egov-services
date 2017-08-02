@@ -1,0 +1,52 @@
+ALTER TABLE egpt_specialnotice_address RENAME COLUMN sno TO id;
+ALTER TABLE egpt_specialnotice_owners RENAME COLUMN sno TO id;
+ALTER TABLE egpt_specialnotice_taxwise_details RENAME COLUMN sno TO id;
+ALTER TABLE egpt_specialnotice ALTER COLUMN id TYPE bigint;
+ALTER TABLE egpt_specialnotice_address ALTER COLUMN id TYPE bigint;
+ALTER TABLE egpt_specialnotice_owners ALTER COLUMN id TYPE bigint;
+ALTER TABLE egpt_specialnotice_floorspec ALTER COLUMN id TYPE bigint;
+ALTER TABLE egpt_specialnotice_tax_details ALTER COLUMN id TYPE bigint;
+ALTER TABLE egpt_specialnotice_taxwise_details ALTER COLUMN id TYPE bigint;
+ALTER TABLE egpt_specialnotice_address DROP CONSTRAINT fk_egpt_specialnotice_address_notice;
+ALTER TABLE egpt_specialnotice_owners DROP CONSTRAINT fk_egpt_specialnotice_owners_notice; 
+ALTER TABLE egpt_specialnotice_tax_details DROP CONSTRAINT fk_egpt_specialnotice_tax_details_notice;
+ALTER TABLE egpt_specialnotice_taxwise_details DROP CONSTRAINT fk_egpt_specialnotice_taxwise_details_taxdetails;
+ALTER TABLE egpt_specialnotice_taxwise_details DROP CONSTRAINT fk_egpt_specialnotice_taxwise_details_notice;
+ALTER TABLE egpt_specialnotice DROP CONSTRAINT egpt_specialnotice_pkey; 
+ALTER TABLE egpt_specialnotice_owners DROP CONSTRAINT egpt_specialnotice_owners_pkey; 
+ALTER TABLE egpt_specialnotice_floorspec DROP CONSTRAINT egpt_specialnotice_floorspec_pkey; 
+ALTER TABLE egpt_specialnotice_tax_details DROP CONSTRAINT egpt_specialnotice_tax_details_pkey; 
+ALTER TABLE egpt_specialnotice_taxwise_details DROP CONSTRAINT egpt_specialnotice_taxwise_details_pkey; 
+DROP SEQUENCE egpt_specialnotice_address_sno_seq CASCADE;
+DROP SEQUENCE egpt_specialnotice_floorspec_id_seq CASCADE;
+DROP SEQUENCE egpt_specialnotice_owners_sno_seq CASCADE;
+DROP SEQUENCE egpt_specialnotice_id_seq CASCADE;
+DROP SEQUENCE egpt_specialnotice_tax_details_id_seq CASCADE;
+DROP SEQUENCE egpt_specialnotice_taxwise_details_sno_seq CASCADE;
+ALTER TABLE egpt_specialnotice ADD CONSTRAINT pk_egpt_specialnotice PRIMARY KEY (id);
+ALTER TABLE egpt_specialnotice_address ADD CONSTRAINT pk_egpt_specialnotice_address PRIMARY KEY (id);
+ALTER TABLE egpt_specialnotice_owners ADD CONSTRAINT pk_egpt_specialnotice_owners PRIMARY KEY (id);
+ALTER TABLE egpt_specialnotice_floorspec ADD CONSTRAINT pk_egpt_specialnotice_floorspec PRIMARY KEY (id);
+ALTER TABLE egpt_specialnotice_tax_details ADD CONSTRAINT pk_egpt_specialnotice_tax_details PRIMARY KEY (id);
+ALTER TABLE egpt_specialnotice_taxwise_details ADD CONSTRAINT pk_egpt_specialnotice_taxwise_details PRIMARY KEY (id);
+ALTER TABLE egpt_specialnotice_address ADD CONSTRAINT fk_egpt_specialnotice_address_notice FOREIGN KEY(notice) REFERENCES egpt_specialnotice(id);
+ALTER TABLE egpt_specialnotice_owners ADD CONSTRAINT fk_egpt_specialnotice_owners_notice FOREIGN KEY(notice) REFERENCES egpt_specialnotice(id);
+ALTER TABLE egpt_specialnotice_tax_details ADD CONSTRAINT fk_egpt_specialnotice_tax_details_notice FOREIGN KEY(notice) REFERENCES egpt_specialnotice(id);
+ALTER TABLE egpt_specialnotice_taxwise_details ADD CONSTRAINT fk_egpt_specialnotice_taxwise_details_notice FOREIGN KEY (notice) REFERENCES egpt_specialnotice(id);
+ALTER TABLE egpt_specialnotice_taxwise_details ADD CONSTRAINT fk_egpt_specialnotice_taxwise_details_taxdetails FOREIGN KEY (taxdetails) REFERENCES egpt_specialnotice_tax_details(id);
+CREATE SEQUENCE seq_egpt_specialnotice;
+ALTER TABLE egpt_specialnotice ALTER COLUMN id SET DEFAULT nextval('seq_egpt_specialnotice');
+CREATE SEQUENCE seq_egpt_specialnotice_address;
+ALTER TABLE egpt_specialnotice_address ALTER COLUMN id SET DEFAULT nextval('seq_egpt_specialnotice_address');
+CREATE SEQUENCE seq_egpt_specialnotice_owners;
+ALTER TABLE egpt_specialnotice_owners ALTER COLUMN id SET DEFAULT nextval('seq_egpt_specialnotice_owners');
+CREATE SEQUENCE seq_egpt_specialnotice_floorspec;
+ALTER TABLE egpt_specialnotice_floorspec ALTER COLUMN id SET DEFAULT nextval('seq_egpt_specialnotice_floorspec');
+CREATE SEQUENCE seq_egpt_specialnotice_tax_details;
+ALTER TABLE egpt_specialnotice_tax_details ALTER COLUMN id SET DEFAULT nextval('seq_egpt_specialnotice_tax_details');
+CREATE SEQUENCE seq_egpt_specialnotice_taxwise_details;
+ALTER TABLE egpt_specialnotice_taxwise_details ALTER COLUMN id SET DEFAULT nextval('seq_egpt_specialnotice_taxwise_details');
+
+
+
+

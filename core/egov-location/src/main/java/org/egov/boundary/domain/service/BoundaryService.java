@@ -382,7 +382,7 @@ public class BoundaryService {
 		return false;
 	}
 	
-	public List<Boundary> getAllBoundariesByNumberAndType(String tenantId,long bndryNumber,List<Long> boundaryTypeIds){
+	public List<Boundary> getAllBoundariesByNumberAndType(String tenantId,List<Long> bndryNumber,List<Long> boundaryTypeIds){
 		
 		return boundaryJpaRepository.findAllBoundariesByNumberAndType(tenantId,bndryNumber,boundaryTypeIds);
 		
@@ -393,7 +393,7 @@ public class BoundaryService {
 		return boundaryJpaRepository.findAllByTenantId(tenantId);
 	}
 	
-	public List<Boundary> getAllBoundaryByTenantIdAndNumber(String tenantId,Long boundaryNumb){
+	public List<Boundary> getAllBoundaryByTenantIdAndNumber(String tenantId,List<Long> boundaryNumb){
 		
 		return boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber(tenantId,boundaryNumb);
 	}
@@ -403,7 +403,7 @@ public class BoundaryService {
 		return boundaryJpaRepository.getAllBoundaryByTenantIdAndTypeIds(tenantId,boundaryTypeIds);
 	}
 	
-	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId,Long boundaryNum,List<Long> boundaryIds,List<Long> boundaryTypeIds){
+	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId,List<Long> boundaryNum,List<Long> boundaryIds,List<Long> boundaryTypeIds){
 		
 		return boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(tenantId,boundaryNum,boundaryIds,boundaryTypeIds);
 		

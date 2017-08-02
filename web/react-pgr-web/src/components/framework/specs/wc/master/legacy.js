@@ -1,3 +1,56 @@
+var meterReading = {
+ "name": "MeterReading",
+ "version": "v1",
+ "level": 2,
+ "jsonPath": "connection.floors[0].rooms",
+ "groups": [
+  {
+   "label": "Meter Reading",
+   "name": "MeterReading",
+   "multiple": false,
+   "children": [],
+   "fields": [
+    {
+     "name": "Reading1",
+     "jsonPath": "connection.floors[0].rooms[0].roomNo",
+     "label": "Reading 1",
+     "pattern": "",
+     "type": "number",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    },
+	{
+     "name": "Reading2",
+     "jsonPath": "connection.floors[0].rooms[0].roomNo",
+     "label": "Reading 2",
+     "pattern": "",
+     "type": "number",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    },
+	{
+     "name": "Reading3",
+     "jsonPath": "connection.floors[0].rooms[0].roomNo",
+     "label": "Reading 3",
+     "pattern": "",
+     "type": "number",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    },
+    
+   ]
+  }
+ ]
+}
+
+
+
 var dat = {
   "wc.create": {
     "numCols": 12 / 3,
@@ -22,17 +75,6 @@ var dat = {
             "type": "radio",
             "isRequired": true,
             "isDisabled": false,
-            "autoCompleteDependancy": {
-              "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
-              "autoFillFields": {
-                "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
-                "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
-                "Connection.asset.email": "properties[0].owners[0].emailId",
-                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.": "properties[0].propertyDetail.noOfFloors"
-
-              }
-            },
             "requiredErrMsg": "",
             "patternErrMsg": "",
 			"values": [{"label":"primary connection", "value":true}]
@@ -45,17 +87,6 @@ var dat = {
             "type": "radio",
             "isRequired": true,
             "isDisabled": false,
-            "autoCompleteDependancy": {
-              "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
-              "autoFillFields": {
-                "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
-                "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
-                "Connection.asset.email": "properties[0].owners[0].emailId",
-                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.": "properties[0].propertyDetail.noOfFloors"
-
-              }
-            },
             "requiredErrMsg": "",
             "patternErrMsg": "",
 			"values": [{"label":"With Property", "value":true},{"label":"Without Property", "value":false}],
@@ -246,6 +277,17 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
+		  {
+            "name": "NoOfFlats",
+            "jsonPath": "Connection.NoOfFlats",
+            "label": "No of Flats",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "CategoryType",
             "jsonPath": "Connection.categoryType",
@@ -364,6 +406,7 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
             "requiredErrMsg": "",
+			"isKeyValuePair":true,
             "patternErrMsg": ""
           },
           {
@@ -387,8 +430,99 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+		  {
+            "name": "FromDate",
+            "jsonPath": "Connection.fromDate",
+            "label": "From Date",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "ToDate",
+            "jsonPath": "Connection.toDate",
+            "label": "To Date",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
           }
         ]
+      }, 
+	  {
+        "label": "Metered",
+        "name": "Metered",
+		"children":[meterReading],
+        "fields": [{
+            "name": "meterMake",
+            "jsonPath": "Connection.meterMake",
+            "label": "Meter Make",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+		  {
+            "name": "meterCost",
+            "jsonPath": "Connection.meterCost",
+            "label": "Meter Make",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+		  {
+            "name": "initialMeterReading",
+            "jsonPath": "Connection.initialMeterReading",
+            "label": "Initial Meter Reading",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          }]
+      },
+	  {
+        "label": "Donation",
+        "name": "Donation",
+        "fields": [{
+            "name": "SpecialDonationCharges",
+            "jsonPath": "Connection.toDate",
+            "label": "Special Donation Charges",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          }]
+      },
+	   {
+        "label": "wc.create.groups.fileDetails.title",
+        "name": "Documents",
+        "fields": [{
+          "name": "File",
+          "jsonPath": "Connection.documents",
+          "type": "documentList",
+          "pathToArray": "DocumentTypeApplicationTypes",
+          "displayNameJsonPath": "documentType",
+          "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
+          "autoFillFields": [{
+            "name": "document",
+            "jsonPath": "documentTypeId"
+          }]
+        }]
       }
     ]
   }

@@ -51,7 +51,10 @@ public class CategoryServiceTest {
 	public String updatedCode = "Flammables v1.1 code updated";
 	public String subCatName = "Flammables2";
 	public String subCatCode = "Flammables2";
-	
+
+	/**
+	 * Description : test method for service createCategory master
+	 */
 	@Test
 	public void testAcreateCategory() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -66,8 +69,8 @@ public class CategoryServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -93,6 +96,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service searchCategory Master
+	 * 
+	 */
 	@Test
 	public void testAsearchCategory() {
 
@@ -119,6 +126,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service createCategory master to check
+	 * DuplicateRecord check
+	 */
 	@Test
 	public void testAcreateDuplicateCategory() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -132,8 +143,8 @@ public class CategoryServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -163,6 +174,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service searchCategory Details Master
+	 * 
+	 */
 	@Test
 	public void testzsearchCategoryDetails() {
 
@@ -175,7 +190,8 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, subCatName, subCatCode, "SUBCATEGORY", parentId, pageSize, offset);
+					new Integer[] { categoryId.intValue() }, subCatName, subCatCode, "SUBCATEGORY", parentId, pageSize,
+					offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 
@@ -187,6 +203,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service createCategory Details Master
+	 * 
+	 */
 	@Test
 	public void testCycreateCategoryDetails() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -213,8 +233,8 @@ public class CategoryServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -230,7 +250,7 @@ public class CategoryServiceTest {
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
-			this.categoryId = categoryResponse.getCategories().get(0).getId();
+			categoryId = categoryResponse.getCategories().get(0).getId();
 
 			assertTrue(true);
 
@@ -244,6 +264,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service createCategory Details Master
+	 * 
+	 */
 	@Test
 	public void testCyxcreateduplicateCategoryDetails() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -270,8 +294,8 @@ public class CategoryServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -287,7 +311,7 @@ public class CategoryServiceTest {
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
-			this.categoryId = categoryResponse.getCategories().get(0).getId();
+			categoryId = categoryResponse.getCategories().get(0).getId();
 
 			assertTrue(true);
 
@@ -301,6 +325,11 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service UpdateCategory Details Master to
+	 * check modify name
+	 * 
+	 */
 	@Test
 	public void testBmodifyCategoryName() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -314,8 +343,8 @@ public class CategoryServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -344,6 +373,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service updateCategory Details Master to
+	 * check modify name
+	 */
 	@Test
 	public void testBsearchUpdatedCategoryName() {
 
@@ -368,6 +401,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service updateCategory Details Master to
+	 * check modify code
+	 */
 	@Test
 	public void testCmodifyCategoryCode() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -381,8 +418,8 @@ public class CategoryServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -407,6 +444,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service updateCategory Details Master to
+	 * check modify code
+	 */
 	@Test
 	public void testCmodifyDuplicateCategoryCode() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -420,8 +461,8 @@ public class CategoryServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -450,6 +491,10 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : test method for service updateCategory Details Master to
+	 * check modify code
+	 */
 	@Test
 	public void testCsearchUpdatedCategoryCode() {
 
@@ -475,6 +520,9 @@ public class CategoryServiceTest {
 
 	}
 
+	/**
+	 * Description : method to create requestInfo Object
+	 */
 	private RequestInfo getRequestInfoObject() {
 		RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setApiId("emp");
@@ -487,7 +535,9 @@ public class CategoryServiceTest {
 		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 		UserInfo userInfo = new UserInfo();
 		String username = "pavan";
+		Integer userId = 1;
 		userInfo.setUsername(username);
+		userInfo.setId(userId);
 		requestInfo.setUserInfo(userInfo);
 
 		return requestInfo;

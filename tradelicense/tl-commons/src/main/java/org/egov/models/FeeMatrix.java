@@ -45,7 +45,7 @@ public class FeeMatrix {
 	private Long subCategoryId = null;
 
 	@NotNull
-	private Long financialYear = null;
+	private String financialYear = null;
 
 	private String effectiveFrom = null;
 

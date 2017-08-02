@@ -2,18 +2,29 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
+import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.utility.ConstantUtility;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for PenaltyRate API's
  * 
  * @author Pavan Kumar Kamma
  */
 public class PenaltyRateQueryBuilder {
+	
+	@Autowired
+	private static PropertiesManager propertiesManager;
 
-	public static final String INSERT_PENALTY_RATE_QUERY = "INSERT INTO egtl_mstr_penalty_rate"
+	private static final String feeMatrixTableName = ConstantUtility.PENALTY_RATE_TABLE_NAME;
+	private static final String defaultPageSize = propertiesManager.getDefaultPageSize();
+	private static final String defaultOffset = propertiesManager.getDefaultOffset();
+
+	public static final String INSERT_PENALTY_RATE_QUERY = "INSERT INTO " + feeMatrixTableName
 			+ " (tenantId, applicationType, fromRange, toRange, rate, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
 			+ " VALUES(?,?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_PENALTY_RATE_QUERY = "UPDATE egtl_mstr_penalty_rate"
+	public static final String UPDATE_PENALTY_RATE_QUERY = "UPDATE " + feeMatrixTableName
 			+ " SET tenantId = ?, applicationType = ?, fromRange = ?, toRange = ?, rate = ?,"
 			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
 
@@ -21,7 +32,7 @@ public class PenaltyRateQueryBuilder {
 			Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from egtl_mstr_penalty_rate where ");
+		searchSql.append("select * from " + feeMatrixTableName + " where ");
 		searchSql.append(" tenantId = ? ");
 		preparedStatementValues.add(tenantId);
 
@@ -46,14 +57,16 @@ public class PenaltyRateQueryBuilder {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (pageSize == null)
-			pageSize = 30;
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(defaultPageSize);
+		}
 
 		searchSql.append(" limit ? ");
 		preparedStatementValues.add(pageSize);
 
-		if (offSet == null)
-			offSet = 0;
+		if (offSet == null) {
+			offSet = Integer.valueOf(defaultOffset);
+		}
 
 		searchSql.append(" offset ? ");
 		preparedStatementValues.add(offSet);

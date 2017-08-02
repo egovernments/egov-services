@@ -27,24 +27,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DocumentTypeServiceTest {
 
-
 	@Autowired
 	DocumentTypeService documentTypeService;
-
 
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-
-
-	public static Long DocumentTypeId = 1l ;
+	public static Long DocumentTypeId = 1l;
 	public String tenantId = "default";
 	public String name = "shubham";
 	public String ApplicationType = "New";
@@ -52,6 +47,9 @@ public class DocumentTypeServiceTest {
 	public String updateApplicationType = "Renew";
 	public Boolean enabled = true;
 
+	/**
+	 * Description : test method to test createDocumentType
+	 */
 	@Test
 	public void testAcreateDocumentType() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -65,8 +63,8 @@ public class DocumentTypeServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(name);
-		auditDetails.setLastModifiedBy(name);
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -78,11 +76,11 @@ public class DocumentTypeServiceTest {
 		documentTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			DocumentTypeResponse documentTypeResponse = documentTypeService.createDocumentType( documentTypeRequest);
+			DocumentTypeResponse documentTypeResponse = documentTypeService.createDocumentType(documentTypeRequest);
 			if (documentTypeResponse.getDocumentTypes().size() == 0) {
 				assertTrue(false);
 			}
-			this.DocumentTypeId = documentTypeResponse.getDocumentTypes().get(0).getId();
+			DocumentTypeId = documentTypeResponse.getDocumentTypes().get(0).getId();
 
 			assertTrue(true);
 
@@ -92,6 +90,9 @@ public class DocumentTypeServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test searchDocumentType
+	 */
 	@Test
 	public void testAsearchDocument() {
 
@@ -116,6 +117,9 @@ public class DocumentTypeServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test DocumentType for Duplicate
+	 */
 	@Test
 	public void testAucreateDuplicateDocumentType() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -129,8 +133,8 @@ public class DocumentTypeServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("shubham");
-		auditDetails.setLastModifiedBy("shubham");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -142,11 +146,11 @@ public class DocumentTypeServiceTest {
 		documentTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			DocumentTypeResponse documentTypeResponse = documentTypeService.createDocumentType( documentTypeRequest);
+			DocumentTypeResponse documentTypeResponse = documentTypeService.createDocumentType(documentTypeRequest);
 			if (documentTypeResponse.getDocumentTypes().size() == 0) {
 				assertTrue(false);
 			}
-			this.DocumentTypeId = documentTypeResponse.getDocumentTypes().get(0).getId();
+			DocumentTypeId = documentTypeResponse.getDocumentTypes().get(0).getId();
 
 			assertTrue(true);
 
@@ -160,6 +164,9 @@ public class DocumentTypeServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to update DocumentType name
+	 */
 	@Test
 	public void testBmodifyDocumentuserName() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -173,8 +180,8 @@ public class DocumentTypeServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(updatedName);
-		auditDetails.setLastModifiedBy(updatedName);
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -203,8 +210,11 @@ public class DocumentTypeServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to update DocumentType name
+	 */
 	@Test
-	public void testBsearchUpdatedusernameName() {
+	public void testBsearchUpdatedusername() {
 
 		Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
@@ -215,7 +225,8 @@ public class DocumentTypeServiceTest {
 
 		try {
 			DocumentTypeResponse documentTypeResponse = documentTypeService.getDocumentType(requestInfo, tenantId,
-					new Integer[] { DocumentTypeId.intValue() }, updatedName, enabled, updateApplicationType, pageSize, offset);
+					new Integer[] { DocumentTypeId.intValue() }, updatedName, enabled, updateApplicationType, pageSize,
+					offset);
 			if (documentTypeResponse.getDocumentTypes().size() == 0)
 				assertTrue(false);
 
@@ -227,6 +238,9 @@ public class DocumentTypeServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to update DocumentType name
+	 */
 	@Test
 	public void testCmodifydocumenttypeName() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -241,8 +255,8 @@ public class DocumentTypeServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("ShubhamPratap");
-		auditDetails.setLastModifiedBy("ShubhamPratap");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -267,6 +281,9 @@ public class DocumentTypeServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to update DocumentType name for duplicate
+	 */
 	@Test
 	public void testCmodifyDuplicateDocumentCode() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -280,8 +297,8 @@ public class DocumentTypeServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("ShubhamPratap");
-		auditDetails.setLastModifiedBy("ShubhamPratap");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -309,6 +326,10 @@ public class DocumentTypeServiceTest {
 		}
 
 	}
+
+	/**
+	 * Description : test method to update DocumentType name
+	 */
 
 	@Test
 	public void testCsearchUpdatedDocumentTypeNameCode() {
@@ -345,12 +366,13 @@ public class DocumentTypeServiceTest {
 		requestInfo.setRequesterId("rajesh");
 		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 		UserInfo userInfo = new UserInfo();
-		String username = "nitin";
+		String username = "pavan";
+		Integer userId = 1;
 		userInfo.setUsername(username);
+		userInfo.setId(userId);
 		requestInfo.setUserInfo(userInfo);
 
 		return requestInfo;
 	}
-
 
 }

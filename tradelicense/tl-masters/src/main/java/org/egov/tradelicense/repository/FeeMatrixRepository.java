@@ -183,7 +183,7 @@ public class FeeMatrixRepository {
 	 * @return List<FeeMatrix>
 	 */
 	public List<FeeMatrix> searchFeeMatrix(String tenantId, Integer[] ids, Integer categoryId, Integer subCategoryId,
-			Integer financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet) {
+			String financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String feeMatrixSearchQuery = FeeMatrixQueryBuilder.buildSearchQuery(tenantId, ids, categoryId, subCategoryId,

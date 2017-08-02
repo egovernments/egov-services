@@ -2,18 +2,29 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
+import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.utility.ConstantUtility;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for UOM API's
  * 
  * @author Pavan Kumar Kamma
  */
 public class UomQueryBuilder {
+	
+	@Autowired
+	private static PropertiesManager propertiesManager;
 
-	public static final String INSERT_UOM_QUERY = "INSERT INTO egtl_mstr_uom"
+	private static final String uomTableName = ConstantUtility.UOM_TABLE_NAME;
+	private static final String defaultPageSize = propertiesManager.getDefaultPageSize();
+	private static final String defaultOffset = propertiesManager.getDefaultOffset();
+
+	public static final String INSERT_UOM_QUERY = "INSERT INTO " + uomTableName
 			+ " (tenantId, code, name, active, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
 			+ " VALUES(?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_UOM_QUERY = "UPDATE egtl_mstr_uom"
+	public static final String UPDATE_UOM_QUERY = "UPDATE " + uomTableName
 			+ " SET tenantId = ?, code = ?, name = ?, active = ?," + " lastModifiedBy = ?, lastModifiedTime = ?"
 			+ " WHERE id = ?";
 
@@ -21,7 +32,7 @@ public class UomQueryBuilder {
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from egtl_mstr_uom where ");
+		searchSql.append("select * from " + uomTableName + " where ");
 		searchSql.append(" tenantId = ? ");
 		preparedStatementValues.add(tenantId);
 
@@ -56,14 +67,16 @@ public class UomQueryBuilder {
 			preparedStatementValues.add(active);
 		}
 
-		if (pageSize == null)
-			pageSize = 30;
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(defaultPageSize);
+		}
 
 		searchSql.append(" limit ? ");
 		preparedStatementValues.add(pageSize);
 
-		if (offSet == null)
-			offSet = 0;
+		if (offSet == null) {
+			offSet = Integer.valueOf(defaultOffset);
+		}
 
 		searchSql.append(" offset ? ");
 		preparedStatementValues.add(offSet);

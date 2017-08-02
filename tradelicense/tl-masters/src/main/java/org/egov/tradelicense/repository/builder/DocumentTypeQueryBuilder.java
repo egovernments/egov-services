@@ -2,18 +2,29 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
+import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.utility.ConstantUtility;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for DocumentType API's
  * 
  * @author Shubham pratap Singh
  */
 public class DocumentTypeQueryBuilder {
+	
+	@Autowired
+	private static PropertiesManager propertiesManager;
 
-	public static final String INSERT_DOCUMENT_TYPE_QUERY = "INSERT INTO egtl_mstr_document_type"
+	private static final String documentTypeTableName = ConstantUtility.DOCUMENT_TYPE_TABLE_NAME;
+	private static final String defaultPageSize = propertiesManager.getDefaultPageSize();
+	private static final String defaultOffset = propertiesManager.getDefaultOffset();
+	
+	public static final String INSERT_DOCUMENT_TYPE_QUERY = "INSERT INTO " + documentTypeTableName
 			+ " (tenantId, name, mandatory, enabled, applicationType, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
 			+ " VALUES(?,?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_DOCUMENT_TYPE_QUERY = "UPDATE egtl_mstr_document_type"
+	public static final String UPDATE_DOCUMENT_TYPE_QUERY = "UPDATE " + documentTypeTableName
 			+ " SET tenantId = ?, name = ?, mandatory = ?, enabled = ?, applicationType = ?,"
 			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
 
@@ -21,7 +32,7 @@ public class DocumentTypeQueryBuilder {
 			String applicationType, Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from egtl_mstr_document_type where ");
+		searchSql.append("select * from "+ documentTypeTableName +" where ");
 		searchSql.append(" tenantId = ? ");
 		preparedStatementValues.add(tenantId);
 		if (ids != null && ids.length > 0) {
@@ -55,14 +66,16 @@ public class DocumentTypeQueryBuilder {
 			preparedStatementValues.add(applicationType);
 		}
 
-		if (pageSize == null)
-			pageSize = 30;
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(defaultPageSize);
+		}
 
 		searchSql.append(" limit ? ");
 		preparedStatementValues.add(pageSize);
 
-		if (offSet == null)
-			offSet = 0;
+		if (offSet == null) {
+			offSet = Integer.valueOf(defaultOffset);
+		}
 
 		searchSql.append(" offset ? ");
 		preparedStatementValues.add(offSet);

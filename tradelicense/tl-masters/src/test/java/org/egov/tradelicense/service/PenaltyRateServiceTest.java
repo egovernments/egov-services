@@ -48,6 +48,9 @@ public class PenaltyRateServiceTest {
 	public Long updatedFromRange = 50l;
 	public Long updatedToRange = 100l;
 
+	/**
+	 * Description : test method to create PenaltyRate
+	 */
 	@Test
 	public void testAcreatePenaltyRate() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -63,8 +66,8 @@ public class PenaltyRateServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -91,6 +94,10 @@ public class PenaltyRateServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to search PenaltyRate
+	 */
+
 	@Test
 	public void testAsearchPenaltyRate() {
 
@@ -115,6 +122,10 @@ public class PenaltyRateServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to update PenaltyRate
+	 */
+
 	@Test
 	public void testBmodifyPenaltyRate() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -131,8 +142,8 @@ public class PenaltyRateServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -173,7 +184,9 @@ public class PenaltyRateServiceTest {
 		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 		UserInfo userInfo = new UserInfo();
 		String username = "pavan";
+		Integer userId = 1;
 		userInfo.setUsername(username);
+		userInfo.setId(userId);
 		requestInfo.setUserInfo(userInfo);
 
 		return requestInfo;

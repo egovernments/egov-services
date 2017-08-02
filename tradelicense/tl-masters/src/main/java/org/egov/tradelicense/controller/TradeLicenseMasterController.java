@@ -311,7 +311,7 @@ public class TradeLicenseMasterController {
 	public FeeMatrixResponse getFeeMatrixMaster(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) Integer subcategoryId,
-			@RequestParam(required = false) Integer financialYear,
+			@RequestParam(required = false) String financialYear,
 			@RequestParam(required = false) String applicationType,
 			@RequestParam(required = false) String businessNature, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {

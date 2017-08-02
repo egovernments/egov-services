@@ -46,6 +46,9 @@ public class UomServiceTest {
 	public String updatedName = "Flammables v1.1 name updated";
 	public String updatedCode = "Flammables v1.1 code updated";
 
+	/**
+	 * Description : test method to test createUom
+	 */
 	@Test
 	public void testAcreateUom() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -60,8 +63,8 @@ public class UomServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -73,7 +76,7 @@ public class UomServiceTest {
 		uomRequest.setRequestInfo(requestInfo);
 
 		try {
-			UOMResponse uomResponse = uomService.createUomMaster( uomRequest);
+			UOMResponse uomResponse = uomService.createUomMaster(uomRequest);
 			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
 			}
@@ -87,6 +90,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test searchUom
+	 */
 	@Test
 	public void testAsearchUom() {
 
@@ -111,6 +117,10 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test createUom
+	 */
+
 	@Test
 	public void testAcreateUomDuplicate() {
 
@@ -125,8 +135,8 @@ public class UomServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -138,7 +148,7 @@ public class UomServiceTest {
 		uomRequest.setRequestInfo(requestInfo);
 
 		try {
-			UOMResponse uomResponse = uomService.createUomMaster( uomRequest);
+			UOMResponse uomResponse = uomService.createUomMaster(uomRequest);
 			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
 			}
@@ -156,6 +166,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test UpdateUom
+	 */
 	@Test
 	public void testBmodifyUomName() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -171,8 +184,8 @@ public class UomServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -201,6 +214,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test updateUom name
+	 */
 	@Test
 	public void testBsearchUpdatedUomName() {
 
@@ -225,6 +241,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test updateUom code
+	 */
 	@Test
 	public void testCmodifyUomCode() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -239,8 +258,8 @@ public class UomServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -265,6 +284,10 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test updateUom code
+	 */
+
 	@Test
 	public void testCmodifyUomCodeDuplicate() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -279,8 +302,8 @@ public class UomServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -309,6 +332,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test updateUom code
+	 */
 	@Test
 	public void testCsearchUpdatedUomCode() {
 
@@ -345,7 +371,9 @@ public class UomServiceTest {
 		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 		UserInfo userInfo = new UserInfo();
 		String username = "pavan";
+		Integer userId = 1;
 		userInfo.setUsername(username);
+		userInfo.setId(userId);
 		requestInfo.setUserInfo(userInfo);
 
 		return requestInfo;

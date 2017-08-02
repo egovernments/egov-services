@@ -301,35 +301,35 @@ ReportDefinitions:
     type: number
     source: seva
     linkedReport:
-      reportName: DrillDownComplaintDetailByGrievanceType
+      reportName: DrillDownComplaintDetailByFunctionary
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}  
   - name: inprocess
     label: reports.pgr.status.inprocess
     type: number
     source: 
     linkedReport:
-      reportName: DrillDownComplaintDetailByGrievanceType
+      reportName: DrillDownComplaintDetailByFunctionary
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}  
   - name: completed
     label: reports.pgr.status.completed
     type: number
     source: reopened
     linkedReport:
-      reportName: DrillDownComplaintDetailByGrievanceType
+      reportName: DrillDownComplaintDetailByFunctionary
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}  
   - name: rejected
     label: reports.pgr.status.reopened
     type: number
     source: seva
     linkedReport:
-      reportName: DrillDownComplaintDetailByGrievanceType
+      reportName: DrillDownComplaintDetailByFunctionary
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}  
   - name: rejected
     label: reports.pgr.status.rejected
     type: number
     source: seva
     linkedReport:
-      reportName: DrillDownComplaintDetailByGrievanceType
+      reportName: DrillDownComplaintDetailByFunctionary
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}  
   - name: withinsla
     label: reports.pgr.status.withinsla

@@ -82,10 +82,7 @@ import View from './components/framework/view';
 import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
 
-
 const base = "";
-
-
 
 const Main = () => {
     return (

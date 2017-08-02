@@ -81,7 +81,9 @@ class Report extends Component {
       };
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
           if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
-            self.props.setFormData({[specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName]: jp.query(res, "$..[0]")[0]});
+            var obj = {};
+            _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
+            self.props.setFormData(obj);
           } else {
             self.props.setFormData(res);
           }
@@ -197,7 +199,11 @@ class Report extends Component {
       self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+          if(self.props.actionName == "update") {
+            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+          } else {
+            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+          }
           self.props.setRoute(hash);
         }
       }, 1500);

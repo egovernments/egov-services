@@ -80,7 +80,14 @@ public class AllotteeRepository {
 		}
 		else{
 			int maxLength = 50;
-			String userName = allottee.getName().replaceAll(" ","").substring(0, Math.min(allottee.getName().length(), maxLength)) + allottee.getMobileNumber();
+			final String name;
+			String allotteeName = allottee.getName().replaceAll(" ", "");
+		    if (allotteeName.length() <= maxLength) {
+		    	name = allotteeName;
+			} else { 
+				name = allotteeName.substring(0, maxLength);
+			}
+			String userName = name + allottee.getMobileNumber();
 		    userSearchRequest.setUserName(userName);
 		}
 		logger.info("url for allottee api post call :: " + url
@@ -96,7 +103,15 @@ public class AllotteeRepository {
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceCreatePAth();
 		int maxLength = 50;
-		String userName = allottee.getName().replaceAll(" ","").substring(0, Math.min(allottee.getName().length(), maxLength)) + allottee.getMobileNumber();
+		final String name;
+		String allotteeName = allottee.getName().replaceAll(" ", "");
+	    if (allotteeName.length() <= maxLength) {
+	    	name = allotteeName;
+		} else { 
+			name = allotteeName.substring(0, maxLength);
+		}
+		String userName = name + allottee.getMobileNumber();
+		
 		Role role = new Role();
 		role.setCode("CITIZEN");
 		role.setName("CITIZEN");

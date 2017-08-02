@@ -152,7 +152,10 @@ public class PropertyServiceImpl implements PropertyService {
 
 		RestTemplate restTemplate = new RestTemplate();
 		try {
+			logger.info("PropertyServiceImpl idGenerationUrl : " + idGenerationUrl.toString()
+			+ " \n IdGenerationRequest  : " + idGeneration);
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
+			logger.info("PropertyServiceImpl IdGenerationResponse : " +response);
 		} catch (Exception ex) {
 			throw new ValidationUrlNotFoundException(environment.getProperty("invalid.id.service.url"),
 					idGenerationUrl.toString(), requestInfo);
@@ -532,13 +535,15 @@ public class PropertyServiceImpl implements PropertyService {
 				.queryParam("tenantId", tenantId).queryParam("validDate", notice.getNoticeDate());
 
 		TaxPeriodResponse taxPeriodResponse = null;
-
+        
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(specialNoticeRequest.getRequestInfo());
+		logger.info("PropertyServiceImpl BuilderUri : " + builder.buildAndExpand().toUri()
+				+ " \n RequestInfoWrapper  : " + requestInfoWrapper);
 		RestTemplate restTemplate = new RestTemplate();
 		taxPeriodResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfoWrapper,
 				TaxPeriodResponse.class);
-
+		logger.info("PropertyServiceImpl taxPeriodResponse : " +taxPeriodResponse);
 		ObjectMapper mapper = new ObjectMapper();
 
 		List<TaxCalculation> calculationList = new ArrayList<>();
@@ -675,10 +680,10 @@ public class PropertyServiceImpl implements PropertyService {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("code", tenantId);
 		SearchTenantResponse searchTenantResponse = null;
 		RestTemplate restTemplate = new RestTemplate();
-		logger.info(" Calling tenant service url = " + tenantCodeUrl.toString() + " request = " + requestInfo
+		logger.info("PropertyServiceImpl Calling tenant service url = " + tenantCodeUrl.toString() + " request = " + requestInfo
 				+ " tenantId =" + tenantId);
 		String response = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfo, String.class);
-		logger.info("after calling the tenant service  response = " + response);
+		logger.info("PropertyServiceImpl after calling the tenant service  response = " + response);
 
 		if (response != null) {
 			ObjectMapper mapper = new ObjectMapper();
@@ -686,7 +691,7 @@ public class PropertyServiceImpl implements PropertyService {
 		}
 
 		ulbCode = searchTenantResponse.getTenant().get(0).getCode();
-		logger.info("ulbocode = " + ulbCode);
+		logger.info("PropertyServiceImpl ulbocode = " + ulbCode);
 
 		return ulbCode;
 
@@ -717,17 +722,17 @@ public class PropertyServiceImpl implements PropertyService {
 		idGeneration.setIdRequests(idRequests);
 		idGeneration.setRequestInfo(requestInfo);
 		RestTemplate restTemplate = new RestTemplate();
-		logger.info("calling the idgenearion service url = " + idGenerationUrl.toString() + " Request = "
+		logger.info("PropertyServiceImpl calling the idgenearion service url = " + idGenerationUrl.toString() + " Request = "
 				+ idGeneration.toString());
 		String response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 
-		logger.info("After the calling  idgenearion  response = " + response);
+		logger.info("PropertyServiceImpl After the calling  idgenearion  response = " + response);
 		if (response != null && response.length() > 0) {
 
 			Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 			IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
 			noticeNumber = idResponse.getIdResponses().get(0).getId();
-			logger.info("After the calling  idgenearion  noticeNumber = " + noticeNumber);
+			logger.info("PropertyServiceImpl After the calling  idgenearion  noticeNumber = " + noticeNumber);
 
 		}
 

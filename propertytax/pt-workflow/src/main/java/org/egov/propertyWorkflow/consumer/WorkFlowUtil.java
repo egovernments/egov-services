@@ -65,7 +65,7 @@ public class WorkFlowUtil {
 		ProcessInstanceResponse processInstanceResponse = null;
 
 		try {
-			logger.info("URL ------->> "+url+" \n processInstanceRequest -->> "+processInstanceRequest);
+			logger.info("WorkFlowUtil URL ------->> "+url+" \n WorkFlowUtil processInstanceRequest -->> "+processInstanceRequest);
 			processInstanceResponse = restTemplate.postForObject(url, processInstanceRequest,
 					ProcessInstanceResponse.class);
 
@@ -73,7 +73,7 @@ public class WorkFlowUtil {
 
 			System.out.println(ex.getMessage());
 		}
-
+        logger.info("WorkFlowUtil processInstanceResponse :" + processInstanceResponse);
 		return processInstanceResponse.getProcessInstance();
 	}
 
@@ -103,10 +103,14 @@ public class WorkFlowUtil {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		HttpEntity requestEntity = new HttpEntity(taskRequest, headers);
-
+		
+		logger.info("WorkFlowUtil Builder uri ------->> "+builder.buildAndExpand(uriParams).toUri()+
+				" \n WorkFlowUtil processRequest -->> "+requestEntity);
+		
 		ResponseEntity<TaskResponse> responseEntity = restTemplate.exchange(builder.buildAndExpand(uriParams).toUri(),
 				HttpMethod.POST, requestEntity, TaskResponse.class);
 
+		logger.info("WorkFlowUtil TaskResponse"+ responseEntity.getBody());
 		TaskResponse taskResponse = responseEntity.getBody();
 		return taskResponse;
 	}

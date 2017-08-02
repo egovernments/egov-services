@@ -25,6 +25,9 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 
  * @author Yosadhara
@@ -33,7 +36,9 @@ import org.springframework.stereotype.Service;
 @EnableKafka
 @Service
 public class TitleTransferConsumer {
-
+    
+	private static final Logger logger = LoggerFactory.getLogger(WorkflowConsumer.class);
+	
 	@Autowired
 	Environment environment;
 
@@ -90,11 +95,14 @@ public class TitleTransferConsumer {
 	public void listen(ConsumerRecord<String, TitleTransferRequest> record) throws Exception {
 
 		TitleTransferRequest titleTransferRequest = record.value();
+		logger.info("TitleTransferConsumer  listen() titleTransferRequest ---->>  "+titleTransferRequest);
 
 		if (record.topic()
 				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.titletransfer.workflow.create"))) {
 
 			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getWorkflowDetailsRequestInfo(titleTransferRequest);
+			logger.info("TitleTransferConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
+			
 			ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
 					environment.getProperty("titletransfer.businesskey"), 
 					environment.getProperty("titletransfer.type"),
@@ -107,6 +115,8 @@ public class TitleTransferConsumer {
 				.equals(environment.getProperty("egov.propertytax.property.titletransfer.workflow.update"))) {
 
 			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getWorkflowDetailsRequestInfo(titleTransferRequest);
+			logger.info("TitleTransferConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
+			
 			TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
 					titleTransferRequest.getTitleTransfer().getStateId());
 			titleTransferRequest.getTitleTransfer().setStateId(taskResponse.getTask().getId());

@@ -71,10 +71,11 @@ public class SearchPropertyBuilder {
 
 		if (ownerName != null || mobileNumber != null || aadhaarNumber != null || tenantId != null) {
 
-			logger.info("userSearchUrl :: " + userSearchUrl);
-			logger.info("userSearchRequestInfo:: " + userSearchRequestInfo);
+			logger.info("SearchpropertyBuilder userSearchUrl :: " + userSearchUrl);
+			logger.info("SearchpropertyBuilder userSearchRequestInfo:: " + userSearchRequestInfo);
 			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
+			logger.info("SearchpropertyBuilder userResponse ::" +userResponse);
 		}
 		String Ids = "";
 

@@ -37,6 +37,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.extern.slf4j.Slf4j;
+
+
 /**
  * Description : CalculatorService interface implementation class
  * 
@@ -44,6 +47,7 @@ import org.springframework.web.client.RestTemplate;
  *
  */
 @Service
+@Slf4j
 public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterService {
 
 	@Autowired
@@ -123,8 +127,10 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			case OCCUPANCY:
 
 				params.put("factorType", "occuapancies");
+				log.info("TaxCalculatorMasterServiceImpl occuapancies uri is:" +uri+ "\n TaxCalculatorMasterServiceImpl occuapancies is:" +requestInfoWrapper+ "occuapancies params :" +params);
 				OccuapancyMasterResponse occuapancyMasterResponse = restTemplate.postForObject(uri.toString(),
 						requestInfoWrapper, OccuapancyMasterResponse.class, params);
+				log.info("TaxCalculatorMasterServiceImpl OccupancyMasterResponse is:" +occuapancyMasterResponse);
 				if (occuapancyMasterResponse.getOccuapancyMasters().size() == 0) {
 					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
 				}
@@ -132,8 +138,10 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			case USAGE:
 
 				params.put("factorType", "usages");
+				log.info("TaxCalculatorMasterServiceImpl USAGE uri is:" +uri+ "\n TaxCalculatorMasterServiceImpl USAGE is:" +requestInfoWrapper+ "USAGE params :" +params);
 				UsageMasterResponse usageMasterResponse = restTemplate.postForObject(uri.toString(), requestInfoWrapper,
 						UsageMasterResponse.class, params);
+				log.info("TaxCalculatorMasterServiceImpl UsageMasterResponse is:" +usageMasterResponse);
 				if (usageMasterResponse.getUsageMasters().size() == 0) {
 					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
 				}
@@ -141,18 +149,22 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			case STRUCTURE:
 
 				params.put("factorType", "structureclasses");
-				StructureClassResponse structureClassResponse = restTemplate.postForObject(uri.toString(),
+				log.info("TaxCalculatorMasterServiceImpl structureclasses uri is:" +uri+ "\n TaxCalculatorMasterServiceImpl structureclasses is:" +requestInfoWrapper+ "structureclasses params :" +params);
+			    StructureClassResponse structureClassResponse = restTemplate.postForObject(uri.toString(),
 						requestInfoWrapper, StructureClassResponse.class, params);
-				if (structureClassResponse.getStructureClasses().size() == 0) {
+			    log.info("TaxCalculatorMasterServiceImpl StructureClassResponse is:" +structureClassResponse);
+	            if (structureClassResponse.getStructureClasses().size() == 0) {
 					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
 				}
 				break;
 			case PROPERTYTYPE:
 
 				params.put("factorType", "propertytypes");
-				PropertyTypeResponse propertyTypeResponse = restTemplate.postForObject(uri.toString(),
+				log.info("TaxCalculatorMasterServiceImpl propertytypes uri is:" +uri+ "\n TaxCalculatorMasterServiceImpl propertytypes is:" +requestInfoWrapper+ "propertytypes params :" +params);
+			    PropertyTypeResponse propertyTypeResponse = restTemplate.postForObject(uri.toString(),
 						requestInfoWrapper, PropertyTypeResponse.class, params);
-				if (propertyTypeResponse.getPropertyTypes().size() == 0) {
+			    log.info("TaxCalculatorMasterServiceImpl PropertyTypeResponse is:" +propertyTypeResponse);
+	            if (propertyTypeResponse.getPropertyTypes().size() == 0) {
 					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
 				}
 				break;

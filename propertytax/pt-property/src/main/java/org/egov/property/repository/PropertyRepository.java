@@ -551,12 +551,14 @@ public class PropertyRepository {
 			userSearchRequestInfo.put("id", userIds);
 			userSearchRequestInfo.put("RequestInfo", requestInfo);
 
-			logger.info("userSearchRequestInfo :" + userSearchRequestInfo);
-			logger.info("userSearchUrl :" + userSearchUrl);
+			logger.info("PropertyRepository  userSearchRequestInfo :" + userSearchRequestInfo);
+			logger.info("PropertyRepository  userSearchUrl :" + userSearchUrl);
 
 			UserResponseInfo userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
-
+			
+			logger.info("PropertyRepository UserResponseInfo :" + userResponse);
+			
 			userResponse.getUser().forEach(user -> {
 				users.add(user);
 			});

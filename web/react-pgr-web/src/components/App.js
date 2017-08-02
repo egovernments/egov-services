@@ -185,6 +185,7 @@ class App extends Component {
           <Footer/>
 
           <Dialog
+            style={{zIndex:2000}}
             actions={actions}
             modal={true}
             open={isDialogOpen}

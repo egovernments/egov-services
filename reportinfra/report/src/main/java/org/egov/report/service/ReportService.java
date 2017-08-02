@@ -73,7 +73,7 @@ public class ReportService {
 			sc.setType(te);
 			sc.setLabel(cd.getLabel());
 			sc.setName(cd.getName());
-			sc.setDefaultValue(cd.getPattern());
+			sc.setDefaultValue(cd.getDefaultValue());
 			searchParams.add(sc);
 
 		}
@@ -81,7 +81,12 @@ public class ReportService {
 		rmt.setSearchParams(searchParams);
 		metadataResponse.setReportDetails(rmt);
 		metadataResponse.setTenantId(metaDataRequest.getTenantId());
-		integrationService.getData(reportDefinition, metadataResponse, metaDataRequest.getRequestInfo());
+		try {
+			integrationService.getData(reportDefinition, metadataResponse, metaDataRequest.getRequestInfo());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return metadataResponse;
 	}
 

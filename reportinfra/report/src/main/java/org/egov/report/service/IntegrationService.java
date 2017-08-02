@@ -59,6 +59,7 @@ public class IntegrationService {
 					}
 					columnDetail.setDefaultValue(map);
 				}else{
+					try{
 					String res = restTemplate.postForObject(url,requestInfo, String.class);
 					
 					Object document = Configuration.defaultConfiguration().jsonProvider().parse(res);
@@ -73,6 +74,9 @@ public class IntegrationService {
 					}
 					LOGGER.info("value map-->"+map);
 					columnDetail.setDefaultValue(map);
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
 					
 				}
 			}

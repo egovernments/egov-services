@@ -145,7 +145,9 @@ var localationData = {
   "wc.search.sourceType.title":"Search Source Type",
   "wc.view.sourceType.title":"View Source Type",
   "wc.update.sourceType.title":"Update Source Type",
-  "wc.create.sourceType.title":"Create Source Type"
+  "wc.create.sourceType.title":"Create Source Type",
+  "wc.create.groups.applicantDetails.consumerNo":"Consumer Number",
+  "wc.create.groups.applicantDetails.connectionDate":"Connection Date"
 }
 
 export function translate(locale_text){

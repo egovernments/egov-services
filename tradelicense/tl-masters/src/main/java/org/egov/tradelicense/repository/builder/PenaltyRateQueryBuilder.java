@@ -2,9 +2,7 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
-import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.utility.ConstantUtility;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for PenaltyRate API's
@@ -12,13 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Pavan Kumar Kamma
  */
 public class PenaltyRateQueryBuilder {
-	
-	@Autowired
-	private static PropertiesManager propertiesManager;
 
 	private static final String feeMatrixTableName = ConstantUtility.PENALTY_RATE_TABLE_NAME;
-	private static final String defaultPageSize = propertiesManager.getDefaultPageSize();
-	private static final String defaultOffset = propertiesManager.getDefaultOffset();
 
 	public static final String INSERT_PENALTY_RATE_QUERY = "INSERT INTO " + feeMatrixTableName
 			+ " (tenantId, applicationType, fromRange, toRange, rate, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
@@ -57,19 +50,15 @@ public class PenaltyRateQueryBuilder {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (pageSize == null) {
-			pageSize = Integer.valueOf(defaultPageSize);
+		if (pageSize != null) {
+			searchSql.append(" limit ? ");
+			preparedStatementValues.add(pageSize);
 		}
 
-		searchSql.append(" limit ? ");
-		preparedStatementValues.add(pageSize);
-
-		if (offSet == null) {
-			offSet = Integer.valueOf(defaultOffset);
+		if (offSet != null) {
+			searchSql.append(" offset ? ");
+			preparedStatementValues.add(offSet);
 		}
-
-		searchSql.append(" offset ? ");
-		preparedStatementValues.add(offSet);
 
 		return searchSql.toString();
 	}

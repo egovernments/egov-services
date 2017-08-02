@@ -7,7 +7,6 @@ import javax.validation.constraints.Size;
 
 import org.egov.enums.ApplicationTypeEnum;
 import org.egov.enums.BusinessNatureEnum;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

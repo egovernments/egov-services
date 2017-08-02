@@ -12,6 +12,7 @@ import org.egov.enums.RateTypeEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.Category;
 import org.egov.models.CategoryDetail;
+import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.repository.builder.CategoryQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,14 +34,17 @@ public class CategoryRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	private PropertiesManager propertiesManager;
+
 	/**
 	 * Description : this method will create category in database
 	 * 
 	 * @param Category
 	 * @return categoryId
 	 */
-	public Long createCategory( Category category) {
-		
+	public Long createCategory(Category category) {
+
 		AuditDetails auditDetails = category.getAuditDetails();
 		String categoryInsert = CategoryQueryBuilder.INSERT_CATEGORY_QUERY;
 
@@ -52,14 +56,13 @@ public class CategoryRepository {
 				ps.setString(1, category.getTenantId());
 				ps.setString(2, category.getName());
 				ps.setString(3, category.getCode());
-				ps.setObject(4, category.getParentId());				
-				if(category.getBusinessNature() == null){
-					ps.setString(5, null);	
-				}
-				else{
+				ps.setObject(4, category.getParentId());
+				if (category.getBusinessNature() == null) {
+					ps.setString(5, null);
+				} else {
 					ps.setString(5, category.getBusinessNature().name());
 				}
-				
+
 				ps.setString(6, auditDetails.getCreatedBy());
 				ps.setString(7, auditDetails.getLastModifiedBy());
 				ps.setLong(8, auditDetails.getCreatedTime());
@@ -67,7 +70,7 @@ public class CategoryRepository {
 				return ps;
 			}
 		};
-		
+
 		// The newly generated key will be saved in this object
 		final KeyHolder holder = new GeneratedKeyHolder();
 		jdbcTemplate.update(psc, holder);
@@ -75,6 +78,7 @@ public class CategoryRepository {
 		return Long.valueOf(holder.getKey().intValue());
 
 	}
+
 	/**
 	 * Description : this method will create categoryDetail in database
 	 * 
@@ -111,7 +115,7 @@ public class CategoryRepository {
 	 * @param Category
 	 * @return Category
 	 */
-public Category updateCategory(Category category) {
+	public Category updateCategory(Category category) {
 
 		AuditDetails auditDetails = category.getAuditDetails();
 		String categoryUpdateSql = CategoryQueryBuilder.UPDATE_CATEGORY_QUERY;
@@ -124,12 +128,11 @@ public Category updateCategory(Category category) {
 				ps.setString(1, category.getTenantId());
 				ps.setString(2, category.getName());
 				ps.setString(3, category.getCode());
-				
+
 				ps.setObject(4, category.getParentId());
-				if(category.getBusinessNature() == null){
-					ps.setString(5, null);	
-				}
-				else{
+				if (category.getBusinessNature() == null) {
+					ps.setString(5, null);
+				} else {
 					ps.setString(5, category.getBusinessNature().name());
 				}
 				ps.setString(6, category.getAuditDetails().getLastModifiedBy());
@@ -183,12 +186,18 @@ public Category updateCategory(Category category) {
 	 * @param offSet
 	 * @return List<Category>
 	 */
-	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String type, Integer categoryId, Integer pageSize,
-			Integer offSet) {
+	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String type,
+			Integer categoryId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, type, categoryId, pageSize, offSet,
-				preparedStatementValues);
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+		}
+		if (offSet == null) {
+			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
+		}
+		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, type, categoryId,
+				pageSize, offSet, preparedStatementValues);
 		List<Category> categories = getCategories(categorySearchQuery.toString(), preparedStatementValues);
 
 		return categories;
@@ -205,6 +214,12 @@ public Category updateCategory(Category category) {
 	public List<CategoryDetail> getCategoryDetailsByCategoryId(Long categoryId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+		}
+		if (offSet == null) {
+			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
+		}
 		String categoryDetailSearchQuery = CategoryQueryBuilder.buildCategoryDetailSearchQuery(categoryId, pageSize,
 				offSet, preparedStatementValues);
 		List<CategoryDetail> categoryDetails = getCategoryDetails(categoryDetailSearchQuery.toString(),

@@ -16,6 +16,7 @@ import org.egov.lams.web.contract.Role;
 import org.egov.lams.web.contract.UserErrorResponse;
 import org.egov.lams.web.contract.UserRequest;
 import org.egov.lams.web.contract.UserSearchRequest;
+import org.egov.lams.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,9 +159,9 @@ public class AllotteeRepository {
 			} catch (HttpClientErrorException e) {
 				String errorResponseBody = e.getResponseBodyAsString();
 				logger.error("Following exception occurred: " + e.getResponseBodyAsString());
-				UserErrorResponse userErrorResponse = null;
+				ErrorResponse userErrorResponse = null;
 				try {
-					userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
+					userErrorResponse = objectMapper.readValue(errorResponseBody, ErrorResponse.class);
 				} catch (JsonMappingException jme) {
 					logger.error("Following Exception Occurred While Mapping JSON Response From User Service : "
 							+ jme.getMessage());
@@ -175,11 +176,8 @@ public class AllotteeRepository {
 				}
 				 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
 					logger.info("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
-					throw new RuntimeException(e);
-			} catch (Exception e) {
-				logger.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
-				throw new RuntimeException(e);
-			}
+					throw new RuntimeException(userErrorResponse.getError().toString());
+			} 
 		}
 		return allotteeResponse;
 	}

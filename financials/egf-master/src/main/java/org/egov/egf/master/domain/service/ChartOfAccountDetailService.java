@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -41,17 +41,17 @@ public class ChartOfAccountDetailService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(chartOfAccountDetailContractRequest.getChartOfAccountDetail(),
 				// errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(chartofaccountdetails, "ChartOfAccountDetails to create must not be null");
 				for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
 					validator.validate(chartOfAccountDetail, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(chartofaccountdetails, "ChartOfAccountDetails to update must not be null");
 				for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
 					validator.validate(chartOfAccountDetail, errors);
@@ -97,7 +97,7 @@ public class ChartOfAccountDetailService {
 	@Transactional
 	public List<ChartOfAccountDetail> add(List<ChartOfAccountDetail> chartofaccountdetails, BindingResult errors) {
 		chartofaccountdetails = fetchRelated(chartofaccountdetails);
-		validate(chartofaccountdetails, EgfConstants.ACTION_CREATE, errors);
+		validate(chartofaccountdetails, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -108,7 +108,7 @@ public class ChartOfAccountDetailService {
 	@Transactional
 	public List<ChartOfAccountDetail> update(List<ChartOfAccountDetail> chartofaccountdetails, BindingResult errors) {
 		chartofaccountdetails = fetchRelated(chartofaccountdetails);
-		validate(chartofaccountdetails, EgfConstants.ACTION_UPDATE, errors);
+		validate(chartofaccountdetails, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -33,17 +33,17 @@ public class FunctionService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(functionContractRequest.getFunction(),
 				// errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(functions, "Functions to create must not be null");
 				for (Function function : functions) {
 					validator.validate(function, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(functions, "Functions to update must not be null");
 				for (Function function : functions) {
 					validator.validate(function, errors);
@@ -78,7 +78,7 @@ public class FunctionService {
 	@Transactional
 	public List<Function> add(List<Function> functions, BindingResult errors) {
 		functions = fetchRelated(functions);
-		validate(functions, EgfConstants.ACTION_CREATE, errors);
+		validate(functions, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -89,7 +89,7 @@ public class FunctionService {
 	@Transactional
 	public List<Function> update(List<Function> functions, BindingResult errors) {
 		functions = fetchRelated(functions);
-		validate(functions, EgfConstants.ACTION_UPDATE, errors);
+		validate(functions, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

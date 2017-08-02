@@ -3,7 +3,7 @@ package org.egov.egf.master.domain.repository;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
@@ -47,7 +47,7 @@ public class AccountDetailTypeRepository {
 	public void add(AccountDetailTypeRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase(EgfConstants.ACTION_CREATE)) {
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
 			message.put("accountdetailtype_create", request);
 		} else {
 			message.put("accountdetailtype_update", request);

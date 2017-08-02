@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
@@ -51,7 +51,7 @@ public class FundController {
         List<FundContract> fundContracts = new ArrayList<>();
         FundContract contract;
 
-        fundRequest.getRequestInfo().setAction(EgfConstants.ACTION_CREATE);
+        fundRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
         for (FundContract fundContract : fundRequest.getFunds()) {
             fund = new Fund();
@@ -83,7 +83,7 @@ public class FundController {
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
-        fundRequest.getRequestInfo().setAction(EgfConstants.ACTION_UPDATE);
+        fundRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
         ModelMapper model = new ModelMapper();
         FundResponse fundResponse = new FundResponse();
         List<Fund> funds = new ArrayList<>();

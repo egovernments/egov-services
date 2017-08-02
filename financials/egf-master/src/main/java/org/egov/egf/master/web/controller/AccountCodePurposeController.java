@@ -7,7 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
@@ -52,7 +52,7 @@ public class AccountCodePurposeController {
 		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<>();
 		AccountCodePurposeContract contract;
 
-		accountCodePurposeRequest.getRequestInfo().setAction(EgfConstants.ACTION_CREATE);
+		accountCodePurposeRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
 		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeRequest
 				.getAccountCodePurposes()) {
@@ -88,7 +88,7 @@ public class AccountCodePurposeController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		accountCodePurposeRequest.getRequestInfo().setAction(EgfConstants.ACTION_UPDATE);
+		accountCodePurposeRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		AccountCodePurposeResponse accountCodePurposeResponse = new AccountCodePurposeResponse();
 		List<AccountCodePurpose> accountcodepurposes = new ArrayList<>();

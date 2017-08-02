@@ -7,7 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Functionary;
@@ -51,7 +51,7 @@ public class FunctionaryController {
 		List<FunctionaryContract> functionaryContracts = new ArrayList<>();
 		FunctionaryContract contract;
 
-		functionaryRequest.getRequestInfo().setAction(EgfConstants.ACTION_CREATE);
+		functionaryRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
 		for (FunctionaryContract functionaryContract : functionaryRequest.getFunctionaries()) {
 			functionary = new Functionary();
@@ -85,7 +85,7 @@ public class FunctionaryController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		functionaryRequest.getRequestInfo().setAction(EgfConstants.ACTION_UPDATE);
+		functionaryRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		FunctionaryResponse functionaryResponse = new FunctionaryResponse();
 		List<Functionary> functionaries = new ArrayList<>();

@@ -1,8 +1,8 @@
 package org.egov.common.constants;
 
-public class EgfConstants {
+public class Constants {
 
-    private EgfConstants() {
+    private Constants() {
 
     }
 

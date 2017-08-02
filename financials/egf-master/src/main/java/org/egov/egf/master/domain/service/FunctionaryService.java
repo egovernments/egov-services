@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Functionary;
@@ -31,17 +31,17 @@ public class FunctionaryService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(functionaryContractRequest.getFunctionary(),
 				// errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(functionaries, "Functionaries to create must not be null");
 				for (Functionary functionary : functionaries) {
 					validator.validate(functionary, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(functionaries, "Functionaries to update must not be null");
 				for (Functionary functionary : functionaries) {
 					validator.validate(functionary, errors);
@@ -69,7 +69,7 @@ public class FunctionaryService {
 	@Transactional
 	public List<Functionary> add(List<Functionary> functionaries, BindingResult errors) {
 		functionaries = fetchRelated(functionaries);
-		validate(functionaries, EgfConstants.ACTION_CREATE, errors);
+		validate(functionaries, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -80,7 +80,7 @@ public class FunctionaryService {
 	@Transactional
 	public List<Functionary> update(List<Functionary> functionaries, BindingResult errors) {
 		functionaries = fetchRelated(functionaries);
-		validate(functionaries, EgfConstants.ACTION_UPDATE, errors);
+		validate(functionaries, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

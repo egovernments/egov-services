@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -36,17 +36,17 @@ public class FiscalPeriodService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(fiscalPeriodContractRequest.getFiscalPeriod(),
 				// errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(fiscalperiods, "FiscalPeriods to create must not be null");
 				for (FiscalPeriod fiscalPeriod : fiscalperiods) {
 					validator.validate(fiscalPeriod, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(fiscalperiods, "FiscalPeriods to update must not be null");
 				for (FiscalPeriod fiscalPeriod : fiscalperiods) {
 					validator.validate(fiscalPeriod, errors);
@@ -81,7 +81,7 @@ public class FiscalPeriodService {
 	@Transactional
 	public List<FiscalPeriod> add(List<FiscalPeriod> fiscalperiods, BindingResult errors) {
 		fiscalperiods = fetchRelated(fiscalperiods);
-		validate(fiscalperiods, EgfConstants.ACTION_CREATE, errors);
+		validate(fiscalperiods, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -92,7 +92,7 @@ public class FiscalPeriodService {
 	@Transactional
 	public List<FiscalPeriod> update(List<FiscalPeriod> fiscalperiods, BindingResult errors) {
 		fiscalperiods = fetchRelated(fiscalperiods);
-		validate(fiscalperiods, EgfConstants.ACTION_UPDATE, errors);
+		validate(fiscalperiods, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Bank;
@@ -34,16 +34,16 @@ public class BankService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(bankContractRequest.getBank(), errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(banks, "Banks to create must not be null");
 				for (Bank bank : banks) {
 					validator.validate(bank, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(banks, "Banks to update must not be null");
 				for (Bank bank : banks) {
 					validator.validate(bank, errors);
@@ -69,7 +69,7 @@ public class BankService {
 	@Transactional
 	public List<Bank> add(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
-		validate(banks, EgfConstants.ACTION_CREATE, errors);
+		validate(banks, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -80,7 +80,7 @@ public class BankService {
 	@Transactional
 	public List<Bank> update(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
-		validate(banks, EgfConstants.ACTION_UPDATE, errors);
+		validate(banks, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

@@ -39,6 +39,7 @@ export default class ShowFields extends Component {
     let {renderField}=this;
     let {addNewCard, removeCard} = this.props;
     let self = this;
+    console.log(groups);
     switch (uiFramework) {
       case "google":
         return groups.map((group, groupIndex)=>{
@@ -74,8 +75,8 @@ export default class ShowFields extends Component {
                     </Grid>
                     <div style={{"marginLeft": "15px"}}>
                       {
-                        group.children && 
-                        group.children.length ? 
+                        group.children &&
+                        group.children.length ?
                         group.children.map(function(child) {
                           return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
                         }) : ""

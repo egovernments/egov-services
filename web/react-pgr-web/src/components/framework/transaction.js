@@ -15,7 +15,7 @@ import UiTable from './components/UiTable';
 var specifications={};
 
 let reqRequired = [];
-class Report extends Component {
+class Transaction extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -139,6 +139,9 @@ class Report extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
+    showResult=false;
+
+    console.log(mockData);
 
     return (
       <div className="SearchResult">
@@ -151,7 +154,11 @@ class Report extends Component {
             <UiButton item={{"label": "Search", "uiType":"submit"}} ui="google"/>
             <br/>
             {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
+            <br/>
+
           </div>
+          {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+
         </form>
       </div>
     );
@@ -210,4 +217,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_FLAG", flag})
   }
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Report);
+export default connect(mapStateToProps, mapDispatchToProps)(Transaction);

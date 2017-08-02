@@ -158,7 +158,7 @@ public class AllotteeRepository {
 				allotteeResponse = restTemplate.postForObject(url, createUserRequest, AllotteeResponse.class);
 			} catch (HttpClientErrorException e) {
 				logger.error("Following exception occurred: " + e.getResponseBodyAsString());
-				throw new RuntimeException(e);
+				throw new RuntimeException(e.getMessage() + e);
 			}
 			
 		}

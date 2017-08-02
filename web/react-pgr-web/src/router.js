@@ -80,6 +80,8 @@ import CreateVacantLand from'./components/contents/propertyTax/master/CreateVaca
 import Create from './components/framework/create';
 import View from './components/framework/view';
 import Search from './components/framework/search';
+import Transaction from './components/framework/transaction';
+
 
 const base = "";
 
@@ -182,7 +184,7 @@ const Main = () => {
 		      <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
           <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
-          <Route exact path= {base + '/transaction/:moduleName/:page'} component={Search}/>
+          <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 
     </Switch>
   </main>

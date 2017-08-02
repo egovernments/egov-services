@@ -14,14 +14,12 @@ import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.domain.service.BudgetDetailService;
-import org.egov.egf.budget.persistence.queue.repository.BudgetDetailQueueRepository;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetDetailRequest;
 import org.egov.egf.budget.web.contract.BudgetDetailResponse;
 import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,11 +40,6 @@ public class BudgetDetailController {
 
 	@Autowired
 	private BudgetDetailService budgetDetailService;
-
-	@Autowired
-	private BudgetDetailQueueRepository budgetDetailQueueRepository;
-
-	private static String persistThroughKafka;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -69,34 +62,13 @@ public class BudgetDetailController {
 			budgetdetails.add(budgetDetail);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		budgetdetails = budgetDetailService.create(budgetdetails, errors, budgetDetailRequest.getRequestInfo());
 
-			budgetdetails = budgetDetailService.fetchAndValidate(budgetdetails, errors,
-					budgetDetailRequest.getRequestInfo().getAction());
-
-			for (BudgetDetail bd : budgetdetails) {
-				contract = mapper.toContract(bd);
-				budgetDetailContracts.add(contract);
-			}
-
-			budgetDetailRequest.setBudgetDetails(budgetDetailContracts);
-			budgetDetailQueueRepository.addToQue(budgetDetailRequest);
-
-		} else {
-
-			budgetdetails = budgetDetailService.save(budgetdetails, errors);
-
-			for (BudgetDetail bd : budgetdetails) {
-				contract = mapper.toContract(bd);
-				budgetDetailContracts.add(contract);
-			}
-
-			budgetDetailRequest.setBudgetDetails(budgetDetailContracts);
-
-			budgetDetailQueueRepository.addToSearchQue(budgetDetailRequest);
-
+		for (BudgetDetail bd : budgetdetails) {
+			contract = mapper.toContract(bd);
+			budgetDetailContracts.add(contract);
 		}
+
 		budgetDetailResponse.setBudgetDetails(budgetDetailContracts);
 
 		return budgetDetailResponse;
@@ -123,33 +95,11 @@ public class BudgetDetailController {
 			budgetdetails.add(budgetDetail);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		budgetdetails = budgetDetailService.update(budgetdetails, errors, budgetDetailRequest.getRequestInfo());
 
-			budgetdetails = budgetDetailService.fetchAndValidate(budgetdetails, errors,
-					budgetDetailRequest.getRequestInfo().getAction());
-
-			for (BudgetDetail bd : budgetdetails) {
-				contract = mapper.toContract(bd);
-				budgetDetailContracts.add(contract);
-			}
-
-			budgetDetailRequest.setBudgetDetails(budgetDetailContracts);
-			budgetDetailQueueRepository.addToQue(budgetDetailRequest);
-
-		} else {
-
-			budgetdetails = budgetDetailService.update(budgetdetails, errors);
-
-			for (BudgetDetail bd : budgetdetails) {
-				contract = mapper.toContract(bd);
-				budgetDetailContracts.add(contract);
-			}
-
-			budgetDetailRequest.setBudgetDetails(budgetDetailContracts);
-
-			budgetDetailQueueRepository.addToSearchQue(budgetDetailRequest);
-
+		for (BudgetDetail bd : budgetdetails) {
+			contract = mapper.toContract(bd);
+			budgetDetailContracts.add(contract);
 		}
 
 		budgetDetailResponse.setBudgetDetails(budgetDetailContracts);
@@ -188,11 +138,6 @@ public class BudgetDetailController {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
 				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
-
-	@Value("${persist.through.kafka}")
-	public void setPersistThroughKafka(String persistThroughKafka) {
-		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

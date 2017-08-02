@@ -2,38 +2,66 @@ package org.egov.egf.budget.domain.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.persistence.entity.BudgetDetailEntity;
+import org.egov.egf.budget.persistence.queue.repository.BudgetDetailQueueRepository;
 import org.egov.egf.budget.persistence.repository.BudgetDetailJdbcRepository;
+import org.egov.egf.budget.web.contract.BudgetDetailRequest;
+import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BudgetDetailRepositoryTest {
 
-	@InjectMocks
-	private BudgetDetailRepository budgetRepository;
+	@Mock
+	private BudgetDetailJdbcRepository budgetDetailJdbcRepository;
+
+	private BudgetDetailRepository budgetDetailRepositoryWithKafka;
+
+	private BudgetDetailRepository budgetDetailRepositoryWithOutKafka;
 
 	@Mock
-	private BudgetDetailJdbcRepository budgetJdbcRepository;
+	private BudgetDetailQueueRepository budgetDetailQueueRepository;
+
+	@Captor
+	private ArgumentCaptor<BudgetDetailRequest> captor;
+
+	private RequestInfo requestInfo = new RequestInfo();
+
+	@Before
+	public void setup() {
+		budgetDetailRepositoryWithKafka = new BudgetDetailRepository(budgetDetailJdbcRepository,
+				budgetDetailQueueRepository, "yes");
+
+		budgetDetailRepositoryWithOutKafka = new BudgetDetailRepository(budgetDetailJdbcRepository,
+				budgetDetailQueueRepository, "no");
+	}
 
 	@Test
 	public void test_find_by_id() {
 		BudgetDetailEntity entity = getBudgetDetailEntity();
 		BudgetDetail expectedResult = entity.toDomain();
 
-		when(budgetJdbcRepository.findById(any(BudgetDetailEntity.class))).thenReturn(entity);
+		when(budgetDetailJdbcRepository.findById(any(BudgetDetailEntity.class))).thenReturn(entity);
 
-		BudgetDetail actualResult = budgetRepository.findById(getBudgetDetailDomin());
+		BudgetDetail actualResult = budgetDetailRepositoryWithKafka.findById(getBudgetDetailDomin());
 
 		assertEquals(expectedResult.getAnticipatoryAmount(), actualResult.getAnticipatoryAmount());
 		assertEquals(expectedResult.getApprovedAmount(), actualResult.getApprovedAmount());
@@ -46,11 +74,112 @@ public class BudgetDetailRepositoryTest {
 	public void test_find_by_id_return_null() {
 		BudgetDetailEntity entity = getBudgetDetailEntity();
 
-		when(budgetJdbcRepository.findById(null)).thenReturn(entity);
+		when(budgetDetailJdbcRepository.findById(null)).thenReturn(entity);
 
-		BudgetDetail actualResult = budgetRepository.findById(getBudgetDetailDomin());
+		BudgetDetail actualResult = budgetDetailRepositoryWithKafka.findById(getBudgetDetailDomin());
 
 		assertEquals(null, actualResult);
+	}
+
+	@Test
+	public void test_save_with_kafka() {
+
+		List<BudgetDetail> expectedResult = getBudgetDetails();
+
+		budgetDetailRepositoryWithKafka.save(expectedResult, requestInfo);
+
+		verify(budgetDetailQueueRepository).addToQue(captor.capture());
+
+		final BudgetDetailRequest actualRequest = captor.getValue();
+
+		assertEquals(expectedResult.get(0).getAnticipatoryAmount(),
+				actualRequest.getBudgetDetails().get(0).getAnticipatoryAmount());
+		assertEquals(expectedResult.get(0).getApprovedAmount(),
+				actualRequest.getBudgetDetails().get(0).getApprovedAmount());
+		assertEquals(expectedResult.get(0).getBudgetAvailable(),
+				actualRequest.getBudgetDetails().get(0).getBudgetAvailable());
+		assertEquals(expectedResult.get(0).getOriginalAmount(),
+				actualRequest.getBudgetDetails().get(0).getOriginalAmount());
+		assertEquals(expectedResult.get(0).getPlanningPercent(),
+				actualRequest.getBudgetDetails().get(0).getPlanningPercent());
+
+	}
+
+	@Test
+	public void test_save_with_out_kafka() {
+
+		List<BudgetDetail> expectedResult = getBudgetDetails();
+
+		BudgetDetailEntity entity = new BudgetDetailEntity().toEntity(expectedResult.get(0));
+
+		when(budgetDetailJdbcRepository.create(any(BudgetDetailEntity.class))).thenReturn(entity);
+
+		budgetDetailRepositoryWithOutKafka.save(expectedResult, requestInfo);
+
+		verify(budgetDetailQueueRepository).addToSearchQue(captor.capture());
+
+		final BudgetDetailRequest actualRequest = captor.getValue();
+
+		assertEquals(expectedResult.get(0).getAnticipatoryAmount(),
+				actualRequest.getBudgetDetails().get(0).getAnticipatoryAmount());
+		assertEquals(expectedResult.get(0).getApprovedAmount(),
+				actualRequest.getBudgetDetails().get(0).getApprovedAmount());
+		assertEquals(expectedResult.get(0).getBudgetAvailable(),
+				actualRequest.getBudgetDetails().get(0).getBudgetAvailable());
+		assertEquals(expectedResult.get(0).getOriginalAmount(),
+				actualRequest.getBudgetDetails().get(0).getOriginalAmount());
+		assertEquals(expectedResult.get(0).getPlanningPercent(),
+				actualRequest.getBudgetDetails().get(0).getPlanningPercent());
+	}
+
+	@Test
+	public void test_update_with_kafka() {
+
+		List<BudgetDetail> expectedResult = getBudgetDetails();
+
+		budgetDetailRepositoryWithKafka.update(expectedResult, requestInfo);
+
+		verify(budgetDetailQueueRepository).addToQue(captor.capture());
+
+		final BudgetDetailRequest actualRequest = captor.getValue();
+
+		assertEquals(expectedResult.get(0).getAnticipatoryAmount(),
+				actualRequest.getBudgetDetails().get(0).getAnticipatoryAmount());
+		assertEquals(expectedResult.get(0).getApprovedAmount(),
+				actualRequest.getBudgetDetails().get(0).getApprovedAmount());
+		assertEquals(expectedResult.get(0).getBudgetAvailable(),
+				actualRequest.getBudgetDetails().get(0).getBudgetAvailable());
+		assertEquals(expectedResult.get(0).getOriginalAmount(),
+				actualRequest.getBudgetDetails().get(0).getOriginalAmount());
+		assertEquals(expectedResult.get(0).getPlanningPercent(),
+				actualRequest.getBudgetDetails().get(0).getPlanningPercent());
+	}
+
+	@Test
+	public void test_update_with_out_kafka() {
+
+		List<BudgetDetail> expectedResult = getBudgetDetails();
+
+		BudgetDetailEntity entity = new BudgetDetailEntity().toEntity(expectedResult.get(0));
+
+		when(budgetDetailJdbcRepository.update(any(BudgetDetailEntity.class))).thenReturn(entity);
+
+		budgetDetailRepositoryWithOutKafka.update(expectedResult, requestInfo);
+
+		verify(budgetDetailQueueRepository).addToSearchQue(captor.capture());
+
+		final BudgetDetailRequest actualRequest = captor.getValue();
+
+		assertEquals(expectedResult.get(0).getAnticipatoryAmount(),
+				actualRequest.getBudgetDetails().get(0).getAnticipatoryAmount());
+		assertEquals(expectedResult.get(0).getApprovedAmount(),
+				actualRequest.getBudgetDetails().get(0).getApprovedAmount());
+		assertEquals(expectedResult.get(0).getBudgetAvailable(),
+				actualRequest.getBudgetDetails().get(0).getBudgetAvailable());
+		assertEquals(expectedResult.get(0).getOriginalAmount(),
+				actualRequest.getBudgetDetails().get(0).getOriginalAmount());
+		assertEquals(expectedResult.get(0).getPlanningPercent(),
+				actualRequest.getBudgetDetails().get(0).getPlanningPercent());
 	}
 
 	@Test
@@ -59,9 +188,9 @@ public class BudgetDetailRepositoryTest {
 		BudgetDetailEntity entity = getBudgetDetailEntity();
 		BudgetDetail expectedResult = entity.toDomain();
 
-		when(budgetJdbcRepository.create(any(BudgetDetailEntity.class))).thenReturn(entity);
+		when(budgetDetailJdbcRepository.create(any(BudgetDetailEntity.class))).thenReturn(entity);
 
-		BudgetDetail actualResult = budgetRepository.save(getBudgetDetailDomin());
+		BudgetDetail actualResult = budgetDetailRepositoryWithKafka.save(getBudgetDetailDomin());
 
 		assertEquals(expectedResult.getAnticipatoryAmount(), actualResult.getAnticipatoryAmount());
 		assertEquals(expectedResult.getApprovedAmount(), actualResult.getApprovedAmount());
@@ -77,9 +206,9 @@ public class BudgetDetailRepositoryTest {
 		BudgetDetailEntity entity = getBudgetDetailEntity();
 		BudgetDetail expectedResult = entity.toDomain();
 
-		when(budgetJdbcRepository.update(any(BudgetDetailEntity.class))).thenReturn(entity);
+		when(budgetDetailJdbcRepository.update(any(BudgetDetailEntity.class))).thenReturn(entity);
 
-		BudgetDetail actualResult = budgetRepository.update(getBudgetDetailDomin());
+		BudgetDetail actualResult = budgetDetailRepositoryWithKafka.update(getBudgetDetailDomin());
 
 		assertEquals(expectedResult.getAnticipatoryAmount(), actualResult.getAnticipatoryAmount());
 		assertEquals(expectedResult.getApprovedAmount(), actualResult.getApprovedAmount());
@@ -96,9 +225,9 @@ public class BudgetDetailRepositoryTest {
 		expectedResult.setPageSize(500);
 		expectedResult.setOffset(0);
 
-		when(budgetJdbcRepository.search(any(BudgetDetailSearch.class))).thenReturn(expectedResult);
+		when(budgetDetailJdbcRepository.search(any(BudgetDetailSearch.class))).thenReturn(expectedResult);
 
-		Pagination<BudgetDetail> actualResult = budgetRepository.search(getBudgetDetailSearch());
+		Pagination<BudgetDetail> actualResult = budgetDetailRepositoryWithKafka.search(getBudgetDetailSearch());
 
 		assertEquals(expectedResult, actualResult);
 
@@ -134,4 +263,18 @@ public class BudgetDetailRepositoryTest {
 
 	}
 
+	private List<BudgetDetail> getBudgetDetails() {
+
+		List<BudgetDetail> budgetDetails = new ArrayList<BudgetDetail>();
+
+		BudgetDetail budgetDetail = BudgetDetail.builder().budget(Budget.builder().id("1").build())
+				.budgetGroup(BudgetGroupContract.builder().id("1").build()).anticipatoryAmount(BigDecimal.TEN)
+				.originalAmount(BigDecimal.TEN).approvedAmount(BigDecimal.TEN).budgetAvailable(BigDecimal.TEN)
+				.planningPercent(BigDecimal.valueOf(1500)).build();
+
+		budgetDetail.setTenantId("default");
+		budgetDetails.add(budgetDetail);
+
+		return budgetDetails;
+	}
 }

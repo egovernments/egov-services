@@ -74,7 +74,7 @@ public class FundsourceContract extends AuditableContract {
 	@Length(min = 1, max = 25)
 	private String type;
 
-	private FundsourceContract fundSource;
+	private FundsourceContract parent;
 
 	private BigDecimal llevel;
 

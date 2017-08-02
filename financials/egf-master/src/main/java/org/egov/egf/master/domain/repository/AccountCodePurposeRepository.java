@@ -7,10 +7,13 @@ import org.egov.common.constants.Constants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.AccountCodePurposeSearch;
+import org.egov.egf.master.domain.service.FinancialConfigurationService;
 import org.egov.egf.master.persistence.entity.AccountCodePurposeEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.AccountCodePurposeJdbcRepository;
+import org.egov.egf.master.web.contract.AccountCodePurposeSearchContract;
 import org.egov.egf.master.web.requests.AccountCodePurposeRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,12 @@ public class AccountCodePurposeRepository {
 	private AccountCodePurposeJdbcRepository accountCodePurposeJdbcRepository;
 	@Autowired
 	private MastersQueueRepository accountCodePurposeQueueRepository;
+	
+	@Autowired
+        private FinancialConfigurationService financialConfigurationService;
+
+        @Autowired
+        private AccountCodePurposeESRepository accountCodePurposeESRepository;
 
 	public AccountCodePurpose findById(AccountCodePurpose accountCodePurpose) {
 		AccountCodePurposeEntity entity = accountCodePurposeJdbcRepository
@@ -56,9 +65,16 @@ public class AccountCodePurposeRepository {
 	}
 
 	public Pagination<AccountCodePurpose> search(AccountCodePurposeSearch domain) {
+            if (!financialConfigurationService.fetchDataFrom().isEmpty()
+                    && financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+                AccountCodePurposeSearchContract accountCodePurposeSearchContract = new AccountCodePurposeSearchContract();
+                ModelMapper mapper = new ModelMapper();
+                mapper.map(domain, accountCodePurposeSearchContract);
+                return accountCodePurposeESRepository.search(accountCodePurposeSearchContract);
+            } else {
+                return accountCodePurposeJdbcRepository.search(domain);
+            }
 
-		return accountCodePurposeJdbcRepository.search(domain);
-
-	}
+        }
 
 }

@@ -1188,8 +1188,8 @@ ReportDefinitions:
     type: string
     source: egpgr_complainttype
     linkedReport:
-      reportName: DrillDownByBoundaryLocalityDepartmentUserNamePositionGetComplaints
-      linkedColumn: _parent?reportName={reportName}&complainttypecode={name}
+      reportName: DrillDownByBoundaryLocalityDepartmentGetUserNamePosition
+      linkedColumn: _parent?reportName={reportName}&complainttype={name}
   - name: registered
     label: reports.pgr.status.registered
     type: number
@@ -1438,18 +1438,22 @@ ReportDefinitions:
     label: reports.pgr.dept.name
     type: string
     source: seva
-  - name: complainttypecode
+  - name: complainttype
     label: reports.pgr.complainttype
     type: string
     source: seva
-  
+  - name: username
+    label: reports.pgr.username
+    type: string
+    source: seva
   query: SELECT cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS withinsla 
          FROM submission cs,submission_attribute sa,
-          eg_boundary boundary, egpgr_complainttype ctype,eg_department dept WHERE 
-          cs.crn = sa.crn and boundary.id = sa.code::integer
+          eg_boundary boundary, egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass, eg_user us WHERE 
+          cs.crn = sa.crn and boundary.id = sa.code::integer and cs.positionid = pos.id and 
+          cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true 
            and cs.servicecode = ctype.code and cs.department=dept.id and cs.createddate >= $fromDate and cs.createddate
          <= $toDate and sa.key = 'systemLocationId' and boundary.id = (select id from eg_boundary where name = $parentboundary and cs.tenantid=$tenantid and boundarytype = 10) and cs.tenantid=$tenantid 
-          and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttypecode and cs.tenantid=$tenantid); 
+          and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and cs.tenantid=$tenantid) and us.username = $username; 
 
 - reportName: AgeingByDepartment
   summary: Ageing report by department

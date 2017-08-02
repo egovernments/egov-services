@@ -157,27 +157,10 @@ public class AllotteeRepository {
 			try {
 				allotteeResponse = restTemplate.postForObject(url, createUserRequest, AllotteeResponse.class);
 			} catch (HttpClientErrorException e) {
-				String errorResponseBody = e.getResponseBodyAsString();
 				logger.error("Following exception occurred: " + e.getResponseBodyAsString());
-				ErrorResponse userErrorResponse = null;
-				try {
-					userErrorResponse = objectMapper.readValue(errorResponseBody, ErrorResponse.class);
-				} catch (JsonMappingException jme) {
-					logger.error("Following Exception Occurred While Mapping JSON Response From User Service : "
-							+ jme.getMessage());
-					throw new RuntimeException(jme);
-				} catch (JsonProcessingException jpe) {
-					logger.error("Following Exception Occurred While Processing JSON Response From User Service : "
-							+ jpe.getMessage());
-					throw new RuntimeException(jpe);
-				} catch (IOException ioe) {
-					logger.error("Following Exception Occurred Calling User Service : " + ioe.getMessage());
-					throw new RuntimeException(ioe);
-				}
-				 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
-					logger.info("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
-					throw new RuntimeException(userErrorResponse.getError().toString());
-			} 
+				throw new RuntimeException(e);
+			}
+			
 		}
 		return allotteeResponse;
 	}

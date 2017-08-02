@@ -53,6 +53,7 @@ public class UpdateWaterConnectionRowMapper implements RowMapper<Connection> {
         final Connection connection = new Connection();
         connection.setId(rs.getLong("id"));
         connection.setStateId(rs.getLong("stateid"));
+        connection.setStatus(rs.getString("status"));
         connection.setAcknowledgementNumber(rs.getString("acknowledgmentnumber"));
         connection.setConsumerNumber(rs.getString("consumernumber"));
         connection.setApplicationType(rs.getString("applicationType"));

@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -25,12 +26,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class ChartOfAccountDetailService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private ChartOfAccountDetailRepository chartOfAccountDetailRepository;
 
@@ -46,17 +41,17 @@ public class ChartOfAccountDetailService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(chartOfAccountDetailContractRequest.getChartOfAccountDetail(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(chartofaccountdetails, "ChartOfAccountDetails to create must not be null");
 				for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
 					validator.validate(chartOfAccountDetail, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(chartofaccountdetails, "ChartOfAccountDetails to update must not be null");
 				for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
 					validator.validate(chartOfAccountDetail, errors);
@@ -102,7 +97,7 @@ public class ChartOfAccountDetailService {
 	@Transactional
 	public List<ChartOfAccountDetail> add(List<ChartOfAccountDetail> chartofaccountdetails, BindingResult errors) {
 		chartofaccountdetails = fetchRelated(chartofaccountdetails);
-		validate(chartofaccountdetails, ACTION_CREATE, errors);
+		validate(chartofaccountdetails, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -113,7 +108,7 @@ public class ChartOfAccountDetailService {
 	@Transactional
 	public List<ChartOfAccountDetail> update(List<ChartOfAccountDetail> chartofaccountdetails, BindingResult errors) {
 		chartofaccountdetails = fetchRelated(chartofaccountdetails);
-		validate(chartofaccountdetails, ACTION_UPDATE, errors);
+		validate(chartofaccountdetails, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

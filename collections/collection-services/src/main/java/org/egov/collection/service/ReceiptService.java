@@ -234,6 +234,8 @@ public class ReceiptService {
 		for (BillDetail billDetail : bill.getBillDetails()) {
 
 			Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
+			String instrumentId = instrumentRepository.createInstrument(
+					requestInfo, instrument);
 			LOGGER.info("ReceiptHeaderId: " + receiptHeaderId);
 
 			billDetail.setCollectionType(CollectionType.COUNTER);
@@ -262,8 +264,7 @@ public class ReceiptService {
 				try {
 					receiptRepository.persistReceipt(parametersMap,
 							parametersReceiptDetails, receiptHeaderId,
-							instrumentRepository.createInstrument(requestInfo,
-									instrument));
+							instrumentId);
 				} catch (Exception e) {
 					LOGGER.error("Persistingreceipt FAILED! ", e);
 					return receipt;

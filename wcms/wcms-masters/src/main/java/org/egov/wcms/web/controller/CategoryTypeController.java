@@ -176,11 +176,6 @@ public class CategoryTypeController {
         else
             responseInfo.setStatus(HttpStatus.OK.toString());
         categoryResponse.setResponseInfo(responseInfo);
-        try {
-
-        } catch (final Exception e) {
-            log.error("Exception Encountered : " + e);
-        }
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
 
     }

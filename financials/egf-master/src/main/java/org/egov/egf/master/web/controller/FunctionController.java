@@ -7,6 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Function;
@@ -50,7 +51,7 @@ public class FunctionController {
 		List<FunctionContract> functionContracts = new ArrayList<>();
 		FunctionContract contract;
 
-		functionRequest.getRequestInfo().setAction("create");
+		functionRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 
 		for (FunctionContract functionContract : functionRequest.getFunctions()) {
 			function = new Function();
@@ -84,7 +85,7 @@ public class FunctionController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		functionRequest.getRequestInfo().setAction("update");
+		functionRequest.getRequestInfo().setAction(Constants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		FunctionResponse functionResponse = new FunctionResponse();
 		List<Function> functions = new ArrayList<>();

@@ -1627,7 +1627,7 @@ public class PropertyRepository {
 	public String getNoticeNumberForupic(String upicNo) {
 
 		String noticeNumber = "";
-		String query = SpecialNoticeBuilder.GET_UPIC_NO;
+		String query = SpecialNoticeBuilder.GET_NOTICE_NUMBER;
 		noticeNumber = jdbcTemplate.queryForObject(query, new Object[] { upicNo }, String.class);
 
 		return noticeNumber;
@@ -1740,7 +1740,7 @@ public class PropertyRepository {
 				@Override
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
 					final PreparedStatement ps = connection.prepareStatement(
-							SpecialNoticeBuilder.INSERT_NOTICE_TAXWISE_DETAILS, new String[] { "sno" });
+							SpecialNoticeBuilder.INSERT_NOTICE_TAXWISE_DETAILS, new String[] { "id" });
 					ps.setLong(1, Long.valueOf(String.valueOf(id)));
 					ps.setLong(2, taxDetailId);
 					ps.setString(3, headWiseTax.getTaxName());
@@ -1801,7 +1801,7 @@ public class PropertyRepository {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
 				final PreparedStatement ps = connection.prepareStatement(SpecialNoticeBuilder.INSERT_NOTICE_ADDRESS,
-						new String[] { "sno" });
+						new String[] { "id" });
 				ps.setLong(1, Long.valueOf(String.valueOf(noticeId)));
 				if (notice.getAddress() != null && notice.getAddress().getId() != null)
 					ps.setLong(2, notice.getAddress().getId());

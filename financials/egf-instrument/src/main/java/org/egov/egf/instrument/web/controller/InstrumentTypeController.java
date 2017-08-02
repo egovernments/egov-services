@@ -11,14 +11,12 @@ import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.service.InstrumentTypeService;
-import org.egov.egf.instrument.persistence.queue.repository.InstrumentTypeQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentTypeContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentTypeMapper;
 import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
 import org.egov.egf.instrument.web.requests.InstrumentTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,11 +34,6 @@ public class InstrumentTypeController {
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
 	public static final String PLACEHOLDER = "placeholder";
-
-	private static String persistThroughKafka;
-
-	@Autowired
-	private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
 
 	@Autowired
 	private InstrumentTypeService instrumentTypeService;
@@ -68,33 +61,11 @@ public class InstrumentTypeController {
 			instrumenttypes.add(instrumentType);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		instrumenttypes = instrumentTypeService.create(instrumenttypes, errors, instrumentTypeRequest.getRequestInfo());
 
-			instrumenttypes = instrumentTypeService.fetchAndValidate(instrumenttypes, errors, ACTION_CREATE);
-
-			for (InstrumentType it : instrumenttypes) {
-				contract = mapper.toContract(it);
-				contract.setCreatedDate(new Date());
-				instrumentTypeContracts.add(contract);
-			}
-
-			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
-			instrumentTypeQueueRepository.addToQue(instrumentTypeRequest);
-
-		} else {
-
-			instrumenttypes = instrumentTypeService.save(instrumenttypes, errors);
-
-			for (InstrumentType it : instrumenttypes) {
-				contract = mapper.toContract(it);
-				contract.setCreatedDate(new Date());
-				instrumentTypeContracts.add(contract);
-			}
-
-			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
-			instrumentTypeQueueRepository.addToSearchQue(instrumentTypeRequest);
-
+		for (InstrumentType it : instrumenttypes) {
+			contract = mapper.toContract(it);
+			instrumentTypeContracts.add(contract);
 		}
 
 		instrumentTypeResponse.setInstrumentTypes(instrumentTypeContracts);
@@ -123,31 +94,11 @@ public class InstrumentTypeController {
 			instrumenttypes.add(instrumentType);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		instrumenttypes = instrumentTypeService.update(instrumenttypes, errors, instrumentTypeRequest.getRequestInfo());
 
-			instrumenttypes = instrumentTypeService.fetchAndValidate(instrumenttypes, errors, ACTION_UPDATE);
-
-			for (InstrumentType it : instrumenttypes) {
-				contract = mapper.toContract(it);
-				instrumentTypeContracts.add(contract);
-			}
-
-			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
-			instrumentTypeQueueRepository.addToQue(instrumentTypeRequest);
-
-		} else {
-
-			instrumenttypes = instrumentTypeService.update(instrumenttypes, errors);
-
-			for (InstrumentType it : instrumenttypes) {
-				contract = mapper.toContract(it);
-				instrumentTypeContracts.add(contract);
-			}
-
-			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
-			instrumentTypeQueueRepository.addToSearchQue(instrumentTypeRequest);
-
+		for (InstrumentType it : instrumenttypes) {
+			contract = mapper.toContract(it);
+			instrumentTypeContracts.add(contract);
 		}
 
 		instrumentTypeResponse.setInstrumentTypes(instrumentTypeContracts);
@@ -186,11 +137,6 @@ public class InstrumentTypeController {
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
-
-	@Value("${persist.through.kafka}")
-	public void setPersistThroughKafka(String persistThroughKafka) {
-		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

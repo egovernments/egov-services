@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Functionary;
@@ -20,12 +21,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class FunctionaryService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private FunctionaryRepository functionaryRepository;
 
@@ -36,17 +31,17 @@ public class FunctionaryService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(functionaryContractRequest.getFunctionary(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(functionaries, "Functionaries to create must not be null");
 				for (Functionary functionary : functionaries) {
 					validator.validate(functionary, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(functionaries, "Functionaries to update must not be null");
 				for (Functionary functionary : functionaries) {
 					validator.validate(functionary, errors);
@@ -74,7 +69,7 @@ public class FunctionaryService {
 	@Transactional
 	public List<Functionary> add(List<Functionary> functionaries, BindingResult errors) {
 		functionaries = fetchRelated(functionaries);
-		validate(functionaries, ACTION_CREATE, errors);
+		validate(functionaries, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -85,7 +80,7 @@ public class FunctionaryService {
 	@Transactional
 	public List<Functionary> update(List<Functionary> functionaries, BindingResult errors) {
 		functionaries = fetchRelated(functionaries);
-		validate(functionaries, ACTION_UPDATE, errors);
+		validate(functionaries, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

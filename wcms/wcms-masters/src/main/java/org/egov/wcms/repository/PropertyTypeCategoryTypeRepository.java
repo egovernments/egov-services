@@ -50,7 +50,6 @@ import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyCategoryRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
@@ -135,24 +134,22 @@ public class PropertyTypeCategoryTypeRepository {
 
     public PropertyTypeCategoryTypesRes findForCriteria(final PropertyCategoryGetRequest propertyCategoryRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        List<Integer> propertyTypeIdsList = new ArrayList<>();
+        final List<Integer> propertyTypeIdsList = new ArrayList<>();
         final String queryStr = propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues);
         final List<PropertyTypeCategoryType> propertyCategories = jdbcTemplate.query(queryStr,
                 preparedStatementValues.toArray(), propertyCategoryRowMapper);
         // fetch property type Id and set the property type name here
-        for (PropertyTypeCategoryType propertyCategory : propertyCategories) {
+        for (final PropertyTypeCategoryType propertyCategory : propertyCategories)
             propertyTypeIdsList.add(Integer.valueOf(propertyCategory.getPropertyTypeId()));
-        }
-        Integer[] propertypeIds =  propertyTypeIdsList.stream().distinct().toArray(Integer[]::new);
+        final Integer[] propertypeIds = propertyTypeIdsList.stream().distinct().toArray(Integer[]::new);
         final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyNameFromPTModule(
                 propertypeIds, propertyCategoryRequest.getTenantId());
-      
+
         propertyCategories.forEach(int1 -> {
-            propertyTypes.getPropertyTypes().forEach(int2->{
+            propertyTypes.getPropertyTypes().forEach(int2 -> {
                 if (int2.getId().equals(int1.getPropertyTypeId()))
-                {
-                    int1.setPropertyTypeName(int2.getName());}
-                    });
+                    int1.setPropertyTypeName(int2.getName());
+            });
         });
         log.info("PropertyCategoryList: " + propertyCategories.toString());
         final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();

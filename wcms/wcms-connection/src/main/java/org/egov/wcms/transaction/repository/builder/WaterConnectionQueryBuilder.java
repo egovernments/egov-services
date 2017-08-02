@@ -110,15 +110,21 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,stateid,demandid) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,stateid) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?)";
+                + ",?,?)";
     }
+    public static String insertDemandConnection() {
 
+        return "INSERT INTO egwtr_demand_connection("
+                + "id,connectionid,demandid,"
+                + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
+                + " values(nextval('seq_egwtr_demand_connection'),?,?,?,?,?,?,?)";
+    }
     public static String insertLegacyConnectionQuery() {
         return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,"
                 + "applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
@@ -147,14 +153,10 @@ public class WaterConnectionQueryBuilder {
 
         return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
                 + "categorytype = ?,hscpipesizetype = ?,sourcetype = ?,connectionstatus =?,"
-                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=?,demandid=? "
+                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=? "
                 + " where acknowledgmentnumber = ?";
     }
-    public static String updateConnectionByConsumerNumberQuery() {
 
-        return "UPDATE egwtr_waterconnection SET demandid=? "
-                + " where consumernumber = ?";
-}
     
     public static String persistEstimationNoticeQuery() { 
     	return "INSERT INTO egwtr_estimationnotice_audit_log (id, waterconnectionid, tenantid, dateofletter, letternumber, letterto, letterintimationsubject, applicationnumber, applicationdate, applicantname, servicename, waternumber, sladays, penaltychargedescription1, penaltychargedescription2, createdby, createdtime) "

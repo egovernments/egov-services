@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.TestConfiguration;
@@ -37,6 +38,8 @@ public class SurrenderReasonServiceTest {
 
 	private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
+	private RequestInfo requestInfo = new RequestInfo();
+
 	@Before
 	public void setup() {
 		surrenderReasonService = new SurrenderReasonService(validator, surrenderReasonRepository);
@@ -47,11 +50,9 @@ public class SurrenderReasonServiceTest {
 
 		List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-		SurrenderReason surrenderReason = expextedResult.get(0);
+		when(surrenderReasonRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(surrenderReasonRepository.save(any(SurrenderReason.class))).thenReturn(surrenderReason);
-
-		List<SurrenderReason> actualResult = surrenderReasonService.save(expextedResult, errors);
+		List<SurrenderReason> actualResult = surrenderReasonService.create(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -62,11 +63,9 @@ public class SurrenderReasonServiceTest {
 
 		List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-		SurrenderReason surrenderReason = expextedResult.get(0);
+		when(surrenderReasonRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(surrenderReasonRepository.save(any(SurrenderReason.class))).thenReturn(surrenderReason);
-
-		List<SurrenderReason> actualResult = surrenderReasonService.save(null, errors);
+		List<SurrenderReason> actualResult = surrenderReasonService.create(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -77,11 +76,9 @@ public class SurrenderReasonServiceTest {
 
 		List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-		SurrenderReason surrenderReason = expextedResult.get(0);
+		when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(surrenderReasonRepository.update(any(SurrenderReason.class))).thenReturn(surrenderReason);
-
-		List<SurrenderReason> actualResult = surrenderReasonService.update(expextedResult, errors);
+		List<SurrenderReason> actualResult = surrenderReasonService.update(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -92,33 +89,9 @@ public class SurrenderReasonServiceTest {
 
 		List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-		SurrenderReason surrenderReason = expextedResult.get(0);
+		when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(surrenderReasonRepository.update(any(SurrenderReason.class))).thenReturn(surrenderReason);
-
-		List<SurrenderReason> actualResult = surrenderReasonService.update(null, errors);
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_create() {
-
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
-
-		List<SurrenderReason> actualResult = surrenderReasonService.fetchAndValidate(expextedResult, errors, "create");
-
-		assertEquals(expextedResult, actualResult);
-
-	}
-
-	@Test
-	public final void test_save_for_update() {
-
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
-
-		List<SurrenderReason> actualResult = surrenderReasonService.fetchAndValidate(expextedResult, errors, "update");
+		List<SurrenderReason> actualResult = surrenderReasonService.update(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 

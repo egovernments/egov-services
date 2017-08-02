@@ -1,0 +1,60 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "financialYear": {
+            "type": "object"
+        },
+        "estimationType": {
+            "type": "keyword"
+        },
+        "parent": {
+            "type": "object"
+        },
+        "primaryBudget": {
+            "type": "boolean"
+        },
+        "referenceBudget": {
+            "type": "object"
+        },
+        "active": {
+            "type": "boolean"
+        },
+	"status": {
+            "type": "object"
+        },
+        "documentNumber": {
+            "type": "keyword"
+        },
+        "description": {
+            "type": "keyword"
+        },
+        "materializedPath": {
+            "type": "keyword"
+        },
+        "createdBy": {
+            "type": "object"
+        },
+        "lastModifiedBy": {
+            "type": "object"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

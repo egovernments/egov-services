@@ -62,6 +62,10 @@ public class PenaltyRateControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	
+	/**
+	 * Description : Test method for createPenaltyRate() method
+	 */
 	@Test
 	public void testCreatePenaltyRate() throws Exception {
 
@@ -97,6 +101,10 @@ public class PenaltyRateControllerTest {
 		assertTrue(Boolean.TRUE);
 	}
 
+	
+	/**
+	 * Description : Test method for updatePenaltyRate() method
+	 */
 	@Test
 	public void testUpdatePenaltyRate() throws Exception {
 
@@ -133,6 +141,9 @@ public class PenaltyRateControllerTest {
 
 	}
 
+	/**
+	 * Description : Test method for searchPenaltyRate() method
+	 */
 	@Test
 	public void testSearchPenaltyRate() throws Exception {
 

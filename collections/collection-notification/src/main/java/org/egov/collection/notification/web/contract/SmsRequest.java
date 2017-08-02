@@ -51,6 +51,7 @@ import org.springframework.stereotype.Service;
 @Setter
 @ToString
 @Service
+@Builder
 public class SmsRequest {
 
     private String mobileNumber;

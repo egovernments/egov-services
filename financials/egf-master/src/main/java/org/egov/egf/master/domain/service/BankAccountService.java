@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -27,12 +28,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class BankAccountService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private BankAccountRepository bankAccountRepository;
 
@@ -49,17 +44,17 @@ public class BankAccountService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(bankAccountContractRequest.getBankAccount(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(bankaccounts, "BankAccounts to create must not be null");
 				for (BankAccount bankAccount : bankaccounts) {
 					validator.validate(bankAccount, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(bankaccounts, "BankAccounts to update must not be null");
 				for (BankAccount bankAccount : bankaccounts) {
 					validator.validate(bankAccount, errors);
@@ -109,7 +104,7 @@ public class BankAccountService {
 	@Transactional
 	public List<BankAccount> add(List<BankAccount> bankaccounts, BindingResult errors) {
 		bankaccounts = fetchRelated(bankaccounts);
-		validate(bankaccounts, ACTION_CREATE, errors);
+		validate(bankaccounts, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -120,7 +115,7 @@ public class BankAccountService {
 	@Transactional
 	public List<BankAccount> update(List<BankAccount> bankaccounts, BindingResult errors) {
 		bankaccounts = fetchRelated(bankaccounts);
-		validate(bankaccounts, ACTION_UPDATE, errors);
+		validate(bankaccounts, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

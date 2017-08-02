@@ -55,7 +55,7 @@ public class UOMServiceImpl implements UOMService {
 				throw new DuplicateIdException(propertiesManager.getUomCustomMsg(),uomRequest.getRequestInfo());
 
 			RequestInfo requestInfo = uomRequest.getRequestInfo();
-			AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetals(requestInfo);
+			AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
 			try {
 
 				uom.setAuditDetails(auditDetails);

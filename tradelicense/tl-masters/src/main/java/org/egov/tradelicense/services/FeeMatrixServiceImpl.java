@@ -9,6 +9,7 @@ import org.egov.models.FeeMatrixDetail;
 import org.egov.models.FeeMatrixRequest;
 import org.egov.models.FeeMatrixResponse;
 import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
@@ -51,7 +52,9 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 	public FeeMatrixResponse createFeeMatrixMaster(String tenantId, FeeMatrixRequest feeMatrixRequest) {
 
 		RequestInfo requestInfo = feeMatrixRequest.getRequestInfo();
-		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetals(requestInfo);
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
 		for (FeeMatrix feeMatrix : feeMatrixRequest.getFeeMatrices()) {
 
 			tenantId = feeMatrix.getTenantId();
@@ -59,8 +62,9 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 			Long categoryId = feeMatrix.getCategoryId();
 			Long subCategoryId = feeMatrix.getSubCategoryId();
 			String financialYear = feeMatrix.getFinancialYear();
+
 			// validating financial year
-			feeMatrixHelper.validateFinancialYear(financialYear, requestInfo);
+			feeMatrixHelper.validateFinancialYear(financialYear, requestInfoWrapper);
 			// validating category
 			feeMatrixHelper.validateCategory(categoryId, requestInfo);
 			// validating sub category
@@ -102,6 +106,8 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 	public FeeMatrixResponse updateFeeMatrixMaster(FeeMatrixRequest feeMatrixRequest) {
 
 		RequestInfo requestInfo = feeMatrixRequest.getRequestInfo();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
 		for (FeeMatrix feeMatrix : feeMatrixRequest.getFeeMatrices()) {
 
 			String tenantId = feeMatrix.getTenantId();
@@ -111,7 +117,7 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 			String financialYear = feeMatrix.getFinancialYear();
 			Long feeMatrixId = feeMatrix.getId();
 			// validating financial year
-			feeMatrixHelper.validateFinancialYear(financialYear, requestInfo);
+			feeMatrixHelper.validateFinancialYear(financialYear, requestInfoWrapper);
 			// validating category
 			feeMatrixHelper.validateCategory(categoryId, requestInfo);
 			// validating sub category

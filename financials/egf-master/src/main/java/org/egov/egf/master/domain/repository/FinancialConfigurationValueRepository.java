@@ -1,9 +1,5 @@
 package org.egov.egf.master.domain.repository;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.FinancialConfigurationValue;
 import org.egov.egf.master.persistence.entity.FinancialConfigurationValueEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
@@ -44,7 +40,7 @@ public class FinancialConfigurationValueRepository {
 	/*public void add(FinancialConfigurationValueRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
 			message.put("financialconfigurationvalue_create", request);
 		} else {
 			message.put("financialconfigurationvalue_update", request);

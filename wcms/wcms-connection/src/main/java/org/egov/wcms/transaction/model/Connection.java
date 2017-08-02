@@ -132,6 +132,10 @@ public class Connection {
     
     @NotNull
     private String estimationNumber;
+    
+    
+    @NotNull
+    private String workOrderNumber;
 
     @NotNull
     private Boolean isLegacy;
@@ -150,6 +154,9 @@ public class Connection {
 
     @NotNull
     private List<DocumentOwner> documents;
+    
+    @NotNull
+    private List<ConnectionDemand> connectionDemands;
 
     @NotNull
     private List<Timeline> timelines;

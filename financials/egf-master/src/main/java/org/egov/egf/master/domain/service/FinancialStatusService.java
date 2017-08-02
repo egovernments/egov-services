@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.FinancialStatus;
@@ -20,12 +21,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class FinancialStatusService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private FinancialStatusRepository financialStatusRepository;
 
@@ -36,17 +31,17 @@ public class FinancialStatusService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(financialStatusContractRequest.getFinancialStatus(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(financialstatuses, "FinancialStatuses to create must not be null");
 				for (FinancialStatus financialStatus : financialstatuses) {
 					validator.validate(financialStatus, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(financialstatuses, "FinancialStatuses to update must not be null");
 				for (FinancialStatus financialStatus : financialstatuses) {
 					validator.validate(financialStatus, errors);
@@ -74,7 +69,7 @@ public class FinancialStatusService {
 	@Transactional
 	public List<FinancialStatus> add(List<FinancialStatus> financialstatuses, BindingResult errors) {
 		financialstatuses = fetchRelated(financialstatuses);
-		validate(financialstatuses, ACTION_CREATE, errors);
+		validate(financialstatuses, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -85,7 +80,7 @@ public class FinancialStatusService {
 	@Transactional
 	public List<FinancialStatus> update(List<FinancialStatus> financialstatuses, BindingResult errors) {
 		financialstatuses = fetchRelated(financialstatuses);
-		validate(financialstatuses, ACTION_UPDATE, errors);
+		validate(financialstatuses, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

@@ -73,7 +73,7 @@ public class Slab {
     private Long toUnit;
 
     @NotNull
-    private Double unitRate;
+    private double unitRate;
 
     @Size(max = 250)
     @NotNull

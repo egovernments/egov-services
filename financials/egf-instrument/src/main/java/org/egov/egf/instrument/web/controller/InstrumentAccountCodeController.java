@@ -12,14 +12,12 @@ import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.domain.service.InstrumentAccountCodeService;
-import org.egov.egf.instrument.persistence.queue.repository.InstrumentAccountCodeQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeContract;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentAccountCodeMapper;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,13 +36,8 @@ public class InstrumentAccountCodeController {
 	public static final String ACTION_UPDATE = "update";
 	public static final String PLACEHOLDER = "placeholder";
 
-	private static String persistThroughKafka;
-
 	@Autowired
 	private InstrumentAccountCodeService instrumentAccountCodeService;
-
-	@Autowired
-	private InstrumentAccountCodeQueueRepository instrumentAccountCodeQueueRepository;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -70,35 +63,12 @@ public class InstrumentAccountCodeController {
 			instrumentaccountcodes.add(instrumentAccountCode);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		instrumentaccountcodes = instrumentAccountCodeService.create(instrumentaccountcodes, errors,
+				instrumentAccountCodeRequest.getRequestInfo());
 
-			instrumentaccountcodes = instrumentAccountCodeService.fetchAndValidate(instrumentaccountcodes, errors,
-					ACTION_CREATE);
-
-			for (InstrumentAccountCode iac : instrumentaccountcodes) {
-				contract = mapper.toContract(iac);
-				contract.setCreatedDate(new Date());
-				instrumentAccountCodeContracts.add(contract);
-			}
-
-			instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
-
-			instrumentAccountCodeQueueRepository.addToQue(instrumentAccountCodeRequest);
-
-		} else {
-
-			instrumentaccountcodes = instrumentAccountCodeService.save(instrumentaccountcodes, errors);
-
-			for (InstrumentAccountCode iac : instrumentaccountcodes) {
-				contract = mapper.toContract(iac);
-				instrumentAccountCodeContracts.add(contract);
-			}
-
-			instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
-
-			instrumentAccountCodeQueueRepository.addToSearchQue(instrumentAccountCodeRequest);
-
+		for (InstrumentAccountCode iac : instrumentaccountcodes) {
+			contract = mapper.toContract(iac);
+			instrumentAccountCodeContracts.add(contract);
 		}
 
 		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
@@ -128,35 +98,12 @@ public class InstrumentAccountCodeController {
 			instrumentaccountcodes.add(instrumentAccountCode);
 		}
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+		instrumentaccountcodes = instrumentAccountCodeService.update(instrumentaccountcodes, errors,
+				instrumentAccountCodeRequest.getRequestInfo());
 
-			instrumentaccountcodes = instrumentAccountCodeService.fetchAndValidate(instrumentaccountcodes, errors,
-					ACTION_UPDATE);
-
-			for (InstrumentAccountCode iac : instrumentaccountcodes) {
-				contract = mapper.toContract(iac);
-				contract.setCreatedDate(new Date());
-				instrumentAccountCodeContracts.add(contract);
-			}
-
-			instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
-
-			instrumentAccountCodeQueueRepository.addToQue(instrumentAccountCodeRequest);
-
-		} else {
-
-			instrumentaccountcodes = instrumentAccountCodeService.update(instrumentaccountcodes, errors);
-
-			for (InstrumentAccountCode iac : instrumentaccountcodes) {
-				contract = mapper.toContract(iac);
-				instrumentAccountCodeContracts.add(contract);
-			}
-
-			instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
-
-			instrumentAccountCodeQueueRepository.addToSearchQue(instrumentAccountCodeRequest);
-
+		for (InstrumentAccountCode iac : instrumentaccountcodes) {
+			contract = mapper.toContract(iac);
+			instrumentAccountCodeContracts.add(contract);
 		}
 
 		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
@@ -197,11 +144,6 @@ public class InstrumentAccountCodeController {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
 				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
-
-	@Value("${persist.through.kafka}")
-	public void setPersistThroughKafka(String persistThroughKafka) {
-		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

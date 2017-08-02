@@ -253,6 +253,28 @@ definitions:
        - supervisionCharges
        - roadCutCharges
        - specialSecurityCharges
+       
+  ConnectionDemand:
+    type: object
+    description: detailed demands for the water connection.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique identifier of a ConnectionDemand object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      demandid:
+        type: string
+        description: unique identifier of Billing service Demand object
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant.
       
 
   Timeline:
@@ -584,6 +606,12 @@ definitions:
       acknowledgmentNumber:
         type: string
         description: the acknowledgement number generated after successful acceptance of request. 
+      estimationNumber:
+        type: string
+        description: estimation Number generated.
+      workOrderNumber:
+        type: string
+        description: workOrderNumber generated once Officer submits Generate WOrkorder .
       consumerNumber:
         type: string
         description: HSC consumer number generated after completion of entire workflow.
@@ -603,6 +631,10 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/EstimationCharge"
+      connectionDemands: 
+        type: array
+        items:
+          $ref: "#/definitions/ConnectionDemand"
       workOrder:
         $ref: "#/definitions/WorkOrder"
       meter:

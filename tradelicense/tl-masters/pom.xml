@@ -62,7 +62,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.egov</groupId>
-			<artifactId>tradelicenseutil</artifactId>
+			<artifactId>tl-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

@@ -37,10 +37,11 @@ public interface CategoryService {
 	 * @param name
 	 * @param code
 	 * @param type
+	 * @param categoryId
 	 * @param pageSize
 	 * @param offSet
 	 * @return CategoryResponse
 	 */
 	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String type, Integer pageSize, Integer offSet);
+			String code, String type, Integer categoryId, Integer pageSize, Integer offSet);
 }

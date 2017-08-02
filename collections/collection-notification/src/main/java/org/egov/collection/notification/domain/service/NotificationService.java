@@ -16,7 +16,7 @@ public class NotificationService {
     }
 
     public void notify(ReceiptRequest receiptRequest) {
-       // this.smsService.send(receiptRequest);
+        this.smsService.send(receiptRequest);
         this.emailService.send(receiptRequest);
     }
 

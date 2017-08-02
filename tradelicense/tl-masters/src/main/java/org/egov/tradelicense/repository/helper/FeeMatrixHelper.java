@@ -11,16 +11,18 @@ import org.egov.models.AuditDetails;
 import org.egov.models.FeeMatrix;
 import org.egov.models.FeeMatrixDetail;
 import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
+import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.exception.InvalidInputException;
 import org.egov.tradelicense.exception.InvalidRangeException;
+import org.egov.tradelicense.model.FinancialYearContract;
+import org.egov.tradelicense.model.FinancialYearContractResponse;
 import org.egov.tradelicense.repository.builder.FeeMatrixQueryBuilder;
 import org.egov.tradelicense.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -34,28 +36,35 @@ public class FeeMatrixHelper {
 	RestTemplate restTemplate;
 
 	@Autowired
-	Environment env;
+	PropertiesManager propertiesManager;
 
 	/**
 	 * This method will validate the financial year
 	 * 
 	 * @param financialYear
 	 */
-	public void validateFinancialYear(String financialYear, RequestInfo requestInfo) {
+	public void validateFinancialYear(String financialYear, RequestInfoWrapper requestInfoWrapper) {
 
 		StringBuffer financialYearURI = new StringBuffer();
-		financialYearURI.append(env.getProperty("egov.services.egf-masters.hostname"))
-				.append(env.getProperty("egov.services.egf-masters.basepath"))
-				.append(env.getProperty("egov.services.egf-masters.searchpath"));
+		financialYearURI.append(propertiesManager.getFinancialServiceHostName())
+				.append(propertiesManager.getFinancialServiceBasePath())
+				.append(propertiesManager.getFinancialServiceSearchPath());
+
 		URI uri = UriComponentsBuilder.fromUriString(financialYearURI.toString()).queryParam("id", financialYear)
 				.build(true).encode().toUri();
 		try {
-			
-			String financialYearResponse = restTemplate.getForObject(uri, String.class);
-
-		} catch (HttpClientErrorException ex) {
-			
-			throw new InvalidInputException(requestInfo);
+			FinancialYearContractResponse financialYearContractResponse = restTemplate.postForObject(uri,
+					requestInfoWrapper, FinancialYearContractResponse.class);
+			if (financialYearContractResponse != null) {
+				List<FinancialYearContract> FinancialYearContracts = financialYearContractResponse.getFinancialYears();
+				if (FinancialYearContracts == null || FinancialYearContracts.size() == 0) {
+					throw new InvalidInputException(requestInfoWrapper.getRequestInfo());
+				}
+			} else {
+				throw new InvalidInputException(requestInfoWrapper.getRequestInfo());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -136,7 +145,7 @@ public class FeeMatrixHelper {
 	}
 
 	/**
-	 * Description : this method for search FeeMatrixDetail of a feeMatrixId
+	 * Description : this method for search FeeMatrixDetail of a feeMatrix
 	 * 
 	 * @param feeMatrixId
 	 * @return List<FeeMatrixDetail>

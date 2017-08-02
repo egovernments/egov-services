@@ -65,6 +65,11 @@ public class CategoryContollerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	
+	/**
+	 * Description : Test method for createCategory() method
+	
+	 */
 	@Test
 	public void testCreateCategory() throws Exception {
 
@@ -100,6 +105,11 @@ public class CategoryContollerTest {
 
 	}
 
+	
+	/**
+	 * Description : Test method for createCategoryDetails() method
+	
+	 */
 	@Test
 	public void testCreateCategoryDetails() throws Exception {
 
@@ -116,7 +126,7 @@ public class CategoryContollerTest {
 		categoryDetails.add(categoryDetail);
 		category.setDetails(categoryDetails);
 		categories.add(category);
-		
+
 		CategoryResponse categoryResponse = new CategoryResponse();
 		categoryResponse.setResponseInfo(new ResponseInfo());
 		categoryResponse.setCategories(categories);
@@ -140,6 +150,10 @@ public class CategoryContollerTest {
 
 	}
 
+	
+	/**
+	 * Description : Test method for updateCategory() method
+	 */
 	@Test
 	public void testUpdateCategory() throws Exception {
 
@@ -177,6 +191,9 @@ public class CategoryContollerTest {
 
 	}
 
+	/**
+	 * Description : Test method for updateCategoryDetials() method
+	 */
 	@Test
 	public void testUpdateCategoryDetails() throws Exception {
 
@@ -226,6 +243,9 @@ public class CategoryContollerTest {
 
 	}
 
+	/**
+	 * Description : Test method for searchCategory() method
+	 */
 	@Test
 	public void testSearchCategory() throws Exception {
 
@@ -245,8 +265,8 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-							.thenReturn(categoryResponse);
+					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
+					any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/tradelicense/category/_search").param("tenantId", "default")
 					.param("type", "SUBCATEGORY").contentType(MediaType.APPLICATION_JSON)
@@ -263,6 +283,10 @@ public class CategoryContollerTest {
 
 	}
 
+	
+	/**
+	 * Description : Test method for searchCategoryDetails() method
+	 */
 	@Test
 	public void testSearchCategoryDetails() throws Exception {
 
@@ -292,8 +316,8 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-							.thenReturn(categoryResponse);
+					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
+					any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/tradelicense/category/_search").param("tenantId", "default")
 					.param("type", "SUBCATEGORY").contentType(MediaType.APPLICATION_JSON)
@@ -305,7 +329,6 @@ public class CategoryContollerTest {
 			assertTrue(Boolean.FALSE);
 			e.printStackTrace();
 		}
-
 		assertTrue(Boolean.TRUE);
 
 	}

@@ -17,18 +17,14 @@ import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
-import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Status;
-import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class DisposalService {
@@ -39,13 +35,10 @@ public class DisposalService {
     private DisposalRepository disposalRepository;
 
     @Autowired
-    private AssetProducer assetProducer;
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private AssetCurrentAmountService assetCurrentAmountService;
@@ -108,21 +101,7 @@ public class DisposalService {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
 
-        String value = null;
-        try {
-            value = objectMapper.writeValueAsString(disposalRequest);
-        } catch (final JsonProcessingException ex) {
-            LOGGER.info("DisposalService:", ex);
-            throw new RuntimeException(ex);
-        }
-
-        try {
-            assetProducer.sendMessage(applicationProperties.getCreateAssetDisposalTopicName(),
-                    KafkaTopicName.SAVEDISPOSAL.toString(), value);
-        } catch (final Exception ex) {
-            LOGGER.info("DisposalService:", ex);
-            throw new RuntimeException(ex);
-        }
+        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetDisposalTopicName(), disposalRequest);
         final List<Disposal> disposals = new ArrayList<Disposal>();
         disposals.add(disposalRequest.getDisposal());
         return getResponse(disposals, disposalRequest.getRequestInfo());

@@ -9,18 +9,14 @@ import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetCategoryResponse;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
-import org.egov.asset.model.enums.KafkaTopicName;
-import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetCategoryRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class AssetCategoryService {
@@ -31,13 +27,10 @@ public class AssetCategoryService {
     private AssetCategoryRepository assetCategoryRepository;
 
     @Autowired
-    private AssetProducer assetProducer;
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
@@ -66,18 +59,8 @@ public class AssetCategoryService {
         assetCategory.setDepreciationRate(assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()));
         assetCategory.setCode(assetCategoryRepository.getAssetCategoryCode());
         logger.info("AssetCategoryService createAsync" + assetCategoryRequest);
-        String value = null;
-        try {
-            value = objectMapper.writeValueAsString(assetCategoryRequest);
-        } catch (final JsonProcessingException e) {
-            logger.info("the exception in assetcategory service create async method : " + e);
-        }
-        try {
-            assetProducer.sendMessage(applicationProperties.getCreateAssetCategoryTopicName(),
-                    KafkaTopicName.SAVEASSETCATEGORY.toString(), value);
-        } catch (final Exception ex) {
-            logger.info("the exception in assetcategory service create async method : " + ex);
-        }
+        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetCategoryTopicName(), assetCategoryRequest);
+
         final List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
         assetCategories.add(assetCategory);
 
@@ -95,18 +78,7 @@ public class AssetCategoryService {
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
         assetCategory.setDepreciationRate(assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()));
         logger.info("AssetCategoryService updateAsync" + assetCategoryRequest);
-        String value = null;
-        try {
-            value = objectMapper.writeValueAsString(assetCategoryRequest);
-        } catch (final JsonProcessingException e) {
-            logger.info("the exception in assetcategory service  updateasync method : " + e);
-        }
-        try {
-            assetProducer.sendMessage(applicationProperties.getUpdateAssetCategoryTopicName(),
-                    KafkaTopicName.UPDATEASSETCATEGORY.toString(), value);
-        } catch (final Exception ex) {
-            logger.info("the exception in assetcategory service updateasync method : " + ex);
-        }
+        logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetCategoryTopicName(), assetCategoryRequest);
         final List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
         assetCategories.add(assetCategory);
 

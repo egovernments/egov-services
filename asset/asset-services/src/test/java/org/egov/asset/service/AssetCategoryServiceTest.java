@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -18,10 +17,10 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
-import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetCategoryRepository;
 import org.egov.asset.util.FileUtils;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,7 +37,7 @@ public class AssetCategoryServiceTest {
     private AssetCategoryRepository assetCategoryRepository;
 
     @Mock
-    private AssetProducer assetProducer;
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
     @Mock
     private ApplicationProperties applicationProperties;
@@ -51,7 +50,7 @@ public class AssetCategoryServiceTest {
 
     @Mock
     private ResponseInfoFactory responseInfoFactory;
-    
+
     @Mock
     private AssetCommonService assetCommonService;
 
@@ -132,7 +131,7 @@ public class AssetCategoryServiceTest {
 
         final List<AssetCategoryRequest> insertedAssetCategoryRequest = new ArrayList<>();
         insertedAssetCategoryRequest.add(assetCategoryRequest);
-        
+
         AssetCategoryResponse assetCategoryResponse = null;
         try {
             assetCategoryResponse = getAssetCategoryResponse("assetcategoryservice.assetcategory1.json");
@@ -143,7 +142,8 @@ public class AssetCategoryServiceTest {
         when(applicationProperties.getUpdateAssetCategoryTopicName()).thenReturn("kafka.topics.update.disposal");
         when(assetCategoryRepository.getAssetCategoryCode()).thenReturn("15");
         assertTrue(assetCategoryResponse.getAssetCategory().get(0).getId().equals(Long.valueOf("15")));
-        doNothing().when(assetProducer).sendMessage(Matchers.anyString(), Matchers.anyString(), Matchers.anyObject());
+        // doNothing().when(logAwareKafkaTemplate).send(Matchers.anyString(),
+        // Matchers.anyString(), Matchers.anyObject());
         assetCategoryService.updateAsync(assetCategoryRequest);
 
         assertEquals(assetCategoryResponse.getAssetCategory().get(0).toString(),

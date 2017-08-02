@@ -14,17 +14,13 @@ import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
-import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
-import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.RevaluationRepository;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class RevaluationService {
@@ -33,13 +29,10 @@ public class RevaluationService {
     private RevaluationRepository revaluationRepository;
 
     @Autowired
-    private AssetProducer assetProducer;
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private AssetCurrentAmountService assetCurrentAmountService;
@@ -63,8 +56,6 @@ public class RevaluationService {
             revaluationRequest.getRevaluation()
                     .setAuditDetails(assetCurrentAmountService.getAuditDetails(revaluationRequest.getRequestInfo()));
 
-        // FIXME uncomment the code once voucher services are up in micro-dev
-        // environment.
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 revaluationRequest.getRevaluation().getTenantId()))
             try {
@@ -75,22 +66,8 @@ public class RevaluationService {
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
-        String json = null;
 
-        try {
-            json = objectMapper.writeValueAsString(revaluationRequest);
-        } catch (final JsonProcessingException ex) {
-            logger.info("RevaluationService createAsync catch block:" + ex.getMessage());
-        }
-
-        // Send data to kafka for persist into db
-        try {
-            if (json != null)
-                assetProducer.sendMessage(applicationProperties.getCreateAssetRevaluationTopicName(),
-                        KafkaTopicName.SAVEREVALUATION.toString(), json);
-        } catch (final Exception ex) {
-            logger.info("RevaluationService send kafka createAsync:" + ex.getMessage());
-        }
+        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetRevaluationTopicName(), revaluationRequest);
 
         final List<Revaluation> revaluations = new ArrayList<Revaluation>();
         revaluations.add(revaluationRequest.getRevaluation());
@@ -102,7 +79,7 @@ public class RevaluationService {
     }
 
     public RevaluationResponse search(final RevaluationCriteria revaluationCriteria) {
-        List<Revaluation> revaluations = null;
+        List<Revaluation> revaluations = new ArrayList<Revaluation>();
         try {
             revaluations = revaluationRepository.search(revaluationCriteria);
         } catch (final Exception ex) {
@@ -112,20 +89,20 @@ public class RevaluationService {
     }
 
     private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest) {
-        final Asset asset = assetCurrentAmountService.getAsset(revaluationRequest.getRevaluation().getAssetId(),
-                revaluationRequest.getRevaluation().getTenantId(), revaluationRequest.getRequestInfo());
+        final Revaluation revaluation = revaluationRequest.getRevaluation();
+        final Asset asset = assetCurrentAmountService.getAsset(revaluation.getAssetId(), revaluation.getTenantId(),
+                revaluationRequest.getRequestInfo());
         logger.debug("asset for revaluation :: " + asset);
 
         final AssetCategory assetCategory = asset.getAssetCategory();
 
-        if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
+        if (revaluation.getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
             logger.info("subledger details check for Type of change INCREASED");
             final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
-                    .getSubledgerDetails(revaluationRequest.getRequestInfo(),
-                            revaluationRequest.getRevaluation().getTenantId(), assetCategory.getAssetAccount());
+                    .getSubledgerDetails(revaluationRequest.getRequestInfo(), revaluation.getTenantId(),
+                            assetCategory.getAssetAccount());
             final List<ChartOfAccountDetailContract> subledgerDetailsForRevaluationReserverAccount = voucherService
-                    .getSubledgerDetails(revaluationRequest.getRequestInfo(),
-                            revaluationRequest.getRevaluation().getTenantId(),
+                    .getSubledgerDetails(revaluationRequest.getRequestInfo(), revaluation.getTenantId(),
                             assetCategory.getRevaluationReserveAccount());
 
             if (subledgerDetailsForAssetAccount != null && subledgerDetailsForRevaluationReserverAccount != null
@@ -133,15 +110,14 @@ public class RevaluationService {
                     && !subledgerDetailsForRevaluationReserverAccount.isEmpty())
                 throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
 
-        } else if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
+        } else if (revaluation.getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
             logger.info("subledger details check for Type of change DECREASED");
             final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
-                    .getSubledgerDetails(revaluationRequest.getRequestInfo(),
-                            revaluationRequest.getRevaluation().getTenantId(), assetCategory.getAssetAccount());
+                    .getSubledgerDetails(revaluationRequest.getRequestInfo(), revaluation.getTenantId(),
+                            assetCategory.getAssetAccount());
             final List<ChartOfAccountDetailContract> subledgerDetailsForFixedAssetWrittenOffAccount = voucherService
-                    .getSubledgerDetails(revaluationRequest.getRequestInfo(),
-                            revaluationRequest.getRevaluation().getTenantId(),
-                            revaluationRequest.getRevaluation().getFixedAssetsWrittenOffAccount());
+                    .getSubledgerDetails(revaluationRequest.getRequestInfo(), revaluation.getTenantId(),
+                            revaluation.getFixedAssetsWrittenOffAccount());
 
             if (subledgerDetailsForAssetAccount != null && subledgerDetailsForFixedAssetWrittenOffAccount != null
                     && !subledgerDetailsForAssetAccount.isEmpty()
@@ -157,7 +133,7 @@ public class RevaluationService {
                 asset, accountCodeDetails);
         logger.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
-        return voucherService.createVoucher(voucherRequest, revaluationRequest.getRevaluation().getTenantId());
+        return voucherService.createVoucher(voucherRequest, revaluation.getTenantId());
 
     }
 

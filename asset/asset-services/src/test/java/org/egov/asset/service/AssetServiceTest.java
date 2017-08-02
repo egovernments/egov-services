@@ -16,10 +16,10 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,126 +31,126 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(MockitoJUnitRunner.class)
 public class AssetServiceTest {
 
-	@Mock
-	private AssetRepository assetRepository;
+    @Mock
+    private AssetRepository assetRepository;
 
-	@Mock
-	private AssetProducer assetProducer;
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-	@Mock
-	private ApplicationProperties applicationProperties;
+    @InjectMocks
+    private AssetService assetService;
 
-	@InjectMocks
-	private AssetService assetService;
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Mock
-	private ResponseInfoFactory responseInfoFactory;
+    @Mock
+    private ObjectMapper objectMapper;
 
-	@Mock
-	private ObjectMapper objectMapper;
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
-	@Test
-	public void testSearch() {
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(getAsset());
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setAssets(assets);
+    @Test
+    public void testSearch() {
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(getAsset());
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setAssets(assets);
 
-		final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
-		when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
-		System.err.println(assetResponse);
-		System.err.println(assetService.getAssets(assetCriteria, new RequestInfo()));
-		assertEquals(assetResponse, assetService.getAssets(assetCriteria, new RequestInfo()));
-	}
+        final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
+        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
+        System.err.println(assetResponse);
+        System.err.println(assetService.getAssets(assetCriteria, new RequestInfo()));
+        assertEquals(assetResponse, assetService.getAssets(assetCriteria, new RequestInfo()));
+    }
 
-	@Test
-	public void testCreate() {
+    @Test
+    public void testCreate() {
 
-		final Asset asset = getAsset();
-		final AssetRequest assetRequest = new AssetRequest();
-		assetRequest.setAsset(asset);
+        final Asset asset = getAsset();
+        final AssetRequest assetRequest = new AssetRequest();
+        assetRequest.setAsset(asset);
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setResponseInfo(null);
-		assetResponse.setAssets(assets);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setResponseInfo(null);
+        assetResponse.setAssets(assets);
 
-		when(assetRepository.create(any(AssetRequest.class))).thenReturn(asset);
+        when(assetRepository.create(any(AssetRequest.class))).thenReturn(asset);
 
-		assertTrue(assetResponse.equals(assetService.create(assetRequest)));
-	}
+        assertTrue(assetResponse.equals(assetService.create(assetRequest)));
+    }
 
-	@Test
-	public void testCreateAsync() {
+    @Test
+    public void testCreateAsync() {
 
-		final Asset asset = getAsset();
-		final AssetRequest assetRequest = new AssetRequest();
-		assetRequest.setAsset(asset);
+        final Asset asset = getAsset();
+        final AssetRequest assetRequest = new AssetRequest();
+        assetRequest.setAsset(asset);
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setResponseInfo(null);
-		assetResponse.setAssets(assets);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setResponseInfo(null);
+        assetResponse.setAssets(assets);
 
-		assertTrue(assetResponse.equals(assetService.createAsync(assetRequest)));
-	}
+        assertTrue(assetResponse.equals(assetService.createAsync(assetRequest)));
+    }
 
-	@Test
-	public void testUpdate() {
+    @Test
+    public void testUpdate() {
 
-		final Asset asset = getAsset();
-		final AssetRequest assetRequest = new AssetRequest();
-		assetRequest.setAsset(asset);
+        final Asset asset = getAsset();
+        final AssetRequest assetRequest = new AssetRequest();
+        assetRequest.setAsset(asset);
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setResponseInfo(null);
-		assetResponse.setAssets(assets);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setResponseInfo(null);
+        assetResponse.setAssets(assets);
 
-		when(assetRepository.update(any(AssetRequest.class))).thenReturn(asset);
+        when(assetRepository.update(any(AssetRequest.class))).thenReturn(asset);
 
-		assertTrue(assetResponse.equals(assetService.update(assetRequest)));
-	}
+        assertTrue(assetResponse.equals(assetService.update(assetRequest)));
+    }
 
-	@Test
-	public void testUpdateAsync() {
+    @Test
+    public void testUpdateAsync() {
 
-		final Asset asset = getAsset();
-		final AssetRequest assetRequest = new AssetRequest();
-		assetRequest.setAsset(asset);
+        final Asset asset = getAsset();
+        final AssetRequest assetRequest = new AssetRequest();
+        assetRequest.setAsset(asset);
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setResponseInfo(null);
-		assetResponse.setAssets(assets);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setResponseInfo(null);
+        assetResponse.setAssets(assets);
 
-		assertTrue(assetResponse.equals(assetService.updateAsync(assetRequest)));
-	}
+        assertTrue(assetResponse.equals(assetService.updateAsync(assetRequest)));
+    }
 
-	private Asset getAsset() {
-		final Asset asset = new Asset();
-		asset.setTenantId("ap.kurnool");
-		asset.setId(null);
-		asset.setName("asset name");
-		asset.setStatus("CREATED");
-		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-		asset.setEnableYearWiseDepreciation(true);
+    private Asset getAsset() {
+        final Asset asset = new Asset();
+        asset.setTenantId("ap.kurnool");
+        asset.setId(null);
+        asset.setName("asset name");
+        asset.setStatus("CREATED");
+        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
+        asset.setEnableYearWiseDepreciation(true);
 
-		final Location location = new Location();
-		location.setLocality(4l);
-		location.setDoorNo("door no");
+        final Location location = new Location();
+        location.setLocality(4l);
+        location.setDoorNo("door no");
 
-		final AssetCategory assetCategory = new AssetCategory();
-		assetCategory.setId(1l);
-		assetCategory.setName("category name");
+        final AssetCategory assetCategory = new AssetCategory();
+        assetCategory.setId(1l);
+        assetCategory.setName("category name");
 
-		asset.setLocationDetails(location);
-		asset.setAssetCategory(assetCategory);
-		return asset;
-	}
+        asset.setLocationDetails(location);
+        asset.setAssetCategory(assetCategory);
+        return asset;
+    }
 
 }

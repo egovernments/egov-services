@@ -28,10 +28,10 @@ import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
-import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.asset.util.FileUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,214 +50,208 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @PrepareForTest(RevaluationService.class)
 public class RevaluationServiceTest {
 
-	@Mock
-	private RevaluationRepository revaluationRepository;
+    @Mock
+    private RevaluationRepository revaluationRepository;
 
-	@Mock
-	private AssetProducer assetProducer;
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
-	@Mock
-	private ObjectMapper objectMapper;
+    @Mock
+    private ObjectMapper objectMapper;
 
-	@Mock
-	private ApplicationProperties applicationProperties;
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-	@Mock
-	private RevaluationCriteria revaluationCriteria;
+    @Mock
+    private RevaluationCriteria revaluationCriteria;
 
-	@Mock
-	private AssetCurrentAmountService assetCurrentAmountService;
+    @Mock
+    private AssetCurrentAmountService assetCurrentAmountService;
 
-	@Mock
-	private RestTemplate restTemplate;
+    @Mock
+    private RestTemplate restTemplate;
 
-	@Mock
-	private RevaluationRequest revaluationRequest;
+    @Mock
+    private RevaluationRequest revaluationRequest;
 
-	@Mock
-	private VoucherService voucherService;
+    @Mock
+    private VoucherService voucherService;
 
-	@InjectMocks
-	private RevaluationService revaluationService;
+    @InjectMocks
+    private RevaluationService revaluationService;
 
-	@Mock
-	private ChartOfAccountDetailContract chartOfAccountDetailContract;
+    @Mock
+    private ChartOfAccountDetailContract chartOfAccountDetailContract;
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public void testCreate() {
-		RevaluationResponse revaluationResponse = null;
-		try {
-			revaluationResponse = getRevaluation("revaluation/revaluationServiceResponse.revaluation1.json");
-		} catch (final Exception e) {
-			e.printStackTrace();
-			fail();
-		}
-		final RevaluationRequest revaluationRequest = new RevaluationRequest();
-		revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
-		revaluationRequest.getRevaluation().setId(Long.valueOf("15"));
+    @Test
+    public void testCreate() {
+        RevaluationResponse revaluationResponse = null;
+        try {
+            revaluationResponse = getRevaluation("revaluation/revaluationServiceResponse.revaluation1.json");
+        } catch (final Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        final RevaluationRequest revaluationRequest = new RevaluationRequest();
+        revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
+        revaluationRequest.getRevaluation().setId(Long.valueOf("15"));
 
-		doNothing().when(revaluationRepository).create(revaluationRequest);
-		revaluationService.create(Matchers.any(RevaluationRequest.class));
-		assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
-				revaluationRequest.getRevaluation().toString());
-	}
+        doNothing().when(revaluationRepository).create(revaluationRequest);
+        revaluationService.create(Matchers.any(RevaluationRequest.class));
+        assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
+                revaluationRequest.getRevaluation().toString());
+    }
 
-	@Test
-	public void testCreateAsync() throws NumberFormatException, Exception {
+    @Test
+    public void testCreateAsync() throws NumberFormatException, Exception {
 
-		when(assetCurrentAmountService.getAsset(any(Long.class), any(String.class), any(RequestInfo.class)))
-				.thenReturn(get_Asset());
-		// RevaluationService spy = PowerMockito.spy(new RevaluationService());
-		final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
-		PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForRevaluation",
-				any(RevaluationRequest.class));
+        when(assetCurrentAmountService.getAsset(any(Long.class), any(String.class), any(RequestInfo.class)))
+                .thenReturn(get_Asset());
+        final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
+        PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForRevaluation",
+                any(RevaluationRequest.class));
 
-		final RevaluationRequest revaluationRequest = new RevaluationRequest();
-		revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
+        final RevaluationRequest revaluationRequest = new RevaluationRequest();
+        revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
 
-		final List<RevaluationRequest> insertedRevaluationRequest = new ArrayList<>();
-		insertedRevaluationRequest.add(revaluationRequest);
-		RevaluationResponse revaluationResponse = null;
-		try {
-			revaluationResponse = getRevaluation("revaluation/revaluationServiceResponse.revaluation1.json");
-		} catch (final Exception e) {
-			e.printStackTrace();
-			fail();
-		}
-		when(revaluationRepository.getNextRevaluationId()).thenReturn(Integer.valueOf("15"));
-		revaluationRequest.getRevaluation().setId(Long.valueOf("15"));
+        final List<RevaluationRequest> insertedRevaluationRequest = new ArrayList<>();
+        insertedRevaluationRequest.add(revaluationRequest);
+        RevaluationResponse revaluationResponse = null;
+        try {
+            revaluationResponse = getRevaluation("revaluation/revaluationServiceResponse.revaluation1.json");
+        } catch (final Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        when(revaluationRepository.getNextRevaluationId()).thenReturn(Integer.valueOf("15"));
+        revaluationRequest.getRevaluation().setId(Long.valueOf("15"));
 
-		when(applicationProperties.getCreateAssetDisposalTopicName()).thenReturn("kafka.topics.save.disposal");
+        when(applicationProperties.getCreateAssetDisposalTopicName()).thenReturn("kafka.topics.save.disposal");
 
-		// when(revaluationService.createVoucherForReevaluation(revaluationReq)).thenReturn(Long.valueOf("6"));
+        assertTrue(revaluationResponse.getRevaluations().get(0).getId().equals(Long.valueOf("15")));
+        // doNothing().when(logAwareKafkaTemplate).send(Matchers.anyString(),
+        // Matchers.anyString(), Matchers.anyObject());
+        mock.createAsync(revaluationRequest);
+        assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
+                revaluationRequest.getRevaluation().toString());
+    }
 
-		assertTrue(revaluationResponse.getRevaluations().get(0).getId().equals(Long.valueOf("15")));
-		doNothing().when(assetProducer).sendMessage(Matchers.anyString(), Matchers.anyString(), Matchers.anyObject());
-		// revaluationService.createAsync(revaluationRequest);
-		mock.createAsync(revaluationRequest);
-		assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
-				revaluationRequest.getRevaluation().toString());
-	}
+    @Test
+    public void testSearch() {
+        final List<Revaluation> revaluation = new ArrayList<>();
+        revaluation.add(getRevaluationForSearch());
 
-	@Test
-	public void testSearch() {
-		final List<Revaluation> revaluation = new ArrayList<>();
-		revaluation.add(getRevaluationForSearch());
+        final RevaluationResponse revaluationResponse = new RevaluationResponse();
+        revaluationResponse.setRevaluations(revaluation);
 
-		final RevaluationResponse revaluationResponse = new RevaluationResponse();
-		revaluationResponse.setRevaluations(revaluation);
+        when(revaluationRepository.search(any(RevaluationCriteria.class))).thenReturn(revaluation);
+        final RevaluationResponse expectedRevaluationResponse = revaluationService
+                .search(any(RevaluationCriteria.class));
 
-		when(revaluationRepository.search(any(RevaluationCriteria.class))).thenReturn(revaluation);
-		final RevaluationResponse expectedRevaluationResponse = revaluationService
-				.search(any(RevaluationCriteria.class));
+        assertEquals(revaluationResponse.toString(), expectedRevaluationResponse.toString());
+    }
 
-		assertEquals(revaluationResponse.toString(), expectedRevaluationResponse.toString());
-	}
+    private Revaluation getRevaluationForCreateAsync() {
 
-	private Revaluation getRevaluationForCreateAsync() {
+        final Revaluation revaluation = new Revaluation();
+        revaluation.setTenantId("ap.kurnool");
+        revaluation.setAssetId(Long.valueOf("31"));
+        revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
+        revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
+        revaluation.setRevaluationAmount(new BigDecimal("10.0"));
+        revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
+        revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
+        revaluation.setReevaluatedBy("5");
+        revaluation.setReasonForRevaluation("reasonForRevaluation");
+        revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
+        revaluation.setFunction(Long.valueOf("2"));
+        revaluation.setFund(Long.valueOf("3"));
+        revaluation.setScheme(Long.valueOf("4"));
+        revaluation.setSubScheme(Long.valueOf("5"));
+        revaluation.setComments("coments");
+        revaluation.setStatus(Status.APPROVED.toString());
+        revaluation.setAuditDetails(getAuditDetails());
+        revaluation.setVoucherReference(Long.valueOf("42"));
+        return revaluation;
+    }
 
-		final Revaluation revaluation = new Revaluation();
-		revaluation.setTenantId("ap.kurnool");
-		revaluation.setAssetId(Long.valueOf("31"));
-		revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
-		revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
-		revaluation.setRevaluationAmount(new BigDecimal("10.0"));
-		revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
-		revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
-		revaluation.setReevaluatedBy("5");
-		revaluation.setReasonForRevaluation("reasonForRevaluation");
-		revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
-		revaluation.setFunction(Long.valueOf("2"));
-		revaluation.setFund(Long.valueOf("3"));
-		revaluation.setScheme(Long.valueOf("4"));
-		revaluation.setSubScheme(Long.valueOf("5"));
-		revaluation.setComments("coments");
-		revaluation.setStatus(Status.APPROVED.toString());
+    private AuditDetails getAuditDetails() {
+        final AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy("5");
+        auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
+        auditDetails.setLastModifiedBy("5");
+        auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
+        return auditDetails;
+    }
 
-		final AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("5");
-		auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
-		auditDetails.setLastModifiedBy("5");
-		auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
-		revaluation.setAuditDetails(auditDetails);
-		revaluation.setVoucherReference(Long.valueOf("42"));
-		return revaluation;
-	}
+    private Asset get_Asset() {
+        final Asset asset = new Asset();
+        asset.setTenantId("ap.kurnool");
+        asset.setId(Long.valueOf("31"));
+        asset.setName("asset name");
+        asset.setStatus(Status.CREATED.toString());
+        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 
-	private Asset get_Asset() {
-		final Asset asset = new Asset();
-		asset.setTenantId("ap.kurnool");
-		asset.setId(Long.valueOf("31"));
-		asset.setName("asset name");
-		asset.setStatus(Status.CREATED.toString());
-		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
+        final Location location = new Location();
+        location.setLocality(4l);
+        location.setDoorNo("door no");
 
-		final Location location = new Location();
-		location.setLocality(4l);
-		location.setDoorNo("door no");
+        final AssetCategory assetCategory = new AssetCategory();
+        assetCategory.setTenantId("ap.kurnool");
+        assetCategory.setId(Long.valueOf("2"));
+        assetCategory.setName("asset3");
+        assetCategory.setCode(null);
+        assetCategory.setAssetCategoryType(AssetCategoryType.IMMOVABLE);
+        assetCategory.setParent(Long.valueOf("2"));
+        assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
+        assetCategory.setIsAssetAllow(true);
+        assetCategory.setAccumulatedDepreciationAccount(Long.valueOf("1"));
+        assetCategory.setDepreciationExpenseAccount(Long.valueOf("3"));
+        assetCategory.setUnitOfMeasurement(Long.valueOf("10"));
+        assetCategory.setVersion("v1");
+        assetCategory.setDepreciationRate(null);
+        assetCategory.setAssetAccount(Long.valueOf("2"));
+        assetCategory.setRevaluationReserveAccount(Long.valueOf("2"));
 
-		final AssetCategory assetCategory = new AssetCategory();
-		assetCategory.setTenantId("ap.kurnool");
-		assetCategory.setId(Long.valueOf("2"));
-		assetCategory.setName("asset3");
-		assetCategory.setCode(null);
-		assetCategory.setAssetCategoryType(AssetCategoryType.IMMOVABLE);
-		assetCategory.setParent(Long.valueOf("2"));
-		assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
-		assetCategory.setIsAssetAllow(true);
-		assetCategory.setAccumulatedDepreciationAccount(Long.valueOf("1"));
-		assetCategory.setDepreciationExpenseAccount(Long.valueOf("3"));
-		assetCategory.setUnitOfMeasurement(Long.valueOf("10"));
-		assetCategory.setVersion("v1");
-		assetCategory.setDepreciationRate(null);
-		assetCategory.setAssetAccount(Long.valueOf("2"));
-		assetCategory.setRevaluationReserveAccount(Long.valueOf("2"));
+        asset.setLocationDetails(location);
+        asset.setAssetCategory(assetCategory);
+        return asset;
+    }
 
-		asset.setLocationDetails(location);
-		asset.setAssetCategory(assetCategory);
-		return asset;
-	}
+    private Revaluation getRevaluationForSearch() {
 
-	private Revaluation getRevaluationForSearch() {
+        final Revaluation revaluation = new Revaluation();
+        revaluation.setTenantId("ap.kurnool");
+        revaluation.setAssetId(Long.valueOf("31"));
+        revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
+        revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
+        revaluation.setRevaluationAmount(new BigDecimal("10"));
+        revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
+        revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
+        revaluation.setReevaluatedBy("5");
+        revaluation.setReasonForRevaluation("reasonForRevaluation");
+        revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
+        revaluation.setFunction(Long.valueOf("2"));
+        revaluation.setFund(Long.valueOf("3"));
+        revaluation.setScheme(Long.valueOf("4"));
+        revaluation.setSubScheme(Long.valueOf("5"));
+        revaluation.setComments("coments");
+        revaluation.setStatus(Status.APPROVED.toString());
+        revaluation.setAuditDetails(getAuditDetails());
 
-		final Revaluation revaluation = new Revaluation();
-		revaluation.setTenantId("ap.kurnool");
-		revaluation.setAssetId(Long.valueOf("31"));
-		revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
-		revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
-		revaluation.setRevaluationAmount(new BigDecimal("10"));
-		revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
-		revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
-		revaluation.setReevaluatedBy("5");
-		revaluation.setReasonForRevaluation("reasonForRevaluation");
-		revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
-		revaluation.setFunction(Long.valueOf("2"));
-		revaluation.setFund(Long.valueOf("3"));
-		revaluation.setScheme(Long.valueOf("4"));
-		revaluation.setSubScheme(Long.valueOf("5"));
-		revaluation.setComments("coments");
-		revaluation.setStatus(Status.APPROVED.toString());
+        return revaluation;
+    }
 
-		final AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("5");
-		auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
-		auditDetails.setLastModifiedBy("5");
-		auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
-		revaluation.setAuditDetails(auditDetails);
-
-		return revaluation;
-	}
-
-	private RevaluationResponse getRevaluation(final String filePath) throws IOException {
-		final String empJson = new FileUtils().getFileContents(filePath);
-		return new ObjectMapper().readValue(empJson, RevaluationResponse.class);
-	}
+    private RevaluationResponse getRevaluation(final String filePath) throws IOException {
+        final String empJson = new FileUtils().getFileContents(filePath);
+        return new ObjectMapper().readValue(empJson, RevaluationResponse.class);
+    }
 }

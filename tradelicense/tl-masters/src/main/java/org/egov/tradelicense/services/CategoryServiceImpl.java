@@ -55,31 +55,35 @@ public class CategoryServiceImpl implements CategoryService {
 		for (Category category : categoryRequest.getCategories()) {
 
 			Long ParentId = category.getParentId();
-			//checking for existence of duplicate record
+			// checking for existence of duplicate record
 			Boolean isExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
 					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, null);
+
 			if (isExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 			}
 
 			if (ParentId != null) {
+
 				Boolean isParentExists = categoryHelper.checkWhetherParentRecordExits(category.getParentId(),
 						ConstantUtility.CATEGORY_TABLE_NAME);
 
 				if (isParentExists) {
 
 					try {
+
 						category.setAuditDetails(auditDetails);
 						Long categoryId = categoryRepository.createCategory(category);
 						category.setId(categoryId);
+
 						for (CategoryDetail categoryDetail : category.getDetails()) {
+
 							categoryDetail.setCategoryId(categoryId);
 							Boolean isCategoryDetailExists = categoryHelper
 									.checkWhetherDuplicateCategoryDetailRecordExits(categoryDetail,
 											ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, null);
 
 							if (isCategoryDetailExists) {
-
 								throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 							}
 
@@ -100,6 +104,7 @@ public class CategoryServiceImpl implements CategoryService {
 					throw new InvalidInputException(requestInfo);
 				}
 			} else {
+				
 				try {
 					category.setAuditDetails(auditDetails);
 					Long id = categoryRepository.createCategory(category);
@@ -123,24 +128,32 @@ public class CategoryServiceImpl implements CategoryService {
 	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest) {
 
 		RequestInfo requestInfo = categoryRequest.getRequestInfo();
-		
+
 		for (Category category : categoryRequest.getCategories()) {
-			
+
 			Long ParentId = category.getParentId();
 			Long categoryId = category.getId();
-			if(categoryId == null){
+			
+			if (categoryId == null) {
 				throw new InvalidInputException(requestInfo);
 			}
+			
 			Boolean isExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
 					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, category.getId());
+			
 			if (isExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 			}
+			
 			if (ParentId != null) {
+				
 				Boolean isParentExists = categoryHelper.checkWhetherParentRecordExits(category.getParentId(),
 						ConstantUtility.CATEGORY_TABLE_NAME);
+				
 				if (isParentExists) {
+					
 					for (CategoryDetail categoryDetail : category.getDetails()) {
+						
 						Boolean isCategoryDetailExists = categoryHelper.checkWhetherDuplicateCategoryDetailRecordExits(
 								categoryDetail, ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetail.getId());
 
@@ -158,7 +171,7 @@ public class CategoryServiceImpl implements CategoryService {
 					try {
 						Long updatedTime = new Date().getTime();
 						category.getAuditDetails().setLastModifiedTime(updatedTime);
-						//category.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
+						 category.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
 
 						for (CategoryDetail categoryDetail : category.getDetails()) {
 
@@ -177,9 +190,10 @@ public class CategoryServiceImpl implements CategoryService {
 				}
 			} else {
 				try {
+					
 					Long updatedTime = new Date().getTime();
 					category.getAuditDetails().setLastModifiedTime(updatedTime);
-					//category.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+					 category.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
 					category = categoryRepository.updateCategory(category);
 				} catch (Exception e) {
 					throw new InvalidInputException(categoryRequest.getRequestInfo());
@@ -204,19 +218,26 @@ public class CategoryServiceImpl implements CategoryService {
 
 			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, type, categoryId,
 					pageSize, offSet);
-			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY") || 
-					(categoryId != null)) {
+			
+			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY") || (categoryId != null)) {
 
 				for (int i = 0; i < categories.size(); i++) {
+					
 					Category category = categories.get(i);
 					Long ParentId = category.getParentId();
+					
 					if (ParentId != null) {
+						
 						Boolean isParentExists = categoryHelper.checkWhetherParentRecordExits(ParentId,
 								ConstantUtility.CATEGORY_TABLE_NAME);
+						
 						if (isParentExists) {
+							
 							List<CategoryDetail> categoryDetails = categoryRepository
 									.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
+							
 							category.setDetails(categoryDetails);
+							
 						} else {
 							throw new InvalidInputException(requestInfo);
 						}

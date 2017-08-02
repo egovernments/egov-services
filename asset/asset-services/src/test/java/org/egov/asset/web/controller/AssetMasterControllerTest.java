@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.asset.TestConfiguration;
 import org.egov.asset.contract.AssetStatusResponse;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.AssetStatusCriteria;
@@ -27,12 +28,14 @@ import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AssetMasterController.class)
+@Import(TestConfiguration.class)
 public class AssetMasterControllerTest {
 
     @Autowired

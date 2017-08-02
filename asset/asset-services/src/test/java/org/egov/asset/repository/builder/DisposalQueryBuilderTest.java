@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.asset.TestConfiguration;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.DisposalCriteria;
 import org.junit.Before;
@@ -16,10 +17,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(DisposalQueryBuilder.class)
+@Import(TestConfiguration.class)
 public class DisposalQueryBuilderTest {
 
 	@MockBean

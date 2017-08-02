@@ -466,8 +466,10 @@ paths:
             maxLength: 128
             minLength: 4 
           - name: financialYear
-            type: integer
+            type: string
             in: query
+            maxLength: 128
+            minLength: 4
             description: UniqueId of the financial Year
           - name: applicationType
             type: string
@@ -970,7 +972,9 @@ definitions:
           description: Unique Identifier of SubCategory
         financialYear:
           type: string
-          description: Financial year in YY-YY format
+          description: Unqiue Identifier of Financial year 
+          maxLength: 128
+          minLength: 4
         effectiveFrom:
           type: string
           format: date

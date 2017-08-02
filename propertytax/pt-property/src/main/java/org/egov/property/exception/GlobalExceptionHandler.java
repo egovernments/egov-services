@@ -244,6 +244,34 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			responseInfo.setStatus(environment.getProperty("failed"));
 			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof InvalidGuidanceValueException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					environment.getProperty("invalid.property.guidancevalue"),
+					((InvalidGuidanceValueException) ex).getMsgDetails(), new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidGuidanceValueException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidGuidanceValueException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidGuidanceValueException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(environment.getProperty("failed"));
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			responseInfo.setStatus(environment.getProperty("failed"));
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof InvalidFactorValueException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					environment.getProperty("invalid.property.factorvalue"),
+					((InvalidFactorValueException) ex).getMsgDetails(), new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidFactorValueException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidFactorValueException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidFactorValueException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(environment.getProperty("failed"));
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			responseInfo.setStatus(environment.getProperty("failed"));
+			return new ErrorRes(responseInfo, errorList);
 		}
 
 		else {

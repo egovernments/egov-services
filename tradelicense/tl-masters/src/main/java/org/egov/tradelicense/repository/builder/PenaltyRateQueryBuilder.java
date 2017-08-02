@@ -2,6 +2,8 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
+import org.egov.tradelicense.utility.ConstantUtility;
+
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for PenaltyRate API's
  * 
@@ -9,11 +11,13 @@ import java.util.List;
  */
 public class PenaltyRateQueryBuilder {
 
-	public static final String INSERT_PENALTY_RATE_QUERY = "INSERT INTO egtl_mstr_penalty_rate"
+	private static final String feeMatrixTableName = ConstantUtility.PENALTY_RATE_TABLE_NAME;
+
+	public static final String INSERT_PENALTY_RATE_QUERY = "INSERT INTO " + feeMatrixTableName
 			+ " (tenantId, applicationType, fromRange, toRange, rate, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
 			+ " VALUES(?,?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_PENALTY_RATE_QUERY = "UPDATE egtl_mstr_penalty_rate"
+	public static final String UPDATE_PENALTY_RATE_QUERY = "UPDATE " + feeMatrixTableName
 			+ " SET tenantId = ?, applicationType = ?, fromRange = ?, toRange = ?, rate = ?,"
 			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
 
@@ -21,7 +25,7 @@ public class PenaltyRateQueryBuilder {
 			Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from egtl_mstr_penalty_rate where ");
+		searchSql.append("select * from " + feeMatrixTableName + " where ");
 		searchSql.append(" tenantId = ? ");
 		preparedStatementValues.add(tenantId);
 
@@ -46,17 +50,15 @@ public class PenaltyRateQueryBuilder {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (pageSize == null)
-			pageSize = 30;
+		if (pageSize != null) {
+			searchSql.append(" limit ? ");
+			preparedStatementValues.add(pageSize);
+		}
 
-		searchSql.append(" limit ? ");
-		preparedStatementValues.add(pageSize);
-
-		if (offSet == null)
-			offSet = 0;
-
-		searchSql.append(" offset ? ");
-		preparedStatementValues.add(offSet);
+		if (offSet != null) {
+			searchSql.append(" offset ? ");
+			preparedStatementValues.add(offSet);
+		}
 
 		return searchSql.toString();
 	}

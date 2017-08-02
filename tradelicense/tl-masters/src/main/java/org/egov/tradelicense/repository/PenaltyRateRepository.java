@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.egov.models.AuditDetails;
 import org.egov.models.PenaltyRate;
+import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.repository.builder.PenaltyRateQueryBuilder;
 import org.egov.tradelicense.repository.helper.PenaltyRateHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class PenaltyRateRepository {
 
 	@Autowired
 	private PenaltyRateHelper penaltyRateHelper;
+	
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	/**
 	 * Description : this method will create PenaltyRate in database
@@ -116,6 +120,12 @@ public class PenaltyRateRepository {
 			Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
+		if (pageSize == null) {
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+		}
+		if (offSet == null) {
+			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
+		}
 		String penaltyRateSearchQuery = PenaltyRateQueryBuilder.buildSearchQuery(tenantId, ids, applicationType,
 				pageSize, offSet, preparedStatementValues);
 		List<PenaltyRate> penaltyRates = penaltyRateHelper.getPenaltyRates(penaltyRateSearchQuery.toString(),

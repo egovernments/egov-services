@@ -9,8 +9,10 @@ import org.egov.models.Boundary;
 import org.egov.models.Document;
 import org.egov.models.Floor;
 import org.egov.models.Property;
+import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
 import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.Unit;
 import org.egov.models.WorkFlowDetails;
@@ -20,6 +22,7 @@ import org.egov.property.exception.InvalidPropertyBoundaryException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
 import org.egov.property.exception.InvalidVacantLandException;
 import org.egov.property.repository.BoundaryRepository;
+import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -43,6 +46,9 @@ public class PropertyValidator {
 
 	@Autowired
 	BoundaryRepository boundaryRepository;
+
+	@Autowired
+	CalculatorRepository calculatorRepository;
 
 	@Autowired
 	private PropertyMasterRepository propertyMasterRepository;
@@ -162,7 +168,9 @@ public class PropertyValidator {
 	 */
 	public void validatePropertyMasterData(Property property, RequestInfo requestInfo) {
 
-		if (property.getPropertyDetail().getPropertyType() != null) {
+		PropertyDetail propertyDetail = property.getPropertyDetail();
+
+		if (propertyDetail.getPropertyType() != null) {
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
 					property.getPropertyDetail().getPropertyType(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
 
@@ -173,13 +181,35 @@ public class PropertyValidator {
 
 		if (property.getPropertyDetail().getFloors() != null) {
 			for (Floor floor : property.getPropertyDetail().getFloors()) {
+
+				String boundary = null;
+
+				if (property.getBoundary() != null && property.getBoundary().getRevenueBoundary() != null) {
+					boundary = property.getBoundary().getRevenueBoundary().getId().toString().trim();
+				} else {
+					throw new InvalidCodeException(env.getProperty("invalid.input.boundary"), requestInfo);
+				}
+
+				String propertyType = null;
+
+				if (property.getPropertyDetail() != null) {
+					propertyType = property.getPropertyDetail().getPropertyType();
+				} else {
+					throw new InvalidCodeException(env.getProperty("invalid.input.propertytype"), requestInfo);
+				}
+				String validOccupancyDate = null;
 				for (Unit unit : floor.getUnits()) {
-					if (unit != null)
-						validateUnitData(property.getTenantId(), unit, requestInfo);
+					if (unit != null) {
+						validOccupancyDate = unit.getOccupancyDate();
+						validateUnitData(property.getTenantId(), unit, requestInfo, boundary, validOccupancyDate,
+								propertyType);
+					}
 
 					if (unit.getUnits() != null) {
-						for (Unit units : unit.getUnits()) {
-							validateUnitData(property.getTenantId(), units, requestInfo);
+						for (Unit room : unit.getUnits()) {
+							validOccupancyDate = room.getOccupancyDate();
+							validateUnitData(property.getTenantId(), room, requestInfo, boundary, validOccupancyDate,
+									propertyType);
 						}
 					}
 				}
@@ -260,7 +290,8 @@ public class PropertyValidator {
 	 * @param unit
 	 * @param requestInfo
 	 */
-	private void validateUnitData(String tenantId, Unit unit, RequestInfo requestInfo) {
+	private void validateUnitData(String tenantId, Unit unit, RequestInfo requestInfo, String boundary,
+			String validOccupancyDate, String propertyType) {
 
 		if (unit.getUsage() != null) {
 			Boolean usageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getUsage(),
@@ -296,5 +327,53 @@ public class PropertyValidator {
 				throw new InvalidCodeException(env.getProperty("invalid.input.structure"), requestInfo);
 			}
 		}
+
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
+		if (unit.getUsage() != null) {
+			calculatorRepository.isGuidanceExists(tenantId, unit, requestInfoWrapper, boundary);
+		} else {
+			throw new InvalidCodeException(env.getProperty("invalid.input.usage"), requestInfo);
+		}
+		if (validOccupancyDate != null)
+
+		{
+			if (unit.getOccupancyType() != null) {
+				calculatorRepository.isFactorExists(tenantId, unit.getOccupancyType(), requestInfoWrapper,
+						validOccupancyDate, env.getProperty("egov.property.factor.occupancy"));
+			} else {
+				throw new InvalidCodeException(env.getProperty("invalid.input.occupancy"), requestInfo);
+			}
+
+			if (unit.getUsage() != null) {
+				calculatorRepository.isFactorExists(tenantId, unit.getUsage(), requestInfoWrapper, validOccupancyDate,
+						env.getProperty("egov.property.factor.usage"));
+			} else {
+				throw new InvalidCodeException(env.getProperty("invalid.input.usage"), requestInfo);
+			}
+
+			if (unit.getStructure() != null) {
+				calculatorRepository.isFactorExists(tenantId, unit.getStructure(), requestInfoWrapper,
+						validOccupancyDate, env.getProperty("egov.property.factor.structure"));
+			} else {
+				throw new InvalidCodeException(env.getProperty("invalid.input.structure"), requestInfo);
+			}
+			if (unit.getAge() != null) {
+				calculatorRepository.isFactorExists(tenantId, unit.getAge(), requestInfoWrapper, validOccupancyDate,
+						env.getProperty("egov.property.factor.age"));
+			} else {
+				throw new InvalidCodeException(env.getProperty("invalid.input.age"), requestInfo);
+			}
+			if (propertyType != null) {
+				calculatorRepository.isFactorExists(tenantId, propertyType, requestInfoWrapper, validOccupancyDate,
+						env.getProperty("egov.property.factor.propertytype"));
+			} else {
+				throw new InvalidCodeException(env.getProperty("invalid.input.propertytype"), requestInfo);
+			}
+		} else {
+			throw new InvalidCodeException(env.getProperty("invalid.input.occupancydate"), requestInfo);
+		}
+
 	}
 }

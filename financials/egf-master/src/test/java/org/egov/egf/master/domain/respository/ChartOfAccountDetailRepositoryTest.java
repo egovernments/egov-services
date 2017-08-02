@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.domain.model.Pagination;
@@ -149,7 +150,7 @@ public class ChartOfAccountDetailRepositoryTest {
 		RequestInfo info = new RequestInfo();
 		User user = new User();
 		user.setId(1l);
-		info.setAction("create");
+		info.setAction(Constants.ACTION_CREATE);
 		info.setDid("did");
 		info.setApiId("apiId");
 		info.setKey("key");

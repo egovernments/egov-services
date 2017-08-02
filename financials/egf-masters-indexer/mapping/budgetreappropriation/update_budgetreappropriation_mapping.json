@@ -1,0 +1,51 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "budgetDetail": {
+            "type": "object"
+        },
+        "additionAmount": {
+            "type": "double"
+        },
+        "deductionAmount": {
+            "type": "double"
+        },
+        "originalAdditionAmount": {
+            "type": "double"
+        },
+        "originalDeductionAmount": {
+            "type": "double"
+        },
+        "anticipatoryAmount": {
+            "type": "double"
+        },
+        "status": {
+            "type": "object"
+        },
+	"asOnDate": {
+            "type": "keyword"
+        },
+        "createdBy": {
+            "type": "object"
+        },
+        "lastModifiedBy": {
+            "type": "object"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

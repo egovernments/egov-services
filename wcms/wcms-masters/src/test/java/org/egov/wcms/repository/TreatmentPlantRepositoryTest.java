@@ -46,10 +46,13 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.wcms.model.TreatmentPlant;
 import org.egov.wcms.repository.builder.TreatmentPlantQueryBuilder;
 import org.egov.wcms.repository.rowmapper.TreatmentPlantRowMapper;
 import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
+import org.egov.wcms.web.contract.TreatmentPlantRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -103,6 +106,40 @@ public class TreatmentPlantRepositoryTest {
                 .thenReturn(treatmentPlantList);
 
         assertTrue(!treatmentPlantList.equals(treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest)));
+    }
+
+    @Test
+    public void test_Should_Create_TreatmentPlant() {
+
+        final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        treatmentPlantRequest.setRequestInfo(requestInfo);
+        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+        final TreatmentPlant treatmentPlant = getTreatmentPlant();
+        treatmentPlantList.add(treatmentPlant);
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(treatmentPlantRequest
+                .equals(treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest)));
+    }
+
+    @Test
+    public void test_Should_Update_TreatmentPlant() {
+
+        final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        treatmentPlantRequest.setRequestInfo(requestInfo);
+        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+        final TreatmentPlant treatmentPlant = getTreatmentPlant();
+        treatmentPlantList.add(treatmentPlant);
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(treatmentPlantRequest
+                .equals(treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest)));
     }
 
     private TreatmentPlant getTreatmentPlant() {

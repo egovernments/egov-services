@@ -63,6 +63,10 @@ public class FeeMatrixControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	
+	/**
+	 * Description : Test method for createFeeMatrix() method
+	 */
 	@Test
 	public void testCreateFeeMatrix() throws Exception {
 
@@ -103,6 +107,10 @@ public class FeeMatrixControllerTest {
 		assertTrue(Boolean.TRUE);
 	}
 
+	
+	/**
+	 * Description : Test method for updateFeeMatrix() method
+	 */
 	@Test
 	public void testUpdateFeeMatrix() throws Exception {
 
@@ -142,6 +150,10 @@ public class FeeMatrixControllerTest {
 		assertTrue(Boolean.TRUE);
 	}
 
+	
+	/**
+	 * Description : Test method for searchFeeMatrix() method
+	 */
 	@Test
 	public void testSearchFeeMatrix() throws Exception {
 

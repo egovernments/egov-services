@@ -1,8 +1,6 @@
 package org.egov.egf.instrument.web.controller;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -12,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.TestConfiguration;
 import org.egov.egf.instrument.domain.model.InstrumentType;
@@ -30,7 +29,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
@@ -54,11 +52,9 @@ public class InstrumentTypeControllerTest {
 	private RequestJsonReader resources = new RequestJsonReader();
 
 	@Test
-	public void test_create_with_kafka() throws IOException, Exception {
+	public void test_create() throws IOException, Exception {
 
-		ReflectionTestUtils.setField(InstrumentTypeController.class, "persistThroughKafka", "yes");
-
-		when(instrumentTypeService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
+		when(instrumentTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getInstrumentTypes());
 
 		mockMvc.perform(post("/instrumenttypes/_create")
@@ -66,44 +62,12 @@ public class InstrumentTypeControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
 						.json(resources.readResponse("instrumenttype/instrumenttype_create_valid_response.json")));
-
-		verify(instrumentTypeQueueRepository).addToQue(captor.capture());
-
-		final InstrumentTypeRequest actualRequest = captor.getValue();
-
-		assertEquals(true, actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals("name", actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals("description", actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals("default", actualRequest.getInstrumentTypes().get(0).getTenantId());
-	}
-
-	@Test
-	public void test_create_without_kafka() throws IOException, Exception {
-
-		ReflectionTestUtils.setField(InstrumentTypeController.class, "persistThroughKafka", "no");
-
-		when(instrumentTypeService.save(any(List.class), any(BindingResult.class))).thenReturn(getInstrumentTypes());
-
-		mockMvc.perform(post("/instrumenttypes/_create")
-				.content(resources.readRequest("instrumenttype/instrumenttype_create_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("instrumenttype/instrumenttype_create_valid_response.json")));
-
-		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
-
-		final InstrumentTypeRequest actualRequest = captor.getValue();
-
-		assertEquals(true, actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals("name", actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals("description", actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals("default", actualRequest.getInstrumentTypes().get(0).getTenantId());
 	}
 
 	@Test
 	public void test_create_error() throws IOException, Exception {
 
-		when(instrumentTypeService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
+		when(instrumentTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn((getInstrumentTypes()));
 
 		mockMvc.perform(post("/instrumenttypes/_create")
@@ -113,14 +77,12 @@ public class InstrumentTypeControllerTest {
 	}
 
 	@Test
-	public void test_update_with_kafka() throws IOException, Exception {
-
-		ReflectionTestUtils.setField(InstrumentTypeController.class, "persistThroughKafka", "yes");
+	public void test_update() throws IOException, Exception {
 
 		List<InstrumentType> instrumentTypes = getInstrumentTypes();
 		instrumentTypes.get(0).setId("1");
 
-		when(instrumentTypeService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
+		when(instrumentTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(instrumentTypes);
 
 		mockMvc.perform(post("/instrumenttypes/_update")
@@ -129,46 +91,12 @@ public class InstrumentTypeControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
 						.json(resources.readResponse("instrumenttype/instrumenttype_update_valid_response.json")));
 
-		verify(instrumentTypeQueueRepository).addToQue(captor.capture());
-
-		final InstrumentTypeRequest actualRequest = captor.getValue();
-
-		assertEquals(true, actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals("name", actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals("description", actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals("default", actualRequest.getInstrumentTypes().get(0).getTenantId());
-	}
-
-	@Test
-	public void test_update_without_kafka() throws IOException, Exception {
-
-		ReflectionTestUtils.setField(InstrumentTypeController.class, "persistThroughKafka", "no");
-
-		List<InstrumentType> instrumentTypes = getInstrumentTypes();
-		instrumentTypes.get(0).setId("1");
-
-		when(instrumentTypeService.update(any(List.class), any(BindingResult.class))).thenReturn(instrumentTypes);
-
-		mockMvc.perform(post("/instrumenttypes/_update")
-				.content(resources.readRequest("instrumenttype/instrumenttype_update_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("instrumenttype/instrumenttype_update_valid_response.json")));
-
-		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
-
-		final InstrumentTypeRequest actualRequest = captor.getValue();
-
-		assertEquals(true, actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals("name", actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals("description", actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals("default", actualRequest.getInstrumentTypes().get(0).getTenantId());
 	}
 
 	@Test
 	public void test_update_error() throws IOException, Exception {
 
-		when(instrumentTypeService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
+		when(instrumentTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn((getInstrumentTypes()));
 
 		mockMvc.perform(post("/instrumenttypes/_update")

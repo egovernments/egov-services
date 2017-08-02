@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.FinancialConfiguration;
@@ -9,6 +10,7 @@ import org.egov.egf.master.domain.model.FinancialConfigurationSearch;
 import org.egov.egf.master.domain.repository.FinancialConfigurationRepository;
 import org.egov.egf.master.web.requests.FinancialConfigurationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -20,34 +22,31 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class FinancialConfigurationService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private FinancialConfigurationRepository financialConfigurationRepository;
 
 	@Autowired
 	private SmartValidator validator;
+	
+	@Value("${fetch_data_from}")
+	private String fetchDataFrom;
 
 	private BindingResult validate(List<FinancialConfiguration> financialconfigurations, String method,
 			BindingResult errors) {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(financialConfigurationContractRequest.getFinancialConfiguration(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(financialconfigurations, "FinancialConfigurations to create must not be null");
 				for (FinancialConfiguration financialConfiguration : financialconfigurations) {
 					validator.validate(financialConfiguration, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(financialconfigurations, "FinancialConfigurations to update must not be null");
 				for (FinancialConfiguration financialConfiguration : financialconfigurations) {
 					validator.validate(financialConfiguration, errors);
@@ -76,7 +75,7 @@ public class FinancialConfigurationService {
 	public List<FinancialConfiguration> add(List<FinancialConfiguration> financialconfigurations,
 			BindingResult errors) {
 		financialconfigurations = fetchRelated(financialconfigurations);
-		validate(financialconfigurations, ACTION_CREATE, errors);
+		validate(financialconfigurations, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -88,7 +87,7 @@ public class FinancialConfigurationService {
 	public List<FinancialConfiguration> update(List<FinancialConfiguration> financialconfigurations,
 			BindingResult errors) {
 		financialconfigurations = fetchRelated(financialconfigurations);
-		validate(financialconfigurations, ACTION_UPDATE, errors);
+		validate(financialconfigurations, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -113,5 +112,9 @@ public class FinancialConfigurationService {
 	public FinancialConfiguration update(FinancialConfiguration financialConfiguration) {
 		return financialConfigurationRepository.update(financialConfiguration);
 	}
+	
+	public String fetchDataFrom() {
+            return fetchDataFrom;
+    }
 
 }

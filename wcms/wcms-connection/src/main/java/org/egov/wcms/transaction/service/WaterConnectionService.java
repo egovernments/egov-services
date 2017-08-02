@@ -174,7 +174,7 @@ public class WaterConnectionService {
 
             waterConnectionRequest.setConnection(connection);
 
-            updateWorkFlow(waterConnectionRequest);
+           updateWorkFlow(waterConnectionRequest);
             waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
         } catch (final Exception e) {
             logger.error("update Connection failed due to db exception", e);
@@ -189,9 +189,9 @@ public class WaterConnectionService {
         return waterConnectionRepository.getWaterConnectionByConsumerNumber(consumerCode);
     }
     
-    public void updateConnectionOnChangeOfDemand(final String demandId ,String consumerNumber)
+    public void updateConnectionOnChangeOfDemand(final String demandId ,Connection waterConn, RequestInfo requestInfo)
     {
-        waterConnectionRepository.updateConnectionOnChangeOfDemand(demandId,consumerNumber);
+        waterConnectionRepository.updateConnectionOnChangeOfDemand(demandId,waterConn,  requestInfo);
     }
 
     private ProcessInstance initiateWorkFow(final WaterConnectionReq waterConnectionReq) {

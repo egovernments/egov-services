@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.mr.broker.MarriageRegnProducer;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.Location;
 import org.egov.mr.model.RegistrationUnit;
@@ -18,6 +17,7 @@ import org.egov.mr.repository.RegistrationUnitRepository;
 import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.egov.mr.web.contract.RegnUnitResponse;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,43 +33,42 @@ public class RegistrationUnitServiceTest {
 	private RegistrationUnitRepository registrationUnitRepository;
 
 	@Mock
-	private MarriageRegnProducer marriageRegnProducer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@InjectMocks
 	private RegistrationUnitService registrationUnitService;
 
 	@Test
 	public void testForSearch() {
-			RegnUnitResponse regnUnitResponse = null;
-			// Accessing the Response
-			try {
-				regnUnitResponse = getRegistrationUnitResponse(
-						"org/egov/mr/service/registrationUnitsListForSearch.json");
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail();
-			}
-			// Setting Criteria(tenantId)
-			RegistrationUnitSearchCriteria registrationUnitSearchCriteria = RegistrationUnitSearchCriteria.builder()
-					.tenantId("KA.BANGALORE").build();
-
-			when(registrationUnitRepository.search(any(RegistrationUnitSearchCriteria.class)))
-					.thenReturn(getRegnUnitsFromDB());
-
-			List<RegistrationUnit> actualRegistrationUnitsList = registrationUnitService
-					.search(registrationUnitSearchCriteria);
-
-			List<RegistrationUnit> expectedRegistrationUnits = new ArrayList();
-			expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(0));
-			expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(1));
-			expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(2));
-
-			assertTrue(registrationUnitSearchCriteria.getTenantId().equals("KA.BANGALORE"));
-			assertEquals(expectedRegistrationUnits.get(0), actualRegistrationUnitsList.get(0));
-			assertEquals(expectedRegistrationUnits.get(1), actualRegistrationUnitsList.get(1));
-			assertEquals(expectedRegistrationUnits.get(2), actualRegistrationUnitsList.get(2));
+		RegnUnitResponse regnUnitResponse = null;
+		// Accessing the Response
+		try {
+			regnUnitResponse = getRegistrationUnitResponse("org/egov/mr/service/registrationUnitsListForSearch.json");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
 		}
-		
+		// Setting Criteria(tenantId)
+		RegistrationUnitSearchCriteria registrationUnitSearchCriteria = RegistrationUnitSearchCriteria.builder()
+				.tenantId("KA.BANGALORE").build();
+
+		when(registrationUnitRepository.search(any(RegistrationUnitSearchCriteria.class)))
+				.thenReturn(getRegnUnitsFromDB());
+
+		List<RegistrationUnit> actualRegistrationUnitsList = registrationUnitService
+				.search(registrationUnitSearchCriteria);
+
+		List<RegistrationUnit> expectedRegistrationUnits = new ArrayList();
+		expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(0));
+		expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(1));
+		expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(2));
+
+		assertTrue(registrationUnitSearchCriteria.getTenantId().equals("KA.BANGALORE"));
+		assertEquals(expectedRegistrationUnits.get(0), actualRegistrationUnitsList.get(0));
+		assertEquals(expectedRegistrationUnits.get(1), actualRegistrationUnitsList.get(1));
+		assertEquals(expectedRegistrationUnits.get(2), actualRegistrationUnitsList.get(2));
+	}
+
 	// Accessing the RegistrationUnitResponse Data from the JSON
 	private RegnUnitResponse getRegistrationUnitResponse(String filePath) throws IOException {
 		String regnUnitJson = new FileUtils().getFileContents(filePath);

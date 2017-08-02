@@ -67,4 +67,10 @@ public class PropertiesManager {
     private String collectionServiceUrl;
 
 
+    @Value("${kafka.topics.notification.sms.name}")
+    private String smsNotificationTopic;
+
+    @Value("${kafka.topics.notification.sms.group}")
+    private String smsNotificationTopicKey;
+
 }

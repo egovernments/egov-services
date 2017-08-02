@@ -1,0 +1,84 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "budget": {
+            "type": "object"
+        },
+        "budgetGroup": {
+            "type": "object"
+        },
+        "usingDepartment": {
+            "type": "object"
+        },
+        "executingDepartment": {
+            "type": "object"
+        },
+        "fund": {
+            "type": "object"
+        },
+        "function": {
+            "type": "object"
+        },
+        "scheme": {
+            "type": "object"
+        },
+	"subScheme": {
+            "type": "object"
+        },
+        "functionary": {
+            "type": "object"
+        },
+        "boundary": {
+            "type": "object"
+        },
+        "anticipatoryAmount": {
+            "type": "double"
+        },
+        "originalAmount": {
+            "type": "double"
+        },
+        "approvedAmount": {
+            "type": "double"
+        },
+        "planningPercent": {
+            "type": "double"
+        },
+        "budgetAvailable": {
+            "type": "double"
+        },
+        "status": {
+            "type": "object"
+        },
+        "documentNumber": {
+            "type": "keyword"
+        },
+        "uniqueNo": {
+            "type": "keyword"
+        },
+        "materializedPath": {
+            "type": "keyword"
+        },
+        "createdBy": {
+            "type": "object"
+        },
+        "lastModifiedBy": {
+            "type": "object"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

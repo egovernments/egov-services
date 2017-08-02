@@ -3,21 +3,16 @@ package org.egov.mr.service;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.mr.broker.MarriageRegnProducer;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.MarriageRegn;
-import org.egov.mr.model.MarryingPerson;
-import org.egov.mr.model.enums.ApplicationStatus;
-import org.egov.mr.model.enums.CertificateType;
 import org.egov.mr.repository.MarriageCertRepository;
 import org.egov.mr.repository.MarriageRegnRepository;
 import org.egov.mr.repository.MarryingPersonRepository;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.RequestInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,28 +20,29 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class MarriageRegnService {
-	
-	public static final Logger LOGGER = LoggerFactory.getLogger(MarriageRegnService.class);
-	
+
 	@Autowired
 	private MarriageRegnRepository marriageRegnRepository;
-	
+
 	@Autowired
 	private MarryingPersonRepository marryingPersonRepository;
 
 	@Autowired
 	private MarriageCertRepository marriageCertRepository;
-	
-	@Autowired
-	private MarriageRegnProducer marriageRegnProducer;
-	
+
 	@Autowired
 	private RegnNumberService regnNumberService;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManager;
+
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	public List<MarriageRegn> getMarriageRegns(MarriageRegnCriteria marriageRegnCriteria, RequestInfo requestInfo) {
 		List<MarriageRegn> marriageRegnList = marriageRegnRepository.findForCriteria(marriageRegnCriteria);
@@ -55,22 +51,14 @@ public class MarriageRegnService {
 
 	public MarriageRegn createAsync(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
-		String applicationNumber=marriageRegnRepository.generateApplicationNumber();
-		marriageRegn.setApplicationNumber(applicationNumber);  
+
+		String applicationNumber = marriageRegnRepository.generateApplicationNumber();
+		marriageRegn.setApplicationNumber(applicationNumber);
 		populateAuditDetailsForMarriageRegnCreate(marriageRegnRequest);
-	
-		String marriageRegnRequestJson = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			marriageRegnRequestJson = mapper.writeValueAsString(marriageRegnRequest);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		LOGGER.info("marriageRegnRequestJson::" + marriageRegnRequestJson);
-		marriageRegnProducer.sendMessage(propertiesManager.getCreateMarriageRegnTopicName(), propertiesManager.getMarriageRegnKey(),
-				marriageRegnRequestJson);
-		return marriageRegn;	
+
+		log.info("marriageRegnRequest::" + marriageRegnRequest);
+		kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);
+		return marriageRegn;
 	}
 
 	private void populateAuditDetailsForMarriageRegnCreate(MarriageRegnRequest marriageRegnRequest) {
@@ -82,7 +70,7 @@ public class MarriageRegnService {
 		auditDetails.setCreatedBy(requestInfo.getRequesterId());
 		auditDetails.setCreatedTime(new Date().getTime());
 		auditDetails.setLastModifiedBy(requestInfo.getRequesterId());
-		auditDetails.setLastModifiedTime(new Date().getTime());	
+		auditDetails.setLastModifiedTime(new Date().getTime());
 		marriageRegn.setAuditDetails(auditDetails);
 	}
 
@@ -98,23 +86,15 @@ public class MarriageRegnService {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 		populateAuditDetailsForMarriageRegnUpdate(marriageRegnRequest);
 		populateDefaultDetailsForMarriageRegnUpdate(marriageRegnRequest);
-		String marriageRegnRequestJson = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			marriageRegnRequestJson = mapper.writeValueAsString(marriageRegnRequest);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		LOGGER.info("marriageRegnRequestJson::" + marriageRegnRequestJson);
-		marriageRegnProducer.sendMessage(propertiesManager.getUpdateMarriageRegnTopicName(), propertiesManager.getMarriageRegnKey(),
-				marriageRegnRequestJson);
-		return marriageRegn;	
+
+		log.info("marriageRegnRequest::" + marriageRegnRequest);
+		kafkaTemplate.send(propertiesManager.getUpdateMarriageRegnTopicName(), marriageRegnRequest);
+		return marriageRegn;
 	}
-	
+
 	private void populateDefaultDetailsForMarriageRegnUpdate(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
-		if(marriageRegn.getStatus().toString().equals("REGISTERED"))
-		{
+		if (marriageRegn.getStatus().toString().equals("REGISTERED")) {
 			marriageRegn.setRegnNumber(regnNumberService.generateRegnNumber());
 			marriageRegn.setRegnDate(new Date().getTime());
 			marriageRegn.setIsActive(true);
@@ -127,7 +107,7 @@ public class MarriageRegnService {
 
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setLastModifiedBy(requestInfo.getRequesterId());
-		auditDetails.setLastModifiedTime(new Date().getTime());		
+		auditDetails.setLastModifiedTime(new Date().getTime());
 		marriageRegn.setAuditDetails(auditDetails);
 	}
 
@@ -137,9 +117,10 @@ public class MarriageRegnService {
 		marriageRegnRepository.update(marriageRegn);
 		marryingPersonRepository.update(marriageRegn.getBridegroom(), marriageRegn.getTenantId());
 		marryingPersonRepository.update(marriageRegn.getBride(), marriageRegn.getTenantId());
-		//List<String> applicationNosList = marriageCertRepository.getApplicationNos(marriageRegn.getTenantId());
-		if(marriageRegn.getStatus().toString().equals("REGISTERED"))
+		// List<String> applicationNosList =
+		// marriageCertRepository.getApplicationNos(marriageRegn.getTenantId());
+		if (marriageRegn.getStatus().toString().equals("REGISTERED"))
 			marriageCertRepository.insert(marriageRegn);
-		
+
 	}
 }

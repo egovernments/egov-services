@@ -3,6 +3,7 @@ package org.egov.egf.master.domain.repository;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SchemeSearch;
@@ -43,7 +44,7 @@ public class SchemeRepository {
 	public void add(SchemeRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
 			message.put("scheme_create", request);
 		} else {
 			message.put("scheme_update", request);

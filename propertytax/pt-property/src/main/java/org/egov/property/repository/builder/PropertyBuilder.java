@@ -26,7 +26,7 @@ public class PropertyBuilder {
 		return propertyUpdateSQL.toString();
 	}
 
-	public static final String isPropertyUnderWorkflow = "select isunderworkflow from property where upicNumber=?";
+	public static final String isPropertyUnderWorkflow = "select isunderworkflow from egpt_property where upicNumber=?";
 
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_property where id= ?";

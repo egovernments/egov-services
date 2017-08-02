@@ -16,6 +16,7 @@ import org.egov.lams.web.contract.Role;
 import org.egov.lams.web.contract.UserErrorResponse;
 import org.egov.lams.web.contract.UserRequest;
 import org.egov.lams.web.contract.UserSearchRequest;
+import org.egov.lams.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,7 @@ public class AllotteeRepository {
 
 	public AllotteeResponse getAllottees(Allottee allottee, RequestInfo requestInfo) {
 
+		logger.info("inside get allottee");
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceSearchPath();
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
@@ -74,7 +76,21 @@ public class AllotteeRepository {
 		userSearchRequest.setEmailId(allottee.getEmailId());
 		userSearchRequest.setMobileNumber(allottee.getMobileNumber());
 		userSearchRequest.setTenantId(allottee.getTenantId());
-		userSearchRequest.setUserName(allottee.getUserName());
+		if(allottee.getUserName() != null){
+		    userSearchRequest.setUserName(allottee.getUserName());
+		}
+		else{
+			int maxLength = 50;
+			final String name;
+			String allotteeName = allottee.getName().replaceAll(" ", "");
+		    if (allotteeName.length() <= maxLength) {
+		    	name = allotteeName;
+			} else { 
+				name = allotteeName.substring(0, maxLength);
+			}
+			String userName = name + allottee.getMobileNumber();
+		    userSearchRequest.setUserName(userName);
+		}
 		logger.info("url for allottee api post call :: " + url
 				+ "the request object for isAllotteeExist is userSearchRequest ::: " + userSearchRequest);
 		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);
@@ -84,8 +100,18 @@ public class AllotteeRepository {
 
 	public AllotteeResponse createAllottee(Allottee allottee, RequestInfo requestInfo) {
 
+		logger.info("inside create allottee");
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceCreatePAth();
+		int maxLength = 50;
+		final String name;
+		String allotteeName = allottee.getName().replaceAll(" ", "");
+	    if (allotteeName.length() <= maxLength) {
+	    	name = allotteeName;
+		} else { 
+			name = allotteeName.substring(0, maxLength);
+		}
+		String userName = name + allottee.getMobileNumber();
 		
 		Role role = new Role();
 		role.setCode("CITIZEN");
@@ -96,7 +122,7 @@ public class AllotteeRepository {
 				
 		UserRequest userRequest = UserRequest.buildUserRequestFromAllotte(allottee);
 		userRequest.setRoles(roles);
-		userRequest.setUserName(allottee.getName() + allottee.getMobileNumber());
+		userRequest.setUserName(userName);
 		userRequest.setPassword(allottee.getMobileNumber().toString());
 		userRequest.setGender(Gender.FEMALE);
 		userRequest.setType(UserType.CITIZEN);
@@ -133,9 +159,9 @@ public class AllotteeRepository {
 			} catch (HttpClientErrorException e) {
 				String errorResponseBody = e.getResponseBodyAsString();
 				logger.error("Following exception occurred: " + e.getResponseBodyAsString());
-				UserErrorResponse userErrorResponse = null;
+				ErrorResponse userErrorResponse = null;
 				try {
-					userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
+					userErrorResponse = objectMapper.readValue(errorResponseBody, ErrorResponse.class);
 				} catch (JsonMappingException jme) {
 					logger.error("Following Exception Occurred While Mapping JSON Response From User Service : "
 							+ jme.getMessage());
@@ -150,11 +176,8 @@ public class AllotteeRepository {
 				}
 				 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
 					logger.info("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
-					throw new RuntimeException(e);
-			} catch (Exception e) {
-				logger.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
-				throw new RuntimeException(e);
-			}
+					throw new RuntimeException(userErrorResponse.getError().toString());
+			} 
 		}
 		return allotteeResponse;
 	}

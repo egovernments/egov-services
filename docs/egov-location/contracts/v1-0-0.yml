@@ -427,11 +427,23 @@ paths:
         - name: boundaryIds
           in: query
           description: Unique List of boundary id's.
-          required: true
+          required: false
           type: array
           items:
             type: integer
             format: int64
+        - name: boundaryNum
+          in: query
+          description: Boundary Unique Number.
+          required: false
+          type: integer
+          format: int64    
+        - name: boundaryType
+          in: query
+          description: Type Of the Boundary Like City,Ward,Zone.
+          required: false
+          type: string
+          format: varchar  
           
       tags:
         - boundary Search

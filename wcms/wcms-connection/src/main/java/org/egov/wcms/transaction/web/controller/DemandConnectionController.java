@@ -134,7 +134,7 @@ public class DemandConnectionController {
             List<Demand> pros = demandConnectionService.prepareDemandForLegacy(demandDetailBeanReq, waterConn, requestInfo);
             DemandResponse    demandRes = demandConnectionService.createDemand(pros, demandDetailBeanReq.getRequestInfo());
             if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
-               waterConnectionService.updateConnectionOnChangeOfDemand(demandRes.getDemands().get(0).getId(), demandBeanGetRequest.getConsumerNuber());
+               waterConnectionService.updateConnectionOnChangeOfDemand(demandRes.getDemands().get(0).getId(), waterConn,requestInfo);
          
        }
         return getSuccessResponse(demandDetailBeanReq.getDemandDetailBeans(), demandDetailBeanReq.getRequestInfo());

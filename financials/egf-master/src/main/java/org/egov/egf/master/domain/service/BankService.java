@@ -2,12 +2,11 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
-import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.repository.BankRepository;
 import org.egov.egf.master.domain.repository.FundRepository;
 import org.egov.egf.master.web.requests.BankRequest;
@@ -23,12 +22,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class BankService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private BankRepository bankRepository;
 
@@ -41,16 +34,16 @@ public class BankService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(bankContractRequest.getBank(), errors);
 				break;
-			case ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(banks, "Banks to create must not be null");
 				for (Bank bank : banks) {
 					validator.validate(bank, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(banks, "Banks to update must not be null");
 				for (Bank bank : banks) {
 					validator.validate(bank, errors);
@@ -76,7 +69,7 @@ public class BankService {
 	@Transactional
 	public List<Bank> add(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
-		validate(banks, ACTION_CREATE, errors);
+		validate(banks, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -87,7 +80,7 @@ public class BankService {
 	@Transactional
 	public List<Bank> update(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
-		validate(banks, ACTION_UPDATE, errors);
+		validate(banks, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

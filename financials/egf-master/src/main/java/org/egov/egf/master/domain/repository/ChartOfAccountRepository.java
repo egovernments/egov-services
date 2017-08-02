@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
@@ -49,7 +50,7 @@ public class ChartOfAccountRepository {
 	public void add(ChartOfAccountRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
 			message.put("chartofaccount_create", request);
 		} else {
 			message.put("chartofaccount_update", request);

@@ -345,6 +345,10 @@ definitions:
         type: boolean
         default: true
         description: True to be set to mark this Trade License as Active, False to be set to mark this Trade License as inActive
+      expiryDate:
+        type: string
+        format: date
+        description: Expiry Date of the Trade License
       feeDetails:
         type: array
         description: List of Fee Details for Trade License,  Required only for Legacy Trade License
@@ -416,9 +420,10 @@ definitions:
         type: integer
         format: int64
         description: Unique Indentifier of the Trade license
-      financialyear:
-        type: integer
-        format: int64
+      financialYear:
+        type: string
+        maxLength: 128
+        minLength: 4
         description: Unique Indentifier of the Financial Year
       amount:
         type: number
@@ -430,7 +435,7 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - licenseId
-    - financialyear
+    - financialYear
     - amount
   SupportDocument:
     type: object

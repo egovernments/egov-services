@@ -38,7 +38,7 @@ public class UomServiceTest {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public Long uomId = 1l;
+	public static Long uomId = 1l;
 	public String tenantId = "default";
 	public String name = "Flammables v1.1";
 	public String code = "Flammables v1.1";
@@ -46,6 +46,9 @@ public class UomServiceTest {
 	public String updatedName = "Flammables v1.1 name updated";
 	public String updatedCode = "Flammables v1.1 code updated";
 
+	/**
+	 * Description : test method to test createUom 
+	 */
 	@Test
 	public void testAcreateUom() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -77,7 +80,13 @@ public class UomServiceTest {
 			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
 			}
-			this.uomId = uomResponse.getUoms().get(0).getId();
+			
+			for( UOM euom : uomResponse.getUoms()){
+				if( euom.getCode().equalsIgnoreCase( code )){
+					this.uomId = euom.getId();
+				}
+			}
+//			this.uomId = uomResponse.getUoms().get(0).getId();
 
 			assertTrue(true);
 
@@ -87,6 +96,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test searchUom 
+	 */
 	@Test
 	public void testAsearchUom() {
 
@@ -98,7 +110,7 @@ public class UomServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { uomId.intValue() },
+			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { this.uomId.intValue() },
 					name, code, active, pageSize, offset);
 			if (uomResponse.getUoms().size() == 0)
 				assertTrue(false);
@@ -111,6 +123,11 @@ public class UomServiceTest {
 
 	}
 
+	
+	/**
+	 * Description : test method to test createUom 
+	 */
+	
 	@Test
 	public void testAcreateUomDuplicate() {
 
@@ -142,9 +159,9 @@ public class UomServiceTest {
 			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
 			}
-			this.uomId = uomResponse.getUoms().get(0).getId();
+			
 
-			assertTrue(true);
+			assertTrue(false);
 
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {
@@ -156,6 +173,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test UpdateUom 
+	 */
 	@Test
 	public void testBmodifyUomName() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -201,6 +221,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test updateUom name
+	 */
 	@Test
 	public void testBsearchUpdatedUomName() {
 
@@ -225,6 +248,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test updateUom code
+	 */
 	@Test
 	public void testCmodifyUomCode() {
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -264,6 +290,10 @@ public class UomServiceTest {
 		}
 
 	}
+	
+	/**
+	 * Description : test method to test updateUom code
+	 */
 
 	@Test
 	public void testCmodifyUomCodeDuplicate() {
@@ -309,6 +339,9 @@ public class UomServiceTest {
 
 	}
 
+	/**
+	 * Description : test method to test updateUom code
+	 */
 	@Test
 	public void testCsearchUpdatedUomCode() {
 

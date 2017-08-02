@@ -62,6 +62,10 @@ public class DocumentTypeControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	
+	/**
+	 * Description : Test method for createDocumentType() method
+	 */
 	@Test
 	public void testCreateDocumentType() throws Exception {
 
@@ -98,6 +102,10 @@ public class DocumentTypeControllerTest {
 
 	}
 
+	
+	/**
+	 * Description : Test method for updateDocumentType() method
+	 */
 	@Test
 	public void testUpdateDocumentType() throws Exception {
 
@@ -133,6 +141,10 @@ public class DocumentTypeControllerTest {
 
 	}
 
+	
+	/**
+	 * Description : Test method for searchDocumentType() method
+	 */
 	@Test
 	public void testSearchDocumentType() throws Exception {
 

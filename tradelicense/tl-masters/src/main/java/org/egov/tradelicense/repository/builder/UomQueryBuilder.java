@@ -2,6 +2,8 @@ package org.egov.tradelicense.repository.builder;
 
 import java.util.List;
 
+import org.egov.tradelicense.utility.ConstantUtility;
+
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for UOM API's
  * 
@@ -9,11 +11,13 @@ import java.util.List;
  */
 public class UomQueryBuilder {
 
-	public static final String INSERT_UOM_QUERY = "INSERT INTO egtl_mstr_uom"
+	private static final String uomTableName = ConstantUtility.UOM_TABLE_NAME;
+
+	public static final String INSERT_UOM_QUERY = "INSERT INTO " + uomTableName
 			+ " (tenantId, code, name, active, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
 			+ " VALUES(?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_UOM_QUERY = "UPDATE egtl_mstr_uom"
+	public static final String UPDATE_UOM_QUERY = "UPDATE " + uomTableName
 			+ " SET tenantId = ?, code = ?, name = ?, active = ?," + " lastModifiedBy = ?, lastModifiedTime = ?"
 			+ " WHERE id = ?";
 
@@ -21,7 +25,7 @@ public class UomQueryBuilder {
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from egtl_mstr_uom where ");
+		searchSql.append("select * from " + uomTableName + " where ");
 		searchSql.append(" tenantId = ? ");
 		preparedStatementValues.add(tenantId);
 
@@ -56,17 +60,15 @@ public class UomQueryBuilder {
 			preparedStatementValues.add(active);
 		}
 
-		if (pageSize == null)
-			pageSize = 30;
+		if (pageSize != null) {
+			searchSql.append(" limit ? ");
+			preparedStatementValues.add(pageSize);
+		}
 
-		searchSql.append(" limit ? ");
-		preparedStatementValues.add(pageSize);
-
-		if (offSet == null)
-			offSet = 0;
-
-		searchSql.append(" offset ? ");
-		preparedStatementValues.add(offSet);
+		if (offSet != null) {
+			searchSql.append(" offset ? ");
+			preparedStatementValues.add(offSet);
+		}
 
 		return searchSql.toString();
 	}

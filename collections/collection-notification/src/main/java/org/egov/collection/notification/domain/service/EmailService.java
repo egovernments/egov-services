@@ -7,6 +7,7 @@ import org.egov.collection.notification.domain.model.City;
 import org.egov.collection.notification.persistence.repository.BusinessDetailsRepository;
 import org.egov.collection.notification.persistence.repository.TenantRepository;
 import org.egov.collection.notification.web.contract.*;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,17 +37,20 @@ public class EmailService {
 
    public void send(ReceiptRequest receiptRequest) {
        List<Receipt> receipts = receiptRequest.getReceipt();
-       String applicantName = receipts.get(0).getPayeeName();
        Receipt receipt = receipts.get(0);
-       String emailId = receipt.getBill().get(0).getPayeeEmail();
+       Bill bill = receipt.getBill().get(0);
+       String emailId = bill.getPayeeEmail();
        final City city = tenantRepository.fetchTenantByCode(receiptRequest.getRequestInfo(),receiptRequest.getTenantId());
-       sendEmailNotification(receiptRequest, applicantName,emailId,city);
+       sendEmailNotification(bill, receiptRequest.getRequestInfo(),emailId,city);
 
    }
 
-    private void sendEmailNotification(ReceiptRequest receiptRequest, String applicantName, String emailId, City city) {
+    private void sendEmailNotification(Bill bill, RequestInfo requestInfo, String emailId, City city) {
 
-        final EmailRequest emailRequest = EmailRequest.builder().subject("Tax Payment details").body(getSmsMessage(receiptRequest,applicantName,city))
+        Date receiptCreateDate = new Date(bill.getBillDetails().get(0).getReceiptDate());
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        final EmailRequest emailRequest = EmailRequest.builder()
+                .subject(new StringBuilder().append("Payment Received dated : ").append(format.format(receiptCreateDate)).toString()).body(getSmsMessage(bill, requestInfo, city))
                 .email(emailId).build();
 
         log.info("Collection email details------------" + emailRequest);
@@ -58,31 +62,34 @@ public class EmailService {
         }
     }
 
-    public String getSmsMessage(final ReceiptRequest receiptRequest, final String applicantName, final City city) {
-        StringBuilder  emailMessage = new StringBuilder(200);
-        List<Receipt> receipts = receiptRequest.getReceipt();
-        List<Bill> bills = receipts.get(0).getBill();
-        List<BillDetail> billDetails = bills.get(0).getBillDetails();
-        emailMessage.append("Dear Sir/Madam,\n\nGreetings from ").append(city.getName()).append(".").append("\n\n").append("We thank you for making a payment of Rs.");
+    public String getSmsMessage(final Bill bill, final RequestInfo requestInfo, final City city) {
+        StringBuilder  emailMessage = new StringBuilder();
+        StringBuilder  consumerCodes = new StringBuilder();
+        StringBuilder amountPaid = new StringBuilder();
+        StringBuilder businessDetails = new StringBuilder();
+        StringBuilder urls = new StringBuilder();
 
-        String consumerCode = "";
-        Long receiptDate = 0l;
-        for(BillDetail billDetail : billDetails) {
-            BusinessDetailsResponse response = businessDetailsRepository.getBusinessDetails(Arrays.asList(billDetail.getBusinessService()) ,receiptRequest.getTenantId(),receiptRequest.getRequestInfo());
-            emailMessage.append(billDetail.getAmountPaid()).append(" for ").append(response.getBusinessDetails().get(0).getName());
-            consumerCode = billDetail.getConsumerCode();
-            receiptDate = billDetail.getReceiptDate();
-        }
+        int count = 0;
 
-        Date receiptCreateDate = new Date(receiptDate);
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        emailMessage.append(" against Consumer Code :").append(consumerCode).append(" on ").append(format.format(receiptCreateDate)).append(".").append(System.lineSeparator());
-        emailMessage.append("Please click on the URL to View your Payment Receipt: ").append(System.lineSeparator());
-        for(BillDetail billDetail : billDetails) {
-            emailMessage.append(propertiesManager.getCollectionServiceHost()).append(propertiesManager.getCollectionServiceUrl())
-                    .append("?receiptNumbers=").append(billDetail.getReceiptNumber());
+        for(BillDetail billDetail : bill.getBillDetails()) {
+            if(count >= 1 && count != bill.getBillDetails().size()) {
+                consumerCodes.append(",");
+                amountPaid.append(",");
+                businessDetails.append(",");
+                urls.append("\n");
+            }
+            count++;
+            consumerCodes.append(billDetail.getConsumerCode());
+            amountPaid.append("Rs.").append(billDetail.getAmountPaid()).append("/-");
+            BusinessDetailsResponse response = businessDetailsRepository.getBusinessDetails(Arrays.asList(billDetail.getBusinessService()) ,bill.getTenantId(),requestInfo);
+            businessDetails.append(response.getBusinessDetails().get(0).getName());
+            urls.append(propertiesManager.getCollectionServiceHost()).append(propertiesManager.getCollectionServiceUrl())
+                    .append("?receiptNumbers=").append(billDetail.getReceiptNumber()).append("&tenantId=").append(bill.getTenantId());
         }
-        emailMessage.append("\n").append("Regards,").append("\n").append(city.getName());
+        emailMessage.append("Dear Consumer,").append("\n\n").append("We have received payment of ").append(amountPaid).append(" for the consumer codes ")
+                .append(consumerCodes).append(" which belong to the service ").append(businessDetails).append(".").append("\n\n");
+        emailMessage.append("Please click on the URL for receipt details: ").append(urls).append("\n\n");
+        emailMessage.append("Regards,").append("\n").append(city.getName());
         return emailMessage.toString();
 
     }

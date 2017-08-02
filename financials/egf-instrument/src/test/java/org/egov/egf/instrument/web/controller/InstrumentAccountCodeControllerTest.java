@@ -1,8 +1,6 @@
 package org.egov.egf.instrument.web.controller;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -12,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.TestConfiguration;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
@@ -32,7 +31,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
@@ -56,35 +54,9 @@ public class InstrumentAccountCodeControllerTest {
 	private RequestJsonReader resources = new RequestJsonReader();
 
 	@Test
-	public void test_create_with_kafka() throws IOException, Exception {
+	public void test_create() throws IOException, Exception {
 
-		ReflectionTestUtils.setField(InstrumentAccountCodeController.class, "persistThroughKafka", "yes");
-
-		when(instrumentAccountCodeService.fetchAndValidate(any(List.class), any(BindingResult.class),
-				any(String.class))).thenReturn(getInstrumentAccountCodes());
-
-		mockMvc.perform(post("/instrumentaccountcodes/_create")
-				.content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_create_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("instrumentaccountcode/instrumentaccountcode_create_valid_response.json")));
-
-		verify(instrumentAccountCodeQueueRepository).addToQue(captor.capture());
-
-		final InstrumentAccountCodeRequest actualRequest = captor.getValue();
-
-		assertEquals("instrumenttype", actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getName());
-		assertEquals(true, actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getActive());
-		assertEquals("glcode", actualRequest.getInstrumentAccountCodes().get(0).getAccountCode().getGlcode());
-		assertEquals("default", actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
-	}
-
-	@Test
-	public void test_create_without_kafka() throws IOException, Exception {
-
-		ReflectionTestUtils.setField(InstrumentAccountCodeController.class, "persistThroughKafka", "no");
-
-		when(instrumentAccountCodeService.save(any(List.class), any(BindingResult.class)))
+		when(instrumentAccountCodeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getInstrumentAccountCodes());
 
 		mockMvc.perform(post("/instrumentaccountcodes/_create")
@@ -92,22 +64,13 @@ public class InstrumentAccountCodeControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
 						.readResponse("instrumentaccountcode/instrumentaccountcode_create_valid_response.json")));
-
-		verify(instrumentAccountCodeQueueRepository).addToSearchQue(captor.capture());
-
-		final InstrumentAccountCodeRequest actualRequest = captor.getValue();
-
-		assertEquals("instrumenttype", actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getName());
-		assertEquals(true, actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getActive());
-		assertEquals("glcode", actualRequest.getInstrumentAccountCodes().get(0).getAccountCode().getGlcode());
-		assertEquals("default", actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
 	}
 
 	@Test
 	public void test_create_error() throws IOException, Exception {
 
-		when(instrumentAccountCodeService.fetchAndValidate(any(List.class), any(BindingResult.class),
-				any(String.class))).thenReturn((getInstrumentAccountCodes()));
+		when(instrumentAccountCodeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(getInstrumentAccountCodes());
 
 		mockMvc.perform(post("/instrumentaccountcodes/_create")
 				.content(resources
@@ -117,41 +80,12 @@ public class InstrumentAccountCodeControllerTest {
 	}
 
 	@Test
-	public void test_update_with_kafka() throws IOException, Exception {
-
-		ReflectionTestUtils.setField(InstrumentAccountCodeController.class, "persistThroughKafka", "yes");
+	public void test_update() throws IOException, Exception {
 
 		List<InstrumentAccountCode> instrumentAccountCodes = getInstrumentAccountCodes();
 		instrumentAccountCodes.get(0).setId("1");
 
-		when(instrumentAccountCodeService.fetchAndValidate(any(List.class), any(BindingResult.class),
-				any(String.class))).thenReturn(instrumentAccountCodes);
-
-		mockMvc.perform(post("/instrumentaccountcodes/_update")
-				.content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_update_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("instrumentaccountcode/instrumentaccountcode_update_valid_response.json")));
-
-		verify(instrumentAccountCodeQueueRepository).addToQue(captor.capture());
-
-		final InstrumentAccountCodeRequest actualRequest = captor.getValue();
-
-		assertEquals("instrumenttype", actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getName());
-		assertEquals(true, actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getActive());
-		assertEquals("glcode", actualRequest.getInstrumentAccountCodes().get(0).getAccountCode().getGlcode());
-		assertEquals("default", actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
-	}
-
-	@Test
-	public void test_update_without_kafka() throws IOException, Exception {
-
-		ReflectionTestUtils.setField(InstrumentAccountCodeController.class, "persistThroughKafka", "no");
-
-		List<InstrumentAccountCode> instrumentAccountCodes = getInstrumentAccountCodes();
-		instrumentAccountCodes.get(0).setId("1");
-
-		when(instrumentAccountCodeService.update(any(List.class), any(BindingResult.class)))
+		when(instrumentAccountCodeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(instrumentAccountCodes);
 
 		mockMvc.perform(post("/instrumentaccountcodes/_update")
@@ -160,21 +94,13 @@ public class InstrumentAccountCodeControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
 						.readResponse("instrumentaccountcode/instrumentaccountcode_update_valid_response.json")));
 
-		verify(instrumentAccountCodeQueueRepository).addToSearchQue(captor.capture());
-
-		final InstrumentAccountCodeRequest actualRequest = captor.getValue();
-
-		assertEquals("instrumenttype", actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getName());
-		assertEquals(true, actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getActive());
-		assertEquals("glcode", actualRequest.getInstrumentAccountCodes().get(0).getAccountCode().getGlcode());
-		assertEquals("default", actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
 	}
 
 	@Test
 	public void test_update_error() throws IOException, Exception {
 
-		when(instrumentAccountCodeService.fetchAndValidate(any(List.class), any(BindingResult.class),
-				any(String.class))).thenReturn((getInstrumentAccountCodes()));
+		when(instrumentAccountCodeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(getInstrumentAccountCodes());
 
 		mockMvc.perform(post("/instrumentaccountcodes/_update")
 				.content(resources

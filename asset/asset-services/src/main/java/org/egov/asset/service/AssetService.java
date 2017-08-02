@@ -49,18 +49,14 @@ import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.YearWiseDepreciation;
-import org.egov.asset.model.enums.KafkaTopicName;
-import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class AssetService {
@@ -71,16 +67,13 @@ public class AssetService {
     private AssetRepository assetRepository;
 
     @Autowired
-    private AssetProducer assetProducer;
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
     @Autowired
     private ApplicationProperties applicationProperties;
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private AssetCommonService assetCommonService;
@@ -112,17 +105,8 @@ public class AssetService {
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
         logger.debug("assetRequest createAsync::" + assetRequest);
-        String value = null;
 
-        try {
-            value = objectMapper.writeValueAsString(assetRequest);
-        } catch (final JsonProcessingException e) {
-            logger.info("JsonProcessingException assetrequest for kafka : " + e);
-        }
-        logger.debug("assetRequest value::" + value);
-
-        assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), KafkaTopicName.SAVEASSET.toString(),
-                value);
+        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetTopicName(), assetRequest);
 
         final List<Asset> assets = new ArrayList<>();
         assets.add(asset);
@@ -142,16 +126,8 @@ public class AssetService {
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
         logger.debug("assetRequest updateAsync::" + assetRequest);
-        String value = null;
 
-        try {
-            value = objectMapper.writeValueAsString(assetRequest);
-        } catch (final JsonProcessingException e) {
-            logger.info("JsonProcessingException assetrequest for update for kafka : " + e);
-        }
-
-        assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(),
-                KafkaTopicName.UPDATEASSET.toString(), value);
+        logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetTopicName(), assetRequest);
 
         final List<Asset> assets = new ArrayList<>();
         assets.add(asset);
@@ -173,8 +149,8 @@ public class AssetService {
         final Boolean enableYearWiseDepreciation = asset.getEnableYearWiseDepreciation();
 
         logger.debug("Enable year wise depreciaition from Request :: " + enableYearWiseDepreciation);
-        
-        logger.debug("Asset ID from Request :: "+asset.getId());
+
+        logger.debug("Asset ID from Request :: " + asset.getId());
         if (enableYearWiseDepreciation != null && enableYearWiseDepreciation && yearWiseDepreciation != null
                 && !yearWiseDepreciation.isEmpty())
             for (final YearWiseDepreciation depreciationRate : yearWiseDepreciation)

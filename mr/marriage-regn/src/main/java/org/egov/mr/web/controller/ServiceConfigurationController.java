@@ -47,7 +47,7 @@ public class ServiceConfigurationController {
 
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		// Validation
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForSearch(requestInfo,
 				bindingResultsForRequestInfoWrapper, bindingResultForserviceConfigurationSearchCriteria);
 
 		if (errorResponseEntity != null)

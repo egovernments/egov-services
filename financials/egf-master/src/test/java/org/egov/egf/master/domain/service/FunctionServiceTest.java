@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.TestConfiguration;
@@ -84,8 +85,8 @@ public class FunctionServiceTest {
 
 		Function function1 = getFunction();
 		functions.add(function1);
-		//functionService.validate(functions, "create", errors);
-	//	functionService.validate(functions, "update", errors);
+		//functionService.validate(functions, Constants.ACTION_CREATE, errors);
+	//	functionService.validate(functions, Constants.ACTION_UPDATE, errors);
 	}
 
 	@Test

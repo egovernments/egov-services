@@ -152,7 +152,7 @@ var localationData = {
   "wc.search.PropertyPipeSize.title":"Search Property Pipe Size",
   "wc.view.PropertyTypePipeSize.title":"View Property Type Pipe Size",
   "wc.update.PropertyTypePipeSize.title":"Update Property Type Pipe Size",
- "wc.create.groups.applicantDetails.consumerNo":"Consumer Number",
+  "wc.create.groups.applicantDetails.consumerNo":"Consumer Number",
   "wc.create.groups.applicantDetails.connectionDate":"Connection Date"
 }
 

@@ -116,7 +116,7 @@
                                         <exclude>org.egov.collection.indexer.contract.*</exclude>
                                         <exclude>org.egov.collection.indexer.enricher.*</exclude>
                                         <exclude>org.egov.collection.indexer.service.*</exclude>
-                                        <exclude>org.egov.collection.indexer.repository.contract.*</exclude>
+                                        <exclude>org.egov.collection.indexer.repository.*</exclude>
                                         <exclude>org.egov.collection.CollectionSearchIndexerApplication</exclude>
                                     </excludes>
                                     <limits>

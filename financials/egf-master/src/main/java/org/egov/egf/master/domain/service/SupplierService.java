@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -40,17 +40,17 @@ public class SupplierService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(supplierContractRequest.getSupplier(),
 				// errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(suppliers, "Suppliers to create must not be null");
 				for (Supplier supplier : suppliers) {
 					validator.validate(supplier, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(suppliers, "Suppliers to update must not be null");
 				for (Supplier supplier : suppliers) {
 					validator.validate(supplier, errors);
@@ -92,7 +92,7 @@ public class SupplierService {
 	@Transactional
 	public List<Supplier> add(List<Supplier> suppliers, BindingResult errors) {
 		suppliers = fetchRelated(suppliers);
-		validate(suppliers, EgfConstants.ACTION_CREATE, errors);
+		validate(suppliers, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -103,7 +103,7 @@ public class SupplierService {
 	@Transactional
 	public List<Supplier> update(List<Supplier> suppliers, BindingResult errors) {
 		suppliers = fetchRelated(suppliers);
-		validate(suppliers, EgfConstants.ACTION_UPDATE, errors);
+		validate(suppliers, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

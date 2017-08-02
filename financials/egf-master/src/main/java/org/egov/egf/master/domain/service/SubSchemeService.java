@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -36,17 +36,17 @@ public class SubSchemeService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(subSchemeContractRequest.getSubScheme(),
 				// errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(subschemes, "SubSchemes to create must not be null");
 				for (SubScheme subScheme : subschemes) {
 					validator.validate(subScheme, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(subschemes, "SubSchemes to update must not be null");
 				for (SubScheme subScheme : subschemes) {
 					validator.validate(subScheme, errors);
@@ -81,7 +81,7 @@ public class SubSchemeService {
 	@Transactional
 	public List<SubScheme> add(List<SubScheme> subschemes, BindingResult errors) {
 		subschemes = fetchRelated(subschemes);
-		validate(subschemes, EgfConstants.ACTION_CREATE, errors);
+		validate(subschemes, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -92,7 +92,7 @@ public class SubSchemeService {
 	@Transactional
 	public List<SubScheme> update(List<SubScheme> subschemes, BindingResult errors) {
 		subschemes = fetchRelated(subschemes);
-		validate(subschemes, EgfConstants.ACTION_UPDATE, errors);
+		validate(subschemes, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

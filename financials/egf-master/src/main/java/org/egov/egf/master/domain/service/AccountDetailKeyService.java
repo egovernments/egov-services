@@ -2,7 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
-import org.egov.common.constants.EgfConstants;
+import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -36,17 +36,17 @@ public class AccountDetailKeyService {
 
 		try {
 			switch (method) {
-			case EgfConstants.ACTION_VIEW:
+			case Constants.ACTION_VIEW:
 				// validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(),
 				// errors);
 				break;
-			case EgfConstants.ACTION_CREATE:
+			case Constants.ACTION_CREATE:
 				Assert.notNull(accountdetailkeys, "AccountDetailKeys to create must not be null");
 				for (AccountDetailKey accountDetailKey : accountdetailkeys) {
 					validator.validate(accountDetailKey, errors);
 				}
 				break;
-			case EgfConstants.ACTION_UPDATE:
+			case Constants.ACTION_UPDATE:
 				Assert.notNull(accountdetailkeys, "AccountDetailKeys to update must not be null");
 				for (AccountDetailKey accountDetailKey : accountdetailkeys) {
 					validator.validate(accountDetailKey, errors);
@@ -83,7 +83,7 @@ public class AccountDetailKeyService {
 	@Transactional
 	public List<AccountDetailKey> add(List<AccountDetailKey> accountdetailkeys, BindingResult errors) {
 		accountdetailkeys = fetchRelated(accountdetailkeys);
-		validate(accountdetailkeys, EgfConstants.ACTION_CREATE, errors);
+		validate(accountdetailkeys, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -94,7 +94,7 @@ public class AccountDetailKeyService {
 	@Transactional
 	public List<AccountDetailKey> update(List<AccountDetailKey> accountdetailkeys, BindingResult errors) {
 		accountdetailkeys = fetchRelated(accountdetailkeys);
-		validate(accountdetailkeys, EgfConstants.ACTION_UPDATE, errors);
+		validate(accountdetailkeys, Constants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

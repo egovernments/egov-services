@@ -117,6 +117,27 @@ public class ReceiptController {
 		return getSuccessResponse(receipts, requestInfo);
 	}
 
+    @PostMapping("/_view")
+    @ResponseBody
+    public List<Receipt> view(@ModelAttribute @Valid ReceiptSearchGetRequest receiptGetRequest) {
+
+        ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
+                .businessCode(receiptGetRequest.getBusinessCode()).classification(receiptGetRequest.getClassification())
+                .collectedBy(receiptGetRequest.getCollectedBy()).consumerCode(receiptGetRequest.getConsumerCode())
+                .fromDate(receiptGetRequest.getFromDate()).toDate(receiptGetRequest.getToDate())
+                .paymentType(receiptGetRequest.getPaymentType()).receiptNumbers(receiptGetRequest.getReceiptNumbers())
+                .status(receiptGetRequest.getStatus()).tenantId(receiptGetRequest.getTenantId())
+                .sortBy(receiptGetRequest.getSortBy()).sortOrder(receiptGetRequest.getSortOrder()).build();
+
+        List<Receipt> receipts = new ArrayList<>();
+        try {
+            receipts = receiptService.getReceipts(searchCriteria).toDomainContract();
+        } catch (final Exception exception) {
+            LOGGER.error("Error while processing request " + receiptGetRequest, exception);
+        }
+        return receipts;
+    }
+
 	@PostMapping("/_cancel")
 	@ResponseBody
 	public ResponseEntity<?> cancelReceipt(@RequestBody @Valid ReceiptReq receiptRequest, BindingResult errors) {

@@ -60,7 +60,7 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(bankBranchSearchEntity.getSortBy(), BankBranchEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (bankBranchSearchEntity.getSortBy() != null && !bankBranchSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + bankBranchSearchEntity.getSortBy();
 		}

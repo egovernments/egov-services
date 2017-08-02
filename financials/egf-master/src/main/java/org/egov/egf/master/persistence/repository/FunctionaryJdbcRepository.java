@@ -60,7 +60,7 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(functionarySearchEntity.getSortBy(), FunctionaryEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (functionarySearchEntity.getSortBy() != null && !functionarySearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + functionarySearchEntity.getSortBy();
 		}

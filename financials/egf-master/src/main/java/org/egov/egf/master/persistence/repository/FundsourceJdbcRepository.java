@@ -60,7 +60,7 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(fundsourceSearchEntity.getSortBy(), FundsourceEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (fundsourceSearchEntity.getSortBy() != null && !fundsourceSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + fundsourceSearchEntity.getSortBy();
 		}

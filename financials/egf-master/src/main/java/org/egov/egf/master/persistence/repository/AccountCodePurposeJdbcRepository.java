@@ -61,7 +61,7 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(accountCodePurposeSearchEntity.getSortBy(), AccountCodePurposeEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (accountCodePurposeSearchEntity.getSortBy() != null
 				&& !accountCodePurposeSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + accountCodePurposeSearchEntity.getSortBy();

@@ -60,7 +60,7 @@ public class BankAccountJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(bankAccountSearchEntity.getSortBy(), BankAccountEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by accountNumber";
 		if (bankAccountSearchEntity.getSortBy() != null && !bankAccountSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + bankAccountSearchEntity.getSortBy();
 		}

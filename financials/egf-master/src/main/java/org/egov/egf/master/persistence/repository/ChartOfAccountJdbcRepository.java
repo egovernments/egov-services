@@ -60,7 +60,7 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(chartOfAccountSearchEntity.getSortBy(), ChartOfAccountEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (chartOfAccountSearchEntity.getSortBy() != null && !chartOfAccountSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + chartOfAccountSearchEntity.getSortBy();
 		}

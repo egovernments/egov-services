@@ -60,7 +60,7 @@ public class SchemeJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(schemeSearchEntity.getSortBy(), SchemeEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (schemeSearchEntity.getSortBy() != null && !schemeSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + schemeSearchEntity.getSortBy();
 		}

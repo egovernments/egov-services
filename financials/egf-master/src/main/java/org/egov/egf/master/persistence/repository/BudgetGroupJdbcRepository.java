@@ -60,7 +60,7 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(budgetGroupSearchEntity.getSortBy(), BudgetGroupEntity.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by name";
 		if (budgetGroupSearchEntity.getSortBy() != null && !budgetGroupSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + budgetGroupSearchEntity.getSortBy();
 		}

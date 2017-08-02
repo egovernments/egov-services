@@ -7,6 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
+import org.egov.common.constants.EgfConstants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.AccountDetailType;
@@ -51,7 +52,7 @@ public class AccountDetailTypeController {
 		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<>();
 		AccountDetailTypeContract contract;
 
-		accountDetailTypeRequest.getRequestInfo().setAction("create");
+		accountDetailTypeRequest.getRequestInfo().setAction(EgfConstants.ACTION_CREATE);
 
 		for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeRequest.getAccountDetailTypes()) {
 			accountDetailType = new AccountDetailType();
@@ -86,7 +87,7 @@ public class AccountDetailTypeController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		accountDetailTypeRequest.getRequestInfo().setAction("update");
+		accountDetailTypeRequest.getRequestInfo().setAction(EgfConstants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		AccountDetailTypeResponse accountDetailTypeResponse = new AccountDetailTypeResponse();
 		List<AccountDetailType> accountdetailtypes = new ArrayList<>();

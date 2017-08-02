@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.EgfConstants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.FinancialYear;
@@ -20,12 +21,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class FinancialYearService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private FinancialYearRepository financialYearRepository;
 
@@ -36,17 +31,17 @@ public class FinancialYearService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case EgfConstants.ACTION_VIEW:
 				// validator.validate(financialYearContractRequest.getFinancialYear(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case EgfConstants.ACTION_CREATE:
 				Assert.notNull(financialyears, "FinancialYears to create must not be null");
 				for (FinancialYear financialYear : financialyears) {
 					validator.validate(financialYear, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case EgfConstants.ACTION_UPDATE:
 				Assert.notNull(financialyears, "FinancialYears to update must not be null");
 				for (FinancialYear financialYear : financialyears) {
 					validator.validate(financialYear, errors);
@@ -73,7 +68,7 @@ public class FinancialYearService {
 
 	public List<FinancialYear> add(List<FinancialYear> financialyears, BindingResult errors) {
 		financialyears = fetchRelated(financialyears);
-		validate(financialyears, ACTION_CREATE, errors);
+		validate(financialyears, EgfConstants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -83,7 +78,7 @@ public class FinancialYearService {
 
 	public List<FinancialYear> update(List<FinancialYear> financialyears, BindingResult errors) {
 		financialyears = fetchRelated(financialyears);
-		validate(financialyears, ACTION_UPDATE, errors);
+		validate(financialyears, EgfConstants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

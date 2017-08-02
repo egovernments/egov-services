@@ -3,6 +3,7 @@ package org.egov.egf.master.domain.repository;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.egov.common.constants.EgfConstants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.domain.model.FunctionarySearch;
@@ -43,7 +44,7 @@ public class FunctionaryRepository {
 	public void add(FunctionaryRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(EgfConstants.ACTION_CREATE)) {
 			message.put("functionary_create", request);
 		} else {
 			message.put("functionary_update", request);

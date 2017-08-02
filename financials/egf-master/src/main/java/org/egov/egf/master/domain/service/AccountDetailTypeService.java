@@ -2,6 +2,7 @@ package org.egov.egf.master.domain.service;
 
 import java.util.List;
 
+import org.egov.common.constants.EgfConstants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
@@ -20,12 +21,6 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class AccountDetailTypeService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
-
 	@Autowired
 	private AccountDetailTypeRepository accountDetailTypeRepository;
 
@@ -36,17 +31,17 @@ public class AccountDetailTypeService {
 
 		try {
 			switch (method) {
-			case ACTION_VIEW:
+			case EgfConstants.ACTION_VIEW:
 				// validator.validate(accountDetailTypeContractRequest.getAccountDetailType(),
 				// errors);
 				break;
-			case ACTION_CREATE:
+			case EgfConstants.ACTION_CREATE:
 				Assert.notNull(accountdetailtypes, "AccountDetailTypes to create must not be null");
 				for (AccountDetailType accountDetailType : accountdetailtypes) {
 					validator.validate(accountDetailType, errors);
 				}
 				break;
-			case ACTION_UPDATE:
+			case EgfConstants.ACTION_UPDATE:
 				Assert.notNull(accountdetailtypes, "AccountDetailTypes to update must not be null");
 				for (AccountDetailType accountDetailType : accountdetailtypes) {
 					validator.validate(accountDetailType, errors);
@@ -74,7 +69,7 @@ public class AccountDetailTypeService {
 	@Transactional
 	public List<AccountDetailType> add(List<AccountDetailType> accountdetailtypes, BindingResult errors) {
 		accountdetailtypes = fetchRelated(accountdetailtypes);
-		validate(accountdetailtypes, ACTION_CREATE, errors);
+		validate(accountdetailtypes, EgfConstants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -85,7 +80,7 @@ public class AccountDetailTypeService {
 	@Transactional
 	public List<AccountDetailType> update(List<AccountDetailType> accountdetailtypes, BindingResult errors) {
 		accountdetailtypes = fetchRelated(accountdetailtypes);
-		validate(accountdetailtypes, ACTION_UPDATE, errors);
+		validate(accountdetailtypes, EgfConstants.ACTION_UPDATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

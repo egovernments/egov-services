@@ -7,6 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
+import org.egov.common.constants.EgfConstants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.BankBranch;
@@ -50,7 +51,7 @@ public class BankBranchController {
 		List<BankBranchContract> bankBranchContracts = new ArrayList<>();
 		BankBranchContract contract;
 
-		bankBranchRequest.getRequestInfo().setAction("create");
+		bankBranchRequest.getRequestInfo().setAction(EgfConstants.ACTION_CREATE);
 
 		for (BankBranchContract bankBranchContract : bankBranchRequest.getBankBranches()) {
 			bankBranch = new BankBranch();
@@ -84,7 +85,7 @@ public class BankBranchController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		bankBranchRequest.getRequestInfo().setAction("update");
+		bankBranchRequest.getRequestInfo().setAction(EgfConstants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		BankBranchResponse bankBranchResponse = new BankBranchResponse();
 		List<BankBranch> bankbranches = new ArrayList<>();

@@ -7,6 +7,7 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
+import org.egov.common.constants.EgfConstants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.FinancialConfiguration;
@@ -51,7 +52,7 @@ public class FinancialConfigurationController {
 		List<FinancialConfigurationContract> financialConfigurationContracts = new ArrayList<>();
 		FinancialConfigurationContract contract;
 
-		financialConfigurationRequest.getRequestInfo().setAction("create");
+		financialConfigurationRequest.getRequestInfo().setAction(EgfConstants.ACTION_CREATE);
 
 		for (FinancialConfigurationContract financialConfigurationContract : financialConfigurationRequest
 				.getFinancialConfigurations()) {
@@ -87,7 +88,7 @@ public class FinancialConfigurationController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		financialConfigurationRequest.getRequestInfo().setAction("update");
+		financialConfigurationRequest.getRequestInfo().setAction(EgfConstants.ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		FinancialConfigurationResponse financialConfigurationResponse = new FinancialConfigurationResponse();
 		List<FinancialConfiguration> financialconfigurations = new ArrayList<>();

@@ -3,6 +3,7 @@ package org.egov.egf.master.domain.repository;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.egov.common.constants.EgfConstants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
@@ -43,7 +44,7 @@ public class BankAccountRepository {
 	public void add(BankAccountRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(EgfConstants.ACTION_CREATE)) {
 			message.put("bankaccount_create", request);
 		} else {
 			message.put("bankaccount_update", request);

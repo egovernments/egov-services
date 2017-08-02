@@ -2,144 +2,90 @@ package org.egov.mr.repository.querybuilder;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.mr.config.ApplicationProperties;
+import org.egov.mr.web.contract.MarriageCertCriteria;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class MarriageCertQueryBuilder {
-	
-	private static final Logger logger = LoggerFactory.getLogger(MarriageCertQueryBuilder.class);
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
-	private static final String MARRIAGE_CERT_IDS_QUERY = "SELECT distinct applicationnumber"
-			+ " FROM egmr_marriage_certificate";
-	
-	private static final String BASE_QUERY = "SELECT certificateno, certificatedate, certificatetype, regnnumber, bridegroomphoto,"
-			+" bridephoto, husbandname, husbandaddress, wifename, wifeaddress, marriagedate, marriagevenueaddress, regndate,"
-			+" regnserialno, regnvolumeno, certificateplace, templateversion, applicationnumber, stateid, approvaldepartment,"
-			+" approvaldesignation, approvalassignee, approvalaction, approvalstatus, approvalcomments, tenantid"
-			+" FROM egmr_marriage_certificate";
-	
-	public String getQueryForListOfMarriageCertIds(MarriageRegnCriteria marriageRegnCriteria,
-			List<Object> preparedStatementValues) {
-		StringBuilder selectQuery = new StringBuilder(MARRIAGE_CERT_IDS_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, marriageRegnCriteria, null);
-		addPagingClause(selectQuery, preparedStatementValues, marriageRegnCriteria);
+	private static final String BASE_QUERY = " select rc.id as rc_id,rc.regnno as rc_regnno,rc.applicantname as rc_applicantname, rc.applicantaddress as rc_applicantaddress,"
+			+ " rc.applicantmobileno as rc_applicantmobileno, rc.applicantfee as rc_applicantfee, rc.applicantaadhaar as  rc_applicantaadhaar,"
+			+ " rc.applicationnumber as rc_applicationnumber, rc.reissueapplstatus as rc_reissueapplstatus ,rc.stateid as rc_stateid,"
+			+ " rc.approvaldepartment as rc_approvaldepartment, rc.approvaldesignation as rc_approvaldesignation,rc.approvalassignee as rc_approvalassignee,"
+			+ " rc.approvalaction as rc_approvalaction,rc.approvalstatus as rc_approvalstatus ,rc.approvalcomments as rc_approvalcomments,"
+			+ " rc.demands as rc_demands,rc.rejectionreason as rc_rejectionreason,rc.remarks as rc_remarks,"
+			+ " rc.isactive as rc_isactive, rc.createdby  as rc_createdby,rc.createdtime as rc_createdtime, rc.lastmodifiedby as rc_lastmodifiedby,"
+			+ " rc.lastmodifiedtime as rc_lastmodifiedtime, rc.tenantid as rc_tenantid, mc.certificateno as mc_certificateno,"
+			+ " mc.certificatedate as mc_certificatedate, mc.certificatetype as mc_certificatetype, mc.regnnumber as mc_regnnumber,"
+			+ " mc.bridegroomphoto as mc_bridegroomphoto, mc.bridephoto as mc_bridephoto, mc.husbandname as mc_husbandname, mc.husbandaddress as mc_husbandaddress,"
+			+ " mc.wifename as mc_wifename, mc.wifeaddress as mc_wifeaddress, mc.marriagedate as mc_marriagedate, mc.marriagevenueaddress as mc_marriagevenueaddress,"
+			+ " mc.regndate as mc_regndate, mc.regnserialno as mc_regnserialno, mc.regnvolumeno as mc_regnvolumeno, mc.certificateplace as mc_certificateplace,"
+			+ " mc.templateversion as mc_templateversion, mc.applicationnumber as mc_applicationnumber, mc.tenantid as mc_tenantid, ds.id as ds_id,ds.reissuecertificateid as ds_reissuecertificateid, ds.documenttypecode as ds_documenttypecode,"
+			+ " ds.location as ds_location, ds.createdby  as ds_createdby,ds.createdtime as ds_createdtime, ds.lastmodifiedby as ds_lastmodifiedby,"
+			+ " ds.lastmodifiedtime as ds_lastmodifiedtime, ds.tenantid as ds_tenantid"
+			+ " FROM egmr_reissuecertificate rc"
+			+ " LEFT OUTER JOIN egmr_marriage_certificate mc ON mc.regnnumber=rc.regnno"
+			+ " LEFT OUTER JOIN egmr_documents ds ON rc.id=ds.reissuecertificateid " + " WHERE rc.tenantId = ? ";
 
-		logger.debug("selectIdQuery : " + selectQuery);
-		return selectQuery.toString();
-	}
-	
-	public String getQuery(MarriageRegnCriteria marriageRegnCriteria, List<Object> preparedStatementValues,
-			List<String> listOfApplNos) {
+	public String getQuery(MarriageCertCriteria marriageCertCriteria, List<Object> preparedStatementValues) {
+		log.info("marriageCertCriteria  getTenantId: " + marriageCertCriteria.getTenantId());
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-
-		addWhereClause(selectQuery, preparedStatementValues, marriageRegnCriteria, listOfApplNos);
-		addOrderByClause(selectQuery, marriageRegnCriteria);
-
-		logger.info("selectQuery : " + selectQuery);
+		log.info("selectQuery  getQuery: " +selectQuery);
+		addWhereClause(selectQuery, preparedStatementValues, marriageCertCriteria);
+		addPagingClause(selectQuery, preparedStatementValues, marriageCertCriteria);
+		log.info("selectQuery  getQuery: " + selectQuery);
 		return selectQuery.toString();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
-			MarriageRegnCriteria marriageRegnCriteria, List<String> listOfApplNos) {
+			MarriageCertCriteria marriageCertCriteria) {
+		preparedStatementValues.add(marriageCertCriteria.getTenantId());
 
-		if (marriageRegnCriteria.getApplicationNumber() == null && marriageRegnCriteria.getRegnNo() == null
-				&& marriageRegnCriteria.getMarriageDate() == null && marriageRegnCriteria.getHusbandName() == null
-				&& marriageRegnCriteria.getWifeName() == null && marriageRegnCriteria.getFromDate() == null
-				&& marriageRegnCriteria.getToDate() == null && marriageRegnCriteria.getRegnUnit() == null
-				&& marriageRegnCriteria.getTenantId() == null)
+		if (marriageCertCriteria.getApplicationNumber() == null && marriageCertCriteria.getRegnNo() == null)
 			return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+		if (StringUtils.isNotBlank(marriageCertCriteria.getApplicationNumber())) {
+			selectQuery.append(" AND rc.applicationnumber = ? ");
+			preparedStatementValues.add(marriageCertCriteria.getApplicationNumber());
+		}
+		if (StringUtils.isNotBlank(marriageCertCriteria.getRegnNo())) {
+			selectQuery.append(" AND rc.regnno = ? ");
+			preparedStatementValues.add(marriageCertCriteria.getRegnNo());
+		}
 
-		if (marriageRegnCriteria.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" tenantid = ?");
-			preparedStatementValues.add(marriageRegnCriteria.getTenantId());
-		}
-		
-		if(marriageRegnCriteria.getApplicationNumber() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" applicationnumber IN " + getIdQuery(marriageRegnCriteria.getApplicationNumber()));
-		} else if(listOfApplNos != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" applicationnumber IN " + getIdQuery(listOfApplNos)); 
-		}
-		if (marriageRegnCriteria.getRegnNo() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" regnnumber = ?");
-			preparedStatementValues.add(marriageRegnCriteria.getRegnNo());
-		}
-		if (marriageRegnCriteria.getMarriageDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" marriagedate = ?");
-			preparedStatementValues.add(marriageRegnCriteria.getMarriageDate());
-		}
-		if ((marriageRegnCriteria.getFromDate() != null) && (marriageRegnCriteria.getToDate() != null)) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.marriagedate between ? and ?");
-			preparedStatementValues.add(marriageRegnCriteria.getFromDate());
-			preparedStatementValues.add(marriageRegnCriteria.getToDate());
-		}
-		if (marriageRegnCriteria.getHusbandName() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" husbandname = ?");
-			preparedStatementValues.add(marriageRegnCriteria.getHusbandName());
-		}
-		if (marriageRegnCriteria.getWifeName() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" wifename = ?");
-			preparedStatementValues.add(marriageRegnCriteria.getWifeName());
-		}
 	}
-	
-	private void addOrderByClause(StringBuilder selectQuery, MarriageRegnCriteria marriageRegnCriteria) {
-		String sortBy = (marriageRegnCriteria.getSortBy() == null ? "marriagedate" : marriageRegnCriteria.getSortBy());
-		String sortOrder = (marriageRegnCriteria.getSortOrder() == null ? "DESC" : marriageRegnCriteria.getSortOrder());
-		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);		
-	}
-	
+
 	private void addPagingClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
-			MarriageRegnCriteria marriageRegnCriteria) {
-		// handle limit(also called pageSize) here
-		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.marriageRegnSearchPageSizeDefault());
-		if (marriageRegnCriteria.getPageSize() != null)
-			pageSize = marriageRegnCriteria.getPageSize();
-		preparedStatementValues.add(pageSize); // Set limit to pageSize
+			MarriageCertCriteria marriageCertCriteria) {
 
-		// handle offset here
+		selectQuery.append(" LIMIT ?");
+		long pageSize = Integer.parseInt(applicationProperties.marriageCertSearchPageSizeDefault());
+		log.info("pageSize :" + pageSize);
+		if (marriageCertCriteria.getPageSize() != null)
+			pageSize = marriageCertCriteria.getPageSize();
+		log.info("pageSize :" + pageSize);
+
+		preparedStatementValues.add(pageSize);
+
 		selectQuery.append(" OFFSET ?");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (marriageRegnCriteria.getPageNo() != null)
-			pageNumber = marriageRegnCriteria.getPageNo() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
+		if (marriageCertCriteria.getPageNo() != null)
+			pageNumber = marriageCertCriteria.getPageNo() - 1;
+		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+		// pageNo * pageSize
 	}
-	
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
 
-		return true;
-	}
-	
-	private static String getIdQuery(List<String> nosList) {
-		StringBuilder query = new StringBuilder("('");
-		if (nosList.size() >= 1) {
-			query.append(nosList.get(0).toString());
-			for (int i = 1; i < nosList.size(); i++) {
-				query.append("', '" + nosList.get(i));
-			}
-		}
-		return query.append("')").toString();
-	}
 }

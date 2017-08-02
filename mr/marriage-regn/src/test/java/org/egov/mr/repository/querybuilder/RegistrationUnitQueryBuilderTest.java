@@ -6,16 +6,19 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.mr.TestConfiguration;
 import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(RegistrationUnitQueryBuilder.class)
+@Import(TestConfiguration.class)
 public class RegistrationUnitQueryBuilderTest {
 
 	@InjectMocks

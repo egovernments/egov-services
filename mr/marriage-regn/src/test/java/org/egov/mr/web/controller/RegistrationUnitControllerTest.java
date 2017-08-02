@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.mr.TestConfiguration;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.Location;
 import org.egov.mr.model.RegistrationUnit;
@@ -29,12 +30,14 @@ import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(RegistrationUnitController.class)
+@Import(TestConfiguration.class)
 public class RegistrationUnitControllerTest {
 
 	@Autowired

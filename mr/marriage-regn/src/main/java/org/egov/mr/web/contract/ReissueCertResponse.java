@@ -18,6 +18,8 @@ import org.egov.mr.model.Page;
 import org.egov.mr.model.ReissueCertAppl;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,9 +31,13 @@ import lombok.NoArgsConstructor;
 @Component
 @Builder
 public class ReissueCertResponse {
+	
+	@JsonProperty("responseInfo")
 	private ResponseInfo responseInfo;
 
+	@JsonProperty("reissueApplications")
 	private List<ReissueCertAppl> reissueApplications = new ArrayList<ReissueCertAppl>();
 
+	@JsonProperty("page")
 	private Page page;
 }

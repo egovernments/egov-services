@@ -46,6 +46,8 @@ public class TradeLicense {
 
 	private String applicationDate = null;
 
+	private String expiryDate = null;
+
 	@Size(max = 12)
 	private String adhaarNumber = null;
 

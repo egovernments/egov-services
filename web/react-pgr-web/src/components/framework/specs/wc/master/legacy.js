@@ -282,7 +282,7 @@ var dat = {
             "jsonPath": "Connection.NoOfFlats",
             "label": "No of Flats",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "number",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -297,7 +297,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":""
           },
           {
             "name": "UsageType",
@@ -308,7 +310,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":""
           },
           {
             "name": "hscPipeSizeType",
@@ -319,7 +323,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":""
           },
           {
             "name": "applicationType",
@@ -395,7 +401,6 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-
           {
             "name": "waterTreatment",
             "jsonPath": "Connection.waterTreatment",

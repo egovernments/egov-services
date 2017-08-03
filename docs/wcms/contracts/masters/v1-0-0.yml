@@ -991,8 +991,76 @@
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-      
               
+  #  Meter Cost Master API    
+    /metercosts/_create:  
+      post:
+        summary: creates new meter costs.
+        description: API to create meter costs.
+        tags:
+          - Meter Costs
+        parameters:
+          - name: Meter Costs
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/MeterCostReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/MeterCostRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+              
+    /metercosts/_update:
+      post:
+        summary: while updating in request body code is required and updates existing values based on code.
+        description: updates existing values
+        tags:
+          - Meter Costs
+        parameters:
+          - name: Meter Costs
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/MeterCostReq'
+        responses:
+          '200':
+            description: Meter Costs updated successfully.
+            schema:
+              $ref: "#/definitions/MeterCostRes"
+          '400':
+            description: Update Meter Costs failed.
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /metercosts/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Meter Costs
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/sizeInMilimeter"
+          - $ref: "#/parameters/name"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/MeterCostRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   parameters:
     updateCode:
       name: code
@@ -1038,6 +1106,7 @@
       type: string
       minLength: 0
       maxLength: 100
+      
     
     sizeInMilimeter:
       name: sizeInMilimeter
@@ -1108,7 +1177,11 @@
       description: unique identifier of application type
       required: false
       type: string
-      
+  
+
+              
+              
+              
   definitions:
   
   # Proprty Type and Category Type mapping definition
@@ -1923,7 +1996,7 @@
           maxLength: 20
         reservoirType:
           type: string
-          description: Type of the Reservoir	.
+          description: Type of the Reservoir  .
           enum:
             - Ground storage reservoir
             - Elevated storage reservoir
@@ -2073,3 +2146,76 @@
         - toUnit
         - unitRate
         - tenantId
+        
+   # Meter Cost Master definitions
+    MeterCostReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        MeterCosts:
+          $ref: '#/definitions/MeterCost'
+      required:
+        - RequestInfo
+        - MeterCosts
+        
+    MeterCostRes:
+      type: object
+      properties:
+         ResponseInfo:
+           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+         MeterCost:
+           type: array
+           maximum: 20
+           items:
+             $ref: '#/definitions/MeterCost'
+             
+    MeterCost:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier, typically defined by system and readonly.
+        code:
+         type: string
+         description : unique code this should be defined by system and readonly.
+         maxLength: 20
+        pipeSize:
+         type: integer
+         format: int64
+         description: h.s.c pipe size
+        meterMake:
+         type: string
+         description: Make of the meter
+         maxLength: 100
+        amount:
+         type: number
+         description: meter cost
+        active:
+         type: boolean
+         format: varchar
+         description: TRUE for active and FALSE for inactive.
+        tenantId:
+         type: string
+         description: Unique Identifier of the tenant
+         maxLength: 250
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - pipeSize
+        - meterMake
+        - amount
+        - tenantId
+        - active
+             
+               
+               
+              
+               
+             
+            
+           
+        
+

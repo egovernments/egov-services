@@ -2,22 +2,19 @@ package org.egov.egf.master.web.repository;
 
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.requests.ChartOfAccountResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class ChartOfAccountContractRepository {
+
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/chartofaccounts/search?";
-	@Autowired
-	private ObjectMapper objectMapper;
+	public static final String SEARCH_URL = "/egf-master/chartofaccounts/_search?";
 
-	public ChartOfAccountContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
+	public ChartOfAccountContractRepository(@Value("${egf.master.host.url}") String hostUrl,
+			RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

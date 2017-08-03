@@ -2,20 +2,16 @@ package org.egov.egf.master.web.repository;
 
 import org.egov.egf.master.web.contract.AccountCodePurposeContract;
 import org.egov.egf.master.web.requests.AccountCodePurposeResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class AccountCodePurposeContractRepository {
+
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/accountcodepurposes/search?";
-	@Autowired
-	private ObjectMapper objectMapper;
+	public static final String SEARCH_URL = "/egf-master/accountcodepurposes/_search?";
 
 	public AccountCodePurposeContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {

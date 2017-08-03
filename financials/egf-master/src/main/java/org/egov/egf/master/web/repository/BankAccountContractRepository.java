@@ -2,20 +2,16 @@ package org.egov.egf.master.web.repository;
 
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.requests.BankAccountResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class BankAccountContractRepository {
+
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/bankaccounts/search?";
-	@Autowired
-	private ObjectMapper objectMapper;
+	public static final String SEARCH_URL = "/egf-master/bankaccounts/_search?";
 
 	public BankAccountContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;

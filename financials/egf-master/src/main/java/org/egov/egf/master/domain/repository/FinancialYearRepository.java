@@ -60,7 +60,7 @@ public class FinancialYearRepository {
     public Pagination<FinancialYear> search(FinancialYearSearch domain) {
 
         if (!financialConfigurationService.fetchDataFrom().isEmpty()
-                && !financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+                && financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
             FinancialYearSearchContract financialYearSearchContract = new FinancialYearSearchContract();
             ModelMapper mapper = new ModelMapper();
             mapper.map(domain, financialYearSearchContract);

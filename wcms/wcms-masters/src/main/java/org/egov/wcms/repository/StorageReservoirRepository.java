@@ -47,6 +47,10 @@ import java.util.Map;
 import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.repository.builder.StorageReservoirQueryBuilder;
 import org.egov.wcms.repository.rowmapper.StorageReservoirRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.util.WcmsConstants;
+import org.egov.wcms.web.contract.Boundary;
+import org.egov.wcms.web.contract.BoundaryResponse;
 import org.egov.wcms.web.contract.StorageReservoirGetRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +71,9 @@ public class StorageReservoirRepository {
 
     @Autowired
     private StorageReservoirQueryBuilder storageReservoirQueryBuilder;
+
+    @Autowired
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public StorageReservoirRequest persistCreateStorageReservoir(final StorageReservoirRequest storageReservoirRequest) {
         log.info("storageReservoirRequest::" + storageReservoirRequest);
@@ -106,9 +113,45 @@ public class StorageReservoirRepository {
 
     public List<StorageReservoir> findForCriteria(final StorageReservoirGetRequest storageReservoirGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
+        final List<String> boundaryWardNumsList = new ArrayList<>();
+        final List<String> boundaryZoneNumsList = new ArrayList<>();
+        final List<String> boundaryLocationNumsList = new ArrayList<>();
         final String queryStr = storageReservoirQueryBuilder.getQuery(storageReservoirGetRequest, preparedStatementValues);
         final List<StorageReservoir> storageReservoirList = jdbcTemplate.query(queryStr,
                 preparedStatementValues.toArray(), storageReservoirRowMapper);
+
+        // fetch boundary Ward Nums and set the boundary name here
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            boundaryWardNumsList.add(storageReservoir.getWardNum());
+        final String[] boundaryWardNum = boundaryWardNumsList.toArray(new String[boundaryWardNumsList.size()]);
+        final BoundaryResponse boundaryResponse = restExternalMasterService.getBoundaryName(
+                WcmsConstants.WARD, boundaryWardNum, storageReservoirGetRequest.getTenantId());
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            for (final Boundary boundary : boundaryResponse.getBoundarys())
+                if (boundary.getBoundaryNum().equals(storageReservoir.getWardNum()))
+                    storageReservoir.setWardName(boundary.getName());
+
+        // fetch boundary Zone Nums and set the boundary name here
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            boundaryZoneNumsList.add(storageReservoir.getZoneNum());
+        final String[] boundaryZoneNum = boundaryZoneNumsList.toArray(new String[boundaryZoneNumsList.size()]);
+        final BoundaryResponse boundaryZone = restExternalMasterService.getBoundaryName(
+                WcmsConstants.ZONE, boundaryZoneNum, storageReservoirGetRequest.getTenantId());
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            for (final Boundary boundary : boundaryZone.getBoundarys())
+                if (boundary.getBoundaryNum().equals(storageReservoir.getZoneNum()))
+                    storageReservoir.setZoneName(boundary.getName());
+
+        // fetch boundary Location Nums and set the boundary name here
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            boundaryLocationNumsList.add(storageReservoir.getLocationNum());
+        final String[] boundaryLocationNum = boundaryLocationNumsList.toArray(new String[boundaryLocationNumsList.size()]);
+        final BoundaryResponse boundaryLocation = restExternalMasterService.getBoundaryName(
+                WcmsConstants.LOCALITY, boundaryLocationNum, storageReservoirGetRequest.getTenantId());
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            for (final Boundary boundary : boundaryLocation.getBoundarys())
+                if (boundary.getBoundaryNum().equals(storageReservoir.getLocationNum()))
+                    storageReservoir.setLocationName(boundary.getName());
 
         return storageReservoirList;
     }

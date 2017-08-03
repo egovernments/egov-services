@@ -361,6 +361,8 @@ public class WcmsConstants {
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE__EQUALFIELD_NAME = "minPipeSize,maxPipeSize";
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE__EQUAL_ERROR_MESSAGE = "Minimum PipeSize should not be same as maximum PipeSize";
     
+
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";

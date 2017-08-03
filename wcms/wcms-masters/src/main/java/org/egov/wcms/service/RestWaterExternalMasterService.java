@@ -140,5 +140,17 @@ public class RestWaterExternalMasterService {
                 BoundaryResponse.class);
         return boundary;
     }
+    
+    public BoundaryResponse getBoundaryName(final String boundaryType, final String[] boundaryNum, final String tenantId) {
+        String url = propertiesManager.getLocationServiceBasePathTopic()
+                + propertiesManager.getLocationServiceBoundarySearchPathTopic();
+        final BoundaryRequestInfo requestInfo = BoundaryRequestInfo.builder().build();
+        final BoundaryRequestInfoWrapper wrapper = BoundaryRequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<BoundaryRequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final BoundaryResponse boundary = restTemplate.postForObject(url.toString(), request,
+                BoundaryResponse.class,boundaryType, boundaryNum,tenantId);
+        return boundary;
+
+    }
 
 }

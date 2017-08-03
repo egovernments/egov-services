@@ -97,7 +97,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    let {history,setTenantInfo}=this.props;
+    let {setTenantInfo}=this.props;
     // let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
     // console.log(commonState);
     //if (!window.localStorage.getItem("token")) {
@@ -168,7 +168,7 @@ class App extends Component {
   }
 
   render() {
-    var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus, isSuccess, isError} = this.props;
+    var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, isSnackBarOpen, toastMsg, loadingStatus, isSuccess, isError} = this.props;
 
     const actions = [
       <FlatButton

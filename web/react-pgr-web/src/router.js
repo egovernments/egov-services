@@ -68,7 +68,7 @@ import WallType from './components/contents/propertyTax/master/WallType';
 import WoodType from './components/contents/propertyTax/master/WoodType';
 import UsageType from './components/contents/propertyTax/master/UsageType';
 import PropertyType from './components/contents/propertyTax/master/PropertyType';
-import Occupancy from './components/contents/propertyTax/master/Occupancy';
+// import Occupancy from './components/contents/propertyTax/master/Occupancy';
 import MutationReason from './components/contents/propertyTax/master/MutationReason';
 import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';

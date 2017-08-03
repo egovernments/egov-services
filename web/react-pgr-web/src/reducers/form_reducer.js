@@ -21,19 +21,206 @@ const defaultState = {
   isFloorValid: false
 };
 
+
+function validate(isRequired, pattern, name, value, validationData, fielderrorMsg) {
+  let errorText = "";
+  if (isRequired) {
+    if (value.toString().trim().length > 0) {
+      if (_.indexOf(validationData.required.current, name) === -1) {
+        validationData.required.current.push(name);
+      }
+    } else {
+      validationData.required.current = _.remove(validationData.required.current, (item) => {
+        return item !== name
+      });
+      errorText = "This is field is required";
+    }
+  }
+  if (pattern.toString().trim().length > 0) {
+    if (value !== "") {
+      if (pattern.test(value)) {
+        //when pattern succeeds, remove it from pattern current array
+        validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+          return item !== name
+        });
+      } else if(pattern === "/^[0-9]+$/"){
+          //when pattern fails, add it in pattern current array
+          if (_.indexOf(validationData.pattern.current, name) === -1) {
+            validationData.pattern.current.push(name);
+          }
+          errorText = "It expects numeric only";
+	  } else {
+        validationData.required.current = _.remove(validationData.required.current, (item) => {
+          return item !== name
+        });
+        //when pattern fails, add it in pattern current array
+        if (_.indexOf(validationData.pattern.current, name) === -1) {
+          validationData.pattern.current.push(name);
+        }
+        //Get cusom message and show it
+        errorText = fielderrorMsg ? fielderrorMsg : "Invalid field data";
+      }
+    }else{
+      //console.log('pattern value came as empty');
+      validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        return item != name
+      });
+    }
+  }
+  if (!isRequired && value === "") {
+    errorText = "";
+  }
+  // console.log(validationData.required.required)
+  // console.log(validationData.required.current)
+  // console.log(validationData.pattern.required);
+  // console.log(validationData.pattern.current);
+  // var isFormValid=false;
+  // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
+  // console.log(validationData.required.required.length, validationData.required.current.length);
+  return {
+    errorText: errorText,
+    validationData: validationData,
+    isFormValid: ((validationData.required.required.length === validationData.required.current.length) && (validationData.pattern ? validationData.pattern.current.length === 0 : true))
+  };
+}
+
+
+function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
+
+console.log('Here', validatePropertyOwner);
+
+  let errorText = "";
+  if (isRequired) {
+    if (value.length || value) {
+      if (_.indexOf(validatePropertyOwner.required.current, name) === -1) {
+        validatePropertyOwner.required.current.push(name);
+      }
+    } else {
+      validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
+        return item != name
+      });
+      errorText = "This is field is required";
+    }
+  }
+  if (pattern.toString().length > 0) {
+    if (value !== "") {
+      if (pattern.test(value)) {
+        // if (_.indexOf(validationData.pattern.current, name) == -1) {
+        //   validationData.pattern.current.push(name);
+        // }
+
+      } else if(pattern === "/^[0-9]+$/"){
+
+		validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
+          return item != name
+        });
+        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        //   return item != name
+        // });
+        errorText = "It expects numeric only";
+
+	  } else {
+        validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
+          return item != name
+        });
+        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        //   return item != name
+        // });
+        errorText = "Invalid field data";
+      }
+    }
+  }
+  if (!isRequired && value === "") {
+    errorText = "";
+  }
+  // console.log(validationData.required.required)
+  // console.log(validationData.required.current)
+  // var isFormValid=false;
+  // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
+  console.log(validatePropertyOwner.required.required.length, validatePropertyOwner.required.current.length);
+  return {
+    errorText: errorText,
+    validatePropertyOwner: validatePropertyOwner,
+    isOwnerValid: (validatePropertyOwner.required.required.length == validatePropertyOwner.required.current.length)
+  };
+}
+
+
+function validate3(isRequired, pattern, name, value, validatePropertyFloor) {
+
+console.log('Here', validatePropertyFloor);
+
+  let errorText = "";
+  if (isRequired) {
+    if (value.length || value) {
+      if (_.indexOf(validatePropertyFloor.required.current, name) === -1) {
+        validatePropertyFloor.required.current.push(name);
+      }
+    } else {
+      validatePropertyFloor.required.current = _.remove(validatePropertyFloor.required.current, (item) => {
+        return item != name
+      });
+      errorText = "This is field is required";
+    }
+  }
+  if (pattern.toString().length > 0) {
+    if (value !== "") {
+      if (pattern.test(value)) {
+        // if (_.indexOf(validationData.pattern.current, name) == -1) {
+        //   validationData.pattern.current.push(name);
+        // }
+
+      } else if(pattern === "/^[0-9]+$/"){
+
+		validatePropertyFloor.required.current = _.remove(validatePropertyFloor.required.current, (item) => {
+          return item !== name
+        });
+        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        //   return item != name
+        // });
+        errorText = "It expects numeric only";
+
+	  } else {
+        validatePropertyFloor.required.current = _.remove(validatePropertyFloor.required.current, (item) => {
+          return item !== name
+        });
+        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        //   return item != name
+        // });
+        errorText = "Invalid field data";
+      }
+    }
+  }
+  if (!isRequired && value === "") {
+    errorText = "";
+  }
+  // console.log(validationData.required.required)
+  // console.log(validationData.required.current)
+  // var isFormValid=false;
+  // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
+  return {
+    errorText: errorText,
+    validatePropertyFloor: validatePropertyFloor,
+    isFloorValid: (validatePropertyFloor.required.required.length === validatePropertyFloor.required.current.length)
+  };
+}
+
+
 export default(state = defaultState, action) => {
   switch (action.type) {
 
 
 	case "ADD_REQUIRED" :
 		var b = state.validationData.required.required.indexOf(action.property);
-		if(b==-1){
+		if(b===-1){
 			state.validationData.required.required.push(action.property);
 		}
 
 		return {
 			...state,
 		}
+    break;
+
 	case "REMOVE_REQUIRED" :
 
 		var a = state.validationData.required.required.indexOf(action.property);
@@ -51,17 +238,19 @@ export default(state = defaultState, action) => {
 		return {
 			...state
 		}
+    break;
 
 
 	case "ADD_FLOOR_REQUIRED" :
 		var b = state.validatePropertyFloor.required.required.indexOf(action.property);
-		if(b==-1){
+		if(b===-1){
 			state.validatePropertyFloor.required.required.push(action.property);
 		}
 
 		return {
 			...state,
 		}
+    break;
 
     case "REMOVE_FLOOR_REQUIRED" :
 
@@ -69,17 +258,18 @@ export default(state = defaultState, action) => {
 		var b = state.validatePropertyFloor.required.current.indexOf(action.property);
 
 		console.log('isthere', a)
-		if(a!=-1){
+		if(a!==-1){
 			state.validatePropertyFloor.required.required.splice(a,1);
 		}
 
-		if(b!=-1){
+		if(b!==-1){
 			state.validatePropertyFloor.required.current.splice(b,1);
 		}
 
 		return {
 			...state
 		}
+    break;
 
     case "PUSH_ONE":
 
@@ -97,6 +287,7 @@ export default(state = defaultState, action) => {
               ]
             }
           }
+        break;
 
       case "RESET_OBJECT":
 
@@ -109,6 +300,7 @@ export default(state = defaultState, action) => {
 				isOwnerValid: action.isSectionValid,
 				isFloorValid: action.isSectionValid
               }
+        break;
 
 	case "EMPTY_PROPERTY":
 
@@ -121,6 +313,7 @@ export default(state = defaultState, action) => {
 			validationData: action.validationData,
 			isFormValid: action.isFormValid
 		}
+    break;
 
 
     case "UPDATE_OBJECT":
@@ -134,6 +327,7 @@ export default(state = defaultState, action) => {
           [action.objectName]: state.form[action.objectName].map((e,i) => e )
           }
         }
+      break;
 
     case "EDIT_OBJECT":
 
@@ -146,6 +340,7 @@ export default(state = defaultState, action) => {
 		  isOwnerValid: action.isSectionValid,
 				isFloorValid: action.isSectionValid
         }
+    break;
 
     case "EDIT_INDEX":
 
@@ -153,6 +348,7 @@ export default(state = defaultState, action) => {
         ...state,
         editIndex: action.index
       }
+    break;
 
     case "DELETE_OBJECT":
 
@@ -166,6 +362,7 @@ export default(state = defaultState, action) => {
           ]
         }
       }
+    break;
 
 
     case "SET_FORM":
@@ -176,6 +373,7 @@ export default(state = defaultState, action) => {
         validationData: action.validationData,
         isFormValid: action.isFormValid
       }
+    break;
 
     case "HANDLE_CHANGE":
       validationData = undefined;
@@ -193,6 +391,7 @@ export default(state = defaultState, action) => {
         validationData: validationData.validationData,
         isFormValid: validationData.isFormValid
       }
+      break;
 
       case 'FILE_UPLOAD':
       var filearray = [];
@@ -208,6 +407,7 @@ export default(state = defaultState, action) => {
           ...state,
           files: []
       };
+      break;
 
       case 'FILE_REMOVE':
       filearray = [];
@@ -227,6 +427,7 @@ export default(state = defaultState, action) => {
           ...state,
           files: filearray
       };
+      break;
 
       case "HANDLE_CHANGE_NEXT_ONE":
 
@@ -252,6 +453,7 @@ export default(state = defaultState, action) => {
           validationData: validationData.validationData,
           isFormValid: validationData.isFormValid
         }
+        break;
 
 	 case "HANDLE_CHANGE_OWNER":
 
@@ -279,6 +481,7 @@ export default(state = defaultState, action) => {
           validatePropertyOwner: validatePropertyOwner.validatePropertyOwner,
           isOwnerValid: validatePropertyOwner.isOwnerValid
         }
+        break;
 
 
 	 case "HANDLE_CHANGE_FLOOR":
@@ -307,6 +510,7 @@ export default(state = defaultState, action) => {
 			validatePropertyFloor: validatePropertyFloor.validatePropertyFloor,
 			isFloorValid: validatePropertyFloor.isFloorValid
         }
+        break;
 
     case "HANDLE_CHANGE_NEXT_TWO":
       let validationData = undefined;
@@ -330,6 +534,7 @@ export default(state = defaultState, action) => {
         validationData: validationData.validationData,
         isFormValid: validationData.isFormValid
       }
+      break;
 
     case "ADD_MANDATORY":
     var obj = state.validationData;
@@ -345,6 +550,7 @@ export default(state = defaultState, action) => {
         ...state
       }
     }
+    break;
 
     case "PUSH_ONE_ARRAY" :
 
@@ -359,6 +565,7 @@ export default(state = defaultState, action) => {
       //console.log(state.form[action.formObject]);
     }
 
+
     return {
       ...state,
       form: {
@@ -372,6 +579,7 @@ export default(state = defaultState, action) => {
         }
       }
     }
+    break;
 
 
     case "REMOVE_MANDATORY":
@@ -396,6 +604,7 @@ export default(state = defaultState, action) => {
         ...state
       }
     }
+    break;
 
     case "RESET_STATE":
       return {
@@ -412,29 +621,37 @@ export default(state = defaultState, action) => {
         showTable:false,
         buttonText:"Search"
       }
+      break;
 
     case 'FIELD_ERRORS':
       return {
         ...state,
         fieldErrors: action.errors
       }
+      break;
 
     case "SHOW_TABLE":
       return {
         ...state,
         showTable: action.state
       }
+      break;
+
     case "BUTTON_TEXT":
       return {
         ...state,
         buttonText: action.text
       }
+      break;
+
     case "TOGGLE_DAILOG_AND_SET_TEXT":
       return {
         ...state,
         msg:action.msg,
         dialogOpen:action.dailogState,
       }
+      break;
+
     case "TOGGLE_SNACKBAR_AND_SET_TEXT":
       return {
         ...state,
@@ -443,195 +660,16 @@ export default(state = defaultState, action) => {
         isSuccess: action.isSuccess || false,
         isError: action.isError || false
       }
+      break;
+
     case "SET_LOADING_STATUS":
       return {
         ...state,
         loadingStatus: action.loadingStatus
       }
+      break;
+
     default:
       return state;
   }
-}
-
-function validate(isRequired, pattern, name, value, validationData, fielderrorMsg) {
-  let errorText = "";
-  if (isRequired) {
-    if (value.toString().trim().length > 0) {
-      if (_.indexOf(validationData.required.current, name) == -1) {
-        validationData.required.current.push(name);
-      }
-    } else {
-      validationData.required.current = _.remove(validationData.required.current, (item) => {
-        return item != name
-      });
-      errorText = "This is field is required";
-    }
-  }
-  if (pattern.toString().trim().length > 0) {
-    if (value != "") {
-      if (pattern.test(value)) {
-        //when pattern succeeds, remove it from pattern current array
-        validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
-          return item != name
-        });
-      } else if(pattern == "/^[0-9]+$/"){
-          //when pattern fails, add it in pattern current array
-          if (_.indexOf(validationData.pattern.current, name) == -1) {
-            validationData.pattern.current.push(name);
-          }
-          errorText = "It expects numeric only";
-	  } else {
-        validationData.required.current = _.remove(validationData.required.current, (item) => {
-          return item != name
-        });
-        //when pattern fails, add it in pattern current array
-        if (_.indexOf(validationData.pattern.current, name) == -1) {
-          validationData.pattern.current.push(name);
-        }
-        //Get cusom message and show it
-        errorText = fielderrorMsg ? fielderrorMsg : "Invalid field data";
-      }
-    }else{
-      //console.log('pattern value came as empty');
-      validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
-        return item != name
-      });
-    }
-  }
-  if (!isRequired && value == "") {
-    errorText = "";
-  }
-  // console.log(validationData.required.required)
-  // console.log(validationData.required.current)
-  // console.log(validationData.pattern.required);
-  // console.log(validationData.pattern.current);
-  // var isFormValid=false;
-  // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  // console.log(validationData.required.required.length, validationData.required.current.length);
-  return {
-    errorText: errorText,
-    validationData: validationData,
-    isFormValid: ((validationData.required.required.length == validationData.required.current.length) && (validationData.pattern ? validationData.pattern.current.length == 0 : true))
-  };
-}
-
-
-function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
-
-console.log('Here', validatePropertyOwner);
-
-  let errorText = "";
-  if (isRequired) {
-    if (value.length || value) {
-      if (_.indexOf(validatePropertyOwner.required.current, name) == -1) {
-        validatePropertyOwner.required.current.push(name);
-      }
-    } else {
-      validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
-        return item != name
-      });
-      errorText = "This is field is required";
-    }
-  }
-  if (pattern.toString().length > 0) {
-    if (value != "") {
-      if (pattern.test(value)) {
-        // if (_.indexOf(validationData.pattern.current, name) == -1) {
-        //   validationData.pattern.current.push(name);
-        // }
-
-      } else if(pattern == "/^[0-9]+$/"){
-
-		validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
-          return item != name
-        });
-        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
-        //   return item != name
-        // });
-        errorText = "It expects numeric only";
-
-	  } else {
-        validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
-          return item != name
-        });
-        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
-        //   return item != name
-        // });
-        errorText = "Invalid field data";
-      }
-    }
-  }
-  if (!isRequired && value == "") {
-    errorText = "";
-  }
-  // console.log(validationData.required.required)
-  // console.log(validationData.required.current)
-  // var isFormValid=false;
-  // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  console.log(validatePropertyOwner.required.required.length, validatePropertyOwner.required.current.length);
-  return {
-    errorText: errorText,
-    validatePropertyOwner: validatePropertyOwner,
-    isOwnerValid: (validatePropertyOwner.required.required.length == validatePropertyOwner.required.current.length)
-  };
-}
-
-
-function validate3(isRequired, pattern, name, value, validatePropertyFloor) {
-
-console.log('Here', validatePropertyFloor);
-
-  let errorText = "";
-  if (isRequired) {
-    if (value.length || value) {
-      if (_.indexOf(validatePropertyFloor.required.current, name) == -1) {
-        validatePropertyFloor.required.current.push(name);
-      }
-    } else {
-      validatePropertyFloor.required.current = _.remove(validatePropertyFloor.required.current, (item) => {
-        return item != name
-      });
-      errorText = "This is field is required";
-    }
-  }
-  if (pattern.toString().length > 0) {
-    if (value != "") {
-      if (pattern.test(value)) {
-        // if (_.indexOf(validationData.pattern.current, name) == -1) {
-        //   validationData.pattern.current.push(name);
-        // }
-
-      } else if(pattern == "/^[0-9]+$/"){
-
-		validatePropertyFloor.required.current = _.remove(validatePropertyFloor.required.current, (item) => {
-          return item != name
-        });
-        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
-        //   return item != name
-        // });
-        errorText = "It expects numeric only";
-
-	  } else {
-        validatePropertyFloor.required.current = _.remove(validatePropertyFloor.required.current, (item) => {
-          return item != name
-        });
-        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
-        //   return item != name
-        // });
-        errorText = "Invalid field data";
-      }
-    }
-  }
-  if (!isRequired && value == "") {
-    errorText = "";
-  }
-  // console.log(validationData.required.required)
-  // console.log(validationData.required.current)
-  // var isFormValid=false;
-  // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  return {
-    errorText: errorText,
-    validatePropertyFloor: validatePropertyFloor,
-    isFloorValid: (validatePropertyFloor.required.required.length == validatePropertyFloor.required.current.length)
-  };
 }

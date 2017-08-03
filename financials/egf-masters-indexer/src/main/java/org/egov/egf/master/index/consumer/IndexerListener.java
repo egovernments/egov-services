@@ -1062,7 +1062,7 @@ public class IndexerListener {
         indexObj.put("id", fundsourceContract.getId());
         indexObj.put("code", fundsourceContract.getCode());
         indexObj.put("name", fundsourceContract.getName());
-        indexObj.put("fundSource", fundsourceContract.getFundSource());
+        indexObj.put("fundSource", fundsourceContract.getParent());
         indexObj.put("type", fundsourceContract.getType());
         indexObj.put("llevel", fundsourceContract.getLlevel());
         indexObj.put("active", fundsourceContract.getActive());

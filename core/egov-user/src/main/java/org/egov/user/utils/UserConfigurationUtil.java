@@ -15,4 +15,6 @@ public class UserConfigurationUtil {
 	private String createUserTopic;
 	@Value("${kafka.topics.update.user}")
 	private String updateUserTopic;
+	@Value("${egov.default.page.size}")
+	private Integer pageSize;
 }

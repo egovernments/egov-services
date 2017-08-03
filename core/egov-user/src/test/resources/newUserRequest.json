@@ -1,0 +1,33 @@
+{
+  "RequestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": null
+  },
+  "Users": [
+    {
+      "id":12,
+      "tenantId": "default",
+      "username": "manas",
+      "mobile": "9865433212",
+      "password": "demo",
+      "email": "abc@xyz.com",
+      "additionalroles": [],
+      "authToken": null,
+      "salutation": "MR.",
+      "name": "manas",
+      "gender": "MALE",
+      "aadhaarNumber": "123456788765",
+      "active": true,
+      "pwdExpiryDate": 4070908800000,
+      "locale": "en_IN",
+      "type": "EMPLOYEE",
+      "accountLocked": false,
+      "userDetails":null,
+      "auditDetails": null
+    }
+  ]
+}

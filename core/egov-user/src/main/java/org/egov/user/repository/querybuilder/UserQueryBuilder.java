@@ -4,14 +4,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.egov.user.model.UserSearchCriteria;
+import org.egov.user.utils.UserConfigurationUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserQueryBuilder {
 	
-	@Value("${egov.default.page.size}")
-	private long pageSize;
+	@Autowired
+	private UserConfigurationUtil userConfigurationUtil;
 	
 	public final String USER_INSERT_QUERY = "INSERT INTO eg_user(title, salutation, dob, locale, username,"
 			+ " password, pwdexpirydate, mobilenumber, altcontactnumber, emailid, createddate, lastmodifieddate,"
@@ -134,7 +136,7 @@ public class UserQueryBuilder {
 			selectQuery.append(" ORDER BY usr.name ASC");
 
 		selectQuery.append(" LIMIT ?");
-//		long pageSize = 0 ;
+		long pageSize = userConfigurationUtil.getPageSize() ;
 		if (userSearchCriteria.getPageSize() != null)
 			pageSize = userSearchCriteria.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

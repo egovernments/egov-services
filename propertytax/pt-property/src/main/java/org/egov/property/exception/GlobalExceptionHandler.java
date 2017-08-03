@@ -273,6 +273,21 @@ public class GlobalExceptionHandler {
 			responseInfo.setStatus(environment.getProperty("failed"));
 			return new ErrorRes(responseInfo, errorList);
 		}
+		else if (ex instanceof PropertyTaxPendingException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					environment.getProperty("invalid.titletransfer.tax.message"),
+					((PropertyTaxPendingException) ex).getMessage(), new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((PropertyTaxPendingException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((PropertyTaxPendingException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((PropertyTaxPendingException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(environment.getProperty("failed"));
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			responseInfo.setStatus(environment.getProperty("failed"));
+			return new ErrorRes(responseInfo, errorList);
+		}
 
 		else {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,

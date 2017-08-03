@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 import org.egov.models.Address;
 import org.egov.models.AttributeNotFoundException;
+import org.egov.models.Demand;
+import org.egov.models.DemandDetail;
+import org.egov.models.DemandResponse;
 import org.egov.models.Document;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
@@ -35,6 +38,7 @@ import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TaxCalculation;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.models.TotalTax;
@@ -45,10 +49,13 @@ import org.egov.models.WorkFlowDetails;
 import org.egov.property.consumer.Producer;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
+import org.egov.property.exception.PropertyTaxPendingException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
+import org.egov.property.repository.DemandRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
+import org.egov.property.repository.WorkFlowRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.egov.property.utility.UpicNoGeneration;
 import org.slf4j.Logger;
@@ -87,6 +94,12 @@ public class PropertyServiceImpl implements PropertyService {
 	PropertyMasterRepository propertyMasterRepository;
 
 	private static final Logger logger = LoggerFactory.getLogger(UpicNoGeneration.class);
+	
+	@Autowired
+	DemandRepository demandRepository;
+
+	@Autowired
+	WorkFlowRepository workFlowRepository;
 
 	@Override
 	public PropertyResponse createProperty(PropertyRequest propertyRequest) {
@@ -469,6 +482,26 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 	private Boolean validateTitleTransfer(TitleTransferRequest titleTransferRequest) {
 
+		TitleTransfer titleTransfer = titleTransferRequest.getTitleTransfer();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(titleTransferRequest.getRequestInfo());
+		DemandResponse demandResponse = demandRepository.getDemands(titleTransfer.getUpicNo(),
+				titleTransfer.getTenantId(), requestInfoWrapper);
+
+		if (demandResponse != null) {
+			for (Demand demand : demandResponse.getDemands()) {
+				Double totalTax = 0.0;
+				Double collectedAmount = 0.0;
+				for (DemandDetail demandDetail : demand.getDemandDetails()) {
+					totalTax += demandDetail.getTaxAmount().doubleValue();
+					collectedAmount += demandDetail.getCollectionAmount().doubleValue();
+				}
+				if (totalTax != collectedAmount) {
+					throw new PropertyTaxPendingException(environment.getProperty("invalid.titletransfer.tax.message"),
+							titleTransferRequest.getRequestInfo());
+				}
+			}
+		}
 		return propertyMasterRepository
 				.checkUniqueCodeForMutation(titleTransferRequest.getTitleTransfer().getTransferReason());
 	}
@@ -594,6 +627,11 @@ public class PropertyServiceImpl implements PropertyService {
 		addNotice(notice, totalTax);
 
 		specialNoticeResponse.setNotice(notice);
+
+		WorkFlowDetails workFlowDetails = specialNoticeRequest.getWorkFlowDetails();
+
+		workFlowRepository.updateWorkFlowDetails(workFlowDetails, specialNoticeRequest.getRequestInfo(), tenantId,
+				specialNoticeRequest.getStateId());
 		specialNoticeResponse.setResponseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(specialNoticeRequest.getRequestInfo(), true));
 

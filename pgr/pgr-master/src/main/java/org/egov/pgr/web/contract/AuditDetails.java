@@ -37,10 +37,12 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.domain.model;
+package org.egov.pgr.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -52,12 +54,16 @@ import java.util.Date;
 @Builder
 public class AuditDetails {
 
+	@NotNull
 	private Long createdBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
+	@NotNull
 	private Long lastModifiedBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
 }

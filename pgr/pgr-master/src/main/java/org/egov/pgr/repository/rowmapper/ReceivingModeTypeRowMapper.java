@@ -36,7 +36,8 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */
+ *//*
+
 
 package org.egov.pgr.repository.rowmapper;
 
@@ -47,16 +48,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.pgr.domain.model.ReceivingModeType;
+import org.egov.pgr.web.contract.ReceivingMode;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> {
-	public Map<String, ReceivingModeType> modeMap = new HashMap<>();
+public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingMode> {
+	public Map<String, ReceivingMode> modeMap = new HashMap<>();
 	@Override
-	public ReceivingModeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		final ReceivingModeType modeType = new ReceivingModeType();
+	public ReceivingMode mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+		final ReceivingMode modeType = new ReceivingMode();
 		if(modeMap.containsKey(rs.getString("code"))){
 			List<String> channelList = modeMap.get(rs.getString("code")).getChannels();
 			channelList.add(rs.getString("channel"));
@@ -75,3 +76,4 @@ public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> 
 		return null;
 	}
 }
+*/

@@ -40,33 +40,61 @@
 
 package org.egov.pgr.web.contract;
 
+import lombok.*;
+import org.egov.pgr.domain.model.AuditDetails;
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotNull;
-
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.domain.model.ReceivingModeType;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.List;
 
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Setter
 @ToString
-public class ReceivingModeTypeReq {
+@Builder
+public class ReceivingMode {
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    @NotNull
+    @Length(min = 3, max = 20)
+    private String code;
 
-	@JsonProperty("ReceivingModeType")
-	private ReceivingModeType modeType;
+    @NotNull
+    @Length(min = 3, max = 100)
+    private String name;
+
+    @Length(max = 250)
+    private String description;
+
+    @NotNull
+    private Boolean active;
+
+    private List<String> channels;
+
+    private AuditDetails auditDetails;
+
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
+
+    public org.egov.pgr.domain.model.ReceivingMode toDomain() {
+        AuditDetails auditDetails = AuditDetails.builder()
+                .createdBy(getAuditDetails().getCreatedBy())
+                .createdDate(getAuditDetails().getCreatedDate())
+                .lastModifiedBy(getAuditDetails().getLastModifiedBy())
+                .lastModifiedDate(getAuditDetails().getLastModifiedDate())
+                .build();
+
+        return org.egov.pgr.domain.model.ReceivingMode.builder()
+                .code(code)
+                .name(name)
+                .description(description)
+                .active(active)
+                .channels(channels)
+                .auditDetails(auditDetails)
+                .tenantId(tenantId)
+                .build();
+
+    }
 
 }

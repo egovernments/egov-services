@@ -10,7 +10,6 @@ import org.egov.pgrrest.common.domain.model.Requester;
 import org.egov.pgrrest.common.domain.model.UserType;
 import org.egov.pgrrest.common.persistence.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.*;
-import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.read.persistence.repository.SubmissionRepository;
 import org.egov.pgrrest.read.web.contract.User;
@@ -25,7 +24,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -244,7 +244,8 @@ public class ServiceRequestServiceTest {
     public void testShouldFindAllComplaintsBySearchCriteria() {
         final ServiceRequestSearchCriteria searchCriteria = ServiceRequestSearchCriteria.builder().build();
         final ServiceRequest expectedComplaint = getComplaint();
-        when(complaintRepository.find(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
+       // when(complaintRepository.find(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
+        when(complaintRepository.findAll(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
 
         final List<ServiceRequest> actualComplaints = serviceRequestService.findAll(searchCriteria);
 

@@ -40,11 +40,9 @@
 
 package org.egov.pgr.repository;
 
-import org.egov.pgr.domain.model.ReceivingModeType;
 import org.egov.pgr.repository.builder.ReceivingModeTypeQueryBuilder;
-import org.egov.pgr.repository.rowmapper.ReceivingModeTypeRowMapper;
-import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;
-import org.egov.pgr.web.contract.ReceivingModeTypeReq;
+import org.egov.pgr.web.contract.ReceivingMode;
+import org.egov.pgr.web.contract.ReceivingModeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,16 +54,14 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @Repository
-public class ReceivingModeTypeRepository {
+public class ReceivingModeRepository {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(ReceivingModeTypeRepository.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ReceivingModeRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -73,11 +69,11 @@ public class ReceivingModeTypeRepository {
     @Autowired
     private ReceivingModeTypeQueryBuilder receivingModeTypeQueryBuilder;
 
-    public ReceivingModeTypeReq persistReceivingModeType(final ReceivingModeTypeReq modeTypeRequest) {
-        LOGGER.info("ReceivingModeType Create Request::" + modeTypeRequest);
+    public ReceivingModeRequest persistReceivingModeType(final ReceivingModeRequest modeTypeRequest) {
+        LOGGER.info("ReceivingMode Create Request::" + modeTypeRequest);
         final String receivingModeTypeInsert = ReceivingModeTypeQueryBuilder.insertReceivingModeTypeQuery();
         final String receivingModeChannelInsert = ReceivingModeTypeQueryBuilder.insertReceivingModeChannelQuery();
-        final ReceivingModeType modeType = modeTypeRequest.getModeType();
+        final ReceivingMode modeType = modeTypeRequest.getReceivingMode();
         final Object[] obj = new Object[]{modeType.getCode(), modeType.getName(), modeType.getDescription(),
                 modeType.getActive(),
                 Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()),
@@ -91,7 +87,7 @@ public class ReceivingModeTypeRepository {
     }
 
 
-    private void insertReceivingModeChannel(final ReceivingModeType modeType, final String receivingModeChannelInsert) {
+    private void insertReceivingModeChannel(final ReceivingMode modeType, final String receivingModeChannelInsert) {
 
         if (modeType.getChannels() != null && modeType.getChannels().size() != 0) {
 
@@ -116,11 +112,11 @@ public class ReceivingModeTypeRepository {
 
     }
 
-    public ReceivingModeTypeReq persistModifyReceivingModeType(final ReceivingModeTypeReq modeTypeRequest) {
-        LOGGER.info("ReceivingModeType Update Request::" + modeTypeRequest);
+    public ReceivingModeRequest persistModifyReceivingModeType(final ReceivingModeRequest modeTypeRequest) {
+        LOGGER.info("ReceivingMode Update Request::" + modeTypeRequest);
         final String receivingCenterTypeUpdate = ReceivingModeTypeQueryBuilder.updateReceivingModeTypeQuery();
         final String receivingModeChannelInsert = ReceivingModeTypeQueryBuilder.insertReceivingModeChannelQuery();
-        final ReceivingModeType modeType = modeTypeRequest.getModeType();
+        final ReceivingMode modeType = modeTypeRequest.getReceivingMode();
         final Object[] obj = new Object[]{modeType.getName(), modeType.getDescription(),
                 modeType.getActive(), Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), modeType.getCode()};
@@ -140,23 +136,23 @@ public class ReceivingModeTypeRepository {
 
     }
 
-    public List<ReceivingModeType> getAllReceivingModeTypes(final ReceivingModeTypeGetReq modeTypeGetRequest) {
-        LOGGER.info("ReceivingModeType search Request::" + modeTypeGetRequest);
+/*    public List<ReceivingMode> getAllReceivingModeTypes(final ReceivingModeTypeGetReq modeTypeGetRequest) {
+        LOGGER.info("ReceivingMode search Request::" + modeTypeGetRequest);
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = receivingModeTypeQueryBuilder.getQuery(modeTypeGetRequest, preparedStatementValues);
         ReceivingModeTypeRowMapper receivingModeRowMapper = new ReceivingModeTypeRowMapper();
         jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), receivingModeRowMapper);
-        Map<String, ReceivingModeType> modeMap = receivingModeRowMapper.modeMap;
-        Iterator<Entry<String, ReceivingModeType>> itr = modeMap.entrySet().iterator();
-        List<ReceivingModeType> receivingModeList = new ArrayList<>();
+        Map<String, ReceivingMode> modeMap = receivingModeRowMapper.modeMap;
+        Iterator<Entry<String, ReceivingMode>> itr = modeMap.entrySet().iterator();
+        List<ReceivingMode> receivingModeList = new ArrayList<>();
         while (itr.hasNext()) {
-            Entry<String, ReceivingModeType> itrEntry = itr.next();
+            Entry<String, ReceivingMode> itrEntry = itr.next();
             receivingModeList.add(itrEntry.getValue());
         }
         return receivingModeList;
-    }
+    }*/
 
-    public boolean checkReceivingModeTypeByNameAndCode(final String code, final String name, final String tenantId) {
+    public boolean checkReceivingModeTypeByCode(final String code, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
 
         preparedStatementValues.add(tenantId);
@@ -169,6 +165,7 @@ public class ReceivingModeTypeRepository {
         }
         final List<Map<String, Object>> centerTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
+
         if (!centerTypes.isEmpty()) {
             String codeFromDB = (String) centerTypes.get(0).get("code");
             if (codeFromDB.equalsIgnoreCase(code))

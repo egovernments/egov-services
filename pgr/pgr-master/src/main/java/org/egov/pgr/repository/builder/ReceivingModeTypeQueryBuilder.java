@@ -52,8 +52,8 @@ public class ReceivingModeTypeQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingModeTypeQueryBuilder.class);
 
-	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.tenantId,modeType.active,channel.channel from egpgr_receivingmode modeType left join egpgr_receivingmode_channel channel"
-                                              +" on channel.receivingmodecode = modeType.code";
+	private static final String BASE_QUERY = "SELECT receivingMode.id,receivingMode.code,receivingMode.name,receivingMode.description,receivingMode.tenantId,receivingMode.active,channel.channel from egpgr_receivingmode receivingMode left join egpgr_receivingmode_channel channel"
+                                              +" on channel.receivingmodecode = receivingMode.code";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final ReceivingModeTypeGetReq modeTypeRequest, final List preparedStatementValues) {
@@ -78,30 +78,30 @@ public class ReceivingModeTypeQueryBuilder {
 
 		if (modeTypeRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" modeType.tenantId = ?");
+			selectQuery.append(" receivingMode.tenantId = ?");
 			preparedStatementValues.add(modeTypeRequest.getTenantId());
 		}
 
 		if (modeTypeRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" modeType.id IN " + getIdQuery(modeTypeRequest.getId()));
+			selectQuery.append(" receivingMode.id IN " + getIdQuery(modeTypeRequest.getId()));
 		}
 
 		if (modeTypeRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" modeType.name = ?");
+			selectQuery.append(" receivingMode.name = ?");
 			preparedStatementValues.add(modeTypeRequest.getName());
 		}
 
 		if (modeTypeRequest.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" modeType.code = ?");
+			selectQuery.append(" receivingMode.code = ?");
 			preparedStatementValues.add(modeTypeRequest.getCode());
 		}
 
 		if (modeTypeRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" modeType.active = ?");
+			selectQuery.append(" receivingMode.active = ?");
 			preparedStatementValues.add(modeTypeRequest.getActive());
 		}
 	}
@@ -132,8 +132,8 @@ public class ReceivingModeTypeQueryBuilder {
 	}
 
 	private void addOrderByClause(final StringBuilder selectQuery, final ReceivingModeTypeGetReq modeTypeGetRequest) {
-		final String sortBy = modeTypeGetRequest.getSortBy() == null ? "modeType.code"
-				: "modeType." + modeTypeGetRequest.getSortBy();
+		final String sortBy = modeTypeGetRequest.getSortBy() == null ? "receivingMode.code"
+				: "receivingMode." + modeTypeGetRequest.getSortBy();
 		final String sortOrder = modeTypeGetRequest.getSortOrder() == null ? "DESC" : modeTypeGetRequest.getSortOrder();
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}

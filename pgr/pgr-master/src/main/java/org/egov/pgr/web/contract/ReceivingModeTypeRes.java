@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgr.domain.model.ReceivingModeType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -66,7 +65,7 @@ public class ReceivingModeTypeRes {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
-	@JsonProperty("ReceivingModeType")
-	private List<ReceivingModeType> modeTypes = new ArrayList<>();
+	@JsonProperty("ReceivingMode")
+	private List<ReceivingMode> modeTypes = new ArrayList<>();
 
 }

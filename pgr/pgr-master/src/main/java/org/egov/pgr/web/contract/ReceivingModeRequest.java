@@ -38,16 +38,15 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.domain.model;
-
-import java.util.List;
+package org.egov.pgr.web.contract;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
+import org.egov.common.contract.request.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,34 +59,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class ReceivingModeType {
-
-	public static final String SEQ_RECEIVINGMODETYPE = "SEQ_EGPGER_RECEIVING_MODE";
+public class ReceivingModeRequest {
 
 	@NotNull
-	private Long id;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-	@NotNull
-	@Length(min = 3, max = 20)
-	private String code;
-
-	@NotNull
-	@Length(min = 3, max = 100)
-	private String name;
-
-	@Length(max = 250)
-	private String description;
-
-	@NotNull
-	private Boolean active;
-	
-	private List<String> channels;
-
-	private AuditDetails auditDetails;
-
-	@Length(max = 250)
-	@NotNull
-	private String tenantId;
+	private ReceivingMode receivingMode;
 
 }

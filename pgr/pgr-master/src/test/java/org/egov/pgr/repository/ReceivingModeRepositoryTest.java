@@ -36,25 +36,18 @@
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */
+ *//*
+
 
 package org.egov.pgr.repository;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.pgr.domain.model.ReceivingModeType;
 import org.egov.pgr.repository.builder.ReceivingModeTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ReceivingModeTypeRowMapper;
+import org.egov.pgr.web.contract.ReceivingMode;
+import org.egov.pgr.web.contract.ReceivingModeRequest;
 import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;
-import org.egov.pgr.web.contract.ReceivingModeTypeReq;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,8 +56,16 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
-public class ReceivingModeTypeRepositoryTest {
+public class ReceivingModeRepositoryTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
@@ -76,12 +77,12 @@ public class ReceivingModeTypeRepositoryTest {
     private ReceivingModeTypeRowMapper receivingModeRowMapper;
 
     @InjectMocks
-    private ReceivingModeTypeRepository receivingModeRepository;
+    private ReceivingModeRepository receivingModeRepository;
 
     @Test
     public void test_Should_Create_ReceivingMode_Valid() {
-        final ReceivingModeTypeReq receivingModeRequest = getReceivingModeRequest();
-        final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
+        final ReceivingModeRequest receivingModeRequest = getReceivingModeRequest();
+        final ReceivingMode receivingMode = receivingModeRequest.getReceivingMode();
         receivingMode.getCode();
         receivingMode.getName();
         receivingMode.getDescription();
@@ -97,8 +98,8 @@ public class ReceivingModeTypeRepositoryTest {
 
     @Test
     public void test_Should_Create_ReceivingMode_Invalid() {
-        final ReceivingModeTypeReq receivingModeReq = getReceivingModeRequest();
-        final ReceivingModeType receivingMode = receivingModeReq.getModeType();
+        final ReceivingModeRequest receivingModeReq = getReceivingModeRequest();
+        final ReceivingMode receivingMode = receivingModeReq.getReceivingMode();
        
         receivingMode.getCode();
         receivingMode.getName();
@@ -119,7 +120,7 @@ public class ReceivingModeTypeRepositoryTest {
         final ReceivingModeTypeGetReq receivingModeGetReq = Mockito.mock(ReceivingModeTypeGetReq.class);
         final String queryString = "MyQuery";
         when(receivingModeQueryBuilder.getQuery(receivingModeGetReq, preparedStatementValues)).thenReturn(queryString);
-        final List< ReceivingModeType> connectionCategories = new ArrayList<>();
+        final List<ReceivingMode> connectionCategories = new ArrayList<>();
         when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), receivingModeRowMapper))
                 .thenReturn(connectionCategories);
 
@@ -127,9 +128,9 @@ public class ReceivingModeTypeRepositoryTest {
                 connectionCategories.equals(receivingModeRepository.getAllReceivingModeTypes(receivingModeGetReq)));
     }
 
-    private ReceivingModeTypeReq getReceivingModeRequest() {
-        final ReceivingModeTypeReq receivingModeReq = new ReceivingModeTypeReq();
-        final ReceivingModeType receivingMode = new ReceivingModeType();
+    private ReceivingModeRequest getReceivingModeRequest() {
+        final ReceivingModeRequest receivingModeReq = new ReceivingModeRequest();
+        final ReceivingMode receivingMode = new ReceivingMode();
         receivingMode.setCode("23");
         receivingMode.setName("New Category");
         receivingMode.setDescription("New Category of Connection");
@@ -139,7 +140,8 @@ public class ReceivingModeTypeRepositoryTest {
         newUser.setId(2L);
         requestInfo.setUserInfo(newUser);
         receivingModeReq.setRequestInfo(requestInfo);
-        receivingModeReq.setModeType(receivingMode);
+        receivingModeReq.setReceivingMode(receivingMode);
         return receivingModeReq;
     }
 }
+*/

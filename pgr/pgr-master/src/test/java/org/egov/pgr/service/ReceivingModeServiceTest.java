@@ -36,7 +36,8 @@
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */
+ *//*
+
 
 package org.egov.pgr.service;
 
@@ -52,11 +53,12 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.pgr.domain.model.AuditDetails;
-import org.egov.pgr.domain.model.ReceivingModeType;
+import org.egov.pgr.domain.service.ReceivingModeService;
+import org.egov.pgr.web.contract.ReceivingMode;
 import org.egov.pgr.producers.PGRProducer;
-import org.egov.pgr.repository.ReceivingModeTypeRepository;
+import org.egov.pgr.repository.ReceivingModeRepository;
 import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;
-import org.egov.pgr.web.contract.ReceivingModeTypeReq;
+import org.egov.pgr.web.contract.ReceivingModeRequest;
 import org.egov.pgr.web.contract.ReceivingModeTypeRes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,45 +68,45 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReceivingModeTypeServiceTest {
+public class ReceivingModeServiceTest {
 
     @Mock
-    private ReceivingModeTypeRepository receivingModeRepository;
+    private ReceivingModeRepository receivingModeRepository;
 
     @Mock
     private PGRProducer waterMasterProducer;
 
     @InjectMocks
-    private ReceivingModeTypeService receivingModeTypeService;
+    private ReceivingModeService receivingModeService;
 
     @Test
     public void test_Search_For_ReceivingModeTypeServices() {
-        final List<ReceivingModeType> ReceivingModeTypeList = new ArrayList<>();
-        final ReceivingModeType receivingModeType = Mockito.mock(ReceivingModeType.class);
+        final List<ReceivingMode> ReceivingModeTypeList = new ArrayList<>();
+        final ReceivingMode receivingModeType = Mockito.mock(ReceivingMode.class);
         ReceivingModeTypeList.add(receivingModeType);
 
         when(receivingModeRepository.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class))).thenReturn(ReceivingModeTypeList);
-        assertTrue(ReceivingModeTypeList.equals(receivingModeTypeService.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class))));
+        assertTrue(ReceivingModeTypeList.equals(receivingModeService.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class))));
     }
 
     @Test
     public void test_Should_ReceivingModeType_Create() {
-        final ReceivingModeType receivingModeType = getReceivingModeType();
-        final List<ReceivingModeType> receivingModeTypes = new ArrayList<>();
+        final ReceivingMode receivingModeType = getReceivingModeType();
+        final List<ReceivingMode> receivingModeTypes = new ArrayList<>();
         receivingModeTypes.add(receivingModeType);
-        final ReceivingModeTypeReq receivingModeTypeReq = new ReceivingModeTypeReq();
-        receivingModeTypeReq.setModeType(receivingModeType);
+        final ReceivingModeRequest receivingModeRequest = new ReceivingModeRequest();
+        receivingModeRequest.setReceivingMode(receivingModeType);
         final ReceivingModeTypeRes propUsageTypeResponse = new ReceivingModeTypeRes();
         propUsageTypeResponse.setResponseInfo(null);
         propUsageTypeResponse.setModeTypes(receivingModeTypes);
 
-        when(receivingModeTypeService.create(any(ReceivingModeTypeReq.class))).thenReturn(receivingModeTypeReq);
-        assertTrue(receivingModeTypeReq.equals(receivingModeTypeService.create(receivingModeTypeReq)));
+        when(receivingModeService.create(any(ReceivingModeRequest.class))).thenReturn(receivingModeRequest);
+        assertTrue(receivingModeRequest.equals(receivingModeService.create(receivingModeRequest)));
 
     }
 
-    private ReceivingModeType getReceivingModeType() {
-        final ReceivingModeType receivingModeType = new ReceivingModeType();
+    private ReceivingMode getReceivingModeType() {
+        final ReceivingMode receivingModeType = new ReceivingMode();
         receivingModeType.setCode("23");
         receivingModeType.setName("New receivingMode Name");
         receivingModeType.setDescription("receivingMode Name Description");
@@ -114,36 +116,36 @@ public class ReceivingModeTypeServiceTest {
 
     @Test
     public void test_Search_For_ReceivingModeType_Notnull() {
-        final List<ReceivingModeType> receivingModeTypeList = new ArrayList<>();
-        final ReceivingModeType receivingModeType = Mockito.mock(ReceivingModeType.class);
+        final List<ReceivingMode> receivingModeTypeList = new ArrayList<>();
+        final ReceivingMode receivingModeType = Mockito.mock(ReceivingMode.class);
         receivingModeTypeList.add(receivingModeType);
 
         when(receivingModeRepository.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class))).thenReturn(receivingModeTypeList);
-        assertNotNull(receivingModeTypeService.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class)));
+        assertNotNull(receivingModeService.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class)));
     }
 
     @Test
     public void test_Search_For_receivingMode_Types_Null() {
-        final List<ReceivingModeType> receivingModeTypeList = new ArrayList<>();
-        final ReceivingModeType receivingModeType = Mockito.mock(ReceivingModeType.class);
+        final List<ReceivingMode> receivingModeTypeList = new ArrayList<>();
+        final ReceivingMode receivingModeType = Mockito.mock(ReceivingMode.class);
         receivingModeTypeList.add(receivingModeType);
 
         when(receivingModeRepository.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class))).thenReturn(null);
-        assertNull(receivingModeTypeService.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class)));
+        assertNull(receivingModeService.getAllReceivingModeTypes(any(ReceivingModeTypeGetReq.class)));
     }
 
-    public List<ReceivingModeType> getReceivingModeTypes(final ReceivingModeTypeGetReq receivingModeTypeGetRequest) {
+    public List<ReceivingMode> getReceivingModeTypes(final ReceivingModeTypeGetReq receivingModeTypeGetRequest) {
         return receivingModeRepository.getAllReceivingModeTypes(receivingModeTypeGetRequest);
     }
 
     @Test
     public void test_Should_Update_ReceivingModeType_NotNull() throws Exception {
-        final ReceivingModeTypeReq receivingModeTypeRequest = new ReceivingModeTypeReq();
+        final ReceivingModeRequest receivingModeTypeRequest = new ReceivingModeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final ReceivingModeType receivingModeType = new ReceivingModeType();
+        final ReceivingMode receivingModeType = new ReceivingMode();
         final AuditDetails auditDetails = new AuditDetails();
 
         receivingModeType.setAuditDetails(auditDetails);
@@ -154,27 +156,27 @@ public class ReceivingModeTypeServiceTest {
         receivingModeType.setDescription("test description");
 
         receivingModeTypeRequest.setRequestInfo(requestInfo);
-        receivingModeTypeRequest.setModeType(receivingModeType);
+        receivingModeTypeRequest.setReceivingMode(receivingModeType);
 
-        final ReceivingModeType receivingModeTypeResult = receivingModeTypeService.sendMessage("topic", "key", receivingModeTypeRequest);
+        final ReceivingMode receivingModeTypeResult = receivingModeService.sendMessage("topic", "key", receivingModeTypeRequest);
 
         assertNotNull(receivingModeTypeResult);
     }
 
     @Test
     public void test_Should_Update_ReceivingModeType() {
-        final ReceivingModeType receivingModeType = getReceivingModeType();
-        final List<ReceivingModeType> receivingModeTypes = new ArrayList<>();
+        final ReceivingMode receivingModeType = getReceivingModeType();
+        final List<ReceivingMode> receivingModeTypes = new ArrayList<>();
         receivingModeTypes.add(receivingModeType);
-        final ReceivingModeTypeReq receivingModeTypeRequest = new ReceivingModeTypeReq();
-        receivingModeTypeRequest.setModeType(receivingModeType);
+        final ReceivingModeRequest receivingModeTypeRequest = new ReceivingModeRequest();
+        receivingModeTypeRequest.setReceivingMode(receivingModeType);
         final ReceivingModeTypeRes receivingModeTypeResponse = new ReceivingModeTypeRes();
         receivingModeTypeResponse.setResponseInfo(null);
         receivingModeTypeResponse.setModeTypes(receivingModeTypes);
 
-        when(receivingModeTypeService.update(any(ReceivingModeTypeReq.class))).thenReturn(receivingModeTypeRequest);
-        assertTrue(receivingModeTypeRequest.equals(receivingModeTypeService.update(receivingModeTypeRequest)));
+        when(receivingModeService.update(any(ReceivingModeRequest.class))).thenReturn(receivingModeTypeRequest);
+        assertTrue(receivingModeTypeRequest.equals(receivingModeService.update(receivingModeTypeRequest)));
 
     }
 
-}
+}*/

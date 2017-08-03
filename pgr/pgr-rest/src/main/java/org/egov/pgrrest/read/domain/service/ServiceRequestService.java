@@ -43,7 +43,8 @@ public class ServiceRequestService {
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        List<ServiceRequest> serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
+        //List<ServiceRequest> serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
+        List<ServiceRequest> serviceRequestList = serviceRequestRepository.findAll(serviceRequestSearchCriteria);
         maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
         return serviceRequestList;
     }

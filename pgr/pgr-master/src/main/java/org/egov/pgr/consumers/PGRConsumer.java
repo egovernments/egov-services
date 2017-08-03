@@ -50,7 +50,7 @@ import org.egov.pgr.service.EscalationHierarchyService;
 import org.egov.pgr.service.EscalationTimeTypeService;
 import org.egov.pgr.service.OTPConfigService;
 import org.egov.pgr.service.ReceivingCenterTypeService;
-import org.egov.pgr.service.ReceivingModeTypeService;
+import org.egov.pgr.domain.service.ReceivingModeService;
 import org.egov.pgr.service.RouterService;
 /*import org.egov.pgr.service.RouterService;*/
 import org.egov.pgr.service.ServiceGroupService;
@@ -59,7 +59,7 @@ import org.egov.pgr.service.ServiceTypeService;
 import org.egov.pgr.web.contract.EscalationHierarchyReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
-import org.egov.pgr.web.contract.ReceivingModeTypeReq;
+import org.egov.pgr.web.contract.ReceivingModeRequest;
 import org.egov.pgr.web.contract.RouterTypeReq;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.egov.pgr.web.contract.ServiceRequest;
@@ -88,7 +88,7 @@ public class PGRConsumer {
 	private ReceivingCenterTypeService receivingCenterTypeService;
 
 	@Autowired
-	private ReceivingModeTypeService receivingModeTypeService;
+	private ReceivingModeService receivingModeService;
 	
 	@Autowired
 	private ServiceTypeService serviceTypeService;
@@ -103,14 +103,14 @@ public class PGRConsumer {
 	private OTPConfigService otpConfigService;
 	
 	@Autowired 
-	private EscalationHierarchyService escalationHierarchyService; 
+	private EscalationHierarchyService escalationHierarchyService;
 
    	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
 			"${kafka.topics.receivingmode.create.name}", "${kafka.topics.receivingcenter.update.name}",
-			"${kafka.topics.receivingmode.update.name}", "${kafka.topics.servicetype.create.name}", 
+			"${kafka.topics.receivingmode.update.name}", "${kafka.topics.servicetype.create.name}",
 			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.servicetype.update.name}","${kafka.topics.router.create.name}",
-			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.escalationtimetype.create.name}", 
+			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.escalationtimetype.create.name}",
 			"${kafka.topics.escalationtimetype.update.name}", "${kafka.topics.otpconfig.update.name}", "${kafka.topics.otpconfig.create.name}",
 			"${kafka.topics.escalationhierarchy.update.name}", "${kafka.topics.escalationhierarchy.create.name}"})
 	
@@ -131,11 +131,11 @@ public class PGRConsumer {
 				LOGGER.info("Consuming update ReceivingCenterType request");
 				receivingCenterTypeService.update(objectMapper.readValue(record.value(), ReceivingCenterTypeReq.class));
 			} else if (record.topic().equals(applicationProperties.getCreateReceivingModeTopicName())) {
-				LOGGER.info("Consuming create ReceivingModeType request");
-				receivingModeTypeService.create(objectMapper.readValue(record.value(), ReceivingModeTypeReq.class));
+				LOGGER.info("Consuming create ReceivingMode request");
+				receivingModeService.create(objectMapper.readValue(record.value(), ReceivingModeRequest.class));
 			} else if (record.topic().equals(applicationProperties.getUpdateReceivingModeTopicName())) {
-				LOGGER.info("Consuming update ReceivingModeType request");
-				receivingModeTypeService.update(objectMapper.readValue(record.value(), ReceivingModeTypeReq.class));
+				LOGGER.info("Consuming update ReceivingMode request");
+				receivingModeService.update(objectMapper.readValue(record.value(), ReceivingModeRequest.class));
 			} else if (record.topic().equals(applicationProperties.getCreateServiceTypeTopicName())) {
 				LOGGER.info("Consuming create ServiceType request");
 				serviceTypeService.create(objectMapper.readValue(record.value(), ServiceRequest.class));

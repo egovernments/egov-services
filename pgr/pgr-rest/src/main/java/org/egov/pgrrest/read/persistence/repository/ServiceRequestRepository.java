@@ -54,4 +54,7 @@ public class ServiceRequestRepository {
         this.serviceRequestMessageQueueRepository.save(sevaRequest);
     }
 
+    public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        return submissionRepository.find(serviceRequestSearchCriteria);
+    }
 }

@@ -13,7 +13,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "StorageReservoir[0].name",
-							"label": "Storage Reservoir",
+							"label": "wc.create.groups.fields.storageReservoirName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -24,7 +24,7 @@ var dat = {
 						{
 							"name": "reservoirType",
 							"jsonPath": "StorageReservoir[0].reservoirType",
-							"label": "Reservoir Type",
+							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
@@ -36,7 +36,7 @@ var dat = {
 						{
 							"name": "locationName",
 							"jsonPath": "StorageReservoir[0].locationName",
-							"label": "Location",
+							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
@@ -48,7 +48,7 @@ var dat = {
 						{
 							"name": "wardName",
 							"jsonPath": "StorageReservoir[0].wardName",
-							"label": "Ward",
+							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
@@ -60,7 +60,7 @@ var dat = {
 						{
 							"name": "zoneName",
 							"jsonPath": "StorageReservoir[0].zoneName",
-							"label": "Zone",
+							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
@@ -72,7 +72,7 @@ var dat = {
 						{
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
-							"label": "Number of main distribution line",
+							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -83,7 +83,7 @@ var dat = {
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoir[0].noOfConnection",
-							"label": "Number of connection from reservoir",
+							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -94,7 +94,7 @@ var dat = {
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoir[0].noOfSubLines",
-							"label": "Number of sub lines",
+							"label": "wc.create.groups.fields.numberOfSubLines",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -105,7 +105,7 @@ var dat = {
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoir[0].capacity",
-							"label": "Storage Capacity of Reservoir(in MLD)",
+							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
@@ -127,24 +127,13 @@ var dat = {
 		"objectName": "StorageReservoir",
 		"groups": [
 			{
-				"label": "wc.search.storageReservoir.title",
+				"label": "wc.create.storageReservoir.title",
 				"name": "createstorageReservoir",
 				"fields": [
 						{
-							"name": "name",
-							"jsonPath": "StorageReservoir.name",
-							"label": "Reservoir Name",
-							"pattern": "",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
 							"name": "reservoirType",
 							"jsonPath": "StorageReservoir.reservoirType",
-							"label": "Reservoir Type",
+							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
@@ -157,9 +146,9 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.code"},{label: "wc.create.storageReservoir"},{label: "wc.create.typeOfReservoir"}, {label: "wc.create.Location"}, {label: "wc.create.Zone"},
-			{label: "wc.create.ward"},{label: "wc.create.StorageCapacityofReservoir"},{label: "wc.create.subLines"},{label: "wc.create.distributionLine "},{label: "wc.create.connection "}],
-			"values": ["code","name", "reservoirType", "location","zone","ward","capacity","noOfSubLines","noOfMainDistributionLines","noOfConnection"],
+			"header": [{label: "wc.create.groups.fields.storageReservoirName"},{label: "wc.create.groups.fields.reservoirType"}, {label: "wc.create.groups.fields.location"}, {label: "wc.create.groups.fields.zone"},
+			{label: "wc.create.groups.fields.ward"},{label: "wc.create.groups.fields.storageCapacityofReservoir(in MLD)"},{label: "wc.create.groups.fields.numberOfSubLines"},{label: "wc.create.groups.fields.numberOfMainDistributionLine"},{label: "wc.create.groups.fields.numberOfConnectionFromReservoir"}],
+			"values": ["name", "reservoirType", "locationNum","zoneNum","wardNum","capacity","noOfSubLines","noOfMainDistributionLines","noOfConnection"],
 			"resultPath": "StorageReservoirs",
 			"rowClickUrlUpdate": "/update/wc/storagereservoir/{id}",
 			"rowClickUrlView": "/view/wc/storagereservoir/{id}"
@@ -179,7 +168,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "StorageReservoirs[0].name",
-							"label": "Storage Reservoir",
+							"label": "wc.create.groups.fields.storageReservoirName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -190,7 +179,7 @@ var dat = {
 						{
 							"name": "reservoirType",
 							"jsonPath": "StorageReservoirs[0].reservoirType",
-							"label": "Reservoir Type",
+							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
@@ -202,7 +191,7 @@ var dat = {
 						{
 							"name": "locationName",
 							"jsonPath": "StorageReservoirs[0].name",
-							"label": "Location",
+							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
@@ -214,7 +203,7 @@ var dat = {
 						{
 							"name": "wardName",
 							"jsonPath": "StorageReservoirs[0].wardName",
-							"label": "Ward",
+							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
@@ -226,7 +215,7 @@ var dat = {
 						{
 							"name": "zoneName",
 							"jsonPath": "StorageReservoirs[0].zoneName",
-							"label": "Zone",
+							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
@@ -238,7 +227,7 @@ var dat = {
 						{
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoirs[0].noOfMainDistributionLines",
-							"label": "Number of main distribution line",
+							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -249,7 +238,7 @@ var dat = {
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoirs[0].noOfConnection",
-							"label": "Number of connection from reservoir",
+							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -260,7 +249,7 @@ var dat = {
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoirs[0].noOfSubLines",
-							"label": "Number of sub lines",
+							"label": "wc.create.groups.fields.numberOfSubLines",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -271,7 +260,7 @@ var dat = {
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoirs[0].capacity",
-							"label": "Storage Capacity of Reservoir(in MLD)",
+							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
@@ -301,7 +290,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "StorageReservoir[0].name",
-							"label": "Storage Reservoir",
+							"label": "wc.create.groups.fields.storageReservoirName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -312,7 +301,7 @@ var dat = {
 						{
 							"name": "reservoirType",
 							"jsonPath": "StorageReservoir[0].reservoirType",
-							"label": "Reservoir Type",
+							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
@@ -324,7 +313,7 @@ var dat = {
 						{
 							"name": "locationName",
 							"jsonPath": "StorageReservoir[0].locationName",
-							"label": "Location",
+							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
@@ -336,7 +325,7 @@ var dat = {
 						{
 							"name": "wardName",
 							"jsonPath": "StorageReservoir[0].wardName",
-							"label": "Ward",
+							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
@@ -348,7 +337,7 @@ var dat = {
 						{
 							"name": "zoneName",
 							"jsonPath": "StorageReservoir[0].zoneName",
-							"label": "Zone",
+							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
@@ -360,7 +349,7 @@ var dat = {
 						{
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
-							"label": "Number of main distribution line",
+							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -371,7 +360,7 @@ var dat = {
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoir[0].noOfConnection",
-							"label": "Number of connection from reservoir",
+							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -382,7 +371,7 @@ var dat = {
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoir[0].noOfSubLines",
-							"label": "Number of sub lines",
+							"label": "wc.create.groups.fields.numberOfSubLines",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -393,7 +382,7 @@ var dat = {
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoir[0].capacity",
-							"label": "Storage Capacity of Reservoir(in MLD)",
+							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,

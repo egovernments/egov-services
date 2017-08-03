@@ -99,6 +99,32 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Receipt
+        
+  /receipts/_view:
+    post:
+      summary: Get the receipt(s) info for the receipt numbers.
+      description: This API returns list of receipts created for the given servicecode and list of billNumbers/instrument numbers/receipt numbers.
+      parameters:
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+  
+        - name: receiptNumbers
+          in: query
+          required: false
+          description: List of receipt numbers.
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Receipt'
+      tags:
+        - Receipt      
+        
+  
   
   /_create:
     post:

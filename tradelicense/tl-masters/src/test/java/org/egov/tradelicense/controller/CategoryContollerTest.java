@@ -24,24 +24,21 @@ import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.services.CategoryService;
-import org.egov.tradelicense.services.DocumentTypeService;
-import org.egov.tradelicense.services.FeeMatrixService;
-import org.egov.tradelicense.services.LicenseStatusService;
-import org.egov.tradelicense.services.PenaltyRateService;
-import org.egov.tradelicense.services.UOMService;
+import org.egov.tradelicense.domain.services.CategoryService;
+import org.egov.tradelicense.web.controller.CategoryController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(TradeLicenseMasterController.class)
+@WebMvcTest(CategoryController.class)
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 public class CategoryContollerTest {
 
@@ -49,30 +46,17 @@ public class CategoryContollerTest {
 	private CategoryService categoryService;
 
 	@MockBean
-	FeeMatrixService feeMatrixService;
-
-	@MockBean
-	private UOMService uomService;
-
-	@MockBean
-	private PenaltyRateService penaltyRateService;
-
-	@MockBean
-	DocumentTypeService documentTypeService;
-	
-	@MockBean
-	LicenseStatusService licenseStatusService;
-
-	@MockBean
 	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private MockMvc mockMvc;
-
 	
+	@MockBean
+	KafkaTemplate kafkaTemplate;
+
 	/**
 	 * Description : Test method for createCategory() method
-	
+	 * 
 	 */
 	@Test
 	public void testCreateCategory() throws Exception {
@@ -94,7 +78,7 @@ public class CategoryContollerTest {
 
 			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/tradelicense/category/_create").param("tenantId", "default")
+			mockMvc.perform(post("/category/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -109,10 +93,9 @@ public class CategoryContollerTest {
 
 	}
 
-	
 	/**
 	 * Description : Test method for createCategoryDetails() method
-	
+	 * 
 	 */
 	@Test
 	public void testCreateCategoryDetails() throws Exception {
@@ -139,7 +122,7 @@ public class CategoryContollerTest {
 
 			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/tradelicense/category/_create").param("tenantId", "default")
+			mockMvc.perform(post("/category/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("categoryDetailsCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -154,7 +137,6 @@ public class CategoryContollerTest {
 
 	}
 
-	
 	/**
 	 * Description : Test method for updateCategory() method
 	 */
@@ -179,7 +161,7 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.updateCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
-			mockMvc.perform(post("/tradelicense/category/_update").param("tenantId", "default")
+			mockMvc.perform(post("/category/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -231,7 +213,7 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.updateCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
-			mockMvc.perform(post("/tradelicense/category/_update").param("tenantId", "default")
+			mockMvc.perform(post("/category/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -272,7 +254,7 @@ public class CategoryContollerTest {
 					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
 					any(Integer.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/tradelicense/category/_search").param("tenantId", "default")
+			mockMvc.perform(post("/category/_search").param("tenantId", "default")
 					.param("type", "SUBCATEGORY").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("categorySearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -287,7 +269,6 @@ public class CategoryContollerTest {
 
 	}
 
-	
 	/**
 	 * Description : Test method for searchCategoryDetails() method
 	 */
@@ -323,7 +304,7 @@ public class CategoryContollerTest {
 					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
 					any(Integer.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/tradelicense/category/_search").param("tenantId", "default")
+			mockMvc.perform(post("/category/_search").param("tenantId", "default")
 					.param("type", "SUBCATEGORY").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("categoryDetailsSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

@@ -21,52 +21,36 @@ import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.services.CategoryService;
-import org.egov.tradelicense.services.DocumentTypeService;
-import org.egov.tradelicense.services.FeeMatrixService;
-import org.egov.tradelicense.services.LicenseStatusService;
-import org.egov.tradelicense.services.PenaltyRateService;
-import org.egov.tradelicense.services.UOMService;
+import org.egov.tradelicense.domain.services.DocumentTypeService;
+import org.egov.tradelicense.web.controller.DocumentTypeController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(TradeLicenseMasterController.class)
+@WebMvcTest(DocumentTypeController.class)
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 public class DocumentTypeControllerTest {
 
 	@MockBean
-	private CategoryService categoryService;
-
-	@MockBean
-	FeeMatrixService feeMatrixService;
-
-	@MockBean
-	private UOMService uomService;
-
-	@MockBean
-	private PenaltyRateService penaltyRateService;
-
-	@MockBean
 	DocumentTypeService documentTypeService;
-	
-	@MockBean
-	LicenseStatusService licenseStatusService;
 
 	@MockBean
 	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private MockMvc mockMvc;
-
 	
+	@MockBean
+	KafkaTemplate kafkaTemplate;
+
 	/**
 	 * Description : Test method for createDocumentType() method
 	 */
@@ -91,7 +75,7 @@ public class DocumentTypeControllerTest {
 			when(documentTypeService.createDocumentType(any(DocumentTypeRequest.class)))
 					.thenReturn(documentTypeResponse);
 
-			mockMvc.perform(post("/tradelicense/documenttype/_create").param("tenantId", "default")
+			mockMvc.perform(post("/documenttype/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -106,7 +90,6 @@ public class DocumentTypeControllerTest {
 
 	}
 
-	
 	/**
 	 * Description : Test method for updateDocumentType() method
 	 */
@@ -130,7 +113,7 @@ public class DocumentTypeControllerTest {
 
 			when(documentTypeService.updateDocumentType(any(DocumentTypeRequest.class)))
 					.thenReturn(documenttypeResponse);
-			mockMvc.perform(post("/tradelicense/documenttype/_update").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/documenttype/_update").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("documenttypeUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("documenttypeUpdateResponse.json")));
@@ -145,7 +128,6 @@ public class DocumentTypeControllerTest {
 
 	}
 
-	
 	/**
 	 * Description : Test method for searchDocumentType() method
 	 */
@@ -171,7 +153,7 @@ public class DocumentTypeControllerTest {
 					any(String.class), any(Boolean.class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(documentTypeResponse);
 
-			mockMvc.perform(post("/tradelicense/documenttype/_search").param("tenantId", "default")
+			mockMvc.perform(post("/documenttype/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeSearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

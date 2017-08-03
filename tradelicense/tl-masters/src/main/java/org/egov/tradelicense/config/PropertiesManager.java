@@ -67,5 +67,11 @@ public class PropertiesManager {
 	
 	@Value("${duplicate.license.status}")
 	private String licenseStatusCustomMsg;
+	
+	@Value("${egov.tradelicense.category.create.validated}")
+	private String createCategoryValidated;
+	
+	@Value("${egov.tradelicense.category.update.validated}")
+	private String updateCategoryValidated;
 
 }

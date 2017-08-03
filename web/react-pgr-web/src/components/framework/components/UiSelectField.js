@@ -72,7 +72,7 @@ class UiSelectField extends Component {
 					console.log(err);
 			});
 		}
-		else {
+		else if (item.hasOwnProperty("defaultValue") && typeof(item.defaultValue)=="object") {
 			setDropDownData(item.jsonPath,item.defaultValue);
 		}
    }

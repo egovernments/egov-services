@@ -5,12 +5,18 @@ import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
+import org.egov.egf.instrument.domain.model.InstrumentType;
+import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
+import org.egov.egf.master.web.contract.BankAccountContract;
+import org.egov.egf.master.web.contract.BankContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.repository.BankAccountContractRepository;
 import org.egov.egf.master.web.repository.BankContractRepository;
 import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
@@ -143,41 +149,48 @@ public class InstrumentService {
 
 				instrument.setId(UUID.randomUUID().toString().replace("-", ""));
 				// fetch related items
-				/*
-				 * if (instrument.getInstrumentType() != null) { InstrumentType
-				 * instrumentType =
-				 * instrumentTypeRepository.findById(instrument.
-				 * getInstrumentType()); if (instrumentType == null) { throw new
-				 * InvalidDataException("instrumentType",
-				 * "instrumentType.invalid", " Invalid instrumentType"); }
-				 * instrument.setInstrumentType(instrumentType); } if
-				 * (instrument.getBank() != null) { BankContract bank =
-				 * bankContractRepository.findById(instrument.getBank()); if
-				 * (bank == null) { throw new InvalidDataException("bank",
-				 * "bank.invalid", " Invalid bank"); } instrument.setBank(bank);
-				 * } if (instrument.getBankAccount() != null) {
-				 * BankAccountContract bankAccount =
-				 * bankAccountContractRepository.findById(instrument.
-				 * getBankAccount()); if (bankAccount == null) { throw new
-				 * InvalidDataException("bankAccount", "bankAccount.invalid",
-				 * " Invalid bankAccount"); }
-				 * instrument.setBankAccount(bankAccount); } if
-				 * (instrument.getFinancialStatus() != null) {
-				 * FinancialStatusContract financialStatus =
-				 * financialStatusContractRepository
-				 * .findById(instrument.getFinancialStatus()); if
-				 * (financialStatus == null) { throw new
-				 * InvalidDataException("financialStatus",
-				 * "financialStatus.invalid", " Invalid financialStatus"); }
-				 * instrument.setFinancialStatus(financialStatus); } if
-				 * (instrument.getSurrendarReason() != null) { SurrenderReason
-				 * surrendarReason =
-				 * surrenderReasonRepository.findById(instrument.
-				 * getSurrendarReason()); if (surrendarReason == null) { throw
-				 * new InvalidDataException("surrendarReason",
-				 * "surrendarReason.invalid", " Invalid surrendarReason"); }
-				 * instrument.setSurrendarReason(surrendarReason); }
-				 */
+
+				if (instrument.getInstrumentType() != null) {
+					InstrumentType instrumentType = instrumentTypeRepository.findById(instrument.getInstrumentType());
+					if (instrumentType == null) {
+						throw new InvalidDataException("instrumentType", "instrumentType.invalid",
+								" Invalid instrumentType");
+					}
+					instrument.setInstrumentType(instrumentType);
+				}
+				if (instrument.getBank() != null) {
+					BankContract bank = bankContractRepository.findById(instrument.getBank());
+					if (bank == null) {
+						throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
+					}
+					instrument.setBank(bank);
+				}
+				if (instrument.getBankAccount() != null) {
+					BankAccountContract bankAccount = bankAccountContractRepository
+							.findById(instrument.getBankAccount());
+					if (bankAccount == null) {
+						throw new InvalidDataException("bankAccount", "bankAccount.invalid", " Invalid bankAccount");
+					}
+					instrument.setBankAccount(bankAccount);
+				}
+				if (instrument.getFinancialStatus() != null) {
+					FinancialStatusContract financialStatus = financialStatusContractRepository
+							.findById(instrument.getFinancialStatus());
+					if (financialStatus == null) {
+						throw new InvalidDataException("financialStatus", "financialStatus.invalid",
+								" Invalid financialStatus");
+					}
+					instrument.setFinancialStatus(financialStatus);
+				}
+				if (instrument.getSurrenderReason() != null) {
+					SurrenderReason surrenderReason = surrenderReasonRepository
+							.findById(instrument.getSurrenderReason());
+					if (surrenderReason == null) {
+						throw new InvalidDataException("surrenderReason", "surrenderReason.invalid",
+								" Invalid surrenderReason");
+					}
+					instrument.setSurrenderReason(surrenderReason);
+				}
 
 			}
 

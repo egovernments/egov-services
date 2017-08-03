@@ -12,20 +12,21 @@ export default class UiTextSearch extends Component {
 				return (
 					<div style={{position: 'relative', display: 'inline'}}>
 						<TextField 
-							style={{"display": (item.hide ? 'none' : 'block')}}
+							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							fullWidth={true} 
 							floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							errorText={this.props.fieldErrors[item.jsonPath]}
 							onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} />
-						<span style={{"display": (item.display ? 'none' : 'block')}} className="glyphicon glyphicon-search" style={{"position":"absolute", "right": "10"}} onClick={() => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}></span>
+						<span className="glyphicon glyphicon-search" style={{"position":"absolute", "right": "10px", "display": (item.display ? 'none' : '')}} onClick={() => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}></span>
 					</div>
 				);
 		}
 	}
 
 	render () {
+		
 		return (
 	      <div>
 	        {this.renderTextSearch(this.props.item)}

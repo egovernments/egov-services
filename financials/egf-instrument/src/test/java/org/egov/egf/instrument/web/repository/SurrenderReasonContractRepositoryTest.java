@@ -38,7 +38,7 @@ public class SurrenderReasonContractRepositoryTest {
 	@Test
 	public void test_find_by_id() throws Exception {
 
-		server.expect(once(), requestTo("http://host/egf-instrument/surrenderreasons/search?id=1&tenantId=default"))
+		server.expect(once(), requestTo("http://host/egf-instrument/surrenderreasons/_search?id=1&tenantId=default"))
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withSuccess(resources.getFileContents("surrenderreason/search_by_id_response.json"),
 						MediaType.APPLICATION_JSON_UTF8));

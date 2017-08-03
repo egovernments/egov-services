@@ -2,20 +2,16 @@ package org.egov.egf.master.web.repository;
 
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.requests.FinancialStatusResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class FinancialStatusContractRepository {
+
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/financialstatuses/search?";
-	@Autowired
-	private ObjectMapper objectMapper;
+	public static final String SEARCH_URL = "/egf-master/financialstatuses/_search?";
 
 	public FinancialStatusContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {

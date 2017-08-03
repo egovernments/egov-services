@@ -525,10 +525,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: (requiredFields, patRequired) => {
+  initForm: (requiredFields, patternFields) => {
     dispatch({
-      type: "SET_REQUIRED_FIELDS",
-      requiredFields
+      type: "SET_REQ_PAT_FIELDS",
+      requiredFields,
+      patternFields
     });
   },
   setMetaData: (metaData) => {

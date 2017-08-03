@@ -113,10 +113,6 @@ public class InstrumentTypeService {
 	}
 
 	public List<InstrumentType> fetchRelated(List<InstrumentType> instrumenttypes) {
-		if (instrumenttypes != null)
-			for (InstrumentType instrumentType : instrumenttypes) {
-
-			}
 
 		return instrumenttypes;
 	}

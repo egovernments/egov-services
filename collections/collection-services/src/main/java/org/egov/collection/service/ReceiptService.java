@@ -56,6 +56,8 @@ import org.egov.collection.model.IdGenRequestInfo;
 import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.Instrument;
+import org.egov.collection.model.PositionSearchCriteria;
+import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.enums.CollectionType;
@@ -276,7 +278,8 @@ public class ReceiptService {
 					LOGGER.error("Persisting receipt FAILED! ", e);
 					return receipt;
 				}
-				startWokflow(tenantId, receiptHeaderId);
+				LOGGER.info("user: "+requestInfo.getUserInfo().getId());
+				startWokflow(requestInfo, tenantId, receiptHeaderId);
 			}
 		}
 		receipt.setBill(Arrays.asList(bill));
@@ -515,7 +518,7 @@ public class ReceiptService {
 			receiptRepository.pushUpdateDetailsToQueque(workFlowDetailsRequest);
 			}
 
-	private void startWokflow(String tenantId, Long receiptHeaderId){
+	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
 		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
 		
 		WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
@@ -524,10 +527,18 @@ public class ReceiptService {
 		workflowDetails.setState("NEW");
 		workflowDetails.setAction("Create");
 		
+		PositionSearchCriteriaWrapper positionSearchCriteriaWrapper = new PositionSearchCriteriaWrapper();
+		PositionSearchCriteria positionSearchCriteria = new PositionSearchCriteria();
+		positionSearchCriteria.setEmployeeId(requestInfo.getUserInfo().getId());
+		positionSearchCriteria.setTenantId(tenantId);
+		positionSearchCriteriaWrapper.setPositionSearchCriteria(positionSearchCriteria);
+		positionSearchCriteriaWrapper.setRequestInfo(requestInfo);
+		
 		try{
+			workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));		
 			workflowService.start(workflowDetails);
 		}catch(Exception e){
-			LOGGER.error("starting workflow failed: "+e.getCause());
+			LOGGER.error("Starting workflow failed: "+e.getCause());
 		}
 		
 		

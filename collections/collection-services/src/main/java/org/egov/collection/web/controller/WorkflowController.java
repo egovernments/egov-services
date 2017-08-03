@@ -63,7 +63,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/receipts-workflow/v1")
+@RequestMapping("/receipts-workflow")
 public class WorkflowController {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(ReceiptController.class);

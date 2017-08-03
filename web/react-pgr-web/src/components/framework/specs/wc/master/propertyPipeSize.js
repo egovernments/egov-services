@@ -17,7 +17,7 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -29,7 +29,7 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""

@@ -184,7 +184,12 @@ var localationData = {
   "wc.create.groups.fields.numberOfMainDistributionLine": " No of main distributionLine",
   "wc.create.groups.fields.reservoirType": "Type of the Reservoir",
   "wc.create.storageReservoir.title":"storage Reservoir",
-  "wc.update.message.success": "Updated Successfully . . . !"
+  "wc.update.message.success": "Updated Successfully . . . !",
+  "wc.create.propertyUsage.title":"Create Property Usage",
+  "wc.create.usageType":"Usage Type",
+  "wc.search.PropertyTypeUsageType.title":"Search Property Type Usage Type",
+  "wc.view.PropertyTypeUsageTypes.title":"View Property Type Usage Types",
+  "wc.update.PropertyTypeUsageType.title":"Update Property Type Usage Type"
 }
 
 export function translate(locale_text){

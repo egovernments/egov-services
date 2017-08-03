@@ -13,7 +13,7 @@ var dat = {
 							"name": "name",
 							"jsonPath": "pipeSize.sizeInMilimeter",
 							"label": "wc.create.mm",
-							"pattern": "/^\d+(\.\d+)?$/",
+							"pattern": "^\\d+(\\.\\d+)?$",
 							"type": "number",
 							"isRequired": true,
 							"isDisabled": false,

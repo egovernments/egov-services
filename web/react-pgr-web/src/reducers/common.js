@@ -67,7 +67,11 @@ let menuConvention={
   "Water Charge.WCMS Masters.Source Type Master.SearchWaterSourceTypeMaster":"/search/wc/waterSourceType/view",
   "Water Charge.WCMS Masters.PropertyPipeSize.ModifyPropertyPipeSizeApi":"/search/wc/propertyPipeSize/update",
   "Water Charge.WCMS Masters.PropertyPipeSize.SearchPropertyPipeSizeApi":"/search/wc/propertyPipeSize/view",
-  "Grievance Redressal.Reports.Grievance Report":"/report/GrievanceReport"
+  "Grievance Redressal.Reports.Grievance Report":"/report/GrievanceReport",
+
+  "Water Charge.WCMS Masters.PipeSize Master.ModifyPipeSizeMasterApi":"/search/wc/pipeSize/update",
+  "Water Charge.WCMS Masters.PipeSize Master.SearchPipeSizeMaster":"/search/wc/pipeSize/view"
+
 }
 
 const defaultState = {

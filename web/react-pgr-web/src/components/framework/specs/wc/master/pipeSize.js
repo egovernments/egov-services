@@ -6,14 +6,14 @@ var dat = {
 		"objectName": "pipeSize",
 		"groups": [
 			{
-				"label": "wc.create.pipesize.title",
+				"label": "wc.create.pipeSize.title",
 				"name": "createpipeSize",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "pipeSize.sizeInMilimeter",
 							"label": "  H.S.C Pipe Size (mm):",
-							"pattern": "",
+							"pattern": "/^\d+(\.\d+)?$/",
 							"type": "number",
 							"isRequired": true,
 							"isDisabled": false,
@@ -75,11 +75,11 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.search.PipeSize.title",
-				"name": "createCategoryType",
+				"name": "searchPipeSize",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "PipeSize.sizeInMilimeter",
+							"jsonPath": "sizeInMilimeter",
 							"label": "H.S.C Pipe Size (mm):",
 							"pattern": "",
 							"type": "text",
@@ -90,7 +90,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "PipeSize.active",
+							"jsonPath": "active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
@@ -103,7 +103,7 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.search.result.code"},{label: "wc.search.result.sizeInInch"},{label: "wc.search.result.sizeInMilimeter"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"header": [{label: "wc.create.code"},{label: "wc.create.sizeInInch"},{label: "wc.create.sizeInMilimeter"}, {label: "wc.create.description"}, {label: "wc.create.active"}],
 			"values": ["code", "sizeInInch", "sizeInMilimeter","description","active"],
 			"resultPath": "PipeSizes",
 			"rowClickUrlUpdate": "/update/wc/pipesize/{id}",

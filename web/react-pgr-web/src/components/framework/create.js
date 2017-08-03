@@ -45,7 +45,7 @@ class Report extends Component {
   setDefaultValues (groups, dat) {
     for(var i=0; i<groups.length; i++) {
       for(var j=0; j<groups[i].fields.length; j++) {
-        if(groups[i].fields[j].defaultValue) {
+        if(typeof groups[i].fields[j].defaultValue != 'undefined') {
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 

@@ -53,6 +53,7 @@ public class CollectionServiceConstants {
 	public static final String INVALID_BD = "Fund, FundSource, Function, Department or glcode may be invalid.";
 	public static final String RECEIPT_FAIL = "Receipt persistence failed due to internal error";
 	public static final String RECEIPT_FAIL_DESC = "Receipt persistence failed due to an error while persistence or due to error in other dependent services";
+	public static final String BUSINESS_KEY="ReceiptHeader";
 
 
 

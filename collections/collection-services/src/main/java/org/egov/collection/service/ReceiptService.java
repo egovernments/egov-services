@@ -113,6 +113,9 @@ public class ReceiptService {
 
 	@Autowired
 	private InstrumentRepository instrumentRepository;
+	
+	@Autowired
+	private WorkflowService workflowService;
 
 	public ReceiptCommonModel getReceipts(
 			ReceiptSearchCriteria receiptSearchCriteria) throws ParseException {
@@ -134,10 +137,11 @@ public class ReceiptService {
 
 		receipt = create(bill, receiptReq.getRequestInfo(),
 				receiptReq.getTenantId(), receipt.getInstrument()); // sync call
-
-		LOGGER.info("Pushing receipt to kafka queue");
-		receiptReq.setReceipt(Arrays.asList(receipt));
-		receipt = receiptRepository.pushToQueue(receiptReq);
+		if(null != receipt.getBill()){
+			LOGGER.info("Pushing receipt to kafka queue");
+			receiptReq.setReceipt(Arrays.asList(receipt));
+			receipt = receiptRepository.pushToQueue(receiptReq);
+		}
 		return receipt;
 	}
 
@@ -236,6 +240,10 @@ public class ReceiptService {
 			Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
 			String instrumentId = instrumentRepository.createInstrument(
 					requestInfo, instrument);
+			if(null == instrumentId || instrumentId.isEmpty()){
+				Receipt emptyReceipt = new Receipt();
+				return emptyReceipt;
+			}
 			
 			billDetail.setCollectionType(CollectionType.COUNTER);
 			billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
@@ -265,9 +273,10 @@ public class ReceiptService {
 							parametersReceiptDetails, receiptHeaderId,
 							instrumentId);
 				} catch (Exception e) {
-					LOGGER.error("Persistingreceipt FAILED! ", e);
+					LOGGER.error("Persisting receipt FAILED! ", e);
 					return receipt;
 				}
+				startWokflow(tenantId, receiptHeaderId);
 			}
 		}
 		receipt.setBill(Arrays.asList(bill));
@@ -505,5 +514,23 @@ public class ReceiptService {
 		   LOGGER.info("WorkflowDetailsRequest :"+workFlowDetailsRequest);
 			receiptRepository.pushUpdateDetailsToQueque(workFlowDetailsRequest);
 			}
+
+	private void startWokflow(String tenantId, Long receiptHeaderId){
+		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
+		
+		WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
+		workflowDetails.setBusinessKey(CollectionServiceConstants.BUSINESS_KEY);
+		workflowDetails.setTenantId(tenantId);
+		workflowDetails.setState("NEW");
+		workflowDetails.setAction("Create");
+		
+		try{
+			workflowService.start(workflowDetails);
+		}catch(Exception e){
+			LOGGER.error("starting workflow failed: "+e.getCause());
+		}
+		
+		
+	}
 
 }

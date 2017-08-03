@@ -11,7 +11,7 @@ public class SurrenderReasonContractRepository {
 	
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-instrument/surrenderreasons/search?";
+	public static final String SEARCH_URL = "/egf-instrument/surrenderreasons/_search?";
 
 	public SurrenderReasonContractRepository(@Value("${egf.instrument.host.url}") String hostUrl,
 			RestTemplate restTemplate) {

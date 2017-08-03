@@ -115,11 +115,6 @@ public class SurrenderReasonService {
 	}
 
 	public List<SurrenderReason> fetchRelated(List<SurrenderReason> surrenderreasons) {
-		if (surrenderreasons != null)
-			for (SurrenderReason surrenderReason : surrenderreasons) {
-				// fetch related items
-
-			}
 
 		return surrenderreasons;
 	}

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.BudgetGroup;
-import org.egov.egf.master.web.contract.BudgetGroupSearchContract;
+import org.egov.egf.master.domain.model.ChartOfAccount;
+import org.egov.egf.master.web.contract.ChartOfAccountSearchContract;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -31,27 +31,27 @@ public class ChartOfAccountESRepository {
 		this.elasticSearchQueryFactory = elasticSearchQueryFactory;
 	}
 
-	public Pagination<BudgetGroup> search(BudgetGroupSearchContract budgetGroupSearchContract) {
-		final SearchRequestBuilder searchRequestBuilder = getSearchRequest(budgetGroupSearchContract);
+	public Pagination<ChartOfAccount> search(ChartOfAccountSearchContract chartOfAccountSearchContract) {
+		final SearchRequestBuilder searchRequestBuilder = getSearchRequest(chartOfAccountSearchContract);
 		final SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
-		return mapToBudgetGroupList(searchResponse,budgetGroupSearchContract);
+		return mapToChartOfAccountList(searchResponse,chartOfAccountSearchContract);
 	}
 
 
     @SuppressWarnings("deprecation")
-	private Pagination<BudgetGroup> mapToBudgetGroupList(SearchResponse searchResponse,BudgetGroupSearchContract budgetGroupSearchContract) {
-		Pagination<BudgetGroup> page = new Pagination<>();
+	private Pagination<ChartOfAccount> mapToChartOfAccountList(SearchResponse searchResponse,ChartOfAccountSearchContract chartOfAccountSearchContract) {
+		Pagination<ChartOfAccount> page = new Pagination<>();
 		if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
 			return page;
 		}
-		List<BudgetGroup> budgetGroups = new ArrayList<BudgetGroup>();
-		BudgetGroup budgetGroup=null;
+		List<ChartOfAccount> chartOfAccounts = new ArrayList<ChartOfAccount>();
+		ChartOfAccount chartOfAccount=null;
 		for (SearchHit hit : searchResponse.getHits()) {
 			
 			ObjectMapper mapper = new ObjectMapper();
 			//JSON from file to Object
 			try {
-			    budgetGroup = mapper.readValue(hit.sourceAsString(), BudgetGroup.class);
+			    chartOfAccount = mapper.readValue(hit.sourceAsString(), ChartOfAccount.class);
 			} catch (JsonParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -63,18 +63,18 @@ public class ChartOfAccountESRepository {
 				e1.printStackTrace();
 			}
 		
-			budgetGroups.add(budgetGroup);
+			chartOfAccounts.add(chartOfAccount);
 		}
 		
 		page.setTotalResults(Long.valueOf(searchResponse.getHits().getTotalHits()).intValue());
-		page.setPagedData(budgetGroups);
+		page.setPagedData(chartOfAccounts);
 
 		return page;
 	}
 
-	private SearchRequestBuilder getSearchRequest(BudgetGroupSearchContract criteria) {
-		final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchBudgetGroup(criteria);
-		final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(BudgetGroup.class.getSimpleName().toLowerCase()).setTypes(BudgetGroup.class.getSimpleName().toLowerCase())
+	private SearchRequestBuilder getSearchRequest(ChartOfAccountSearchContract criteria) {
+		final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchChartOfAccount(criteria);
+		final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(ChartOfAccount.class.getSimpleName().toLowerCase()).setTypes(ChartOfAccount.class.getSimpleName().toLowerCase())
 				.addSort(DEFAULT_SORT_FIELD, SortOrder.ASC).setQuery(boolQueryBuilder);
 		return searchRequestBuilder;
 	}

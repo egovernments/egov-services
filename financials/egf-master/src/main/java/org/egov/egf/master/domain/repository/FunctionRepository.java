@@ -65,7 +65,7 @@ public class FunctionRepository {
     public Pagination<Function> search(FunctionSearch domain) {
 
         if (!financialConfigurationService.fetchDataFrom().isEmpty()
-                && !financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+                && financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
             FunctionSearchContract functionSearchContract = new FunctionSearchContract();
             ModelMapper mapper = new ModelMapper();
             mapper.map(domain, functionSearchContract);

@@ -16,8 +16,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.enums.BankAccountType;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
-import org.egov.egf.master.domain.model.BankBranch;
-import org.egov.egf.master.domain.model.BankBranchSearch;
+import org.egov.egf.master.domain.service.FinancialConfigurationService;
 import org.egov.egf.master.persistence.entity.BankAccountEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.BankAccountJdbcRepository;
@@ -42,6 +41,9 @@ public class BankAccountRepositoryTest {
 
     @InjectMocks
     private BankAccountRepository bankAccountRepository;
+
+    @Mock
+    private FinancialConfigurationService financialConfigurationService;
 
     @Test
     public void testFindById() {
@@ -91,12 +93,13 @@ public class BankAccountRepositoryTest {
         assertEquals(expectedResult.getActive(), actualResult.getActive());
         assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
     }
-    
+
     @Test
     public void testSearch() {
         Pagination<BankAccount> expectedResult = new Pagination<>();
         expectedResult.setPageSize(500);
         expectedResult.setOffset(0);
+        when(financialConfigurationService.fetchDataFrom()).thenReturn("db");
         when(bankAccountJdbcRepository.search(any(BankAccountSearch.class))).thenReturn(expectedResult);
         Pagination<BankAccount> actualResult = bankAccountRepository.search(getBankAccountSearch());
         assertEquals(expectedResult, actualResult);

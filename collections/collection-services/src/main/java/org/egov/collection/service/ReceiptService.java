@@ -238,49 +238,49 @@ public class ReceiptService {
 		Receipt receipt = new Receipt();
 		AuditDetails auditDetail = getAuditDetails(requestInfo.getUserInfo());
 		for (BillDetail billDetail : bill.getBillDetails()) {
-
-			Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
-			String instrumentId = instrumentRepository.createInstrument(
-					requestInfo, instrument);
-			if(null == instrumentId || instrumentId.isEmpty()){
-				Receipt emptyReceipt = new Receipt();
-				return emptyReceipt;
-			}
-			
-			billDetail.setCollectionType(CollectionType.COUNTER);
-			billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
-			billDetail.setReceiptDate(new Date().getTime());
-			billDetail.setReceiptNumber(generateReceiptNumber(requestInfo,
-					tenantId));
-			Map<String, Object> parametersMap;
-			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
-					billDetail.getBusinessService(), requestInfo, tenantId);
-
-			if (validateFundAndDept(businessDetailsRes)
-					&& validateGLCode(requestInfo, tenantId, billDetail)) {
-				BusinessDetailsRequestInfo businessDetails = businessDetailsRes
-						.getBusinessDetails().get(0);
-				parametersMap = prepareReceiptHeader(bill, tenantId,
-						auditDetail, billDetail, receiptHeaderId,
-						businessDetails);
-				
-				LOGGER.info("Rcpt no generated: " + billDetail.getReceiptNumber());
-				LOGGER.info("InstrumentId: " + instrumentId
-						+ " ReceiptHeaderId: " + receiptHeaderId);
-
-				Map<String, Object>[] parametersReceiptDetails = prepareReceiptDetails(
-						requestInfo, tenantId, billDetail, receiptHeaderId);
-				try {
-					receiptRepository.persistReceipt(parametersMap,
-							parametersReceiptDetails, receiptHeaderId,
-							instrumentId);
-				} catch (Exception e) {
-					LOGGER.error("Persisting receipt FAILED! ", e);
-					return receipt;
+			if(billDetail.getAmountPaid().longValueExact() > 0){
+				Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
+				String instrumentId = instrumentRepository.createInstrument(
+						requestInfo, instrument);
+				if(null == instrumentId || instrumentId.isEmpty()){
+					Receipt emptyReceipt = new Receipt();
+					return emptyReceipt;
 				}
-				LOGGER.info("user: "+requestInfo.getUserInfo().getId());
-				startWokflow(requestInfo, tenantId, receiptHeaderId);
-			}
+				
+				billDetail.setCollectionType(CollectionType.COUNTER);
+				billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
+				billDetail.setReceiptDate(new Date().getTime());
+				billDetail.setReceiptNumber(generateReceiptNumber(requestInfo,
+						tenantId));
+				Map<String, Object> parametersMap;
+				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
+						billDetail.getBusinessService(), requestInfo, tenantId);
+	
+				if (validateFundAndDept(businessDetailsRes)
+						&& validateGLCode(requestInfo, tenantId, billDetail)) {
+					BusinessDetailsRequestInfo businessDetails = businessDetailsRes
+							.getBusinessDetails().get(0);
+					parametersMap = prepareReceiptHeader(bill, tenantId,
+							auditDetail, billDetail, receiptHeaderId,
+							businessDetails);
+					
+					LOGGER.info("Rcpt no generated: " + billDetail.getReceiptNumber());
+					LOGGER.info("InstrumentId: " + instrumentId
+							+ " ReceiptHeaderId: " + receiptHeaderId);
+	
+					Map<String, Object>[] parametersReceiptDetails = prepareReceiptDetails(
+							requestInfo, tenantId, billDetail, receiptHeaderId);
+					try {
+						receiptRepository.persistReceipt(parametersMap,
+								parametersReceiptDetails, receiptHeaderId,
+								instrumentId);
+					} catch (Exception e) {
+						LOGGER.error("Persisting receipt FAILED! ", e);
+						return receipt;
+					}
+					startWokflow(requestInfo, tenantId, receiptHeaderId);
+				}
+		}
 		}
 		receipt.setBill(Arrays.asList(bill));
 		receipt.setAuditDetails(auditDetail);
@@ -522,10 +522,14 @@ public class ReceiptService {
 		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
 		
 		WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
-		workflowDetails.setBusinessKey(CollectionServiceConstants.BUSINESS_KEY);
+		
+		workflowDetails.setReceiptHeaderId(receiptHeaderId);
 		workflowDetails.setTenantId(tenantId);
 		workflowDetails.setState("NEW");
 		workflowDetails.setAction("Create");
+		workflowDetails.setAssignee(requestInfo.getUserInfo().getId());
+		workflowDetails.setInitiatorPosition(requestInfo.getUserInfo().getId());
+		workflowDetails.setRequestInfo(requestInfo);
 		
 		PositionSearchCriteriaWrapper positionSearchCriteriaWrapper = new PositionSearchCriteriaWrapper();
 		PositionSearchCriteria positionSearchCriteria = new PositionSearchCriteria();
@@ -534,8 +538,10 @@ public class ReceiptService {
 		positionSearchCriteriaWrapper.setPositionSearchCriteria(positionSearchCriteria);
 		positionSearchCriteriaWrapper.setRequestInfo(requestInfo);
 		
+		
 		try{
-			workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));		
+	//		workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));	
+	//		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper));
 			workflowService.start(workflowDetails);
 		}catch(Exception e){
 			LOGGER.error("Starting workflow failed: "+e.getCause());

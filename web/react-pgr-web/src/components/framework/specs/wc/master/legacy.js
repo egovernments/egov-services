@@ -395,7 +395,6 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-
           {
             "name": "waterTreatment",
             "jsonPath": "Connection.waterTreatment",

@@ -1,0 +1,10 @@
+{
+  "responseInfo": null,
+  "serviceTypeConfiguration": {
+    "tenantId" : "default",
+    "serviceCode" : "NOC",
+    "applicationFeesEnabled": false,
+    "notificationEnabled": true,
+    "slaEnabled": true
+  }
+}

@@ -33,7 +33,7 @@ var dat = {
 							"name": "description",
 							"jsonPath": "pipeSize.sizeInInch",
 							"label": "wc.create.groups.connectionDetails.hscPipeSizeType",
-							"pattern": "",
+							"pattern": "\\d{10}",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": true,

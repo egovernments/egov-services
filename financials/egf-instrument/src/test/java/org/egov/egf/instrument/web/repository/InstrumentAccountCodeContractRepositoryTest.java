@@ -39,7 +39,7 @@ public class InstrumentAccountCodeContractRepositoryTest {
 	public void test_find_by_id() throws Exception {
 
 		server.expect(once(),
-				requestTo("http://host/egf-instrument/instrumentaccountcodes/search?id=1&tenantId=default"))
+				requestTo("http://host/egf-instrument/instrumentaccountcodes/_search?id=1&tenantId=default"))
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withSuccess(resources.getFileContents("instrumentaccountcode/search_by_id_response.json"),
 						MediaType.APPLICATION_JSON_UTF8));

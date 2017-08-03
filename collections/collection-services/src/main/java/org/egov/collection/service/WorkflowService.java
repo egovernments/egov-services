@@ -105,7 +105,7 @@ public class WorkflowService {
 		try{
 			collectionProducer.producer(applicationProperties.getKafkaUpdateworkflowTopic(),
 					applicationProperties.getKafkaUpdateworkflowTopicKey(), workflowDetails);
-			
+			 	
 		}catch(Exception e){
 			logger.error("Pushing to Queue FAILED! ", e.getMessage());
 			return null;

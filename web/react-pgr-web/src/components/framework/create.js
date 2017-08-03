@@ -45,7 +45,7 @@ class Report extends Component {
   setDefaultValues (groups, dat) {
     for(var i=0; i<groups.length; i++) {
       for(var j=0; j<groups[i].fields.length; j++) {
-        if(groups[i].fields[j].defaultValue) {
+        if(typeof groups[i].fields[j].defaultValue != 'undefined') {
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
@@ -67,7 +67,7 @@ class Report extends Component {
     specifications =typeof(results)=="string"?JSON.parse(results):results;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     self.setLabelAndReturnRequired(obj);
-    initForm(reqRequired, []);
+    initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
@@ -525,11 +525,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: (requiredFields, patternFields) => {
+  initForm: (requiredFields) => {
     dispatch({
-      type: "SET_REQ_PAT_FIELDS",
-      requiredFields,
-      patternFields
+      type: "SET_REQUIRED_FIELDS",
+      requiredFields
     });
   },
   setMetaData: (metaData) => {

@@ -803,10 +803,11 @@ public class ValidatorUtils {
                 .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFiled).build();
     }
 
-    public List<ErrorResponse> validateStorageReservoirRequest(final StorageReservoirRequest storageReservoirRequest) {
+    public List<ErrorResponse> validateStorageReservoirRequest(final StorageReservoirRequest storageReservoirRequest,
+            final String mode) {
         final ErrorResponse errorResponse = new ErrorResponse();
         final List<ErrorResponse> errorResponseList = new ArrayList<>();
-        final Error error = getError(storageReservoirRequest);
+        final Error error = getError(storageReservoirRequest, mode);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponseList.add(errorResponse);
@@ -814,28 +815,34 @@ public class ValidatorUtils {
 
     }
 
-    private Error getError(final StorageReservoirRequest storageReservoirRequest) {
-        final List<ErrorField> errorFiled = getErrorFields(storageReservoirRequest);
+    private Error getError(final StorageReservoirRequest storageReservoirRequest, final String mode) {
+        final List<ErrorField> errorFiled = getErrorFields(storageReservoirRequest, mode);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_STORAGE_RESERVOIR_REQUEST_MESSAGE).errorFields(errorFiled).build();
     }
 
-    private List<ErrorField> getErrorFields(final StorageReservoirRequest storageReservoirRequest) {
+    private List<ErrorField> getErrorFields(final StorageReservoirRequest storageReservoirRequest, final String mode) {
         final List<ErrorField> errorFields = new ArrayList<>();
         for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir()) {
-            addStorageReservoirValidationErrors(storageReservoir, errorFields);
+            addStorageReservoirValidationErrors(storageReservoir, errorFields, mode);
             addTenantIdValidationErrors(storageReservoir.getTenantId(), errorFields);
         }
         return errorFields;
     }
 
     private void addStorageReservoirValidationErrors(final StorageReservoir storageReservoir,
-            final List<ErrorField> errorFields) {
-
+            final List<ErrorField> errorFields, final String mode) {
+        if (StringUtils.isNotBlank(mode))
+            if (storageReservoir.getCode() == null || storageReservoir.getCode().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                        .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
         if (storageReservoir.getName() == null || storageReservoir.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.STORAGE_RESERVOIR_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME).build();
+                    .message(WcmsConstants.STORAGE_RESERVOIR_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.STORAGE_RESERVOIR_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
         } else if (!storageReservoirService.getStorageReservoirByNameAndCode(storageReservoir.getCode(),
                 storageReservoir.getName(),
@@ -844,7 +851,8 @@ public class ValidatorUtils {
                     .message(WcmsConstants.STORAGERESERVOIR_UNQ_ERROR_MESSAGE)
                     .field(WcmsConstants.STORAGERESERVOIR_NAME_UNQ_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (storageReservoir.getReservoirType() == null || storageReservoir.getReservoirType().isEmpty()) {
+        }
+        if (storageReservoir.getReservoirType() == null || storageReservoir.getReservoirType().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.STORAGE_RESERVOIR_RESERVOIR_TYPE_MANDATORY_CODE)
                     .message(WcmsConstants.STORAGE_RESERVOIR_RESERVOIR_TYPE_MANADATORY_ERROR_MESSAGE)
@@ -880,10 +888,11 @@ public class ValidatorUtils {
 
     }
 
-    public List<ErrorResponse> validateTreatmentPlantRequest(final TreatmentPlantRequest treatmentPlantRequest) {
+    public List<ErrorResponse> validateTreatmentPlantRequest(final TreatmentPlantRequest treatmentPlantRequest,
+            final String mode) {
         final ErrorResponse errorResponse = new ErrorResponse();
         final List<ErrorResponse> errorResponseList = new ArrayList<>();
-        final Error error = getError(treatmentPlantRequest);
+        final Error error = getError(treatmentPlantRequest, mode);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponseList.add(errorResponse);
@@ -891,23 +900,30 @@ public class ValidatorUtils {
 
     }
 
-    private Error getError(final TreatmentPlantRequest treatmentPlantRequest) {
-        final List<ErrorField> errorFiled = getErrorFields(treatmentPlantRequest);
+    private Error getError(final TreatmentPlantRequest treatmentPlantRequest, final String mode) {
+        final List<ErrorField> errorFiled = getErrorFields(treatmentPlantRequest, mode);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_TREATMENT_PLANT_REQUEST_MESSAGE).errorFields(errorFiled).build();
     }
 
-    private List<ErrorField> getErrorFields(final TreatmentPlantRequest treatmentPlantRequest) {
+    private List<ErrorField> getErrorFields(final TreatmentPlantRequest treatmentPlantRequest, final String mode) {
         final List<ErrorField> errorFields = new ArrayList<>();
         for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants()) {
-            addTreatmentPlantValidationErrors(treatmentPlant, errorFields);
+            addTreatmentPlantValidationErrors(treatmentPlant, errorFields, mode);
             addTenantIdValidationErrors(treatmentPlant.getTenantId(), errorFields);
         }
         return errorFields;
     }
 
     private void addTreatmentPlantValidationErrors(final TreatmentPlant treatmentPlant,
-            final List<ErrorField> errorFields) {
+            final List<ErrorField> errorFields, final String mode) {
+        if (StringUtils.isNotBlank(mode))
+            if (treatmentPlant.getCode() == null || treatmentPlant.getCode().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                        .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
         if (treatmentPlant.getName() == null || treatmentPlant.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TREATMENT_PLANT_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.TREATMENT_PLANT_MANADATORY_ERROR_MESSAGE)
@@ -919,7 +935,8 @@ public class ValidatorUtils {
                     .message(WcmsConstants.TREATMENTPLANT_UNQ_ERROR_MESSAGE)
                     .field(WcmsConstants.TREATMENT_PLANT_NAME_UNQ_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (treatmentPlant.getPlantType() == null || treatmentPlant.getPlantType().isEmpty()) {
+        }
+        if (treatmentPlant.getPlantType() == null || treatmentPlant.getPlantType().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TREATMENT_PLANT_TYPE_MANDATORY_CODE)
                     .message(WcmsConstants.TREATMENT_PLANT_TYPE_MANADATORY_ERROR_MESSAGE)
@@ -935,6 +952,13 @@ public class ValidatorUtils {
                     .code(WcmsConstants.TREATMENT_STORAGERESERVOIR_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (treatmentPlantService.checkStorageReservoirExists(treatmentPlant.getStorageReservoirName(),
+                treatmentPlant.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_CODE)
+                    .message(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         } else if (treatmentPlant.getCapacity() == 0) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CAPACITY_MANDATORY_CODE)
@@ -956,15 +980,8 @@ public class ValidatorUtils {
                     .message(WcmsConstants.BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.BOUNDARY_LOCATION_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (treatmentPlantService.checkStorageReservoirExists(treatmentPlant.getStorageReservoirName(),
-                treatmentPlant.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_CODE)
-                    .message(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_FIELD_NAME).build();
-            errorFields.add(errorField);
-            return;
         }
+        return;
 
     }
 

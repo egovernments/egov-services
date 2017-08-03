@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.repository;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -51,6 +52,7 @@ import org.egov.common.contract.request.User;
 import org.egov.wcms.model.TreatmentPlant;
 import org.egov.wcms.repository.builder.TreatmentPlantQueryBuilder;
 import org.egov.wcms.repository.rowmapper.TreatmentPlantRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
 import org.egov.wcms.web.contract.TreatmentPlantRequest;
 import org.junit.Test;
@@ -78,20 +80,22 @@ public class TreatmentPlantRepositoryTest {
     @InjectMocks
     private TreatmentPlantRepository treatmentPlantRepository;
 
+    @Mock
+    private RestWaterExternalMasterService restExternalMasterService;
+
     @Test
     public void test_Should_Search_TreatmentPlant() {
-
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
         final TreatmentPlant treatmentPlant = getTreatmentPlant();
         treatmentPlantList.add(treatmentPlant);
 
-        when(treatmentPlantQueryBuilder.getQuery(any(TreatmentPlantGetRequest.class), any(List.class)))
-                .thenReturn("");
-        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(TreatmentPlantRowMapper.class)))
+        final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito.mock(TreatmentPlantGetRequest.class);
+        when(jdbcTemplate.query("query", preparedStatementValues.toArray(), treatmentPlantRowMapper))
                 .thenReturn(treatmentPlantList);
 
-        assertTrue(
-                treatmentPlantList.equals(treatmentPlantRepository.findForCriteria(new TreatmentPlantGetRequest())));
+        assertNotNull(
+                treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest));
     }
 
     @Test

@@ -11,7 +11,7 @@ export default class UiCheckBox extends Component {
 			case 'google': 
 				return (
 					<Checkbox 
-						style={{"display": (item.hide ? 'none' : 'block')}}
+						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						label={item.label + (item.isRequired ? " *" : "")} 
 						checked={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}

@@ -327,6 +327,7 @@ var dat = {
 			"defaultValue": [],
 			"url":""
           },
+		  
           {
             "name": "applicationType",
             "jsonPath": "Connection.applicationType",

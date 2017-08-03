@@ -100,7 +100,7 @@ public class StorageReservoirController {
         }
         log.info("Storage Reservoir Request::" + storageReservoirRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateStorageReservoirRequest(storageReservoirRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateStorageReservoirRequest(storageReservoirRequest,"");
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -120,7 +120,7 @@ public class StorageReservoirController {
         }
         log.info("storageReservoirRequest::" + storageReservoirRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateStorageReservoirRequest(storageReservoirRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateStorageReservoirRequest(storageReservoirRequest,"update");
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 

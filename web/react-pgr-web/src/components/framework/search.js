@@ -67,7 +67,7 @@ class Report extends Component {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     this.setLabelAndReturnRequired(obj);
-    initForm(reqRequired, []);
+    initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
@@ -136,7 +136,7 @@ class Report extends Component {
   }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
 
@@ -148,7 +148,7 @@ class Report extends Component {
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit"}} ui="google"/>
+            <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
             <br/>
             {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
           </div>
@@ -165,23 +165,15 @@ const mapStateToProps = state => ({
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
-  flag: state.report.flag
+  flag: state.report.flag,
+  isFormValid: state.frameworkForm.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: (reqRequired, patRequired) => {
+  initForm: (requiredFields) => {
     dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: reqRequired
-        },
-        pattern: {
-          current: [],
-          required: patRequired
-        }
-      }
+      type: "SET_REQUIRED_FIELDS",
+      requiredFields
     });
   },
   setMetaData: (metaData) => {

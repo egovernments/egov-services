@@ -67,7 +67,7 @@ class Report extends Component {
     specifications =typeof(results)=="string"?JSON.parse(results):results;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     self.setLabelAndReturnRequired(obj);
-    initForm(reqRequired, []);
+    initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
@@ -525,11 +525,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: (requiredFields, patternFields) => {
+  initForm: (requiredFields) => {
     dispatch({
-      type: "SET_REQ_PAT_FIELDS",
-      requiredFields,
-      patternFields
+      type: "SET_REQUIRED_FIELDS",
+      requiredFields
     });
   },
   setMetaData: (metaData) => {

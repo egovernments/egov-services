@@ -18,7 +18,7 @@ export default class UiAadharCard extends Component {
 						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}
-						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '/\d{10}/', item.requiredErrMsg, item.patternErrMsg)} />
+						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '\\d{10}', item.requiredErrMsg, item.patternErrMsg)} />
 				);
 		}
 	}

@@ -12,6 +12,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.domain.service.FinancialConfigurationService;
+import org.egov.egf.master.persistence.entity.BankEntity;
 import org.egov.egf.master.persistence.entity.FundEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.FundJdbcRepository;
@@ -160,6 +161,10 @@ public class FundRepository {
 
     }
 
+    public String getNextSequence(){
+        return fundJdbcRepository.getSequence(FundEntity.SEQUENCE_NAME);
+    }
+    
     public Fund findById(Fund fund) {
         FundEntity entity = fundJdbcRepository.findById(new FundEntity().toEntity(fund));
         return entity.toDomain();

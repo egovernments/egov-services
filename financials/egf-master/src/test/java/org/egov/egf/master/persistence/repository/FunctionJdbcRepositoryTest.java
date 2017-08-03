@@ -44,7 +44,7 @@ public class FunctionJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/clearFunction.sql" })
 	public void test_create() {
 
-		FunctionEntity function = FunctionEntity.builder().code("code").name("name").active(true).level(1)
+		FunctionEntity function = FunctionEntity.builder().id("46353532").code("code").name("name").active(true).level(1)
 				.isParent(false).parentId("1").build();
 		function.setTenantId("default");
 		FunctionEntity actualResult = functionJdbcRepository.create(function);

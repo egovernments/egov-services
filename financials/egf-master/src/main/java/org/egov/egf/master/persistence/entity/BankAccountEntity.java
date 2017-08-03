@@ -22,6 +22,7 @@ import lombok.Setter;
 @Builder
 public class BankAccountEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_bankaccount";
+	public static final String SEQUENCE_NAME = "seq_egf_bankaccount";
 	private String id;
 	private String bankBranchId;
 	private String chartOfAccountId;

@@ -9,6 +9,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailKey;
 import org.egov.egf.master.domain.model.AccountDetailKeySearch;
 import org.egov.egf.master.domain.model.AccountDetailType;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountDetailKeyRepository;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
@@ -87,6 +88,7 @@ public class AccountDetailKeyService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(AccountDetailKey b:accountdetailkeys)b.setId(accountDetailKeyRepository.getNextSequence());
 		return accountdetailkeys;
 
 	}

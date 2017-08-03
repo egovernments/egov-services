@@ -20,6 +20,7 @@ import lombok.Setter;
 @Builder
 public class SupplierEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_supplier";
+	public static final String SEQUENCE_NAME = "seq_egf_supplier";
 	private String id;
 	private String code;
 	private String name;

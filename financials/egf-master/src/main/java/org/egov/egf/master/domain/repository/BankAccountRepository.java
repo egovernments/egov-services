@@ -39,6 +39,10 @@ public class BankAccountRepository {
 
     }
 
+    public String getNextSequence(){
+        return bankAccountJdbcRepository.getSequence(BankAccountEntity.SEQUENCE_NAME);
+    }
+    
     @Transactional
     public BankAccount save(BankAccount bankAccount) {
         BankAccountEntity entity = bankAccountJdbcRepository.create(new BankAccountEntity().toEntity(bankAccount));

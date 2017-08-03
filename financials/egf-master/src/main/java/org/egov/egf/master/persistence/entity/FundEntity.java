@@ -60,6 +60,7 @@ import lombok.Setter;
 public class FundEntity extends AuditableEntity {
 
 	public static final String TABLE_NAME = "egf_fund";
+	public static final String SEQUENCE_NAME = "seq_egf_fund";
 	public static final String ALIAS = "fund";
 
 	private static final long serialVersionUID = 7977534010758407945L;

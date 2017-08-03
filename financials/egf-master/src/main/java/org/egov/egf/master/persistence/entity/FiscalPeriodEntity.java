@@ -21,6 +21,7 @@ import lombok.Setter;
 @Builder
 public class FiscalPeriodEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_fiscalperiod";
+	public static final String SEQUENCE_NAME = "seq_egf_fiscalperiod";
 	private String id;
 	private String name;
 	private String financialYearId;

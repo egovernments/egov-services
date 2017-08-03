@@ -96,6 +96,7 @@ public class SupplierService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(Supplier s:suppliers)s.setId(supplierRepository.getNextSequence());
 		return suppliers;
 
 	}

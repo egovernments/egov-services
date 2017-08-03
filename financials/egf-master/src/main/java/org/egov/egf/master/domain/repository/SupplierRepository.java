@@ -38,6 +38,10 @@ public class SupplierRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return supplierJdbcRepository.getSequence(SupplierEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public Supplier save(Supplier supplier) {

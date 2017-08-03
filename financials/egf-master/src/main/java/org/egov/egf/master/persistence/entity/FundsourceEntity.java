@@ -20,6 +20,7 @@ import lombok.Setter;
 @Builder
 public class FundsourceEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_fundsource";
+    public static final String SEQUENCE_NAME = "seq_egf_fundsource";
     private String id;
     private String code;
     private String name;

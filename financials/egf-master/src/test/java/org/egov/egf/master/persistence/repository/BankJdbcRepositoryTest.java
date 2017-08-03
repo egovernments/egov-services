@@ -122,7 +122,7 @@ public class BankJdbcRepositoryTest {
 
     private Bank getBankDomain() {
         Bank bank = new Bank();
-        bank.setId("1");
+        bank.setId("134235");
         bank.setCode("code");
         bank.setName("name");
         bank.setDescription("description");

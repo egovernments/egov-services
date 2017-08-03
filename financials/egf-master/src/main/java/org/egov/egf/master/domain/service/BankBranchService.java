@@ -85,6 +85,7 @@ public class BankBranchService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(BankBranch b:bankbranches)b.setId(bankBranchRepository.getNextSequence());
 		return bankbranches;
 
 	}

@@ -9,6 +9,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountEntity;
 import org.egov.egf.master.domain.model.AccountEntitySearch;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.domain.repository.AccountEntityRepository;
 import org.egov.egf.master.web.requests.AccountEntityRequest;
@@ -87,6 +88,7 @@ public class AccountEntityService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(AccountEntity b:accountentities)b.setId(accountEntityRepository.getNextSequence());
 		return accountentities;
 
 	}

@@ -160,7 +160,12 @@ var localationData = {
   "wc.create.sizeInMilimeter":"Size In Milimeter",
   "wc.view.PipeSize.title":"View Pipe Size",
   "wc.create.mm":"H.S.C Pipe Size (mm)",
-  "wc.update.pipesize.title":"Update Pipe Size"
+  "wc.update.pipesize.title":"Update Pipe Size",
+  "wc.create.propertyCategory.title":"Create Property Category",
+  "wc.create.categoryType":"Category Type",
+  "wc.search.PropertyTypeCategoryType.title":"Search Property Type Category Type",
+  "wc.view.PropertyTypeCategoryTypes.title":"View Property Type Category Type",
+  "wc.update.PropertyTypeCategoryType.title":"Update Property Type Category Type"
 }
 
 export function translate(locale_text){

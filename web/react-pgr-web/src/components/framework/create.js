@@ -290,6 +290,80 @@ class Report extends Component {
     return _.get(this.props.formData, path) || "";
   }
 
+  hideField = (_mockData, hideObject, reset) => {
+    let {moduleName, actionName} = this.props;
+    if(hideObject.isField) {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+          if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? false : true;
+          }
+        }
+      }
+    } else {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+          _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  showField = (_mockData, showObject, reset) => {
+    let {moduleName, actionName} = this.props;
+    if(showObject.isField) {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+          if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? true : false;
+          }
+        }
+      }
+    } else {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+          _mockData[moduleName + "." + actionName].groups[i].hide = reset ? true : false;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  checkIfHasShowHideFields = (jsonPath, val) => {
+    let _mockData = {...this.props.mockData};
+    let {moduleName, actionName, setMockData} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
+          for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z]);
+              }
+            } else {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    setMockData(_mockData);
+  }
+
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
       let {getVal}=this;
       let {handleChange,mockData,setDropDownData}=this.props;
@@ -297,6 +371,7 @@ class Report extends Component {
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      this.checkIfHasShowHideFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
       _.forEach(depedants, function(value,key) {

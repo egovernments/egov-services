@@ -11,6 +11,7 @@ export default class UiEmailField extends Component {
 			case 'google': 
 				return (
 					<DatePicker 
+						style={{"display": (item.hide ? 'none' : 'block')}}
 						hintText={item.label + (item.isRequired ? " *" : "")} 
 						disabled={item.isDisabled} 
 						value={this.props.getVal(item.jsonPath)}

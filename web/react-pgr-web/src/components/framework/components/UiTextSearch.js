@@ -10,7 +10,7 @@ export default class UiTextSearch extends Component {
 		switch (this.props.ui) {
 			case 'google': 
 				return (
-					<div style={{position: 'relative', display: 'inline'}}>
+					<div style={{position: 'relative', display: 'inline-block'}}>
 						<TextField 
 							style={{"display": (item.hide ? 'none' : 'block')}}
 							fullWidth={true} 

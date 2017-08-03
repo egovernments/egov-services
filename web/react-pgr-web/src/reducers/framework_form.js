@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {translate} from '../components/common/common';
 
 const defaultState = {
     form: {},
@@ -32,7 +33,7 @@ export default (state = defaultState, action) => {
         case "HANDLE_CHANGE_FRAMEWORK":
             var currentState = { ...state };
             _.set(currentState.form, action.property, action.value);
-            var validationDat = validate(action.value, action.isRequired, currentState.form, currentState.requiredFields);
+            var validationDat = validate(action.property, action.value, action.isRequired, currentState.form, currentState.requiredFields, action.pattern, action.patternErrMsg);
             //Set field errors
             currentState.fieldErrors = {
               ...state.fieldErrors,
@@ -84,13 +85,18 @@ export default (state = defaultState, action) => {
     }
 }
 
-function validate(value, isRequired, form, requiredFields) {
-  let errorText = isRequired && !value ? 'Required' : '';
+function validate(property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
+  let errorText = isRequired && !value ? translate('ui.framework.required') : '';
   let isFormValid = true;
   for(var i=0; i<requiredFields.length; i++) {
     if(!_.get(form, requiredFields[i])) {
       isFormValid = false;
     }
+  }
+
+  if(pattern && _.get(form, property) && !new RegExp(pattern).test(_.get(form, property))) {
+    errorText = patErrMsg ? translate(patErrMsg) : translate('ui.framework.patternMessage');
+    isFormValid = false;
   }
 
   return {

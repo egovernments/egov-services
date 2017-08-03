@@ -1,4 +1,6 @@
 var localationData = {
+  "ui.framework.required": "Required",
+  "ui.framework.patternMessage": "Match the above pattern",
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
   "reports.pgr.wardtype":"Ward Type",

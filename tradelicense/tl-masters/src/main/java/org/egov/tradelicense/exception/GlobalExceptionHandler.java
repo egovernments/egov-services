@@ -65,6 +65,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorRes processValidationError(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<String, String>();
+        
         for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
@@ -90,6 +91,7 @@ public class GlobalExceptionHandler {
 
 	public ErrorRes unknownException(Exception ex, WebRequest req) {
 		if (ex instanceof InvalidInputException) {
+			
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
@@ -101,6 +103,7 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof DuplicateIdException) {
+			
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateCode(), null,
 					null);
 			ResponseInfo responseInfo = new ResponseInfo();
@@ -113,6 +116,7 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidRangeException) {
+			
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidRangeCode(), null,
 					null);
 			ResponseInfo responseInfo = new ResponseInfo();
@@ -125,6 +129,7 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		} else {
+			
 			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
 					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();

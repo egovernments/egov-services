@@ -55,11 +55,16 @@ public class FeeMatrixHelper {
 		try {
 			FinancialYearContractResponse financialYearContractResponse = restTemplate.postForObject(uri,
 					requestInfoWrapper, FinancialYearContractResponse.class);
+			
 			if (financialYearContractResponse != null) {
+				
 				List<FinancialYearContract> FinancialYearContracts = financialYearContractResponse.getFinancialYears();
+				
 				if (FinancialYearContracts == null || FinancialYearContracts.size() == 0) {
+					
 					throw new InvalidInputException(requestInfoWrapper.getRequestInfo());
 				}
+				
 			} else {
 				throw new InvalidInputException(requestInfoWrapper.getRequestInfo());
 			}

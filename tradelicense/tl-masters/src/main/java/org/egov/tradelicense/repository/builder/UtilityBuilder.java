@@ -56,7 +56,7 @@ public class UtilityBuilder {
 	public static String getFeeMatrixValidationQuery(String tableName, String tenantId, String applicationType,
 			Long categoryId, Long subCategoryId, String financialYear, Long id) {
 
-		StringBuffer feeMatrixValidationQuery = new StringBuffer("select count(*) from " + tableName + " where");
+		StringBuffer feeMatrixValidationQuery = new StringBuffer("select count(*) from " + tableName + " where 1=1 ");
 
 		if (tenantId != null) {
 			feeMatrixValidationQuery.append(" tenantId = '" + tenantId + "'");

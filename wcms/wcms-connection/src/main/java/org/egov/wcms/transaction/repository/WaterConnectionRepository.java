@@ -137,13 +137,15 @@ public class WaterConnectionRepository {
                         || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
                     statement.setString(27, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
                     statement.setString(28, waterConnectionRequest.getConnection().getConsumerNumber());
+                    statement.setLong(29, waterConnectionRequest.getConnection().getExecutionDate());
+                    statement.setInt(30, waterConnectionRequest.getConnection().getNoOfFlats());
+
                 }
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
                     statement.setLong(29, waterConnectionRequest.getConnection().getParentConnectionId());
 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
-
                 return statement;
             }, keyHolder);
 
@@ -153,7 +155,7 @@ public class WaterConnectionRepository {
             LOGGER.error("Inserting Connection Object failed!", e);
         }
 
-        if (connectionId > 0 && !waterConnectionRequest.getConnection().getIsLegacy()) {
+        if (connectionId > 0 ) {
             final List<Object[]> values = new ArrayList<>();
             for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments()) {
                 document.setDocumentId(Integer.parseInt(document.getDocument()));
@@ -210,7 +212,6 @@ public class WaterConnectionRepository {
             }
         }
 
-        LOGGER.info("Insertion to document owner table left unattempted upon failure of connection object insertion.");
         return waterConnectionRequest;
 
     }

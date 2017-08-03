@@ -480,7 +480,11 @@ definitions:
       meterCost:
         type: integer
         format : int64
-        description: company name of the meter.  
+        description: company name of the meter.
+      meterSlNo:
+        type: integer
+        format: int64
+        description: Meter SerialNumber.
       initialMeterReading: 
         type: string
         description: intial reading of the meter.
@@ -508,10 +512,9 @@ definitions:
         type: integer
         format: int64
         description: unique identifier of Meter object
-      meterSlNo:
-        type: integer
-        format: int64
-        description: Meter SerialNumber.
+      readingDate:
+       type : integer
+       description: readingDate of Every Month
       reading:
         type: integer
         format: long
@@ -600,8 +603,7 @@ definitions:
         type: integer
         description: holds identifier of previous connection if current connection request is for additional water connection.
       legacyConsumerNumber:
-        type: integer
-        format: int64
+        type: string
         description: legacy connection consumer number for existing consumer.
       acknowledgmentNumber:
         type: string
@@ -609,6 +611,13 @@ definitions:
       estimationNumber:
         type: string
         description: estimation Number generated.
+      executionDate:
+        type: integer
+        description: executiondate of connection
+      noOfFlats:
+        type: integer
+        description: If user select PropertyType as Residential/Non-Residential required No of flats.
+        
       workOrderNumber:
         type: string
         description: workOrderNumber generated once Officer submits Generate WOrkorder .

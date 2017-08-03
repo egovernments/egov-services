@@ -84,10 +84,12 @@ public class Connection {
 
     private String pipesizeId;
     
-    private long executionDate;
+    private Long executionDate;
 
     @NotNull
     private String supplyType;
+    
+    private int noOfFlats;
 
     private String supplyTypeId;
 

@@ -41,6 +41,7 @@ package org.egov.collection.indexer.consumer;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.indexer.contract.ReceiptRequest;
 import org.egov.collection.indexer.repository.ElasticSearchRepository;
 import org.egov.collection.indexer.repository.contract.ReceiptRequestDocument;
@@ -53,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@Slf4j
 public class IndexerListener {
 
 
@@ -73,6 +75,7 @@ public class IndexerListener {
     public void listen(HashMap<String, Object> receiptRequestMap) {
         ReceiptRequest receiptRequest = objectMapper.convertValue(receiptRequestMap, ReceiptRequest.class);
         final List<ReceiptRequestDocument> documents = documentService.enrich(receiptRequest);
+        log.debug("Documents pushed to elastic search : "+ documents.size() + " and ",documents);
         elasticSearchRepository.index(documents);
     }
 }

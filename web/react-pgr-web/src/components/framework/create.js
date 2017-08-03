@@ -484,7 +484,7 @@ class Report extends Component {
   }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     return (
       <div className="Report">
@@ -504,8 +504,8 @@ class Report extends Component {
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>}
-            {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit"}} ui="google"/>}
+            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
+            {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             <br/>
           </div>
         </form>
@@ -520,23 +520,15 @@ const mapStateToProps = state => ({
   moduleName:state.framework.moduleName,
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
-  fieldErrors: state.frameworkForm.fieldErrors
+  fieldErrors: state.frameworkForm.fieldErrors,
+  isFormValid: state.frameworkForm.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: (reqRequired, patRequired) => {
+  initForm: (requiredFields, patRequired) => {
     dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: reqRequired
-        },
-        pattern: {
-          current: [],
-          required: patRequired
-        }
-      }
+      type: "SET_REQUIRED_FIELDS",
+      requiredFields
     });
   },
   setMetaData: (metaData) => {
@@ -555,7 +547,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_ACTION_NAME", actionName})
   },
   handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
-    dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
+    dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});

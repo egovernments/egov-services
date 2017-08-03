@@ -90,7 +90,7 @@ public class WaterConnectionRepository {
 
         final String query = insertQuery;
 
-        long connectionId = 0L;
+        Long connectionId = 0L;
         try {
             final KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update((PreparedStatementCreator) connection -> {
@@ -115,8 +115,8 @@ public class WaterConnectionRepository {
                 statement.setDate(16, new Date(new java.util.Date().getTime()));
                 statement.setDate(17, new Date(new java.util.Date().getTime()));
                 statement.setString(18, waterConnectionRequest.getConnection().getPropertyIdentifier());
-                statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageTypeId());
-                statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyTypeId());
+                statement.setString(19, "1");
+                statement.setString(20,"1");
                 statement.setString(21, "AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
                 statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
 
@@ -173,34 +173,53 @@ public class WaterConnectionRepository {
             } catch (final Exception e) {
                 LOGGER.error("Inserting documents failed!", e);
             }
-        } else if (connectionId > 0 && waterConnectionRequest.getConnection().getBillingType() != null &&
-                waterConnectionRequest.getConnection().getBillingType().equals(BillingType.METERED) &&
+        }  if (connectionId > 0 && waterConnectionRequest.getConnection().getBillingType() != null &&
+                waterConnectionRequest.getConnection().getBillingType().equals("METERED") &&
                 !waterConnectionRequest.getConnection().getMeter().isEmpty()) {
 
-            final String insertMeterQuery = WaterConnectionQueryBuilder.insertMeterQuery();
-            try {
-                final Object[] obj = new Object[] { waterConnectionRequest.getConnection().getMeter().get(0).getMeterMake(),
-                        connectionId, waterConnectionRequest.getConnection().getMeter().get(0).getInitialMeterReading(),
-                        waterConnectionRequest.getConnection().getTenantId(),
-                        waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
-                        waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()) };
+            Long meterId=null;
+                final String insertestQuery = WaterConnectionQueryBuilder.insertMeterQuery();
+                try {
+            
+                    final KeyHolder keyHolder = new GeneratedKeyHolder();
+                    jdbcTemplate.update((PreparedStatementCreator) connectiontemp -> {
+                        final String[] returnValColumn = new String[] { "id" };
+                        final PreparedStatement statement = connectiontemp.prepareStatement(insertestQuery,
+                                returnValColumn);
+                        statement.setLong(1, waterConnectionRequest.getConnection().getId());
+                        statement.setString(2, waterConnectionRequest.getConnection().getMeter().get(0).getMeterMake());
+                        statement.setString(3, waterConnectionRequest.getConnection().getMeter().get(0).getInitialMeterReading());
+                        
+                        statement.setString(4, waterConnectionRequest.getConnection().getMeter().get(0).getMeterSlNo());
+                        statement.setString(5,  waterConnectionRequest.getConnection().getMeter().get(0).getMeterCost());  
+                        statement.setString(6, waterConnectionRequest.getConnection().getTenantId());
+                        statement.setLong(7, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                        statement.setDate(8, new Date(new java.util.Date().getTime()));
 
-                jdbcTemplate.update(insertMeterQuery, obj);
-            } catch (final Exception e) {
-                LOGGER.error("Inserting Meter failed!", e);
-            }
+                        statement.setLong(9, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                        statement.setDate(10, new Date(new java.util.Date().getTime()));
+                        
+                        return statement;
+                    }, keyHolder);
+
+                    meterId = keyHolder.getKey().longValue();
+                    
+                    
+                } catch (final Exception e) {LOGGER.error("Inserting meter failed!", e);
+                    
+                }
+
             if (!waterConnectionRequest.getConnection().getMeter().get(0).getMeterReadings().isEmpty()) {
                 final String insertMeterReadingQuery = WaterConnectionQueryBuilder.insertMeterReadingQuery();
                 final List<Object[]> values = new ArrayList<>();
                 for (final MeterReading meterReading : waterConnectionRequest.getConnection().getMeter().get(0)
                         .getMeterReadings()) {
 
-                    final Object[] obj = { connectionId,
-                            meterReading.getReading(), waterConnectionRequest.getConnection().getTenantId(),
-                            waterConnectionRequest.getRequestInfo().getUserInfo().getId(),
-                            meterReading.getAuditDetails().getCreatedDate(),
-                            waterConnectionRequest.getRequestInfo().getUserInfo().getId(),
-                            meterReading.getAuditDetails().getCreatedDate() };
+                    final Object[] obj = { meterId,
+                            meterReading.getReading(),
+                            meterReading.getReadingDate(),waterConnectionRequest.getConnection().getTenantId(),
+                            waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                            waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()) };
 
                     values.add(obj);
                 }

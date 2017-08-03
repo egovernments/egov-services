@@ -236,14 +236,12 @@ public class ReceiptService {
 			Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
 			String instrumentId = instrumentRepository.createInstrument(
 					requestInfo, instrument);
-			LOGGER.info("ReceiptHeaderId: " + receiptHeaderId);
-
+			
 			billDetail.setCollectionType(CollectionType.COUNTER);
 			billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 			billDetail.setReceiptDate(new Date().getTime());
 			billDetail.setReceiptNumber(generateReceiptNumber(requestInfo,
 					tenantId));
-			LOGGER.info("Rcpt no generated: " + billDetail.getReceiptNumber());
 			Map<String, Object> parametersMap;
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billDetail.getBusinessService(), requestInfo, tenantId);
@@ -255,8 +253,9 @@ public class ReceiptService {
 				parametersMap = prepareReceiptHeader(bill, tenantId,
 						auditDetail, billDetail, receiptHeaderId,
 						businessDetails);
-
-				LOGGER.info("InstrumentId: " + instrument
+				
+				LOGGER.info("Rcpt no generated: " + billDetail.getReceiptNumber());
+				LOGGER.info("InstrumentId: " + instrumentId
 						+ " ReceiptHeaderId: " + receiptHeaderId);
 
 				Map<String, Object>[] parametersReceiptDetails = prepareReceiptDetails(

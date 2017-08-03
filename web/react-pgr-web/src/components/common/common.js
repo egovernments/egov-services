@@ -167,7 +167,8 @@ var localationData = {
   "wc.create.categoryType":"Category Type",
   "wc.search.PropertyTypeCategoryType.title":"Search Property Type Category Type",
   "wc.view.PropertyTypeCategoryTypes.title":"View Property Type Category Type",
-  "wc.update.PropertyTypeCategoryType.title":"Update Property Type Category Type"
+  "wc.update.PropertyTypeCategoryType.title":"Update Property Type Category Type",
+  "wc.create.supplyType.title":"Create Supply Type"
 }
 
 export function translate(locale_text){

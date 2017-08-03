@@ -295,37 +295,32 @@ public class ReceiptRepository {
 		jdbcTemplate.update(queryString, new Object[] {instrumentId, receiptHeaderId,tenantId});
 	}
 
-	public Boolean updateReceipt(ReceiptReq receiptRequest) {
-		Receipt receipt = receiptRequest.getReceipt().get(0);
-		BillDetail billDetail = receipt.getBill().get(0).getBillDetails()
-				.get(0);
-
+	public WorkflowDetailsRequest updateReceipt(WorkflowDetailsRequest workFlowDetailsRequest) {
 		String updateQuery = receiptDetailQueryBuilder.getQueryForUpdate(
-				receipt.getStateId(), billDetail.getStatus(), new Long(
-						billDetail.getId()), billDetail.getTenantId());
+				workFlowDetailsRequest.getStateId(), workFlowDetailsRequest.getStatus(), 
+				workFlowDetailsRequest.getReceiptHeaderId(), workFlowDetailsRequest.getTenantId());
 		PreparedStatementSetter pss = new PreparedStatementSetter() {
 
 			@Override
 			public void setValues(PreparedStatement ps) throws SQLException {
 
 				int i = 1;
-				if (receipt.getStateId() != null)
-					ps.setLong(i++, receipt.getStateId());
+				if (String.valueOf(workFlowDetailsRequest.getStateId()) != null)
+					ps.setLong(i++, workFlowDetailsRequest.getStateId());
 
-				if (billDetail.getStatus() != null)
-					ps.setString(i++, billDetail.getStatus());
+				if (workFlowDetailsRequest.getStatus() != null)
+					ps.setString(i++, workFlowDetailsRequest.getStatus());
 
-				if (receiptRequest.getRequestInfo().getUserInfo().getId() != null)
-					ps.setLong(i++, receiptRequest.getRequestInfo()
+				if (workFlowDetailsRequest.getRequestInfo().getUserInfo().getId() != null)
+					ps.setLong(i++, workFlowDetailsRequest.getRequestInfo()
 							.getUserInfo().getId());
 
 				ps.setLong(i++, new Date().getTime());
 
-				if (billDetail.getId() != null)
-					ps.setLong(i++, new Long(billDetail.getId()));
-				if (billDetail.getTenantId() != null)
-					ps.setString(i++, billDetail.getTenantId());
-
+				if (String.valueOf(workFlowDetailsRequest.getReceiptHeaderId())!= null)
+					ps.setLong(i++, new Long(workFlowDetailsRequest.getReceiptHeaderId()));
+				if (workFlowDetailsRequest.getTenantId() != null)
+					ps.setString(i++, workFlowDetailsRequest.getTenantId());
 			}
 		};
 		try {
@@ -333,19 +328,19 @@ public class ReceiptRepository {
 		} catch (Exception e) {
 			logger.error(
 					"could not update status and stateId in db for ReceiptRequest:",
-					receiptRequest);
-			return false;
+					workFlowDetailsRequest);
+			return null;
 		}
-		return true;
+		return workFlowDetailsRequest;
 	}
 
-	public void pushUpdateDetailsToQueque(ReceiptReq receiptRequest) {
+	public void pushUpdateDetailsToQueque(WorkflowDetailsRequest workFlowDetailsRequest) {
 		logger.info("Pushing updateReceiptDetails to queue");
 		try {
 			collectionProducer.producer(
 					applicationProperties.getUpdateReceiptTopicName(),
 					applicationProperties.getUpdateReceiptTopicKey(),
-					receiptRequest);
+					workFlowDetailsRequest);
 		} catch (Exception e) {
 			logger.error("Pushing To Queue Failed! ", e.getMessage());
 		}

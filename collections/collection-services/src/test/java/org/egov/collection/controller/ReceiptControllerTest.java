@@ -63,6 +63,7 @@ import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.service.ReceiptService;
+import org.egov.collection.service.WorkflowService;
 import org.egov.collection.util.ReceiptReqValidator;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
@@ -103,6 +104,9 @@ public class ReceiptControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@MockBean
+	WorkflowService workFlowService;
 
 	@Test
 	public void test_should_search_receipts_as_per_criteria() throws Exception {

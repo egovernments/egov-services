@@ -58,7 +58,6 @@ import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
@@ -74,6 +73,7 @@ import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.ChartOfAccount;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
@@ -467,19 +467,15 @@ public class ReceiptService {
 				.pushReceiptCancelDetailsToQueue(receiptRequest);
 	}
 
-	public WorkflowDetails updateStateId(WorkflowDetails workflowDetails) {
-		LOGGER.info("WorkflowDetails: " + workflowDetails.toString());
+	public WorkflowDetailsRequest updateStateId(WorkflowDetailsRequest workflowDetailsRequest) {
+		LOGGER.info("WorkflowDetailsRequest: " + workflowDetailsRequest.toString());
 		try {
-			pushUpdateReceiptDetailsToQueque(
-					workflowDetails.getReceiptHeaderId(),
-					workflowDetails.getStateId(), workflowDetails.getStatus(),
-					workflowDetails.getTenantId(),
-					workflowDetails.getRequestInfo());
+			pushUpdateReceiptDetailsToQueque(workflowDetailsRequest);
 		} catch (Exception e) {
 			LOGGER.error("Couldn't update stateId and status" + e);
 			return null;
 		}
-		return workflowDetails;
+		return workflowDetailsRequest;
 	}
 
 	public List<User> getReceiptCreators(final RequestInfo requestInfo,
@@ -491,26 +487,8 @@ public class ReceiptService {
 		return receiptRepository.getReceiptStatus(tenantId);
 	}
 
-	public void pushUpdateReceiptDetailsToQueque(Long id, Long stateId,
-			String status, String tenantId, RequestInfo requestInfo)
-			throws ParseException {
-		ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria
-				.builder().tenantId(tenantId).ids(Arrays.asList(id)).build();
-		List<Receipt> receipts = receiptRepository.findAllReceiptsByCriteria(
-				receiptSearchCriteria).toDomainContract();
-		receipts.get(0).getBill().get(0).getBillDetails().get(0)
-				.setStatus(status);
-		receipts.get(0).setStateId(stateId);
-		ReceiptReq receiptRequest = new ReceiptReq();
-		receiptRequest.setRequestInfo(requestInfo);
-		receiptRequest.setReceipt(receipts);
-		receiptRepository.pushUpdateDetailsToQueque(receiptRequest);
-	}
-
-	public Boolean updateReceipt(ReceiptReq receiptRequest) {
-		LOGGER.info("ReceiptRequest:" + receiptRequest);
-		return receiptRepository.updateReceipt(receiptRequest);
-
+	public void updateReceipt(WorkflowDetailsRequest workflowDetails){
+		receiptRepository.updateReceipt(workflowDetails);
 	}
 
 	public List<BusinessDetailsRequestInfo> getBusinessDetails(
@@ -522,5 +500,10 @@ public class ReceiptService {
 			final String tenantId, final RequestInfo requestInfo) {
 		return receiptRepository.getChartOfAccounts(tenantId, requestInfo);
 	}
+	
+	public void pushUpdateReceiptDetailsToQueque(WorkflowDetailsRequest workFlowDetailsRequest) {
+		   LOGGER.info("WorkflowDetailsRequest :"+workFlowDetailsRequest);
+			receiptRepository.pushUpdateDetailsToQueque(workFlowDetailsRequest);
+			}
 
 }

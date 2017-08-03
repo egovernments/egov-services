@@ -302,7 +302,7 @@ public class ReceiptServiceTest {
 		assertEquals(Arrays.asList(getReceipt()), receipt);
 	}
 
-	@Test
+/*	@Test
 	public void test_should_be_able_to_push_update_receiptRequest_to_queue()
 			throws ParseException {
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
@@ -330,7 +330,7 @@ public class ReceiptServiceTest {
 		Boolean value = receiptService
 				.updateReceipt(getReceiptRequestForUpdate());
 		assertEquals(false, value);
-	}
+	}*/
 
 	@Test
 	public void test_should_be_able_to_return_true_if_voucherCreation_is_true_and_receiptDate_is_greater_than_voucherCutOffDate() {

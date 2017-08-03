@@ -4,9 +4,9 @@ package org.egov.collection.consumer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +41,10 @@ public class CollectionConsumer {
 				recieptService.cancelReceiptBeforeRemittance(objectMapper.convertValue(record, ReceiptReq.class));
 			}else if(topic.equals(applicationProperties.getKafkaUpdateStateIdTopic())){
 				logger.info("Consuming updateStateId request");
-				recieptService.updateStateId(objectMapper.convertValue(record, WorkflowDetails.class));
+				recieptService.updateStateId(objectMapper.convertValue(record, WorkflowDetailsRequest.class));
 			}else if(topic.equals(applicationProperties.getUpdateReceiptTopicName())){
 				logger.info("Consuming update Receipt request");
-				recieptService.updateReceipt(objectMapper.convertValue(record, ReceiptReq.class));
+				recieptService.updateReceipt(objectMapper.convertValue(record, WorkflowDetailsRequest.class));
 			}
 			
 		} catch (final Exception e) {

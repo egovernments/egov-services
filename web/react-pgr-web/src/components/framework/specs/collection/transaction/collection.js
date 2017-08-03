@@ -169,7 +169,7 @@ var chequeOrDD={
 var dat = {
   "collection.transaction": {
     "numCols": "6",
-    "url": "/billing-service/bill/_generate?tenantId=default&consumerCode=consumerCode&businessService=businessService",
+    "url": "/billing-service/bill/_generate",
     "tenantIdRequired": true,
     "objectName": "search",
     "groups": [{

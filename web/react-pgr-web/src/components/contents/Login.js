@@ -125,9 +125,6 @@ class Login extends Component {
        this.signUp = this.signUp.bind(this);
    }
 
-   componentWillMount() {
-
-   }
 
    componentDidMount() {
      let {initForm, setLoadingStatus, setHome} = this.props;
@@ -137,17 +134,6 @@ class Login extends Component {
      this.handleLocaleChange(this.state.locale);
    }
 
-   componentWillUnmount() {
-
-   }
-
-   componentWillUpdate() {
-
-   }
-
-   componentDidUpdate(prevProps, prevState) {
-
-   }
 
    handleLocaleChange = (value) => {
      //console.log(value);
@@ -166,8 +152,8 @@ class Login extends Component {
    }
 
    loginRequest (e) {
-	var current = this;
-    this.props.setLoadingStatus('loading');
+	    var current = this;
+      this.props.setLoadingStatus('loading');
 	   e.preventDefault();
       var self = this, props = this.props;
       let {setActionList}=this.props;
@@ -474,6 +460,7 @@ class Login extends Component {
         })
       }
    }
+
    openAnonymousComplaint = () => {
      let {setRoute, setHome} = this.props;
      setRoute('/pgr/createGrievance');
@@ -620,24 +607,24 @@ class Login extends Component {
                           <Row>
                               <Col lg={12}>
                               <h4>{translate('core.lbl.signin')}</h4>
-							  <Row>
+							                <Row>
                                 <Col lg={12}>
                                 <TextField
                                     floatingLabelText={translate('core.lbl.addmobilenumber/login')}
                                     errorText={fieldErrors.username ? fieldErrors.username : ""}
                                     id="username"
                                     fullWidth={true}
-                                    autocomplete="off"
+                                    autoComplete="off"
                                     value={credential.username?credential.username:""}
                                     onChange={(e) => handleChange(e, "username", true, "")}
                                 />
                                 </Col>
                                 <Col lg={12}>
-                                <TextField tabindex="0"
+                                <TextField tabIndex="0"
                                     floatingLabelText={translate('core.lbl.password')}
                                     type="password"
                                     fullWidth={true}
-                                    autocomplete="new-password"
+                                    autoComplete="new-password"
                                     errorText={fieldErrors.password ? fieldErrors.password : ""}
                                     id="password"
                                     value={credential.password?credential.password:""}
@@ -649,7 +636,7 @@ class Login extends Component {
                                 </Col>
                                 <Col lg={12}>
                                   <RaisedButton disabled={!isFormValid} type="submit" label={translate('core.lbl.signin')} style={{width:150,marginTop: 20}}  primary={true} />
-                                  <FlatButton label={translate('core.lbl.forgot.password')} labelStyle={{fontSize:12}} style={styles.buttonTopMargin} hoverColor={{color:'#ffffff'}} onClick={showPasswordModal}/>
+                                  <FlatButton label={translate('core.lbl.forgot.password')} labelStyle={{fontSize:12}} style={styles.buttonTopMargin} hoverColor={'#ffffff'} onClick={showPasswordModal}/>
                                 </Col>
 									  </Row>
                               </Col>
@@ -672,7 +659,7 @@ class Login extends Component {
                       </Col>
 
                       <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
-                        <IconButton  style={styles.floatingIconButton}  primary={true}>
+                        <IconButton  style={styles.floatingIconButton} >
                             <i className="material-icons">mode_edit</i>
                         </IconButton>
                         <div style={{"float": "left", "cursor": "pointer"}}>
@@ -791,7 +778,7 @@ class Login extends Component {
             />
             <Dialog
               title={translate('pgr.title.create.account')}
-              autoScrollBodyContent="true"
+              autoScrollBodyContent={true}
               actions={[
                 <FlatButton
                   label={translate('core.lbl.cancel')}
@@ -815,7 +802,7 @@ class Login extends Component {
                     <TextField
                         floatingLabelText={translate('core.lbl.mobilenumber')}
                         fullWidth={true}
-                        autocomplete="off"
+                        autoComplete="off"
                         value={signUpObject.mobileNumber}
                         disabled={optSent}
                         errorText={signUpObject.mobileNumberMsg ? signUpObject.mobileNumberMsg : ""}
@@ -827,7 +814,7 @@ class Login extends Component {
                         floatingLabelText={translate('core.lbl.password')}
                         fullWidth={true}
                         value={signUpObject.password}
-                        autocomplete="new-password"
+                        autoComplete="new-password"
                         type="password"
                         errorText={signUpObject.passwordMsg ? signUpObject.passwordMsg : ""}
                         onChange={(e) => handleStateChange(e, "signUpObject.password", /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/, 'Should be combination of alphabet, special characters and numbers. Atleast 8 - 20 characters')}

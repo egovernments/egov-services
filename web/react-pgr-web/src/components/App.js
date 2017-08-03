@@ -184,7 +184,7 @@ class App extends Component {
               {router}
           <Footer/>
 
-          <Dialog
+          {msg && <Dialog
             style={{zIndex:2000}}
             actions={actions}
             modal={true}
@@ -192,14 +192,14 @@ class App extends Component {
             onRequestClose={()=>toggleDailogAndSetText(false,"")}
             >
             {msg}
-          </Dialog>
-          <Snackbar
+          </Dialog>}
+          {toastMsg && <Snackbar
               open={isSnackBarOpen}
               message={toastMsg}
               bodyStyle={{"backgroundColor": isSuccess ? "#3ca23c" : (isError ? "#e83e36" : "rgb(95, 92, 98)"), "textAlign": "center"}}
               autoHideDuration={6000}
               onRequestClose={()=>toggleSnackbarAndSetText(false, "", false, false)}
-            />
+            />}
           <LoadingIndicator status={loadingStatus || "hide"}/>
       </div>
     );

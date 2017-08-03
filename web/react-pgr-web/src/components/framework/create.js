@@ -106,36 +106,36 @@ class Report extends Component {
     let endPoint="";
     let self = this;
 
-    if (hash[2]=="wc") {
-        if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-          endPoint = `${hash[2]}/${hash[2]}.json`;
-        } else {
-          endPoint = `${hash[2]}/master/${hash[3]}.json`;
-        }
-      $.ajax({
-      url: baseUrl+endPoint+"?timestamp="+new Date().getTime(),
-      // dataType: 'application/javascript',
-      success: function(results)
-      {
-        self.displayUI(results);
-      },
-      error: function (results) {
-        try {
-          if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-            specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-          } else {
-            specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-          }
-        } catch(e) {
-
-        }
-        self.displayUI(specifications);
-
-
-      }})
-    }
-
-    else {
+    // if (hash[2]=="wc") {
+    //     if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+    //       endPoint = `${hash[2]}/${hash[2]}.json`;
+    //     } else {
+    //       endPoint = `${hash[2]}/master/${hash[3]}.json`;
+    //     }
+    //   $.ajax({
+    //   url: baseUrl+endPoint+"?timestamp="+new Date().getTime(),
+    //   // dataType: 'application/javascript',
+    //   success: function(results)
+    //   {
+    //     self.displayUI(results);
+    //   },
+    //   error: function (results) {
+    //     try {
+    //       if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+    //         specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+    //       } else {
+    //         specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+    //       }
+    //     } catch(e) {
+    //
+    //     }
+    //     self.displayUI(specifications);
+    //
+    //
+    //   }})
+    // }
+    //
+    // else {
       try {
         if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
           specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
@@ -148,7 +148,7 @@ class Report extends Component {
 
       self.displayUI(specifications);
 
-    }
+    // }
 
   }
 

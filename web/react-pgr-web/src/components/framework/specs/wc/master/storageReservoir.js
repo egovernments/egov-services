@@ -35,7 +35,7 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].locationName",
+							"jsonPath": "StorageReservoir[0].locationNum",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
@@ -47,7 +47,7 @@ var dat = {
 						},
 						{
 							"name": "wardName",
-							"jsonPath": "StorageReservoir[0].wardName",
+							"jsonPath": "StorageReservoir[0].wardNum",
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
@@ -59,7 +59,7 @@ var dat = {
 						},
 						{
 							"name": "zoneName",
-							"jsonPath": "StorageReservoir[0].zoneName",
+							"jsonPath": "StorageReservoir[0].zoneNum",
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
@@ -132,7 +132,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "reservoirType",
-							"jsonPath": "StorageReservoir.reservoirType",
+							"jsonPath": "reservoirType",
 							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
@@ -148,10 +148,10 @@ var dat = {
 		"result": {
 			"header": [{label: "wc.create.groups.fields.storageReservoirName"},{label: "wc.create.groups.fields.reservoirType"}, {label: "wc.create.groups.fields.location"}, {label: "wc.create.groups.fields.zone"},
 			{label: "wc.create.groups.fields.ward"},{label: "wc.create.groups.fields.storageCapacityofReservoir(in MLD)"},{label: "wc.create.groups.fields.numberOfSubLines"},{label: "wc.create.groups.fields.numberOfMainDistributionLine"},{label: "wc.create.groups.fields.numberOfConnectionFromReservoir"}],
-			"values": ["name", "reservoirType", "locationNum","zoneNum","wardNum","capacity","noOfSubLines","noOfMainDistributionLines","noOfConnection"],
+			"values": ["name", "reservoirType", "locationName","zoneName","wardName","capacity","noOfSubLines","noOfMainDistributionLines","noOfConnection"],
 			"resultPath": "StorageReservoirs",
-			"rowClickUrlUpdate": "/update/wc/storagereservoir/{id}",
-			"rowClickUrlView": "/view/wc/storagereservoir/{id}"
+			"rowClickUrlUpdate": "/update/wc/storageReservoir/{id}",
+			"rowClickUrlView": "/view/wc/storageReservoir/{id}"
 			}
 	},
 	"wc.view": {
@@ -190,7 +190,7 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoirs[0].name",
+							"jsonPath": "StorageReservoirs[0].locationName",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
@@ -312,7 +312,7 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].locationName",
+							"jsonPath": "StorageReservoir[0].locationNum",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
@@ -324,7 +324,7 @@ var dat = {
 						},
 						{
 							"name": "wardName",
-							"jsonPath": "StorageReservoir[0].wardName",
+							"jsonPath": "StorageReservoir[0].wardNum",
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
@@ -336,7 +336,7 @@ var dat = {
 						},
 						{
 							"name": "zoneName",
-							"jsonPath": "StorageReservoir[0].zoneName",
+							"jsonPath": "StorageReservoir[0].zoneNum",
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",

@@ -46,6 +46,16 @@ public class PropertiesManager {
 	private String propertyIndexType;
 
 	private String serverContextpath;
+	
+	private String createTitleTranfer;
+	
+	private String updateTitleTransfer;
+	
+	private String titleTransferType;
+	
+	private String approveTitleTransfer;
+	
+	private String titleTransferIndex;
 
 	public String getBootstrapServer() {
 		return environment.getProperty("spring.kafka.bootstrap.servers");
@@ -98,4 +108,28 @@ public class PropertiesManager {
 	public String getServerContextpath() {
 		return environment.getProperty("server.contextpath");
 	}
+
+	public String getTitleTransferType() {
+		return environment.getProperty("titletransfer.index.type");
+	}
+	
+	public String getTitleTransferIndex() {
+		return environment.getProperty("titletransfer.index");		
+	}
+
+	public String getCreateTitleTranfer() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.workflow.created");
+	}
+
+
+	public String getUpdateTitleTransfer() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.workflow.updated");
+	}
+
+
+	public String getApproveTitleTransfer() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.db.saved");
+	}
+
+
 }

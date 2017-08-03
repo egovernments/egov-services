@@ -230,8 +230,9 @@ public class ActionRepository {
 		parametersMap.put("tenantid", actionRequest.getTenantId());
 
 		allservicesQueryBuilder.append("(WITH RECURSIVE nodes(id,code,name,parentmodule,displayname,enabled) AS ("
-				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname,s1.enabled" + " FROM service s1 WHERE "
-				+ " id IN (:moduleCodes) UNION ALL" + " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname,s1.enabled"
+				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname,s1.enabled"
+				+ " FROM service s1 WHERE " + " id IN (:moduleCodes) UNION ALL"
+				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname,s1.enabled"
 				+ " FROM nodes s2, service s1 WHERE CAST(s1.parentmodule as bigint) = s2.id");
 
 		if (actionRequest.getEnabled() != null) {
@@ -245,10 +246,19 @@ public class ActionRepository {
 
 		allservicesQueryBuilder.append(" SELECT * FROM nodes )" + " UNION"
 				+ " (WITH RECURSIVE nodes(id,code,name,parentmodule,displayname,enabled) AS ("
-				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname,s1.enabled" + " FROM service s1 WHERE "
-				+ " id IN (:moduleCodes) UNION ALL" + " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname,s1.enabled"
-				+ " FROM nodes s2, service s1 WHERE CAST(s2.parentmodule as bigint) = s1.id"
-				+ " and s1.tenantid =:tenantid )" + " SELECT * FROM nodes );");
+				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname,s1.enabled"
+				+ " FROM service s1 WHERE " + " id IN (:moduleCodes) UNION ALL"
+				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname,s1.enabled"
+				+ " FROM nodes s2, service s1 WHERE CAST(s2.parentmodule as bigint) = s1.id");
+		if (actionRequest.getEnabled() != null) {
+			parametersMap.put("enabled", actionRequest.getEnabled());
+
+			allservicesQueryBuilder
+					.append(" and s1.tenantid =:tenantid and s1.enabled =:enabled ) SELECT * FROM nodes )");
+
+		} else {
+			allservicesQueryBuilder.append(" and s1.tenantid = :tenantid ) SELECT * FROM nodes )");
+		}
 
 		LOGGER.info("All Services Query : " + allservicesQueryBuilder.toString());
 		List<Module> allServiceList = namedParameterJdbcTemplate.query(allservicesQueryBuilder.toString(),
@@ -412,10 +422,23 @@ public class ActionRepository {
 
 			for (Action action : actions) {
 
-				String path = getPath(action.getServiceCode(), allServiceList);
+				String path = "";
+				if(allServiceList !=null){
+				path = getPath(action.getServiceCode(), allServiceList);
+				}
 
 				if (path != "") {
 					path = path + "." + action.getName();
+					String[] output = path.split("\\.");
+
+					for (Module mod : allServiceList) {
+
+						if (mod.getName().equals(output[0]) && mod.getParentModule() != null) {
+
+							path = "";
+						}
+					}
+
 				}
 				action.setPath(path);
 

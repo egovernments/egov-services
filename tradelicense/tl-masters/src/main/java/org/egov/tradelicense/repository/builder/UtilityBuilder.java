@@ -56,7 +56,7 @@ public class UtilityBuilder {
 	public static String getFeeMatrixValidationQuery(String tableName, String tenantId, String applicationType,
 			Long categoryId, Long subCategoryId, String financialYear, Long id) {
 
-		StringBuffer feeMatrixValidationQuery = new StringBuffer("select count(*) from " + tableName + " where");
+		StringBuffer feeMatrixValidationQuery = new StringBuffer("select count(*) from " + tableName + " where 1=1 ");
 
 		if (tenantId != null) {
 			feeMatrixValidationQuery.append(" tenantId = '" + tenantId + "'");
@@ -119,5 +119,19 @@ public class UtilityBuilder {
 		categoryValidationQuery.append(" where id = '" + categoryId + "'");
 
 		return categoryValidationQuery.toString();
+	}
+	
+	public static String getUniqueLicenseStatusValidationQuery(String tenantId, String name,
+			String code, Long id, String tableName ) {
+
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
+		uniqueQuery.append(" where name = '" + name + "'");
+		uniqueQuery.append(" AND tenantId = '" + tenantId + "'");
+		uniqueQuery.append(" AND code = '" + code + "'");
+		if (id != null) {
+			uniqueQuery.append(" AND id !=" + id);
+		}
+
+		return uniqueQuery.toString();
 	}
 }

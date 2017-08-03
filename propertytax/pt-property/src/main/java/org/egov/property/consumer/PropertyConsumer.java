@@ -20,6 +20,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Consumer class will use for listing property object from kafka server to
  * insert data in postgres database
@@ -27,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
  * @author: S Anilkumar
  */
 @Service
+@Slf4j
 public class PropertyConsumer {
 
 	@Autowired
@@ -90,7 +93,7 @@ public class PropertyConsumer {
 			"#{environment.getProperty('egov.propertytax.property.update.workflow.started')}",
 			"#{environment.getProperty('egov.propertytax.property.update.workflow.approved')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
-
+	  log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
 		if (consumerRecord.topic()
 				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow.started"))) {
 			persisterService.addProperty(consumerRecord.value());

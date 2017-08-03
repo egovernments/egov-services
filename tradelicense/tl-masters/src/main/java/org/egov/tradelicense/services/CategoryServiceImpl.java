@@ -1,6 +1,5 @@
 package org.egov.tradelicense.services;
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.models.AuditDetails;
@@ -55,12 +54,24 @@ public class CategoryServiceImpl implements CategoryService {
 		for (Category category : categoryRequest.getCategories()) {
 
 			Long ParentId = category.getParentId();
+			Long categoryId = null;
 			// checking for existence of duplicate record
 			Boolean isExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
 					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, null);
 
 			if (isExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+			}
+
+			try {
+
+				category.setAuditDetails(auditDetails);
+				categoryId = categoryRepository.createCategory(category);
+				category.setId(categoryId);
+
+			} catch (Exception e) {
+
+				throw new InvalidInputException(requestInfo);
 			}
 
 			if (ParentId != null) {
@@ -71,10 +82,6 @@ public class CategoryServiceImpl implements CategoryService {
 				if (isParentExists) {
 
 					try {
-
-						category.setAuditDetails(auditDetails);
-						Long categoryId = categoryRepository.createCategory(category);
-						category.setId(categoryId);
 
 						for (CategoryDetail categoryDetail : category.getDetails()) {
 
@@ -103,15 +110,6 @@ public class CategoryServiceImpl implements CategoryService {
 				} else {
 					throw new InvalidInputException(requestInfo);
 				}
-			} else {
-				
-				try {
-					category.setAuditDetails(auditDetails);
-					Long id = categoryRepository.createCategory(category);
-					category.setId(id);
-				} catch (Exception e) {
-					throw new InvalidInputException(requestInfo);
-				}
 			}
 		}
 
@@ -133,27 +131,27 @@ public class CategoryServiceImpl implements CategoryService {
 
 			Long ParentId = category.getParentId();
 			Long categoryId = category.getId();
-			
+
 			if (categoryId == null) {
 				throw new InvalidInputException(requestInfo);
 			}
-			
+
 			Boolean isExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
-					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, category.getId());
-			
+					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
+
 			if (isExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 			}
-			
+
 			if (ParentId != null) {
-				
+
 				Boolean isParentExists = categoryHelper.checkWhetherParentRecordExits(category.getParentId(),
 						ConstantUtility.CATEGORY_TABLE_NAME);
-				
+
 				if (isParentExists) {
-					
+
 					for (CategoryDetail categoryDetail : category.getDetails()) {
-						
+
 						Boolean isCategoryDetailExists = categoryHelper.checkWhetherDuplicateCategoryDetailRecordExits(
 								categoryDetail, ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetail.getId());
 
@@ -167,37 +165,31 @@ public class CategoryServiceImpl implements CategoryService {
 
 							throw new InvalidInputException(requestInfo);
 						}
-					}
-					try {
-						Long updatedTime = new Date().getTime();
-						category.getAuditDetails().setLastModifiedTime(updatedTime);
-						 category.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
-
-						for (CategoryDetail categoryDetail : category.getDetails()) {
+						try {
 
 							categoryDetail = categoryRepository.updateCategoryDetail(categoryDetail);
+						} catch (Exception e) {
+
+							throw new InvalidInputException(requestInfo);
 						}
-
-						category = categoryRepository.updateCategory(category);
-
-					} catch (Exception e) {
-
-						throw new InvalidInputException(categoryRequest.getRequestInfo());
 					}
+
 				} else {
 
 					throw new InvalidInputException(requestInfo);
 				}
-			} else {
-				try {
-					
-					Long updatedTime = new Date().getTime();
-					category.getAuditDetails().setLastModifiedTime(updatedTime);
-					 category.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
-					category = categoryRepository.updateCategory(category);
-				} catch (Exception e) {
-					throw new InvalidInputException(categoryRequest.getRequestInfo());
-				}
+			}
+
+			try {
+
+				AuditDetails auditDetails = category.getAuditDetails();
+				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
+				category.setAuditDetails(auditDetails);
+				category = categoryRepository.updateCategory(category);
+
+			} catch (Exception e) {
+
+				throw new InvalidInputException(requestInfo);
 			}
 		}
 
@@ -218,26 +210,26 @@ public class CategoryServiceImpl implements CategoryService {
 
 			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, type, categoryId,
 					pageSize, offSet);
-			
+
 			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY") || (categoryId != null)) {
 
 				for (int i = 0; i < categories.size(); i++) {
-					
+
 					Category category = categories.get(i);
 					Long ParentId = category.getParentId();
-					
+
 					if (ParentId != null) {
-						
+
 						Boolean isParentExists = categoryHelper.checkWhetherParentRecordExits(ParentId,
 								ConstantUtility.CATEGORY_TABLE_NAME);
-						
+
 						if (isParentExists) {
-							
+
 							List<CategoryDetail> categoryDetails = categoryRepository
 									.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
-							
+
 							category.setDetails(categoryDetails);
-							
+
 						} else {
 							throw new InvalidInputException(requestInfo);
 						}

@@ -33,14 +33,14 @@ var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId
 module.exports = {
     commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false) => {
         var url = context;
-        if(url && url[url.length-1] == "/")
+        if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
         if (!doNotOverride)
             url += "?tenantId=" + tenantId;
         else
             url += "?"
         for (var variable in queryObject) {
-            if (typeof(queryObject[variable]) != "undefined") {
+            if (typeof(queryObject[variable]) !== "undefined") {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }
@@ -60,9 +60,9 @@ module.exports = {
         return instance.post(url, body).then(function(response) {
             return response.data;
         }).catch(function(response) {
-			
+
 			console.log(response);
-			
+
             if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
                 var _err = response.response.data[0].error.message || "";
                 if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
@@ -74,7 +74,7 @@ module.exports = {
             }else if(response && response.response && response.response.data && response.response.data.error){
               let _err = common.translate(response.response.data.error.fields[0].code);
               throw new Error(_err);
-            }else if(response && response.response && !response.response.data && response.response.status == 400) {
+            }else if(response && response.response && !response.response.data && response.response.status === 400) {
                 document.title = "eGovernments";
                 var locale = localStorage.getItem('locale');
                 localStorage.clear();
@@ -94,7 +94,7 @@ module.exports = {
         else
             url += "?"
         for (var variable in queryObject) {
-            if (typeof queryObject[variable] != "undefined") {
+            if (typeof queryObject[variable] !== "undefined") {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }

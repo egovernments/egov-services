@@ -100,6 +100,7 @@ class UiSelectField extends Component {
 				// let {dropDownData}=this.state;
 				return (
 					<SelectField
+						style={{"display": (item.hide ? 'none' : 'block')}}
 						fullWidth={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
 						value={this.props.getVal(item.jsonPath)}

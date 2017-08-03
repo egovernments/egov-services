@@ -1,4 +1,4 @@
-/Users/senthil/eGov/source/egov-services/tradelicense/tl-masters/start.sh#!/bin/sh
+#!/bin/sh
 
 if [[ -z "${JAVA_OPTS}" ]];then
     export JAVA_OPTS="-Xmx64m -Xms64m"

@@ -21,7 +21,7 @@ public class UomQueryBuilder {
 			+ " SET tenantId = ?, code = ?, name = ?, active = ?," + " lastModifiedBy = ?, lastModifiedTime = ?"
 			+ " WHERE id = ?";
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, Boolean active,
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -56,8 +56,13 @@ public class UomQueryBuilder {
 		}
 
 		if (active != null) {
-			searchSql.append(" AND active =? ");
-			preparedStatementValues.add(active);
+			if (active.equalsIgnoreCase("false")) {
+				searchSql.append(" AND active =? ");
+				preparedStatementValues.add(false);
+			} else if (active.equalsIgnoreCase("true")) {
+				searchSql.append(" AND active =? ");
+				preparedStatementValues.add(true);
+			}
 		}
 
 		if (pageSize != null) {

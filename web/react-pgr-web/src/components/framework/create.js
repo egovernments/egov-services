@@ -106,36 +106,36 @@ class Report extends Component {
     let endPoint="";
     let self = this;
 
-    if (hash[2]=="wc") {
-        if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-          endPoint = `${hash[2]}/${hash[2]}.json`;
-        } else {
-          endPoint = `${hash[2]}/master/${hash[3]}.json`;
-        }
-      $.ajax({
-      url: baseUrl+endPoint+"?timestamp="+new Date().getTime(),
-      // dataType: 'application/javascript',
-      success: function(results)
-      {
-        self.displayUI(results);
-      },
-      error: function (results) {
-        try {
-          if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-            specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-          } else {
-            specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-          }
-        } catch(e) {
-
-        }
-        self.displayUI(specifications);
-
-
-      }})
-    }
-
-    else {
+    // if (hash[2]=="wc") {
+    //     if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+    //       endPoint = `${hash[2]}/${hash[2]}.json`;
+    //     } else {
+    //       endPoint = `${hash[2]}/master/${hash[3]}.json`;
+    //     }
+    //   $.ajax({
+    //   url: baseUrl+endPoint+"?timestamp="+new Date().getTime(),
+    //   // dataType: 'application/javascript',
+    //   success: function(results)
+    //   {
+    //     self.displayUI(results);
+    //   },
+    //   error: function (results) {
+    //     try {
+    //       if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+    //         specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+    //       } else {
+    //         specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+    //       }
+    //     } catch(e) {
+    //
+    //     }
+    //     self.displayUI(specifications);
+    //
+    //
+    //   }})
+    // }
+    //
+    // else {
       try {
         if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
           specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
@@ -148,7 +148,7 @@ class Report extends Component {
 
       self.displayUI(specifications);
 
-    }
+    // }
 
   }
 
@@ -290,6 +290,80 @@ class Report extends Component {
     return _.get(this.props.formData, path) || "";
   }
 
+  hideField = (_mockData, hideObject, reset) => {
+    let {moduleName, actionName} = this.props;
+    if(hideObject.isField) {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+          if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? false : true;
+          }
+        }
+      }
+    } else {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+          _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  showField = (_mockData, showObject, reset) => {
+    let {moduleName, actionName} = this.props;
+    if(showObject.isField) {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+          if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? true : false;
+          }
+        }
+      }
+    } else {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+          _mockData[moduleName + "." + actionName].groups[i].hide = reset ? true : false;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  checkIfHasShowHideFields = (jsonPath, val) => {
+    let _mockData = {...this.props.mockData};
+    let {moduleName, actionName, setMockData} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
+          for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z]);
+              }
+            } else {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    setMockData(_mockData);
+  }
+
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
       let {getVal}=this;
       let {handleChange,mockData,setDropDownData}=this.props;
@@ -297,6 +371,7 @@ class Report extends Component {
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      this.checkIfHasShowHideFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
       _.forEach(depedants, function(value,key) {
@@ -409,7 +484,7 @@ class Report extends Component {
   }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     return (
       <div className="Report">
@@ -429,8 +504,8 @@ class Report extends Component {
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>}
-            {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit"}} ui="google"/>}
+            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
+            {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             <br/>
           </div>
         </form>
@@ -445,23 +520,15 @@ const mapStateToProps = state => ({
   moduleName:state.framework.moduleName,
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
-  fieldErrors: state.frameworkForm.fieldErrors
+  fieldErrors: state.frameworkForm.fieldErrors,
+  isFormValid: state.frameworkForm.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: (reqRequired, patRequired) => {
+  initForm: (requiredFields, patRequired) => {
     dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: reqRequired
-        },
-        pattern: {
-          current: [],
-          required: patRequired
-        }
-      }
+      type: "SET_REQUIRED_FIELDS",
+      requiredFields
     });
   },
   setMetaData: (metaData) => {
@@ -480,7 +547,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_ACTION_NAME", actionName})
   },
   handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
-    dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
+    dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});

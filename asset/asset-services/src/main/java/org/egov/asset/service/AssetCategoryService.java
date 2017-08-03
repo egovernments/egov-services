@@ -9,6 +9,7 @@ import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetCategoryResponse;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
+import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.repository.AssetCategoryRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -59,7 +60,8 @@ public class AssetCategoryService {
         assetCategory.setDepreciationRate(assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()));
         assetCategory.setCode(assetCategoryRepository.getAssetCategoryCode());
         logger.info("AssetCategoryService createAsync" + assetCategoryRequest);
-        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetCategoryTopicName(), assetCategoryRequest);
+        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetCategoryTopicName(),
+                KafkaTopicName.SAVEASSETCATEGORY.toString(), assetCategoryRequest);
 
         final List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
         assetCategories.add(assetCategory);
@@ -78,7 +80,8 @@ public class AssetCategoryService {
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
         assetCategory.setDepreciationRate(assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()));
         logger.info("AssetCategoryService updateAsync" + assetCategoryRequest);
-        logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetCategoryTopicName(), assetCategoryRequest);
+        logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetCategoryTopicName(),
+                KafkaTopicName.UPDATEASSETCATEGORY.toString(), assetCategoryRequest);
         final List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
         assetCategories.add(assetCategory);
 

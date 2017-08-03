@@ -1,0 +1,23 @@
+{
+	"responseInfo": {
+		"apiId": null,
+		"ver": null,
+		"ts": null,
+		"resMsgId": null,
+		"msgId": null,
+		"status": null
+	},
+	"licenseStatuses": [{
+		"id": null,
+		"tenantId": "default",
+		"name": "shubham",
+		"code": "babu",
+		"active": true,
+		"auditDetails": {
+			"createdBy": null,
+			"lastModifiedBy": null,
+			"createdTime": null,
+			"lastModifiedTime": null
+		}
+	}]
+}

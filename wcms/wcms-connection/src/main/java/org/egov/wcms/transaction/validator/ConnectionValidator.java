@@ -151,12 +151,21 @@ public class ConnectionValidator {
                     .field(WcmsConnectionConstants.SUPPLY_TYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-        if(waterConnectionRequest.getConnection().getBillingType() !=null  && waterConnectionRequest.getConnection().getBillingType().equals("METERED")
+        if(waterConnectionRequest.getConnection().getIsLegacy() ){
+                if(waterConnectionRequest.getConnection().getBillingType() !=null  && waterConnectionRequest.getConnection().getBillingType().equals("METERED")
                  && ( waterConnectionRequest.getConnection().getMeter()==null)){
             final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_INVALID_CODE)
             .message(WcmsConnectionConstants.CONNECTION_METERED_INVALID_ERROR_MESSAGE)
             .field(WcmsConnectionConstants.CONNECTION_METERED_INVALID_FIELD_NAME).build();
         errorFields.add(errorField);
+        }
+            if (waterConnectionRequest.getConnection().getExecutionDate() == null) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_CODE)
+                        .message(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
+
         }
         /*else if (waterConnectionRequest.getConnection().getProperty()!=null && 
                 waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()==null && 
@@ -262,7 +271,7 @@ public class ConnectionValidator {
                         .build();
                 errorFields.add(errorField);
             }
-        if(waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE)){
+        if(!waterConnectionRequest.getConnection().getIsLegacy()){
         final DonationResponseInfo donationresInfo = restConnectionService.validateDonationAmount(waterConnectionRequest);
         if (donationresInfo == null) {
             final ErrorField errorField = ErrorField.builder()

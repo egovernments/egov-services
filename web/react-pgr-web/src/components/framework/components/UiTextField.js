@@ -11,6 +11,7 @@ export default class UiTextField extends Component {
 			case 'google': 
 				return (
 					<TextField 
+						style={{"display": (item.hide ? 'none' : 'block')}}
 						fullWidth={true} 
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={this.props.getVal(item.jsonPath)}

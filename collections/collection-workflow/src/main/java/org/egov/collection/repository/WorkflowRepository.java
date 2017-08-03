@@ -46,7 +46,6 @@ import org.egov.collection.model.Task;
 import org.egov.collection.model.TaskRequest;
 import org.egov.collection.model.TaskResponse;
 import org.egov.collection.model.WorkflowDetails;
-import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.web.contract.Position;
 import org.egov.collection.web.contract.ProcessInstance;
 import org.egov.collection.web.contract.ProcessInstanceRequest;
@@ -165,11 +164,11 @@ public class WorkflowRepository {
         task.setDetails("Receipt Create : " + workflowDetails.getReceiptNumber());
         
         task.setAction(workflowDetails.getAction());
-        if ("Approve".equalsIgnoreCase(workflowDetails.getAction()))
+       /* if ("Approve".equalsIgnoreCase(workflowDetails.getAction()))
             task.setStatus(ReceiptStatus.APPROVED.toString());
         else if ("Reject".equalsIgnoreCase(workflowDetails.getAction()))
-            task.setStatus(ReceiptStatus.REJECTED.toString());
-                
+            task.setStatus(ReceiptStatus.REJECTED.toString());*/
+                task.setStatus(workflowDetails.getStatus());
         //logic based on dml and current state
         
         taskRequest.setRequestInfo(requestInfo);

@@ -43,6 +43,7 @@ public class UomServiceTest {
 	public String name = "Flammables v1.1";
 	public String code = "Flammables v1.1";
 	public Boolean active = true;
+	public String searchActive = "true";
 	public String updatedName = "Flammables v1.1 name updated";
 	public String updatedCode = "Flammables v1.1 code updated";
 
@@ -111,7 +112,7 @@ public class UomServiceTest {
 
 		try {
 			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { this.uomId.intValue() },
-					name, code, active, pageSize, offset);
+					name, code, searchActive, pageSize, offset);
 			if (uomResponse.getUoms().size() == 0)
 				assertTrue(false);
 
@@ -236,7 +237,7 @@ public class UomServiceTest {
 
 		try {
 			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { uomId.intValue() },
-					updatedName, code, active, pageSize, offset);
+					updatedName, code, searchActive, pageSize, offset);
 			if (uomResponse.getUoms().size() == 0)
 				assertTrue(false);
 
@@ -354,7 +355,7 @@ public class UomServiceTest {
 
 		try {
 			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { uomId.intValue() },
-					updatedName, updatedCode, active, pageSize, offset);
+					updatedName, updatedCode, searchActive, pageSize, offset);
 			if (uomResponse.getUoms().size() == 0)
 				assertTrue(false);
 

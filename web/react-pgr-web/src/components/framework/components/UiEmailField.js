@@ -11,6 +11,7 @@ export default class UiEmailField extends Component {
 			case 'google': 
 				return (
 					<TextField 
+						style={{"display": (item.hide ? 'none' : 'block')}}
 						fullWidth={true} 
 						type="email"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 

@@ -228,7 +228,7 @@ public class ReceiptRepositoryTest {
 		assertNotNull(receiptRepository.pushReceiptCancelDetailsToQueue(getReceiptRequest()));
 	}
 	
-	@Test
+	/*@Test
 	public void test_should_update_status_and_stateId_toDB(){
 	
 		when(receiptDetailQueryBuilder.getQueryForUpdate(2L,"CANCELLED", 1L, "default"))
@@ -242,7 +242,7 @@ public class ReceiptRepositoryTest {
 	public void test_should_be_able_to_push_update_status_request_to_kafka(){
 		receiptRepository.pushUpdateDetailsToQueque(getReceiptRequest());
 		verify(collectionProducer).producer(any(String.class), any(String.class), any(ReceiptReq.class));
-	}
+	}*/
 
 	private ReceiptReq getReceiptRequest() {
 

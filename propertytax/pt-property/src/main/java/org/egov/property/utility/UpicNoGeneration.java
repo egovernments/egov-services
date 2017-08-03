@@ -106,12 +106,12 @@ public class UpicNoGeneration {
 		idGeneration.setRequestInfo(requestInfo);
 		String response = null;
 		try {
-			logger.info("calling id generation service url :"+idGenerationUrl.toString()+" request is "+requestInfo);
+			logger.info("UpicNoGeneration calling id generation service url :"+idGenerationUrl.toString()+" request is "+requestInfo);
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		logger.info("After calling the id generation service response :"+response);
+		logger.info("UpicNoGeneration After calling the id generation service response :"+response);
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
 		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);

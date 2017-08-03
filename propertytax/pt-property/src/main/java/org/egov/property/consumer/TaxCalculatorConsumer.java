@@ -105,11 +105,13 @@ public class TaxCalculatorConsumer {
 		calculationRequest.setProperty(property);
 		String url = environment.getProperty("egov.services.pt_calculator.hostname")
 				+ environment.getProperty("egov.services.pt_calculator.calculatorpath");
+		log.info("Calculator url is:" +url+ "CalculationRequest is:" +calculationRequest);
 		CalculationResponse calculationResponse = restTemplate.postForObject(url, calculationRequest,
 				CalculationResponse.class);
+		log.info( "CalculationResponse is:" + calculationResponse);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
-		if (!property.getChannel().toString().equalsIgnoreCase(environment.getProperty("egov.property.channel.type"))) {
+        if (!property.getChannel().toString().equalsIgnoreCase(environment.getProperty("egov.property.channel.type"))) {
 
 			if (consumerRecord.topic()
 					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.tax.calculaion"))) {

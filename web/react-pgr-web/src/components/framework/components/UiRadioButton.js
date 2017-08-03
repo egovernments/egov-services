@@ -22,7 +22,7 @@ export default class UiAadharCard extends Component {
    		switch (this.props.ui) {
 			case 'google': 
 				return (
-					<div>
+					<div style={{"display": (item.hide ? 'none' : 'block')}}>
 						<label>{item.label}</label>
 						<RadioButtonGroup name="shipSpeed" valueSelected={this.props.getVal(item.jsonPath)} defaultSelected={item.defaultSelected} onChange={(e, val) => {
 							this.props.handler({target:{value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)

@@ -14,6 +14,7 @@ import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
+import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -67,7 +68,8 @@ public class RevaluationService {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
 
-        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetRevaluationTopicName(), revaluationRequest);
+        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetRevaluationTopicName(),
+                KafkaTopicName.SAVEREVALUATION.toString(), revaluationRequest);
 
         final List<Revaluation> revaluations = new ArrayList<Revaluation>();
         revaluations.add(revaluationRequest.getRevaluation());

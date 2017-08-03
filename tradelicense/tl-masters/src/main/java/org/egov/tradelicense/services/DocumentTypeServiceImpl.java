@@ -1,6 +1,5 @@
 package org.egov.tradelicense.services;
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.models.AuditDetails;
@@ -78,6 +77,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 	@Transactional
 	public DocumentTypeResponse updateDocumentType(DocumentTypeRequest documentTypeRequest) {
 
+		RequestInfo requestInfo = documentTypeRequest.getRequestInfo();
 		for (DocumentType documentType : documentTypeRequest.getDocumentTypes()) {
 
 			Boolean isExists = documentTypeHelper.checkWhetherRecordExitswithName(documentType.getTenantId(),
@@ -87,13 +87,12 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 			if (isExists)
 				throw new DuplicateIdException(propertiesManager.getDocumentTypeCustomMsg(),
 						documentTypeRequest.getRequestInfo());
-
-			RequestInfo requestInfo = documentTypeRequest.getRequestInfo();
+			
 			try {
 
-				Long updatedTime = new Date().getTime();
-				documentType.getAuditDetails().setLastModifiedTime(updatedTime);
-				documentType.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+				AuditDetails auditDetails = documentType.getAuditDetails();
+				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
+				documentType.setAuditDetails(auditDetails);
 				documentType = documentTypeRepository.updateDocumentType(documentType);
 
 			} catch (Exception e) {

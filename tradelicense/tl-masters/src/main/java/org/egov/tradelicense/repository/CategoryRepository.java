@@ -57,6 +57,7 @@ public class CategoryRepository {
 				ps.setString(2, category.getName());
 				ps.setString(3, category.getCode());
 				ps.setObject(4, category.getParentId());
+				
 				if (category.getBusinessNature() == null) {
 					ps.setString(5, null);
 				} else {
@@ -130,6 +131,7 @@ public class CategoryRepository {
 				ps.setString(3, category.getCode());
 
 				ps.setObject(4, category.getParentId());
+				
 				if (category.getBusinessNature() == null) {
 					ps.setString(5, null);
 				} else {
@@ -190,12 +192,14 @@ public class CategoryRepository {
 			Integer categoryId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
+		
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
+		
 		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, type, categoryId,
 				pageSize, offSet, preparedStatementValues);
 		List<Category> categories = getCategories(categorySearchQuery.toString(), preparedStatementValues);
@@ -214,6 +218,7 @@ public class CategoryRepository {
 	public List<CategoryDetail> getCategoryDetailsByCategoryId(Long categoryId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
+		
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
@@ -241,6 +246,7 @@ public class CategoryRepository {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
 
 		for (Map<String, Object> row : rows) {
+			
 			CategoryDetail categoryDetail = new CategoryDetail();
 			categoryDetail.setId(getLong(row.get("id")));
 			categoryDetail.setCategoryId(getLong(row.get("categoryId")));
@@ -266,11 +272,13 @@ public class CategoryRepository {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
 
 		for (Map<String, Object> row : rows) {
+			
 			Category category = new Category();
 			category.setId(getLong(row.get("id")));
 			category.setTenantId(getString(row.get("tenantid")));
 			category.setCode(getString(row.get("code")));
 			category.setName(getString(row.get("name")));
+			
 			if (getLong(row.get("parentId")) == 0) {
 				category.setParentId(null);
 			} else {

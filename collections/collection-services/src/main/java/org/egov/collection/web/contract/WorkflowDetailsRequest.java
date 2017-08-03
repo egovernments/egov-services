@@ -37,7 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.model;
+package org.egov.collection.web.contract;
 
 import javax.validation.constraints.NotNull;
 
@@ -60,7 +60,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class WorkflowDetails {
+public class WorkflowDetailsRequest {
 
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;

@@ -296,9 +296,13 @@ public class WcmsConnectionConstants {
     public static final String SUPPLYTYPE_INVALID_ERROR_MESSAGE = "SupplyType name doesn't Exist";
     
     
-    public static final String CONNECTION_METERED_INVALID_CODE = "wcms.0042";
+    public static final String CONNECTION_METERED_INVALID_CODE = "wcms.0046";
     public static final String CONNECTION_METERED_INVALID_FIELD_NAME = "billingType";
     public static final String CONNECTION_METERED_INVALID_ERROR_MESSAGE = "Please provide Meter Deatils for Metered Connection";
+    
+    public static final String LEGACY_EXECUTIONDATE_INVALID_CODE = "wcms.0047";
+    public static final String LEGACY_EXECUTIONDATE_INVALID_FIELD_NAME = "executionDate";
+    public static final String LEGACY_EXECUTIONDATE_INVALID_ERROR_MESSAGE = "Please provide executionDate";
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

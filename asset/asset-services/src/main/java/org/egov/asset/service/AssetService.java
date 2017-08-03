@@ -49,6 +49,7 @@ import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.YearWiseDepreciation;
+import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -106,7 +107,8 @@ public class AssetService {
 
         logger.debug("assetRequest createAsync::" + assetRequest);
 
-        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetTopicName(), assetRequest);
+        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetTopicName(), KafkaTopicName.SAVEASSET.toString(),
+                assetRequest);
 
         final List<Asset> assets = new ArrayList<>();
         assets.add(asset);
@@ -127,7 +129,8 @@ public class AssetService {
 
         logger.debug("assetRequest updateAsync::" + assetRequest);
 
-        logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetTopicName(), assetRequest);
+        logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetTopicName(),
+                KafkaTopicName.UPDATEASSET.toString(), assetRequest);
 
         final List<Asset> assets = new ArrayList<>();
         assets.add(asset);

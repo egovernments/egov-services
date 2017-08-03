@@ -11,6 +11,7 @@ export default class UiSingleFileUpload extends Component {
 			case 'google': 
 				return (
 					<RaisedButton
+					  style={{"display": (item.hide ? 'none' : 'block')}}
 					  containerElement='label'
 					  fullWidth={true} 
 					  value={this.props.getVal(item.jsonPath)}

@@ -67,6 +67,9 @@ public class MeterReading {
 
     @NotNull
     private long reading;
+    
+    @NotNull
+    private long readingDate;
 
     @NotNull
     private AuditDetails auditDetails;

@@ -39,11 +39,10 @@ export default class ShowFields extends Component {
     let {renderField}=this;
     let {addNewCard, removeCard} = this.props;
     let self = this;
-    console.log(groups);
     switch (uiFramework) {
       case "google":
         return groups.map((group, groupIndex)=>{
-          return (<Card className="uiCard" key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+          return (<Card style={{"display": group.hide ? "none" : "block"}} className="uiCard" key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
                     <CardHeader title={group.label} showExpandableButton={true} actAsExpander={true}/>
                     <CardText style={{padding:0}} expandable={true}>
                     <Grid>

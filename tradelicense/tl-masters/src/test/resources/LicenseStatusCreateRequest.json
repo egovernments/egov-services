@@ -1,0 +1,27 @@
+{  
+   "RequestInfo":{  
+         "apiId":"emp",
+         "ver":"1.0",
+         "ts":120,
+         "action":"create",
+         "did":"1",
+         "key":"abcdkey",
+         "msgId":"20170310130900",
+         "requesterId":"rajesh",
+         "authToken":"d0058c65-7c55-445e-89b3-7f5b0cfdc12b"
+      },
+      "licenseStaus":[  
+         {  
+            "tenantId":"default",
+            "name":null,
+            "code":null,
+            "active": null,
+            "auditDetails" : {
+            	"createdBy": null,
+            	"lastModifiedBy": null,
+            	"createdTime": null,
+            	"lastModifiedTime": null
+            }
+         }
+      ]
+}

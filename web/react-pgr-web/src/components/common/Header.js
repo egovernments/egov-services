@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+// import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 // import PropTypes from 'prop-types'
 import { withRouter } from 'react-router';
-import Api from '../../api/api';
+// import Api from '../../api/api';
 import {logo, tenantName} from './temp/local';
 import {getTitleCase} from '../framework/utility/utility';
 import $ from 'jquery';
@@ -20,7 +20,7 @@ import $ from 'jquery';
 
 import CustomMenu from './CustomMenu';
 
-var base='/';
+// var base='/';
 var tenantContent = {
   "details" : {
     "panavel" : {
@@ -58,7 +58,7 @@ const styles = {
 const getTenantId = () => {
   if(localStorage.getItem("tenantId")) {
     return localStorage.getItem("tenantId");
-  } 
+  }
 
   return window.location.hash.split("#/")[1];
 }
@@ -151,7 +151,7 @@ const RightIcon = (props) => {
 
       </div>
     );
-  } else if(window.location.hash == "#/") {
+  } else if(window.location.hash === "#/") {
     return(
       <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
     )
@@ -210,7 +210,7 @@ class Header extends Component {
       <div className="Header">
         <AppBar title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> {getTitle(this.props.tenantInfo, tenantContext)} </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
-                iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
+                iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false} >

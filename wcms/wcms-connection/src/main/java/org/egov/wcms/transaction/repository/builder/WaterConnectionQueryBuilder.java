@@ -67,14 +67,22 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String insertMeterReadingQuery() {
-        return "INSERT INTO egwtr_meterreading(id,connectionid,reading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime) values "
-                + "(nextval('seq_egwtr_meterreading'),?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_meterreading(id,meterid,reading,readingDate,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime) values "
+                + "(nextval('seq_egwtr_meterreading'),?,?,"
+                + "?,?,"
+                + "?,?,"
+                + "?,?)";
     }
 
     public static String insertMeterQuery() {
 
-        return "INSERT INTO egwtr_meter(metermake,connectionid,meterreading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
-                + " values(nextval('seq_egwtr_meter'),?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_meter(id,connectionid,metermake,initialmeterreading,meterSlNo,meterCost,"
+                + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
+                + " values(nextval('seq_egwtr_meter'),?,?,"
+                + "?,?,"
+                + "?,?,"
+                + "?,?,"
+                + "?,?)";
     }
     public static String insertEstimationCharge() {
 
@@ -131,13 +139,13 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,legacyconsumernumber,consumerNumber) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?,?)";
+                + ",?,?,?,?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {

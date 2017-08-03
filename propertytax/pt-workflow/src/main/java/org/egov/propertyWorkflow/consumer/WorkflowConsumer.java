@@ -132,7 +132,7 @@ public class WorkflowConsumer {
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-
+				logger.info("WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
 				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
 						property.getPropertyDetail().getStateId());
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
@@ -218,9 +218,12 @@ public class WorkflowConsumer {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 				// Add query parameter
 				.queryParam("code", property.getTenantId());
+		logger.info("WorkflowConsumer builderuri :" +builder.buildAndExpand().toUri()+ 
+				"\n WorkflowConsumer PropertyRequest :" +propertyRequest.getRequestInfo());
 		try {
 			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(),
 					propertyRequest.getRequestInfo(), SearchTenantResponse.class);
+			logger.info("WorkflowConsumer SearchTenantResponse  ---->>  "+searchTenantResponse);
 			if (searchTenantResponse.getTenant().size() > 0) {
 				City city = searchTenantResponse.getTenant().get(0).getCity();
 				String cityCode = city.getCode();
@@ -264,8 +267,11 @@ public class WorkflowConsumer {
 		idGeneration.setIdRequests(idRequests);
 		idGeneration.setRequestInfo(propertyRequest.getRequestInfo());
 		String response = null;
-		try {
+		logger.info("WorkflowConsumer idGenerationUrl :" +idGenerationUrl.toString()+ 
+				"\n WorkflowConsumer idGenerationRequest :" +idGeneration);
+	    try {
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
+			logger.info("WorkflowConsumer getupicnumber response  ---->>  "+response);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

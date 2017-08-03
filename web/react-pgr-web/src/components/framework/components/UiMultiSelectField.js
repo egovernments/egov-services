@@ -59,6 +59,7 @@ class UiMultiSelectField extends Component {
 			case 'google':
 				return (
 					<SelectField
+						style={{"display": (item.hide ? 'none' : 'block')}}
 						fullWidth={true}
 						multiple={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}

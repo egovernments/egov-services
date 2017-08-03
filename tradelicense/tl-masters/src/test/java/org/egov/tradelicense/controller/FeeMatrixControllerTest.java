@@ -25,6 +25,7 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.services.CategoryService;
 import org.egov.tradelicense.services.DocumentTypeService;
 import org.egov.tradelicense.services.FeeMatrixService;
+import org.egov.tradelicense.services.LicenseStatusService;
 import org.egov.tradelicense.services.PenaltyRateService;
 import org.egov.tradelicense.services.UOMService;
 import org.junit.Test;
@@ -56,6 +57,9 @@ public class FeeMatrixControllerTest {
 
 	@MockBean
 	DocumentTypeService documentTypeService;
+	
+	@MockBean
+	LicenseStatusService licenseStatusService;
 
 	@MockBean
 	private PropertiesManager propertiesManager;

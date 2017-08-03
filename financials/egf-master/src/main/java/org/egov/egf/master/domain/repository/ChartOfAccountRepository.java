@@ -10,10 +10,13 @@ import org.egov.common.constants.Constants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
+import org.egov.egf.master.domain.service.FinancialConfigurationService;
 import org.egov.egf.master.persistence.entity.ChartOfAccountEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.ChartOfAccountJdbcRepository;
+import org.egov.egf.master.web.contract.ChartOfAccountSearchContract;
 import org.egov.egf.master.web.requests.ChartOfAccountRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +26,15 @@ public class ChartOfAccountRepository {
 
 	@Autowired
 	private ChartOfAccountJdbcRepository chartOfAccountJdbcRepository;
+	
 	@Autowired
 	private MastersQueueRepository chartOfAccountQueueRepository;
+	
+	@Autowired
+	private FinancialConfigurationService financialConfigurationService;
+	
+	@Autowired
+	private ChartOfAccountESRepository chartOfAccountESRepository;
 
 	public ChartOfAccount findById(ChartOfAccount chartOfAccount) {
 		ChartOfAccountEntity entity = chartOfAccountJdbcRepository
@@ -61,9 +71,19 @@ public class ChartOfAccountRepository {
 	public Pagination<ChartOfAccount> search(ChartOfAccountSearch domain) {
 
 		Set<ChartOfAccount> chartOfAccountSet = new HashSet<ChartOfAccount>();
-
-		Pagination<ChartOfAccount> finalResult = null;
-		Pagination<ChartOfAccount> result = chartOfAccountJdbcRepository.search(domain);
+		Pagination<ChartOfAccount> finalResult = new Pagination<>();
+		Pagination<ChartOfAccount> result = new Pagination<>();
+		
+		if (!financialConfigurationService.fetchDataFrom().isEmpty()
+	                && financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+		    ChartOfAccountSearchContract chartOfAccountSearchContract = new ChartOfAccountSearchContract();
+	            ModelMapper mapper = new ModelMapper();
+	            mapper.map(domain, chartOfAccountSearchContract);
+	            result = chartOfAccountESRepository.search(chartOfAccountSearchContract);
+	        } else {
+	            
+	             result = chartOfAccountJdbcRepository.search(domain);
+	        }
 
 		if (domain != null && domain.getAccountCodePurpose() != null
 				&& domain.getAccountCodePurpose().getId() != null) {

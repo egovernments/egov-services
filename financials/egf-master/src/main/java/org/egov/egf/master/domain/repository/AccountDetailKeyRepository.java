@@ -7,10 +7,13 @@ import org.egov.common.constants.Constants;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailKey;
 import org.egov.egf.master.domain.model.AccountDetailKeySearch;
+import org.egov.egf.master.domain.service.FinancialConfigurationService;
 import org.egov.egf.master.persistence.entity.AccountDetailKeyEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.AccountDetailKeyJdbcRepository;
+import org.egov.egf.master.web.contract.AccountDetailKeySearchContract;
 import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,12 @@ public class AccountDetailKeyRepository {
 	private AccountDetailKeyJdbcRepository accountDetailKeyJdbcRepository;
 	@Autowired
 	private MastersQueueRepository accountDetailKeyQueueRepository;
+	
+	@Autowired
+	    private FinancialConfigurationService financialConfigurationService;
+
+	    @Autowired
+	    private AccountDetailKeyESRepository accountDetailKeyESRepository;
 
 	public AccountDetailKey findById(AccountDetailKey accountDetailKey) {
 		AccountDetailKeyEntity entity = accountDetailKeyJdbcRepository
@@ -55,10 +64,17 @@ public class AccountDetailKeyRepository {
 		accountDetailKeyQueueRepository.add(message);
 	}
 
-	public Pagination<AccountDetailKey> search(AccountDetailKeySearch domain) {
+	public Pagination<AccountDetailKey> search(final AccountDetailKeySearch domain) {
 
-		return accountDetailKeyJdbcRepository.search(domain);
+	        if (!financialConfigurationService.fetchDataFrom().isEmpty()
+	                && financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+	            final AccountDetailKeySearchContract accountDetailKeySearchContract = new AccountDetailKeySearchContract();
+	            final ModelMapper mapper = new ModelMapper();
+	            mapper.map(domain, accountDetailKeySearchContract);
+	            return accountDetailKeyESRepository.search(accountDetailKeySearchContract);
+	        } else
+	            return accountDetailKeyJdbcRepository.search(domain);
 
-	}
+	    }
 
 }

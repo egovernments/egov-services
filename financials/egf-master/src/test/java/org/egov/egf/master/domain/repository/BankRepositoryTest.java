@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.egov.egf.master.domain.service.FinancialConfigurationService;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
@@ -38,6 +39,9 @@ public class BankRepositoryTest {
 
     @InjectMocks
     private BankRepository bankRepository;
+    
+    @Mock
+    private FinancialConfigurationService financialConfigurationService;
 
     @Test
     public void testFindById() {
@@ -102,6 +106,7 @@ public class BankRepositoryTest {
         Pagination<Bank> expectedResult = new Pagination<>();
         expectedResult.setPageSize(500);
         expectedResult.setOffset(0);
+        when(financialConfigurationService.fetchDataFrom()).thenReturn("db");
         when(bankJdbcRepository.search(any(BankSearch.class))).thenReturn(expectedResult);
         Pagination<Bank> actualResult = bankRepository.search(getBankSearch());
         assertEquals(expectedResult, actualResult);

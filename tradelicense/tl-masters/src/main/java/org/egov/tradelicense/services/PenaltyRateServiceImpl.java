@@ -1,6 +1,5 @@
 package org.egov.tradelicense.services;
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.models.AuditDetails;
@@ -69,13 +68,15 @@ public class PenaltyRateServiceImpl implements PenaltyRateService {
 	public PenaltyRateResponse updatePenaltyRateMaster(PenaltyRateRequest penaltyRateRequest) {
 
 		RequestInfo requestInfo = penaltyRateRequest.getRequestInfo();
-		penaltyRateHelper.validatePenaltyRange(null,penaltyRateRequest,false);
+		penaltyRateHelper.validatePenaltyRange(null, penaltyRateRequest, false);
 		for (PenaltyRate penaltyRate : penaltyRateRequest.getPenaltyRates()) {
 			try {
-				Long updatedTime = new Date().getTime();
-				penaltyRate.getAuditDetails().setLastModifiedTime(updatedTime);
-				penaltyRate.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+
+				AuditDetails auditDetails = penaltyRate.getAuditDetails();
+				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
+				penaltyRate.setAuditDetails(auditDetails);
 				penaltyRate = penaltyRateRepository.updatePenaltyRate(penaltyRate);
+
 			} catch (Exception e) {
 				throw new InvalidInputException(requestInfo);
 			}

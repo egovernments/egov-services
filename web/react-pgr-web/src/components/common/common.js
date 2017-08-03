@@ -153,7 +153,14 @@ var localationData = {
   "wc.view.PropertyTypePipeSize.title":"View Property Type Pipe Size",
   "wc.update.PropertyTypePipeSize.title":"Update Property Type Pipe Size",
   "wc.create.groups.applicantDetails.consumerNo":"Consumer Number",
-  "wc.create.groups.applicantDetails.connectionDate":"Connection Date"
+  "wc.create.groups.applicantDetails.connectionDate":"Connection Date",
+  "wc.create.pipeSize.title":"Create Pipe Size",
+  "wc.search.PipeSize.title":"Search Pipe Size",
+  "wc.create.sizeInInch":"Size In Inch",
+  "wc.create.sizeInMilimeter":"Size In Milimeter",
+  "wc.view.PipeSize.title":"View Pipe Size",
+  "wc.create.mm":"H.S.C Pipe Size (mm)",
+  "wc.update.pipesize.title":"Update Pipe Size"
 }
 
 export function translate(locale_text){

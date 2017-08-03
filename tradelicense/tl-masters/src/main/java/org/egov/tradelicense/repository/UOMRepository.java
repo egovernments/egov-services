@@ -31,7 +31,7 @@ public class UOMRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManager;
 
@@ -53,7 +53,7 @@ public class UOMRepository {
 				ps.setString(1, uom.getTenantId());
 				ps.setString(2, uom.getCode());
 				ps.setString(3, uom.getName());
-				if(uom.getActive() != null){
+				if (uom.getActive() != null) {
 					ps.setBoolean(4, uom.getActive());
 				} else {
 					ps.setNull(4, java.sql.Types.NULL);
@@ -92,7 +92,11 @@ public class UOMRepository {
 				ps.setString(1, uom.getTenantId());
 				ps.setString(2, uom.getCode());
 				ps.setString(3, uom.getName());
-				ps.setBoolean(4, uom.getActive());
+				if (uom.getActive() != null) {
+					ps.setBoolean(4, uom.getActive());
+				} else {
+					ps.setNull(4, java.sql.Types.NULL);
+				}
 				ps.setString(5, uom.getAuditDetails().getLastModifiedBy());
 				ps.setLong(6, updatedTime);
 				ps.setLong(7, uom.getId());
@@ -117,7 +121,7 @@ public class UOMRepository {
 	 * @param offSet
 	 * @return List<UOM>
 	 */
-	public List<UOM> searchUom(String tenantId, Integer[] ids, String name, String code, Boolean active,
+	public List<UOM> searchUom(String tenantId, Integer[] ids, String name, String code, String active,
 			Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();

@@ -11,6 +11,7 @@ export default class UiMobileField extends Component {
 			case 'google': 
 				return (
 					<TextField 
+						style={{"display": (item.hide ? 'none' : 'block')}}
 						fullWidth={true} 
 						type="number"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 

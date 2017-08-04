@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.GrievanceType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -66,5 +66,5 @@ public class ServiceResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("Service")
-    private List<ServiceType> services = new ArrayList<>();
+    private List<GrievanceType> services = new ArrayList<>();
 }

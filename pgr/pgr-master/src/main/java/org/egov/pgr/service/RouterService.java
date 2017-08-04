@@ -43,9 +43,9 @@ package org.egov.pgr.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.domain.model.PersistRouter;
 import org.egov.pgr.domain.model.PersistRouterReq;
-import org.egov.pgr.domain.model.ServiceType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.RouterRepository;
 import org.egov.pgr.web.contract.BoundaryIdType;
@@ -79,9 +79,9 @@ public class RouterService {
 
 	
 	public PersistRouterReq create(final RouterTypeReq routerRequests) {
-		List<ServiceType> serviceTypes = new ArrayList<ServiceType>();
-		serviceTypes = routerRequests.getRouterType().getServices();
-		logger.info("Service Type size is" +serviceTypes.size());
+		List<GrievanceType> grievanceTypes = new ArrayList<GrievanceType>();
+		grievanceTypes = routerRequests.getRouterType().getServices();
+		logger.info("Service Type size is" + grievanceTypes.size());
 		
 		List<BoundaryIdType> boundaries = new ArrayList<BoundaryIdType>();
 		boundaries = routerRequests.getRouterType().getBoundary();
@@ -93,8 +93,8 @@ public class RouterService {
 	    pr.setId(routerRequests.getRouterType().getId());
 	    pr.setTenantId(routerRequests.getRouterType().getTenantId());
 	    
-	    for(int i=0;i<serviceTypes.size();i++){
-	    	Long serviceID = serviceTypes.get(i).getId();
+	    for(int i = 0; i< grievanceTypes.size(); i++){
+	    	Long serviceID = grievanceTypes.get(i).getId();
 	    	for (int j=0;j<boundaries.size();j++){
 	    		
 	    		logger.info("Boundary Size is" +boundaries.get(j).getBoundaryType());

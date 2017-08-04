@@ -43,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceTypeRepository;
 import org.egov.pgr.web.contract.ServiceGetRequest;
@@ -59,9 +59,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Service
-public class ServiceTypeService {
+public class GrievanceTypeService {
 
-	public static final Logger logger = LoggerFactory.getLogger(ServiceTypeService.class);
+	public static final Logger logger = LoggerFactory.getLogger(GrievanceTypeService.class);
 
 	@Autowired
 	private ServiceTypeRepository grievanceRepository;
@@ -80,7 +80,7 @@ public class ServiceTypeService {
 		return grievanceRepository.persistModifyServiceType(serviceRequest);
 	}
 
-	public ServiceType createServiceType(final String topic, final String key, final ServiceRequest serviceRequest) {
+	public GrievanceType createServiceType(final String topic, final String key, final ServiceRequest serviceRequest) {
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		String serviceRequestValue = null;
@@ -109,7 +109,7 @@ public class ServiceTypeService {
 		return serviceRequest.getService();
 	}
 
-	public ServiceType updateServices(final String topic, final String key, final ServiceRequest servicesRequest) {
+	public GrievanceType updateServices(final String topic, final String key, final ServiceRequest servicesRequest) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String servicesValues = null;
 		try {
@@ -139,7 +139,7 @@ public class ServiceTypeService {
 		return grievanceRepository.checkServiceByNameAndCode(code, name, tenantId);
 	}
 
-	public List<ServiceType> getServiceTypes(final ServiceGetRequest serviceGetRequest) {
+	public List<GrievanceType> getServiceTypes(final ServiceGetRequest serviceGetRequest) {
 		return grievanceRepository.findForCriteria(serviceGetRequest);
 	}
 

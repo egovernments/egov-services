@@ -42,7 +42,7 @@ package org.egov.pgr.web.contract;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.GrievanceType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -66,5 +66,5 @@ public class ServiceRequest {
     private RequestInfo requestInfo;
 
     @JsonProperty("Service")
-    private ServiceType service;
+    private GrievanceType service;
 }

@@ -40,6 +40,7 @@ import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -106,7 +107,8 @@ public class DisposalServiceTest {
     public void testCreateAsync() throws NumberFormatException, Exception {
 
         final DisposalService mock = PowerMockito.mock(DisposalService.class);
-        PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForDisposal", any(DisposalRequest.class));
+        PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForDisposal", any(DisposalRequest.class),
+                any(HttpHeaders.class));
 
         final DisposalRequest disposalRequest = new DisposalRequest();
         disposalRequest.setDisposal(getDisposalForCreateAsync());
@@ -130,7 +132,7 @@ public class DisposalServiceTest {
         assertTrue(disposalResponse.getDisposals().get(0).getId().equals(Long.valueOf("15")));
         // doNothing().when(logAwareKafkaTemplate).send(Matchers.anyString(),
         // Matchers.anyString(), Matchers.anyObject());
-        mock.createAsync(disposalRequest);
+        mock.createAsync(disposalRequest, new HttpHeaders());
 
         assertEquals(disposalResponse.getDisposals().get(0).getVoucherReference(),
                 disposalRequest.getDisposal().getVoucherReference());

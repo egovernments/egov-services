@@ -63,12 +63,14 @@ import org.egov.asset.web.validator.AssetValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -143,7 +145,7 @@ public class AssetController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         assetValidator.validateAssetForUpdate(assetRequest);
-        
+
         final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
 
         return new ResponseEntity<>(assetResponse, HttpStatus.OK);
@@ -152,16 +154,16 @@ public class AssetController {
     @PostMapping("revaluation/_create")
     @ResponseBody
     public ResponseEntity<?> revaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
-            final BindingResult bindingResult) {
+            final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
 
         logger.debug("create reevaluate:" + revaluationRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
-
-        assetValidator.validateRevaluation(revaluationRequest);
-        final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
+        logger.debug("Request Headers :: " + headers);
+        assetValidator.validateRevaluation(revaluationRequest, headers);
+        final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest, headers);
 
         return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
     }
@@ -186,17 +188,18 @@ public class AssetController {
     @PostMapping("dispose/_create")
     @ResponseBody
     public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest,
-            final BindingResult bindingResult) {
+            final BindingResult bindingResult,@RequestHeader final HttpHeaders headers) {
 
         logger.info("create dispose:" + disposalRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
+        
+        logger.debug("Request Headers :: " + headers);
+        assetValidator.validateDisposal(disposalRequest,headers);
 
-        assetValidator.validateDisposal(disposalRequest);
-
-        final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
+        final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest,headers);
         logger.debug("dispose disposalResponse:" + disposalResponse);
 
         return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);

@@ -63,7 +63,6 @@ import org.egov.collection.web.errorhandlers.Error;
 import org.egov.collection.web.errorhandlers.ErrorHandler;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

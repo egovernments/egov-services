@@ -8,7 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import DataTable from '../common/Table';
 import {Tabs, Tab} from 'material-ui/Tabs';
-// From https://github.com/oliviertassinari/react-swipeable-views
+import {translate} from '../common/common';
 import SwipeableViews from 'react-swipeable-views';
 //api import
 import Api from "../../api/api";
@@ -54,8 +54,9 @@ class Dashboard extends Component {
     this.state = {
       slideIndex: 0,
       serviceRequests: [],
-	     localArray:[],
-       hasData:false
+	    localArray:[],
+      hasData:false,
+      workflowResult: {}
     };
 }
   componentWillMount() {
@@ -114,7 +115,7 @@ class Dashboard extends Component {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
 
         if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
-          Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
+          /*Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
                 for(var i=0; i<response.serviceRequests.length; i++) {
                   var d1 = response.serviceRequests[i].requestedDatetime.split(" ")[0].split("-");
                   var d11 = response.serviceRequests[i].requestedDatetime.split(" ")[1].split(":");
@@ -145,11 +146,34 @@ class Dashboard extends Component {
                   localArray:[],
                    hasData:false
                 });
-				current.props.setLoadingStatus('hide');
+				        current.props.setLoadingStatus('hide');
+            })*/
+
+            var bodyReq = {
+              tenantId: localStorage.getItem("tenantId") || "default",
+              "reportName": "CommonInbox",
+              "searchParams": [
+                {
+                  "name": "positionId",
+                  "input": res.Employee[0].assignments[0].position
+                }
+              ]
+            };
+            Api.commonApiPost("/pgr-master/report/_get", {}, bodyReq).then(function(res) {
+              current.setState({
+                workflowResult: res,
+                hasData: true
+              });
+            }, function(err) {
+              current.props.setLoadingStatus('hide');
+              current.setState({
+                workflowResult: {},
+                hasData: true
+              });
             })
         } else {
-			current.props.setLoadingStatus('hide');
-            current.props.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
+			    current.props.setLoadingStatus('hide');
+          current.props.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
         }
       })
     }
@@ -196,13 +220,29 @@ class Dashboard extends Component {
     });
   };
 
-   handleNavigation = (type, id) => {
+  handleNavigation = (type, id) => {
       this.props.history.push(type+id);
-    }
+  }
 
+  handleRowClick = (row) => {
+    this.props.setRoute(row[row.length-1].replace("_url?", ""));
+  }
+
+  checkIfDate = (val, i) => {
+    if(this.workflowResult && this.workflowResult.reportHeader && this.workflowResult.reportHeader.length && this.workflowResult.reportHeader[i] && this.workflowResult.reportHeader[i].type == "epoch") {
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+             + _date.getFullYear();
+    } else {
+      return val;
+    }
+  }
 
   render() {
 
+    let {workflowResult} = this.state;
+    let {handleRowClick, checkIfDate} = this;
 	  const renderBody=()=> {
 		 return this.state.localArray.map((e,i)=> {
 				var triColor = "#fff";
@@ -254,9 +294,8 @@ class Dashboard extends Component {
 							)
 	  }
 
-    //console.log(this.state.localArray);
     var {currentUser}=this.props;
-    // console.log(currentUser);
+
     return (
       <div className="Dashboard">
 
@@ -334,13 +373,44 @@ class Dashboard extends Component {
                   </Grid>
               </div>
             </SwipeableViews>
-          </div>:  <Card>
-              <CardHeader title={< div style = {styles.headerStyle} >Work List< /div>} />
+          </div>:  <Card className="uiCard">
+              <CardHeader title={< div style = {styles.headerStyle} >My Tasks< /div>} />
 				<CardText>
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
-
-				<div  className="tableLayout">
+                      <div>
+                          <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+                            <thead>
+                              <tr>
+                                {
+                                  workflowResult.hasOwnProperty("reportHeader") && workflowResult.reportHeader.map((item, i) => {
+                                      if(item.name != "url")
+                                        return (
+                                          <th key={i}>{translate(item.label)}</th>
+                                        )
+                                  })
+                                }
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {
+                                workflowResult.hasOwnProperty("reportData") && workflowResult.reportData.map((item, i) => {
+                                  return (
+                                    <tr key={i} onClick={() => {handleRowClick(item)}}>
+                                      {item.map((item1, i2)=>{
+                                        if(!/_url\?/.test(item1))
+                                          return (
+                                            <td key={i2}>{checkIfDate(item1, i2)}</td>
+                                          )
+                                      })}
+                                    </tr>
+                                    )
+                                })
+                              }
+                            </tbody>
+                          </Table>
+                      </div>
+				{/*<div  className="tableLayout">
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
 						 <thead>
 							<tr>
@@ -358,8 +428,8 @@ class Dashboard extends Component {
 						  {renderBody()}
 						  </tbody>
 					</Table>
-          </div>
-          <div className="cardLayout">
+          </div>*/}
+          {/*<div className="cardLayout">
 
          {(this.state.localArray.length>0) && this.state.localArray.map((e,i)=>{
 
@@ -398,113 +468,12 @@ class Dashboard extends Component {
                           </Col>
                         )
                       }) }
-					</div>
+					</div>*/}
 
 
                     </Row>
                   </Grid>
 				</CardText>
-
-              {/*<CardText>
-                            <Grid>
-                              <Row>
-
-                                <Col xs={12} md={3}>
-                                 <Card>
-                                     <CardHeader
-                                      title="URL Avatar"
-                                      subtitle="Subtitle"
-                                      avatar="images/jsa-128.jpg"
-                                     />
-                                     <CardMedia
-                                      overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-                                     >
-                                      <img src="images/nature-600-337.jpg" alt="" />
-                                     </CardMedia>
-                                     <CardTitle title="Card title" subtitle="Card subtitle" />
-                                     <CardText>
-                                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                      Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                                      Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                                     </CardText>
-
-                                     </Card>
-                                 </Col>
-
-                                 <Col xs={12} md={3}>
-                                  <Card>
-                                      <CardHeader
-                                       title="URL Avatar"
-                                       subtitle="Subtitle"
-                                       avatar="images/jsa-128.jpg"
-                                      />
-                                      <CardMedia
-                                       overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-                                      >
-                                       <img src="images/nature-600-337.jpg" alt="" />
-                                      </CardMedia>
-                                      <CardTitle title="Card title" subtitle="Card subtitle" />
-                                      <CardText>
-                                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                       Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                                       Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                                       Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                                      </CardText>
-
-                                      </Card>
-                                  </Col>
-
-                                  <Col xs={12} md={3}>
-                                   <Card>
-                                       <CardHeader
-                                        title="URL Avatar"
-                                        subtitle="Subtitle"
-                                        avatar="images/jsa-128.jpg"
-                                       />
-                                       <CardMedia
-                                        overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-                                       >
-                                        <img src="images/nature-600-337.jpg" alt="" />
-                                       </CardMedia>
-                                       <CardTitle title="Card title" subtitle="Card subtitle" />
-                                       <CardText>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                                        Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                                        Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                                       </CardText>
-
-                                       </Card>
-                                   </Col>
-
-                                   <Col xs={12} md={3}>
-                                    <Card>
-                                        <CardHeader
-                                         title="URL Avatar"
-                                         subtitle="Subtitle"
-                                         avatar="images/jsa-128.jpg"
-                                        />
-                                        <CardMedia
-                                         overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-                                        >
-                                         <img src="images/nature-600-337.jpg" alt="" />
-                                        </CardMedia>
-                                        <CardTitle title="Card title" subtitle="Card subtitle" />
-                                        <CardText>
-                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                         Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                                         Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                                         Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                                        </CardText>
-
-                                        </Card>
-                                    </Col>
-
-
-                              </Row>
-                              </Grid>
-                            </CardText>*/}
             </Card>
       }
 
@@ -520,15 +489,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-    // labels: state.labels,
-    // appLoaded: state.common.appLoaded,
-    // appName: state.common.appName,
-    currentUser: state.common.currentUser,
-    // redirectTo: state.common.redirectTo,
-    // auth:state.common.token,
-    // pleaseWait: state.common.pleaseWait,
-    // isDialogOpen: state.form.dialogOpen,
-    // msg: state.form.msg
+    currentUser: state.common.currentUser
 });
 
 // this.props.appLoaded
@@ -539,36 +500,9 @@ const mapDispatchToProps = dispatch => ({
     },
         setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-    }
-    // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
-    // onRedirect: () => dispatch({type: 'REDIRECT'}),
-    // setLabels: payload => dispatch({type: 'LABELS', payload}),
-    // onUpdateAuth: (value, key) => dispatch({type: 'UPDATE_FIELD_AUTH', key, value}),
-    // onLogin: (username, password) => {
-    //     dispatch({
-    //         type: 'LOGIN',
-    //         payload: []//agent.Auth.login(username, password)
-    //     })
-    // },
-    // updateError: (error) =>
-    //     dispatch({
-    //         type: 'UPDATE_ERROR',
-    //         error
-    //     }),
-    // setPleaseWait: (pleaseWait) =>
-    //     dispatch({
-    //         type: 'PLEASE_WAIT',
-    //         pleaseWait
-    //     }),
-  //  toggleDailogAndSetText: (dailogState,msg) => {
-  //         dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
-  //       }
+    },
+    setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 });
-
-
-// App.contextTypes = {
-//     router: React.PropTypes.object.isRequired
-// };
 
 
 

@@ -58,14 +58,14 @@ class Report extends Component {
     }
   }
 
-  displayUI(results)
-  {
+  displayUI(results) {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
 
     specifications =typeof(results)=="string"?JSON.parse(results):results;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
@@ -525,6 +525,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   initForm: (requiredFields) => {
+    console.log(requiredFields);
     dispatch({
       type: "SET_REQUIRED_FIELDS",
       requiredFields

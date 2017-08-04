@@ -276,7 +276,7 @@ paths:
             description: name of the DocumentType
             maxLength: 128
           - name: enabled
-            type: string
+            type: boolean
             in: query
             description: True will be set in cases where only active DocumentTypes are needed and False will be set when inactive DocumentTypes are needed and no value will be set when all DocumentTypes are needed.
           - name: applicationType
@@ -515,7 +515,6 @@ paths:
         tags: 
           - FeeMatrix
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: feeMatrixRequest
             in: body
             description: FeeMatrix Request with FeeMatix(s) to be created with RequestInfo
@@ -686,7 +685,6 @@ definitions:
          description: Unique Id of the parent Category for subCategory, null for Category.
         active:
           type: boolean
-          default: true
           description: true if Category is active and false if Category is inactive 
         businessNature:
           $ref: '#/definitions/BusinessNature' 
@@ -1072,8 +1070,8 @@ definitions:
           maxLength: 50
           description: Unique code of the Status
         active:
-          type: boolean
-          default: true
+          type: string
+          default: "True"
           description: True will be set for Active Status False will be set for InActive Status
         tenantId:
           type: string

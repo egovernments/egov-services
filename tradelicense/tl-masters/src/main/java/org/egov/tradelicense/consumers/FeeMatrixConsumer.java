@@ -9,6 +9,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.FeeMatrixRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.FeeMatrixService;
+import org.egov.tradelicense.persistence.repository.FeeMatrixRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +40,7 @@ public class FeeMatrixConsumer {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	FeeMatrixService feeMatrixService;
+	FeeMatrixRepository feeMatrixRepository;
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -87,13 +88,7 @@ public class FeeMatrixConsumer {
 	@KafkaListener(topics = { "#{propertiesManager.getCreateFeeMatrixValidated()}",
 			"#{propertiesManager.getUpdateFeeMatrixValidated()}" })
 	public void receive(ConsumerRecord<String, FeeMatrixRequest> consumerRecord) throws Exception {
-
-		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateFeeMatrixValidated())) {
-			// feeMatrixService.createFeeMatrix(consumerRecord.value());
-		}
-
-		else {
-			// feeMatrixService.updateFeeMatrix(consumerRecord.value());
-		}
+		Boolean isNew = (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateFeeMatrixValidated()));
+		feeMatrixRepository.persistNewFeeMatrix(consumerRecord.value(), isNew);
 	}
 }

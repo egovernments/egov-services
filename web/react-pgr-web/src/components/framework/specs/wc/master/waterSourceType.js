@@ -63,7 +63,7 @@ var dat = {
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "Length is more than 100"

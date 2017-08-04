@@ -49,13 +49,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.IdGenRequestInfo;
-import org.egov.collection.model.IdRequest;
-import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.PositionSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
@@ -66,6 +62,7 @@ import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.ChartOfAccountsRepository;
+import org.egov.collection.repository.IdGenRepository;
 import org.egov.collection.repository.InstrumentRepository;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Bill;
@@ -84,9 +81,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.jayway.jsonpath.JsonPath;
 
 @Service
 public class ReceiptService {
@@ -96,12 +91,6 @@ public class ReceiptService {
 
 	@Autowired
 	private ReceiptRepository receiptRepository;
-
-	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	@Autowired
-	private RestTemplate restTemplate;
 
 	@Autowired
 	private BusinessDetailsRepository businessDetailsRepository;
@@ -117,6 +106,9 @@ public class ReceiptService {
 
 	@Autowired
 	private InstrumentRepository instrumentRepository;
+	
+	@Autowired
+	private IdGenRepository idGenRepository;
 	
 	@Autowired
 	private WorkflowService workflowService;
@@ -153,6 +145,7 @@ public class ReceiptService {
 		Boolean callBackForApportion = false;
 		List<BillDetail> apportionBillDetails = new ArrayList<>();
 		for (BillDetail billDetail : bill.getBillDetails()) {
+			if(billDetail.getAmountPaid().longValueExact() > 0){
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billDetail.getBusinessService(), requestInfo, tenantId);
 			if (billDetail.getAmountPaid() != billDetail.getTotalAmount()) {
@@ -169,6 +162,7 @@ public class ReceiptService {
 				}
 			}
 			apportionBillDetails.add(billDetail);
+		  }
 		}
 		if (callBackForApportion) {
 			apportionBillDetails.addAll(billingServiceRepository
@@ -250,7 +244,7 @@ public class ReceiptService {
 				billDetail.setCollectionType(CollectionType.COUNTER);
 				billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 				billDetail.setReceiptDate(new Date().getTime());
-				billDetail.setReceiptNumber(generateReceiptNumber(requestInfo,
+				billDetail.setReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
 						tenantId));
 				Map<String, Object> parametersMap;
 				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
@@ -404,61 +398,6 @@ public class ReceiptService {
 		}
 		LOGGER.info("Response from coll-master: " + businessDetailsResponse);
 		return businessDetailsResponse;
-	}
-
-	public String generateReceiptNumber(RequestInfo requestInfo, String tenantId) {
-		LOGGER.info("Generating receipt number for the receipt.");
-
-		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getIdGenServiceHost();
-		String baseUri = applicationProperties.getIdGeneration();
-		builder.append(hostname).append(baseUri);
-
-		LOGGER.info("URI being hit: " + builder.toString());
-
-		IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
-		IdGenRequestInfo idGenReq = new IdGenRequestInfo();
-
-		// Because idGen Svc uses a slightly different form of requestInfo
-
-		idGenReq.setAction(requestInfo.getAction());
-		idGenReq.setApiId(requestInfo.getApiId());
-		idGenReq.setAuthToken(requestInfo.getAuthToken());
-		idGenReq.setCorrelationId(requestInfo.getCorrelationId());
-		idGenReq.setDid(requestInfo.getDid());
-		idGenReq.setKey(requestInfo.getKey());
-		idGenReq.setMsgId(requestInfo.getMsgId());
-		idGenReq.setRequesterId(requestInfo.getRequesterId());
-		idGenReq.setTs(requestInfo.getTs().getTime()); // this
-														// is
-														// the
-														// difference.
-		idGenReq.setUserInfo(requestInfo.getUserInfo());
-		idGenReq.setVer(requestInfo.getVer());
-
-		IdRequest idRequest = new IdRequest();
-		idRequest.setIdName(CollectionServiceConstants.COLL_ID_NAME);
-		idRequest.setTenantId(tenantId);
-		idRequest.setFormat(CollectionServiceConstants.COLL_ID_FORMAT);
-
-		List<IdRequest> idRequests = new ArrayList<>();
-		idRequests.add(idRequest);
-
-		idRequestWrapper.setIdGenRequestInfo(idGenReq);
-		idRequestWrapper.setIdRequests(idRequests);
-		Object response = null;
-
-		try {
-			response = restTemplate.postForObject(builder.toString(),
-					idRequestWrapper, Object.class);
-		} catch (Exception e) {
-			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-					CollectionServiceConstants.RCPTNO_EXCEPTION_MSG, CollectionServiceConstants.RCPTNO_EXCEPTION_DESC);
-
-		}
-		LOGGER.info("Response from id gen service: " + response.toString());
-
-		return JsonPath.read(response, "$.idResponses[0].id");
 	}
 
 	public Boolean checkVoucherCreation(Boolean voucherCreation,

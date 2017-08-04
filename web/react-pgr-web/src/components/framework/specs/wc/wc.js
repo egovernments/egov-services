@@ -27,8 +27,7 @@ var dat = {
                 "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
                 "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.asset.email": "properties[0].owners[0].emailId",
-                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.": "properties[0].propertyDetail.noOfFloors"
+                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber"
 
               }
             },
@@ -180,8 +179,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-			"defaultValue": [],
-			"url":''
+      			"defaultValue": [],
+      			"url":'/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..categoryTypeName|$..categoryTypeName'
           },
           {
             "name": "UsageType",

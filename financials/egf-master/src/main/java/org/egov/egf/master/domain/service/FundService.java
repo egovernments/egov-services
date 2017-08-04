@@ -68,6 +68,9 @@ public class FundService {
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
             }
+            for(Fund b:funds) {
+                b.update();
+            }
 
         } catch (CustomBindException e) {
 

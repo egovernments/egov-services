@@ -24,10 +24,13 @@ import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.VoucherType;
 import org.egov.common.contract.request.RequestInfo;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -79,19 +82,31 @@ public class VoucherService {
         return voucherRequest;
     }
 
-    public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
         final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
                 + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
         logger.debug("Voucher API Request URL :: " + createVoucherUrl);
         logger.debug("VoucherRequest :: " + voucherRequest);
         Error err = new Error();
         VoucherResponse voucherRes = new VoucherResponse();
+
+        final List<String> sessionId = headers.get("sessionId");
+        logger.debug("Session ID ::" + sessionId);
+
+        final HttpHeaders reqHeaders = new HttpHeaders();
+        reqHeaders.add("Cookie", "SESSIONID=" + sessionId);
+
+        logger.debug("Request Headers for Voucher Request :: " + reqHeaders);
+
+        final HttpEntity requestEntity = new HttpEntity(voucherRequest, reqHeaders);
+        logger.debug("Request Entity ::" + requestEntity);
         try {
-            final JSONObject voucherResponse = restTemplate.postForObject(createVoucherUrl, voucherRequest,
-                    JSONObject.class);
-            logger.debug("VoucherResponse :: " + voucherResponse);
+            final ResponseEntity<String> response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST,
+                    requestEntity, String.class);
+            logger.debug("VoucherResponse :: " + response.getBody());
             try {
-                voucherRes = mapper.readValue(voucherResponse.toString(), VoucherResponse.class);
+                voucherRes = mapper.readValue(response.toString(), VoucherResponse.class);
             } catch (final IOException e) {
                 logger.debug("Voucher response Deserialization Issue :: " + e.getMessage());
             }

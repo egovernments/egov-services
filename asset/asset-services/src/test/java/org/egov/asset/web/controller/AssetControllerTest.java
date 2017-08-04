@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -163,7 +164,7 @@ public class AssetControllerTest {
         final RevaluationResponse revaluationResponse = new RevaluationResponse();
         revaluationResponse.setResposneInfo(null);
         revaluationResponse.setRevaluations(revaluations);
-        when(revaluationService.createAsync(any(RevaluationRequest.class))).thenReturn(revaluationResponse);
+        when(revaluationService.createAsync(any(RevaluationRequest.class),any(HttpHeaders.class))).thenReturn(revaluationResponse);
         mockMvc.perform(post("/assets/revaluation" + "/_create").contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("revaluation/revaluationcreaterequest.json"))).andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -191,7 +192,7 @@ public class AssetControllerTest {
         final DisposalResponse disposalResponse = new DisposalResponse();
         disposalResponse.setResponseInfo(null);
         disposalResponse.setDisposals(disposals);
-        when(disposalService.createAsync(any(DisposalRequest.class))).thenReturn(disposalResponse);
+        when(disposalService.createAsync(any(DisposalRequest.class),any(HttpHeaders.class))).thenReturn(disposalResponse);
         mockMvc.perform(post("/assets/dispose/_create").contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("disposal/disposalcreaterequest.json"))).andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

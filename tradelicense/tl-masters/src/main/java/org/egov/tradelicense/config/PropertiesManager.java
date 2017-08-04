@@ -23,6 +23,9 @@ public class PropertiesManager {
 	@Value("${duplicate.code}")
 	private String duplicateCode;
 
+	@Value("${duplicate.name}")
+	private String duplicateName;
+
 	@Value("${invalid.range.code}")
 	private String invalidRangeCode;
 
@@ -49,6 +52,9 @@ public class PropertiesManager {
 
 	@Value("${duplicate.category.code}")
 	private String categoryCustomMsg;
+	
+	@Value("${duplicate.category.name}")
+	private String categoryNameDuplicate;
 
 	@Value("${duplicate.subcategory.code}")
 	private String subCategoryCustomMsg;

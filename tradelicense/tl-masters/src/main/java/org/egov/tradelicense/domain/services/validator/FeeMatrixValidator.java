@@ -17,11 +17,13 @@ import org.egov.tradelicense.persistence.repository.helper.FeeMatrixHelper;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
 import org.egov.tradelicense.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author phani
  *
  */
+@Component
 public class FeeMatrixValidator {
 
 	@Autowired
@@ -36,7 +38,7 @@ public class FeeMatrixValidator {
 	@Autowired
 	FeeMatrixRepository feeMatrixRepository;
 	
-	@Autowired
+	
 	public void validateFeeMatrixRequest( FeeMatrixRequest feeMatrixRequest, Boolean isNew){
 		
 		RequestInfo requestInfo = feeMatrixRequest.getRequestInfo();

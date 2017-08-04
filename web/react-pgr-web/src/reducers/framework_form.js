@@ -19,10 +19,10 @@ const defaultState = {
 export default (state = defaultState, action) => {
     switch (action.type) {
         case "SET_FORM_DATA":
-            
             return {
                 ...state,
-                form: action.data
+                form: action.data,
+                isFormValid: checkIfHasAllReqFields(state.requiredFields, action.data)
             }
 
         case "SET_REQUIRED_FIELDS":
@@ -114,4 +114,14 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
     isFormValid,
     errorText
   }
+}
+
+function checkIfHasAllReqFields(reqFields, form) {
+    for(var i=0; i<reqFields.length; i++) {
+        if(!_.get(form, reqFields[i])) {
+            return false;
+        }
+    }
+
+    return true;
 }

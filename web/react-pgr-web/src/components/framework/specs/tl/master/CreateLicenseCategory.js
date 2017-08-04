@@ -1,9 +1,9 @@
 var dat = {
 	"tl.create": {
 		"numCols": 12/2,
-		"url": "/v1/category/_create",
+		"url": "/tl-masters/category/_create",
 		"tenantIdRequired": true,
-		"objectName": "LicenseCategoryType",
+		"objectName": "categories",
 		"groups": [
 			{
 				"label": "tl.create.categorytype.title",
@@ -11,7 +11,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "categories.name",
+							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.categorytype.name",
 							"pattern": "",
 							"type": "text",
@@ -22,7 +22,7 @@ var dat = {
 						},
 						{
 							"name": "code",
-							"jsonPath": "categories.code",
+							"jsonPath": "categories[0].code",
 							"label": "tl.create.groups.categorytype.code",
 							"pattern": "",
 							"type": "text",
@@ -30,6 +30,18 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
+						},
+						{
+							"name": "active",
+							"jsonPath": "categories[0].active",
+							"label": "Active",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue":true
 						}
 				]
 			}

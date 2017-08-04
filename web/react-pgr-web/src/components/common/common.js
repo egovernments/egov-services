@@ -370,7 +370,7 @@ var localationData = {
 		"employee.APRDetails.title": " A P R Details",
 		"employee.EmployeeDocuments.fields.document": "Document",
 		"employee.EmployeeDocuments.fields.referenceType": "Reference Type",
-		"employee.EmployeeDocuments.title": " Employee Documents"
+		"employee.EmployeeDocuments.title": " Employee Documents",
 
 
   "tl.create.categorytype.title":"Create License Category",

@@ -80,7 +80,9 @@ let menuConvention={
   "Water Charge.WCMS Masters.StorageReservoir.ModifyStorageReservoirApi":"/search/wc/storageReservoir/update",
   "Water Charge.WCMS Masters.StorageReservoir.SearchStorageReservoirApi":"/search/wc/storageReservoir/view",
 
-  "Collection.Collection-Transactions.CreateReceipt":"/transaction/collection/collection"
+  "Collection.Collection-Transactions.CreateReceipt":"/transaction/collection/collection",
+
+  "Trade License.Trade License Masters.License Category.CreateLicenseCategory":"/create/tl/CreateLicenseCategory"
 
 }
 

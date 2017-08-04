@@ -198,7 +198,7 @@ public class ServiceTypeRepository {
 
     public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId ,final String serviceCode) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(serviceName.toUpperCase());
+        preparedStatementValues.add(serviceName.toUpperCase().trim());
         preparedStatementValues.add(tenantId);
 
         final String query = ServiceTypeQueryBuilder.checkServiceNameIfExists();

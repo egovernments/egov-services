@@ -285,7 +285,9 @@ public class ReceiptService {
 			String tenantId, AuditDetails auditDetail, BillDetail billDetail,
 			Long receiptHeaderId, BusinessDetailsRequestInfo businessDetails) {
 		final Map<String, Object> parametersMap = new HashMap<>();
-
+		String collectionModesNotAllowed = billDetail
+				.getCollectionModesNotAllowed().toString().replace("[", "");
+		collectionModesNotAllowed = collectionModesNotAllowed.replace("]", "");
 		parametersMap.put("id", receiptHeaderId);
 		parametersMap.put("payeename", bill.getPayeeName());
 		parametersMap.put("payeeaddress", bill.getPayeeAddress());
@@ -302,8 +304,7 @@ public class ReceiptService {
 				billDetail.getReasonForCancellation());
 		parametersMap.put("minimumamount", billDetail.getMinimumAmount());
 		parametersMap.put("totalamount", billDetail.getAmountPaid());
-		parametersMap.put("collmodesnotallwd", billDetail
-				.getCollectionModesNotAllowed().toString());
+		parametersMap.put("collmodesnotallwd",collectionModesNotAllowed);
 		parametersMap.put("consumercode", billDetail.getConsumerCode());
 		parametersMap.put("channel", billDetail.getChannel());
 		parametersMap.put("fund", businessDetails.getFund());

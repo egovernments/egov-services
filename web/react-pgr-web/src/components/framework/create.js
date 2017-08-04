@@ -73,7 +73,7 @@ class Report extends Component {
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
 
-    if(hashLocation.split("/").indexOf("update") > -1) {
+    if(hashLocation.split("/").indexOf("update") == 1) {
       var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
       var id = self.props.match.params.id || self.props.match.params.master;
       var query = {
@@ -450,11 +450,13 @@ class Report extends Component {
     let {mockData, moduleName, actionName} = this.props;
     const getFromGroup = function(groups) {
       for(var i=0; i<groups.length; i++) {
-        for(var j=0; j<groups[i].children.length; i++) {
-          if(groups[i].children[j].jsonPath == value) {
-            return "groups[" + i + "].children[" + j + "].groups";
-          } else {
-            return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
+        if(groups[i].children) {
+          for(var j=0; j<groups[i].children.length; i++) {
+            if(groups[i].children[j].jsonPath == value) {
+              return "groups[" + i + "].children[" + j + "].groups";
+            } else {
+              return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
+            }
           }
         }
       }
@@ -525,7 +527,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   initForm: (requiredFields) => {
-    console.log(requiredFields);
     dispatch({
       type: "SET_REQUIRED_FIELDS",
       requiredFields

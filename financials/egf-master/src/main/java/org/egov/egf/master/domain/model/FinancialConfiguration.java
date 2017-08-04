@@ -46,7 +46,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.common.domain.model.Auditable;
-import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,18 +62,21 @@ import lombok.ToString;
 @ToString
 public class FinancialConfiguration extends Auditable {
 
-	@NotNull
-	private String id;
+    @NotNull
+    private String id;
 
-	
-	@Size(min = 3, max = 50)
-	private String name;
+    @Size(min = 3, max = 50)
+    private String name;
 
-	@NotNull
-	@Size(min = 3, max = 250)
-	private String description;
+    @NotNull
+    @Size(min = 3, max = 250)
+    private String description;
 
-	@NotNull
-	private List<FinancialConfigurationValue> values;
+    @NotNull
+    @Size(min = 3, max = 50)
+    private String module;
+
+    @NotNull
+    private List<FinancialConfigurationValue> values;
 
 }

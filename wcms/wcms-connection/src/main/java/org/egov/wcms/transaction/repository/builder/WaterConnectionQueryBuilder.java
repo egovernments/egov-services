@@ -101,6 +101,11 @@ public class WaterConnectionQueryBuilder {
                 + "materialcharges=?,tenantid=?,lastmodifiedby=?,lastmodifiedtime=? where id=?";
                 
     }
+    
+    public static String getDocumentForConnection() { 
+    	
+    	return "SELECT id, document, name, filestoreid, connectionid, tenantid FROM egwtr_documentowner WHERE connectionid = ? AND tenantid = ?" ;
+    }
     public static String insertMaterial() {
 
         return "INSERT INTO egwtr_material("
@@ -167,8 +172,13 @@ public class WaterConnectionQueryBuilder {
 
     
     public static String persistEstimationNoticeQuery() { 
-    	return "INSERT INTO egwtr_estimationnotice_audit_log (id, waterconnectionid, tenantid, dateofletter, letternumber, letterto, letterintimationsubject, applicationnumber, applicationdate, applicantname, servicename, waternumber, sladays, penaltychargedescription1, penaltychargedescription2, createdby, createdtime) "
-    			+ "values (nextval('seq_egwtr_estimationnotice_audit_log'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "; 
+    	return "INSERT INTO egwtr_estimationnotice_audit_log (id, waterconnectionid, tenantid, dateofletter, letternumber, letterto, letterintimationsubject, applicationnumber, applicationdate, applicantname, servicename, waternumber, sladays, chargeDescription1, chargeDescription2, createdby, createdtime) "
+    			+ "values (nextval('seq_egwtr_estimationnotice_audit_log'),:waterConnectionId,:tenantId,:dateOfLetter,:letterNumber,:letterTo,:letterIntimationSubject,:applicationNumber,:applicationDate,:applicantName,:serviceName,:waterNumber,:slaDays,:chargeDescription1,:chargeDescription2,:createdBy,:createdDate) "; 
+    }
+    
+    public static String persistWorkOrderQuery() { 
+    	return "INSERT INTO egwtr_workorder_audit_log (id, waterconnectionid, tenantid, workordernumber, workorderdate, watertapownername, acknumber,  acknumberdate, hscnumber, hscnumberdate, servicename, plumbername, createdby, createdtime) "
+    			+ "values (nextval('seq_egwtr_workorder_audit_log'),:waterConnectionId,:tenantId,:workOrderNumber,:workOrderDate,:waterTapOwnerName,:ackNumber,:ackNumberDate,:hscNumber,:hscNumberDate,:serviceName,:plumberName,:createdBy,:createdDate) "; 
     }
     
 

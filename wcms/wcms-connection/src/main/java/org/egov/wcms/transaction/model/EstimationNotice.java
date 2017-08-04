@@ -40,6 +40,8 @@
 
 package org.egov.wcms.transaction.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -66,8 +68,7 @@ public class EstimationNotice {
 	private String serviceName;
 	private String waterNo;
 	private Long slaDays;
-	private String chargeDescription1;
-	private String chargeDescription2;
+	private List<String> chargeDescription;
 	
 	public String getUlbLogo() {
 		return ulbLogo;
@@ -173,21 +174,15 @@ public class EstimationNotice {
 		this.slaDays = slaDays;
 	}
 
-	public String getChargeDescription1() {
-		return chargeDescription1;
+	public List<String> getChargeDescription() {
+		return chargeDescription;
 	}
 
-	public void setChargeDescription1(String chargeDescription1) {
-		this.chargeDescription1 = chargeDescription1;
+	public void setChargeDescription(List<String> chargeDescription) {
+		this.chargeDescription = chargeDescription;
 	}
 
-	public String getChargeDescription2() {
-		return chargeDescription2;
-	}
-
-	public void setChargeDescription2(String chargeDescription2) {
-		this.chargeDescription2 = chargeDescription2;
-	}
+	
 
 	
 

@@ -37,57 +37,32 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.demand.contract;
+package org.egov.wcms.transaction.web.contract;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transaction.model.WorkOrderFormat;
 
-import javax.validation.constraints.NotNull;
-
-import org.egov.wcms.transaction.model.AuditDetails;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Getter
+@NoArgsConstructor
 @Setter
-public class Demand {
+@ToString
+public class WorkOrderRes {
 
-	private String id;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	@NotNull
-	private String tenantId;
+    @JsonProperty("WorkOrder")
+    private WorkOrderFormat workOrder; 
 
-	@NotNull
-	private String consumerCode;
-
-	@NotNull
-	private String consumerType;
-
-	@NotNull
-	private String businessService;
-
-	@NotNull
-	private Owner owner;
-
-	@NotNull
-	private Long taxPeriodFrom;
-//Date
-	@NotNull
-	private Long taxPeriodTo;
-	
-	
-	@NotNull
-	private List<DemandDetail> demandDetails = new ArrayList<>();
-
-	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
-
-	private AuditDetails auditDetails;
 }

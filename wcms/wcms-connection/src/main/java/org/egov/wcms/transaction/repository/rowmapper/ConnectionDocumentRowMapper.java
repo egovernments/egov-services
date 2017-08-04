@@ -37,57 +37,24 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.demand.contract;
+package org.egov.wcms.transaction.repository.rowmapper;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import javax.validation.constraints.NotNull;
+import org.egov.wcms.transaction.model.DocumentOwner;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import org.egov.wcms.transaction.model.AuditDetails;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class Demand {
-
-	private String id;
-
-	@NotNull
-	private String tenantId;
-
-	@NotNull
-	private String consumerCode;
-
-	@NotNull
-	private String consumerType;
-
-	@NotNull
-	private String businessService;
-
-	@NotNull
-	private Owner owner;
-
-	@NotNull
-	private Long taxPeriodFrom;
-//Date
-	@NotNull
-	private Long taxPeriodTo;
-	
-	
-	@NotNull
-	private List<DemandDetail> demandDetails = new ArrayList<>();
-
-	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
-
-	private AuditDetails auditDetails;
+@Component
+public class ConnectionDocumentRowMapper implements RowMapper<DocumentOwner> {
+    @Override
+    public DocumentOwner mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final DocumentOwner documentOwner= new DocumentOwner();	
+        documentOwner.setDocumentId(rs.getInt("id"));
+        documentOwner.setDocument(rs.getString("document"));
+        documentOwner.setFileStoreId(rs.getString("filestoreid"));
+        documentOwner.setName(rs.getString("name"));
+        return documentOwner;
+    }
 }

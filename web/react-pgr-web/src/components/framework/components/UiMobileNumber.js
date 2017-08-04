@@ -12,6 +12,7 @@ export default class UiMobileField extends Component {
 				return (
 					<TextField 
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
+						errorStyle={{"float":"left"}}
 						fullWidth={true} 
 						type="number"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 

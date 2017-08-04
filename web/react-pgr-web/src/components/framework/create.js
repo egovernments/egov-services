@@ -287,16 +287,23 @@ class Report extends Component {
   }
 
   getVal = (path) => {
-    return _.get(this.props.formData, path) || "";
+    return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
   }
 
   hideField = (_mockData, hideObject, reset) => {
-    let {moduleName, actionName} = this.props;
+    let {moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
     if(hideObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
           if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
             _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? false : true;
+            if(!reset) {
+              _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+              setFormData(_formData);  
+            }
+            
+            break;
           }
         }
       }
@@ -304,6 +311,7 @@ class Report extends Component {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
+          break;
         }
       }
     }
@@ -312,12 +320,18 @@ class Report extends Component {
   }
 
   showField = (_mockData, showObject, reset) => {
-    let {moduleName, actionName} = this.props;
+    let {moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
     if(showObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
           if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
             _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? true : false;
+            if(!reset) {
+              _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+              setFormData(_formData);  
+            }
+            break;
           }
         }
       }
@@ -325,6 +339,7 @@ class Report extends Component {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? true : false;
+          break;
         }
       }
     }

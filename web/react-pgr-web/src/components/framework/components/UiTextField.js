@@ -12,6 +12,7 @@ export default class UiTextField extends Component {
 				return (
 					<TextField 
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
+						errorStyle={{"float":"left"}}
 						fullWidth={true} 
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={this.props.getVal(item.jsonPath)}

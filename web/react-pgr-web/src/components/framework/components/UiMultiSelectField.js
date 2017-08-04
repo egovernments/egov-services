@@ -32,17 +32,19 @@ class UiMultiSelectField extends Component {
 			}
 
 			Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
-				let keys=jp.query(response, splitArray[1].split("|")[1]);
-				let values=jp.query(response, splitArray[1].split("|")[2]);
-				let dropDownData=[];
-				for (var k = 0; k < keys.length; k++) {
-						let obj={};
-						obj["key"]=keys[k];
-						obj["value"]=values[k];
-						dropDownData.push(obj);
-				}
+				if(response) {
+					let keys=jp.query(response, splitArray[1].split("|")[1]);
+					let values=jp.query(response, splitArray[1].split("|")[2]);
+					let dropDownData=[];
+					for (var k = 0; k < keys.length; k++) {
+							let obj={};
+							obj["key"]=keys[k];
+							obj["value"]=values[k];
+							dropDownData.push(obj);
+					}
 
-				setDropDownData(item.jsonPath, dropDownData);
+					setDropDownData(item.jsonPath, dropDownData);
+				}
 			},function(err) {
 				console.log(err);
 			});
@@ -60,6 +62,7 @@ class UiMultiSelectField extends Component {
 				return (
 					<SelectField
 						style={{"display": (item.hide ? 'none' : 'block')}}
+						errorStyle={{"float":"left"}}
 						fullWidth={true}
 						multiple={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}

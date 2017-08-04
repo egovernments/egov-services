@@ -12,6 +12,7 @@ export default class UiTextArea extends Component {
 				return (
 					<TextField 
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
+						errorStyle={{"float":"left"}}
 						fullWidth={true} 
 						multiLine={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 

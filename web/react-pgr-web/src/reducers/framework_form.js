@@ -108,6 +108,7 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
     }
   }
 
+
   return {
     isFormValid,
     errorText

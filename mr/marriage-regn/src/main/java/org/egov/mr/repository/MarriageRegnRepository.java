@@ -39,7 +39,7 @@ public class MarriageRegnRepository {
 			+ " bridegroomid, brideid, priestname, priestreligion, priestaddress, priestaadhaar, priestmobileno,"
 			+ " priestemail, serialno, volumeno, applicationnumber,"
 			+ " regnnumber, regndate, status, source, stateid, isactive, approvaldepartment, approvaldesignation, approvalassignee,"
-			+ " approvalaction, approvalstatus, aprovalcomments, createdby, createdtime, lastmodifiedby, lastmodifiedtime, tenantid)"
+			+ " approvalaction, approvalstatus, approvalcomments, createdby, createdtime, lastmodifiedby, lastmodifiedtime, tenantid)"
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 	public static final String UPDATE_MARRIAGE_REGN_QUERY = "UPDATE egmr_marriage_regn"
@@ -47,7 +47,7 @@ public class MarriageRegnRepository {
 			+ " bridegroomid, brideid, priestname, priestreligion, priestaddress, priestaadhaar, priestmobileno,"
 			+ " priestemail, serialno, volumeno,"
 			+ " regnnumber, regndate, status, source, stateid, isactive, approvaldepartment, approvaldesignation, approvalassignee,"
-			+ " approvalaction, approvalstatus, aprovalcomments, lastmodifiedby, lastmodifiedtime)"
+			+ " approvalaction, approvalstatus, approvalcomments, lastmodifiedby, lastmodifiedtime)"
 			+ " = (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 			+ " WHERE applicationnumber = ? AND tenantid = ?";
 

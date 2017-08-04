@@ -7,10 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Component
-public class MarriageDocumentTypeQueryBuilder {
+import lombok.extern.slf4j.Slf4j;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MarriageDocumentTypeQueryBuilder.class);
+@Component
+@Slf4j
+public class MarriageDocumentTypeQueryBuilder {
 
 	public final static String BATCH_INSERT_QUERY = "INSERT INTO egmr_marriage_document_type "
 			+ "(id,name,code,isactive,isindividual,isrequired,proof,appltype,tenantid)" + " values (?,?,?,?,?,?,?,?,?)";
@@ -28,7 +29,7 @@ public class MarriageDocumentTypeQueryBuilder {
 			List<Object> preparedStatementValues) {
 		selectQuery = new StringBuilder(BASEQUERY);
 		addWhereClause(marriageDocumentTypeSearchCriteria, preparedStatementValues);
-		LOGGER.info(selectQuery.toString());
+		log.info(selectQuery.toString());
 		return selectQuery.toString();
 	}
 

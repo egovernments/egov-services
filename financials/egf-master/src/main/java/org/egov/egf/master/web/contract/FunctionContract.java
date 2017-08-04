@@ -75,10 +75,6 @@ public class FunctionContract extends AuditableContract {
 	@NotNull
 	private Boolean active;
 
-	// is this required?
-	@NotNull
-	private Boolean isParent;
-
 	private FunctionContract parentId;
 
 }

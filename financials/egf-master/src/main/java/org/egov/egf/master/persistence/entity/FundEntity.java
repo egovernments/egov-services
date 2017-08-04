@@ -80,8 +80,6 @@ public class FundEntity extends AuditableEntity {
 	@NotNull
 	protected Long level;
 
-	protected Boolean isParent;
-
 	@NotNull
 	protected Boolean active;
 
@@ -101,7 +99,6 @@ public class FundEntity extends AuditableEntity {
 		fund.setIdentifier(this.identifier);
 		fund.setActive(this.active);
 		fund.setParent(parent);
-		fund.setIsParent(this.isParent);
 		fund.setLevel(this.level);
 		return fund;
 
@@ -118,7 +115,6 @@ public class FundEntity extends AuditableEntity {
 		this.parentId = fund.getParent() != null ? fund.getParent().getId() : null;
 		this.active = fund.getActive();
 		this.level = fund.getLevel();
-		this.isParent = fund.getIsParent();
 		return this;
 
 	}

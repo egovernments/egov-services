@@ -92,7 +92,7 @@ public class FunctionServiceTest {
 	@Test
 	public final void test_invalid_Add() {
 
-		Function function1 = Function.builder().id("1").code("001").active(true).parentId(null).level(1).isParent(false)
+		Function function1 = Function.builder().id("1").code("001").active(true).parentId(null).level(1)
 				.build();
 		functions.add(function1);
 
@@ -150,13 +150,13 @@ public class FunctionServiceTest {
 
 	private Function getFunction() {
 		Function function = Function.builder().id("1").name("function").code("001").active(true)
-				.parentId(getParentFunction()).level(1).isParent(false).build();
+				.parentId(getParentFunction()).level(1).build();
 		return function;
 	}
 
 	private Function getParentFunction() {
 		Function function = Function.builder().id("2").name("functionParent").code("002").active(true).parentId(null)
-				.level(1).isParent(false).build();
+				.level(1).build();
 		return function;
 	}
 
@@ -170,7 +170,7 @@ public class FunctionServiceTest {
 	}
 
 	private FunctionContract getFunctionContract() {
-		return FunctionContract.builder().code("001").name("function").active(true).level(1).isParent(false).build();
+		return FunctionContract.builder().code("001").name("function").active(true).level(1).build();
 	}
 
 }

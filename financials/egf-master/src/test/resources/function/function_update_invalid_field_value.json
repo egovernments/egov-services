@@ -14,8 +14,7 @@
 			    "name":"functionUaa",
 		   		"tenantId":"default",
 		   		"code":"003",
-		   		"active":true,
-		   		"isParent":false
+		   		"active":true
 		   	}
 	   	
 	   ]

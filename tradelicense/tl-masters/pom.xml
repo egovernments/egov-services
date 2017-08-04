@@ -80,9 +80,14 @@
 	<repositories>
 		<repository>
 			<id>repo.egovernments.org</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>repo.egovernments.org</id>
 			<name>eGov ERP Snapshots Repository</name>
 			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-		</repository>
+		</snapshotRepository>
 	</repositories>
 
 	<build>

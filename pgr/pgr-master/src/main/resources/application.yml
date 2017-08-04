@@ -1577,43 +1577,43 @@ ReportDefinitions:
   - name: businesskey
     label: reports.common.businesskey
     type: string
-    source: egpgr_complainttype
+    source: common
   - name: comments
     label: reports.common.comments
-    type: number
-    source: egeis_position
+    type: string
+    source: common
   - name: createddate
     label: reports.common.createddate
-    type: number
-    source: eg_boundary
+    type: epoch
+    source: common
   - name: id
     label: reports.common.id
     type: number
-    source: egpgr_router
+    source: common
   - name: status
     label: reports.common.status
-    type: number
-    source: egpgr_router
+    type: string
+    source: common
   - name: natureoftask
     label: reports.common.natureoftask
-    type: number
-    source: egpgr_router
+    type: string
+    source: common
   - name: details
-    label: reports.common.natureoftask
-    type: number
-    source: egpgr_router
+    label: reports.common.details
+    type: string
+    source: common
   - name: sendername
-    label: reports.common.natureoftask
-    type: number
+    label: reports.common.sendername
+    type: string
     source: egpgr_router
   - name: action
-    label: reports.common.natureoftask
-    type: number
-    source: egpgr_router
+    label: reports.common.action
+    type: string
+    source: common
   - name: url
-    label: reports.common.natureoftask
-    type: number
-    source: egpgr_router
+    label: reports.common.url
+    type: string
+    source: common
   
   searchParams:
   - name: positionId

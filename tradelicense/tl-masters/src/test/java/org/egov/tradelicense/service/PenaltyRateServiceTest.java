@@ -43,7 +43,7 @@ public class PenaltyRateServiceTest {
 	@Autowired
 	PenaltyRateRepository penaltyRateRepository;
 
-	public Long penaltyRateId = 1l;
+	public static Long penaltyRateId = 1l;
 	public String tenantId = "default";
 	public String applicationType = "New";
 	public Long fromRange = -9999l;
@@ -89,7 +89,7 @@ public class PenaltyRateServiceTest {
 				assertTrue(false);
 			}
 
-			penaltyRateRepository.craeatePenaltyRate(tenantId, penaltyRateResponse.getPenaltyRates().get(0));
+			penaltyRateId = penaltyRateRepository.craeatePenaltyRate(tenantId, penaltyRateResponse.getPenaltyRates().get(0));
 
 			assertTrue(true);
 

@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.CategoryRequest;
 import org.egov.models.PenaltyRateRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
@@ -66,9 +65,9 @@ public class PenaltyRateConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, PenaltyRateRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(PenaltyRateRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -77,8 +76,8 @@ public class PenaltyRateConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, PenaltyRateRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, PenaltyRateRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PenaltyRateRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -92,7 +91,7 @@ public class PenaltyRateConsumer {
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreatePenaltyRateValidated()}",
 			"#{propertiesManager.getUpdatePenaltyRateValidated()}" })
-	public void receive(ConsumerRecord<String, PenaltyRateRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreatePenaltyRateValidated())) {
 			penaltyRateService.createPenaltyRate(objectMapper.convertValue(consumerRecord.value(), PenaltyRateRequest.class));

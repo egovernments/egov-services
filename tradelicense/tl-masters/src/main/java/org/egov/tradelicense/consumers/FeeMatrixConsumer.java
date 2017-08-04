@@ -8,7 +8,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.FeeMatrixRequest;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.domain.services.FeeMatrixService;
 import org.egov.tradelicense.persistence.repository.FeeMatrixRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +20,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Consumer class will use for listening feematrix object from kafka server to
@@ -41,6 +42,10 @@ public class FeeMatrixConsumer {
 
 	@Autowired
 	FeeMatrixRepository feeMatrixRepository;
+	
+
+	 @Autowired
+	 private ObjectMapper objectMapper;
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -61,9 +66,9 @@ public class FeeMatrixConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, FeeMatrixRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(FeeMatrixRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -72,8 +77,8 @@ public class FeeMatrixConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, FeeMatrixRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, FeeMatrixRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, FeeMatrixRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -87,8 +92,8 @@ public class FeeMatrixConsumer {
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateFeeMatrixValidated()}",
 			"#{propertiesManager.getUpdateFeeMatrixValidated()}" })
-	public void receive(ConsumerRecord<String, FeeMatrixRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
 		Boolean isNew = (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateFeeMatrixValidated()));
-		feeMatrixRepository.persistNewFeeMatrix(consumerRecord.value(), isNew);
+		feeMatrixRepository.persistNewFeeMatrix(objectMapper.convertValue(consumerRecord.value(), FeeMatrixRequest.class), isNew);
 	}
 }

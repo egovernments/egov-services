@@ -65,9 +65,9 @@ public class CategoryConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, CategoryRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(CategoryRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -76,8 +76,8 @@ public class CategoryConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, CategoryRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, CategoryRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, CategoryRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -85,13 +85,13 @@ public class CategoryConsumer {
 	/**
 	 * receive method
 	 * 
-	 * @param CategoryRequest
+	 * @param Object
 	 *            This method is listened whenever category is created and
 	 *            updated
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateCategoryValidated()}",
 			"#{propertiesManager.getUpdateCategoryValidated()}" })
-	public void receive(ConsumerRecord<String, CategoryRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateCategoryValidated())) {
 			categoryService.createCategory(objectMapper.convertValue(consumerRecord.value(), CategoryRequest.class));

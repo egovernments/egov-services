@@ -35,7 +35,7 @@ public class FeeMatrixController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/_create", method = RequestMethod.POST)
-	public FeeMatrixResponse createFeeMatrixMaster(@RequestParam(required = true) String tenantId,
+	public FeeMatrixResponse createFeeMatrixMaster(
 			@Valid @RequestBody FeeMatrixRequest feeMatrixRequest) throws Exception {
 
 		return feeMatrixService.createFeeMatrixMaster( feeMatrixRequest);

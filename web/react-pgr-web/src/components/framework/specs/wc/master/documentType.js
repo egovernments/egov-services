@@ -24,7 +24,7 @@ var dat = {
 							"name": "description",
 							"jsonPath": "documentType.description",
 							"label": "wc.create.description",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,

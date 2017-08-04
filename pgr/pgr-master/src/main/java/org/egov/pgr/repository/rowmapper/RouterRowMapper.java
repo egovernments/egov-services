@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.pgr.domain.model.Attribute;
-import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.domain.model.Value;
 import org.egov.pgr.web.contract.BoundaryIdType;
 import org.egov.pgr.web.contract.RouterType;
@@ -61,7 +61,7 @@ public class RouterRowMapper implements RowMapper<RouterType> {
 	private static final Logger logger = LoggerFactory.getLogger(RouterRowMapper.class);
 	public static Map<String, List<Value>> attribValue = new HashMap<>();
 	public static Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
-	public static Map<Long, Map< String, List<ServiceType>>> serviceMap = new HashMap<>();
+	public static Map<Long, Map< String, List<GrievanceType>>> serviceMap = new HashMap<>();
 	public static Map<Long, RouterType> routerMap = new HashMap<>();
 	
 	@Override
@@ -72,17 +72,17 @@ public class RouterRowMapper implements RowMapper<RouterType> {
 		}
 		
 		if(serviceMap.containsKey(rs.getLong("id"))){
-			Map<String, List<ServiceType>> innerServiceMap = serviceMap.get(rs.getLong("id"));
+			Map<String, List<GrievanceType>> innerServiceMap = serviceMap.get(rs.getLong("id"));
 			if(!innerServiceMap.containsKey(rs.getString("servicecode"))){
-				List<ServiceType> serviceTypeList = new ArrayList<>();
-				serviceTypeList.add(prepareServiceType(rs));
-				innerServiceMap.put(rs.getString("servicecode"), serviceTypeList); 
+				List<GrievanceType> grievanceTypeList = new ArrayList<>();
+				grievanceTypeList.add(prepareServiceType(rs));
+				innerServiceMap.put(rs.getString("servicecode"), grievanceTypeList);
 			}
 		} else {
-			List<ServiceType> serviceTypeList = new ArrayList<>();
-			serviceTypeList.add(prepareServiceType(rs));
-			Map<String, List<ServiceType>> innerServiceMap = new HashMap<>();
-			innerServiceMap.put(rs.getString("servicecode"), serviceTypeList);
+			List<GrievanceType> grievanceTypeList = new ArrayList<>();
+			grievanceTypeList.add(prepareServiceType(rs));
+			Map<String, List<GrievanceType>> innerServiceMap = new HashMap<>();
+			innerServiceMap.put(rs.getString("servicecode"), grievanceTypeList);
 			serviceMap.put(rs.getLong("id"), innerServiceMap);
 		}
 		
@@ -108,18 +108,18 @@ public class RouterRowMapper implements RowMapper<RouterType> {
 		return null;
 	}
 	
-	private ServiceType prepareServiceType(ResultSet rs) {
-		ServiceType serviceType = new ServiceType();
+	private GrievanceType prepareServiceType(ResultSet rs) {
+		GrievanceType grievanceType = new GrievanceType();
 		try {
-			serviceType.setId(rs.getLong("complaintid"));
-			serviceType.setServiceCode(rs.getString("servicecode"));
-			serviceType.setServiceName(rs.getString("servicename"));
-			serviceType.setDescription(rs.getString("servicedescription"));
-			serviceType.setCategory(rs.getInt("category"));
+			grievanceType.setId(rs.getLong("complaintid"));
+			grievanceType.setServiceCode(rs.getString("servicecode"));
+			grievanceType.setServiceName(rs.getString("servicename"));
+			grievanceType.setDescription(rs.getString("servicedescription"));
+			grievanceType.setCategory(rs.getInt("category"));
 		} catch (Exception e) {
 			logger.error("Exception Encountered : " + e);
 		}
-		return serviceType;
+		return grievanceType;
 	}
 	
 	private Attribute prepareAttribute(ResultSet rs) {

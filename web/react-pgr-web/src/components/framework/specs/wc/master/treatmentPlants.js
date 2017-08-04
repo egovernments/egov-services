@@ -1,19 +1,19 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/storagereservoir/_create",
+		"url": "/wcms/masters/treatmentplant/_create",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "treatmentPlant",
+		"objectName": "TreatmentPlants",
 		"groups": [
 			{
-				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"label": "wc.create.groups.treatmentplant.title",
+				"name": "createTreatmentPlant",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "treatmentPlant.name",
-							"label": "Treatment Plant",
+							"jsonPath": "TreatmentPlants[0].name",
+							"label": "wc.create.groups.fields.treatmentPlantName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -22,9 +22,9 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
-							"name": "reservoirType",
-							"jsonPath": "storageReservoir.reservoirType",
-							"label": "Reservoir Type",
+							"name": "plantType",
+							"jsonPath": "TreatmentPlants[0].plantType",
+							"label": "wc.create.groups.fields.plantType",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/master/_getplanttypes?|$..key|$..object",
@@ -35,11 +35,11 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "storageReservoir.locationName",
-							"label": "Location",
+							"jsonPath": "TreatmentPlants[0].locationNum",
+							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -47,11 +47,11 @@ var dat = {
 						},
 						{
 							"name": "wardName",
-							"jsonPath": "storageReservoir.wardName",
-							"label": "Ward",
+							"jsonPath": "TreatmentPlants[0].wardNum",
+							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -59,44 +59,23 @@ var dat = {
 						},
 						{
 							"name": "zoneName",
-							"jsonPath": "storageReservoir.zoneName",
-							"label": "Zone",
+							"jsonPath": "TreatmentPlants[0].zoneNum",
+							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
 						{
-							"name": "noOfMainDistributionLines",
-							"jsonPath": "storageReservoir.noOfMainDistributionLines",
-							"label": "Number of main distribution line",
+							"name": "storageReservoirName",
+							"jsonPath": "TreatmentPlants[0].storageReservoirName",
+							"label": "wc.create.groups.fields.storageType",
 							"pattern": "",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "noOfConnection",
-							"jsonPath": "storageReservoir.noOfConnection",
-							"label": "Number of connection from reservoir",
-							"pattern": "",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "noOfSubLines",
-							"jsonPath": "storageReservoir.noOfSubLines",
-							"label": "Number of sub lines",
-							"pattern": "",
-							"type": "text",
+							"type": "singleValueList",
+							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -104,34 +83,80 @@ var dat = {
 						},
 						{
 							"name": "capacity",
-							"jsonPath": "storageReservoir.capacity",
-							"label": "Storage Capacity of Reservoir(in MLD)",
+							"jsonPath": "TreatmentPlants[0].capacity",
+							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
+						},
+						{
+							"name": "description",
+							"jsonPath": "TreatmentPlants[0].description",
+							"label": "wc.create.groups.fields.description",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						}
-
 				]
 			}
 		]
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/storagereservoir/_search",
+		"url": "/wcms/masters/treatmentplant/_search",
 		"tenantIdRequired": true,
-		"objectName": "storageReservoir",
+		"useTimestamp": true,
+		"objectName": "treatmentplant",
 		"groups": [
 			{
-				"label": "wc.search.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"label": "wc.create.groups.treatmentplant.title",
+				"name": "searchTreatmentPlant",
+				"fields": [
+					{
+						"name": "plantType",
+						"jsonPath": "plantType",
+						"label": "wc.create.groups.fields.plantType",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/wcms/masters/master/_getplanttypes?|$..key|$..object",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
+				]
+			}
+		],
+		"result": {
+			"header": [{label: "wc.create.groups.fields.treatmentPlantName"},{label: "wc.create.groups.fields.plantType"}, {label: "wc.create.groups.fields.location"}, {label: "wc.create.groups.fields.zone"},
+			{label: "wc.create.groups.fields.ward"},{label: "wc.create.groups.fields.storageCapacityofReservoir(in MLD)"},{label: "wc.create.groups.fields.storageReservoirName"}],
+			"values": ["name", "plantType","locationName","zoneName","wardName","capacity","storageReservoirName"],
+			"resultPath": "TreatmentPlants",
+			"rowClickUrlUpdate": "/update/wc/treatmentPlants/{id}",
+			"rowClickUrlView": "/view/wc/treatmentPlants/{id}"
+			}
+	},
+	"wc.view": {
+		"numCols": 12/3,
+		"url": "/wcms/masters/treatmentplant/_search?id={id}",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "TreatmentPlants",
+		"groups": [
+			{
+				"label": "wc.create.groups.treatmentplant.title",
+				"name": "createTreatmentPlant",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "storageReservoir.name",
-							"label": "Category Type",
+							"jsonPath": "TreatmentPlants[0].name",
+							"label": "wc.create.groups.fields.treatmentPlantName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -140,11 +165,191 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
-							"name": "Active",
-							"jsonPath": "storageReservoir.active",
-							"label": "Active",
+							"name": "plantType",
+							"jsonPath": "TreatmentPlants[0].plantType",
+							"label": "wc.create.groups.fields.plantType",
 							"pattern": "",
-							"type": "checkbox",
+							"type": "singleValueList",
+							"url": "/wcms/masters/master/_getplanttypes?|$..key|$..object",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "locationName",
+							"jsonPath": "TreatmentPlants[0].locationName",
+							"label": "wc.create.groups.fields.location",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "wardName",
+							"jsonPath": "TreatmentPlants[0].wardName",
+							"label": "wc.create.groups.fields.ward",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "zoneName",
+							"jsonPath": "TreatmentPlants[0].zoneName",
+							"label": "wc.create.groups.fields.zone",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "storageReservoirName",
+							"jsonPath": "TreatmentPlants[0].storageReservoirName",
+							"label": "wc.create.groups.fields.storageType",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "capacity",
+							"jsonPath": "TreatmentPlants[0].capacity",
+							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
+							"pattern": "",
+							"type": "number",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "description",
+							"jsonPath": "TreatmentPlants[0].description",
+							"label": "wc.create.groups.fields.description",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}
+				]
+			}
+		]
+	},
+	"wc.update": {
+		"numCols": 12/3,
+		"searchUrl": "/wcms/masters/treatmentplant/_search?id={id}",
+		"url":"/wcms/masters/treatmentplant/_update",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "TreatmentPlants",
+		"groups": [
+			{
+				"label": "wc.create.groups.treatmentplant.title",
+				"name": "createTreatmentPlant",
+				"fields": [
+						{
+							"name": "name",
+							"jsonPath": "TreatmentPlants[0].name",
+							"label": "wc.create.groups.fields.treatmentPlantName",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "plantType",
+							"jsonPath": "TreatmentPlants[0].plantType",
+							"label": "wc.create.groups.fields.plantType",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/wcms/masters/master/_getplanttypes?|$..key|$..object",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "locationName",
+							"jsonPath": "TreatmentPlants[0].locationNum",
+							"label": "wc.create.groups.fields.location",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "wardName",
+							"jsonPath": "TreatmentPlants[0].wardNum",
+							"label": "wc.create.groups.fields.ward",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "zoneName",
+							"jsonPath": "TreatmentPlants[0].zoneNum",
+							"label": "wc.create.groups.fields.zone",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "storageReservoirName",
+							"jsonPath": "TreatmentPlants[0].storageReservoirName",
+							"label": "wc.create.groups.fields.storageType",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "capacity",
+							"jsonPath": "TreatmentPlants[0].capacity",
+							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
+							"pattern": "",
+							"type": "number",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "description",
+							"jsonPath": "TreatmentPlants[0].description",
+							"label": "wc.create.groups.fields.description",
+							"pattern": "",
+							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

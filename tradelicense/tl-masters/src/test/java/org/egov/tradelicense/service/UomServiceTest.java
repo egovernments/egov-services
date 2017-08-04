@@ -15,8 +15,8 @@ import org.egov.models.UOMResponse;
 import org.egov.models.UserInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.exception.DuplicateIdException;
-import org.egov.tradelicense.services.UOMService;
+import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.services.UOMService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,7 @@ public class UomServiceTest {
 	public String name = "Flammables v1.1";
 	public String code = "Flammables v1.1";
 	public Boolean active = true;
-	public String searchActive = "true";
+	public String searchActive = "True";
 	public String updatedName = "Flammables v1.1 name updated";
 	public String updatedCode = "Flammables v1.1 code updated";
 

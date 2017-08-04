@@ -47,6 +47,10 @@ import java.util.Map;
 import org.egov.wcms.model.TreatmentPlant;
 import org.egov.wcms.repository.builder.TreatmentPlantQueryBuilder;
 import org.egov.wcms.repository.rowmapper.TreatmentPlantRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.util.WcmsConstants;
+import org.egov.wcms.web.contract.Boundary;
+import org.egov.wcms.web.contract.BoundaryResponse;
 import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
 import org.egov.wcms.web.contract.TreatmentPlantRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +72,9 @@ public class TreatmentPlantRepository {
 
     @Autowired
     private TreatmentPlantQueryBuilder treatmentPlantQueryBuilder;
+
+    @Autowired
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public TreatmentPlantRequest persistCreateTreatmentPlant(final TreatmentPlantRequest treatmentPlantRequest) {
         log.info("treatmentPlantRequest::" + treatmentPlantRequest);
@@ -122,6 +129,9 @@ public class TreatmentPlantRepository {
     }
 
     public List<TreatmentPlant> findForCriteria(final TreatmentPlantGetRequest treatmentPlantGetRequest) {
+        final List<String> boundaryWardNumsList = new ArrayList<>();
+        final List<String> boundaryZoneNumsList = new ArrayList<>();
+        final List<String> boundaryLocationNumsList = new ArrayList<>();
         final List<Object> preparedStatementValues = new ArrayList<>();
         try {
             if (treatmentPlantGetRequest.getStorageReservoirName() != null)
@@ -142,6 +152,39 @@ public class TreatmentPlantRepository {
         for (final TreatmentPlant treatmentPlant : treatmentPlantList)
             treatmentPlant.setStorageReservoirName(jdbcTemplate.queryForObject(storageReservoirNameOuery,
                     new Object[] { treatmentPlant.getStorageReservoirId(), treatmentPlant.getTenantId() }, String.class));
+
+        // fetch boundary Ward Nums and set the boundary name here
+        for (final TreatmentPlant treatmentPlant : treatmentPlantList)
+            boundaryWardNumsList.add(treatmentPlant.getWardNum());
+        final String[] boundaryWardNum = boundaryWardNumsList.toArray(new String[boundaryWardNumsList.size()]);
+        final BoundaryResponse boundaryResponse = restExternalMasterService.getBoundaryName(
+                WcmsConstants.WARD, boundaryWardNum, treatmentPlantGetRequest.getTenantId());
+        for (final TreatmentPlant treatmentPlant : treatmentPlantList)
+            for (final Boundary boundary : boundaryResponse.getBoundarys())
+                if (boundary.getBoundaryNum().equals(treatmentPlant.getWardNum()))
+                    treatmentPlant.setWardName(boundary.getName());
+
+        // fetch boundary Zone Nums and set the boundary name here
+        for (final TreatmentPlant treatmentPlant : treatmentPlantList)
+            boundaryZoneNumsList.add(treatmentPlant.getZoneNum());
+        final String[] boundaryZoneNum = boundaryZoneNumsList.toArray(new String[boundaryZoneNumsList.size()]);
+        final BoundaryResponse boundaryZone = restExternalMasterService.getBoundaryName(
+                WcmsConstants.ZONE, boundaryZoneNum, treatmentPlantGetRequest.getTenantId());
+        for (final TreatmentPlant treatmentPlant : treatmentPlantList)
+            for (final Boundary boundary : boundaryZone.getBoundarys())
+                if (boundary.getBoundaryNum().equals(treatmentPlant.getZoneNum()))
+                    treatmentPlant.setZoneName(boundary.getName());
+
+        // fetch boundary Location Nums and set the boundary name here
+        for (final TreatmentPlant treatmentPlant : treatmentPlantList)
+            boundaryLocationNumsList.add(treatmentPlant.getLocationNum());
+        final String[] boundaryLocationNum = boundaryLocationNumsList.toArray(new String[boundaryLocationNumsList.size()]);
+        final BoundaryResponse boundaryLocation = restExternalMasterService.getBoundaryName(
+                WcmsConstants.LOCALITY, boundaryLocationNum, treatmentPlantGetRequest.getTenantId());
+        for (final TreatmentPlant treatmentPlant : treatmentPlantList)
+            for (final Boundary boundary : boundaryLocation.getBoundarys())
+                if (boundary.getBoundaryNum().equals(treatmentPlant.getLocationNum()))
+                    treatmentPlant.setLocationName(boundary.getName());
         return treatmentPlantList;
     }
 

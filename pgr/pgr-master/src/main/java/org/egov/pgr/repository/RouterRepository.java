@@ -46,11 +46,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.egov.pgr.domain.model.Attribute;
-import org.egov.pgr.domain.model.PersistRouter;
-import org.egov.pgr.domain.model.PersistRouterReq;
-import org.egov.pgr.domain.model.ServiceType;
-import org.egov.pgr.domain.model.Value;
+import org.egov.pgr.domain.model.*;
+import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.repository.builder.RouterQueryBuilder;
 import org.egov.pgr.repository.rowmapper.PersistRouteRowMapper;
 import org.egov.pgr.repository.rowmapper.RouterRowMapper;
@@ -135,28 +132,28 @@ public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
 	private List<RouterType> prepareRouterTypeList(RouterRowMapper rowMapper){
 		Map<String, List<Value>> attribValue = rowMapper.attribValue;
 		Map<String, Map<String, Attribute>> serviceAttrib = rowMapper.serviceAttrib;
-		Map<Long, Map<String, List<ServiceType>>> serviceMap = rowMapper.serviceMap;
+		Map<Long, Map<String, List<GrievanceType>>> serviceMap = rowMapper.serviceMap;
 		Map<Long, RouterType> routerMap = rowMapper.routerMap;
 		RouterType routerType = new RouterType();
 		List<RouterType> routerTypes = new ArrayList<>();
-		List<ServiceType> serviceTypeList = new ArrayList<>();
+		List<GrievanceType> grievanceTypeList = new ArrayList<>();
 		
 		Iterator<Entry<Long, RouterType>> itr = routerMap.entrySet().iterator();
 		while (itr.hasNext()) {
 			Entry<Long, RouterType> routerEntry = itr.next();
 			routerType = routerEntry.getValue();
 			Long routerId = routerEntry.getKey();
-			Map<String, List<ServiceType>> innerServiceMap = serviceMap.get(routerId);
-			Iterator<Entry<String, List<ServiceType>>> innerItr = innerServiceMap.entrySet().iterator();
+			Map<String, List<GrievanceType>> innerServiceMap = serviceMap.get(routerId);
+			Iterator<Entry<String, List<GrievanceType>>> innerItr = innerServiceMap.entrySet().iterator();
 			while (innerItr.hasNext()) {
-				Entry<String, List<ServiceType>> innerEntry = innerItr.next();
-				serviceTypeList = innerEntry.getValue();
-				List<ServiceType> finalServiceList = new ArrayList<>();
-				Iterator<ServiceType> serviceItr = serviceTypeList.iterator();
+				Entry<String, List<GrievanceType>> innerEntry = innerItr.next();
+				grievanceTypeList = innerEntry.getValue();
+				List<GrievanceType> finalServiceList = new ArrayList<>();
+				Iterator<GrievanceType> serviceItr = grievanceTypeList.iterator();
 				while (serviceItr.hasNext()) {
-					ServiceType serviceType = new ServiceType();
-					serviceType = serviceItr.next();
-					Map<String, Attribute> innerAttrMap = serviceAttrib.get(serviceType.getServiceCode());
+					GrievanceType grievanceType = new GrievanceType();
+					grievanceType = serviceItr.next();
+					Map<String, Attribute> innerAttrMap = serviceAttrib.get(grievanceType.getServiceCode());
 					Iterator<Entry<String, Attribute>> innerAttrItr = innerAttrMap.entrySet().iterator();
 					List<Attribute> finalAttributeList = new ArrayList<>();
 					while (innerAttrItr.hasNext()) {
@@ -165,8 +162,8 @@ public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
 						attrEntry.getValue().setAttributes(valueList);
 						finalAttributeList.add(attrEntry.getValue());
 					}
-					serviceType.setAttributes(finalAttributeList);
-					finalServiceList.add(serviceType);
+					grievanceType.setAttributes(finalAttributeList);
+					finalServiceList.add(grievanceType);
 				}
 				routerType.setServices(finalServiceList);
 				routerTypes.add(routerType);

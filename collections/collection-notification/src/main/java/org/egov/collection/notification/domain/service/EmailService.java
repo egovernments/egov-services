@@ -86,7 +86,7 @@ public class EmailService {
             urls.append(propertiesManager.getCollectionServiceHost()).append(propertiesManager.getCollectionServiceUrl())
                     .append("?receiptNumbers=").append(billDetail.getReceiptNumber()).append("&tenantId=").append(bill.getTenantId());
         }
-        emailMessage.append("Dear Consumer,").append("\n\n").append("We have received payment of ").append(amountPaid).append(" for the consumer codes ")
+        emailMessage.append("Dear ").append(bill.getPayeeName()).append(",").append("\n\n").append("We have received payment of ").append(amountPaid).append(" for the consumer codes ")
                 .append(consumerCodes).append(" which belong to the service ").append(businessDetails).append(".").append("\n\n");
         emailMessage.append("Please click on the URL for receipt details: ").append(urls).append("\n\n");
         emailMessage.append("Regards,").append("\n").append(city.getName());

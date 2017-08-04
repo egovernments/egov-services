@@ -5,6 +5,7 @@ import java.util.List;
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.domain.model.FunctionarySearch;
 import org.egov.egf.master.domain.repository.FunctionaryRepository;
@@ -73,6 +74,7 @@ public class FunctionaryService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(Functionary b:functionaries)b.setId(functionaryRepository.getNextSequence());
 		return functionaries;
 
 	}

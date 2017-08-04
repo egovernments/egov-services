@@ -39,6 +39,10 @@ public class AccountEntityRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return accountEntityJdbcRepository.getSequence(AccountEntityEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public AccountEntity save(AccountEntity accountEntity) {

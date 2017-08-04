@@ -167,7 +167,29 @@ var localationData = {
   "wc.create.categoryType":"Category Type",
   "wc.search.PropertyTypeCategoryType.title":"Search Property Type Category Type",
   "wc.view.PropertyTypeCategoryTypes.title":"View Property Type Category Type",
-  "wc.update.PropertyTypeCategoryType.title":"Update Property Type Category Type"
+  "wc.update.PropertyTypeCategoryType.title":"Update Property Type Category Type",
+  "wc.create.supplyType.title":"Create Supply Type",
+  "wc.create.groups.fields.location":"Location",
+  "wc.create.groups.fields.zone":"Zone",
+  "wc.create.groups.fields.ward":"Ward",
+  "wc.create.groups.fields.storageCapacityofReservoir(in MLD)" :"Capacity of plant(in MLD)",
+  "wc.create.groups.fields.storageReservoirName" : "Name of the Storage Reservoir",
+  "wc.create.groups.fields.treatmentPlantName" : "Water treatment plant",
+  "wc.create.groups.fields.plantType":"Type of plant",
+  "wc.create.groups.fields.description" : "Description",
+  "wc.create.groups.treatmentplant.title" : "Treatment Plant",
+  "wc.create.groups.fields.storageType":"Storage reservoir",
+  "wc.create.groups.fields.numberOfSubLines": " No of subLines",
+  "wc.create.groups.fields.numberOfConnectionFromReservoir": " No of connection from resrvoir",
+  "wc.create.groups.fields.numberOfMainDistributionLine": " No of main distributionLine",
+  "wc.create.groups.fields.reservoirType": "Type of the Reservoir",
+  "wc.create.storageReservoir.title":"storage Reservoir",
+  "wc.update.message.success": "Updated Successfully . . . !",
+  "wc.create.propertyUsage.title":"Create Property Usage",
+  "wc.create.usageType":"Usage Type",
+  "wc.search.PropertyTypeUsageType.title":"Search Property Type Usage Type",
+  "wc.view.PropertyTypeUsageTypes.title":"View Property Type Usage Types",
+  "wc.update.PropertyTypeUsageType.title":"Update Property Type Usage Type"
 }
 
 export function translate(locale_text){

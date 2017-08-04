@@ -38,6 +38,10 @@ public class AccountDetailTypeRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return accountDetailTypeJdbcRepository.getSequence(AccountDetailTypeEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public AccountDetailType save(AccountDetailType accountDetailType) {

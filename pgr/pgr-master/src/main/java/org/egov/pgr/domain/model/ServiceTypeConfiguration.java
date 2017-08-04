@@ -1,8 +1,6 @@
 package org.egov.pgr.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -10,6 +8,8 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@Getter
 public class ServiceTypeConfiguration {
 
     private String tenantId;
@@ -28,5 +28,15 @@ public class ServiceTypeConfiguration {
 
     public boolean isServiceCodeAbsent(){
         return isEmpty(serviceCode);
+    }
+
+    public org.egov.pgr.persistence.dto.ServiceTypeConfiguration toDto(){
+        return org.egov.pgr.persistence.dto.ServiceTypeConfiguration.builder()
+                .serviceCode(serviceCode)
+                .tenantId(tenantId)
+                .isApplicationFeesEnabled(isApplicationFeesEnabled)
+                .isNotificationEnabled(isNotificationEnabled)
+                .isSlaEnabled(isSlaEnabled)
+                .build();
     }
 }

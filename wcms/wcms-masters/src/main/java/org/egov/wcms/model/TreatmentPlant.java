@@ -80,11 +80,18 @@ public class TreatmentPlant {
 
     @NotNull
     private String locationNum;
+    
+    private String locationName;
+
 
     @NotNull
     private String wardNum;
     
+    private String wardName;
+    @NotNull
     private String zoneNum;
+    
+    private String zoneName;
 
     @NotNull
     @Min(1)

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -28,8 +27,6 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 	}
 
 	public FinancialYearEntity create(FinancialYearEntity entity) {
-
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}
@@ -37,7 +34,6 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 	public FinancialYearEntity update(FinancialYearEntity entity) {
 		super.update(entity);
 		return entity;
-
 	}
 
 	public Pagination<FinancialYear> search(FinancialYearSearch domain) {

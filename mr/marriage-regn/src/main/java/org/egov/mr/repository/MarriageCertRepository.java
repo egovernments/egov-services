@@ -10,7 +10,7 @@ import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.ReissueCertAppl;
 import org.egov.mr.model.enums.CertificateType;
 import org.egov.mr.repository.querybuilder.MarriageCertQueryBuilder;
-import org.egov.mr.repository.rowmapper.MarriagecertRowMapper;
+import org.egov.mr.repository.rowmapper.MarriageCertRowMapper;
 import org.egov.mr.service.CertificateNumberService;
 import org.egov.mr.web.contract.MarriageCertCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class MarriageCertRepository {
 	private MarriageCertQueryBuilder marriageCertQueryBuilder;
 
 	@Autowired
-	private MarriagecertRowMapper marriagecertRowMapper;
+	private MarriageCertRowMapper marriageCertRowMapper;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -67,7 +67,7 @@ public class MarriageCertRepository {
 		String queryStr = marriageCertQueryBuilder.getQuery(marriageCertCriteria, preparedStatementValues);
 		log.info("queryStr;;"+queryStr);
 		List<ReissueCertAppl> marriageCert = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				marriagecertRowMapper);
+				marriageCertRowMapper);
 		return marriageCert;
 
 	}

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.egov.models.PropertyRequest;
 import org.egov.propertyIndexer.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +31,7 @@ public class Producer {
 	PropertiesManager propertiesManager;
 
     @Autowired
-    KafkaTemplate<String, PropertyRequest> kafkaTemplate;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     /*
      * This method will return map object for producer configuration
@@ -52,7 +51,7 @@ public class Producer {
      */
 
     @Bean
-    public ProducerFactory<String, PropertyRequest> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
@@ -61,7 +60,7 @@ public class Producer {
      */
 
     @Bean
-    public KafkaTemplate<String, PropertyRequest> kafkaTemplate() {
+    public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
@@ -70,7 +69,7 @@ public class Producer {
      * object
      */
 
-    public void send(String topic, PropertyRequest propertyRequest) {
+    public void send(String topic, Object propertyRequest) {
         log.info("topic name is : " + topic + "  producerecord is: " + propertyRequest);
         kafkaTemplate.send(topic, propertyRequest);
     }

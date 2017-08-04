@@ -18,6 +18,7 @@ import lombok.Setter;
 @Builder
 public class FunctionEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_function";
+	public static final String SEQUENCE_NAME = "seq_egf_function";
 	private String id;
 	private String name;
 	private String code;

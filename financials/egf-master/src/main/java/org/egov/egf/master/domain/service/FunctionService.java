@@ -6,6 +6,7 @@ import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.repository.FunctionRepository;
@@ -82,6 +83,7 @@ public class FunctionService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(Function b:functions)b.setId(functionRepository.getNextSequence());
 		return functions;
 
 	}

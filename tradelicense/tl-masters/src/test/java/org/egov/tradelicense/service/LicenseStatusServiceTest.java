@@ -15,8 +15,8 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.UserInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.exception.DuplicateIdException;
-import org.egov.tradelicense.services.LicenseStatusService;
+import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.services.LicenseStatusService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +44,7 @@ public class LicenseStatusServiceTest {
 	public String code = "babu";
 	public String NameToupdate = "shubhamPratap";
 	public String CodeToUpdate = "nitin";
-	public String active = "true";
+	public String active = "True";
 
 	/**
 	 * Description : Test method for createLicenceStatus() method

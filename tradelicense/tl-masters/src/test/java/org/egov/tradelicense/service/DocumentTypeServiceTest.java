@@ -16,8 +16,8 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.UserInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.exception.DuplicateIdException;
-import org.egov.tradelicense.services.DocumentTypeService;
+import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.services.DocumentTypeService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +45,7 @@ public class DocumentTypeServiceTest {
 	public String ApplicationType = "New";
 	public String updatedName = "nitin";
 	public String updateApplicationType = "Renew";
-	public Boolean enabled = true;
+	public String enabled = "True";
 
 	/**
 	 * Description : test method to test createDocumentType

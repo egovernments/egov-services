@@ -44,7 +44,7 @@ public class FundJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/clearFund.sql" })
 	public void test_create() {
 
-		FundEntity fund = FundEntity.builder().code("code").name("name").active(true).level(1l).isParent(false)
+		FundEntity fund = FundEntity.builder().id("2374257").code("code").name("name").active(true).level(1l).isParent(false)
 				.parentId("1").identifier('F').build();
 		fund.setTenantId("default");
 		FundEntity actualResult = fundJdbcRepository.create(fund);

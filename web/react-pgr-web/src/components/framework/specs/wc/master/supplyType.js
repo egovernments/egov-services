@@ -39,6 +39,7 @@ var dat = {
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
+							"defaultValue":true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -63,7 +64,7 @@ var dat = {
 							"label": "wc.create.supplyType",
 							"pattern": "",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""

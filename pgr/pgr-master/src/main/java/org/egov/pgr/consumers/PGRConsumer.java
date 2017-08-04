@@ -55,7 +55,7 @@ import org.egov.pgr.service.RouterService;
 /*import org.egov.pgr.service.RouterService;*/
 import org.egov.pgr.service.ServiceGroupService;
 /*import org.egov.pgr.web.contract.RouterReq;*/
-import org.egov.pgr.service.ServiceTypeService;
+import org.egov.pgr.service.GrievanceTypeService;
 import org.egov.pgr.web.contract.EscalationHierarchyReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
@@ -91,7 +91,7 @@ public class PGRConsumer {
 	private ReceivingModeTypeService receivingModeTypeService;
 	
 	@Autowired
-	private ServiceTypeService serviceTypeService;
+	private GrievanceTypeService grievanceTypeService;
 	
 	@Autowired
 	private EscalationTimeTypeService escalationTimeTypeService;
@@ -137,14 +137,14 @@ public class PGRConsumer {
 				LOGGER.info("Consuming update ReceivingModeType request");
 				receivingModeTypeService.update(objectMapper.readValue(record.value(), ReceivingModeTypeReq.class));
 			} else if (record.topic().equals(applicationProperties.getCreateServiceTypeTopicName())) {
-				LOGGER.info("Consuming create ServiceType request");
-				serviceTypeService.create(objectMapper.readValue(record.value(), ServiceRequest.class));
+				LOGGER.info("Consuming create GrievanceType request");
+				grievanceTypeService.create(objectMapper.readValue(record.value(), ServiceRequest.class));
 			} else if (record.topic().equals(applicationProperties.getUpdateServiceGroupTopicName())) {
 				LOGGER.info("Consuming update ServiceGroup request");
 				serviceGroupService.update(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
 			} else if (record.topic().equals(applicationProperties.getUpdateServiceTypeTopicName())) {
-				LOGGER.info("Consuming update ServiceType request");
-				serviceTypeService.update(objectMapper.readValue(record.value(), ServiceRequest.class));
+				LOGGER.info("Consuming update GrievanceType request");
+				grievanceTypeService.update(objectMapper.readValue(record.value(), ServiceRequest.class));
 			} else if (record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())) {
 				LOGGER.info("Consuming create Category request");
 				serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));

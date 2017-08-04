@@ -126,7 +126,7 @@ public class BankBranchJdbcRepositoryTest {
 
     private BankBranch getBankBranchDomain() {
         BankBranch bankBranch = new BankBranch();
-        bankBranch.setId("1");
+        bankBranch.setId("124234");
         bankBranch.setBank(getBankDomain());
         bankBranch.setCode("code");
         bankBranch.setName("name");

@@ -39,7 +39,7 @@ var dat = {
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -51,7 +51,7 @@ var dat = {
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -63,7 +63,7 @@ var dat = {
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -162,7 +162,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.groups.treatmentplant.title",
-				"name": "createTreatmentPlant",
+				"name": "viewTreatmentPlant",
 				"fields": [
 						{
 							"name": "name",
@@ -193,7 +193,7 @@ var dat = {
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -205,7 +205,7 @@ var dat = {
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -217,7 +217,7 @@ var dat = {
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -271,7 +271,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.groups.treatmentplant.title",
-				"name": "createTreatmentPlant",
+				"name": "updateTreatmentPlant",
 				"fields": [
 						{
 							"name": "name",
@@ -302,7 +302,7 @@ var dat = {
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -314,7 +314,7 @@ var dat = {
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -326,7 +326,7 @@ var dat = {
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

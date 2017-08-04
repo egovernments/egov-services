@@ -19,6 +19,7 @@ const defaultState = {
 export default (state = defaultState, action) => {
     switch (action.type) {
         case "SET_FORM_DATA":
+            
             return {
                 ...state,
                 form: action.data

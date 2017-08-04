@@ -73,7 +73,7 @@ class Report extends Component {
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
 
-    if(hashLocation.split("/").indexOf("update") > -1) {
+    if(hashLocation.split("/").indexOf("update") == 1) {
       var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
       var id = self.props.match.params.id || self.props.match.params.master;
       var query = {
@@ -525,7 +525,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   initForm: (requiredFields) => {
-    console.log(requiredFields);
     dispatch({
       type: "SET_REQUIRED_FIELDS",
       requiredFields

@@ -4,6 +4,11 @@ ReportDefinitions:
   summary: Report grouped by Grievance Type and status - based on a date period
   version: 1.0.0
   sourceColumns:
+  - name: code
+    label: reports.pgr.complainttype.name
+    type: string
+    source: egpgr_complainttype
+    showColumn: false
   - name: name
     label: reports.pgr.complainttype.name
     type: string
@@ -66,16 +71,19 @@ ReportDefinitions:
     label: reports.pgr.datefrom
     type: epoch
     source: seva
+    isMandatory: true
   - name: toDate
     label: reports.pgr.dateto
     type: epoch
     source: seva
+    isMandatory: true
   - name: complainttype
     label: reports.pgr.complainttype
     type: singlevaluelist
     pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
     source: seva
-  query: SELECT ctype.name,count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN
+    searchClause: and ctype.code = $complainttype
+  query: SELECT ctype.code,ctype.name,count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN
     1 ELSE NULL::integer END) AS registered,count(CASE WHEN cs.status::text = ANY
     (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text,
     'NOTCOMPLETED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE
@@ -104,8 +112,9 @@ ReportDefinitions:
     AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval
     * ctype.slahours::double precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla
     FROM submission cs, egpgr_complainttype ctype WHERE cs.servicecode = ctype.code
-    and ctype.code = $complainttype and cs.createddate >= $fromDate and cs.createddate
-    <= $toDate and cs.tenantid = $tenantid GROUP BY ctype.name;
+    and cs.createddate >= $fromDate and cs.createddate
+    <= $toDate and cs.tenantid = $tenantid 
+  groupBy: GROUP BY ctype.code,ctype.name;
   
   
 - reportName: DrillDownComplaintDetailByGrievanceType

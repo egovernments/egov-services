@@ -16,8 +16,9 @@ public class ColumnDetail extends ColumnDef  {
 public ColumnDetail() {
 		
 	}
-  public ColumnDetail(String label, TypeEnum type,Object defaultValue,Boolean total,String name) {
+  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name) {
 		super();
+		this.showColumn = showColumn;
 		this.label = label;
 		this.type = type;
 		this.defaultValue = defaultValue;
@@ -90,7 +91,7 @@ public ColumnDetail() {
   private Object defaultValue = null;
 
   @JsonProperty("isMandatory")
-  private Boolean isMandatory = true;
+  private Boolean isMandatory = false;
 
   @JsonProperty("showColumn")
   private Boolean showColumn = true;

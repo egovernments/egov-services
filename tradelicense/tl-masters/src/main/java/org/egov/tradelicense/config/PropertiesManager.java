@@ -64,14 +64,44 @@ public class PropertiesManager {
 
 	@Value("${egov.services.egf-masters.searchpath}")
 	private String financialServiceSearchPath;
-	
+
 	@Value("${duplicate.license.status}")
 	private String licenseStatusCustomMsg;
-	
+
 	@Value("${egov.tradelicense.category.create.validated}")
 	private String createCategoryValidated;
-	
+
 	@Value("${egov.tradelicense.category.update.validated}")
 	private String updateCategoryValidated;
+
+	@Value("${egov.tradelicense.uom.create.validated}")
+	private String createUomValidated;
+
+	@Value("${egov.tradelicense.uom.update.validated}")
+	private String updateUomValidated;
+
+	@Value("${egov.tradelicense.feematrix.create.validated}")
+	private String createFeeMatrixValidated;
+
+	@Value("${egov.tradelicense.feematrix.update.validated}")
+	private String updateFeeMatrixValidated;
+
+	@Value("${egov.tradelicense.documenttype.create.validated}")
+	private String createDocumentTypeValidated;
+
+	@Value("${egov.tradelicense.documenttype.update.validated}")
+	private String updateDocumentTypeValidated;
+
+	@Value("${egov.tradelicense.penaltyrate.create.validated}")
+	private String createPenaltyRateValidated;
+
+	@Value("${egov.tradelicense.penaltyrate.update.validated}")
+	private String updatePenaltyRateValidated;
+
+	@Value("${egov.tradelicense.licensestatus.create.validated}")
+	private String createLicenseStatusValidated;
+
+	@Value("${egov.tradelicense.licensestatus.update.validated}")
+	private String updateLicenseStatusValidated;
 
 }

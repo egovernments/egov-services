@@ -6,9 +6,9 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.CategoryRequest;
+import org.egov.models.DocumentTypeRequest;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.domain.services.CategoryService;
+import org.egov.tradelicense.domain.services.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Consumer class will use for listening category object from kafka server to
+ * Consumer class will use for listening documentType object from kafka server to
  * insert data in postgres database
  * 
  * @author: Pavan Kumar Kamma
@@ -30,7 +30,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Configuration
 @Profile("production")
-public class CategoryConsumer {
+public class DocumentTypeConsumer {
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -39,7 +39,7 @@ public class CategoryConsumer {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	CategoryService categoryService;
+	DocumentTypeService documentTypeService;
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -51,7 +51,7 @@ public class CategoryConsumer {
 		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, propertiesManager.getKafkaServerConfig());
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "category");
+		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "documentType");
 		return consumerProperties;
 	}
 
@@ -60,9 +60,9 @@ public class CategoryConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, CategoryRequest> consumerFactory() {
+	public ConsumerFactory<String, DocumentTypeRequest> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(CategoryRequest.class));
+				new JsonDeserializer<>(DocumentTypeRequest.class));
 
 	}
 
@@ -71,8 +71,8 @@ public class CategoryConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, CategoryRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, CategoryRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, CategoryRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, DocumentTypeRequest> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, DocumentTypeRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, DocumentTypeRequest>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -84,16 +84,16 @@ public class CategoryConsumer {
 	 *            This method is listened whenever category is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{propertiesManager.getCreateCategoryValidated()}",
-			"#{propertiesManager.getUpdateCategoryValidated()}" })
-	public void receive(ConsumerRecord<String, CategoryRequest> consumerRecord) throws Exception {
+	@KafkaListener(topics = { "#{propertiesManager.getCreateDocumentTypeValidated()}",
+			"#{propertiesManager.getUpdateDocumentTypeValidated()}" })
+	public void receive(ConsumerRecord<String, DocumentTypeRequest> consumerRecord) throws Exception {
 
-		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateCategoryValidated())) {
-			categoryService.createCategory(consumerRecord.value());
+		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateDocumentTypeValidated())) {
+			//documentTypeService.createDocumentType(consumerRecord.value());
 		}
 
 		else {
-			categoryService.updateCategory(consumerRecord.value());
+			//documentTypeService.updateDocumentType(consumerRecord.value());
 		}
 	}
 }

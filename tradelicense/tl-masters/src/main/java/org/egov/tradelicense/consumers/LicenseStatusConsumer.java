@@ -6,9 +6,9 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.CategoryRequest;
+import org.egov.models.LicenseStatusRequest;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.domain.services.CategoryService;
+import org.egov.tradelicense.domain.services.LicenseStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,15 +22,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Consumer class will use for listening category object from kafka server to
- * insert data in postgres database
+ * Consumer class will use for listening lecenseStatus object from kafka server
+ * to insert data in postgres database
  * 
  * @author: Pavan Kumar Kamma
  */
 @Service
 @Configuration
 @Profile("production")
-public class CategoryConsumer {
+public class LicenseStatusConsumer {
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -39,7 +39,7 @@ public class CategoryConsumer {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	CategoryService categoryService;
+	LicenseStatusService licenseStatusService;
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -51,7 +51,7 @@ public class CategoryConsumer {
 		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, propertiesManager.getKafkaServerConfig());
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "category");
+		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "penaltyRate");
 		return consumerProperties;
 	}
 
@@ -60,9 +60,9 @@ public class CategoryConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, CategoryRequest> consumerFactory() {
+	public ConsumerFactory<String, LicenseStatusRequest> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(CategoryRequest.class));
+				new JsonDeserializer<>(LicenseStatusRequest.class));
 
 	}
 
@@ -71,8 +71,8 @@ public class CategoryConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, CategoryRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, CategoryRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, CategoryRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -84,16 +84,16 @@ public class CategoryConsumer {
 	 *            This method is listened whenever category is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{propertiesManager.getCreateCategoryValidated()}",
-			"#{propertiesManager.getUpdateCategoryValidated()}" })
-	public void receive(ConsumerRecord<String, CategoryRequest> consumerRecord) throws Exception {
+	@KafkaListener(topics = { "#{propertiesManager.getCreateLicenseStatusValidated()}",
+			"#{propertiesManager.getUpdateLicenseStatusValidated()}" })
+	public void receive(ConsumerRecord<String, LicenseStatusRequest> consumerRecord) throws Exception {
 
-		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateCategoryValidated())) {
-			categoryService.createCategory(consumerRecord.value());
+		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateLicenseStatusValidated())) {
+			// licenseStatusService.createLicenseStatus(consumerRecord.value());
 		}
 
 		else {
-			categoryService.updateCategory(consumerRecord.value());
+			// licenseStatusService.updateLicenseStatus(consumerRecord.value());
 		}
 	}
 }

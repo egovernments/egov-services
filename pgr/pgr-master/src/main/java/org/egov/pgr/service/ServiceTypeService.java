@@ -92,7 +92,7 @@ public class ServiceTypeService {
 
 			List<String> configValue = Collections.singletonList("true");
 
-			if (serviceTypes.get("sla.enabled").stream().anyMatch(configValue::contains)
+			if (null != serviceTypes.get("sla.enabled") && serviceTypes.get("sla.enabled").stream().anyMatch(configValue::contains)
 					&& serviceRequest.getService().getSlaHours() == null) {
 				serviceRequest.getService().setSlaHours(0);
 			}

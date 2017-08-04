@@ -60,7 +60,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class ServiceType {
+public class GrievanceType {
 
     public static final String SEQ_CATEGORY = "SEQ_EGPGR_GRIEVANCETYPE";
     private Long id; 

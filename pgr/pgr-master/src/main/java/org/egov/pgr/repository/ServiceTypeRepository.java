@@ -40,7 +40,7 @@
 package org.egov.pgr.repository;
 
 import org.egov.pgr.domain.model.Attribute;
-import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.domain.model.Value;
 import org.egov.pgr.repository.builder.ServiceTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ServiceTypeRowMapper;
@@ -128,10 +128,10 @@ public class ServiceTypeRepository {
     }
 
     private void persistKeywordServiceCodeMapping(ServiceRequest serviceRequest) {
-        ServiceType serviceType = serviceRequest.getService();
+        GrievanceType grievanceType = serviceRequest.getService();
         final String serviceKeywordMappingQuery = ServiceTypeQueryBuilder.insertServiceKeyworkMappingQuery();
-        for (int i = 0; i < serviceType.getKeywords().size(); i++) {
-            final Object[] obj1 = new Object[]{serviceType.getServiceCode(), serviceType.getKeywords().get(i), serviceType.getTenantId(),
+        for (int i = 0; i < grievanceType.getKeywords().size(); i++) {
+            final Object[] obj1 = new Object[]{grievanceType.getServiceCode(), grievanceType.getKeywords().get(i), grievanceType.getTenantId(),
                     serviceRequest.getRequestInfo().getUserInfo().getId(),
                     new Date(new java.util.Date().getTime())};
             jdbcTemplate.update(serviceKeywordMappingQuery, obj1);
@@ -141,19 +141,19 @@ public class ServiceTypeRepository {
     public ServiceRequest persistModifyServiceType(final ServiceRequest serviceRequest) {
         LOGGER.info("Service Type Request::" + serviceRequest);
         final String serviceTypeUpdate = ServiceTypeQueryBuilder.updateServiceTypeQuery();
-        final ServiceType serviceType = serviceRequest.getService();
-        final Object[] obj = new Object[]{serviceType.getServiceName(),
-                serviceType.getDescription(), serviceType.getCategory(), serviceType.getSlaHours(), serviceType.getActive(),serviceType.isHasFinancialImpact(), serviceType.getDays(), serviceRequest.getRequestInfo().getUserInfo().getId(), 
-                new Date(new java.util.Date().getTime()), serviceType.getServiceCode(), serviceType.getTenantId()};
+        final GrievanceType grievanceType = serviceRequest.getService();
+        final Object[] obj = new Object[]{grievanceType.getServiceName(),
+                grievanceType.getDescription(), grievanceType.getCategory(), grievanceType.getSlaHours(), grievanceType.getActive(), grievanceType.isHasFinancialImpact(), grievanceType.getDays(), serviceRequest.getRequestInfo().getUserInfo().getId(),
+                new Date(new java.util.Date().getTime()), grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(serviceTypeUpdate, obj);
         final String valueRemove = ServiceTypeQueryBuilder.removeValueQuery();
-        final Object[] objValueRemove = new Object[]{serviceType.getServiceCode(), serviceType.getTenantId()};
+        final Object[] objValueRemove = new Object[]{grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(valueRemove, objValueRemove);
         final String attributeRemove = ServiceTypeQueryBuilder.removeAttributeQuery();
-        final Object[] objAttributeRemove = new Object[]{serviceType.getServiceCode(), serviceType.getTenantId()};
+        final Object[] objAttributeRemove = new Object[]{grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(attributeRemove, objAttributeRemove);
         final String serviceKeywordRemove = ServiceTypeQueryBuilder.removeServiceKeywordMapping();
-        final Object[] objserviceKeywordRemove = new Object[]{serviceType.getServiceCode(), serviceType.getTenantId()};
+        final Object[] objserviceKeywordRemove = new Object[]{grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(serviceKeywordRemove, objserviceKeywordRemove);
         if (serviceRequest.getService().isMetadata()) {
             persistAttributeValues(serviceRequest);
@@ -212,7 +212,7 @@ public class ServiceTypeRepository {
         return false;
     }
 
-    public List<ServiceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
+    public List<GrievanceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         String queryStr = serviceTypeQueryBuilder.getQuery(serviceTypeGetRequest, preparedStatementValues);
         ServiceTypeRowMapper serviceTypeRowMapper = new ServiceTypeRowMapper();
@@ -220,26 +220,26 @@ public class ServiceTypeRepository {
         return assembleServiceTypeObject(serviceTypeRowMapper);
     }
 
-    private List<ServiceType> assembleServiceTypeObject(ServiceTypeRowMapper rowMapper) {
+    private List<GrievanceType> assembleServiceTypeObject(ServiceTypeRowMapper rowMapper) {
         final String separator = ">";
-        List<ServiceType> serviceTypeList = new ArrayList<>();
-        Set<Entry<String, ServiceType>> sMapEntrySet = rowMapper.serviceMap.entrySet();
-        Iterator<Entry<String, ServiceType>> sMapItr = sMapEntrySet.iterator();
+        List<GrievanceType> grievanceTypeList = new ArrayList<>();
+        Set<Entry<String, GrievanceType>> sMapEntrySet = rowMapper.serviceMap.entrySet();
+        Iterator<Entry<String, GrievanceType>> sMapItr = sMapEntrySet.iterator();
         Set<Entry<String, Map<String, Attribute>>> sAttrEntrySet = rowMapper.serviceAttrib.entrySet();
         Iterator<Entry<String, Map<String, Attribute>>> sAttrItr = sAttrEntrySet.iterator();
         Set<Entry<String, List<Value>>> attrValueEntrySet = rowMapper.attribValue.entrySet();
         while (sMapItr.hasNext()) {
-            Entry<String, ServiceType> srvEntry = sMapItr.next();
-            ServiceType serviceType = srvEntry.getValue();
-            List<String> keywordsList = getKeywordsForService(serviceType);
-            serviceType.setKeywords(keywordsList);
-            serviceTypeList.add(serviceType);
+            Entry<String, GrievanceType> srvEntry = sMapItr.next();
+            GrievanceType grievanceType = srvEntry.getValue();
+            List<String> keywordsList = getKeywordsForService(grievanceType);
+            grievanceType.setKeywords(keywordsList);
+            grievanceTypeList.add(grievanceType);
         }
-        for (int i = 0; i < serviceTypeList.size(); i++) {
+        for (int i = 0; i < grievanceTypeList.size(); i++) {
             while (sAttrItr.hasNext()) {
                 Entry<String, Map<String, Attribute>> attrEntry = sAttrItr.next();
                 List<Attribute> attributeList = new ArrayList<>();
-                if (serviceTypeList.get(i).getServiceCode().equals(attrEntry.getKey())) {
+                if (grievanceTypeList.get(i).getServiceCode().equals(attrEntry.getKey())) {
                     Iterator<Entry<String, Attribute>> attrInnerItr = attrEntry.getValue().entrySet().iterator();
                     while (attrInnerItr.hasNext()) {
                         Entry<String, Attribute> attrInnerEntry = attrInnerItr.next();
@@ -247,7 +247,7 @@ public class ServiceTypeRepository {
                         Iterator<Entry<String, List<Value>>> attrValueItr = attrValueEntrySet.iterator();
                         while (attrValueItr.hasNext()) {
                             Entry<String, List<Value>> valueEntry = attrValueItr.next();
-                            if (serviceTypeList.get(i).getServiceCode().concat(separator + attribute.getCode())
+                            if (grievanceTypeList.get(i).getServiceCode().concat(separator + attribute.getCode())
                                     .equals(valueEntry.getKey())) {
                                 attribute.setAttributes(valueEntry.getValue());
                             }
@@ -255,18 +255,18 @@ public class ServiceTypeRepository {
                         attributeList.add(attribute);
                     }
                 }
-                serviceTypeList.get(i).setAttributes(attributeList);
-                serviceTypeList.get(i).setMetadata(true);
+                grievanceTypeList.get(i).setAttributes(attributeList);
+                grievanceTypeList.get(i).setMetadata(true);
             }
         }
-        return serviceTypeList;
+        return grievanceTypeList;
     }
 
-    public List<String> getKeywordsForService(ServiceType serviceType) {
+    public List<String> getKeywordsForService(GrievanceType grievanceType) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         String queryStr = serviceTypeQueryBuilder.fetchServiceKeywords();
-        preparedStatementValues.add(serviceType.getServiceCode());
-        preparedStatementValues.add(serviceType.getTenantId());
+        preparedStatementValues.add(grievanceType.getServiceCode());
+        preparedStatementValues.add(grievanceType.getTenantId());
         List<String> keywords = new ArrayList<>();
         try {
             keywords = jdbcTemplate.queryForList(queryStr, preparedStatementValues.toArray(), String.class);

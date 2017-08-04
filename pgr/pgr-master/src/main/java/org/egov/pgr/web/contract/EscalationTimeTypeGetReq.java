@@ -46,7 +46,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.egov.pgr.domain.model.ServiceType;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;

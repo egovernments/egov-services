@@ -71,7 +71,7 @@ public class EscalationTimeType {
     private String tenantId;
 
     @NotNull
-    private ServiceType grievanceType;
+    private GrievanceType grievanceType;
     
     @NotNull
     private long noOfHours;

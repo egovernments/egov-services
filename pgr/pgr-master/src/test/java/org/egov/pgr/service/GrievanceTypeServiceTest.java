@@ -49,7 +49,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceTypeRepository;
 import org.egov.pgr.web.contract.ServiceGetRequest;
@@ -61,13 +61,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceTypeServiceTest {
+public class GrievanceTypeServiceTest {
 	
 	@Mock
     private ServiceTypeRepository serviceTypeRepository;
 
     @InjectMocks
-    private ServiceTypeService serviceTypeService;
+    private GrievanceTypeService grievanceTypeService;
     
     @Mock
 	private PGRProducer pgrProducer;
@@ -88,9 +88,9 @@ public class ServiceTypeServiceTest {
 	
 	@Test
 	public void test_should_fetch_service_type_from_db() {
-		List<ServiceType> serviceTypeList = prepareServiceTypeList(); 
-		when(serviceTypeRepository.findForCriteria(any(ServiceGetRequest.class))).thenReturn(serviceTypeList);
-		assertTrue(serviceTypeList.equals(serviceTypeRepository.findForCriteria(any(ServiceGetRequest.class))));
+		List<GrievanceType> grievanceTypeList = prepareServiceTypeList();
+		when(serviceTypeRepository.findForCriteria(any(ServiceGetRequest.class))).thenReturn(grievanceTypeList);
+		assertTrue(grievanceTypeList.equals(serviceTypeRepository.findForCriteria(any(ServiceGetRequest.class))));
 		
 	}
 	
@@ -101,7 +101,7 @@ public class ServiceTypeServiceTest {
 		user.setId(1L);
 		rInfo.setUserInfo(user);
 		serviceRequest.setRequestInfo(rInfo);
-		ServiceType service = new ServiceType(); 
+		GrievanceType service = new GrievanceType();
 		service.setServiceCode("SCODE");
 		service.setServiceName("ServiceName");
 		service.setActive(true);
@@ -112,15 +112,15 @@ public class ServiceTypeServiceTest {
 		return serviceRequest;
 	}
 	
-	private List<ServiceType> prepareServiceTypeList() { 
-		List<ServiceType> serviceTypeList = new ArrayList<>();
-		serviceTypeList.add(new ServiceType().builder().serviceCode("SCODEONE")
+	private List<GrievanceType> prepareServiceTypeList() {
+		List<GrievanceType> grievanceTypeList = new ArrayList<>();
+		grievanceTypeList.add(new GrievanceType().builder().serviceCode("SCODEONE")
 				.serviceName("ServiceNameOne").active(true).tenantId("default")
 				.slaHours(24).category(4).build());
-		serviceTypeList.add(new ServiceType().builder().serviceCode("SCODETWO")
+		grievanceTypeList.add(new GrievanceType().builder().serviceCode("SCODETWO")
 				.serviceName("ServiceNameTwo").active(true).tenantId("default")
 				.slaHours(12).category(2).build());
-		return serviceTypeList;
+		return grievanceTypeList;
 				
 	}
 

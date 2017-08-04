@@ -140,7 +140,7 @@ public class DemandConnectionService {
         demand.setConsumerType(connection.getApplicationType());
         demand.setConsumerCode(connection.getConsumerNumber());
         final Set<DemandDetail> dmdDetailSet = new HashSet<>();
-        for (final DemandDetailBean demandReason : demandDetailBeanReq.getDemandDetailBeans()){
+        for (final DemandDetailBean demandReason : demandDetailBeanReq.getDemandDetailBeans()) {
             String demandreasoncode="WATERCHARGE"+demandReason.getTaxHeadMasterCode().split("#")[1];
             dmdDetailSet.add(createLegacyDemandDeatils(
                    tenantId,demandreasoncode, 

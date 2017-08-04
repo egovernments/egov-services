@@ -37,37 +37,18 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.producers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+package org.egov.wcms.transaction.consumer;
 
-@Service
-public class WaterTransactionProducer {
-    public static final Logger LOGGER = LoggerFactory.getLogger(WaterTransactionProducer.class);
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+import java.util.HashMap;
 
-    public void sendMessage(final String topic, final String key, final Object message) {
-        LOGGER.info("Message Received is : Topic : " + topic + " Key : " + key + " Message : " + message);
-        final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-            @Override
-            public void onSuccess(final SendResult<String, Object> stringTSendResult) {
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-            }
+@SuppressWarnings("rawtypes")
+public class HashMapDeserializer extends JsonDeserializer<HashMap> {
 
-            @Override
-            public void onFailure(final Throwable throwable) {
-
-            }
-        });
-    }
+	public HashMapDeserializer() {
+		super(HashMap.class);
+	}
 
 }

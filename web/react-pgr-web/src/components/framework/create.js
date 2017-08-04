@@ -450,11 +450,13 @@ class Report extends Component {
     let {mockData, moduleName, actionName} = this.props;
     const getFromGroup = function(groups) {
       for(var i=0; i<groups.length; i++) {
-        for(var j=0; j<groups[i].children.length; i++) {
-          if(groups[i].children[j].jsonPath == value) {
-            return "groups[" + i + "].children[" + j + "].groups";
-          } else {
-            return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
+        if(groups[i].children) {
+          for(var j=0; j<groups[i].children.length; i++) {
+            if(groups[i].children[j].jsonPath == value) {
+              return "groups[" + i + "].children[" + j + "].groups";
+            } else {
+              return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
+            }
           }
         }
       }

@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class DemandValidator implements Validator {
 
 	@Autowired
@@ -204,12 +208,16 @@ public class DemandValidator implements Validator {
 			}
 		}
 		List<Demand> dbDemands = demandRepository.getDemandsForConsumerCodes(businessConsumerValidatorMap, tenatId);
-		for (Demand demand : dbDemands) {
-
-			Set<String> consumerCodes = businessConsumerValidatorMap.get(demand.getBusinessService());
-			if (consumerCodes.contains(demand.getConsumerCode()))
-				errors.rejectValue("Demands", "", "the consumerCode value : " + demand.getConsumerCode()
-						+ " already exists for businessService : " + demand.getBusinessService());
+		Map<String, List<Demand>> dbDemandMap = dbDemands.stream().collect(Collectors.groupingBy(Demand::getConsumerCode, Collectors.toList()));
+		//Valiadting for existing records
+		for (Demand demand : demands) {
+			for (Demand demandFromMap : dbDemandMap.get(demand.getConsumerCode())) {
+				if (demand.getTaxPeriodFrom().equals(demandFromMap.getTaxPeriodFrom())
+						&& demand.getTaxPeriodTo().equals(demandFromMap.getTaxPeriodTo()))
+					errors.rejectValue("Demands", "", "the consumerCode value : " + demand.getConsumerCode()
+					+" with tax period from "+demand.getTaxPeriodFrom()+" and tax period to "+demand.getTaxPeriodTo()
+					+" already exists for businessService: " + demand.getBusinessService());
+			}
 		}
 	}
 

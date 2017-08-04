@@ -115,13 +115,15 @@ public class GrievanceTypeService {
         String servicesValues = null;
         try {
             logger.info("Update Service Type Service::" + servicesRequest);
-            Map<String, List<String>> serviceTypes = sevaConfigurationService.getSevaConfigurations(
-                    SevaConfigurationGetRequest.builder().keyName(servicesRequest.getService().getConfig().get(0))
-                            .tenantId(servicesRequest.getService().getTenantId()).build());
-            List<String> configValue = Collections.singletonList("true");
-            if (null != serviceTypes.get("sla.enabled") && serviceTypes.get("sla.enabled").stream().anyMatch(configValue::contains)
-                    && servicesRequest.getService().getSlaHours() == null) {
-                servicesRequest.getService().setSlaHours(0);
+            if (null != servicesRequest.getService().getConfig()) {
+                Map<String, List<String>> serviceTypes = sevaConfigurationService.getSevaConfigurations(
+                        SevaConfigurationGetRequest.builder().keyName(servicesRequest.getService().getConfig().get(0))
+                                .tenantId(servicesRequest.getService().getTenantId()).build());
+                List<String> configValue = Collections.singletonList("true");
+                if (null != serviceTypes.get("sla.enabled") && serviceTypes.get("sla.enabled").stream().anyMatch(configValue::contains)
+                        && servicesRequest.getService().getSlaHours() == null) {
+                    servicesRequest.getService().setSlaHours(0);
+                }
             }
             servicesValues = mapper.writeValueAsString(servicesRequest);
             logger.info("Service Type Value::" + servicesValues);

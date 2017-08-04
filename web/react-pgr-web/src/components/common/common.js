@@ -194,7 +194,7 @@ var localationData = {
   "wc.view.PropertyTypeUsageTypes.title":"View Property Type Usage Types",
   "wc.update.PropertyTypeUsageType.title":"Update Property Type Usage Type",
   "wc.update.Donation.title":"Update Donation",
-  "wc.view.Donations.title":"View Donation"
+  "wc.view.Donations.title":"View Donation",
   
   "pt.create.groups.propertyAddress.fields.aadhaarNumber": "Aadhaar Number",
   "pt.create.groups.propertyAddress.fields.phoneNumber":"Phone Number",

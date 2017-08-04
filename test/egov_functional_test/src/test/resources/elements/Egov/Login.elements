@@ -1,0 +1,27 @@
+{
+    "elements":[
+        {
+            "elementName":"username",
+            "identifier":"id",
+            "value":"username",
+            "waitFor":"visibility"
+        },
+        {
+            "elementName":"password",
+            "identifier":"id",
+            "value":"password",
+            "waitFor":"visibility"
+        },
+        {
+            "elementName":"signIn",
+            "identifier":"css",
+            "value":"button[type='submit']",
+            "waitFor":"presence"
+        },
+        {
+            "elementName":"",
+            "identifier":"name",
+            "value":""
+        }
+    ]
+}

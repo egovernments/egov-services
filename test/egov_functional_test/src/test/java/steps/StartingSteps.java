@@ -1,5 +1,6 @@
 package steps;
 
+import com.testvagrant.intents.Intent;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -15,6 +16,7 @@ public class StartingSteps extends BaseSteps {
     @Before
     public void beforeScenario() throws IOException {
         scenarioContext = new ScenarioContext();
+        intent = new Intent();
         pageStore = new PageStore();
         pageStore.getDriver().get(Properties.url);
         pageStore.getDriver().manage().window().maximize();

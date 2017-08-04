@@ -1,5 +1,6 @@
 package steps;
 
+import com.testvagrant.intents.Intent;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -13,6 +14,7 @@ import java.io.IOException;
 public class BaseSteps {
 
     public static PageStore pageStore;
+    public static Intent intent;
 
     public static ScenarioContext scenarioContext;
     protected String ptisTestDataFileName = "PTISTestData";

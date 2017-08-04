@@ -21,6 +21,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Consumer class will use for listening category object from kafka server to
  * insert data in postgres database
@@ -41,6 +43,9 @@ public class CategoryConsumer {
 	@Autowired
 	CategoryService categoryService;
 
+	 @Autowired
+	 private ObjectMapper objectMapper;
+	 
 	/**
 	 * This method for getting consumer configuration bean
 	 */
@@ -89,11 +94,11 @@ public class CategoryConsumer {
 	public void receive(ConsumerRecord<String, CategoryRequest> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateCategoryValidated())) {
-			categoryService.createCategory(consumerRecord.value());
+			categoryService.createCategory(objectMapper.convertValue(consumerRecord.value(), CategoryRequest.class));
 		}
 
 		else {
-			categoryService.updateCategory(consumerRecord.value());
+			categoryService.updateCategory(objectMapper.convertValue(consumerRecord.value(), CategoryRequest.class));
 		}
 	}
 }

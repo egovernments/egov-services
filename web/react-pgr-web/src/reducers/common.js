@@ -72,7 +72,9 @@ let menuConvention={
   "Water Charge.WCMS Masters.PipeSize Master.ModifyPipeSizeMasterApi":"/search/wc/pipeSize/update",
   "Water Charge.WCMS Masters.PipeSize Master.SearchPipeSizeMaster":"/search/wc/pipeSize/view",
   "Water Charge.WCMS Masters.PropertyCategory.ModifyPropertyCategoryApi":"/search/wc/propertyCategory/update",
-  "Water Charge.WCMS Masters.PropertyCategory.SearchPropertyCategoryApi":"/search/wc/propertyCategory/view"
+  "Water Charge.WCMS Masters.PropertyCategory.SearchPropertyCategoryApi":"/search/wc/propertyCategory/view",
+
+  "Collection.Collection-Transactions.CreateReceipt":"/transaction/collection/collection"
 
 }
 

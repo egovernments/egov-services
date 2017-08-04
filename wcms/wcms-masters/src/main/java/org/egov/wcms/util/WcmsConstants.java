@@ -68,6 +68,7 @@ public class WcmsConstants {
     public static final String INVALID_STORAGE_RESERVOIR_REQUEST_MESSAGE = "Storage Reservoir is invalid";
     public static final String INVALID_TREATMENT_PLANT_REQUEST_MESSAGE = "Treatment Plant is invalid";
     public static final String INVALID_METER_WATER_RATES_REQUEST_MESSAGE = "Meter Water Rates is invalid";
+    public static final String INVALID_SUPPLY_TYPE_REQUEST_MESSAGE = "Supply Type is invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";

@@ -737,13 +737,13 @@ public class ValidatorUtils {
 
     private List<ErrorField> getErrorFields(final SourceTypeRequest waterSourceTypeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        addCategoryNameValidationErrors(waterSourceTypeRequest, errorFields);
+        addSupplyTYpeNameValidationErrors(waterSourceTypeRequest, errorFields);
         addTenantIdValidationErrors(waterSourceTypeRequest.getSourceType().getTenantId(), errorFields);
         addActiveValidationErrors(waterSourceTypeRequest.getSourceType().getActive(), errorFields);
         return errorFields;
     }
 
-    private void addCategoryNameValidationErrors(final SourceTypeRequest waterSourceTypeRequest,
+    private void addSupplyTYpeNameValidationErrors(final SourceTypeRequest waterSourceTypeRequest,
             final List<ErrorField> errorFields) {
         final SourceType waterSource = waterSourceTypeRequest.getSourceType();
         if (waterSource.getName() == null || waterSource.getName().isEmpty()) {
@@ -787,7 +787,7 @@ public class ValidatorUtils {
                     .message(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (supply.getCode() != null && !supplyTypeService.getSupplyTypeByNameAndCode(supply.getCode(),
+        } else if (!supplyTypeService.getSupplyTypeByNameAndCode(supply.getCode(),
                 supply.getName(), supply.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUPPLYTYPE_NAME_UNIQUE_CODE)
                     .message(WcmsConstants.SUPPLYTYPE_UNQ_ERROR_MESSAGE)
@@ -800,7 +800,7 @@ public class ValidatorUtils {
     private Error getError(final SupplyTypeRequest supplyTypeRequest) {
         final List<ErrorField> errorFiled = getErrorFields(supplyTypeRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFiled).build();
+                .message(WcmsConstants.INVALID_SUPPLY_TYPE_REQUEST_MESSAGE).errorFields(errorFiled).build();
     }
 
     public List<ErrorResponse> validateStorageReservoirRequest(final StorageReservoirRequest storageReservoirRequest,

@@ -60,7 +60,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "DocumentType.name",
+							"jsonPath": "name",
 							"label": "wc.create.documentType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -71,7 +71,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "DocumentType.active",
+							"jsonPath": "active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

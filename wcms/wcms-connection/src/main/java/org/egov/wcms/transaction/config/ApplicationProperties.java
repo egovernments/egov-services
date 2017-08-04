@@ -79,7 +79,6 @@ public class ApplicationProperties {
     @Value("${kafka.topics.workorder.persist.key}")
     private String workOrderPersistTopicKey; 
 
-
     @Autowired
     private Environment environment;
 
@@ -123,5 +122,4 @@ public class ApplicationProperties {
     public String getWorkOrderTopicKey() {
     	return workOrderPersistTopicKey;
     }
-
 }

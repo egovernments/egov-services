@@ -60,8 +60,6 @@ import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMappe
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transaction.validator.RestConnectionService;
-import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
-import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -417,38 +415,13 @@ public class WaterConnectionRepository {
         return false;
     }
     
-    public boolean persistWorkOrderLog(WaterConnectionGetReq waterConnectionGetReq) { 
-    	List<Connection> connectionList = getConnectionDetails(waterConnectionGetReq);
-		WorkOrderFormat workOrder = null;
-		Connection connection = null;
-		for (int i = 0; i < connectionList.size(); i++) {
-			connection = connectionList.get(i);
-			workOrder = WorkOrderFormat.builder().ackNumber(connection.getAcknowledgementNumber())
-					.ackNumberDate("AckNumberDate").connectionId(connection.getId())
-					.workOrderNumber(connection.getWorkOrderNumber()).workOrderDate(new Date(new java.util.Date().getTime()).toString())
-					.hscNumber(connection.getConsumerNumber()).hscNumberDate("HSCNumberDate").tenantId(connection.getTenantId()).build();
-		}
-		PropertyResponse propertyResponse = restConnectionService
-				.getPropertyDetailsByUpicNo(getWaterConnectionRequest(connection));
-		if (null != propertyResponse) {
-			LOGGER.info("Property Response as received from Property Service : " + propertyResponse.toString());
-			if (null != propertyResponse.getProperties() && propertyResponse.getProperties().size() > 0) {
-				List<PropertyOwnerInfo> ownersList = propertyResponse.getProperties().get(0).getOwners();
-				if (null != ownersList && ownersList.size() > 0) {
-					workOrder.setWaterTapOwnerName(ownersList.get(0).getName());
-				}
-			}
-		}
+    public boolean persistWorkOrderLog(WorkOrderFormat workOrder) { 
     	String persistsWorkOrderLogQuery = WaterConnectionQueryBuilder.persistWorkOrderQuery();
+    	LOGGER.info("Persist Work Order Query : " + persistsWorkOrderLogQuery);
         if(namedParameterJdbcTemplate.update(persistsWorkOrderLogQuery, getObjectForInsertWorkOrder(workOrder)) > 0) { 
         	return true;
         }
         return false;
-    }
-    
-    private WaterConnectionReq getWaterConnectionRequest(Connection connection) { 
-    	RequestInfo rInfo = new RequestInfo();
-    	return new WaterConnectionReq(rInfo, connection);
     }
     
 	public Map<String, Object> getObjectForInsertEstimationNotice(EstimationNotice estimationNotice, long connectionId,

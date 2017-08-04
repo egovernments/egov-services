@@ -9,6 +9,7 @@ import java.util.List;
 import org.egov.models.AuditDetails;
 import org.egov.models.FeeMatrix;
 import org.egov.models.FeeMatrixDetail;
+import org.egov.models.FeeMatrixRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.FeeMatrixQueryBuilder;
 import org.egov.tradelicense.persistence.repository.helper.FeeMatrixHelper;
@@ -39,13 +40,46 @@ public class FeeMatrixRepository {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
+	public void persistNewFeeMatrix( FeeMatrixRequest feeMatrixRequest, Boolean isNew){
+		
+		Long feeMatrixId;
+		for( FeeMatrix feeMatrix : feeMatrixRequest.getFeeMatrices()){
+
+//				feeMatrix.setAuditDetails(auditDetails);
+				
+				if( isNew ){
+					
+					feeMatrixId = this.createFeeMatrix( feeMatrix);
+					feeMatrix.setId(feeMatrixId);
+					
+				}else{
+					feeMatrixId = feeMatrix.getId();
+					feeMatrix = this.updateFeeMatrix( feeMatrix);
+				}
+			
+				for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
+					feeMatrixDetail.setFeeMatrixId(feeMatrixId);
+					
+					if( isNew ){
+						
+						this.createFeeMatrixDetails( feeMatrixDetail);
+					}else{
+						
+						feeMatrixDetail = this.updateFeeMatrixDetail(feeMatrixDetail);
+					}
+					
+				}
+
+		}
+		
+	}
 	/**
 	 * Description : this method will create FeeMatrix in database
 	 * 
 	 * @param FeeMatrix
 	 * @return feeMatrixId
 	 */
-	public Long createFeeMatrix(String tenantId, FeeMatrix feeMatrix) {
+	public Long createFeeMatrix( FeeMatrix feeMatrix) {
 
 		AuditDetails auditDetails = feeMatrix.getAuditDetails();
 		String feeMatrixInsertQuery = FeeMatrixQueryBuilder.INSERT_FEE_MATRIX_QUERY;
@@ -84,7 +118,7 @@ public class FeeMatrixRepository {
 	 * @param FeeMatrixDetail
 	 * @return feeMatrixDetailId
 	 */
-	public Long createFeeMatrixDetails(String tenantId, FeeMatrixDetail feeMatrixDetail) {
+	public Long createFeeMatrixDetails( FeeMatrixDetail feeMatrixDetail) {
 
 		String feeMatrixInsertQuery = FeeMatrixQueryBuilder.INSERT_FEE_MATRIX_DETAIL_QUERY;
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -114,7 +148,7 @@ public class FeeMatrixRepository {
 	 * @param FeeMatrix
 	 * @return feeMatrix
 	 */
-	public FeeMatrix updateFeeMatrix(String tenantId, FeeMatrix feeMatrix) {
+	public FeeMatrix updateFeeMatrix( FeeMatrix feeMatrix) {
 
 		AuditDetails auditDetails = feeMatrix.getAuditDetails();
 		String feeMatrixUpdateQuery = FeeMatrixQueryBuilder.UPDATE_FEE_MATRIX_QUERY;

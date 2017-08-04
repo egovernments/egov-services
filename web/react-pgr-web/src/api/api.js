@@ -62,28 +62,31 @@ module.exports = {
         }).catch(function(response) {
 
 			console.log(response);
-
-            if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
-                var _err = response.response.data[0].error.message || "";
-                if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
-                    for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
-                        _err += "\n " + response.response.data[0].error.errorFields[i].message + " ";
+            try {
+                if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
+                    var _err = response.response.data[0].error.message || "";
+                    if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
+                        for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
+                            _err += "\n " + response.response.data[0].error.errorFields[i].message + " ";
+                        }
+                        throw new Error(_err);
                     }
-                    throw new Error(_err);
+                }else if(response && response.response && response.response.data && response.response.data.error){
+                  let _err = common.translate(response.response.data.error.fields[0].code);
+                  throw new Error(_err);
+                }else if(response && response.response && !response.response.data && response.response.status === 400) {
+                    document.title = "eGovernments";
+                    var locale = localStorage.getItem('locale');
+                    localStorage.clear();
+                    localStorage.setItem('locale', locale);
+                    window.location.hash = "#/";
+                } else if(response){
+                    throw new Error(response);
+                }else {
+                    throw new Error("Server returned unexpected error. Please contact system administrator.");
                 }
-            }else if(response && response.response && response.response.data && response.response.data.error){
-              let _err = common.translate(response.response.data.error.fields[0].code);
-              throw new Error(_err);
-            }else if(response && response.response && !response.response.data && response.response.status === 400) {
-                document.title = "eGovernments";
-                var locale = localStorage.getItem('locale');
-                localStorage.clear();
-                localStorage.setItem('locale', locale);
-                window.location.hash = "#/";
-            } else if(response){
-				throw new Error(response);
-			}else {
-                throw new Error("Server returned unexpected error. Please contact system administrator.");
+            } catch(e) {
+                throw new Error("Oops! Something isn't right. Please try again later.");
             }
         });
     },

@@ -79,8 +79,6 @@ public class FundContract extends AuditableContract {
 
 	protected FundContract parent;
 
-	protected Boolean isParent;
-
 	@NotNull
 	protected Boolean active;
 

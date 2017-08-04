@@ -154,7 +154,7 @@ public class ChartOfAccountDetailJdbcRepositoryTest {
 
 	private ChartOfAccountDetail getChartOfAccountDetailDomain() {
 		ChartOfAccountDetail chartOfAccountDetail = ChartOfAccountDetail
-				.builder().id("1").accountDetailType(getAccountDetailType()).chartOfAccount(getChartOfAccount()).build();
+				.builder().id("14632342").accountDetailType(getAccountDetailType()).chartOfAccount(getChartOfAccount()).build();
 		chartOfAccountDetail.setChartOfAccount(getChartOfAccount());
 		chartOfAccountDetail.setAccountDetailType(getAccountDetailType());
 		chartOfAccountDetail.setTenantId("default");

@@ -7,6 +7,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.web.requests.AccountDetailTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,7 @@ public class AccountDetailTypeService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(AccountDetailType b:accountdetailtypes)b.setId(accountDetailTypeRepository.getNextSequence());
 		return accountdetailtypes;
 
 	}

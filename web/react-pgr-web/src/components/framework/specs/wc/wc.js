@@ -27,8 +27,7 @@ var dat = {
                 "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
                 "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.asset.email": "properties[0].owners[0].emailId",
-                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.": "properties[0].propertyDetail.noOfFloors"
+                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber"
 
               }
             },
@@ -179,7 +178,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+      			"defaultValue": [],
+      			"url":'/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..categoryTypeName|$..categoryTypeName'
           },
           {
             "name": "UsageType",
@@ -190,7 +191,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":''
           },
           {
             "name": "hscPipeSizeType",
@@ -201,7 +204,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":''
           },
           {
             "name": "applicationType",

@@ -6,6 +6,7 @@ import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.SubSchemeSearch;
@@ -85,6 +86,7 @@ public class SubSchemeService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(SubScheme b:subschemes)b.setId(subSchemeRepository.getNextSequence());
 		return subschemes;
 
 	}

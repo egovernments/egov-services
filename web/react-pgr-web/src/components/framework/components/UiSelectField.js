@@ -48,7 +48,7 @@ class UiSelectField extends Component {
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
-							obj["key"]=keys[k];
+							obj["key"]=parseInt(keys[k]);
 							obj["value"]=values[k];
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+"-"+values[k]
@@ -100,7 +100,7 @@ class UiSelectField extends Component {
 				// let {dropDownData}=this.state;
 				return (
 					<SelectField
-						style={{"display": (item.hide ? 'none' : 'block')}}
+						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						fullWidth={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
 						value={this.props.getVal(item.jsonPath)}

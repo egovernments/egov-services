@@ -39,6 +39,10 @@ public class ChartOfAccountDetailRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return chartOfAccountDetailJdbcRepository.getSequence(ChartOfAccountDetailEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public ChartOfAccountDetail save(ChartOfAccountDetail chartOfAccountDetail) {

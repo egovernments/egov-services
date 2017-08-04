@@ -7,6 +7,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.AccountCodePurposeSearch;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
 import org.egov.egf.master.web.requests.AccountCodePurposeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,7 @@ public class AccountCodePurposeService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(AccountCodePurpose b:accountcodepurposes)b.setId(accountCodePurposeRepository.getNextSequence());
 		return accountcodepurposes;
 
 	}

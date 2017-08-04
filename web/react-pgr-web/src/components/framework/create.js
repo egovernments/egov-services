@@ -45,7 +45,7 @@ class Report extends Component {
   setDefaultValues (groups, dat) {
     for(var i=0; i<groups.length; i++) {
       for(var j=0; j<groups[i].fields.length; j++) {
-        if(groups[i].fields[j].defaultValue) {
+        if(typeof groups[i].fields[j].defaultValue != 'undefined') {
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
@@ -58,14 +58,14 @@ class Report extends Component {
     }
   }
 
-  displayUI(results)
-  {
+  displayUI(results) {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
 
     specifications =typeof(results)=="string"?JSON.parse(results):results;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
@@ -73,7 +73,7 @@ class Report extends Component {
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
 
-    if(hashLocation.split("/").indexOf("update") > -1) {
+    if(hashLocation.split("/").indexOf("update") == 1) {
       var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
       var id = self.props.match.params.id || self.props.match.params.master;
       var query = {
@@ -196,7 +196,7 @@ class Report extends Component {
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
-      self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
+      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
           if(self.props.actionName == "update") {
@@ -427,7 +427,6 @@ class Report extends Component {
               handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
             }
       });
-
   }
 
   incrementIndexValue = (group, jsonPath) => {
@@ -451,11 +450,13 @@ class Report extends Component {
     let {mockData, moduleName, actionName} = this.props;
     const getFromGroup = function(groups) {
       for(var i=0; i<groups.length; i++) {
-        for(var j=0; j<groups[i].children.length; i++) {
-          if(groups[i].children[j].jsonPath == value) {
-            return "groups[" + i + "].children[" + j + "].groups";
-          } else {
-            return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
+        if(groups[i].children) {
+          for(var j=0; j<groups[i].children.length; i++) {
+            if(groups[i].children[j].jsonPath == value) {
+              return "groups[" + i + "].children[" + j + "].groups";
+            } else {
+              return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
+            }
           }
         }
       }

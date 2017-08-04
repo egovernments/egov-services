@@ -13,11 +13,11 @@ var dat = {
 							"name": "name",
 							"jsonPath": "pipeSize.sizeInMilimeter",
 							"label": "wc.create.mm",
-							"pattern": "/^\d+(\.\d+)?$/",
+							"pattern": "^\\d+(\\.\\d+)?$",
 							"type": "number",
 							"isRequired": true,
 							"isDisabled": false,
-							"requiredErrMsg": "",
+							"requiredErrMsg": "Please Enter valid Number",
 							"patternErrMsg": "",
 							"depedants":[{
 									"jsonPath":"pipeSize.sizeInInch",
@@ -33,12 +33,12 @@ var dat = {
 							"name": "description",
 							"jsonPath": "pipeSize.sizeInInch",
 							"label": "wc.create.groups.connectionDetails.hscPipeSizeType",
-							"pattern": "\\d{10}",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": true,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
             {
 							"name": "description",
@@ -59,6 +59,7 @@ var dat = {
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
+							"defaultValue":true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -83,7 +84,7 @@ var dat = {
 							"label": "wc.create.mm",
 							"pattern": "",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""

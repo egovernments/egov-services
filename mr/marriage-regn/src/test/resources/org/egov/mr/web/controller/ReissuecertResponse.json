@@ -1,154 +1,84 @@
 {
     "responseInfo": {
-        "resMsgId": "resMsgId",
+        "resMsgId": "string",
         "status": "200",
         "apiId": "uief87324",
-        "ver": "v12",
-        "ts": null,
+        "ver": "string",
+        "ts": "string",
         "key": "successful",
         "tenantId": "ap.kurnool"
     },
     "reissueApplications": [
         {
             "id": "1",
-            "regnNo": "1",
+            "regnNo": "regnno",
             "applicantInfo": {
-                "name": "qwertyuiuy",
-                "address": "kjhgfdsghjk",
-                "mobileNo": "xcvbnmnbvc",
-                "email": null,
+                "name": "name",
+                "address": "address12345",
+                "mobileNo": "9876543210",
+                "email": "emailid@gmail.com",
                 "fee": 34,
-                "aadhaar": "dfghjgfd"
+                "aadhaar": "123456789"
             },
             "documents": [
                 {
                     "id": "1",
-                    "documentType": "wertyu",
-                    "location": "ertyuiuytr",
+                    "documentType": "documenttype",
+                    "location": "location",
                     "tenantId": "ap.kurnool",
-                    "reissueCertificateId": "1",
+                    "reissueCertificateId": "1234",
                     "auditDetails": {
-                        "createdBy": "qwerty",
-                        "lastModifiedBy": "wertyu",
-                        "createdTime": 234567,
-                        "lastModifiedTime": 1234567
-                    }
-                },
-                {
-                    "id": "2",
-                    "documentType": "dfghjhg",
-                    "location": "ertyuiuytrtyu",
-                    "tenantId": "ap.kurnool",
-                    "reissueCertificateId": "1",
-                    "auditDetails": {
-                        "createdBy": "sdfghjkjhg",
-                        "lastModifiedBy": "sdfghgf",
-                        "createdTime": 23456,
-                        "lastModifiedTime": 7654567
-                    }
-                },
-                {
-                    "id": "3",
-                    "documentType": "kjhgfdghjk",
-                    "location": "jhghtuyui",
-                    "tenantId": "ap.kurnool",
-                    "reissueCertificateId": "1",
-                    "auditDetails": {
-                        "createdBy": "vghjikiouiyu",
-                        "lastModifiedBy": "guhiuoy",
-                        "createdTime": 123456,
-                        "lastModifiedTime": 456788
+                        "createdBy": "creator",
+                        "lastModifiedBy": "modifier",
+                        "createdTime":1496430744825,
+                        "lastModifiedTime": 1496430744825
                     }
                 }
             ],
-            "applicationNumber": "cvbvbn",
-            "reissueApplStatus": null,
-            "stateId": "cvbnbv",
+            "applicationNumber": "egov1234",
+            "reissueApplStatus": "CREATED",
+            "stateId": "12345",
             "approvalDetails": {
-                "department": 456,
-                "designation": 456,
-                "assignee": 456,
-                "action": "4bvdfgh",
-                "status": "jhgfgh",
-                "comments": "hhhhhhhhhg"
+                "department": 1496430744825,
+                "designation": 1496430744825,
+                "assignee": 1496430744825,
+                "action": "action",
+                "status": "Approved",
+                "comments": "comments"
             },
             "demands": [
-                9876543
+                1496430744825
             ],
             "tenantId": "ap.kurnool",
-            "certificates": [
-                {
-                    "certificateNo": "wertyui",
-                    "certificateDate": 2345678,
-                    "certificateType": null,
-                    "regnNumber": "1",
-                    "bridegroomPhoto": "kjhgf",
-                    "bridePhoto": "jhgfds",
-                    "husbandName": "jhgfdsasdfg",
-                    "husbandAddress": "sdfghj",
-                    "wifeName": "zxcfghj",
-                    "wifeAddress": "3456778",
-                    "marriageDate": 23456789876,
-                    "marriageVenueAddress": "3456787",
-                    "regnDate": 98765,
-                    "regnSerialNo": "sdfgh",
-                    "regnVolumeNo": "bvcxsdfg",
-                    "certificatePlace": "zxcvhte",
-                    "templateVersion": "ytrew",
-                    "applicationNumber": "asdfgh",
+            "certificate": {
+                    "certificateNo": "certno",
+                    "certificateDate": 1496430744825,
+                    "certificateType": "REISSUE",
+                    "regnNumber": "regnnumber",
+                    "bridegroomPhoto": "photo",
+                    "bridePhoto": "photo",
+                    "husbandName": "husname",
+                    "husbandAddress": "hus address",
+                    "wifeName":"wife name",
+                    "wifeAddress": "wife address",
+                    "marriageDate": 1496430744825,
+                    "marriageVenueAddress": "venu address",
+                    "regnDate": 1496430744825,
+                    "regnSerialNo": "serialno",
+                    "regnVolumeNo": "volumeno",
+                    "certificatePlace": "certplace",
+                    "templateVersion": "v2",
+                    "applicationNumber": "applnno",
                     "tenantId": "ap.kurnool"
                 },
-                {
-                    "certificateNo": "wertyui",
-                    "certificateDate": 2345678,
-                    "certificateType": null,
-                    "regnNumber": "1",
-                    "bridegroomPhoto": "kjhgf",
-                    "bridePhoto": "jhgfds",
-                    "husbandName": "jhgfdsasdfg",
-                    "husbandAddress": "sdfghj",
-                    "wifeName": "zxcfghj",
-                    "wifeAddress": "3456778",
-                    "marriageDate": 23456789876,
-                    "marriageVenueAddress": "3456787",
-                    "regnDate": 98765,
-                    "regnSerialNo": "sdfgh",
-                    "regnVolumeNo": "bvcxsdfg",
-                    "certificatePlace": "zxcvhte",
-                    "templateVersion": "ytrew",
-                    "applicationNumber": "asdfgh",
-                    "tenantId": "ap.kurnool"
-                },
-                {
-                    "certificateNo": "wertyui",
-                    "certificateDate": 2345678,
-                    "certificateType": null,
-                    "regnNumber": "1",
-                    "bridegroomPhoto": "kjhgf",
-                    "bridePhoto": "jhgfds",
-                    "husbandName": "jhgfdsasdfg",
-                    "husbandAddress": "sdfghj",
-                    "wifeName": "zxcfghj",
-                    "wifeAddress": "3456778",
-                    "marriageDate": 23456789876,
-                    "marriageVenueAddress": "3456787",
-                    "regnDate": 98765,
-                    "regnSerialNo": "sdfgh",
-                    "regnVolumeNo": "bvcxsdfg",
-                    "certificatePlace": "zxcvhte",
-                    "templateVersion": "ytrew",
-                    "applicationNumber": "asdfgh",
-                    "tenantId": "ap.kurnool"
-                }
-            ],
-            "rejectionReason": "jhgf",
-            "remarks": "bvcxfdghj",
-            "isActive": true,
+            "rejectionReason": "rejectionreaon",
+            "remarks": "remarks",
+            "isActive": null,
             "auditDetails": {
-                "createdBy": "qwerty",
-                "lastModifiedBy": "wertyu",
-                "createdTime": 234567,
-                "lastModifiedTime": 1234567
+                "createdBy": "creator",
+                "lastModifiedBy": "modifier",
+                "createdTime": 1496430744825,
+                "lastModifiedTime": 1496430744825
             }
         }
     ],
@@ -159,4 +89,7 @@
         "currentPage": null,
         "offSet": null
     }
+    
+    
+    
 }

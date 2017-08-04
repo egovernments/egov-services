@@ -18,6 +18,7 @@ import lombok.Setter;
 @Builder
 public class AccountDetailTypeEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_accountdetailtype";
+    public static final String SEQUENCE_NAME = "seq_egf_accountdetailtype";
     private String id;
     private String name;
     private String description;

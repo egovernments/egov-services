@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.repository;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -51,6 +52,7 @@ import org.egov.common.contract.request.User;
 import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.repository.builder.StorageReservoirQueryBuilder;
 import org.egov.wcms.repository.rowmapper.StorageReservoirRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.StorageReservoirGetRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.junit.Test;
@@ -77,6 +79,9 @@ public class StorageReservoirRepositoryTest {
 
     @InjectMocks
     private StorageReservoirRepository storageReservoirRepository;
+
+    @Mock
+    private RestWaterExternalMasterService restExternalMasterService;
 
     @Test
     public void test_Should_Create_StorageReservoir() {
@@ -114,18 +119,17 @@ public class StorageReservoirRepositoryTest {
 
     @Test
     public void test_Should_Search_StorageReservoir() {
-
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final List<StorageReservoir> storageReservoirList = new ArrayList<>();
         final StorageReservoir storageReservoir = getStorageReservoir();
         storageReservoirList.add(storageReservoir);
 
-        when(storageReservoirQueryBuilder.getQuery(any(StorageReservoirGetRequest.class), any(List.class)))
-                .thenReturn("");
-        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(StorageReservoirRowMapper.class)))
+        final StorageReservoirGetRequest storageReservoirGetRequest = Mockito.mock(StorageReservoirGetRequest.class);
+        when(jdbcTemplate.query("query", preparedStatementValues.toArray(), storageReservoirRowMapper))
                 .thenReturn(storageReservoirList);
 
-        assertTrue(
-                storageReservoirList.equals(storageReservoirRepository.findForCriteria(new StorageReservoirGetRequest())));
+        assertNotNull(
+                storageReservoirRepository.findForCriteria(storageReservoirGetRequest));
     }
 
     @Test

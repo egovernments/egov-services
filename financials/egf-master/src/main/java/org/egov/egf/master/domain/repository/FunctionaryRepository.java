@@ -38,6 +38,10 @@ public class FunctionaryRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return functionaryJdbcRepository.getSequence(FunctionaryEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public Functionary save(Functionary functionary) {

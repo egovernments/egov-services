@@ -21,52 +21,36 @@ import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.services.CategoryService;
-import org.egov.tradelicense.services.DocumentTypeService;
-import org.egov.tradelicense.services.FeeMatrixService;
-import org.egov.tradelicense.services.LicenseStatusService;
-import org.egov.tradelicense.services.PenaltyRateService;
-import org.egov.tradelicense.services.UOMService;
+import org.egov.tradelicense.domain.services.PenaltyRateService;
+import org.egov.tradelicense.web.controller.PenaltyRateController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(TradeLicenseMasterController.class)
+@WebMvcTest(PenaltyRateController.class)
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 public class PenaltyRateControllerTest {
 
 	@MockBean
-	private CategoryService categoryService;
-
-	@MockBean
-	FeeMatrixService feeMatrixService;
-
-	@MockBean
-	private UOMService uomService;
-
-	@MockBean
 	private PenaltyRateService penaltyRateService;
-
-	@MockBean
-	DocumentTypeService documentTypeService;
-	
-	@MockBean
-	LicenseStatusService licenseStatusService;
 
 	@MockBean
 	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private MockMvc mockMvc;
-
 	
+	@MockBean
+	KafkaTemplate kafkaTemplate;
+
 	/**
 	 * Description : Test method for createPenaltyRate() method
 	 */
@@ -91,7 +75,7 @@ public class PenaltyRateControllerTest {
 			when(penaltyRateService.createPenaltyRateMaster(any(String.class), any(PenaltyRateRequest.class)))
 					.thenReturn(penaltyRateResponse);
 
-			mockMvc.perform(post("/tradelicense/penaltyrate/_create").param("tenantId", "default")
+			mockMvc.perform(post("/penaltyrate/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -105,7 +89,6 @@ public class PenaltyRateControllerTest {
 		assertTrue(Boolean.TRUE);
 	}
 
-	
 	/**
 	 * Description : Test method for updatePenaltyRate() method
 	 */
@@ -129,7 +112,7 @@ public class PenaltyRateControllerTest {
 
 			when(penaltyRateService.updatePenaltyRateMaster(any(PenaltyRateRequest.class)))
 					.thenReturn(penaltyRateResponse);
-			mockMvc.perform(post("/tradelicense/penaltyrate/_update").param("tenantId", "default")
+			mockMvc.perform(post("/penaltyrate/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -170,7 +153,7 @@ public class PenaltyRateControllerTest {
 					any(Integer[].class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(penaltyRateResponse);
 
-			mockMvc.perform(post("/tradelicense/penaltyrate/_search").param("tenantId", "default")
+			mockMvc.perform(post("/penaltyrate/_search").param("tenantId", "default")
 					.param("applicationType", "New").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("penaltyRateSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

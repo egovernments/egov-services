@@ -21,6 +21,7 @@ import lombok.Setter;
 @Builder
 public class SubSchemeEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_subscheme";
+	public static final String SEQUENCE_NAME = "seq_egf_subscheme";
 	private String id;
 	private String schemeId;
 	private String code;

@@ -16,6 +16,9 @@ var specifications={};
 
 let reqRequired = [];
 class Report extends Component {
+  state={
+    pathname:""
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -66,16 +69,27 @@ class Report extends Component {
     } catch(e) {}
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    reqRequired = [];
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
+
+    this.setState({
+      pathname:this.props.history.location.pathname
+    })
   }
 
   componentDidMount() {
       this.initData();
+  }
+  componentWillReceiveProps(nextProps)
+  {
+    if (this.state.pathname!=nextProps.history.location.pathname) {
+      this.initData();
+    }
   }
 
   search = (e) => {
@@ -145,7 +159,7 @@ class Report extends Component {
         <form onSubmit={(e) => {
           search(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>

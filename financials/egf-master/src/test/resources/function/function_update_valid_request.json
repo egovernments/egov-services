@@ -6,8 +6,7 @@
 		   		"tenantId":"default",
 		   		"code":"003",
 		   		"active":true,
-		   		"level":1,
-		   		"isParent":false
+		   		"level":1
 		   	}
 	   	
 	   ]

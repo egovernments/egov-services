@@ -44,8 +44,8 @@ public class FunctionJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/clearFunction.sql" })
 	public void test_create() {
 
-		FunctionEntity function = FunctionEntity.builder().code("code").name("name").active(true).level(1)
-				.isParent(false).parentId("1").build();
+		FunctionEntity function = FunctionEntity.builder().id("46353532").code("code").name("name").active(true).level(1)
+				.parentId("1").build();
 		function.setTenantId("default");
 		FunctionEntity actualResult = functionJdbcRepository.create(function);
 
@@ -64,7 +64,7 @@ public class FunctionJdbcRepositoryTest {
 	public void test_create_with_tenantId_null() {
 
 		FunctionEntity function = FunctionEntity.builder().code("code").name("name").active(true).level(1)
-				.isParent(false).parentId("1").level(1).build();
+				.parentId("1").level(1).build();
 		functionJdbcRepository.create(function);
 
 	}
@@ -73,7 +73,7 @@ public class FunctionJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/clearFunction.sql", "/sql/insertFunctionData.sql" })
 	public void test_update() {
 
-		FunctionEntity function = FunctionEntity.builder().code("codeU").name("nameU").active(true).isParent(false)
+		FunctionEntity function = FunctionEntity.builder().code("codeU").name("nameU").active(true)
 				.id("2").level(1).build();
 		function.setTenantId("default");
 		FunctionEntity actualResult = functionJdbcRepository.update(function);
@@ -170,7 +170,6 @@ public class FunctionJdbcRepositoryTest {
 						put("code", resultSet.getString("code"));
 						put("active", resultSet.getBoolean("active"));
 						put("level", resultSet.getLong("level"));
-						put("isParent", resultSet.getBoolean("isParent"));
 						put("createdBy", resultSet.getString("createdBy"));
 						put("createdDate", resultSet.getString("createdDate"));
 						put("lastModifiedBy", resultSet.getString("lastModifiedBy"));
@@ -192,7 +191,6 @@ public class FunctionJdbcRepositoryTest {
 		functionSearch.setName("name");
 		functionSearch.setCode("code");
 		functionSearch.setActive(true);
-		functionSearch.setIsParent(false);
 		functionSearch.setLevel(1);
 		functionSearch.setParentId(parentFunction());
 		functionSearch.setPageSize(500);
@@ -202,7 +200,7 @@ public class FunctionJdbcRepositoryTest {
 	}
 
 	private Function parentFunction() {
-		Function function = Function.builder().name("parent").code("001").level(0).active(true).isParent(true).id("1")
+		Function function = Function.builder().name("parent").code("001").level(0).active(true).id("1")
 				.build();
 		function.setTenantId("default");
 		return function;

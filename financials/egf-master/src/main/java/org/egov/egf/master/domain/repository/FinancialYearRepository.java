@@ -56,6 +56,10 @@ public class FinancialYearRepository {
         }
         financialYearQueueRepository.add(message);
     }
+    
+    public String getNextSequence(){
+        return financialYearJdbcRepository.getSequence(FinancialYearEntity.SEQUENCE_NAME);
+    }
 
     public Pagination<FinancialYear> search(FinancialYearSearch domain) {
 

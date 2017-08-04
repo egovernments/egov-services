@@ -46,6 +46,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.service.WorkflowService;
@@ -62,7 +63,6 @@ import org.egov.collection.web.errorhandlers.Error;
 import org.egov.collection.web.errorhandlers.ErrorHandler;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,48 +178,21 @@ public class ReceiptController {
 		final List<ErrorResponse> errorResponses = receiptReqValidator.validatecreateReceiptRequest(receiptRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
-		Receipt receiptInfo = receiptService.apportionAndCreateReceipt(receiptRequest);
-
-		if (null == receiptInfo) {
-			LOGGER.info("Service returned null");
+		Receipt receiptInfo = null;
+		try{
+			receiptInfo = receiptService.apportionAndCreateReceipt(receiptRequest);
+		}catch(CustomException e){
+			LOGGER.info("Exception Message: "+e.getCustomMessage());
 			Error error = new Error();
-			ErrorField errorField = new ErrorField();
-			List<ErrorField> errorFields = new ArrayList<>();
-			errorField.setField("businessDetailsCode or glcode");
-			errorField.setMessage(CollectionServiceConstants.INVALID_BD);
-			errorFields.add(errorField);
-			error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
-			error.setMessage(CollectionServiceConstants.INVALID_RECEIPT_REQUEST);
-			error.setDescription(CollectionServiceConstants.INVALID_REQ_DESC);
-			error.setErrorFields(errorFields);
+			final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(receiptRequest.getRequestInfo(), true);
+			error.setCode(Integer.valueOf(e.getCode().toString()));
+			error.setMessage(e.getCustomMessage());
+			error.setDescription(e.getDescription());
 			ErrorResponse errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
+			errorResponse.setResponseInfo(responseInfo);
 
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-
-		}
-
-		// to differentiate between badrequest and internal server so that user
-		// has a clear idea
-
-		if (null == receiptInfo.getBill().get(0).getBillDetails().get(0).getReceiptNumber()) {
-			LOGGER.info("Service returned empty object");
-			Error error = new Error();
-			ErrorField errorField = new ErrorField();
-			List<ErrorField> errorFields = new ArrayList<>();
-			errorField.setField("Receipt");
-			errorField.setMessage(CollectionServiceConstants.RECEIPT_FAIL);
-			errorFields.add(errorField);
-			error.setCode(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()));
-			error.setMessage(CollectionServiceConstants.RECEIPT_FAIL);
-			error.setDescription(CollectionServiceConstants.RECEIPT_FAIL_DESC);
-			error.setErrorFields(errorFields);
-			ErrorResponse errorResponse = new ErrorResponse();
-			errorResponse.setError(error);
-
-			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
 		}
 
 		List<Receipt> receipts = new ArrayList<>();
@@ -230,12 +203,13 @@ public class ReceiptController {
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid WorkflowDetailsRequest workFlowRequest, BindingResult errors) {
+	public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
+		WorkflowDetailsRequest workFlowRequest = receiptReq.getWorkflowDetails();
 		if (!validator(workFlowRequest.getTenantId(), workFlowRequest.getReceiptHeaderId())) {
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();

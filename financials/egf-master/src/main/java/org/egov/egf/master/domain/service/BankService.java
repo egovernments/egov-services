@@ -73,6 +73,7 @@ public class BankService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(Bank b:banks)b.setId(bankRepository.getNextSequence());
 		return banks;
 
 	}

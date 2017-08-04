@@ -43,7 +43,7 @@ var meterReading = {
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
     },
-    
+
    ]
   }
  ]
@@ -91,7 +91,7 @@ var dat = {
             "patternErrMsg": "",
 			"values": [{"label":"With Property", "value":true},{"label":"Without Property", "value":false}],
 			"defaultValue":true
-          }			  
+          }
         ]
       },{
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
@@ -228,7 +228,7 @@ var dat = {
             "pattern": "",
             "type": "text",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -275,7 +275,20 @@ var dat = {
               }
             ],
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "showHideFields": [{
+                   "ifValue": "test",
+                   "hide": [{
+                    "name": "description",
+                    "isGroup": false,
+                    "isField": true
+                   }],
+                   "show": [{
+                    "name": "NoOfFlats",
+                    "isGroup": false,
+                    "isField": true
+                   }]
+                  }]
           },
 		  {
             "name": "NoOfFlats",
@@ -283,6 +296,7 @@ var dat = {
             "label": "No of Flats",
             "pattern": "",
             "type": "number",
+            "hide":true,
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -327,7 +341,7 @@ var dat = {
 			"defaultValue": [],
 			"url":""
           },
-		  
+
           {
             "name": "applicationType",
             "jsonPath": "Connection.applicationType",
@@ -364,7 +378,20 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getbillingtypes?|$..key|$..object",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "showHideFields": [{
+                   "ifValue": "METERED",
+                   "hide": [{
+                    "name": "description",
+                    "isGroup": false,
+                    "isField": true
+                   }],
+                   "show": [{
+                    "name": "Metered",
+                    "isGroup": true,
+                    "isField": false
+                   }]
+                  }]
           },
           {
             "name": "ConnectionType",
@@ -460,10 +487,11 @@ var dat = {
             "patternErrMsg": ""
           }
         ]
-      }, 
+      },
 	  {
         "label": "Metered",
         "name": "Metered",
+        "hide":true,
 		"children":[meterReading],
         "fields": [{
             "name": "meterMake",

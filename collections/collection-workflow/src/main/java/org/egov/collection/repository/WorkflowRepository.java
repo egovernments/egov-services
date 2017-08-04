@@ -134,6 +134,8 @@ public class WorkflowRepository {
         final ProcessInstance processInstance = new ProcessInstance();
         final Position assignee = new Position();
         assignee.setId(workflowDetails.getAssignee());
+        
+        logger.info("Workflowdetails received: "+workflowDetails);
 
         processInstance.setBusinessKey(CollectionServiceConstants.BUSINESS_KEY);
         processInstance.setType(CollectionServiceConstants.BUSINESS_KEY);

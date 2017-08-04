@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -34,8 +33,6 @@ public class FunctionJdbcRepository extends JdbcRepository {
 	}
 
 	public FunctionEntity create(FunctionEntity entity) {
-
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}
@@ -111,13 +108,6 @@ public class FunctionJdbcRepository extends JdbcRepository {
 			}
 			params.append("active =:active");
 			paramValues.put("active", functionSearchEntity.getActive());
-		}
-		if (functionSearchEntity.getIsParent() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("isParent =:isParent");
-			paramValues.put("isParent", functionSearchEntity.getIsParent());
 		}
 		if (functionSearchEntity.getParentId() != null) {
 			if (params.length() > 0) {

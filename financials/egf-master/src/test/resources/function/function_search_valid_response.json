@@ -4,8 +4,7 @@
             "id": "1",
             "name": "function",
             "code": "002",
-            "tenantId": "default",
-		    "isParent":false
+            "tenantId": "default"
         }
     ],
     "page":

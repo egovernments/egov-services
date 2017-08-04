@@ -5,6 +5,7 @@ import java.util.List;
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FinancialYearSearch;
 import org.egov.egf.master.domain.repository.FinancialYearRepository;
@@ -66,12 +67,14 @@ public class FinancialYearService {
 		return financialyears;
 	}
 
+	@Transactional
 	public List<FinancialYear> add(List<FinancialYear> financialyears, BindingResult errors) {
 		financialyears = fetchRelated(financialyears);
 		validate(financialyears, Constants.ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(FinancialYear b:financialyears)b.setId(financialYearRepository.getNextSequence());
 		return financialyears;
 
 	}

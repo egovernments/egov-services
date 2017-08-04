@@ -11,7 +11,7 @@ export default class UiNumberField extends Component {
 			case 'google': 
 				return (
 					<TextField 
-						style={{"display": (item.hide ? 'none' : 'block')}}
+						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						fullWidth={true} 
 						type="number"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 

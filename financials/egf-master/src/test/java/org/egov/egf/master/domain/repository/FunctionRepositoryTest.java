@@ -96,7 +96,7 @@ public class FunctionRepositoryTest {
     }
 
     private FunctionContract getFunctionContract() {
-        return FunctionContract.builder().code("001").name("test").active(true).level(1).isParent(false).build();
+        return FunctionContract.builder().code("001").name("test").active(true).level(1).build();
     }
 
     private Function getFunctionDomin() {
@@ -105,7 +105,6 @@ public class FunctionRepositoryTest {
         function.setName("name");
         function.setActive(true);
         function.setLevel(1);
-        function.setIsParent(false);
         function.setTenantId("default");
         return function;
     }
@@ -117,7 +116,6 @@ public class FunctionRepositoryTest {
         entity.setName(function.getName());
         entity.setActive(function.getActive());
         entity.setLevel(function.getLevel());
-        entity.setIsParent(function.getIsParent());
         entity.setTenantId(function.getTenantId());
         return entity;
     }

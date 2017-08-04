@@ -185,7 +185,7 @@ public class ReceivingModeTypeRepository {
         String query = "";
         if (null != name && name != "") {
 
-            preparedStatementValues.add(name.toUpperCase());
+            preparedStatementValues.add(name.toUpperCase().trim());
             query = ReceivingModeTypeQueryBuilder.checkReceivinModeTypeByName();
 
         }

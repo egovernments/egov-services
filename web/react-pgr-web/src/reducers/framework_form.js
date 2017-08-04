@@ -21,19 +21,21 @@ export default (state = defaultState, action) => {
         case "SET_FORM_DATA":
             return {
                 ...state,
-                form: action.data
+                form: action.data,
+                isFormValid: checkIfHasAllReqFields(state.requiredFields, action.data)
             }
 
         case "SET_REQUIRED_FIELDS":
             return {
               ...state,
               requiredFields: action.requiredFields,
+              fieldErrors: {},
               isFormValid: action.requiredFields.length == 0 ? true : false
             }
         case "HANDLE_CHANGE_FRAMEWORK":
             var currentState = { ...state };
             _.set(currentState.form, action.property, action.value);
-            var validationDat = validate(action.property, action.value, action.isRequired, currentState.form, currentState.requiredFields, action.pattern, action.patternErrMsg);
+            var validationDat = validate(currentState.fieldErrors, action.property, action.value, action.isRequired, currentState.form, currentState.requiredFields, action.pattern, action.patternErrMsg);
             //Set field errors
             currentState.fieldErrors = {
               ...state.fieldErrors,
@@ -85,12 +87,13 @@ export default (state = defaultState, action) => {
     }
 }
 
-function validate(property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
+function validate(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
   let errorText = isRequired && !value ? translate('ui.framework.required') : '';
   let isFormValid = true;
   for(var i=0; i<requiredFields.length; i++) {
     if(!_.get(form, requiredFields[i])) {
       isFormValid = false;
+      break;
     }
   }
 
@@ -99,8 +102,26 @@ function validate(property, value, isRequired, form, requiredFields, pattern, pa
     isFormValid = false;
   }
 
+  for(let key in fieldErrors) {
+    if(fieldErrors[key]) {
+        isFormValid = false;
+        break;
+    }
+  }
+
+
   return {
     isFormValid,
     errorText
   }
+}
+
+function checkIfHasAllReqFields(reqFields, form) {
+    for(var i=0; i<reqFields.length; i++) {
+        if(!_.get(form, reqFields[i])) {
+            return false;
+        }
+    }
+
+    return true;
 }

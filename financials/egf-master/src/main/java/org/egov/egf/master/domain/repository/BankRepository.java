@@ -38,6 +38,10 @@ public class BankRepository {
 
     }
 
+    public String getNextSequence(){
+        return bankJdbcRepository.getSequence(BankEntity.SEQUENCE_NAME);
+    }
+    
     @Transactional
     public Bank save(Bank bank) {
         BankEntity entity = bankJdbcRepository.create(new BankEntity().toEntity(bank));

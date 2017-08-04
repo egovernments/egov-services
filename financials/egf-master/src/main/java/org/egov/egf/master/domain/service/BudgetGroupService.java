@@ -6,6 +6,7 @@ import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
 import org.egov.egf.master.domain.model.ChartOfAccount;
@@ -99,6 +100,7 @@ public class BudgetGroupService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(BudgetGroup b:budgetgroups)b.setId(budgetGroupRepository.getNextSequence());
 		return budgetgroups;
 
 	}

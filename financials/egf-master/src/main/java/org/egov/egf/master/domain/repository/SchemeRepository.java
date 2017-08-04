@@ -38,6 +38,10 @@ public class SchemeRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return schemeJdbcRepository.getSequence(SchemeEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public Scheme save(Scheme scheme) {

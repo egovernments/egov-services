@@ -2,6 +2,10 @@ package org.egov.egf.master.domain.repository;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.egov.egf.master.web.contract.AccountCodePurposeSearchContract;
 import org.egov.egf.master.web.contract.AccountDetailKeySearchContract;
 import org.egov.egf.master.web.contract.AccountDetailTypeSearchContract;
@@ -40,7 +44,6 @@ public class ElasticSearchQueryFactory {
         elasticSearchUtils.add(fundSearchContract.getIdentifier(), "identifier", boolQueryBuilder);
         elasticSearchUtils.add(fundSearchContract.getLevel(), "level", boolQueryBuilder);
         elasticSearchUtils.add(fundSearchContract.getParent(), "parent", boolQueryBuilder);
-        elasticSearchUtils.add(fundSearchContract.getIsParent(), "isParent", boolQueryBuilder);
         elasticSearchUtils.add(fundSearchContract.getActive(), "active", boolQueryBuilder);
 
         return boolQueryBuilder;
@@ -221,7 +224,6 @@ public class ElasticSearchQueryFactory {
         elasticSearchUtils.add(functionSearchContract.getCode(), "code", boolQueryBuilder);
         elasticSearchUtils.add(functionSearchContract.getLevel(), "level", boolQueryBuilder);
         elasticSearchUtils.add(functionSearchContract.getActive(), "active", boolQueryBuilder);
-        elasticSearchUtils.add(functionSearchContract.getIsParent(), "isParent", boolQueryBuilder);
         elasticSearchUtils.add(functionSearchContract.getParentId(), "parentId", boolQueryBuilder);
         return boolQueryBuilder;
 
@@ -323,6 +325,26 @@ public class ElasticSearchQueryFactory {
         elasticSearchUtils.add(fundsourceSearchContract.getType(), "type", boolQueryBuilder);
         
         return boolQueryBuilder;
+    }
+    
+    public List<String> prepareOrderBys(String sortBy) {
+        List<String> orderByList = new ArrayList<String>();
+        List<String> sortByList = new ArrayList<String>();
+        if (sortBy.contains(",")) {
+                sortByList = Arrays.asList(sortBy.split(","));
+        } else {
+                sortByList = Arrays.asList(sortBy);
+        }
+        for (String s : sortByList) {
+                if (s.contains(" ") && (s.toLowerCase().trim().endsWith("asc") || s.toLowerCase().trim().endsWith("desc"))) {
+                    orderByList.add(s.trim());
+                }
+                else {
+                    orderByList.add(s.trim() + " asc");
+                }
+        }
+        
+        return orderByList;
     }
 
 }

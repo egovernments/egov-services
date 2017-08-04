@@ -61,15 +61,16 @@ public class Consumer {
         consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, propertiesManager.getConsumerGroup());
         return consumerProperties;
+        
     }
 
     /*
      * This method will return the consumer factory bean based on consumer configuration
      */
     @Bean
-    public ConsumerFactory<String, PropertyRequest> consumerFactory() {
+    public ConsumerFactory<String, Object> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-                new JsonDeserializer<>(PropertyRequest.class));
+                new JsonDeserializer<>(Object.class));
 
     }
 
@@ -78,8 +79,8 @@ public class Consumer {
      */
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
+    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
@@ -109,18 +110,20 @@ public class Consumer {
 
     @KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}",
             "#{propertiesManager.getUpdateWorkflow()}",
-            "#{propertiesManager.getApproveWorkflow()}" })
-    public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws IOException {
+            "#{propertiesManager.getApproveWorkflow()}",
+            "#{propertiesManager.getApproveTitleTransfer()}"})
+    public void receive(ConsumerRecord<String, Object> consumerRecord) throws IOException {
         log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord.value());
-        for (Property property : consumerRecord.value().getProperties()) {
+       PropertyRequest propertyRequest = new ObjectMapper().convertValue(consumerRecord.value(), PropertyRequest.class);
+        for (Property property : propertyRequest.getProperties()) {
             String propertyData = new ObjectMapper().writeValueAsString(property);
             client.execute(
                     new Index.Builder(propertyData)
                             .index(propertiesManager.getPropertyIndex())
-                            .type(propertiesManager.getPropertyIndexType())
+                            .type(propertiesManager.getPropertyIndexType()).id(property.getPropertyDetail().getApplicationNo())
                             .build());
         }
-        client.shutdownClient();
+       
 
     }
 }

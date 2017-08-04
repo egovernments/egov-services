@@ -138,7 +138,7 @@ public class ServiceGroupRepository {
 	
 	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) { 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName().toUpperCase());
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName().toUpperCase().trim());
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
 		String checkQuery = ""; 
 		if(action.equals(taskAction[0])) { 

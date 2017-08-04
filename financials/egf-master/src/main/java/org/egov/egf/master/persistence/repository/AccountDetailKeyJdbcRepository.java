@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -34,8 +33,6 @@ public class AccountDetailKeyJdbcRepository extends JdbcRepository {
 	}
 
 	public AccountDetailKeyEntity create(AccountDetailKeyEntity entity) {
-
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}

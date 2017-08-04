@@ -203,12 +203,13 @@ public class ReceiptController {
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid WorkflowDetailsRequest workFlowRequest, BindingResult errors) {
+	public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
+		WorkflowDetailsRequest workFlowRequest = receiptReq.getWorkflowDetails();
 		if (!validator(workFlowRequest.getTenantId(), workFlowRequest.getReceiptHeaderId())) {
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();

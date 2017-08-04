@@ -6,6 +6,8 @@ import org.egov.user.model.UserReq;
 import org.egov.user.model.UserRes;
 import org.egov.user.model.UserSearchCriteria;
 import org.egov.user.service.NewUserService;
+import org.egov.user.web.contract.factory.ResponseFactory;
+import org.egov.user.web.validator.NewUserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,12 @@ public class NewUserController {
 	@Autowired
 	private NewUserService newUserService;
 	
+	@Autowired
+	private NewUserValidator userValidator;
+	
+	@Autowired
+	private ResponseFactory responseFactory;
+	
 	@PostMapping("_search")
 	public ResponseEntity<?> search(@ModelAttribute UserSearchCriteria userSearchCriteria,
 			@RequestBody RequestInfoWrapper requestInfoWrapper){
@@ -37,6 +45,10 @@ public class NewUserController {
 	@PostMapping("_create")
 	public ResponseEntity<?> create(@RequestBody UserReq userReq, BindingResult errors){
 		log.info("create userReq : "+userReq);
+		userValidator.validate(userReq, errors);
+		if (errors.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(errors, userReq.getRequestInfo()), HttpStatus.BAD_REQUEST);
+		}
 		UserRes userRes = newUserService.create(userReq);
 		return new ResponseEntity<>(userRes, HttpStatus.CREATED);
 	}

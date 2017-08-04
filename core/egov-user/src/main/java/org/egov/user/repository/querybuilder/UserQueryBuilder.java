@@ -101,8 +101,8 @@ public class UserQueryBuilder {
 		}
 		
 		if(userSearchCriteria.getUserName() != null){
-			selectQuery.append(" AND usr.username = ? ");
-			preparedStatementValues.add(userSearchCriteria.getUserName());
+			selectQuery.append(" AND usr.username IN ("+getCodeQuery(userSearchCriteria.getUserName()));
+//			preparedStatementValues.add(userSearchCriteria.getUserName());
 		}
 		
 		if(userSearchCriteria.getActive() != null){

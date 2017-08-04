@@ -22,7 +22,7 @@ public class UserSearchCriteria {
 	
 	private String tenantId;
 	private Long lastChangedSince;
-	private String userName;
+	private Set<String> userName;
 	private Boolean active;
 	private Set<Long> id;
 	private Type type;

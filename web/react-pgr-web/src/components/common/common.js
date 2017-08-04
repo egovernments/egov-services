@@ -192,7 +192,10 @@ var localationData = {
   "wc.create.usageType":"Usage Type",
   "wc.search.PropertyTypeUsageType.title":"Search Property Type Usage Type",
   "wc.view.PropertyTypeUsageTypes.title":"View Property Type Usage Types",
-  "wc.update.PropertyTypeUsageType.title":"Update Property Type Usage Type"
+  "wc.update.PropertyTypeUsageType.title":"Update Property Type Usage Type",
+  "wc.update.Donation.title":"Update Donation",
+  "wc.view.Donations.title":"View Donation"
+
 }
 
 export function translate(locale_text){

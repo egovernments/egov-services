@@ -208,15 +208,19 @@ public class DemandValidator implements Validator {
 			}
 		}
 		List<Demand> dbDemands = demandRepository.getDemandsForConsumerCodes(businessConsumerValidatorMap, tenatId);
-		Map<String, List<Demand>> dbDemandMap = dbDemands.stream().collect(Collectors.groupingBy(Demand::getConsumerCode, Collectors.toList()));
-		//Valiadting for existing records
-		for (Demand demand : demands) {
-			for (Demand demandFromMap : dbDemandMap.get(demand.getConsumerCode())) {
-				if (demand.getTaxPeriodFrom().equals(demandFromMap.getTaxPeriodFrom())
-						&& demand.getTaxPeriodTo().equals(demandFromMap.getTaxPeriodTo()))
-					errors.rejectValue("Demands", "", "the consumerCode value : " + demand.getConsumerCode()
-					+" with tax period from "+demand.getTaxPeriodFrom()+" and tax period to "+demand.getTaxPeriodTo()
-					+" already exists for businessService: " + demand.getBusinessService());
+		Map<String, List<Demand>> dbDemandMap = dbDemands.stream()
+				.collect(Collectors.groupingBy(Demand::getConsumerCode, Collectors.toList()));
+		// Valiadting for existing records
+		if (!dbDemandMap.isEmpty()) {
+			for (Demand demand : demands) {
+				for (Demand demandFromMap : dbDemandMap.get(demand.getConsumerCode())) {
+					if (demand.getTaxPeriodFrom().equals(demandFromMap.getTaxPeriodFrom())
+							&& demand.getTaxPeriodTo().equals(demandFromMap.getTaxPeriodTo()))
+						errors.rejectValue("Demands", "",
+								"the consumerCode value : " + demand.getConsumerCode() + " with tax period from "
+										+ demand.getTaxPeriodFrom() + " and tax period to " + demand.getTaxPeriodTo()
+										+ " already exists for businessService: " + demand.getBusinessService());
+				}
 			}
 		}
 	}

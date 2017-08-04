@@ -18,7 +18,7 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Length is more than 100"
+							"patternErrMsg": "Length minimum is 3 and maximum is 100"
 						},
 						{
 							"name": "description",

@@ -254,7 +254,18 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.occupancyCertificateNumber": "Occupancy Certificate Number",
   "pt.create.groups.propertyAddress.fields.buildingPermissionNumber": "Building Permission Number",
   "pt.create.groups.propertyAddress.fields.buildingPermissionDate": "Building Permission Date",
-  "pt.create.groups.propertyAddress.fields.plinthAreaInBuildingPlan": "Plinth Area In Building Plan"
+  "pt.create.groups.propertyAddress.fields.plinthAreaInBuildingPlan": "Plinth Area In Building Plan",
+  "pt.create.groups.propertyAddress.fields.surveyNumber":"Survey Number",
+  "pt.create.groups.propertyAddress.fields.pattaNumber":"Patta Number",
+  "pt.create.groups.propertyAddress.fields.vacantLandArea":"Vacant Land Area",
+  "pt.create.groups.propertyAddress.fields.marketValue":"marketValue",
+  "pt.create.groups.propertyAddress.fields.capitalValue":"Capital Value",
+  "pt.create.groups.propertyAddress.fields.effectiveDate":"Effective Date",
+  "pt.create.groups.propertyAddress.fields.vacantLandPlotArea":"Vacant Land Plot Area",
+  "pt.create.groups.propertyAddress.fields.layoutApprovalAuthority":"Layout Approval Authority",
+  "pt.create.groups.propertyAddress.fields.layoutPermitNumber":"Layout Permit Number",
+  "pt.create.groups.propertyAddress.fields.layoutPermitDate":"layoutPermitDate",
+  "pt.create.groups.propertyAddress.fields.upicNumber":"Upic Number"
  
 }
 

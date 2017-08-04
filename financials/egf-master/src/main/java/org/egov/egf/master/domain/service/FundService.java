@@ -41,7 +41,10 @@ public class FundService {
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
             }
-            for(Fund b:funds)b.setId(fundRepository.getNextSequence());
+            for(Fund b:funds) {
+                b.setId(fundRepository.getNextSequence());
+                b.add();
+            }
 
         } catch (CustomBindException e) {
 
@@ -64,6 +67,9 @@ public class FundService {
 
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
+            }
+            for(Fund b:funds) {
+                b.update();
             }
 
         } catch (CustomBindException e) {

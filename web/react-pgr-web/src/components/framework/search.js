@@ -69,6 +69,7 @@ class Report extends Component {
     } catch(e) {}
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    reqRequired = [];
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);

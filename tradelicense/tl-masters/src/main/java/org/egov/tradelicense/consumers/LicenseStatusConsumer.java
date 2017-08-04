@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.LicenseStatusRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.LicenseStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +59,9 @@ public class LicenseStatusConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, LicenseStatusRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(LicenseStatusRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -71,8 +70,8 @@ public class LicenseStatusConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -86,7 +85,7 @@ public class LicenseStatusConsumer {
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateLicenseStatusValidated()}",
 			"#{propertiesManager.getUpdateLicenseStatusValidated()}" })
-	public void receive(ConsumerRecord<String, LicenseStatusRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateLicenseStatusValidated())) {
 			// licenseStatusService.createLicenseStatus(consumerRecord.value());

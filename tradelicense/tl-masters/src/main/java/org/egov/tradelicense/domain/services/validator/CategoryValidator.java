@@ -7,6 +7,7 @@ import org.egov.models.CategoryRequest;
 import org.egov.models.RequestInfo;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.exception.DuplicateNameException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
@@ -48,10 +49,18 @@ public class CategoryValidator {
 
 			// checking for existence of duplicate record
 			Boolean isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
-					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
+					category.getCode(),null, ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
 
 			if (isDuplicateRecordExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+			}
+			
+			// checking for existence of duplicate record
+			 isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
+					 null, category.getName(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
+
+			if (isDuplicateRecordExists) {
+				throw new DuplicateNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
 			}
 
 			if (ParentId != null) {

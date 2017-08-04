@@ -323,7 +323,7 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].locationName",
+							"jsonPath": "StorageReservoir[0].locationNum",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
@@ -335,7 +335,7 @@ var dat = {
 						},
 						{
 							"name": "wardName",
-							"jsonPath": "StorageReservoir[0].wardName",
+							"jsonPath": "StorageReservoir[0].wardNum",
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
@@ -347,7 +347,7 @@ var dat = {
 						},
 						{
 							"name": "zoneName",
-							"jsonPath": "StorageReservoir[0].zoneName",
+							"jsonPath": "StorageReservoir[0].zoneNum",
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",

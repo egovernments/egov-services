@@ -44,7 +44,6 @@ public class ElasticSearchQueryFactory {
         elasticSearchUtils.add(fundSearchContract.getIdentifier(), "identifier", boolQueryBuilder);
         elasticSearchUtils.add(fundSearchContract.getLevel(), "level", boolQueryBuilder);
         elasticSearchUtils.add(fundSearchContract.getParent(), "parent", boolQueryBuilder);
-        elasticSearchUtils.add(fundSearchContract.getIsParent(), "isParent", boolQueryBuilder);
         elasticSearchUtils.add(fundSearchContract.getActive(), "active", boolQueryBuilder);
 
         return boolQueryBuilder;
@@ -225,7 +224,6 @@ public class ElasticSearchQueryFactory {
         elasticSearchUtils.add(functionSearchContract.getCode(), "code", boolQueryBuilder);
         elasticSearchUtils.add(functionSearchContract.getLevel(), "level", boolQueryBuilder);
         elasticSearchUtils.add(functionSearchContract.getActive(), "active", boolQueryBuilder);
-        elasticSearchUtils.add(functionSearchContract.getIsParent(), "isParent", boolQueryBuilder);
         elasticSearchUtils.add(functionSearchContract.getParentId(), "parentId", boolQueryBuilder);
         return boolQueryBuilder;
 

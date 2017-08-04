@@ -44,9 +44,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorRes nullPointerException(NullPointerException ex) {
         ex.printStackTrace();
-        Map<String, String> errors = new HashMap<String, String>();
+        
         Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
-                errors);
+                null);
         List<Error> errorList = new ArrayList<Error>();
         errorList.add(error);
         ResponseInfo responseInfo = new ResponseInfo();
@@ -70,8 +70,8 @@ public class GlobalExceptionHandler {
             errors.put(error.getField(), error.getDefaultMessage());
         }
 
-        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
-                errors);
+        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), errors.toString(),
+                null);
         List<Error> errorList = new ArrayList<Error>();
         errorList.add(error);
         ResponseInfo responseInfo = new ResponseInfo();
@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
 	 */
 
 	@ExceptionHandler(value = { Exception.class })
-
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorRes unknownException(Exception ex, WebRequest req) {
 		if (ex instanceof InvalidInputException) {
 			
@@ -104,7 +104,7 @@ public class GlobalExceptionHandler {
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof DuplicateIdException) {
 			
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateCode(), null,
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateCode(), ((DuplicateIdException) ex).getCustomMsg(),
 					null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
@@ -115,7 +115,20 @@ public class GlobalExceptionHandler {
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
-		} else if (ex instanceof InvalidRangeException) {
+		} else if ( ex instanceof DuplicateNameException){
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateName(), ((DuplicateNameException) ex).getCustomMsg(),
+					null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateNameException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateNameException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateNameException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+			
+		}else if (ex instanceof InvalidRangeException) {
 			
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidRangeCode(), null,
 					null);

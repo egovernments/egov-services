@@ -319,7 +319,7 @@ definitions:
         type: string
         description: Tenant Id.
       auditDetails:
-          $ref: '#/definitions/AuditDetails'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       billDetails:
         type: array
         items:
@@ -491,42 +491,74 @@ definitions:
         type: string
         description: Unique id of tenant.
         format: varchar
-      bank:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Bank'
-      bankAccount:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/BankAccount'
-      instrumentType:
-        description: Instrument Type need to refer from Financials.
-        items:
-          type: string
-      instrumentHeader:
-        description: Instrument Header need to refer from Financials.
-        items:
-          type: string
+      id:
+        type: string
+        description: Receipt Header Id which needs to be set during search and the same will be used for update also.
+      instrument:
+        type: string
+        description: Instrument needs to be referred from financials.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       billInfo:
         $ref: '#/definitions/BillInfo'
+      workflowDetails:
+        $ref: '#/definitions/WorkflowDetails'
         
         
-  AuditDetails:
+  WorkflowDetails:
     type: object
-    description: Collection of audit related fields used by most models
-    readOnly: true
-    properties:
-      createdBy: 
-        type: number
-        description: userid of the user that created the object
-      lastModifiedBy: 
-        type: number
-        description: userid of the user that last modified the object
-      createdTime:
-        type: number
-        format: long
-        description: epoch or timestamp of the time object is created
-      lastModifiedTime:
-        type: number
-        format: long
-        description: epoch or timestamp of the time object is last modified
+    description: workflow details related to connection
+    properties: 
+      department: 
+        type: integer
+        description: ID to define the Department .
+        minLength: 1
+        maxLength: 100
+      designation: 
+        type: integer
+        description: ID to define the Designation.
+        minLength: 1
+        maxLength: 100
+      approver: 
+        type: integer
+        description: ID to define the Approver ID.
+        minLength: 1
+        maxLength: 100
+      initiatorPosition:
+        type: integer
+        description: ID of the User who initiates the workflow.
+        minLength: 1
+        maxLength: 100
+      assignee:
+        type: integer
+        description: assignee of the Task
+        minLength: 1
+        maxLength: 100
+      action:
+        type: string
+        description: action of the Task
+        maxLength: 128
+      comments: 
+        type: string
+        description: Notes that has been added by the clerk or engineer.
+        minLength: 1
+        maxLength: 100
+      status:
+        type: string
+        description: Enumeration of Connection Request statuses.
+        enum:
+          - ACTIVE
+          - INPROGRESS
+          - DISCONNECTED
+          - HOLDING
+          - CLOSED
+          - INACTIVE            
+    required:
+     - department
+     - designation
+     - approver
   
+        
 parameters:
   pageSize:
     name: pageSize

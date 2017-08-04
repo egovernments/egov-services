@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.UOMRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.UOMService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +59,9 @@ public class UOMConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, UOMRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(UOMRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -71,8 +70,8 @@ public class UOMConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, UOMRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, UOMRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, UOMRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -86,7 +85,7 @@ public class UOMConsumer {
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateUomValidated()}",
 			"#{propertiesManager.getUpdateUomValidated()}" })
-	public void receive(ConsumerRecord<String, UOMRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateUomValidated())) {
 			//uomService.createUom(consumerRecord.value());

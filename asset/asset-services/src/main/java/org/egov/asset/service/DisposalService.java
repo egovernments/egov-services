@@ -25,6 +25,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -84,20 +85,20 @@ public class DisposalService {
         assetService.update(assetRequest);
     }
 
-    public DisposalResponse createAsync(final DisposalRequest disposalRequest) {
+    public DisposalResponse createAsync(final DisposalRequest disposalRequest, final HttpHeaders headers) {
+        final Disposal disposal = disposalRequest.getDisposal();
 
-        disposalRequest.getDisposal().setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
+        disposal.setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
 
-        if (disposalRequest.getDisposal().getAuditDetails() == null)
-            disposalRequest.getDisposal()
-                    .setAuditDetails(assetCurrentAmountService.getAuditDetails(disposalRequest.getRequestInfo()));
+        if (disposal.getAuditDetails() == null)
+            disposal.setAuditDetails(assetCurrentAmountService.getAuditDetails(disposalRequest.getRequestInfo()));
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                disposalRequest.getDisposal().getTenantId()))
+                disposal.getTenantId()))
             try {
                 LOGGER.info("Commencing Voucher Generation for Asset Sale/Disposal");
-                final Long voucherId = createVoucherForDisposal(disposalRequest);
+                final Long voucherId = createVoucherForDisposal(disposalRequest, headers);
                 if (voucherId != null)
-                    disposalRequest.getDisposal().setVoucherReference(voucherId);
+                    disposal.setVoucherReference(voucherId);
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
@@ -105,22 +106,22 @@ public class DisposalService {
         logAwareKafkaTemplate.send(applicationProperties.getCreateAssetDisposalTopicName(),
                 KafkaTopicName.SAVEDISPOSAL.toString(), disposalRequest);
         final List<Disposal> disposals = new ArrayList<Disposal>();
-        disposals.add(disposalRequest.getDisposal());
+        disposals.add(disposal);
         return getResponse(disposals, disposalRequest.getRequestInfo());
     }
 
-    private Long createVoucherForDisposal(final DisposalRequest disposalRequest) {
-        final Asset asset = assetCurrentAmountService.getAsset(disposalRequest.getDisposal().getAssetId(),
-                disposalRequest.getDisposal().getTenantId(), disposalRequest.getRequestInfo());
+    private Long createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
+        final Disposal disposal = disposalRequest.getDisposal();
+        final Asset asset = assetCurrentAmountService.getAsset(disposal.getAssetId(), disposal.getTenantId(),
+                disposalRequest.getRequestInfo());
 
         final AssetCategory assetCategory = asset.getAssetCategory();
 
         final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService.getSubledgerDetails(
-                disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
-                assetCategory.getAssetAccount());
+                disposalRequest.getRequestInfo(), disposal.getTenantId(), assetCategory.getAssetAccount());
         final List<ChartOfAccountDetailContract> subledgerDetailsForAssetSaleAccount = voucherService
-                .getSubledgerDetails(disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
-                        disposalRequest.getDisposal().getAssetSaleAccount());
+                .getSubledgerDetails(disposalRequest.getRequestInfo(), disposal.getTenantId(),
+                        disposal.getAssetSaleAccount());
 
         if (subledgerDetailsForAssetAccount != null && subledgerDetailsForAssetSaleAccount != null
                 && !subledgerDetailsForAssetAccount.isEmpty() && !subledgerDetailsForAssetSaleAccount.isEmpty())
@@ -135,22 +136,19 @@ public class DisposalService {
 
             LOGGER.debug("Voucher Request for Disposal :: " + voucherRequest);
 
-            return voucherService.createVoucher(voucherRequest, disposalRequest.getDisposal().getTenantId());
+            return voucherService.createVoucher(voucherRequest, disposal.getTenantId(), headers);
         }
 
     }
 
     private List<VouchercreateAccountCodeDetails> getAccountDetails(final DisposalRequest disposalRequest,
             final AssetCategory assetCategory) {
+        final Disposal disposal = disposalRequest.getDisposal();
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-        accountCodeDetails.add(voucherService.getGlCodes(disposalRequest.getRequestInfo(),
-                disposalRequest.getDisposal().getTenantId(), disposalRequest.getDisposal().getAssetSaleAccount(),
-                disposalRequest.getDisposal().getSaleValue(), disposalRequest.getDisposal().getFunction(), false,
-                true));
-        accountCodeDetails.add(
-                voucherService.getGlCodes(disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
-                        assetCategory.getAssetAccount(), disposalRequest.getDisposal().getSaleValue(),
-                        disposalRequest.getDisposal().getFunction(), true, false));
+        accountCodeDetails.add(voucherService.getGlCodes(disposalRequest.getRequestInfo(), disposal.getTenantId(),
+                disposal.getAssetSaleAccount(), disposal.getSaleValue(), disposal.getFunction(), false, true));
+        accountCodeDetails.add(voucherService.getGlCodes(disposalRequest.getRequestInfo(), disposal.getTenantId(),
+                assetCategory.getAssetAccount(), disposal.getSaleValue(), disposal.getFunction(), true, false));
         return accountCodeDetails;
     }
 

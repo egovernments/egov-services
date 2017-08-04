@@ -16,7 +16,7 @@ class UiSelectField extends Component {
 			 }
    	}
 
-  initDat(props) {
+  initData(props) {
    		let {item, setDropDownData, useTimestamp}=props;
 		// console.log(this.props.item);
 		if(item.hasOwnProperty("url") && item.url && item.url.search("\\|")>-1 && item.url.search("{")==-1)
@@ -48,7 +48,7 @@ class UiSelectField extends Component {
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
-							obj["key"]=keys[k];
+							obj["key"]=keys[k] && keys[k].toString();
 							obj["value"]=values[k];
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+"-"+values[k]
@@ -77,14 +77,14 @@ class UiSelectField extends Component {
 		}
    }
 
-   	componentWillReceiveProps(nextProps, nextState) {
-   		if(!_.isEqual(nextProps, this.props)) {
-   			this.initDat(nextProps);
-   		}
-   	}
+  // componentWillReceiveProps(nextProps, nextState) {
+  //  		if(!_.isEqual(nextProps, this.props)) {
+  //  			this.initData(nextProps);
+  //  		}
+  //  	}
 
 	componentDidMount() {
-		this.initDat(this.props);
+		this.initData(this.props);
 	}
 
 

@@ -109,13 +109,6 @@ public class FunctionJdbcRepository extends JdbcRepository {
 			params.append("active =:active");
 			paramValues.put("active", functionSearchEntity.getActive());
 		}
-		if (functionSearchEntity.getIsParent() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("isParent =:isParent");
-			paramValues.put("isParent", functionSearchEntity.getIsParent());
-		}
 		if (functionSearchEntity.getParentId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

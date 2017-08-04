@@ -6,7 +6,6 @@ import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.repository.FunctionRepository;
@@ -42,6 +41,7 @@ public class FunctionService {
 				Assert.notNull(functions, "Functions to create must not be null");
 				for (Function function : functions) {
 					validator.validate(function, errors);
+					
 				}
 				break;
 			case Constants.ACTION_UPDATE:
@@ -83,7 +83,11 @@ public class FunctionService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		for(Function b:functions)b.setId(functionRepository.getNextSequence());
+		for(Function b:functions){
+		    //this is hack to support kafka based persist
+		    b.setId(functionRepository.getNextSequence());
+		    b.add();
+		}
 		return functions;
 
 	}
@@ -95,6 +99,9 @@ public class FunctionService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+	        for(Function b:functions){
+	              b.update();
+	        }
 		return functions;
 
 	}

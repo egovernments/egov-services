@@ -132,7 +132,7 @@ public class CategoryServiceTest {
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
-			categoryRepository.createCategory(categoryResponse.getCategories().get(0));
+			categoryId = categoryRepository.createCategory(categoryResponse.getCategories().get(0));
 			assertTrue(true);
 
 		} catch (Exception e) {
@@ -294,7 +294,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
-					subCatName, subCatCode, active, "SUBCATEGORY", searchCategoryId, pageSize, offset);
+					subCatName, subCatCode, active, "SUBCATEGORY", null, pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 

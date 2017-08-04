@@ -96,5 +96,5 @@ Insert into eg_installment_master (id, installment_num, installment_year, start_
 --Annual 2019-20
 Insert into eg_installment_master (id, installment_num, installment_year, start_date, end_date, module, lastupdatedtimestamp, description, installment_type, financial_year, tenantid) values (nextval('SEQ_EG_INSTALLMENT_MASTER'),20192020,'2019-04-01 00:00:00', '2019-04-01 00:00:00', '2020-03-31 23:59:59','Leases And Agreements',current_timestamp,'LAMS_AI-I/19-20','ANNUAL', '2019-20', 'default');
 
-select microservice.migrateinstallment();
+
 

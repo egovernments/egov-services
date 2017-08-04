@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.DocumentTypeRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +59,9 @@ public class DocumentTypeConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, DocumentTypeRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(DocumentTypeRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -71,8 +70,8 @@ public class DocumentTypeConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, DocumentTypeRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, DocumentTypeRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, DocumentTypeRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -86,7 +85,7 @@ public class DocumentTypeConsumer {
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateDocumentTypeValidated()}",
 			"#{propertiesManager.getUpdateDocumentTypeValidated()}" })
-	public void receive(ConsumerRecord<String, DocumentTypeRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateDocumentTypeValidated())) {
 			//documentTypeService.createDocumentType(consumerRecord.value());

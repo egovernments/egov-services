@@ -21,6 +21,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,24 +47,22 @@ public class RevaluationService {
 
     private static final Logger logger = LoggerFactory.getLogger(RevaluationService.class);
 
-    public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest) {
-
+    public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
+        final Revaluation revaluation = revaluationRequest.getRevaluation();
         logger.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
 
-        revaluationRequest.getRevaluation()
-                .setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
+        revaluation.setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
 
-        if (revaluationRequest.getRevaluation().getAuditDetails() == null)
-            revaluationRequest.getRevaluation()
-                    .setAuditDetails(assetCurrentAmountService.getAuditDetails(revaluationRequest.getRequestInfo()));
+        if (revaluation.getAuditDetails() == null)
+            revaluation.setAuditDetails(assetCurrentAmountService.getAuditDetails(revaluationRequest.getRequestInfo()));
 
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                revaluationRequest.getRevaluation().getTenantId()))
+                revaluation.getTenantId()))
             try {
                 logger.info("Commencing Voucher Generation for Asset Revaluation");
-                final Long voucherId = createVoucherForRevaluation(revaluationRequest);
+                final Long voucherId = createVoucherForRevaluation(revaluationRequest, headers);
                 if (voucherId != null)
-                    revaluationRequest.getRevaluation().setVoucherReference(voucherId);
+                    revaluation.setVoucherReference(voucherId);
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
@@ -72,7 +71,7 @@ public class RevaluationService {
                 KafkaTopicName.SAVEREVALUATION.toString(), revaluationRequest);
 
         final List<Revaluation> revaluations = new ArrayList<Revaluation>();
-        revaluations.add(revaluationRequest.getRevaluation());
+        revaluations.add(revaluation);
         return getRevaluationResponse(revaluations);
     }
 
@@ -90,7 +89,7 @@ public class RevaluationService {
         return getRevaluationResponse(revaluations);
     }
 
-    private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest) {
+    private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final Asset asset = assetCurrentAmountService.getAsset(revaluation.getAssetId(), revaluation.getTenantId(),
                 revaluationRequest.getRequestInfo());
@@ -135,7 +134,7 @@ public class RevaluationService {
                 asset, accountCodeDetails);
         logger.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
-        return voucherService.createVoucher(voucherRequest, revaluation.getTenantId());
+        return voucherService.createVoucher(new VoucherRequest(), revaluation.getTenantId(), headers);
 
     }
 

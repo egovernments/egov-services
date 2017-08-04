@@ -42,6 +42,7 @@ import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -117,7 +118,7 @@ public class RevaluationServiceTest {
                 .thenReturn(get_Asset());
         final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
         PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForRevaluation",
-                any(RevaluationRequest.class));
+                any(RevaluationRequest.class), any(HttpHeaders.class));
 
         final RevaluationRequest revaluationRequest = new RevaluationRequest();
         revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
@@ -139,7 +140,7 @@ public class RevaluationServiceTest {
         assertTrue(revaluationResponse.getRevaluations().get(0).getId().equals(Long.valueOf("15")));
         // doNothing().when(logAwareKafkaTemplate).send(Matchers.anyString(),
         // Matchers.anyString(), Matchers.anyObject());
-        mock.createAsync(revaluationRequest);
+        mock.createAsync(revaluationRequest, new HttpHeaders());
         assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
                 revaluationRequest.getRevaluation().toString());
     }

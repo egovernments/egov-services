@@ -76,10 +76,31 @@ public class Function extends Auditable {
 	@NotNull
 	private Boolean active;
 
-	// is this required?
-	@NotNull
-	private Boolean isParent;
-
 	private Function parentId;
+	
+	
+	public void add()
+	{
+	    if(parentId==null)
+	    {
+	        level=0;
+	        
+	    }else
+	    {
+	        level=parentId.getLevel()+1;
+	    }
+	}
+	
+	public void update()
+        {
+            if(parentId==null)
+            {
+                level=0;
+                
+            }else
+            {
+                level=parentId.getLevel()+1;
+            }
+        }
 
 }

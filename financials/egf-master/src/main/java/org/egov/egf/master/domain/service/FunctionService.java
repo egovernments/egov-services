@@ -99,6 +99,9 @@ public class FunctionService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+	        for(Function b:functions){
+	              b.update();
+	        }
 		return functions;
 
 	}

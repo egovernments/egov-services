@@ -8,7 +8,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"name": "createStorageReservoir",
 				"fields": [
 						{
 							"name": "name",
@@ -39,7 +39,7 @@ var dat = {
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -51,7 +51,7 @@ var dat = {
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -63,7 +63,7 @@ var dat = {
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -128,7 +128,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"name": "searchStorageReservoir",
 				"fields": [
 						{
 							"name": "name",
@@ -174,7 +174,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"name": "viewStorageReservoir",
 				"fields": [
 						{
 							"name": "name",
@@ -201,11 +201,11 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoirs[0].locationName",
+							"jsonPath": "StorageReservoirs[0].locationNum",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -217,7 +217,7 @@ var dat = {
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -229,7 +229,7 @@ var dat = {
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -296,7 +296,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"name": "updateStorageReservoir",
 				"fields": [
 						{
 							"name": "name",
@@ -323,11 +323,11 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].locationNum",
+							"jsonPath": "StorageReservoir[0].locationName",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -335,11 +335,11 @@ var dat = {
 						},
 						{
 							"name": "wardName",
-							"jsonPath": "StorageReservoir[0].wardNum",
+							"jsonPath": "StorageReservoir[0].wardName",
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -347,11 +347,11 @@ var dat = {
 						},
 						{
 							"name": "zoneName",
-							"jsonPath": "StorageReservoir[0].zoneNum",
+							"jsonPath": "StorageReservoir[0].zoneName",
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

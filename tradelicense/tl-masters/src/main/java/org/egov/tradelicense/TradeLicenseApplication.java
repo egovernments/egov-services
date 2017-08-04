@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableWebMvc
-@Import({TracerConfiguration.class})
+@Import({ TracerConfiguration.class })
 public class TradeLicenseApplication {
 
 	public static void main(String[] args) {

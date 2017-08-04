@@ -61,6 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return categoryResponse;
 	}
 
+	@Override
 	@Transactional
 	public void createCategory(CategoryRequest categoryRequest) {
 
@@ -104,6 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return categoryResponse;
 	}
 
+	@Override
 	@Transactional
 	public void updateCategory(CategoryRequest categoryRequest) {
 
@@ -137,8 +139,8 @@ public class CategoryServiceImpl implements CategoryService {
 		CategoryResponse categoryResponse = new CategoryResponse();
 		try {
 
-			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type, categoryId,
-					pageSize, offSet);
+			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
+					categoryId, pageSize, offSet);
 
 			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY") || (categoryId != null)) {
 

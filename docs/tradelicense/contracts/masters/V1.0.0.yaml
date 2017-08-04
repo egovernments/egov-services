@@ -66,6 +66,10 @@ paths:
             in: query
             format: int64
             description: set unique Identifier of a Category to fetch the sub categories of provided category. type will not be considered when categoryId is passed.
+          - name: active
+            type: string
+            in: query
+            description: True will be set in cases where only active Category(s) are needed and False will be set when inactive Category(s) are needed and no value will be set when all Category(s) are needed.  
           - name: type
             type: string
             in: query
@@ -180,7 +184,7 @@ paths:
             description: unique code of the Unit of Measure
             maxLength: 50
           - name: active
-            type: boolean
+            type: string
             in: query
             description: True will be set in cases where only active UOM are needed and False will be set when inactive UOM are needed and no value will be set when all UOM are needed.
           - $ref: '#/parameters/pageSize'
@@ -511,7 +515,6 @@ paths:
         tags: 
           - FeeMatrix
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: feeMatrixRequest
             in: body
             description: FeeMatrix Request with FeeMatix(s) to be created with RequestInfo
@@ -680,6 +683,9 @@ definitions:
          type: integer
          format: int64
          description: Unique Id of the parent Category for subCategory, null for Category.
+        active:
+          type: boolean
+          description: true if Category is active and false if Category is inactive 
         businessNature:
           $ref: '#/definitions/BusinessNature' 
         details:
@@ -1064,8 +1070,8 @@ definitions:
           maxLength: 50
           description: Unique code of the Status
         active:
-          type: boolean
-          default: true
+          type: string
+          default: "True"
           description: True will be set for Active Status False will be set for InActive Status
         tenantId:
           type: string

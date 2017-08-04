@@ -4,6 +4,9 @@ var localationData = {
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
   "reports.pgr.wardtype":"Ward Type",
+  "reports.common.details": "Details",
+  "reports.common.sendername": "Sender Name",
+  "reports.common.action": "Action",
   "wc.create.name": "Name",
   "wc.create.groups.applicantDetails.title":"Applicant Particulars",
   "wc.create.groups.applicantDetails.propertyIdentifier":"PT Assessment Number",
@@ -183,13 +186,15 @@ var localationData = {
   "wc.create.groups.fields.numberOfConnectionFromReservoir": " No of connection from resrvoir",
   "wc.create.groups.fields.numberOfMainDistributionLine": " No of main distributionLine",
   "wc.create.groups.fields.reservoirType": "Type of the Reservoir",
-  "wc.create.storageReservoir.title":"storage Reservoir",
+  "wc.create.storageReservoir.title":"Storage Reservoir",
   "wc.update.message.success": "Updated Successfully . . . !",
   "wc.create.propertyUsage.title":"Create Property Usage",
   "wc.create.usageType":"Usage Type",
   "wc.search.PropertyTypeUsageType.title":"Search Property Type Usage Type",
   "wc.view.PropertyTypeUsageTypes.title":"View Property Type Usage Types",
   "wc.update.PropertyTypeUsageType.title":"Update Property Type Usage Type",
+  "wc.update.Donation.title":"Update Donation",
+  "wc.view.Donations.title":"View Donation"
   
   "pt.create.groups.propertyAddress.fields.aadhaarNumber": "Aadhaar Number",
   "pt.create.groups.propertyAddress.fields.phoneNumber":"Phone Number",
@@ -250,7 +255,7 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.buildingPermissionNumber": "Building Permission Number",
   "pt.create.groups.propertyAddress.fields.buildingPermissionDate": "Building Permission Date",
   "pt.create.groups.propertyAddress.fields.plinthAreaInBuildingPlan": "Plinth Area In Building Plan"
-  
+ 
 }
 
 export function translate(locale_text){

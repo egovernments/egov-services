@@ -14,11 +14,11 @@ public interface FeeMatrixService {
 	/**
 	 * Description : service method for creating feeMatrix master
 	 * 
-	 * @param tenantId
+	 * 
 	 * @param FeeMatrixRequest
 	 * @return FeeMatrixResponse
 	 */
-	public FeeMatrixResponse createFeeMatrixMaster(String tenantId, FeeMatrixRequest feeMatrixRequest);
+	public FeeMatrixResponse createFeeMatrixMaster( FeeMatrixRequest feeMatrixRequest);
 
 	/**
 	 * Description : service method for updating feeMatrix master

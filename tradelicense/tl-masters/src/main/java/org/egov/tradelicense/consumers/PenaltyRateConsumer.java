@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.egov.models.CategoryRequest;
 import org.egov.models.PenaltyRateRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
@@ -20,6 +21,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Consumer class will use for listening penaltyrate object from kafka server to
@@ -40,6 +43,9 @@ public class PenaltyRateConsumer {
 
 	@Autowired
 	PenaltyRateService penaltyRateService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -89,11 +95,11 @@ public class PenaltyRateConsumer {
 	public void receive(ConsumerRecord<String, PenaltyRateRequest> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreatePenaltyRateValidated())) {
-			// penaltyRateService.createPenaltyRate(consumerRecord.value());
+			penaltyRateService.createPenaltyRate(objectMapper.convertValue(consumerRecord.value(), PenaltyRateRequest.class));
 		}
 
 		else {
-			// penaltyRateService.updatePenaltyRate(consumerRecord.value());
+			penaltyRateService.updatePenaltyRate(objectMapper.convertValue(consumerRecord.value(), PenaltyRateRequest.class));
 		}
 	}
 }

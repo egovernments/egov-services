@@ -5,7 +5,7 @@
 	<artifactId>tl-masters</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>tl-masters</name>
-	<description>tradelicense service</description>
+	<description>tradelicense masters service</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -62,7 +62,7 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.egov</groupId>
+			<groupId>org.egov.services</groupId>
 			<artifactId>tl-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
@@ -77,11 +77,12 @@
 		</dependency>
 
 	</dependencies>
+	
 	<repositories>
 		<repository>
 			<id>repo.egovernments.org</id>
 			<name>eGov ERP Releases Repository</name>
-			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+			<url>http://repo.egovernments.org/nexus/content/repositories/</url>
 		</repository>
 	</repositories>
 

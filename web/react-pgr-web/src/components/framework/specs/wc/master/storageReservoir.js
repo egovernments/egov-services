@@ -8,18 +8,18 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"name": "createStorageReservoir",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "StorageReservoir[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "reservoirType",
@@ -39,7 +39,7 @@ var dat = {
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -51,7 +51,7 @@ var dat = {
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -63,7 +63,7 @@ var dat = {
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -73,45 +73,45 @@ var dat = {
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of DistributionLine is 124"
 						},
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoir[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of connection is 124"
 						},
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoir[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of subline is 124"
 						},
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoir[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						}
 
 				]
@@ -128,8 +128,19 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"name": "searchStorageReservoir",
 				"fields": [
+						{
+							"name": "name",
+							"jsonPath": "name",
+							"label": "wc.create.groups.fields.storageReservoirName",
+							"pattern": "^.{3,100}$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "Maximum length of name is 100"
+						},
 						{
 							"name": "reservoirType",
 							"jsonPath": "reservoirType",
@@ -163,18 +174,18 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"name": "viewStorageReservoir",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "StorageReservoirs[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "reservoirType",
@@ -190,11 +201,11 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoirs[0].locationName",
+							"jsonPath": "StorageReservoirs[0].locationNum",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -206,7 +217,7 @@ var dat = {
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -218,7 +229,7 @@ var dat = {
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -228,45 +239,45 @@ var dat = {
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoirs[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of DistributionLine is 124"
 						},
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoirs[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of connection is 124"
 						},
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoirs[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of subline is 124"
 						},
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoirs[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						}
 
 				]
@@ -285,18 +296,18 @@ var dat = {
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
-				"name": "createstorageReservoir",
+				"name": "updateStorageReservoir",
 				"fields": [
 						{
 							"name": "name",
 							"jsonPath": "StorageReservoir[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "reservoirType",
@@ -312,11 +323,11 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].locationNum",
+							"jsonPath": "StorageReservoir[0].locationName",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -324,11 +335,11 @@ var dat = {
 						},
 						{
 							"name": "wardName",
-							"jsonPath": "StorageReservoir[0].wardNum",
+							"jsonPath": "StorageReservoir[0].wardName",
 							"label": "wc.create.groups.fields.ward",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -336,11 +347,11 @@ var dat = {
 						},
 						{
 							"name": "zoneName",
-							"jsonPath": "StorageReservoir[0].zoneNum",
+							"jsonPath": "StorageReservoir[0].zoneName",
 							"label": "wc.create.groups.fields.zone",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$..boundaryNum|$..name",
+							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -350,45 +361,45 @@ var dat = {
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of DistributionLine is 124"
 						},
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoir[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of connection is 124"
 						},
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoir[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of subline is 124"
 						},
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoir[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						}
 
 				]

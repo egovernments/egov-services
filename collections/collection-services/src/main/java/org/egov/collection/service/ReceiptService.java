@@ -49,12 +49,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.IdGenRequestInfo;
-import org.egov.collection.model.IdRequest;
-import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.PositionSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
@@ -65,6 +62,7 @@ import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.ChartOfAccountsRepository;
+import org.egov.collection.repository.IdGenRepository;
 import org.egov.collection.repository.InstrumentRepository;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Bill;
@@ -81,10 +79,9 @@ import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.jayway.jsonpath.JsonPath;
 
 @Service
 public class ReceiptService {
@@ -94,12 +91,6 @@ public class ReceiptService {
 
 	@Autowired
 	private ReceiptRepository receiptRepository;
-
-	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	@Autowired
-	private RestTemplate restTemplate;
 
 	@Autowired
 	private BusinessDetailsRepository businessDetailsRepository;
@@ -117,6 +108,9 @@ public class ReceiptService {
 	private InstrumentRepository instrumentRepository;
 	
 	@Autowired
+	private IdGenRepository idGenRepository;
+	
+	@Autowired
 	private WorkflowService workflowService;
 
 	public ReceiptCommonModel getReceipts(
@@ -128,13 +122,8 @@ public class ReceiptService {
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
-		try {
-			bill.setBillDetails(apportionPaidAmount(
+		bill.setBillDetails(apportionPaidAmount(
 					receiptReq.getRequestInfo(), bill, receiptReq.getTenantId()));
-		} catch (Exception e) {
-			LOGGER.error("Receipt persist failed due to internal server error"
-					+ e);
-		}
 		// return receiptRepository.pushToQueue(receiptReq); //async call
 
 		receipt = create(bill, receiptReq.getRequestInfo(),
@@ -156,6 +145,7 @@ public class ReceiptService {
 		Boolean callBackForApportion = false;
 		List<BillDetail> apportionBillDetails = new ArrayList<>();
 		for (BillDetail billDetail : bill.getBillDetails()) {
+			if(billDetail.getAmountPaid().longValueExact() > 0){
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billDetail.getBusinessService(), requestInfo, tenantId);
 			if (billDetail.getAmountPaid() != billDetail.getTotalAmount()) {
@@ -172,6 +162,7 @@ public class ReceiptService {
 				}
 			}
 			apportionBillDetails.add(billDetail);
+		  }
 		}
 		if (callBackForApportion) {
 			apportionBillDetails.addAll(billingServiceRepository
@@ -203,7 +194,7 @@ public class ReceiptService {
 	public Boolean validateFundAndDept(
 			BusinessDetailsResponse businessDetailsRes) {
 		BusinessDetailsRequestInfo businessDetails;
-		if (null != businessDetailsRes) {
+		if (null != businessDetailsRes && !businessDetailsRes.getBusinessDetails().isEmpty()) {
 			businessDetails = businessDetailsRes.getBusinessDetails().get(0);
 			if (null != businessDetails) {
 				String fund = businessDetails.getFund();
@@ -220,6 +211,7 @@ public class ReceiptService {
 			}
 			return true;
 		}
+		LOGGER.info("Returning false");
 		return false;
 	}
 
@@ -239,18 +231,20 @@ public class ReceiptService {
 		AuditDetails auditDetail = getAuditDetails(requestInfo.getUserInfo());
 		for (BillDetail billDetail : bill.getBillDetails()) {
 			if(billDetail.getAmountPaid().longValueExact() > 0){
+				String instrumentId = null;
 				Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
-				String instrumentId = instrumentRepository.createInstrument(
+			try{
+				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
-				if(null == instrumentId || instrumentId.isEmpty()){
-					Receipt emptyReceipt = new Receipt();
-					return emptyReceipt;
-				}
+			}catch(Exception e){
+				throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+						CollectionServiceConstants.INSTRUMENT_EXCEPTION_MSG, CollectionServiceConstants.INSTRUMENT_EXCEPTION_DESC);
+			}
 				
 				billDetail.setCollectionType(CollectionType.COUNTER);
 				billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 				billDetail.setReceiptDate(new Date().getTime());
-				billDetail.setReceiptNumber(generateReceiptNumber(requestInfo,
+				billDetail.setReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
 						tenantId));
 				Map<String, Object> parametersMap;
 				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
@@ -394,66 +388,16 @@ public class ReceiptService {
 					.getBusinessDetails(Arrays.asList(businessDetailsCode),
 							tenantId, requestInfo);
 		} catch (Exception e) {
-			LOGGER.error("Error while fetching buisnessDetails from coll-master service. "
-					+ e);
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
+
+		}
+		if(businessDetailsResponse.getBusinessDetails().isEmpty()){
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 		}
 		LOGGER.info("Response from coll-master: " + businessDetailsResponse);
 		return businessDetailsResponse;
-	}
-
-	public String generateReceiptNumber(RequestInfo requestInfo, String tenantId) {
-		LOGGER.info("Generating receipt number for the receipt.");
-
-		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getIdGenServiceHost();
-		String baseUri = applicationProperties.getIdGeneration();
-		builder.append(hostname).append(baseUri);
-
-		LOGGER.info("URI being hit: " + builder.toString());
-
-		IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
-		IdGenRequestInfo idGenReq = new IdGenRequestInfo();
-
-		// Because idGen Svc uses a slightly different form of requestInfo
-
-		idGenReq.setAction(requestInfo.getAction());
-		idGenReq.setApiId(requestInfo.getApiId());
-		idGenReq.setAuthToken(requestInfo.getAuthToken());
-		idGenReq.setCorrelationId(requestInfo.getCorrelationId());
-		idGenReq.setDid(requestInfo.getDid());
-		idGenReq.setKey(requestInfo.getKey());
-		idGenReq.setMsgId(requestInfo.getMsgId());
-		idGenReq.setRequesterId(requestInfo.getRequesterId());
-		idGenReq.setTs(requestInfo.getTs().getTime()); // this
-														// is
-														// the
-														// difference.
-		idGenReq.setUserInfo(requestInfo.getUserInfo());
-		idGenReq.setVer(requestInfo.getVer());
-
-		IdRequest idRequest = new IdRequest();
-		idRequest.setIdName(CollectionServiceConstants.COLL_ID_NAME);
-		idRequest.setTenantId(tenantId);
-		idRequest.setFormat(CollectionServiceConstants.COLL_ID_FORMAT);
-
-		List<IdRequest> idRequests = new ArrayList<>();
-		idRequests.add(idRequest);
-
-		idRequestWrapper.setIdGenRequestInfo(idGenReq);
-		idRequestWrapper.setIdRequests(idRequests);
-		Object response = null;
-
-		try {
-			response = restTemplate.postForObject(builder.toString(),
-					idRequestWrapper, Object.class);
-		} catch (Exception e) {
-			LOGGER.error("Error while generating receipt number. " + e);
-			return null;
-
-		}
-		LOGGER.info("Response from id gen service: " + response.toString());
-
-		return JsonPath.read(response, "$.idResponses[0].id");
 	}
 
 	public Boolean checkVoucherCreation(Boolean voucherCreation,

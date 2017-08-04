@@ -39,15 +39,9 @@ public class InstrumentRepository {
 		LOGGER.info("Request to instrument create: "
 				+ instrumentRequest.toString());
 		LOGGER.info("URI Instrument create: " + builder.toString());
-		try {
 			response = restTemplate.postForObject(builder.toString(),
 					instrumentRequest, Object.class);
 			instrumentId = JsonPath.read(response, "$.instruments[0].id");
-		} catch (Exception e) {
-			LOGGER.error(
-					"Couldn't create instrument in the instrument service.", e);
-			return instrumentId;
-		}
 		LOGGER.info("Response from instrument service: " + response.toString());
 
 		return instrumentId;

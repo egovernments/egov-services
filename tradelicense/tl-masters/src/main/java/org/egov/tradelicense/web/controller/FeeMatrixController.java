@@ -38,7 +38,7 @@ public class FeeMatrixController {
 	public FeeMatrixResponse createFeeMatrixMaster(@RequestParam(required = true) String tenantId,
 			@Valid @RequestBody FeeMatrixRequest feeMatrixRequest) throws Exception {
 
-		return feeMatrixService.createFeeMatrixMaster(tenantId, feeMatrixRequest);
+		return feeMatrixService.createFeeMatrixMaster( feeMatrixRequest);
 	}
 
 	/**

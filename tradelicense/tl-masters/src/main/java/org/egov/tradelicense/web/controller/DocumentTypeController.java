@@ -73,7 +73,7 @@ public class DocumentTypeController {
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
 	public DocumentTypeResponse getDocumentTypeMaster(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) Boolean enabled,
+			@RequestParam(required = false) String name, @RequestParam(required = false) String enabled,
 			@RequestParam(required = false) String applicationType, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 

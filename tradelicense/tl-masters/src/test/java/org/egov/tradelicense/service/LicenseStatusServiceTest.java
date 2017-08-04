@@ -44,7 +44,7 @@ public class LicenseStatusServiceTest {
 	public String code = "babu";
 	public String NameToupdate = "shubhamPratap";
 	public String CodeToUpdate = "nitin";
-	public String active = "true";
+	public String active = "True";
 
 	/**
 	 * Description : Test method for createLicenceStatus() method

@@ -251,7 +251,7 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
+					any(String.class), any(String.class), any(String.class), any(String.class),any(Integer.class), any(Integer.class),
 					any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/category/_search").param("tenantId", "default")
@@ -301,7 +301,7 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
+					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
 					any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/category/_search").param("tenantId", "default")

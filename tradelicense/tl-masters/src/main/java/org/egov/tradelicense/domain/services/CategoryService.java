@@ -43,7 +43,7 @@ public interface CategoryService {
 	 * @return CategoryResponse
 	 */
 	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String type, Integer categoryId, Integer pageSize, Integer offSet);
+			String code, String active , String type, Integer categoryId, Integer pageSize, Integer offSet);
 
 	public void createCategory(CategoryRequest categoryRequest);
 

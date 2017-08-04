@@ -39,6 +39,8 @@ public class Category {
 	private String code = null;
 
 	private Long parentId = null;
+	
+	private Boolean active = true;
 
 	private BusinessNatureEnum businessNature = null;
 

@@ -45,7 +45,7 @@ public class DocumentTypeServiceTest {
 	public String ApplicationType = "New";
 	public String updatedName = "nitin";
 	public String updateApplicationType = "Renew";
-	public Boolean enabled = true;
+	public String enabled = "True";
 
 	/**
 	 * Description : test method to test createDocumentType

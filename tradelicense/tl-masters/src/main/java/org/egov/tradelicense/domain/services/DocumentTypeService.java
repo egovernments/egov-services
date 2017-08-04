@@ -43,5 +43,5 @@ public interface DocumentTypeService {
 	 * @return DocumentTypeResponse
 	 */
 	public DocumentTypeResponse getDocumentType(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			Boolean enabled, String applicationType, Integer pageSize, Integer offSet);
+			String enabled, String applicationType, Integer pageSize, Integer offSet);
 }

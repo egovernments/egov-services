@@ -150,7 +150,7 @@ public class DocumentTypeControllerTest {
 		try {
 
 			when(documentTypeService.getDocumentType(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(Boolean.class), any(String.class), any(Integer.class), any(Integer.class)))
+					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(documentTypeResponse);
 
 			mockMvc.perform(post("/documenttype/_search").param("tenantId", "default")

@@ -1,0 +1,1 @@
+ALTER TABLE ONLY egtl_mstr_category ADD COLUMN active boolean DEFAULT true;

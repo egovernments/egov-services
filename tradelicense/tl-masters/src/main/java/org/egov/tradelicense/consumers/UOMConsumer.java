@@ -88,7 +88,7 @@ public class UOMConsumer {
 			"#{propertiesManager.getUpdateUomValidated()}" })
 	public void receive(ConsumerRecord<String, UOMRequest> consumerRecord) throws Exception {
 
-		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateCategoryValidated())) {
+		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateUomValidated())) {
 			//uomService.createUom(consumerRecord.value());
 		}
 

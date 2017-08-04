@@ -427,7 +427,6 @@ class Report extends Component {
               handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
             }
       });
-
   }
 
   incrementIndexValue = (group, jsonPath) => {

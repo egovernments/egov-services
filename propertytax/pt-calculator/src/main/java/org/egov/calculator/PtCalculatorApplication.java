@@ -2,9 +2,11 @@ package org.egov.calculator;
 
 import org.egov.calculator.config.PropertiesManager;
 import org.egov.models.ResponseInfoFactory;
+import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
@@ -14,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  *
  */
 @SpringBootApplication
-//@Import({TracerConfiguration.class})
+@Import({TracerConfiguration.class})
 @EnableWebMvc
 public class PtCalculatorApplication {
 

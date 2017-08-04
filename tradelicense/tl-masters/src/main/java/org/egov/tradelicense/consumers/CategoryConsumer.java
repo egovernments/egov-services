@@ -9,9 +9,10 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.CategoryRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.CategoryService;
-import org.egov.tradelicense.persistence.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -27,6 +28,8 @@ import org.springframework.web.client.RestTemplate;
  * @author: Pavan Kumar Kamma
  */
 @Service
+@Configuration
+@Profile("production")
 public class CategoryConsumer {
 
 	@Autowired
@@ -34,7 +37,7 @@ public class CategoryConsumer {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	CategoryService categoryService;
 

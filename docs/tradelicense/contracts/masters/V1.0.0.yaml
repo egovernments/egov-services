@@ -66,6 +66,10 @@ paths:
             in: query
             format: int64
             description: set unique Identifier of a Category to fetch the sub categories of provided category. type will not be considered when categoryId is passed.
+          - name: active
+            type: string
+            in: query
+            description: True will be set in cases where only active Category(s) are needed and False will be set when inactive Category(s) are needed and no value will be set when all Category(s) are needed.  
           - name: type
             type: string
             in: query
@@ -180,7 +184,7 @@ paths:
             description: unique code of the Unit of Measure
             maxLength: 50
           - name: active
-            type: boolean
+            type: string
             in: query
             description: True will be set in cases where only active UOM are needed and False will be set when inactive UOM are needed and no value will be set when all UOM are needed.
           - $ref: '#/parameters/pageSize'
@@ -272,7 +276,7 @@ paths:
             description: name of the DocumentType
             maxLength: 128
           - name: enabled
-            type: boolean
+            type: string
             in: query
             description: True will be set in cases where only active DocumentTypes are needed and False will be set when inactive DocumentTypes are needed and no value will be set when all DocumentTypes are needed.
           - name: applicationType
@@ -680,6 +684,10 @@ definitions:
          type: integer
          format: int64
          description: Unique Id of the parent Category for subCategory, null for Category.
+        active:
+          type: boolean
+          default: true
+          description: true if Category is active and false if Category is inactive 
         businessNature:
           $ref: '#/definitions/BusinessNature' 
         details:

@@ -179,7 +179,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":''
           },
           {
             "name": "UsageType",
@@ -190,7 +192,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":''
           },
           {
             "name": "hscPipeSizeType",
@@ -201,7 +205,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":''
           },
           {
             "name": "applicationType",

@@ -76,12 +76,12 @@ public class RegistrationUnitQueryBuilder {
 
 	// Query to generate Unique Id
 	public String getIdNextValForRegnUnit() {
-		return "SELECT NEXTVAL('seq_registartionunit_id') ;";
+		return "SELECT NEXTVAL('seq_registartion_unit') ;";
 	}
 
 	// Query for _create
 	public String getCreateQuery() {
-		return "INSERT INTO egmr_registration_unit " + "(id,code,name,isactive,tenantid,locality,zone,revenueWard,block"
+		return "INSERT INTO egmr_registration_unit" + "(id,code,name,isactive,tenantid,locality,zone,revenueWard,block"
 				+ ",street,electionWard,doorNo,pinCode,createdBy,lastModifiedBy,createdTime,lastModifiedTime) "
 				+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ;";
 	}

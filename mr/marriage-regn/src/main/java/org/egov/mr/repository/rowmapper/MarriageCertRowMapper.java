@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class MarriagecertRowMapper implements ResultSetExtractor<List<ReissueCertAppl>> {
+public class MarriageCertRowMapper implements ResultSetExtractor<List<ReissueCertAppl>> {
 
 	@Override
 	public List<ReissueCertAppl> extractData(ResultSet rs) throws SQLException, DataAccessException {

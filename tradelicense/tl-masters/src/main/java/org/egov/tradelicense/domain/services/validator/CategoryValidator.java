@@ -27,19 +27,25 @@ public class CategoryValidator {
 	public void validateCategoryRequest(CategoryRequest categoryRequest, Boolean isNewCategory) {
 
 		RequestInfo requestInfo = categoryRequest.getRequestInfo();
-		
+
 		for (Category category : categoryRequest.getCategories()) {
 
 			Long ParentId = category.getParentId();
 			Long categoryId = null;
-			if(isNewCategory){
-				
+
+			if (isNewCategory) {
+				AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
+				category.setAuditDetails(auditDetails);
 			} else {
+				AuditDetails auditDetails = category.getAuditDetails();
+				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
+				category.setAuditDetails(auditDetails);
 				categoryId = category.getId();
 				if (categoryId == null) {
 					throw new InvalidInputException(requestInfo);
 				}
 			}
+
 			// checking for existence of duplicate record
 			Boolean isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
 					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
@@ -51,15 +57,7 @@ public class CategoryValidator {
 			if (ParentId != null) {
 				validateSubCategory(category, requestInfo, isNewCategory);
 			}
-			
-			if(isNewCategory){
-				AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
-				category.setAuditDetails(auditDetails);
-			} else {
-				AuditDetails auditDetails = category.getAuditDetails();
-				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
-				category.setAuditDetails(auditDetails);
-			}
+
 		}
 	}
 
@@ -74,12 +72,12 @@ public class CategoryValidator {
 
 				Long categoryDetailId = null;
 				Boolean isCategoryDetailDuplicateExists = null;
-				
-				if(isNewCategory){
-					
+
+				if (isNewCategory) {
+
 					isCategoryDetailDuplicateExists = false;
 				} else {
-					
+
 					categoryDetailId = categoryDetail.getId();
 					isCategoryDetailDuplicateExists = checkWhetherDuplicateCategoryDetailRecordExits(categoryDetail,
 							ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetailId);

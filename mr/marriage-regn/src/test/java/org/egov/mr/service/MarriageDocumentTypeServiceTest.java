@@ -1,0 +1,210 @@
+package org.egov.mr.service;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.mr.config.PropertiesManager;
+import org.egov.mr.model.MarriageDocumentType;
+import org.egov.mr.model.enums.ApplicationType;
+import org.egov.mr.model.enums.DocumentProof;
+import org.egov.mr.repository.MarriageDocumentTypeRepository;
+import org.egov.mr.util.SequenceIdGenService;
+import org.egov.mr.utils.FileUtils;
+import org.egov.mr.web.contract.MarriageDocTypeRequest;
+import org.egov.mr.web.contract.MarriageDocTypeResponse;
+import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
+import org.egov.mr.web.contract.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(MarriageDocumentTypeService.class)
+public class MarriageDocumentTypeServiceTest {
+
+	@MockBean
+	private PropertiesManager propertiesManager;
+
+	@Mock
+	private PropertiesManager prosManager;
+
+	@Mock
+	private LogAwareKafkaTemplate<String, Object> _kafkaTemplate;
+
+	@MockBean
+	private KafkaTemplate<String, Object> kafkaTemplate;
+
+	@MockBean
+	private SequenceIdGenService sequenceIdGenService;
+
+	@Mock
+	private SequenceIdGenService genService;
+
+	@MockBean
+	private MarriageDocumentTypeRepository marriageDocumentTypeRepository;
+
+	@Mock
+	private MarriageDocumentTypeRepository mdtRepository;
+
+	@Mock
+	private MarriageDocumentTypeSearchCriteria mdtSearchCriteria;
+
+	@InjectMocks
+	private MarriageDocumentTypeService marriageDocumentTypeService;
+
+	/**
+	 * @Test_CreateAsync
+	 */
+	@Test
+	public void testCreateAsync() {
+		/**
+		 * @DB
+		 */
+		MarriageDocTypeResponse mdtResponse = null;
+		try {
+			mdtResponse = getResponse("org/egov/mr/service/marriageDocumentTypeCreateResponseAsDB.json");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+
+		List<MarriageDocumentType> marriageDocumentType = getMarriageDocumentTypesForCreate();
+
+		/**
+		 * @RequestInfo
+		 */
+		MarriageDocTypeRequest marriageDocTypeRequest = new MarriageDocTypeRequest();
+		marriageDocTypeRequest.setMarriageDocTypes(marriageDocumentType);
+		marriageDocTypeRequest.setRequestInfo(new RequestInfo());
+
+		when(genService.idSeqGen(Matchers.anyInt(), Matchers.anyString())).thenReturn(getIdsGenerated());
+		when(prosManager.getCreateMarriageDocumentTypeTopicName())
+				.thenReturn("kafka.topics.create.marriagedocumenttype");
+		when(_kafkaTemplate.send(Matchers.anyString(), Matchers.anyObject())).thenReturn(new SendResult<>(null, null));
+
+		// resEntity.getBody()
+		ResponseEntity<?> resEntity = marriageDocumentTypeService.createAsync(marriageDocTypeRequest);
+		assertEquals(Long.valueOf("200").toString(), resEntity.getStatusCode().toString());
+		assertEquals(mdtResponse, resEntity.getBody());
+
+	}
+
+	/**
+	 * @Test_Search
+	 */
+	@Test
+	public void testSearch() {
+		/**
+		 * @DB
+		 */
+		MarriageDocTypeResponse mdtResponse = null;
+		try {
+			mdtResponse = getResponse("org/egov/mr/service/marriageDocumentTypeSearchResponseAsDB.json");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+		List<MarriageDocumentType> marriageDocumentTypes = getMarriageDocumentTypesForSearch();
+
+		mdtSearchCriteria = MarriageDocumentTypeSearchCriteria.builder().applicationType("REISSUE")
+				.tenantId("ap.kurnool").build();
+		when(mdtRepository.search(mdtSearchCriteria)).thenReturn(marriageDocumentTypes);
+
+		ResponseEntity<?> resEntity = marriageDocumentTypeService.search(mdtSearchCriteria, new RequestInfo());
+		assertEquals(Long.valueOf("200").toString(), resEntity.getStatusCode().toString());
+		assertEquals(mdtResponse, resEntity.getBody());
+	}
+
+	/**
+	 * 
+	 * @SEARCH_Request
+	 */
+	private List<MarriageDocumentType> getMarriageDocumentTypesForSearch() {
+		List<MarriageDocumentType> mdts = new ArrayList<>();
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("1")).name("ADDRESSPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REGISTRATION).isActive(true).isIndividual(true).isRequired(true)
+				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("2")).name("ADDRESSPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REISSUE).isActive(true).isIndividual(false).isRequired(true)
+				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("3")).name("AGEPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REGISTRATION).isActive(true).isIndividual(true).isRequired(false)
+				.code("00015").proof(DocumentProof.AGE).build());
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("4")).name("AGEPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REISSUE).isActive(false).isIndividual(false).isRequired(false)
+				.code("00015").proof(DocumentProof.AGE).build());
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("5")).name("COMMONPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REGISTRATION).isActive(false).isIndividual(true).isRequired(false)
+				.code("00015").proof(DocumentProof.COMMON).build());
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("6")).name("COMMONPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REISSUE).isActive(false).isIndividual(false).isRequired(true)
+				.code("00015").proof(DocumentProof.COMMON).build());
+		return mdts;
+	}
+
+	/**
+	 * @CREATE_Request
+	 */
+	private List<MarriageDocumentType> getMarriageDocumentTypesForCreate() {
+		List<MarriageDocumentType> mdts = new ArrayList<>();
+		mdts.add(MarriageDocumentType.builder().name("ADDRESSPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REGISTRATION).isActive(true).isIndividual(true).isRequired(true)
+				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+		mdts.add(MarriageDocumentType.builder().name("ADDRESSPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REISSUE).isActive(true).isIndividual(true).isRequired(true)
+				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+		return mdts;
+	}
+
+	/**
+	 * 
+	 * @UPDATE_Request
+	 */
+	private List<MarriageDocumentType> getMarriageDocumentTypesForUpdate() {
+		List<MarriageDocumentType> mdts = new ArrayList<>();
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("1")).name("ADDRESSPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REGISTRATION).isActive(true).isIndividual(true).isRequired(true)
+				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("2")).name("ADDRESSPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REISSUE).isActive(true).isIndividual(true).isRequired(true)
+				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+		return mdts;
+	}
+
+	private List<Long> getIdsGenerated() {
+
+		List<Long> ids = new ArrayList<>();
+		ids.add(Long.valueOf("1"));
+		ids.add(Long.valueOf("2"));
+		return ids;
+	}
+
+	/**
+	 * @Accessing the RegistrationUnitResponse Data from the JSON
+	 * 
+	 * @param filePath
+	 * @return
+	 * @throws IOException
+	 */
+	private MarriageDocTypeResponse getResponse(String filePath) throws IOException {
+		String mrJson = new FileUtils().getFileContents(filePath);
+		return new ObjectMapper().readValue(mrJson, MarriageDocTypeResponse.class);
+	}
+
+}

@@ -56,10 +56,10 @@ public class UomQueryBuilder {
 		}
 
 		if (active != null) {
-			if (active.equalsIgnoreCase("false")) {
+			if (active.equalsIgnoreCase("False")) {
 				searchSql.append(" AND active =? ");
 				preparedStatementValues.add(false);
-			} else if (active.equalsIgnoreCase("true")) {
+			} else if (active.equalsIgnoreCase("True")) {
 				searchSql.append(" AND active =? ");
 				preparedStatementValues.add(true);
 			}

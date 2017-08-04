@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.pgr.domain.model.Attribute;
-import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.domain.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,16 +55,16 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
+public class ServiceTypeRowMapper implements RowMapper<GrievanceType> {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceTypeRowMapper.class);
 	public Map<String, List<Value>> attribValue = new HashMap<>();
 	public Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
-	public Map<String, ServiceType> serviceMap = new HashMap<>();
+	public Map<String, GrievanceType> serviceMap = new HashMap<>();
 	public static final String separator = ">";
 
 	@Override
-	public ServiceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+	public GrievanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 		if (serviceMap.containsKey(rs.getString("code"))) {
 			if (serviceAttrib.containsKey(rs.getString("code"))) {
 				Map<String, Attribute> innerMap = serviceAttrib.get(rs.getString("code"));
@@ -119,7 +119,7 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 			}
 					serviceMap.put(rs.getString("code"), createServiceTypeObjectForMe(rs));
 		}
-		return new ServiceType();
+		return new GrievanceType();
 	}
 	
 	private Value createValueObjectForMe(ResultSet rs) {
@@ -149,21 +149,21 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 		return attr;
 	}
 	
-	private ServiceType createServiceTypeObjectForMe(ResultSet rs) {
-		ServiceType serviceType = new ServiceType();
+	private GrievanceType createServiceTypeObjectForMe(ResultSet rs) {
+		GrievanceType grievanceType = new GrievanceType();
 		try { 
-			serviceType.setId(rs.getLong("id"));
-			serviceType.setServiceName(rs.getString("name"));
-			serviceType.setServiceCode(rs.getString("code"));
-			serviceType.setTenantId(rs.getString("tenantid"));
-			serviceType.setDescription(rs.getString("description"));
-			serviceType.setCategory(rs.getInt("category"));
-			serviceType.setHasFinancialImpact(rs.getBoolean("hasfinancialimpact"));
-			serviceType.setSlaHours(rs.getInt("slahours"));
-			serviceType.setActive(rs.getBoolean("isactive"));
+			grievanceType.setId(rs.getLong("id"));
+			grievanceType.setServiceName(rs.getString("name"));
+			grievanceType.setServiceCode(rs.getString("code"));
+			grievanceType.setTenantId(rs.getString("tenantid"));
+			grievanceType.setDescription(rs.getString("description"));
+			grievanceType.setCategory(rs.getInt("category"));
+			grievanceType.setHasFinancialImpact(rs.getBoolean("hasfinancialimpact"));
+			grievanceType.setSlaHours(rs.getInt("slahours"));
+			grievanceType.setActive(rs.getBoolean("isactive"));
 		} catch (Exception e) {
 			LOGGER.error("Encountered an Exception while creating Service Type Object using Result Set " + e);
 		}
-		return serviceType;
+		return grievanceType;
 	}
 }

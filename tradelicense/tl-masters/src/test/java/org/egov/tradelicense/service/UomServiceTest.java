@@ -43,7 +43,7 @@ public class UomServiceTest {
 	public String name = "Flammables v1.1";
 	public String code = "Flammables v1.1";
 	public Boolean active = true;
-	public String searchActive = "true";
+	public String searchActive = "True";
 	public String updatedName = "Flammables v1.1 name updated";
 	public String updatedCode = "Flammables v1.1 code updated";
 

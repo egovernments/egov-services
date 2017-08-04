@@ -132,13 +132,13 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String type, Integer categoryId, Integer pageSize, Integer offSet) {
+			String code, String active, String type, Integer categoryId, Integer pageSize, Integer offSet) {
 
 		CategoryResponse categoryResponse = new CategoryResponse();
 		try {
 
-			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, type, categoryId,
-					pageSize, offSet);
+			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
+					categoryId, pageSize, offSet);
 
 			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY") || (categoryId != null)) {
 

@@ -43,9 +43,6 @@ package org.egov.pgr.domain.model;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.pgr.domain.model.AuditDetails;
-import org.egov.pgr.domain.model.ServiceType;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

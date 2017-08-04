@@ -15,11 +15,11 @@ public class CategoryQueryBuilder {
 	private static final String categoryDetailTableName = ConstantUtility.CATEGORY_DETAIL_TABLE_NAME;
 
 	public static final String INSERT_CATEGORY_QUERY = "INSERT INTO " + categoryTableName
-			+ " (tenantId, name, code, parentId, businessNature, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(?,?,?,?,?,?,?,?,?)";
+			+ " (tenantId, name, code, active ,parentId, businessNature, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_CATEGORY_QUERY = "UPDATE " + categoryTableName
-			+ " SET tenantId = ?, name = ?, code = ?, parentId = ?, businessNature = ?,"
+			+ " SET tenantId = ?, name = ?, code = ?, active = ?, parentId = ?, businessNature = ?,"
 			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
 
 	public static final String INSERT_CATEGORY_DETAIL_QUERY = "INSERT INTO " + categoryDetailTableName
@@ -52,8 +52,8 @@ public class CategoryQueryBuilder {
 		return searchSql.toString();
 	}
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String type,
-			Integer categoryId, Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
+			String type, Integer categoryId, Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + categoryTableName + " where ");
@@ -96,7 +96,21 @@ public class CategoryQueryBuilder {
 				searchSql.append(" AND parentId IS NULL ");
 			}
 		}
+		
+		if (active != null) {
 
+			if (active.equalsIgnoreCase("False")) {
+				searchSql.append(" AND active =? ");
+				preparedStatementValues.add(false);
+			}
+
+			else if (active.equalsIgnoreCase("True")) {
+				searchSql.append(" AND active =? ");
+				preparedStatementValues.add(true);
+			}
+
+		}
+		
 		if (pageSize != null) {
 			searchSql.append(" limit ? ");
 			preparedStatementValues.add(pageSize);

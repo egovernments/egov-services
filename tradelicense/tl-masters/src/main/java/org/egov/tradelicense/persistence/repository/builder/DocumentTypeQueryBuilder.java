@@ -21,7 +21,7 @@ public class DocumentTypeQueryBuilder {
 			+ " SET tenantId = ?, name = ?, mandatory = ?, enabled = ?, applicationType = ?,"
 			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, Boolean enabled,
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String enabled,
 			String applicationType, Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -50,8 +50,13 @@ public class DocumentTypeQueryBuilder {
 		}
 
 		if (enabled != null) {
-			searchSql.append(" AND enabled =? ");
-			preparedStatementValues.add(enabled);
+			if (enabled.equalsIgnoreCase("False")) {
+				searchSql.append(" AND enabled =? ");
+				preparedStatementValues.add(false);
+			} else if (enabled.equalsIgnoreCase("True")) {
+				searchSql.append(" AND enabled =? ");
+				preparedStatementValues.add(true);
+			}
 		}
 
 		if (applicationType != null && !applicationType.isEmpty()) {

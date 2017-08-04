@@ -117,7 +117,7 @@ public class DocumentTypeRepository {
 	 * @param offSet
 	 * @return List<DocumentType>
 	 */
-	public List<DocumentType> searchDocumentType(String tenantId, Integer[] ids, String name, Boolean enabled,
+	public List<DocumentType> searchDocumentType(String tenantId, Integer[] ids, String name, String enabled,
 			String applicationType, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();

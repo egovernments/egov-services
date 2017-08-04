@@ -56,18 +56,19 @@ public class CategoryRepository {
 				ps.setString(1, category.getTenantId());
 				ps.setString(2, category.getName());
 				ps.setString(3, category.getCode());
-				ps.setObject(4, category.getParentId());
+				ps.setBoolean(4,  ( category.getActive() == null ? true : category.getActive()) ); 
+				ps.setObject(5, category.getParentId());
 				
 				if (category.getBusinessNature() == null) {
-					ps.setString(5, null);
+					ps.setString(6, null);
 				} else {
-					ps.setString(5, category.getBusinessNature().name());
+					ps.setString(6, category.getBusinessNature().name());
 				}
 
-				ps.setString(6, auditDetails.getCreatedBy());
-				ps.setString(7, auditDetails.getLastModifiedBy());
-				ps.setLong(8, auditDetails.getCreatedTime());
-				ps.setLong(9, auditDetails.getLastModifiedTime());
+				ps.setString(7, auditDetails.getCreatedBy());
+				ps.setString(8, auditDetails.getLastModifiedBy());
+				ps.setLong(9, auditDetails.getCreatedTime());
+				ps.setLong(10, auditDetails.getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -129,17 +130,17 @@ public class CategoryRepository {
 				ps.setString(1, category.getTenantId());
 				ps.setString(2, category.getName());
 				ps.setString(3, category.getCode());
-
-				ps.setObject(4, category.getParentId());
+				ps.setBoolean(4,  ( category.getActive() == null ? true : category.getActive()) );
+				ps.setObject(5, category.getParentId());
 				
 				if (category.getBusinessNature() == null) {
-					ps.setString(5, null);
+					ps.setString(6, null);
 				} else {
-					ps.setString(5, category.getBusinessNature().name());
+					ps.setString(6, category.getBusinessNature().name());
 				}
-				ps.setString(6, category.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, auditDetails.getLastModifiedTime());
-				ps.setLong(8, category.getId());
+				ps.setString(7, category.getAuditDetails().getLastModifiedBy());
+				ps.setLong(8, auditDetails.getLastModifiedTime());
+				ps.setLong(9, category.getId());
 
 				return ps;
 			}
@@ -188,7 +189,7 @@ public class CategoryRepository {
 	 * @param offSet
 	 * @return List<Category>
 	 */
-	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String type,
+	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String active, String type,
 			Integer categoryId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
@@ -200,7 +201,7 @@ public class CategoryRepository {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
 		
-		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, type, categoryId,
+		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, type, categoryId,
 				pageSize, offSet, preparedStatementValues);
 		List<Category> categories = getCategories(categorySearchQuery.toString(), preparedStatementValues);
 
@@ -278,7 +279,7 @@ public class CategoryRepository {
 			category.setTenantId(getString(row.get("tenantid")));
 			category.setCode(getString(row.get("code")));
 			category.setName(getString(row.get("name")));
-			
+			category.setActive(getBoolean(row.get("active")));
 			if (getLong(row.get("parentId")) == 0) {
 				category.setParentId(null);
 			} else {
@@ -330,5 +331,16 @@ public class CategoryRepository {
 	 */
 	private Long getLong(Object object) {
 		return object == null ? 0 : Long.parseLong(object.toString());
+	}
+	
+	/**
+	 * This method will cast the given object to Boolean
+	 * 
+	 * @param object
+	 *            that need to be cast to Boolean
+	 * @return {@link boolean}
+	 */
+	private Boolean getBoolean(Object object) {
+		return object == null ? Boolean.FALSE : (Boolean) object;
 	}
 }

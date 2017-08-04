@@ -1,7 +1,6 @@
 package org.egov.asset.consumers;
 
 import java.util.Map;
-
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetRequest;

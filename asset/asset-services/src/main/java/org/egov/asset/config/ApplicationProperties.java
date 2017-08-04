@@ -99,6 +99,19 @@ public class ApplicationProperties {
 	@Value("${egov.services.asset.current.value.sequence}")
 	private String currentValueServiceSequence;
 
-	@Autowired
-	private Environment environment;
+	@Value("${egov.services.asset.batchsize}")
+    private String batchSize;
+    
+    @Value("${egov.services.egf_service.financialyear.searchpath}")
+    private String egfFinancialYearSearchPath;
+    
+    @Value("${kafka.topics.save.depreciation}")
+    private String saveDepreciationTopic;
+    
+    @Value("${kafka.topics.save.currentvalue}")
+    private String saveCurrentvalueTopic;
+
+    @Autowired
+    private Environment environment;
+   
 }

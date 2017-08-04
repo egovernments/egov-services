@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.asset.model.enums.TransactionType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +31,7 @@ public class AssetCurrentValue {
 	
 	private BigDecimal currentAmount;
 	
-	private String assetTranType;
+	private TransactionType assetTranType;
 
 	private AuditDetails auditDetails;
 }

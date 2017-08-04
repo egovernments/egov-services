@@ -1,7 +1,11 @@
 package org.egov.asset.service;
 
+import java.util.Date;
+
 import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
+import org.egov.asset.model.AuditDetails;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,4 +49,10 @@ public class AssetCommonService {
         if (depreciationRate != null && Double.compare(depreciationRate, Double.valueOf("0.0")) < 0)
             throw new RuntimeException("Depreciation rate can not be negative.");
     }
+    
+    public AuditDetails getAuditDetails(final RequestInfo requestInfo) {
+    	String id = requestInfo.getUserInfo().getId().toString();
+		Long time = new Date().getTime();
+		return AuditDetails.builder().createdBy(id).lastModifiedBy(id).createdDate(time).lastModifiedDate(time).build();
+	}
 }

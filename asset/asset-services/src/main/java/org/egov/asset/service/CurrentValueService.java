@@ -1,6 +1,5 @@
 package org.egov.asset.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -9,9 +8,11 @@ import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AuditDetails;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.CurrentValueRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class CurrentValueService {
+	
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -30,6 +34,9 @@ public class CurrentValueService {
 	@Autowired
 	private SequenceGenService sequenceGenService;
 
+	@Autowired
+	private AssetCommonService assetCommonService;
+	
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
@@ -44,17 +51,15 @@ public class CurrentValueService {
 
 		RequestInfo requestInfo = assetCurrentValueRequest.getRequestInfo();
 		List<AssetCurrentValue> assetCurrentValues = assetCurrentValueRequest.getAssetCurrentValues();
-		AuditDetails auditDetails = getAuditDetails(requestInfo);
+		AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo);
 
-		List<Long> idList = sequenceGenService.getIds(assetCurrentValues.size(),
-				applicationProperties.getCurrentValueServiceSequence());
+		List<Long> idList = sequenceGenService.getIds(assetCurrentValues.size(), Sequence.CURRENTVALUESEQUENCE.toString());
 		int i = 0;
 		for (AssetCurrentValue assetCurrentValue : assetCurrentValues) {
 			assetCurrentValue.setAuditDetails(auditDetails);
 			assetCurrentValue.setId(idList.get(i++));
 		}
-		saveCurrentValue(assetCurrentValueRequest);
-		// TODO kafka send message and remove save method call
+		kafkaTemplate.send(applicationProperties.getSaveCurrentvalueTopic(), assetCurrentValueRequest);
 		return new AssetCurrentValueResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
 				assetCurrentValues);
 	}
@@ -68,18 +73,6 @@ public class CurrentValueService {
 		// TODO
 	}
 
-	public AuditDetails getAuditDetails(final RequestInfo requestInfo) {
-		final String userId = requestInfo.getUserInfo().getId().toString();
-		final Long currEpochDate = new Date().getTime();
-
-		final AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(userId);
-		auditDetails.setCreatedDate(currEpochDate);
-		auditDetails.setLastModifiedBy(userId);
-		auditDetails.setLastModifiedDate(currEpochDate);
-
-		return auditDetails;
-	}
 
 	/*
 	 * public AssetCurrentValueResponse getCurrentAmount(final Long assetId,

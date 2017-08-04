@@ -48,6 +48,8 @@ import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
+import org.egov.asset.contract.DepreciationRequest;
+import org.egov.asset.contract.DepreciationResponse;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
@@ -60,6 +62,7 @@ import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.CurrentValueService;
+import org.egov.asset.service.DepreciationService;
 import org.egov.asset.service.DisposalService;
 import org.egov.asset.service.RevaluationService;
 import org.egov.asset.web.validator.AssetValidator;
@@ -102,6 +105,9 @@ public class AssetController {
     @Autowired
     private AssetCommonService assetCommonService;
 
+    @Autowired
+    private DepreciationService depreciationservice;
+    
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -147,9 +153,7 @@ public class AssetController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         assetValidator.validateAssetForUpdate(assetRequest);
-
         final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
-
         return new ResponseEntity<>(assetResponse, HttpStatus.OK);
     }
 
@@ -241,7 +245,7 @@ public class AssetController {
                 tenantId, requestInfoWrapper.getRequestInfo());
 
         log.debug("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
-        return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);
+        return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.OK);
     }
     
     @PostMapping("currentvalue/_create")
@@ -257,5 +261,35 @@ public class AssetController {
         		currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
         return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.CREATED);
     }
+    
+  /*  @PostMapping("depreciations/_search")
+    @ResponseBody
+    public ResponseEntity<?> getDepreciations(@ModelAttribute ,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, final BindingResult bindingResult) {
 
+        log.debug("getAssetCurrentValue assetId:" + assetIds + ",tenantId:" + tenantId);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        final AssetCurrentValueResponse assetCurrentValueResponse = assetCurrentAmountService.getCurrentValues(assetIds,
+                tenantId, requestInfoWrapper.getRequestInfo());
+
+        log.debug("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
+        return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.OK);
+    }
+    */
+	@PostMapping("depreciations/_create")
+	@ResponseBody
+	public ResponseEntity<?> saveDepreciation(@RequestBody @Valid final DepreciationRequest depreciationRequest,
+			final BindingResult bindingResult) {
+		log.info("create depreciationRequest :" + depreciationRequest);
+		if (bindingResult.hasErrors()) {
+			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		DepreciationResponse depreciationResponse = depreciationservice.depreciateAsset(depreciationRequest);
+		return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);
+	}
 }

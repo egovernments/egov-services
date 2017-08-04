@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DisposalQueryBuilder {
 	
-
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
@@ -57,7 +56,8 @@ public class DisposalQueryBuilder {
 		if (disposalCriteria.getId() == null && disposalCriteria.getAssetId() == null)
 			return;
 
-		if (disposalCriteria.getId() != null) {
+		if (disposalCriteria.getId() != null && !disposalCriteria.getId().isEmpty()) {
+			
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" disposal.id IN (" + getIdQuery(disposalCriteria.getId()));
 		}
@@ -79,6 +79,7 @@ public class DisposalQueryBuilder {
 
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.getSearchPageSizeDefault());
+
 		if (disposalCriteria.getSize() != null)
 			pageSize = disposalCriteria.getSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
@@ -110,7 +111,7 @@ public class DisposalQueryBuilder {
 
 	private static String getIdQuery(final List<Long> idList) {
 		StringBuilder query = null;
-		if (idList.size() >= 1) {
+		if (!idList.isEmpty()) {
 			query = new StringBuilder(idList.get(0).toString());
 			for (int i = 1; i < idList.size(); i++)
 				query.append("," + idList.get(i));

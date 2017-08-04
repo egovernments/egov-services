@@ -44,9 +44,6 @@ public class DisposalService {
     private ApplicationProperties applicationProperties;
 
     @Autowired
-    private CurrentValueService assetCurrentAmountService;
-
-    @Autowired
     private VoucherService voucherService;
 
     @Autowired
@@ -60,6 +57,9 @@ public class DisposalService {
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
+    
+    @Autowired
+    private AssetCommonService assetCommonService;
 
     public DisposalResponse search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
         List<Disposal> disposals = null;
@@ -98,7 +98,7 @@ public class DisposalService {
         disposal.setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
 
         if (disposal.getAuditDetails() == null)
-            disposal.setAuditDetails(assetCurrentAmountService.getAuditDetails(disposalRequest.getRequestInfo()));
+            disposal.setAuditDetails(assetCommonService.getAuditDetails(disposalRequest.getRequestInfo()));
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 disposal.getTenantId()))
             try {

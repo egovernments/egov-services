@@ -4,7 +4,6 @@ package org.egov.asset.repository.rowmapper;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.TimeZone;
 
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.enums.AssetCategoryType;
@@ -14,7 +13,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

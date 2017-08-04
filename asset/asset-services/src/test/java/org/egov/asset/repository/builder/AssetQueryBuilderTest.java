@@ -217,5 +217,4 @@ public class AssetQueryBuilderTest {
                 + "assetreference=?,version=?WHERE code=? and tenantid=?";
         assertEquals(queryWithTenantId, assetQueryBuilder.getUpdateQuery());
     }
-
 }

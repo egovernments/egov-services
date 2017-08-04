@@ -94,7 +94,7 @@ public class AssetQueryBuilder {
 			preparedStatementValues.add(searchAsset.getTenantId());
 		}
 
-		if (searchAsset.getId() != null) {
+		if (searchAsset.getId() != null && !searchAsset.getId().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.id IN (" + getIdQuery(searchAsset.getId()));
 		}
@@ -218,6 +218,7 @@ public class AssetQueryBuilder {
 
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.getSearchPageSizeDefault());
+
 		if (searchAsset.getSize() != null)
 			pageSize = searchAsset.getSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
@@ -247,7 +248,7 @@ public class AssetQueryBuilder {
 
 	private static String getIdQuery(final List<Long> idList) {
 		StringBuilder query = null;
-		if (idList.size() >= 1) {
+		if (!idList.isEmpty()) {
 			query = new StringBuilder(idList.get(0).toString());
 			for (int i = 1; i < idList.size(); i++)
 				query.append("," + idList.get(i));

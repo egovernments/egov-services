@@ -8,7 +8,9 @@ public enum TransactionType {
 	
 	    SALE("SALE"),
 	    
-	    DISPOSAL("DISPOSAL");
+	    DISPOSAL("DISPOSAL"),
+	
+		DEPRECIATION("DEPRECIATION");
 
 	    private String value;
 

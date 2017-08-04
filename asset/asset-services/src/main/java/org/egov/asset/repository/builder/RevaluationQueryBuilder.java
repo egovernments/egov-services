@@ -66,12 +66,12 @@ public class RevaluationQueryBuilder {
             preparedStatementValues.add(revaluationCriteria.getTenantId());
         }
 
-        if (revaluationCriteria.getId() != null) {
+        if (revaluationCriteria.getId() != null && !revaluationCriteria.getId().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" revalution.id IN (" + getIdQuery(revaluationCriteria.getId()));
         }
 
-        if (revaluationCriteria.getAssetId() != null) {
+        if (revaluationCriteria.getAssetId() != null && !revaluationCriteria.getAssetId().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" revalution.assetid IN (" + getIdQuery(revaluationCriteria.getAssetId()));
         }
@@ -91,6 +91,7 @@ public class RevaluationQueryBuilder {
 
         selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.getSearchPageSizeDefault());
+
         if (revaluationCriteria.getSize() != null)
             pageSize = revaluationCriteria.getSize();
         preparedStatementValues.add(pageSize); // Set limit to pageSize
@@ -119,8 +120,8 @@ public class RevaluationQueryBuilder {
     }
 
     private static String getIdQuery(final List<Long> idList) {
-        StringBuilder query = null;
-        if (idList.size() >= 1) {
+        StringBuilder query = new StringBuilder();
+        if (!idList.isEmpty()) {
             query = new StringBuilder(idList.get(0).toString());
             for (int i = 1; i < idList.size(); i++)
                 query.append("," + idList.get(i));

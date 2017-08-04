@@ -40,9 +40,6 @@ public class RevaluationService {
     private ApplicationProperties applicationProperties;
 
     @Autowired
-    private CurrentValueService assetCurrentAmountService;
-    
-    @Autowired
     private AssetRepository assetRepository;
 
     @Autowired
@@ -50,7 +47,9 @@ public class RevaluationService {
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
-
+    
+    @Autowired
+    private AssetCommonService assetCommonService;
 
     public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
@@ -59,7 +58,7 @@ public class RevaluationService {
         revaluation.setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
 
         if (revaluation.getAuditDetails() == null)
-            revaluation.setAuditDetails(assetCurrentAmountService.getAuditDetails(revaluationRequest.getRequestInfo()));
+            revaluation.setAuditDetails(assetCommonService.getAuditDetails(revaluationRequest.getRequestInfo()));
 
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 revaluation.getTenantId()))

@@ -40,6 +40,7 @@ public class AssetConfigurationQueryBuilderTest {
     public void getQueryWithTenantIdTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
+
         final String expectedQueryWithTenantId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
                 + "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE ck.tenantId = ?";
         final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
@@ -84,19 +85,19 @@ public class AssetConfigurationQueryBuilderTest {
     }
 
     @Test
-    public void getQueryWithEffectiveFromTest() {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
-        final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
-                .effectiveFrom(Long.valueOf("1500381058598")).build();
-        final String expectedQueryWithId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
-                + "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE cv.effectiveFrom = ?";
-        assertEquals(expectedQueryWithId,
-                assetConfigurationQueryBuilder.getQuery(assetConfigurationCriteria, preparedStatementValues));
-        final List<Object> expectedPreparedStatementValues = new ArrayList<>();
-        expectedPreparedStatementValues.add(Long.valueOf("1500381058598"));
-        assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
-    }
+	public void getQueryWithEffectiveFromTest() {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
+		final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
+				.effectiveFrom(Long.valueOf("1500381058598")).build();
+		final String expectedQueryWithId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
+				+ "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE cv.effectiveFrom = ?";
+		assertEquals(expectedQueryWithId,
+				assetConfigurationQueryBuilder.getQuery(assetConfigurationCriteria, preparedStatementValues));
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		expectedPreparedStatementValues.add(Long.valueOf("1500381058598"));
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
 
     private static String getIdQuery(final List<Long> idList) {
         final StringBuilder query = new StringBuilder("(");

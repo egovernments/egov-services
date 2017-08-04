@@ -1,0 +1,51 @@
+ {
+ 	"RequestInfo" : {
+		"apiId" : null,
+		"ver" : "1.0",
+		"action" : "create",
+		"did" : "1",
+		"key" : "abcdkey",
+		"msgId" : "20170310130900",
+		"requesterId" : "rajesh",
+		"authToken" : "22466b9b-1548-42cc-a5e1-e416f690add4",
+		"userInfo" : {
+			"id" : 1,
+			"userName" : "testUser",
+			"name" : "test user",
+			"type" : "type",
+			"mobileNumber" : "9999999999",
+			"emailId" : "test.user@gmail.com",
+			"roles" : null
+		}
+	},
+  "AssetCurrentValues": [
+    {
+      "tenantId": "ap.kurnool",
+      "assetId": 1,
+      "currentAmount": 5000,
+      "assetTranType": "Depreciation",
+      "auditDetails": null
+    },
+     {
+      "tenantId": "ap.kurnool",
+      "assetId": 1,
+      "currentAmount": 5000,
+      "assetTranType": "Depreciation",
+      "auditDetails": null
+    },
+     {
+      "tenantId": "ap.kurnool",
+      "assetId": 1,
+      "currentAmount": 5000,
+      "assetTranType": "Depreciation",
+      "auditDetails": null
+    },
+     {
+      "tenantId": "ap.kurnool",
+      "assetId": 1,
+      "currentAmount": 5000,
+      "assetTranType": "Depreciation",
+      "auditDetails": null
+    }
+  ]
+}

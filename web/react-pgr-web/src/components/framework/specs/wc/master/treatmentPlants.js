@@ -14,12 +14,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "TreatmentPlants[0].name",
 							"label": "wc.create.groups.fields.treatmentPlantName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "plantType",
@@ -85,23 +85,23 @@ var dat = {
 							"name": "capacity",
 							"jsonPath": "TreatmentPlants[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						},
 						{
 							"name": "description",
 							"jsonPath": "TreatmentPlants[0].description",
 							"label": "wc.create.groups.fields.description",
-							"pattern": "",
+							"pattern": "^.{3,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of description is 250"
 						}
 				]
 			}
@@ -118,6 +118,17 @@ var dat = {
 				"label": "wc.create.groups.treatmentplant.title",
 				"name": "searchTreatmentPlant",
 				"fields": [
+					{
+						"name": "name",
+						"jsonPath": "name",
+						"label": "wc.create.groups.fields.treatmentPlantName",
+						"pattern": "^.{3,100}$",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "Maximum length of name is 100"
+					},
 					{
 						"name": "plantType",
 						"jsonPath": "plantType",
@@ -157,12 +168,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "TreatmentPlants[0].name",
 							"label": "wc.create.groups.fields.treatmentPlantName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "plantType",
@@ -228,23 +239,23 @@ var dat = {
 							"name": "capacity",
 							"jsonPath": "TreatmentPlants[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						},
 						{
 							"name": "description",
 							"jsonPath": "TreatmentPlants[0].description",
 							"label": "wc.create.groups.fields.description",
-							"pattern": "",
+							"pattern": "^.{3,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of description is 250"
 						}
 				]
 			}
@@ -266,12 +277,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "TreatmentPlants[0].name",
 							"label": "wc.create.groups.fields.treatmentPlantName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "plantType",
@@ -337,23 +348,23 @@ var dat = {
 							"name": "capacity",
 							"jsonPath": "TreatmentPlants[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						},
 						{
 							"name": "description",
 							"jsonPath": "TreatmentPlants[0].description",
 							"label": "wc.create.groups.fields.description",
-							"pattern": "",
+							"pattern": "^.{3,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of description is 250"
 						}
 				]
 			}

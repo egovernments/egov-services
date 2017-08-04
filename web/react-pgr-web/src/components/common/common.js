@@ -183,7 +183,7 @@ var localationData = {
   "wc.create.groups.fields.numberOfConnectionFromReservoir": " No of connection from resrvoir",
   "wc.create.groups.fields.numberOfMainDistributionLine": " No of main distributionLine",
   "wc.create.groups.fields.reservoirType": "Type of the Reservoir",
-  "wc.create.storageReservoir.title":"storage Reservoir",
+  "wc.create.storageReservoir.title":"Storage Reservoir",
   "wc.update.message.success": "Updated Successfully . . . !",
   "wc.create.propertyUsage.title":"Create Property Usage",
   "wc.create.usageType":"Usage Type",

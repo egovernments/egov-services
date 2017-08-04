@@ -61,6 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return categoryResponse;
 	}
 
+	@Override
 	@Transactional
 	public void createCategory(CategoryRequest categoryRequest) {
 
@@ -104,6 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return categoryResponse;
 	}
 
+	@Override
 	@Transactional
 	public void updateCategory(CategoryRequest categoryRequest) {
 

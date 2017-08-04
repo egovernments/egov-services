@@ -16,6 +16,9 @@ var specifications={};
 
 let reqRequired = [];
 class Report extends Component {
+  state={
+    pathname:""
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -72,10 +75,20 @@ class Report extends Component {
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
+
+    this.setState({
+      pathname:this.props.history.location.pathname
+    })
   }
 
   componentDidMount() {
       this.initData();
+  }
+  componentWillReceiveProps(nextProps)
+  {
+    if (this.state.pathname!=nextProps.history.location.pathname) {
+      this.initData();
+    }
   }
 
   search = (e) => {

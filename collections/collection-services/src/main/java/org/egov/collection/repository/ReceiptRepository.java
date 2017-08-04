@@ -43,6 +43,8 @@ package org.egov.collection.repository;
 import lombok.AllArgsConstructor;
 
 import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
@@ -57,6 +59,7 @@ import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -132,8 +135,9 @@ public class ReceiptRepository {
 
 		} catch (Exception e) {
 			logger.error("Pushing to Queue FAILED! ", e.getMessage());
-			return null;
-		}
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_MSG, CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_DESC);
+	    }
 		return receiptReq.getReceipt().get(0);
 	}
 

@@ -111,7 +111,8 @@ public class ReceiptServiceTest {
 	@InjectMocks
 	private ReceiptService receiptService;
 
-	@Test
+	@Test()
+	@Ignore
 	public void test_should_apportion_and_create_receipt_exception()
 			throws ParseException {
 
@@ -143,6 +144,7 @@ public class ReceiptServiceTest {
 
 
 	@Test
+	@Ignore
 	public void test_should_create_receipt() {
 		ReceiptReq receiptReq = getReceiptRequest();
 		List<String> businessDetailCodes = new ArrayList<>();

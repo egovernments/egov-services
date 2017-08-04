@@ -18,6 +18,7 @@ import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
+import org.egov.tradelicense.persistence.repository.PenaltyRateRepository;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,9 @@ public class PenaltyRateServiceTest {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+
+	@Autowired
+	PenaltyRateRepository penaltyRateRepository;
 
 	public Long penaltyRateId = 1l;
 	public String tenantId = "default";
@@ -84,7 +88,8 @@ public class PenaltyRateServiceTest {
 			if (penaltyRateResponse.getPenaltyRates().size() == 0) {
 				assertTrue(false);
 			}
-			this.penaltyRateId = penaltyRateResponse.getPenaltyRates().get(0).getId();
+
+			penaltyRateRepository.craeatePenaltyRate(tenantId, penaltyRateResponse.getPenaltyRates().get(0));
 
 			assertTrue(true);
 
@@ -111,8 +116,9 @@ public class PenaltyRateServiceTest {
 		try {
 			PenaltyRateResponse penaltyRateResponse = penaltyRateService.getPenaltyRateMaster(requestInfo, tenantId,
 					new Integer[] { penaltyRateId.intValue() }, applicationType, pageSize, offset);
-			if (penaltyRateResponse.getPenaltyRates().size() == 0)
+			if (penaltyRateResponse.getPenaltyRates().size() == 0) {
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 
@@ -157,9 +163,11 @@ public class PenaltyRateServiceTest {
 		try {
 			PenaltyRateResponse penaltyRateResponse = penaltyRateService.updatePenaltyRateMaster(penaltyRateRequest);
 
-			if (penaltyRateResponse.getPenaltyRates().size() == 0)
+			if (penaltyRateResponse.getPenaltyRates().size() == 0) {
 				assertTrue(false);
+			}
 
+			penaltyRateRepository.updatePenaltyRate(penaltyRateResponse.getPenaltyRates().get(0));
 			assertTrue(true);
 
 		} catch (Exception e) {

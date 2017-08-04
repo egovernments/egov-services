@@ -14,12 +14,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "StorageReservoir[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "reservoirType",
@@ -73,45 +73,45 @@ var dat = {
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of DistributionLine is 124"
 						},
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoir[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of connection is 124"
 						},
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoir[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of subline is 124"
 						},
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoir[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						}
 
 				]
@@ -130,6 +130,17 @@ var dat = {
 				"label": "wc.create.storageReservoir.title",
 				"name": "createstorageReservoir",
 				"fields": [
+						{
+							"name": "name",
+							"jsonPath": "name",
+							"label": "wc.create.groups.fields.storageReservoirName",
+							"pattern": "^.{3,100}$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "Maximum length of name is 100"
+						},
 						{
 							"name": "reservoirType",
 							"jsonPath": "reservoirType",
@@ -169,12 +180,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "StorageReservoirs[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "reservoirType",
@@ -228,45 +239,45 @@ var dat = {
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoirs[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of DistributionLine is 124"
 						},
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoirs[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of connection is 124"
 						},
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoirs[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of subline is 124"
 						},
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoirs[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						}
 
 				]
@@ -291,12 +302,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "StorageReservoir[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "",
+							"pattern": "^.{3,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of name is 100"
 						},
 						{
 							"name": "reservoirType",
@@ -350,45 +361,45 @@ var dat = {
 							"name": "noOfMainDistributionLines",
 							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of DistributionLine is 124"
 						},
 						{
 							"name": "noOfConnection",
 							"jsonPath": "StorageReservoir[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of connection is 124"
 						},
 						{
 							"name": "noOfSubLines",
 							"jsonPath": "StorageReservoir[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
-							"pattern": "",
+							"pattern": "^.{1,124}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of subline is 124"
 						},
 						{
 							"name": "capacity",
 							"jsonPath": "StorageReservoir[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
-							"pattern": "",
+							"pattern": "^.{1,8}$",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of capacity is 8"
 						}
 
 				]

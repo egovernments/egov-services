@@ -46,4 +46,8 @@ public interface PenaltyRateService {
 	public PenaltyRateResponse getPenaltyRateMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String applicationType, Integer pageSize, Integer offSet);
 
+	public void createPenaltyRate(PenaltyRateRequest value);
+
+	public void updatePenaltyRate(PenaltyRateRequest convertValue);
+
 }

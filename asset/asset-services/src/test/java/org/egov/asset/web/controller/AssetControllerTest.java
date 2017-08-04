@@ -58,254 +58,254 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(TestConfiguration.class)
 public class AssetControllerTest {
 
-	 @Autowired
-	    private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	    @MockBean
-	    private AssetService assetService;
+    @MockBean
+    private AssetService assetService;
 
-	    @MockBean
-	    private ApplicationProperties applicationProperties;
+    @MockBean
+    private ApplicationProperties applicationProperties;
 
-	    @MockBean
-	    private AssetValidator assetValidator;
+    @MockBean
+    private AssetValidator assetValidator;
 
-	    @MockBean
-	    private RevaluationService revaluationService;
+    @MockBean
+    private RevaluationService revaluationService;
 
-	    @MockBean
-	    private DisposalService disposalService;
+    @MockBean
+    private CurrentValueService currentValueService;
 
-	    @MockBean
-	    private AssetCommonService assetCommonService;
-	    
-	    @MockBean
-	    private CurrentValueService currentValueService;
+    @MockBean
+    private DisposalService disposalService;
 
-	    @Test
-	    public void test_Should_Search_Asset() throws Exception {
-	        final List<Asset> assets = new ArrayList<>();
-	        assets.add(getAsset());
+    @MockBean
+    private AssetCommonService assetCommonService;
 
-	        final AssetResponse assetResponse = new AssetResponse();
-	        assetResponse.setAssets(assets);
-	        assetResponse.setResponseInfo(new ResponseInfo());
+    @Test
+    public void test_Should_Search_Asset() throws Exception {
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(getAsset());
 
-	        when(assetService.getAssets(Matchers.any(AssetCriteria.class), Matchers.any(RequestInfo.class)))
-	                .thenReturn(assetResponse);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setAssets(assets);
+        assetResponse.setResponseInfo(new ResponseInfo());
 
-	        mockMvc.perform(post("/assets/_search").param("code", "000013").param("tenantId", "ap.kurnool")
-	                .param("assetCategory", "1").contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("assetsearchresponse.json")));
-	    }
+        when(assetService.getAssets(Matchers.any(AssetCriteria.class), Matchers.any(RequestInfo.class)))
+                .thenReturn(assetResponse);
 
-	    @Test
-	    public void test_Should_ThrowException_OnSearchAsset() throws Exception {
-	        final List<Asset> assets = new ArrayList<>();
-	        assets.add(getAsset());
+        mockMvc.perform(post("/assets/_search").param("code", "000013").param("tenantId", "ap.kurnool")
+                .param("assetCategory", "1").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("assetsearchresponse.json")));
+    }
 
-	        final AssetResponse assetResponse = new AssetResponse();
-	        assetResponse.setAssets(assets);
-	        assetResponse.setResponseInfo(new ResponseInfo());
+    @Test
+    public void test_Should_ThrowException_OnSearchAsset() throws Exception {
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(getAsset());
 
-	        when(assetService.getAssets(Matchers.any(AssetCriteria.class), Matchers.any(RequestInfo.class)))
-	                .thenReturn(assetResponse);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setAssets(assets);
+        assetResponse.setResponseInfo(new ResponseInfo());
 
-	        mockMvc.perform(post("/assets/_search").param("grossValue", Double.valueOf("15").toString())
-	                .param("fromCapitalizedValue", Double.valueOf("15").toString())
-	                .param("toCapitalizedValue", Double.valueOf("20").toString()).param("tenantId", "ap.kurnool")
-	                .param("assetCategory", "1").contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().is4xxClientError());
-	    }
+        when(assetService.getAssets(Matchers.any(AssetCriteria.class), Matchers.any(RequestInfo.class)))
+                .thenReturn(assetResponse);
 
-	    @Test
-	    public void test_Should_Create_Asset() throws Exception {
+        mockMvc.perform(post("/assets/_search").param("grossValue", Double.valueOf("15").toString())
+                .param("fromCapitalizedValue", Double.valueOf("15").toString())
+                .param("toCapitalizedValue", Double.valueOf("20").toString()).param("tenantId", "ap.kurnool")
+                .param("assetCategory", "1").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().is4xxClientError());
+    }
 
-	        final List<Asset> assets = new ArrayList<>();
-	        final Asset asset = getAsset();
-	        assets.add(asset);
-	        final AssetResponse assetResponse = new AssetResponse();
-	        assetResponse.setAssets(assets);
-	        assetResponse.setResponseInfo(new ResponseInfo());
+    @Test
+    public void test_Should_Create_Asset() throws Exception {
 
-	        when(assetService.createAsync(any(AssetRequest.class))).thenReturn(assetResponse);
+        final List<Asset> assets = new ArrayList<>();
+        final Asset asset = getAsset();
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setAssets(assets);
+        assetResponse.setResponseInfo(new ResponseInfo());
 
-	        mockMvc.perform(post("/assets/_create").contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("assetcreaterequest.json"))).andExpect(status().isCreated())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("assetcreateresponse.json")));
-	    }
+        when(assetService.createAsync(any(AssetRequest.class))).thenReturn(assetResponse);
 
-	    @Test
-	    public void test_Should_Update_Asset() throws Exception {
+        mockMvc.perform(post("/assets/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("assetcreaterequest.json"))).andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("assetcreateresponse.json")));
+    }
 
-	        final List<Asset> assets = new ArrayList<>();
-	        final Asset asset = getAsset();
-	        asset.setCode("13");
-	        assets.add(asset);
-	        final AssetResponse assetResponse = new AssetResponse();
-	        assetResponse.setAssets(assets);
-	        assetResponse.setResponseInfo(new ResponseInfo());
+    @Test
+    public void test_Should_Update_Asset() throws Exception {
 
-	        when(assetService.updateAsync(any(AssetRequest.class))).thenReturn(assetResponse);
+        final List<Asset> assets = new ArrayList<>();
+        final Asset asset = getAsset();
+        asset.setCode("13");
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setAssets(assets);
+        assetResponse.setResponseInfo(new ResponseInfo());
 
-	        mockMvc.perform(post("/assets/_update", "13").contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("assetupdaterequest.json"))).andExpect(status().isOk())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("assetupdateresponse.json")));
-	    }
+        when(assetService.updateAsync(any(AssetRequest.class))).thenReturn(assetResponse);
 
-	    @Test
-	    public void test_should_create_revaluate() throws IOException, Exception {
-	        final List<Revaluation> revaluations = new ArrayList<>();
-	        revaluations.add(getRevaluation());
-	        final RevaluationResponse revaluationResponse = new RevaluationResponse();
-	        revaluationResponse.setResposneInfo(null);
-	        revaluationResponse.setRevaluations(revaluations);
-	        when(revaluationService.createAsync(any(RevaluationRequest.class),any(HttpHeaders.class))).thenReturn(revaluationResponse);
-	        mockMvc.perform(post("/assets/revaluation" + "/_create").contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("revaluation/revaluationcreaterequest.json"))).andExpect(status().isCreated())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("revaluation/revaluationcreateresponse.json")));
-	    }
+        mockMvc.perform(post("/assets/_update", "13").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("assetupdaterequest.json"))).andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("assetupdateresponse.json")));
+    }
 
-	    @Test
-	    public void test_should_search_revaluate() throws IOException, Exception {
-	        final List<Revaluation> revaluations = new ArrayList<>();
-	        revaluations.add(getRevaluation());
-	        final RevaluationResponse revaluationResponse = new RevaluationResponse();
-	        revaluationResponse.setResposneInfo(null);
-	        revaluationResponse.setRevaluations(revaluations);
-	        when(revaluationService.search(any(RevaluationCriteria.class))).thenReturn(revaluationResponse);
-	        mockMvc.perform(post("/assets/revaluation/_search").contentType(MediaType.APPLICATION_JSON)
-	                .param("tenantId", "ap.kurnool").content(getFileContents("requestinfowrapper.json")))
-	                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("revaluation/revaluatesearchresponse.json")));
-	    }
+    @Test
+    public void test_should_create_revaluate() throws IOException, Exception {
+        final List<Revaluation> revaluations = new ArrayList<>();
+        revaluations.add(getRevaluation());
+        final RevaluationResponse revaluationResponse = new RevaluationResponse();
+        revaluationResponse.setResposneInfo(null);
+        revaluationResponse.setRevaluations(revaluations);
+        when(revaluationService.createAsync(any(RevaluationRequest.class),any(HttpHeaders.class))).thenReturn(revaluationResponse);
+        mockMvc.perform(post("/assets/revaluation" + "/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("revaluation/revaluationcreaterequest.json"))).andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("revaluation/revaluationcreateresponse.json")));
+    }
 
-	    @Test
-	    public void test_should_create_disposal() throws IOException, Exception {
-	        final List<Disposal> disposals = new ArrayList<>();
-	        disposals.add(getDisposals());
-	        final DisposalResponse disposalResponse = new DisposalResponse();
-	        disposalResponse.setResponseInfo(null);
-	        disposalResponse.setDisposals(disposals);
-	        when(disposalService.createAsync(any(DisposalRequest.class),any(HttpHeaders.class))).thenReturn(disposalResponse);
-	        mockMvc.perform(post("/assets/dispose/_create").contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("disposal/disposalcreaterequest.json"))).andExpect(status().isCreated())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("disposal/disposalcreateresponse.json")));
-	    }
+    @Test
+    public void test_should_search_revaluate() throws IOException, Exception {
+        final List<Revaluation> revaluations = new ArrayList<>();
+        revaluations.add(getRevaluation());
+        final RevaluationResponse revaluationResponse = new RevaluationResponse();
+        revaluationResponse.setResposneInfo(null);
+        revaluationResponse.setRevaluations(revaluations);
+        when(revaluationService.search(any(RevaluationCriteria.class))).thenReturn(revaluationResponse);
+        mockMvc.perform(post("/assets/revaluation/_search").contentType(MediaType.APPLICATION_JSON)
+                .param("tenantId", "ap.kurnool").content(getFileContents("requestinfowrapper.json")))
+                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("revaluation/revaluatesearchresponse.json")));
+    }
 
-	    @Test
-	    public void test_should_search_disposal() throws IOException, Exception {
-	        final List<Disposal> disposal = new ArrayList<>();
-	        disposal.add(getDisposals());
-	        final DisposalResponse disposalResponse = new DisposalResponse();
-	        disposalResponse.setResponseInfo(null);
-	        disposalResponse.setDisposals(disposal);
-	        when(disposalService.search(any(DisposalCriteria.class), any(RequestInfo.class))).thenReturn(disposalResponse);
-	        mockMvc.perform(post("/assets/dispose/_search").contentType(MediaType.APPLICATION_JSON)
-	                .param("tenantId", "ap.kurnool").content(getFileContents("requestinfowrapper.json")))
-	                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("disposal/disposesearchresponse.json")));
-	    }
+    @Test
+    public void test_should_create_disposal() throws IOException, Exception {
+        final List<Disposal> disposals = new ArrayList<>();
+        disposals.add(getDisposals());
+        final DisposalResponse disposalResponse = new DisposalResponse();
+        disposalResponse.setResponseInfo(null);
+        disposalResponse.setDisposals(disposals);
+        when(disposalService.createAsync(any(DisposalRequest.class),any(HttpHeaders.class))).thenReturn(disposalResponse);
+        mockMvc.perform(post("/assets/dispose/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("disposal/disposalcreaterequest.json"))).andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("disposal/disposalcreateresponse.json")));
+    }
 
-	    private String getFileContents(final String fileName) throws IOException {
-	        return new FileUtils().getFileContents(fileName);
-	    }
+    @Test
+    public void test_should_search_disposal() throws IOException, Exception {
+        final List<Disposal> disposal = new ArrayList<>();
+        disposal.add(getDisposals());
+        final DisposalResponse disposalResponse = new DisposalResponse();
+        disposalResponse.setResponseInfo(null);
+        disposalResponse.setDisposals(disposal);
+        when(disposalService.search(any(DisposalCriteria.class), any(RequestInfo.class))).thenReturn(disposalResponse);
+        mockMvc.perform(post("/assets/dispose/_search").contentType(MediaType.APPLICATION_JSON)
+                .param("tenantId", "ap.kurnool").content(getFileContents("requestinfowrapper.json")))
+                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("disposal/disposesearchresponse.json")));
+    }
 
-	    private Asset getAsset() {
-	        final Asset asset = new Asset();
-	        asset.setTenantId("ap.kurnool");
-	        asset.setId(2L);
-	        asset.setName("asset name");
-	        asset.setCode("000013");
-	        asset.setDepartment(null);
+    private String getFileContents(final String fileName) throws IOException {
+        return new FileUtils().getFileContents(fileName);
+    }
 
-	        final AssetCategory assetCategory = new AssetCategory();
-	        assetCategory.setId(1l);
-	        assetCategory.setName("category name");
-	        asset.setAssetCategory(assetCategory);
+    private Asset getAsset() {
+        final Asset asset = new Asset();
+        asset.setTenantId("ap.kurnool");
+        asset.setId(2L);
+        asset.setName("asset name");
+        asset.setCode("000013");
+        asset.setDepartment(null);
 
-	        asset.setAssetDetails(null);
-	        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-	        asset.setStatus("CREATED");
-	        asset.setDescription(null);
-	        asset.setDateOfCreation(null);
+        final AssetCategory assetCategory = new AssetCategory();
+        assetCategory.setId(1l);
+        assetCategory.setName("category name");
+        asset.setAssetCategory(assetCategory);
 
-	        final Location location = new Location();
-	        location.setLocality(4l);
-	        location.setDoorNo("door no");
-	        asset.setLocationDetails(location);
+        asset.setAssetDetails(null);
+        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
+        asset.setStatus("CREATED");
+        asset.setDescription(null);
+        asset.setDateOfCreation(null);
 
-	        asset.setRemarks(null);
-	        asset.setLength(null);
-	        asset.setWidth(null);
-	        asset.setTotalArea(null);
-	        asset.setGrossValue(null);
-	        asset.setAccumulatedDepreciation(null);
-	        asset.setAssetReference(null);
-	        asset.setVersion(null);
-	        asset.setAssetAttributes(null);
+        final Location location = new Location();
+        location.setLocality(4l);
+        location.setDoorNo("door no");
+        asset.setLocationDetails(location);
 
-	        return asset;
-	    }
+        asset.setRemarks(null);
+        asset.setLength(null);
+        asset.setWidth(null);
+        asset.setTotalArea(null);
+        asset.setGrossValue(null);
+        asset.setAccumulatedDepreciation(null);
+        asset.setAssetReference(null);
+        asset.setVersion(null);
+        asset.setAssetAttributes(null);
 
-	    private Revaluation getRevaluation() {
-	        final Revaluation revaluation = new Revaluation();
-	        revaluation.setTenantId("ap.kurnool");
-	        revaluation.setId(Long.valueOf("15"));
-	        revaluation.setAssetId(Long.valueOf("31"));
-	        revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
-	        revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
-	        revaluation.setRevaluationAmount(new BigDecimal("10.0"));
-	        revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
-	        revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
-	        revaluation.setReevaluatedBy("5");
-	        revaluation.setReasonForRevaluation("reasonForRevaluation");
-	        revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
-	        revaluation.setFunction(Long.valueOf("2"));
-	        revaluation.setFund(Long.valueOf("3"));
-	        revaluation.setScheme(Long.valueOf("4"));
-	        revaluation.setSubScheme(Long.valueOf("5"));
-	        revaluation.setComments("coments");
-	        revaluation.setStatus(Status.APPROVED.toString());
+        return asset;
+    }
 
-	        final AuditDetails auditDetails = new AuditDetails();
-	        auditDetails.setCreatedBy(String.valueOf("5"));
-	        auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
-	        auditDetails.setLastModifiedBy(String.valueOf("5"));
-	        auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
-	        revaluation.setAuditDetails(auditDetails);
+    private Revaluation getRevaluation() {
+        final Revaluation revaluation = new Revaluation();
+        revaluation.setTenantId("ap.kurnool");
+        revaluation.setId(Long.valueOf("15"));
+        revaluation.setAssetId(Long.valueOf("31"));
+        revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
+        revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
+        revaluation.setRevaluationAmount(new BigDecimal("10.0"));
+        revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
+        revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
+        revaluation.setReevaluatedBy("5");
+        revaluation.setReasonForRevaluation("reasonForRevaluation");
+        revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
+        revaluation.setFunction(Long.valueOf("2"));
+        revaluation.setFund(Long.valueOf("3"));
+        revaluation.setScheme(Long.valueOf("4"));
+        revaluation.setSubScheme(Long.valueOf("5"));
+        revaluation.setComments("coments");
+        revaluation.setStatus(Status.APPROVED.toString());
 
-	        return revaluation;
-	    }
+        final AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy(String.valueOf("5"));
+        auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
+        auditDetails.setLastModifiedBy(String.valueOf("5"));
+        auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
+        revaluation.setAuditDetails(auditDetails);
 
-	    public Disposal getDisposals() {
-	        final Disposal disposal = new Disposal();
-	        disposal.setTenantId("ap.kurnool");
-	        disposal.setId(Long.valueOf("15"));
-	        disposal.setAssetId(Long.valueOf("31"));
-	        disposal.setBuyerName("Abhi");
-	        disposal.setBuyerAddress("Bangalore");
-	        disposal.setDisposalReason("disposalReason");
-	        disposal.setDisposalDate(Long.valueOf("1496564536178"));
-	        disposal.setPanCardNumber("baq1234567");
-	        disposal.setAadharCardNumber("12345678123456");
-	        disposal.setAssetCurrentValue(new BigDecimal("100.0"));
-	        disposal.setSaleValue(new BigDecimal("200.0"));
-	        disposal.setTransactionType(TransactionType.SALE);
-	        disposal.setAssetSaleAccount(Long.valueOf("6"));
+        return revaluation;
+    }
 
-	        final AuditDetails auditDetails = new AuditDetails();
-	        auditDetails.setCreatedBy(String.valueOf("5"));
-	        auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
-	        auditDetails.setLastModifiedBy(String.valueOf("5"));
-	        auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
-	        disposal.setAuditDetails(auditDetails);
-	        return disposal;
-	    }
+    public Disposal getDisposals() {
+        final Disposal disposal = new Disposal();
+        disposal.setTenantId("ap.kurnool");
+        disposal.setId(Long.valueOf("15"));
+        disposal.setAssetId(Long.valueOf("31"));
+        disposal.setBuyerName("Abhi");
+        disposal.setBuyerAddress("Bangalore");
+        disposal.setDisposalReason("disposalReason");
+        disposal.setDisposalDate(Long.valueOf("1496564536178"));
+        disposal.setPanCardNumber("baq1234567");
+        disposal.setAadharCardNumber("12345678123456");
+        disposal.setAssetCurrentValue(new BigDecimal("100.0"));
+        disposal.setSaleValue(new BigDecimal("200.0"));
+        disposal.setTransactionType(TransactionType.SALE);
+        disposal.setAssetSaleAccount(Long.valueOf("6"));
+
+        final AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy(String.valueOf("5"));
+        auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
+        auditDetails.setLastModifiedBy(String.valueOf("5"));
+        auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
+        disposal.setAuditDetails(auditDetails);
+        return disposal;
+    }
 }

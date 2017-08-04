@@ -13,23 +13,23 @@ var dat = {
 							"name": "name",
 							"jsonPath": "documentType.name",
 							"label": "wc.create.documentType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
 							"jsonPath": "documentType.description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
@@ -38,6 +38,7 @@ var dat = {
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
+							"defaultValue":true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -61,12 +62,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "DocumentType.name",
 							"label": "wc.create.documentType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "Active",
@@ -155,23 +156,23 @@ var dat = {
 							"name": "name",
 							"jsonPath": "DocumentType.name",
 							"label": "wc.create.documentType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
 							"jsonPath": "DocumentType.description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",

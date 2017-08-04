@@ -28,6 +28,7 @@ export default (state = defaultState, action) => {
             return {
               ...state,
               requiredFields: action.requiredFields,
+              fieldErrors: {},
               isFormValid: action.requiredFields.length == 0 ? true : false
             }
         case "HANDLE_CHANGE_FRAMEWORK":

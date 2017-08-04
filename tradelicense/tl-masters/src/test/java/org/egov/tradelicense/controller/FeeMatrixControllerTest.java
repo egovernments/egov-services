@@ -78,10 +78,10 @@ public class FeeMatrixControllerTest {
 
 		try {
 
-			when(feeMatrixService.createFeeMatrixMaster(any(String.class), any(FeeMatrixRequest.class)))
+			when(feeMatrixService.createFeeMatrixMaster( any(FeeMatrixRequest.class)))
 					.thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/feematrix/_create").param("tenantId", "default")
+			mockMvc.perform(post("/feematrix/_create")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("feeMatrixCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -123,7 +123,7 @@ public class FeeMatrixControllerTest {
 
 			when(feeMatrixService.updateFeeMatrixMaster(any(FeeMatrixRequest.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/feematrix/_update").param("tenantId", "default")
+			mockMvc.perform(post("/feematrix/_update")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("feeMatrixUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

@@ -64,7 +64,7 @@ var dat = {
 							"label": "wc.create.categorytype",
 							"pattern": "",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""

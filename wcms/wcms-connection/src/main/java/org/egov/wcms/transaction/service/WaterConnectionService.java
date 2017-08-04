@@ -50,7 +50,6 @@ import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EstimationNotice;
-import org.egov.wcms.transaction.model.RoleInfo;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
@@ -321,15 +320,15 @@ public class WaterConnectionService {
 		}
 		
 		// Sending the message to Kafka Producer
-		if (sendDocumentObjToProducer(topic, key, waterConnectionGetReq)) {
+		if (sendDocumentObjToProducer(topic, key, workOrder)) {
 			return workOrder;
 		}
 		return new WorkOrderFormat();
 	}
     
-    private boolean sendDocumentObjToProducer(final String topic, final String key, final WaterConnectionGetReq waterConnectionGetReq) {
+    private boolean sendDocumentObjToProducer(final String topic, final String key, final WorkOrderFormat workOrder) {
 		try {
-			kafkaTemplate.send(topic, key, waterConnectionGetReq);
+			kafkaTemplate.send(topic, key, workOrder);
 		} catch (final Exception e) {
 			logger.error("Producer failed to post request to kafka queue", e);
 			return false;
@@ -337,16 +336,8 @@ public class WaterConnectionService {
 		return true;
 	}
     
-    public void checkWithRoleInfo(final String topic, final String key, final RoleInfo roleInfo) { 
-    	try {
-			kafkaTemplate.send(topic, key, roleInfo);
-		} catch (final Exception e) {
-			logger.error("Producer failed to post request to kafka queue", e);
-		}
-    }
-    
-    public boolean persistWorkOrderLog(WaterConnectionGetReq waterConnectionGetReq) { 
-    	return waterConnectionRepository.persistWorkOrderLog(waterConnectionGetReq);
+    public boolean persistWorkOrderLog(WorkOrderFormat workOrder) { 
+    	return waterConnectionRepository.persistWorkOrderLog(workOrder);
     }
     
     private WaterConnectionReq getWaterConnectionRequest(Connection connection) { 
@@ -357,4 +348,5 @@ public class WaterConnectionService {
     private List<DocumentOwner> getDocumentForConnection(Connection connection) { 
     	return waterConnectionRepository.getDocumentForConnection(connection);
     }
+    
  }

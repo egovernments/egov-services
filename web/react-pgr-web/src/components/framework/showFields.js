@@ -57,23 +57,23 @@ export default class ShowFields extends Component {
                             }
                         })}
                       </Row>
-                      {group.multiple && <Row style={{"visibility": (groupIndex == (groups.length-1)) ? "initial" : "hidden" }}>
-                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
-                          <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath)}}>
+                      {group.multiple && groupIndex == (groups.length-1) && <Row>
+                        <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
+                          <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath, group.name)}}>
                             <span className="glyphicon glyphicon-plus"></span>
                           </FloatingActionButton>
                         </Col>
                       </Row>}
-                      {group.multiple && <Row style={{"visibility": (groupIndex < (groups.length-1)) ? "initial" : "hidden" }}>
-                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
-                          <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex)}}>
+                      {group.multiple && groupIndex < (groups.length-1) && <Row>
+                        <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
+                          <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex, group.name)}}>
                             <span className="glyphicon glyphicon-minus"></span>
                           </FloatingActionButton>
                         </Col>
                       </Row>}
                     </Grid>
-                    <div style={{"marginLeft": "15px"}}>
-                      {
+                    <div style={{"marginLeft": "15px", "marginRight": "15px"}}>
+                      { 
                         group.children &&
                         group.children.length ?
                         group.children.map(function(child) {
@@ -146,7 +146,7 @@ export default class ShowFields extends Component {
   }
 
   render() {
-    let  {groups,noCols,uiFramework}=this.props;
+    let  {groups, noCols, uiFramework}=this.props;
   	return ( <div>
   	 	{this.renderGroups(groups, noCols, uiFramework)}
   	 </div>)

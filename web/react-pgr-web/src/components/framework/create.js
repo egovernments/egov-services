@@ -480,23 +480,56 @@ class Report extends Component {
     return getFromGroup(mockData[moduleName + "." + actionName].groups);
   }
 
-  addNewCard = (group, jsonPath) => {
+  addNewCard = (group, jsonPath, groupName) => {
     let self = this;
-    group = JSON.parse(JSON.stringify(group));
-    let {setMockData, mockData, metaData, moduleName, actionName} = this.props;
-    //Increment the values of indexes
-    var grp = _.get(metaData[moduleName + "." + actionName], self.getPath(jsonPath)+ '[0]');
-    group = this.incrementIndexValue(grp, jsonPath);
-    //Push to the path
-    var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
-    //Create new mock data
-    setMockData(updatedSpecs);
+    let {setMockData, metaData, moduleName, actionName} = this.props;
+    let mockData = {...this.props.mockData};
+    if(!jsonPath) {
+      for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i--) {
+        if(groupName == metaData[moduleName + "." + actionName].groups[i].name) {
+          var _groupToBeInserted = {...metaData[moduleName + "." + actionName].groups[i]};
+          for(var j=(mockData[moduleName + "." + actionName].groups.length-1); j>=0; j--) {
+            if(groupName == mockData[moduleName + "." + actionName].groups[j].name) {
+              var regexp = new RegExp("\\[\\d{1}\\]", "g");
+              var stringified = JSON.stringify(_groupToBeInserted);
+              var ind = mockData[moduleName + "." + actionName].groups[j].index+1;
+              _groupToBeInserted = JSON.parse(stringified.replace(regexp, "[" + ind + "]"));
+              _groupToBeInserted.index = ind;
+              mockData[moduleName + "." + actionName].groups.splice(ind, 0, _groupToBeInserted);
+              setMockData(mockData);
+              break;
+            }
+          }
+          break;
+        }
+      }
+    } else {
+      group = JSON.parse(JSON.stringify(group));
+      //Increment the values of indexes
+      var grp = _.get(metaData[moduleName + "." + actionName], self.getPath(jsonPath)+ '[0]');
+      group = this.incrementIndexValue(grp, jsonPath);
+      //Push to the path
+      var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
+      //Create new mock data
+      setMockData(updatedSpecs);
+    }
   }
 
-  removeCard = (jsonPath, index) => {
+  removeCard = (jsonPath, index, groupName) => {
     //Remove at that index and update upper array values
-    let {mockData, setMockData, formData} = this.props;
+    let {setMockData, formData, moduleName, actionName} = this.props;
+    let self = this;
+    let mockData = {...this.props.mockData};
+    var _groups = _.get(mockData[moduleName + "." + actionName], self.getPath(jsonPath));
+    _groups.splice(index, 1);
+    var regexp = new RegExp("\\[\\d{1}\\]", "g");
+    for(var i=index; i<_groups.length; i++) {
+      var stringified = JSON.stringify(_groups[i]);
+      _groups[i] = JSON.parse(stringified.replace(regexp, "[" + i + "]"));
+    }
 
+    _.set(mockData, self.getPath(jsonPath), _groups);
+    setMockData(mockData);
   }
 
   render() {
@@ -569,8 +602,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
-    console.log(toastMsg);
-    console.log(isSuccess);
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
   },
   setDropDownData:(fieldName,dropDownData)=>{

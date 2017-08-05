@@ -921,7 +921,7 @@ var dat = {
           "label": "Acknowledgement Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -932,7 +932,7 @@ var dat = {
           "label": "Consumer Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -943,7 +943,7 @@ var dat = {
           "label": "Name",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -954,7 +954,7 @@ var dat = {
           "label": "Mobile Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -965,7 +965,7 @@ var dat = {
           "label": "Locality",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -976,7 +976,7 @@ var dat = {
           "label": "Revenue Ward",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -987,7 +987,7 @@ var dat = {
           "label": "Door Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""

@@ -316,20 +316,20 @@ public class BillService {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
 
-		log.debug("getGlCodes demandDetails:"+demandDetails);
+		log.info("getGlCodes demandDetails:"+demandDetails);
 
 		Set<String>  taxHeadMasterCode = demandDetails.stream().
 				map(demandDetail -> demandDetail.getTaxHeadMasterCode()).collect(Collectors.toSet());
 
-		log.debug("getGlCodes taxHeadMasterCode:"+taxHeadMasterCode);
+		log.info("getGlCodes taxHeadMasterCode:"+taxHeadMasterCode);
 		List<GlCodeMaster> glCodeMasters = glCodeMasterService.getGlCodes(
 				GlCodeMasterCriteria.builder().taxHead(taxHeadMasterCode).service(
 				service).tenantId(tenantId).build(), requestInfo).getGlCodeMasters();
-		log.debug("getGlCodes glCodeMasters:"+glCodeMasters);
+		log.info("getGlCodes glCodeMasters:"+glCodeMasters);
 		Map<String, List<GlCodeMaster>> map = glCodeMasters.stream().collect(
 				Collectors.groupingBy(GlCodeMaster::getTaxHead, Collectors.toList()));
 
-		log.debug("getTaxHeadMaster map:"+map);
+		log.info("getTaxHeadMaster map:"+map);
 		return map;
 	}
 	

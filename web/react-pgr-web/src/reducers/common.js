@@ -82,7 +82,8 @@ let menuConvention={
 
   "Collection.Collection-Transactions.CreateReceipt":"/transaction/collection/collection",
 
-  "Trade License.Trade License Masters.License Category.CreateLicenseCategory":"/create/tl/CreateLicenseCategory"
+  "Trade License.Trade License Masters.License Category.CreateLicenseCategory":"/create/tl/CreateLicenseCategory",
+  "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy"
 
 }
 

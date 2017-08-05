@@ -27,7 +27,8 @@ var dat = {
                 "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
                 "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.asset.email": "properties[0].owners[0].emailId",
-                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber"
+                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
+                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors"
 
               }
             },
@@ -921,7 +922,7 @@ var dat = {
           "label": "Acknowledgement Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -932,7 +933,7 @@ var dat = {
           "label": "Consumer Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -943,7 +944,7 @@ var dat = {
           "label": "Name",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -954,7 +955,7 @@ var dat = {
           "label": "Mobile Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -965,7 +966,7 @@ var dat = {
           "label": "Locality",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -976,7 +977,7 @@ var dat = {
           "label": "Revenue Ward",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -987,7 +988,7 @@ var dat = {
           "label": "Door Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""

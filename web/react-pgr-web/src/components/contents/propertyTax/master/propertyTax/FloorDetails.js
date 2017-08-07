@@ -529,7 +529,7 @@ calcArea = (e, type) => {
 																<Col xs={12} md={3} sm={6}>			
 																	<TextField  className="fullWidth"
 																	  hintText="201"
-																	  floatingLabelText="Flat Number"
+																	  floatingLabelText="Flat Number *"
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
 																	  onChange={(e) => {handleChangeFloor(e,"floor" ,"flatNo", true, /^\d+$/g)}}

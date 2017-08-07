@@ -12,13 +12,11 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class RevaluationRequest   {
-  @JsonProperty("RequestInfo")
-  private RequestInfo requestInfo = null;
+public class RevaluationRequest {
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo = null;
 
-  @JsonProperty("Revaluation")
-  private Revaluation revaluation = null;
+    @JsonProperty("Revaluation")
+    private Revaluation revaluation = null;
 
-  
 }
-

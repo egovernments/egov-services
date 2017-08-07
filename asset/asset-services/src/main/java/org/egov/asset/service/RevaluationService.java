@@ -4,18 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.RevaluationRepository;
@@ -51,6 +54,9 @@ public class RevaluationService {
     @Autowired
     private AssetCommonService assetCommonService;
 
+    @Autowired
+    private CurrentValueService currentValueService;
+
     public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         log.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
@@ -82,6 +88,23 @@ public class RevaluationService {
 
     public void create(final RevaluationRequest revaluationRequest) {
         revaluationRepository.create(revaluationRequest);
+        saveRevaluationAmountToCurrentAmount(revaluationRequest);
+    }
+
+    public void saveRevaluationAmountToCurrentAmount(final RevaluationRequest revaluationRequest) {
+        
+        final Revaluation revaluation = revaluationRequest.getRevaluation();
+        final List<AssetCurrentValue> assetCurrentValues = new ArrayList<AssetCurrentValue>();
+        final AssetCurrentValue assetCurrentValue = new AssetCurrentValue();
+        assetCurrentValue.setAssetId(revaluation.getAssetId());
+        assetCurrentValue.setAssetTranType(TransactionType.REVALUATION);
+        assetCurrentValue.setCurrentAmount(revaluation.getValueAfterRevaluation());
+        assetCurrentValue.setTenantId(revaluation.getTenantId());
+        assetCurrentValues.add(assetCurrentValue);
+        final AssetCurrentValueRequest assetCurrentValueRequest = new AssetCurrentValueRequest();
+        assetCurrentValueRequest.setRequestInfo(revaluationRequest.getRequestInfo());
+        assetCurrentValueRequest.setAssetCurrentValues(assetCurrentValues);
+        currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
     }
 
     public RevaluationResponse search(final RevaluationCriteria revaluationCriteria) {

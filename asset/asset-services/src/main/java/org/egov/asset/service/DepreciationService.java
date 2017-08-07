@@ -36,113 +36,118 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DepreciationService {
-	
-	@Autowired
-	private RestTemplate restTemplate;
-	
-	@Autowired
-	private DepreciationRepository depreciationRepository;
-	
-	@Autowired
-	private CurrentValueService currentValueService;
-	
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private AssetDepreciator assetDepreciator;
-	
-	@Autowired
-	private SequenceGenService sequenceGenService;
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
-	
-	@Autowired
-	private AssetCommonService assetCommonService;
-	
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
-	public DepreciationResponse depreciateAsset(DepreciationRequest depreciationRequest) {
+    @Autowired
+    private RestTemplate restTemplate;
 
-		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
-		DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
-		String tenantId = depreciationCriteria.getTenantId();
-		if (depreciationCriteria.getFinancialYear() == null
-				&& (depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null))
-			throw new RuntimeException("financialyear and (time period)fromdate,todate both "
-					+ "cannot be null please provide atleast one value");
-		else if (depreciationCriteria.getFinancialYear() == null) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(depreciationCriteria.getFromDate());
-			int from = calendar.get(Calendar.YEAR);
-			calendar.setTimeInMillis(depreciationCriteria.getToDate());
-			int to = calendar.get(Calendar.YEAR);
-			depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
-			log.info("financial year value -- " + depreciationCriteria.getFinancialYear());
-		} else if(depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null){
-			
-			String url = applicationProperties.getEgfServiceHostName() + applicationProperties.getEgfFinancialYearSearchPath()
-					+ "?tenantId =" + tenantId + "&finYearRange=" + depreciationCriteria.getFinancialYear();
-			FinancialYearContract financialYearContract = restTemplate.postForObject(url, new RequestInfoWrapper(
-					requestInfo), FinancialYearContractResponse.class).getFinancialYears().get(0);
-			
-			depreciationCriteria.setToDate(financialYearContract.getEndingDate().getTime());
-			depreciationCriteria.setFromDate(financialYearContract.getStartingDate().getTime());
-		}
-		
-		AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo); 
+    @Autowired
+    private DepreciationRepository depreciationRepository;
 
-		List<CalculationAssetDetails> calculationAssetDetailList = depreciationRepository.getCalculationAssetDetails(
-				depreciationCriteria);
-		Map<Long, CalculationCurrentValue> calculationCurrentValues = depreciationRepository.getCalculationCurrentvalue(
-				depreciationCriteria).stream().collect(Collectors.toMap(CalculationCurrentValue::getAssetId, Function.identity()));
-		Map<Long, BigDecimal> depreciationSumMap = depreciationRepository.getdepreciationSum(depreciationCriteria.getTenantId());
-		
-		List<AssetCurrentValue> assetCurrentValues = new ArrayList<>();
-		List<DepreciationDetail> depreciationDetails = new ArrayList<>();
-		
-		assetDepreciator.depreciateAsset(depreciationRequest, calculationAssetDetailList, calculationCurrentValues
-				, depreciationSumMap, assetCurrentValues, depreciationDetails);
-		
-		Long voucherReference = null;
-	/*	 TODO get voucherreference do integration 
-		if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-				depreciationCriteria.getTenantId()))
-			try {
-				// TODO VOUCHER GEN voucherReference =
-				// createVoucherForRevaluation(revaluationRequest);
-			} catch (final Exception e) {
-				throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
-			}*/
+    @Autowired
+    private CurrentValueService currentValueService;
 
-		for (AssetCurrentValue assetCurrentValue :assetCurrentValues) { assetCurrentValue.setTenantId(tenantId);}
-		
-		Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria).depreciationDetails(
-				depreciationDetails).voucherReference(voucherReference).auditDetails(auditDetails).build();
-		saveAsync(depreciation);
-		currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder().assetCurrentValues(
-				assetCurrentValues).requestInfo(requestInfo).build());
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-		return new DepreciationResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
-				depreciation);
-	}
+    @Autowired
+    private AssetDepreciator assetDepreciator;
 
-	public void saveAsync(Depreciation depreciation) {
+    @Autowired
+    private SequenceGenService sequenceGenService;
 
-		List<DepreciationDetail> depreciationDetails = depreciation.getDepreciationDetails();
-		List<Long> depreciationDetailsId = sequenceGenService.getIds(depreciationDetails.size(),
-				Sequence.DEPRECIATIONSEQUENCE.toString());
-		int depreciationCount = 0;
-		for (DepreciationDetail depreciationDetail : depreciationDetails) {
-			depreciationDetail.setId(depreciationDetailsId.get(depreciationCount++));
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-		}
-		kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(),depreciation);
-	}
-	
-	public void save(Depreciation depreciation) {
-		depreciationRepository.saveDepreciation(depreciation);
-	}
+    @Autowired
+    private AssetCommonService assetCommonService;
+
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
+    public DepreciationResponse depreciateAsset(final DepreciationRequest depreciationRequest) {
+
+        final RequestInfo requestInfo = depreciationRequest.getRequestInfo();
+        final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
+        final String tenantId = depreciationCriteria.getTenantId();
+        if (depreciationCriteria.getFinancialYear() == null && depreciationCriteria.getFromDate() == null
+                && depreciationCriteria.getToDate() == null)
+            throw new RuntimeException("financialyear and (time period)fromdate,todate both "
+                    + "cannot be null please provide atleast one value");
+        else if (depreciationCriteria.getFinancialYear() == null) {
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(depreciationCriteria.getFromDate());
+            final int from = calendar.get(Calendar.YEAR);
+            calendar.setTimeInMillis(depreciationCriteria.getToDate());
+            final int to = calendar.get(Calendar.YEAR);
+            depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
+            log.info("financial year value -- " + depreciationCriteria.getFinancialYear());
+        } else if (depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null) {
+
+            final String url = applicationProperties.getEgfServiceHostName()
+                    + applicationProperties.getEgfFinancialYearSearchPath() + "?tenantId =" + tenantId
+                    + "&finYearRange=" + depreciationCriteria.getFinancialYear();
+            final FinancialYearContract financialYearContract = restTemplate
+                    .postForObject(url, new RequestInfoWrapper(requestInfo), FinancialYearContractResponse.class)
+                    .getFinancialYears().get(0);
+
+            depreciationCriteria.setToDate(financialYearContract.getEndingDate().getTime());
+            depreciationCriteria.setFromDate(financialYearContract.getStartingDate().getTime());
+        }
+
+        final AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo);
+
+        final List<CalculationAssetDetails> calculationAssetDetailList = depreciationRepository
+                .getCalculationAssetDetails(depreciationCriteria);
+        final Map<Long, CalculationCurrentValue> calculationCurrentValues = depreciationRepository
+                .getCalculationCurrentvalue(depreciationCriteria).stream()
+                .collect(Collectors.toMap(CalculationCurrentValue::getAssetId, Function.identity()));
+        final Map<Long, BigDecimal> depreciationSumMap = depreciationRepository
+                .getdepreciationSum(depreciationCriteria.getTenantId());
+
+        final List<AssetCurrentValue> assetCurrentValues = new ArrayList<>();
+        final List<DepreciationDetail> depreciationDetails = new ArrayList<>();
+
+        assetDepreciator.depreciateAsset(depreciationRequest, calculationAssetDetailList, calculationCurrentValues,
+                depreciationSumMap, assetCurrentValues, depreciationDetails);
+
+        final Long voucherReference = null;
+        /*
+         * TODO get voucherreference do integration if
+         * (assetConfigurationService.getEnabledVoucherGeneration(
+         * AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
+         * depreciationCriteria.getTenantId())) try { // TODO VOUCHER GEN
+         * voucherReference = //
+         * createVoucherForRevaluation(revaluationRequest); } catch (final
+         * Exception e) { throw new RuntimeException(
+         * "Voucher Generation is failed due to :" + e.getMessage()); }
+         */
+
+        for (final AssetCurrentValue assetCurrentValue : assetCurrentValues)
+            assetCurrentValue.setTenantId(tenantId);
+
+        final Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
+                .depreciationDetails(depreciationDetails).voucherReference(voucherReference).auditDetails(auditDetails)
+                .build();
+        saveAsync(depreciation);
+        currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder()
+                .assetCurrentValues(assetCurrentValues).requestInfo(requestInfo).build());
+
+        return new DepreciationResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
+                depreciation);
+    }
+
+    public void saveAsync(final Depreciation depreciation) {
+
+        final List<DepreciationDetail> depreciationDetails = depreciation.getDepreciationDetails();
+        final List<Long> depreciationDetailsId = sequenceGenService.getIds(depreciationDetails.size(),
+                Sequence.DEPRECIATIONSEQUENCE.toString());
+        int depreciationCount = 0;
+        for (final DepreciationDetail depreciationDetail : depreciationDetails)
+            depreciationDetail.setId(depreciationDetailsId.get(depreciationCount++));
+        kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(), depreciation);
+    }
+
+    public void save(final Depreciation depreciation) {
+        depreciationRepository.saveDepreciation(depreciation);
+    }
 }

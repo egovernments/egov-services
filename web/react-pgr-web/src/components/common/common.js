@@ -266,6 +266,10 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.layoutPermitNumber":"Layout Permit Number",
   "pt.create.groups.propertyAddress.fields.layoutPermitDate":"layoutPermitDate",
   "pt.create.groups.propertyAddress.fields.upicNumber":"Upic Number",
+  "pt.create.groups.propertyAddress.fields.northBoundedBy": "North",
+  "pt.create.groups.propertyAddress.fields.southBoundedBy": "South",
+  "pt.create.groups.propertyAddress.fields.eastBoundedBy":"East",
+  "pt.create.groups.propertyAddress.fields.westBoundedBy":"West",
 
   //employee Object
   "employee.Employee.fields.code": "Code",

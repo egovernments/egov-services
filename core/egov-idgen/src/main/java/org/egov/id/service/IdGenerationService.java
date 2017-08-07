@@ -15,15 +15,7 @@ import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
 import org.egov.id.config.PropertiesManager;
-import org.egov.id.model.IDSeqNotFoundException;
-import org.egov.id.model.IDSeqOverflowException;
-import org.egov.id.model.IdGenerationRequest;
-import org.egov.id.model.IdGenerationResponse;
-import org.egov.id.model.IdRequest;
-import org.egov.id.model.IdResponse;
-import org.egov.id.model.InvalidIDFormatException;
-import org.egov.id.model.RequestInfo;
-import org.egov.id.model.ResponseInfoFactory;
+import org.egov.id.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
@@ -185,7 +177,10 @@ public class IdGenerationService {
 			} else if (attributeName.substring(0, 2).equalsIgnoreCase("cy")) {
 				idFormat = idFormat.replace("[" + attributeName + "]",
 						generateCurrentYearDateFormat(attributeName, requestInfo));
-			} else {
+			} else if(attributeName.substring(0, 4).equalsIgnoreCase("city")) {
+                idFormat = idFormat.replace("[" + attributeName + "]",
+                        getCityCode(idRequest.getTenantId(),requestInfo));
+            } else {
 				idFormat = idFormat.replace("[" + attributeName + "]", generateRandomText(attributeName, requestInfo));
 			}
 		}
@@ -338,4 +333,40 @@ public class IdGenerationService {
 		StringBuilder seqNumber = new StringBuilder(String.format("%06d", seqId));
 		return seqNumber.toString();
 	}
+
+
+    /**
+     * Description : method to get
+     * @param requestInfo
+     * @return city code
+     * @throws Exception
+     */
+    private String getCityCode(String tenantId, RequestInfo requestInfo) throws Exception {
+
+        //String citySql = "SELECT code from city where tenantcode = '"+ tenantId +"' ";
+        String citySql = "SELECT code from city where tenantcode = ? ";
+        // connection and prepared statement
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        String cityCode = null;
+        try {
+            conn = DataSourceUtils.getConnection(dataSource);
+            conn.setAutoCommit(false);
+            pst = conn.prepareStatement(citySql);
+            pst.setString(1,tenantId);
+            rs = pst.executeQuery();
+            if (rs.next())
+                cityCode = rs.getString(1);
+            // committing the transaction
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (Exception e) {
+                throw new CityCodeNotFoundException(propertiesManager.getCityCodeNotFound(), requestInfo);
+
+        } finally {
+            conn.close();
+        }
+        return cityCode;
+    }
 }

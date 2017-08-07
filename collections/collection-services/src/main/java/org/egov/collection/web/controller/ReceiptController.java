@@ -112,7 +112,7 @@ public class ReceiptController {
 				.fromDate(receiptGetRequest.getFromDate()).toDate(receiptGetRequest.getToDate())
 				.paymentType(receiptGetRequest.getPaymentType()).receiptNumbers(receiptGetRequest.getReceiptNumbers())
 				.status(receiptGetRequest.getStatus()).tenantId(receiptGetRequest.getTenantId())
-				.sortBy(receiptGetRequest.getSortBy()).sortOrder(receiptGetRequest.getSortOrder()).build();
+				.sortBy(receiptGetRequest.getSortBy()).sortOrder(receiptGetRequest.getSortOrder()).transactionId(receiptGetRequest.getTransactionId()).build();
 
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 

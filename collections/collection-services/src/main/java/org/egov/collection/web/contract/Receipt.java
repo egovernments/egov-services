@@ -31,6 +31,8 @@ public class Receipt {
 	
 	private String id;
 
+    private String transactionId;
+
 	@NotNull
 	@JsonProperty("Bill")
 	private List<Bill> bill = new ArrayList<>();

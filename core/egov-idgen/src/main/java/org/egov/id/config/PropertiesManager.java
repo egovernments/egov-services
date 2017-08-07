@@ -86,4 +86,8 @@ public class PropertiesManager {
 	public String getServerContextpath() {
 		return environment.getProperty("server.context-path");
 	}
+
+    public String getCityCodeNotFound() {
+        return environment.getProperty("city.code.notfound");
+    }
 }

@@ -103,6 +103,7 @@ public class ReceiptRowMapper implements RowMapper<ReceiptHeader> {
 		receiptHeader.setCreatedBy((Long) rs.getObject("rh_createdBy"));
 		receiptHeader.setLastModifiedBy((Long) rs.getObject("rh_lastModifiedBy"));
 		receiptHeader.setCancellationRemarks(rs.getString("rh_cancellationRemarks"));
+        receiptHeader.setTransactionId(rs.getString("rh_transactionid"));
 
 		try {
 			Date date = isEmpty((Long)rs.getObject("rh_referenceDate")) ? null

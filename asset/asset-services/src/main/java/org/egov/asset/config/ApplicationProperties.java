@@ -56,62 +56,59 @@ import lombok.Getter;
 @Getter
 public class ApplicationProperties {
 
-	private  String searchPageSizeDefault = "search.pagesize.default";
-	private  String searchPagenoMax = "search.pageno.max";
-	private  String searchPageSizeMax = "search.pagesize.max";
+    private final String searchPageSizeDefault = "search.pagesize.default";
+    private final String searchPagenoMax = "search.pageno.max";
+    private final String searchPageSizeMax = "search.pagesize.max";
 
-	@Value("${egov.assetcategory.async}")
-	private Boolean assetCategoryAsync;
+    @Value("${egov.assetcategory.async}")
+    private Boolean assetCategoryAsync;
 
-	@Value("${kafka.topics.save.asset}")
-	private String createAssetTopicName;
+    @Value("${kafka.topics.save.asset}")
+    private String createAssetTopicName;
 
-	@Value("${kafka.topics.update.asset}")
-	private String updateAssetTopicName;
+    @Value("${kafka.topics.update.asset}")
+    private String updateAssetTopicName;
 
-	@Value("${kafka.topics.save.assetcategory}")
-	private String createAssetCategoryTopicName;
+    @Value("${kafka.topics.save.assetcategory}")
+    private String createAssetCategoryTopicName;
 
-	@Value("${kafka.topics.update.assetcategory}")
-	private String updateAssetCategoryTopicName;
+    @Value("${kafka.topics.update.assetcategory}")
+    private String updateAssetCategoryTopicName;
 
-	@Value("${kafka.topics.save.revaluation}")
-	private String createAssetRevaluationTopicName;
+    @Value("${kafka.topics.save.revaluation}")
+    private String createAssetRevaluationTopicName;
 
-	@Value("${kafka.topics.save.disposal}")
-	private String createAssetDisposalTopicName;
+    @Value("${kafka.topics.save.disposal}")
+    private String createAssetDisposalTopicName;
 
-	@Value("${egov.services.egf_service.hostname}")
-	private String egfServiceHostName;
+    @Value("${egov.services.egf_service.hostname}")
+    private String egfServiceHostName;
 
-	@Value("${egov.services.egf_service.chartofaccounts.searchpath}")
-	private String egfServiceChartOfAccountsSearchPath;
+    @Value("${egov.services.egf_service.chartofaccounts.searchpath}")
+    private String egfServiceChartOfAccountsSearchPath;
 
-	@Value("${egov.services.egf_service.chartofaccountsdetails.searchpath}")
-	private String egfServiceChartOfAccountsDetailsSearchPath;
+    @Value("${egov.services.egf_service.chartofaccountsdetails.searchpath}")
+    private String egfServiceChartOfAccountsDetailsSearchPath;
 
-	@Value("${egov.services.egf_service.voucher.createpath}")
-	private String egfServiceVoucherCreatePath;
+    @Value("${egov.services.egf_service.voucher.createpath}")
+    private String egfServiceVoucherCreatePath;
 
-	@Value("${egov.municipality.host}")
-	private String municipalityHostName;
+    @Value("${egov.municipality.host}")
+    private String municipalityHostName;
 
-	@Value("${egov.services.asset.current.value.sequence}")
-	private String currentValueServiceSequence;
-
-	@Value("${egov.services.asset.batchsize}")
+    @Value("${egov.services.asset.batchsize}")
     private String batchSize;
-    
+
     @Value("${egov.services.egf_service.financialyear.searchpath}")
     private String egfFinancialYearSearchPath;
-    
+
     @Value("${kafka.topics.save.depreciation}")
     private String saveDepreciationTopic;
-    
+
     @Value("${kafka.topics.save.currentvalue}")
     private String saveCurrentvalueTopic;
 
     @Autowired
     private Environment environment;
-   
+
 }

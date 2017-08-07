@@ -219,15 +219,15 @@ public class ServiceTypeQueryBuilder {
     }
 
     public static String checkServiceCodeIfExists() {
-    	return " SELECT code FROM service_definition WHERE code = ? and tenantid = ? ";
+    	return " SELECT code FROM service_definition WHERE trim(code) = ? and tenantid = ? ";
     }
 
     public static String checkComplaintCodeIfExists() {
-    	return " SELECT code FROM egpgr_complainttype WHERE code = ? and tenantid = ? ";
+    	return " SELECT code FROM egpgr_complainttype WHERE trim(code) = ? and tenantid = ? ";
     }
 
     public static String checkServiceNameIfExists() {
-    	return " SELECT name,code from egpgr_complainttype WHERE upper(name) = ? and tenantid = ? ";
+    	return " SELECT name,code from egpgr_complainttype WHERE trim(upper(name)) = ? and tenantid = ? ";
     }
 
     public static String selectServiceNameAndCodeNotInQuery() {

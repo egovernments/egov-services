@@ -138,11 +138,11 @@ public class ServiceGroupQueryBuilder {
 	}
 	
 	public static String checkIfNameTenantIdAvailable() { 
-		return "SELECT count(*) FROM egpgr_complainttype_category WHERE upper(name) = ? AND tenantid = ? " ;
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(name)) = ? AND tenantid = ? " ;
 	}
 
 	public static String checkIfNameTenantIdAvailableUpdate() { 
-		return "SELECT count(*) FROM egpgr_complainttype_category WHERE upper(name) = ? AND tenantid = ? AND id NOT IN (?) " ;
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(name)) = ? AND tenantid = ? AND id NOT IN (?) " ;
 	}
 
 	private static String getComplaintCategoryByKeyword(){

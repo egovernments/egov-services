@@ -181,12 +181,12 @@ public class ReceivingCenterTypeQueryBuilder {
 	
 	public static String checkReceivingCenterTypeByNameUpdate() {
 
-		return "select id from egpgr_receiving_center where tenantid=? and upper(name)=? and id not in (?)" ; 
+		return "select id from egpgr_receiving_center where tenantid=? and trim(upper(name))=? and id not in (?)" ;
 	}
 
 	public static String checkReceivingCenterTypeByCode() {
 
-		return "select id from egpgr_receiving_center where tenantid = ? and code = ?";
+		return "select id from egpgr_receiving_center where tenantid = ? and trim(code) = ?";
 
 	}
 

@@ -87,7 +87,7 @@ public class NewUserControllerTest {
 		userRes.setResponseInfo(new ResponseInfo());
 		userRes.setUsers(users);
 		
-		when(newUserService.create(any(UserReq.class))).thenReturn(userRes);
+		when(newUserService.createAsync(any(UserReq.class))).thenReturn(userRes);
 		
 		mockMvc.perform(post("/v110/_create").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("newUserRequest.json"))).andExpect(status().isCreated())

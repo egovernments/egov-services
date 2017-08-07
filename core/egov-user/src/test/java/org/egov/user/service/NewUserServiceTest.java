@@ -78,7 +78,7 @@ public class NewUserServiceTest {
 
 		when(passwordEncoder.encode(Matchers.any(String.class))).thenReturn("demo");
 
-		assertTrue(userRes.equals(newUserService.create(userReq)));
+		assertTrue(userRes.equals(newUserService.createAsync(userReq)));
 	}
 	
 	@Test

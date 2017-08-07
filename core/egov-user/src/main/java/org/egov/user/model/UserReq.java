@@ -3,6 +3,8 @@ package org.egov.user.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,6 +22,7 @@ public class UserReq   {
   private RequestInfo requestInfo = null;
 
   @JsonProperty("Users")
+  @Valid
   private List<User> users = new ArrayList<User>();
 
   

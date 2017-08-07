@@ -1,5 +1,7 @@
 package org.egov.user.web.controller;
 
+import javax.validation.Valid;
+
 import org.egov.user.model.RequestInfoWrapper;
 import org.egov.user.model.User;
 import org.egov.user.model.UserReq;
@@ -43,13 +45,15 @@ public class NewUserController {
 	}
 	
 	@PostMapping("_create")
-	public ResponseEntity<?> create(@RequestBody UserReq userReq, BindingResult errors){
+	public ResponseEntity<?> create(@RequestBody @Valid UserReq userReq, BindingResult errors){
 		log.info("create userReq : "+userReq);
+
 		userValidator.validate(userReq, errors);
 		if (errors.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(errors, userReq.getRequestInfo()), HttpStatus.BAD_REQUEST);
 		}
-		UserRes userRes = newUserService.create(userReq);
+		
+		UserRes userRes = newUserService.createAsync(userReq);
 		return new ResponseEntity<>(userRes, HttpStatus.CREATED);
 	}
 	

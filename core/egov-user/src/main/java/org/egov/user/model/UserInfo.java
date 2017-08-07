@@ -3,6 +3,8 @@ package org.egov.user.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -21,15 +23,18 @@ import lombok.ToString;
 public class UserInfo {
 
 	@JsonProperty("tenantId")
+	@NotNull
 	private String tenantId = null;
 
 	@JsonProperty("id")
 	private Long id = null;
 
 	@JsonProperty("username")
+	@NotNull
 	private String username = null;
 	
 	@JsonProperty("password")
+	@NotNull
 	private String password;
 
 	@JsonProperty("mobile")

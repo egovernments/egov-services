@@ -244,6 +244,7 @@ var dat = {
 						"type": "checkbox",
 						"isRequired": false,
 						"isDisabled": false,
+						"defaultValue":true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					}

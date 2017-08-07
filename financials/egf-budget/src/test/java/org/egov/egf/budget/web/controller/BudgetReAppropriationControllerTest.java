@@ -38,106 +38,106 @@ import org.springframework.validation.BindingResult;
 @Import(TestConfiguration.class)
 public class BudgetReAppropriationControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private BudgetReAppropriationService budgetReAppropriationService;
+    @MockBean
+    private BudgetReAppropriationService budgetReAppropriationService;
 
-	@Captor
-	private ArgumentCaptor<BudgetReAppropriationRequest> captor;
+    @Captor
+    private ArgumentCaptor<BudgetReAppropriationRequest> captor;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private final RequestJsonReader resources = new RequestJsonReader();
 
-	@Test
-	public void test_create() throws IOException, Exception {
+    @Test
+    public void test_create() throws IOException, Exception {
 
-		when(budgetReAppropriationService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getBudgetReAppropriations());
+        when(budgetReAppropriationService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetReAppropriations());
 
-		mockMvc.perform(post("/budgetreappropriations/_create")
-				.content(resources.readRequest("budgetreappropriation/budgetreappropriation_create_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("budgetreappropriation/budgetreappropriation_create_valid_response.json")));
+        mockMvc.perform(post("/budgetreappropriations/_create")
+                .content(resources.readRequest("budgetreappropriation/budgetreappropriation_create_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+                        .readResponse("budgetreappropriation/budgetreappropriation_create_valid_response.json")));
 
-	}
+    }
 
-	@Test
-	public void test_create_error() throws IOException, Exception {
+    @Test
+    public void test_create_error() throws IOException, Exception {
 
-		when(budgetReAppropriationService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getBudgetReAppropriations()));
+        when(budgetReAppropriationService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetReAppropriations());
 
-		mockMvc.perform(post("/budgetreappropriations/_create")
-				.content(resources
-						.readRequest("budgetreappropriation/budgetreappropriation_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        mockMvc.perform(post("/budgetreappropriations/_create")
+                .content(resources
+                        .readRequest("budgetreappropriation/budgetreappropriation_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_update() throws IOException, Exception {
+    @Test
+    public void test_update() throws IOException, Exception {
 
-		List<BudgetReAppropriation> budgetReAppropriations = getBudgetReAppropriations();
-		budgetReAppropriations.get(0).setId("1");
+        final List<BudgetReAppropriation> budgetReAppropriations = getBudgetReAppropriations();
+        budgetReAppropriations.get(0).setId("1");
 
-		when(budgetReAppropriationService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(budgetReAppropriations);
+        when(budgetReAppropriationService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(budgetReAppropriations);
 
-		mockMvc.perform(post("/budgetreappropriations/_update")
-				.content(resources.readRequest("budgetreappropriation/budgetreappropriation_update_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("budgetreappropriation/budgetreappropriation_update_valid_response.json")));
+        mockMvc.perform(post("/budgetreappropriations/_update")
+                .content(resources.readRequest("budgetreappropriation/budgetreappropriation_update_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+                        .readResponse("budgetreappropriation/budgetreappropriation_update_valid_response.json")));
 
-	}
+    }
 
-	@Test
-	public void test_update_error() throws IOException, Exception {
+    @Test
+    public void test_update_error() throws IOException, Exception {
 
-		when(budgetReAppropriationService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getBudgetReAppropriations()));
+        when(budgetReAppropriationService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetReAppropriations());
 
-		mockMvc.perform(post("/budgetreappropriations/_update")
-				.content(resources
-						.readRequest("budgetreappropriation/budgetreappropriation_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        mockMvc.perform(post("/budgetreappropriations/_update")
+                .content(resources
+                        .readRequest("budgetreappropriation/budgetreappropriation_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_search() throws IOException, Exception {
+    @Test
+    public void test_search() throws IOException, Exception {
 
-		Pagination<BudgetReAppropriation> page = new Pagination<>();
-		page.setTotalPages(1);
-		page.setTotalResults(1);
-		page.setCurrentPage(0);
-		page.setPagedData(getBudgetReAppropriations());
-		page.getPagedData().get(0).setId("1");
+        final Pagination<BudgetReAppropriation> page = new Pagination<>();
+        page.setTotalPages(1);
+        page.setTotalResults(1);
+        page.setCurrentPage(0);
+        page.setPagedData(getBudgetReAppropriations());
+        page.getPagedData().get(0).setId("1");
 
-		when(budgetReAppropriationService.search(any(BudgetReAppropriationSearch.class))).thenReturn(page);
+        when(budgetReAppropriationService.search(any(BudgetReAppropriationSearch.class))).thenReturn(page);
 
-		mockMvc.perform(post("/budgetreappropriations/_search").content(resources.getRequestInfo())
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("budgetreappropriation/budgetreappropriation_search_valid_response.json")));
+        mockMvc.perform(post("/budgetreappropriations/_search").content(resources.getRequestInfo())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+                        .readResponse("budgetreappropriation/budgetreappropriation_search_valid_response.json")));
 
-	}
+    }
 
-	private List<BudgetReAppropriation> getBudgetReAppropriations() {
+    private List<BudgetReAppropriation> getBudgetReAppropriations() {
 
-		List<BudgetReAppropriation> budgetReAppropriations = new ArrayList<BudgetReAppropriation>();
+        final List<BudgetReAppropriation> budgetReAppropriations = new ArrayList<BudgetReAppropriation>();
 
-		BudgetReAppropriation budgetReAppropriation = BudgetReAppropriation.builder()
-				.budgetDetail(BudgetDetail.builder().id("1").build()).additionAmount(BigDecimal.TEN)
-				.deductionAmount(BigDecimal.TEN).originalAdditionAmount(BigDecimal.TEN)
-				.originalDeductionAmount(BigDecimal.TEN).anticipatoryAmount(BigDecimal.TEN).build();
+        final BudgetReAppropriation budgetReAppropriation = BudgetReAppropriation.builder()
+                .budgetDetail(BudgetDetail.builder().id("1").build()).additionAmount(BigDecimal.TEN)
+                .deductionAmount(BigDecimal.TEN).originalAdditionAmount(BigDecimal.TEN)
+                .originalDeductionAmount(BigDecimal.TEN).anticipatoryAmount(BigDecimal.TEN).build();
 
-		budgetReAppropriation.setTenantId("default");
-		budgetReAppropriations.add(budgetReAppropriation);
+        budgetReAppropriation.setTenantId("default");
+        budgetReAppropriations.add(budgetReAppropriation);
 
-		return budgetReAppropriations;
-	}
+        return budgetReAppropriations;
+    }
 
 }

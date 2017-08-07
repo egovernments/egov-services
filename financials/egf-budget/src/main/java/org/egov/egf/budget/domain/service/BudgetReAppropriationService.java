@@ -23,137 +23,130 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class BudgetReAppropriationService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
+    public static final String ACTION_CREATE = "create";
+    public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_VIEW = "view";
+    public static final String ACTION_EDIT = "edit";
+    public static final String ACTION_SEARCH = "search";
 
-	private BudgetReAppropriationRepository budgetReAppropriationRepository;
+    private final BudgetReAppropriationRepository budgetReAppropriationRepository;
 
-	private SmartValidator validator;
+    private final SmartValidator validator;
 
-	private BudgetDetailRepository budgetDetailRepository;
+    private final BudgetDetailRepository budgetDetailRepository;
 
-	@Autowired
-	public BudgetReAppropriationService(BudgetReAppropriationRepository budgetReAppropriationRepository,
-			SmartValidator validator, BudgetDetailRepository budgetDetailRepository) {
+    @Autowired
+    public BudgetReAppropriationService(final BudgetReAppropriationRepository budgetReAppropriationRepository,
+            final SmartValidator validator, final BudgetDetailRepository budgetDetailRepository) {
 
-		this.budgetReAppropriationRepository = budgetReAppropriationRepository;
-		this.validator = validator;
-		this.budgetDetailRepository = budgetDetailRepository;
+        this.budgetReAppropriationRepository = budgetReAppropriationRepository;
+        this.validator = validator;
+        this.budgetDetailRepository = budgetDetailRepository;
 
-	}
+    }
 
-	@Transactional
-	public List<BudgetReAppropriation> create(List<BudgetReAppropriation> budgetReAppropriations, BindingResult errors,
-			RequestInfo requestInfo) {
+    @Transactional
+    public List<BudgetReAppropriation> create(List<BudgetReAppropriation> budgetReAppropriations, final BindingResult errors,
+            final RequestInfo requestInfo) {
 
-		try {
+        try {
 
-			budgetReAppropriations = fetchRelated(budgetReAppropriations);
+            budgetReAppropriations = fetchRelated(budgetReAppropriations);
 
-			validate(budgetReAppropriations, ACTION_CREATE, errors);
+            validate(budgetReAppropriations, ACTION_CREATE, errors);
 
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
 
-		} catch (CustomBindException e) {
+        } catch (final CustomBindException e) {
 
-			throw new CustomBindException(errors);
-		}
+            throw new CustomBindException(errors);
+        }
 
-		return budgetReAppropriationRepository.save(budgetReAppropriations, requestInfo);
+        return budgetReAppropriationRepository.save(budgetReAppropriations, requestInfo);
 
-	}
+    }
 
-	@Transactional
-	public List<BudgetReAppropriation> update(List<BudgetReAppropriation> budgetReAppropriations, BindingResult errors,
-			RequestInfo requestInfo) {
+    @Transactional
+    public List<BudgetReAppropriation> update(List<BudgetReAppropriation> budgetReAppropriations, final BindingResult errors,
+            final RequestInfo requestInfo) {
 
-		try {
+        try {
 
-			budgetReAppropriations = fetchRelated(budgetReAppropriations);
+            budgetReAppropriations = fetchRelated(budgetReAppropriations);
 
-			validate(budgetReAppropriations, ACTION_UPDATE, errors);
+            validate(budgetReAppropriations, ACTION_UPDATE, errors);
 
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
 
-		} catch (CustomBindException e) {
+        } catch (final CustomBindException e) {
 
-			throw new CustomBindException(errors);
-		}
+            throw new CustomBindException(errors);
+        }
 
-		return budgetReAppropriationRepository.update(budgetReAppropriations, requestInfo);
+        return budgetReAppropriationRepository.update(budgetReAppropriations, requestInfo);
 
-	}
+    }
 
-	private BindingResult validate(List<BudgetReAppropriation> budgetreappropriations, String method,
-			BindingResult errors) {
+    private BindingResult validate(final List<BudgetReAppropriation> budgetreappropriations, final String method,
+            final BindingResult errors) {
 
-		try {
-			switch (method) {
-			case ACTION_VIEW:
-				// validator.validate(budgetReAppropriationContractRequest.getBudgetReAppropriation(),
-				// errors);
-				break;
-			case ACTION_CREATE:
-				Assert.notNull(budgetreappropriations, "BudgetReAppropriations to create must not be null");
-				for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
-					validator.validate(budgetReAppropriation, errors);
-				}
-				break;
-			case ACTION_UPDATE:
-				Assert.notNull(budgetreappropriations, "BudgetReAppropriations to update must not be null");
-				for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
-					validator.validate(budgetReAppropriation, errors);
-				}
-				break;
-			default:
+        try {
+            switch (method) {
+            case ACTION_VIEW:
+                // validator.validate(budgetReAppropriationContractRequest.getBudgetReAppropriation(),
+                // errors);
+                break;
+            case ACTION_CREATE:
+                Assert.notNull(budgetreappropriations, "BudgetReAppropriations to create must not be null");
+                for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations)
+                    validator.validate(budgetReAppropriation, errors);
+                break;
+            case ACTION_UPDATE:
+                Assert.notNull(budgetreappropriations, "BudgetReAppropriations to update must not be null");
+                for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations)
+                    validator.validate(budgetReAppropriation, errors);
+                break;
+            default:
 
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
+            }
+        } catch (final IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
+        return errors;
 
-	}
+    }
 
-	public List<BudgetReAppropriation> fetchRelated(List<BudgetReAppropriation> budgetreappropriations) {
-		if (budgetreappropriations != null)
-			for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
-				// fetch related items
-				if (budgetReAppropriation.getBudgetDetail() != null
-						&& budgetReAppropriation.getBudgetDetail().getId() != null
-						&& budgetReAppropriation.getBudgetDetail().getTenantId() != null) {
-					BudgetDetail budgetDetail = budgetDetailRepository
-							.findById(budgetReAppropriation.getBudgetDetail());
-					if (budgetDetail == null) {
-						throw new InvalidDataException("budgetDetail", "budgetDetail.invalid", " Invalid budgetDetail");
-					}
-					budgetReAppropriation.setBudgetDetail(budgetDetail);
-				}
+    public List<BudgetReAppropriation> fetchRelated(final List<BudgetReAppropriation> budgetreappropriations) {
+        if (budgetreappropriations != null)
+            for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations)
+                // fetch related items
+                if (budgetReAppropriation.getBudgetDetail() != null
+                        && budgetReAppropriation.getBudgetDetail().getId() != null
+                        && budgetReAppropriation.getBudgetDetail().getTenantId() != null) {
+                    final BudgetDetail budgetDetail = budgetDetailRepository
+                            .findById(budgetReAppropriation.getBudgetDetail());
+                    if (budgetDetail == null)
+                        throw new InvalidDataException("budgetDetail", "budgetDetail.invalid", " Invalid budgetDetail");
+                    budgetReAppropriation.setBudgetDetail(budgetDetail);
+                }
 
-			}
+        return budgetreappropriations;
+    }
 
-		return budgetreappropriations;
-	}
+    public Pagination<BudgetReAppropriation> search(final BudgetReAppropriationSearch budgetReAppropriationSearch) {
+        return budgetReAppropriationRepository.search(budgetReAppropriationSearch);
+    }
 
-	public Pagination<BudgetReAppropriation> search(BudgetReAppropriationSearch budgetReAppropriationSearch) {
-		return budgetReAppropriationRepository.search(budgetReAppropriationSearch);
-	}
+    @Transactional
+    public BudgetReAppropriation save(final BudgetReAppropriation budgetReAppropriation) {
+        return budgetReAppropriationRepository.save(budgetReAppropriation);
+    }
 
-	@Transactional
-	public BudgetReAppropriation save(BudgetReAppropriation budgetReAppropriation) {
-		return budgetReAppropriationRepository.save(budgetReAppropriation);
-	}
-
-	@Transactional
-	public BudgetReAppropriation update(BudgetReAppropriation budgetReAppropriation) {
-		return budgetReAppropriationRepository.update(budgetReAppropriation);
-	}
+    @Transactional
+    public BudgetReAppropriation update(final BudgetReAppropriation budgetReAppropriation) {
+        return budgetReAppropriationRepository.update(budgetReAppropriation);
+    }
 
 }

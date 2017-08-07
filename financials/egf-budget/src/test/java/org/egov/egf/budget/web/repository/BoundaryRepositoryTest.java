@@ -7,7 +7,6 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import org.egov.egf.budget.utils.RequestJsonReader;
-import org.egov.egf.budget.web.contract.Boundary;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,7 @@ public class BoundaryRepositoryTest {
 
     private BoundaryRepository boundaryRepository;
 
-    private RequestJsonReader resources = new RequestJsonReader();
+    private final RequestJsonReader resources = new RequestJsonReader();
 
     @Before
     public void setup() {
@@ -38,11 +37,12 @@ public class BoundaryRepositoryTest {
     @Test
     public void test_get_by_id() throws Exception {
 
-        server.expect(once(), requestTo("http://host/egov-location/boundarys?boundary.id=boundaryId&boundary.tenantId=tenantId")).andExpect(method(HttpMethod.GET))
+        server.expect(once(), requestTo("http://host/egov-location/boundarys?boundary.id=boundaryId&boundary.tenantId=tenantId"))
+                .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(resources.getFileContents("boundary/search_boundary_by_id.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        final Boundary response = boundaryRepository.getBoundaryById("boundaryId", "tenantId");
+        boundaryRepository.getBoundaryById("boundaryId", "tenantId");
 
         server.verify();
 

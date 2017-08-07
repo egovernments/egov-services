@@ -64,70 +64,64 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "budgetDetail", "additionAmount", "deductionAmount", "originalAdditionAmount",
-		"originalDeductionAmount", "anticipatoryAmount", "status", "asOnDate" })
+        "originalDeductionAmount", "anticipatoryAmount", "status", "asOnDate" })
 public class BudgetReAppropriationContract extends AuditableContract {
 
-	/**
-	 * id of the BudgetReAppropriationContract representing the unique value of
-	 * each record getting saved.
-	 */
-	private String id;
+    /**
+     * id of the BudgetReAppropriationContract representing the unique value of each record getting saved.
+     */
+    private String id;
 
-	/**
-	 * budgetDetail is the reference given for budget re appropriation to
-	 * identify for witch budget line item this appropriation is doing.
-	 */
-	@NotNull
-	private BudgetDetailContract budgetDetail;
+    /**
+     * budgetDetail is the reference given for budget re appropriation to identify for witch budget line item this appropriation
+     * is doing.
+     */
+    @NotNull
+    private BudgetDetailContract budgetDetail;
 
-	/**
-	 * additionAmount is the proposed extra amount to add for the given budget
-	 * detail
-	 */
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal additionAmount = new BigDecimal("0.0");
+    /**
+     * additionAmount is the proposed extra amount to add for the given budget detail
+     */
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal additionAmount = new BigDecimal("0.0");
 
-	/**
-	 * deductionAmount is the proposed amount to deduct for the given budget
-	 * detail
-	 */
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal deductionAmount = new BigDecimal("0.0");
+    /**
+     * deductionAmount is the proposed amount to deduct for the given budget detail
+     */
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal deductionAmount = new BigDecimal("0.0");
 
-	/**
-	 * originalAdditionAmount is the extra amount to add for the given budget
-	 * detail
-	 */
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal originalAdditionAmount = new BigDecimal("0.0");
+    /**
+     * originalAdditionAmount is the extra amount to add for the given budget detail
+     */
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal originalAdditionAmount = new BigDecimal("0.0");
 
-	/**
-	 * originalAdditionAmount is the amount to deduct for the given budget
-	 * detail
-	 */
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal originalDeductionAmount = new BigDecimal("0.0");
+    /**
+     * originalAdditionAmount is the amount to deduct for the given budget detail
+     */
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal originalDeductionAmount = new BigDecimal("0.0");
 
-	/**
-	 * anticipatoryAmount is the anticipated amount while processing the
-	 * re-appropriations.
-	 */
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal anticipatoryAmount = new BigDecimal("0.0");
+    /**
+     * anticipatoryAmount is the anticipated amount while processing the re-appropriations.
+     */
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal anticipatoryAmount = new BigDecimal("0.0");
 
-	/**
-	 * status gives the current status of the budget re appropriation line item.
-	 */
-	private FinancialStatusContract status;
+    /**
+     * status gives the current status of the budget re appropriation line item.
+     */
+    private FinancialStatusContract status;
 
-	/**
-	 * asOnDate is the date on witch date the current appropriation is done.
-	 */
-	private Date asOnDate;
+    /**
+     * asOnDate is the date on witch date the current appropriation is done.
+     */
+    private Date asOnDate;
 
 }

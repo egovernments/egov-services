@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class BudgetReAppropriationSearch extends BudgetReAppropriation {
-	private Integer pageSize;
-	private Integer offset;
-	private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
+    private String sortBy;
 }

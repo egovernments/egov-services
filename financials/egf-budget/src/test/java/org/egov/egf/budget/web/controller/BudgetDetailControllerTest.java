@@ -39,104 +39,104 @@ import org.springframework.validation.BindingResult;
 @Import(TestConfiguration.class)
 public class BudgetDetailControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private BudgetDetailService budgetDetailService;
+    @MockBean
+    private BudgetDetailService budgetDetailService;
 
-	@Captor
-	private ArgumentCaptor<BudgetDetailRequest> captor;
+    @Captor
+    private ArgumentCaptor<BudgetDetailRequest> captor;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private final RequestJsonReader resources = new RequestJsonReader();
 
-	@Test
-	public void test_create() throws IOException, Exception {
+    @Test
+    public void test_create() throws IOException, Exception {
 
-		when(budgetDetailService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getBudgetDetails());
+        when(budgetDetailService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetDetails());
 
-		mockMvc.perform(post("/budgetdetails/_create")
-				.content(resources.readRequest("budgetdetail/budgetdetail_create_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
-						content().json(resources.readResponse("budgetdetail/budgetdetail_create_valid_response.json")));
+        mockMvc.perform(post("/budgetdetails/_create")
+                .content(resources.readRequest("budgetdetail/budgetdetail_create_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_create_valid_response.json")));
 
-	}
+    }
 
-	@Test
-	public void test_create_error() throws IOException, Exception {
+    @Test
+    public void test_create_error() throws IOException, Exception {
 
-		when(budgetDetailService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getBudgetDetails()));
+        when(budgetDetailService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetDetails());
 
-		mockMvc.perform(post("/budgetdetails/_create")
-				.content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        mockMvc.perform(post("/budgetdetails/_create")
+                .content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_update() throws IOException, Exception {
+    @Test
+    public void test_update() throws IOException, Exception {
 
-		List<BudgetDetail> budgetDetails = getBudgetDetails();
-		budgetDetails.get(0).setId("1");
+        final List<BudgetDetail> budgetDetails = getBudgetDetails();
+        budgetDetails.get(0).setId("1");
 
-		when(budgetDetailService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(budgetDetails);
+        when(budgetDetailService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(budgetDetails);
 
-		mockMvc.perform(post("/budgetdetails/_update")
-				.content(resources.readRequest("budgetdetail/budgetdetail_update_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
-						content().json(resources.readResponse("budgetdetail/budgetdetail_update_valid_response.json")));
+        mockMvc.perform(post("/budgetdetails/_update")
+                .content(resources.readRequest("budgetdetail/budgetdetail_update_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_update_valid_response.json")));
 
-	}
+    }
 
-	@Test
-	public void test_update_error() throws IOException, Exception {
+    @Test
+    public void test_update_error() throws IOException, Exception {
 
-		when(budgetDetailService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getBudgetDetails()));
+        when(budgetDetailService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetDetails());
 
-		mockMvc.perform(post("/budgetdetails/_update")
-				.content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        mockMvc.perform(post("/budgetdetails/_update")
+                .content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_search() throws IOException, Exception {
+    @Test
+    public void test_search() throws IOException, Exception {
 
-		Pagination<BudgetDetail> page = new Pagination<>();
-		page.setTotalPages(1);
-		page.setTotalResults(1);
-		page.setCurrentPage(0);
-		page.setPagedData(getBudgetDetails());
-		page.getPagedData().get(0).setId("1");
+        final Pagination<BudgetDetail> page = new Pagination<>();
+        page.setTotalPages(1);
+        page.setTotalResults(1);
+        page.setCurrentPage(0);
+        page.setPagedData(getBudgetDetails());
+        page.getPagedData().get(0).setId("1");
 
-		when(budgetDetailService.search(any(BudgetDetailSearch.class))).thenReturn(page);
+        when(budgetDetailService.search(any(BudgetDetailSearch.class))).thenReturn(page);
 
-		mockMvc.perform(post("/budgetdetails/_search").content(resources.getRequestInfo())
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
-						content().json(resources.readResponse("budgetdetail/budgetdetail_search_valid_response.json")));
+        mockMvc.perform(post("/budgetdetails/_search").content(resources.getRequestInfo())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_search_valid_response.json")));
 
-	}
+    }
 
-	private List<BudgetDetail> getBudgetDetails() {
+    private List<BudgetDetail> getBudgetDetails() {
 
-		List<BudgetDetail> budgetDetails = new ArrayList<BudgetDetail>();
+        final List<BudgetDetail> budgetDetails = new ArrayList<BudgetDetail>();
 
-		BudgetDetail budgetDetail = BudgetDetail.builder().budget(Budget.builder().id("1").build())
-				.budgetGroup(BudgetGroupContract.builder().id("1").build()).anticipatoryAmount(BigDecimal.TEN)
-				.originalAmount(BigDecimal.TEN).approvedAmount(BigDecimal.TEN).budgetAvailable(BigDecimal.TEN)
-				.planningPercent(BigDecimal.valueOf(1500)).build();
+        final BudgetDetail budgetDetail = BudgetDetail.builder().budget(Budget.builder().id("1").build())
+                .budgetGroup(BudgetGroupContract.builder().id("1").build()).anticipatoryAmount(BigDecimal.TEN)
+                .originalAmount(BigDecimal.TEN).approvedAmount(BigDecimal.TEN).budgetAvailable(BigDecimal.TEN)
+                .planningPercent(BigDecimal.valueOf(1500)).build();
 
-		budgetDetail.setTenantId("default");
-		budgetDetails.add(budgetDetail);
+        budgetDetail.setTenantId("default");
+        budgetDetails.add(budgetDetail);
 
-		return budgetDetails;
-	}
+        return budgetDetails;
+    }
 
 }

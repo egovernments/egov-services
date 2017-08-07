@@ -54,10 +54,10 @@ import lombok.Data;
 @JsonInclude(value = Include.NON_NULL)
 public class BudgetDetailResponse {
 
-	private ResponseInfo responseInfo;
+    private ResponseInfo responseInfo;
 
-	private List<BudgetDetailContract> budgetDetails = new ArrayList<BudgetDetailContract>();
+    private List<BudgetDetailContract> budgetDetails = new ArrayList<BudgetDetailContract>();
 
-	private PaginationContract page;
+    private PaginationContract page;
 
 }

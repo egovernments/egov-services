@@ -28,42 +28,42 @@ import org.springframework.web.client.RestTemplate;
 @RunWith(MockitoJUnitRunner.class)
 public class DepartmentRepositoryTest {
 
-	private static final String HOST = "http://host";
+    private static final String HOST = "http://host";
 
-	private static final String DEPT_BY_ID_URL = "/departments/findById";
+    private static final String DEPT_BY_ID_URL = "/departments/findById";
 
-	private MockRestServiceServer server;
+    private MockRestServiceServer server;
 
-	private DepartmentRepository departmentRepository;
+    private DepartmentRepository departmentRepository;
 
-	@Mock
-	private DateFactory dateFactory;
+    @Mock
+    private DateFactory dateFactory;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private final RequestJsonReader resources = new RequestJsonReader();
 
-	@Before
-	public void setup() {
-		final RestTemplate restTemplate = new RestTemplate();
-		departmentRepository = new DepartmentRepository(restTemplate, HOST, DEPT_BY_ID_URL, dateFactory);
-		server = MockRestServiceServer.bindTo(restTemplate).build();
-	}
+    @Before
+    public void setup() {
+        final RestTemplate restTemplate = new RestTemplate();
+        departmentRepository = new DepartmentRepository(restTemplate, HOST, DEPT_BY_ID_URL, dateFactory);
+        server = MockRestServiceServer.bindTo(restTemplate).build();
+    }
 
-	@Test
-	public void test_get_by_id() throws Exception {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+    @Test
+    public void test_get_by_id() throws Exception {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
 
-		Date now = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2017 00:00:00");
-		server.expect(once(), requestTo("http://host/departments/findById")).andExpect(method(HttpMethod.POST))
-				.andExpect(content().string(resources.getFileContents("department/search_dept_by_id_request.json")))
-				.andRespond(withSuccess(resources.getFileContents("department/search_dept_by_id.json"),
-						MediaType.APPLICATION_JSON_UTF8));
+        final Date now = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2017 00:00:00");
+        server.expect(once(), requestTo("http://host/departments/findById")).andExpect(method(HttpMethod.POST))
+                .andExpect(content().string(resources.getFileContents("department/search_dept_by_id_request.json")))
+                .andRespond(withSuccess(resources.getFileContents("department/search_dept_by_id.json"),
+                        MediaType.APPLICATION_JSON_UTF8));
 
-		when(dateFactory.create()).thenReturn(now);
+        when(dateFactory.create()).thenReturn(now);
 
-		final DepartmentRes response = departmentRepository.getDepartmentById("departmentId", "tenantId");
-		server.verify();
+        final DepartmentRes response = departmentRepository.getDepartmentById("departmentId", "tenantId");
+        server.verify();
 
-		assertEquals(1, response.getDepartment().size());
+        assertEquals(1, response.getDepartment().size());
 
-	}
+    }
 }

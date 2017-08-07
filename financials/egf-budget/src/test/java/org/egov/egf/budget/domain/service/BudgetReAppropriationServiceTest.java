@@ -33,172 +33,172 @@ import org.springframework.validation.SmartValidator;
 @RunWith(SpringRunner.class)
 public class BudgetReAppropriationServiceTest {
 
-	private BudgetReAppropriationService budgetReAppropriationService;
+    private BudgetReAppropriationService budgetReAppropriationService;
 
-	@Mock
-	private SmartValidator validator;
+    @Mock
+    private SmartValidator validator;
 
-	@Mock
-	private BudgetReAppropriationRepository budgetReAppropriationRepository;
+    @Mock
+    private BudgetReAppropriationRepository budgetReAppropriationRepository;
 
-	@Mock
-	private BudgetDetailRepository budgetDetailRepository;
+    @Mock
+    private BudgetDetailRepository budgetDetailRepository;
 
-	@Mock
-	private FinancialYearContractRepository financialYearContractRepository;
+    @Mock
+    private FinancialYearContractRepository financialYearContractRepository;
 
-	private BindingResult errors = new BeanPropertyBindingResult(null, null);
+    private final BindingResult errors = new BeanPropertyBindingResult(null, null);
 
-	private RequestInfo requestInfo = new RequestInfo();
+    private final RequestInfo requestInfo = new RequestInfo();
 
-	@Before
-	public void setup() {
-		budgetReAppropriationService = new BudgetReAppropriationService(budgetReAppropriationRepository, validator,
-				budgetDetailRepository);
-	}
+    @Before
+    public void setup() {
+        budgetReAppropriationService = new BudgetReAppropriationService(budgetReAppropriationRepository, validator,
+                budgetDetailRepository);
+    }
 
-	@Test
-	public final void test_save_with_out_kafka() {
+    @Test
+    public final void test_save_with_out_kafka() {
 
-		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+        final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
 
-		when(budgetReAppropriationRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(budgetReAppropriationRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.create(expextedResult, errors,
-				requestInfo);
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.create(expextedResult, errors,
+                requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	@Test(expected = CustomBindException.class)
-	public final void test_save_with_out_kafka_and_with_null_req() {
+    @Test(expected = CustomBindException.class)
+    public final void test_save_with_out_kafka_and_with_null_req() {
 
-		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+        final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
 
-		when(budgetReAppropriationRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(budgetReAppropriationRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.create(null, errors, requestInfo);
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.create(null, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	@Test
-	public final void test_update_with_out_kafka() {
+    @Test
+    public final void test_update_with_out_kafka() {
 
-		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+        final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
 
-		when(budgetReAppropriationRepository.update(any(List.class), any(RequestInfo.class)))
-				.thenReturn(expextedResult);
+        when(budgetReAppropriationRepository.update(any(List.class), any(RequestInfo.class)))
+                .thenReturn(expextedResult);
 
-		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.update(expextedResult, errors,
-				requestInfo);
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.update(expextedResult, errors,
+                requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	@Test(expected = CustomBindException.class)
-	public final void test_update_with_out_kafka_and_with_null_req() {
+    @Test(expected = CustomBindException.class)
+    public final void test_update_with_out_kafka_and_with_null_req() {
 
-		List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+        final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
 
-		when(budgetReAppropriationRepository.update(any(List.class), any(RequestInfo.class)))
-				.thenReturn(expextedResult);
+        when(budgetReAppropriationRepository.update(any(List.class), any(RequestInfo.class)))
+                .thenReturn(expextedResult);
 
-		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.update(null, errors, requestInfo);
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.update(null, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	@Test
-	public final void test_search() {
+    @Test
+    public final void test_search() {
 
-		List<BudgetReAppropriation> budgets = getBudgetReAppropriations();
-		BudgetReAppropriationSearch budgetSearch = new BudgetReAppropriationSearch();
-		Pagination<BudgetReAppropriation> expextedResult = new Pagination<>();
+        final List<BudgetReAppropriation> budgets = getBudgetReAppropriations();
+        final BudgetReAppropriationSearch budgetSearch = new BudgetReAppropriationSearch();
+        final Pagination<BudgetReAppropriation> expextedResult = new Pagination<>();
 
-		expextedResult.setPagedData(budgets);
+        expextedResult.setPagedData(budgets);
 
-		when(budgetReAppropriationRepository.search(budgetSearch)).thenReturn(expextedResult);
+        when(budgetReAppropriationRepository.search(budgetSearch)).thenReturn(expextedResult);
 
-		Pagination<BudgetReAppropriation> actualResult = budgetReAppropriationService.search(budgetSearch);
+        final Pagination<BudgetReAppropriation> actualResult = budgetReAppropriationService.search(budgetSearch);
 
-		assertEquals(expextedResult, actualResult);
-	}
+        assertEquals(expextedResult, actualResult);
+    }
 
-	@Test
-	public final void test_save() {
+    @Test
+    public final void test_save() {
 
-		BudgetReAppropriation expextedResult = getBudgetReAppropriations().get(0);
+        final BudgetReAppropriation expextedResult = getBudgetReAppropriations().get(0);
 
-		when(budgetReAppropriationRepository.save(any(BudgetReAppropriation.class))).thenReturn(expextedResult);
+        when(budgetReAppropriationRepository.save(any(BudgetReAppropriation.class))).thenReturn(expextedResult);
 
-		BudgetReAppropriation actualResult = budgetReAppropriationService.save(expextedResult);
+        final BudgetReAppropriation actualResult = budgetReAppropriationService.save(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
-	}
+        assertEquals(expextedResult, actualResult);
+    }
 
-	@Test
-	public final void test_update() {
+    @Test
+    public final void test_update() {
 
-		BudgetReAppropriation expextedResult = getBudgetReAppropriations().get(0);
+        final BudgetReAppropriation expextedResult = getBudgetReAppropriations().get(0);
 
-		when(budgetReAppropriationRepository.update(any(BudgetReAppropriation.class))).thenReturn(expextedResult);
+        when(budgetReAppropriationRepository.update(any(BudgetReAppropriation.class))).thenReturn(expextedResult);
 
-		BudgetReAppropriation actualResult = budgetReAppropriationService.update(expextedResult);
+        final BudgetReAppropriation actualResult = budgetReAppropriationService.update(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
-	}
+        assertEquals(expextedResult, actualResult);
+    }
 
-	@Test
-	public final void test_fetch_budget_detail() {
+    @Test
+    public final void test_fetch_budget_detail() {
 
-		List<BudgetReAppropriation> budgets = getBudgetReAppropriations();
+        final List<BudgetReAppropriation> budgets = getBudgetReAppropriations();
 
-		BudgetDetail expextedResult = BudgetDetail.builder().id("1").build();
-		expextedResult.setTenantId("tenantId");
+        final BudgetDetail expextedResult = BudgetDetail.builder().id("1").build();
+        expextedResult.setTenantId("tenantId");
 
-		budgets.get(0).setBudgetDetail(expextedResult);
+        budgets.get(0).setBudgetDetail(expextedResult);
 
-		when(budgetDetailRepository.findById(any(BudgetDetail.class))).thenReturn(expextedResult);
+        when(budgetDetailRepository.findById(any(BudgetDetail.class))).thenReturn(expextedResult);
 
-		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.fetchRelated(budgets);
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.fetchRelated(budgets);
 
-		assertEquals(expextedResult, actualResult.get(0).getBudgetDetail());
-	}
+        assertEquals(expextedResult, actualResult.get(0).getBudgetDetail());
+    }
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_fetch_null_for_budget_detail() {
+    @Test(expected = InvalidDataException.class)
+    public final void test_fetch_null_for_budget_detail() {
 
-		List<BudgetReAppropriation> budgets = getBudgetReAppropriations();
+        final List<BudgetReAppropriation> budgets = getBudgetReAppropriations();
 
-		BudgetDetail expextedResult = BudgetDetail.builder().id("1").build();
-		expextedResult.setTenantId("tenantId");
+        final BudgetDetail expextedResult = BudgetDetail.builder().id("1").build();
+        expextedResult.setTenantId("tenantId");
 
-		budgets.get(0).setBudgetDetail(expextedResult);
+        budgets.get(0).setBudgetDetail(expextedResult);
 
-		when(budgetDetailRepository.findById(null)).thenReturn(expextedResult);
+        when(budgetDetailRepository.findById(null)).thenReturn(expextedResult);
 
-		budgetReAppropriationService.fetchRelated(budgets);
+        budgetReAppropriationService.fetchRelated(budgets);
 
-	}
+    }
 
-	private List<BudgetReAppropriation> getBudgetReAppropriations() {
+    private List<BudgetReAppropriation> getBudgetReAppropriations() {
 
-		List<BudgetReAppropriation> budgetReAppropriations = new ArrayList<BudgetReAppropriation>();
+        final List<BudgetReAppropriation> budgetReAppropriations = new ArrayList<BudgetReAppropriation>();
 
-		BudgetReAppropriation budgetReAppropriation = BudgetReAppropriation.builder()
-				.budgetDetail(BudgetDetail.builder().id("1").build()).additionAmount(BigDecimal.TEN)
-				.deductionAmount(BigDecimal.TEN).originalAdditionAmount(BigDecimal.TEN)
-				.originalDeductionAmount(BigDecimal.TEN).anticipatoryAmount(BigDecimal.TEN).build();
+        final BudgetReAppropriation budgetReAppropriation = BudgetReAppropriation.builder()
+                .budgetDetail(BudgetDetail.builder().id("1").build()).additionAmount(BigDecimal.TEN)
+                .deductionAmount(BigDecimal.TEN).originalAdditionAmount(BigDecimal.TEN)
+                .originalDeductionAmount(BigDecimal.TEN).anticipatoryAmount(BigDecimal.TEN).build();
 
-		budgetReAppropriation.setTenantId("default");
-		budgetReAppropriations.add(budgetReAppropriation);
+        budgetReAppropriation.setTenantId("default");
+        budgetReAppropriations.add(budgetReAppropriation);
 
-		return budgetReAppropriations;
-	}
+        return budgetReAppropriations;
+    }
 
 }

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.egf.budget.domain.model.EstimationType;
 import org.egov.egf.budget.persistence.queue.FinancialProducer;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetRequest;
@@ -25,91 +24,91 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class BudgetQueueRepositoryTest {
 
-	@Mock
-	private BudgetQueueRepository budgetQueueRepository;
+    @Mock
+    private BudgetQueueRepository budgetQueueRepository;
 
-	@Mock
-	private FinancialProducer financialProducer;
+    @Mock
+    private FinancialProducer financialProducer;
 
-	private static final String TOPIC_NAME = "topic";
+    private static final String TOPIC_NAME = "topic";
 
-	private static final String KEY_NAME = "key";
+    private static final String KEY_NAME = "key";
 
-	@Before
-	public void setup() {
-		budgetQueueRepository = new BudgetQueueRepository(financialProducer, TOPIC_NAME, KEY_NAME, TOPIC_NAME,
-				KEY_NAME);
-	}
+    @Before
+    public void setup() {
+        budgetQueueRepository = new BudgetQueueRepository(financialProducer, TOPIC_NAME, KEY_NAME, TOPIC_NAME,
+                KEY_NAME);
+    }
 
-	@Test
-	public void test_add_to_queue_while_create() {
+    @Test
+    public void test_add_to_queue_while_create() {
 
-		BudgetRequest request = new BudgetRequest();
+        final BudgetRequest request = new BudgetRequest();
 
-		request.setBudgets(getBudgetContracts());
-		request.setRequestInfo(new RequestInfo());
-		request.getRequestInfo().setAction("create");
+        request.setBudgets(getBudgetContracts());
+        request.setRequestInfo(new RequestInfo());
+        request.getRequestInfo().setAction("create");
 
-		budgetQueueRepository.addToQue(request);
+        budgetQueueRepository.addToQue(request);
 
-		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
+        final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
-		verify(financialProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
+        verify(financialProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
 
-		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
+        final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("budget_create"));
+        assertEquals(request, actualRequest.get("budget_create"));
 
-	}
+    }
 
-	@Test
-	public void test_add_to_queue_while_update() {
+    @Test
+    public void test_add_to_queue_while_update() {
 
-		BudgetRequest request = new BudgetRequest();
+        final BudgetRequest request = new BudgetRequest();
 
-		request.setBudgets(getBudgetContracts());
-		request.setRequestInfo(new RequestInfo());
-		request.getRequestInfo().setAction("update");
+        request.setBudgets(getBudgetContracts());
+        request.setRequestInfo(new RequestInfo());
+        request.getRequestInfo().setAction("update");
 
-		budgetQueueRepository.addToQue(request);
+        budgetQueueRepository.addToQue(request);
 
-		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
+        final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
-		verify(financialProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
+        verify(financialProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
 
-		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
+        final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("budget_update"));
+        assertEquals(request, actualRequest.get("budget_update"));
 
-	}
+    }
 
-	@Test
-	public void test_add_to_search_queue() {
+    @Test
+    public void test_add_to_search_queue() {
 
-		BudgetRequest request = new BudgetRequest();
+        final BudgetRequest request = new BudgetRequest();
 
-		request.setBudgets(getBudgetContracts());
+        request.setBudgets(getBudgetContracts());
 
-		budgetQueueRepository.addToSearchQue(request);
+        budgetQueueRepository.addToSearchQue(request);
 
-		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
+        final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
-		verify(financialProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
+        verify(financialProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
 
-		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
+        final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("budget_persisted"));
+        assertEquals(request, actualRequest.get("budget_persisted"));
 
-	}
+    }
 
-	private List<BudgetContract> getBudgetContracts() {
-		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
-		BudgetContract budgetContract = BudgetContract.builder().name("test")
-				.financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
-				.estimationType(EstimationTypeContract.BE).primaryBudget(false).build();
-		budgetContract.setTenantId("default");
-		budgetContracts.add(budgetContract);
-		return budgetContracts;
-	}
+    private List<BudgetContract> getBudgetContracts() {
+        final List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
+        final BudgetContract budgetContract = BudgetContract.builder().name("test")
+                .financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
+                .estimationType(EstimationTypeContract.BE).primaryBudget(false).build();
+        budgetContract.setTenantId("default");
+        budgetContracts.add(budgetContract);
+        return budgetContracts;
+    }
 
 }

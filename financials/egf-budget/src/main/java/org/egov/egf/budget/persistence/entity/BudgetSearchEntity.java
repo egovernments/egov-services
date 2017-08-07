@@ -14,23 +14,23 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class BudgetSearchEntity extends BudgetEntity {
-	private Integer pageSize;
-	private Integer offset;
-	private String sortBy;
-	
-	@Override
-	public Budget toDomain() {
-		Budget budget = new Budget();
-		super.toDomain(budget);
-		return budget;
-	}
+    private Integer pageSize;
+    private Integer offset;
+    private String sortBy;
 
-	public BudgetSearchEntity toEntity(BudgetSearch budgetSearch) {
-		super.toEntity((Budget) budgetSearch);
-		this.pageSize = budgetSearch.getPageSize();
-		this.offset = budgetSearch.getOffset();
-		this.sortBy = budgetSearch.getSortBy();
-		return this;
-	}
+    @Override
+    public Budget toDomain() {
+        final Budget budget = new Budget();
+        super.toDomain(budget);
+        return budget;
+    }
+
+    public BudgetSearchEntity toEntity(final BudgetSearch budgetSearch) {
+        super.toEntity(budgetSearch);
+        pageSize = budgetSearch.getPageSize();
+        offset = budgetSearch.getOffset();
+        sortBy = budgetSearch.getSortBy();
+        return this;
+    }
 
 }

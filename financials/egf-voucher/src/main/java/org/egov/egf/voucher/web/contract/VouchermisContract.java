@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.voucher.web.contract;
+import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundsourceContract;
@@ -59,7 +60,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id","billNumber","function","fundsource","scheme","subScheme","functionary","sourcePath","budgetCheckRequired","budgetAppropriationNo"})
-public class VouchermisContract implements java.io.Serializable {
+public class VouchermisContract  extends AuditableContract implements java.io.Serializable {
 
 		@Length(max = 32)
 	private String id;

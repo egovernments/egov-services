@@ -1,0 +1,151 @@
+    /vouchers/_search:
+      post:
+        summary: Get the list of vouchers
+        description: vouchers
+        tags: 
+          - Voucher
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+            maxLength: 32
+          - name: type
+            type: string
+            in: query
+            description: |
+              
+            maxLength: 16
+          - name: name
+            type: string
+            in: query
+            description: |
+              
+            maxLength: 16
+          - name: description
+            type: string
+            in: query
+            description: |
+              
+            maxLength: 256
+          - name: voucherNumber
+            type: string
+            in: query
+            description: |
+              
+            maxLength: 32
+          - name: voucherDate
+            type: string
+            format: date
+            in: query
+            description: |
+              
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+          - name: originalVoucherNumber
+            type: string
+            in: query
+            description: |
+              
+          - name: refVoucherNumber
+            type: string
+            in: query
+            description: |
+              
+          - name: moduleName
+            type: string
+            in: query
+            description: |
+              
+          - name: ledgers
+            type: object
+            items:
+              $ref: "#/definitions/Ledger"
+            in: query
+            description: |
+              
+          - name: vouchermis
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Voucher retrieved Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /vouchers/_create:
+      post:
+        summary: Create  new  vouchers
+        description: Create  new vouchers
+        tags: 
+          - Voucher
+          - Voucher
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: voucherRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          201:
+            description: Voucher created Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /vouchers/_update:
+      post:
+        summary: Update any of the vouchers
+        description: Update any of the vouchers
+        tags: 
+          - Voucher
+          - Voucher
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: voucherRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          200:
+            description: Voucher updated Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+

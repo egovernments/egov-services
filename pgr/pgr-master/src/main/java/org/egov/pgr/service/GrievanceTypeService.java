@@ -44,7 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.producers.PGRProducer;
-import org.egov.pgr.repository.ServiceTypeRepository;
+import org.egov.pgr.repository.GrievanceTypeRepository;
 import org.egov.pgr.web.contract.ServiceGetRequest;
 import org.egov.pgr.web.contract.ServiceRequest;
 import org.egov.pgr.web.contract.SevaConfigurationGetRequest;
@@ -63,7 +63,7 @@ public class GrievanceTypeService {
     public static final Logger logger = LoggerFactory.getLogger(GrievanceTypeService.class);
 
     @Autowired
-    private ServiceTypeRepository grievanceRepository;
+    private GrievanceTypeRepository grievanceRepository;
 
     @Autowired
     private PGRProducer pgrProducer;

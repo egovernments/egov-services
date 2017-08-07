@@ -47,9 +47,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceTypeQueryBuilder {
+public class GrievanceTypeQueryBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceTypeQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(GrievanceTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, comp.category, comp.slahours, "
     			+ " comp.hasfinancialimpact, comp.isactive, comp.isday, adef.code attributecode, "

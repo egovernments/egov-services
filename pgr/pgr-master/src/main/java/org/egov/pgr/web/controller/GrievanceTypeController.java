@@ -100,7 +100,7 @@ public class GrievanceTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final GrievanceType grievanceType = grievanceTypeService.createServiceType(applicationProperties.getCreateServiceTypeTopicName(), applicationProperties.getCreateServiceTypeTopicKey(), serviceTypeRequest);
+        final GrievanceType grievanceType = grievanceTypeService.createServiceType(applicationProperties.getCreateGrievanceTypeTopicName(), applicationProperties.getCreateGrievanceTypeTopicKey(), serviceTypeRequest);
         final List<GrievanceType> grievanceTypes = new ArrayList<>();
         grievanceTypes.add(grievanceType);
         return getSuccessResponse(grievanceTypes, serviceTypeRequest.getRequestInfo());
@@ -124,7 +124,7 @@ public class GrievanceTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final GrievanceType service = grievanceTypeService.updateServices(applicationProperties.getUpdateServiceTypeTopicName(), applicationProperties.getUpdateServiceTypeTopicKey(), serviceTypeRequest);
+        final GrievanceType service = grievanceTypeService.updateServices(applicationProperties.getUpdateGrievanceTypeTopicName(), applicationProperties.getUpdateGrievanceTypeTopicKey(), serviceTypeRequest);
         final List<GrievanceType> services = new ArrayList<>();
         services.add(service);
         return getSuccessResponse(services, serviceTypeRequest.getRequestInfo());

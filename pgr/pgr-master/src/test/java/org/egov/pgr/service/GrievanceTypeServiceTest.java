@@ -51,7 +51,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.producers.PGRProducer;
-import org.egov.pgr.repository.ServiceTypeRepository;
+import org.egov.pgr.repository.GrievanceTypeRepository;
 import org.egov.pgr.web.contract.ServiceGetRequest;
 import org.egov.pgr.web.contract.ServiceRequest;
 import org.junit.Test;
@@ -64,7 +64,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class GrievanceTypeServiceTest {
 	
 	@Mock
-    private ServiceTypeRepository serviceTypeRepository;
+    private GrievanceTypeRepository grievanceTypeRepository;
 
     @InjectMocks
     private GrievanceTypeService grievanceTypeService;
@@ -75,22 +75,22 @@ public class GrievanceTypeServiceTest {
 	@Test
 	public void test_should_create_new_service_type() {
 		ServiceRequest sRequest = prepareServiceRequest(); 
-		when(serviceTypeRepository.persistServiceType(any(ServiceRequest.class))).thenReturn(sRequest);
-		assertTrue(sRequest.equals(serviceTypeRepository.persistServiceType(sRequest)));
+		when(grievanceTypeRepository.persistServiceType(any(ServiceRequest.class))).thenReturn(sRequest);
+		assertTrue(sRequest.equals(grievanceTypeRepository.persistServiceType(sRequest)));
 	}
 	
 	@Test
 	public void test_should_update_existing_service_type() { 
 		ServiceRequest sRequest = prepareServiceRequest(); 
-		when(serviceTypeRepository.persistModifyServiceType(any(ServiceRequest.class))).thenReturn(sRequest);
-		assertTrue(sRequest.equals(serviceTypeRepository.persistModifyServiceType(sRequest)));
+		when(grievanceTypeRepository.persistModifyServiceType(any(ServiceRequest.class))).thenReturn(sRequest);
+		assertTrue(sRequest.equals(grievanceTypeRepository.persistModifyServiceType(sRequest)));
 	}
 	
 	@Test
 	public void test_should_fetch_service_type_from_db() {
 		List<GrievanceType> grievanceTypeList = prepareServiceTypeList();
-		when(serviceTypeRepository.findForCriteria(any(ServiceGetRequest.class))).thenReturn(grievanceTypeList);
-		assertTrue(grievanceTypeList.equals(serviceTypeRepository.findForCriteria(any(ServiceGetRequest.class))));
+		when(grievanceTypeRepository.findForCriteria(any(ServiceGetRequest.class))).thenReturn(grievanceTypeList);
+		assertTrue(grievanceTypeList.equals(grievanceTypeRepository.findForCriteria(any(ServiceGetRequest.class))));
 		
 	}
 	

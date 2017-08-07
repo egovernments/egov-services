@@ -55,9 +55,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceTypeRowMapper implements RowMapper<GrievanceType> {
+public class GrievanceTypeRowMapper implements RowMapper<GrievanceType> {
 	
-	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceTypeRowMapper.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(GrievanceTypeRowMapper.class);
 	public Map<String, List<Value>> attribValue = new HashMap<>();
 	public Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
 	public Map<String, GrievanceType> serviceMap = new HashMap<>();

@@ -735,8 +735,8 @@ table thead th {
 	border-bottom:none !important;
 	font-weight:500 !important;
 	font-size:12px !important;
-	  border-left:0 !important;
-	  border-right:0 !important;
+	border-left:0 !important;
+	border-right:0 !important;
 }
 
  table tbody td {
@@ -747,6 +747,7 @@ table thead th {
 	  color:rgba(0,0,0,0.87) !important;
 	  border-left:0 !important;
 	  border-right:0 !important;
+	  text-align: left;
  }
 
 

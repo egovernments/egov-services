@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *      accountability and the service delivery of the government  organizations.
+ *  
+ *       Copyright (C) <2015>  eGovernments Foundation
+ *  
+ *       The updated version of eGov suite of products as by eGovernments Foundation
+ *       is available at http://www.egovernments.org
+ *  
+ *       This program is free software: you can redistribute it and/or modify
+ *       it under the terms of the GNU General Public License as published by
+ *       the Free Software Foundation, either version 3 of the License, or
+ *       any later version.
+ *  
+ *       This program is distributed in the hope that it will be useful,
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *       GNU General Public License for more details.
+ *  
+ *       You should have received a copy of the GNU General Public License
+ *       along with this program. If not, see http://www.gnu.org/licenses/ or
+ *       http://www.gnu.org/licenses/gpl.html .
+ *  
+ *       In addition to the terms of the GPL license to be adhered to in using this
+ *       program, the following additional terms are to be complied with:
+ *  
+ *           1) All versions of this program, verbatim or modified must carry this
+ *              Legal Notice.
+ *  
+ *           2) Any misrepresentation of the origin of the material is prohibited. It
+ *              is required that all modified versions of this material be marked in
+ *              reasonable ways as different from the original version.
+ *  
+ *           3) This license does not grant any rights to any user of the program
+ *              with regards to rights under trademark law for use of the trade names
+ *              or trademarks of eGovernments Foundation.
+ *  
+ *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.egf.budget.web.controller;
 
 import java.text.SimpleDateFormat;
@@ -34,108 +73,108 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/budgets")
 public class BudgetController {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String PLACEHOLDER = "placeholder";
+    public static final String ACTION_CREATE = "create";
+    public static final String ACTION_UPDATE = "update";
+    public static final String PLACEHOLDER = "placeholder";
 
-	@Autowired
-	private BudgetService budgetService;
+    @Autowired
+    private BudgetService budgetService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public BudgetResponse create(@RequestBody BudgetRequest budgetRequest, BindingResult errors) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BudgetResponse create(@RequestBody final BudgetRequest budgetRequest, final BindingResult errors) {
 
-		BudgetMapper mapper = new BudgetMapper();
-		BudgetResponse budgetResponse = new BudgetResponse();
-		budgetResponse.setResponseInfo(getResponseInfo(budgetRequest.getRequestInfo()));
-		List<Budget> budgets = new ArrayList<>();
-		Budget budget = null;
-		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
-		BudgetContract contract = null;
+        final BudgetMapper mapper = new BudgetMapper();
+        final BudgetResponse budgetResponse = new BudgetResponse();
+        budgetResponse.setResponseInfo(getResponseInfo(budgetRequest.getRequestInfo()));
+        List<Budget> budgets = new ArrayList<>();
+        Budget budget = null;
+        final List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
+        BudgetContract contract = null;
 
-		budgetRequest.getRequestInfo().setAction(ACTION_CREATE);
+        budgetRequest.getRequestInfo().setAction(ACTION_CREATE);
 
-		for (BudgetContract budgetContract : budgetRequest.getBudgets()) {
-			budget = mapper.toDomain(budgetContract);
-			budget.setCreatedBy(budgetRequest.getRequestInfo().getUserInfo());
-			budget.setLastModifiedBy(budgetRequest.getRequestInfo().getUserInfo());
-			budgets.add(budget);
-		}
+        for (final BudgetContract budgetContract : budgetRequest.getBudgets()) {
+            budget = mapper.toDomain(budgetContract);
+            budget.setCreatedBy(budgetRequest.getRequestInfo().getUserInfo());
+            budget.setLastModifiedBy(budgetRequest.getRequestInfo().getUserInfo());
+            budgets.add(budget);
+        }
 
-		budgets = budgetService.create(budgets, errors, budgetRequest.getRequestInfo());
+        budgets = budgetService.create(budgets, errors, budgetRequest.getRequestInfo());
 
-		for (Budget b : budgets) {
-			contract = mapper.toContract(b);
-			budgetContracts.add(contract);
-		}
+        for (final Budget b : budgets) {
+            contract = mapper.toContract(b);
+            budgetContracts.add(contract);
+        }
 
-		budgetResponse.setBudgets(budgetContracts);
+        budgetResponse.setBudgets(budgetContracts);
 
-		return budgetResponse;
-	}
+        return budgetResponse;
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public BudgetResponse update(@RequestBody @Valid BudgetRequest budgetRequest, BindingResult errors) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BudgetResponse update(@RequestBody @Valid final BudgetRequest budgetRequest, final BindingResult errors) {
 
-		BudgetMapper mapper = new BudgetMapper();
-		BudgetResponse budgetResponse = new BudgetResponse();
-		budgetResponse.setResponseInfo(getResponseInfo(budgetRequest.getRequestInfo()));
-		List<Budget> budgets = new ArrayList<>();
-		Budget budget = null;
-		BudgetContract contract = null;
-		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
+        final BudgetMapper mapper = new BudgetMapper();
+        final BudgetResponse budgetResponse = new BudgetResponse();
+        budgetResponse.setResponseInfo(getResponseInfo(budgetRequest.getRequestInfo()));
+        List<Budget> budgets = new ArrayList<>();
+        Budget budget = null;
+        BudgetContract contract = null;
+        final List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
 
-		budgetRequest.getRequestInfo().setAction(ACTION_UPDATE);
+        budgetRequest.getRequestInfo().setAction(ACTION_UPDATE);
 
-		for (BudgetContract budgetContract : budgetRequest.getBudgets()) {
-			budget = mapper.toDomain(budgetContract);
-			budget.setLastModifiedBy(budgetRequest.getRequestInfo().getUserInfo());
-			budgets.add(budget);
-		}
+        for (final BudgetContract budgetContract : budgetRequest.getBudgets()) {
+            budget = mapper.toDomain(budgetContract);
+            budget.setLastModifiedBy(budgetRequest.getRequestInfo().getUserInfo());
+            budgets.add(budget);
+        }
 
-		budgets = budgetService.update(budgets, errors, budgetRequest.getRequestInfo());
+        budgets = budgetService.update(budgets, errors, budgetRequest.getRequestInfo());
 
-		for (Budget b : budgets) {
-			contract = mapper.toContract(b);
-			budgetContracts.add(contract);
-		}
+        for (final Budget b : budgets) {
+            contract = mapper.toContract(b);
+            budgetContracts.add(contract);
+        }
 
-		budgetResponse.setBudgets(budgetContracts);
+        budgetResponse.setBudgets(budgetContracts);
 
-		return budgetResponse;
-	}
+        return budgetResponse;
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public BudgetResponse search(@ModelAttribute BudgetSearchContract budgetSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public BudgetResponse search(@ModelAttribute final BudgetSearchContract budgetSearchContract,
+            @RequestBody final RequestInfo requestInfo, final BindingResult errors) {
 
-		BudgetMapper mapper = new BudgetMapper();
-		BudgetSearch domain = mapper.toSearchDomain(budgetSearchContract);
-		BudgetContract contract = null;
-		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
-		Pagination<Budget> budgets = budgetService.search(domain);
+        final BudgetMapper mapper = new BudgetMapper();
+        final BudgetSearch domain = mapper.toSearchDomain(budgetSearchContract);
+        BudgetContract contract = null;
+        final List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
+        final Pagination<Budget> budgets = budgetService.search(domain);
 
-		for (Budget budget : budgets.getPagedData()) {
-			contract = mapper.toContract(budget);
-			budgetContracts.add(contract);
-		}
+        for (final Budget budget : budgets.getPagedData()) {
+            contract = mapper.toContract(budget);
+            budgetContracts.add(contract);
+        }
 
-		BudgetResponse response = new BudgetResponse();
-		response.setBudgets(budgetContracts);
-		response.setPage(new PaginationContract(budgets));
-		response.setResponseInfo(getResponseInfo(requestInfo));
+        final BudgetResponse response = new BudgetResponse();
+        response.setBudgets(budgetContracts);
+        response.setPage(new PaginationContract(budgets));
+        response.setResponseInfo(getResponseInfo(requestInfo));
 
-		return response;
+        return response;
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
-				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
+                .resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+    }
 
 }

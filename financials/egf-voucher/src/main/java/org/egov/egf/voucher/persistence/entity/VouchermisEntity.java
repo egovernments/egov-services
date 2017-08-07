@@ -1,5 +1,6 @@
 package org.egov.egf.voucher.persistence.entity;
 
+import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
@@ -18,6 +19,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Builder
 public class VouchermisEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_vouchermis";
@@ -50,7 +52,7 @@ public class VouchermisEntity extends AuditableEntity {
 	}
 
 	public VouchermisEntity toEntity(Vouchermis vouchermis) {
-		super.toEntity(vouchermis);
+		super.toEntity((Auditable) vouchermis);
 		this.id = vouchermis.getId();
 		this.billNumber = vouchermis.getBillNumber();
 		this.functionId = vouchermis.getFunction() != null ? vouchermis.getFunction().getId() : null;

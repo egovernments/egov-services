@@ -23,13 +23,13 @@ import lombok.Setter;
 public class LedgerEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_ledger";
 	private String id;
+	private String voucherId;
 	private Integer orderId;
 	private String chartOfAccountId;
 	private String glcode;
 	private BigDecimal debitAmount;
 	private BigDecimal creditAmount;
 	private String functionId;
-	private String voucherId;
 
 	public Ledger toDomain() {
 		Ledger ledger = new Ledger();

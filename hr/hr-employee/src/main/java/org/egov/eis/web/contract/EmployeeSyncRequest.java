@@ -38,19 +38,23 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.data.sync.employee.web.contract;
+package org.egov.eis.web.contract;
 
 import lombok.*;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.model.EmployeeSync;
 
-@Data
-@Setter
 @Getter
-@Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-    private Long id;
-    private String userName;
-    private String signature;
-    private String tenantId;
+@ToString
+@EqualsAndHashCode
+@Builder
+public class EmployeeSyncRequest {
+
+    private RequestInfo requestInfo;
+    private EmployeeSync employeeSync;
+
 }
+

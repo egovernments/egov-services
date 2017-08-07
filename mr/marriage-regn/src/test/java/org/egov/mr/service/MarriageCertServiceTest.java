@@ -1,15 +1,16 @@
 package org.egov.mr.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.AssertTrue;
-
-import static org.mockito.Mockito.when;
+import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.MarriageCertificate;
@@ -20,25 +21,23 @@ import org.egov.mr.model.ReissueCertAppl;
 import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.CertificateType;
 import org.egov.mr.repository.MarriageCertRepository;
+import org.egov.mr.util.SequenceIdGenService;
 import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageCertCriteria;
-import org.egov.mr.web.contract.RegnUnitResponse;
+import org.egov.mr.web.contract.ReissueCertRequest;
 import org.egov.mr.web.contract.ReissueCertResponse;
 import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ResponseInfoFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import static org.mockito.Matchers.any;
+import org.springframework.kafka.support.SendResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ch.qos.logback.core.boolex.Matcher;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MarriageCertServiceTest {
@@ -52,6 +51,15 @@ public class MarriageCertServiceTest {
 	@InjectMocks
 	private MarriageCertService marriageCertService;
 
+	@Mock
+	private SequenceIdGenService sequenceGenUtil;
+	
+	@Mock
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Mock
+	private PropertiesManager propertiesManager;
+	
 	@Test
 	public void testForGetMarriageCerts() {
 
@@ -73,6 +81,24 @@ public class MarriageCertServiceTest {
 				new RequestInfo());
 		ReissueCertResponse expectedReissueCertAppl = reissueCertResponse;
 		assertEquals(actualReissueCertAppl.toString(), expectedReissueCertAppl.toString());
+	}
+	
+	@Test
+	public void testForCreate(){
+		ReissueCertResponse reissueCertResp=getReissueCertApplFromDB().get(0);
+		
+		ReissueCertRequest reissueRequest=ReissueCertRequest.builder().reissueApplication(reissueCertResp.getReissueApplications()
+				.get(0)).requestInfo(new RequestInfo()).build();
+		List<String> ids=new ArrayList<>();
+		ids.add("1");
+		when(sequenceGenUtil.getIds(Matchers.any(int.class), Matchers.any(String.class)))
+		.thenReturn(ids);
+		
+		when(kafkaTemplate.send(Matchers.any(String.class), Matchers.any(String.class), Matchers.any(Object.class)))
+		.thenReturn(new SendResult<>(null, null));
+		
+		assertTrue(reissueCertResp.equals(marriageCertService.createAsync(reissueRequest)));
+		
 	}
 
 	private ReissueCertResponse getMarriageCertResponse(String filePath) throws IOException {
@@ -112,8 +138,8 @@ public class MarriageCertServiceTest {
 				.approvalDetails(approvalDetails).applicantInfo(reissueApplicantInfo).build();
 
 		reissueCertApplList.add(reissueCertAppl);
-		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
-				.build();
+		Page page = null;/*Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
+				.build();*/
 		ReissueCertResponse reissueCertResponse = ReissueCertResponse.builder().reissueApplications(reissueCertApplList)
 				.page(page).build();
 		List<ReissueCertResponse> responselist = new ArrayList<>();

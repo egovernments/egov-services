@@ -189,17 +189,7 @@ class FloorDetails extends Component {
 		var allFloors = this.state.floorNumber;
 	  
 	    var allRooms = floorDetails.floors;
-		
-		if(allRooms) {
-			for(var i = 0; i<allRooms.length;i++){
-			if(allRooms[i].isStructured == 'YES'){
-				allRooms[i].isStructured = true;
-			} else {
-				allRooms[i].isStructured = false;
-			}
-		}
-		
-		}
+	
 		
 		
 		if(!allRooms){
@@ -539,7 +529,7 @@ calcArea = (e, type) => {
 																<Col xs={12} md={3} sm={6}>			
 																	<TextField  className="fullWidth"
 																	  hintText="201"
-																	  floatingLabelText="Flat Number"
+																	  floatingLabelText="Flat Number *"
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
 																	  onChange={(e) => {handleChangeFloor(e,"floor" ,"flatNo", true, /^\d+$/g)}}
@@ -796,7 +786,7 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor.isStructured == 'YES') ? true : false}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'NO' ? true : false) : false}
 														/>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
@@ -814,7 +804,7 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor.isStructured == 'YES') ? true : false}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'NO' ? true : false) : false}
 														/>
 													</Col>
 													
@@ -833,7 +823,7 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor.isStructured == 'NO') ? true : false}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
 														/>
 													</Col>
 
@@ -901,6 +891,11 @@ calcArea = (e, type) => {
 														<br/>
 														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid}  primary={true} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
+															 if(floorDetails.floor.isStructured == 'YES'){
+																	floorDetails.floor.isStructured = true;
+																} else {
+																	floorDetails.floor.isStructured = false;
+																}
 															 this.props.resetObject("floor", false);
 															 setTimeout(()=>{
 																	_this.createFloorObject();
@@ -976,7 +971,7 @@ calcArea = (e, type) => {
                                                     <td>{i.width || 'NA'}</td>
                                                     <td>{i.builtupArea || 'NA'}</td>
                                                     <td>{i.occupancyCertiNumber || 'NA'}</td>
-                                                    <td>{i.bpaNo}</td>
+                                                    <td>{i.bpaNo || 'NA'}</td>
                                                     <td>{i.bpaDate || 'NA'}</td>
                                                     <td>{i.bpaBuiltupArea || 'NA'}</td>
                                                     <td>

@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *      accountability and the service delivery of the government  organizations.
+ *  
+ *       Copyright (C) <2015>  eGovernments Foundation
+ *  
+ *       The updated version of eGov suite of products as by eGovernments Foundation
+ *       is available at http://www.egovernments.org
+ *  
+ *       This program is free software: you can redistribute it and/or modify
+ *       it under the terms of the GNU General Public License as published by
+ *       the Free Software Foundation, either version 3 of the License, or
+ *       any later version.
+ *  
+ *       This program is distributed in the hope that it will be useful,
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *       GNU General Public License for more details.
+ *  
+ *       You should have received a copy of the GNU General Public License
+ *       along with this program. If not, see http://www.gnu.org/licenses/ or
+ *       http://www.gnu.org/licenses/gpl.html .
+ *  
+ *       In addition to the terms of the GPL license to be adhered to in using this
+ *       program, the following additional terms are to be complied with:
+ *  
+ *           1) All versions of this program, verbatim or modified must carry this
+ *              Legal Notice.
+ *  
+ *           2) Any misrepresentation of the origin of the material is prohibited. It
+ *              is required that all modified versions of this material be marked in
+ *              reasonable ways as different from the original version.
+ *  
+ *           3) This license does not grant any rights to any user of the program
+ *              with regards to rights under trademark law for use of the trade names
+ *              or trademarks of eGovernments Foundation.
+ *  
+ *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.egf.budget.web.mapper;
 
 import org.egov.egf.budget.domain.model.Budget;
@@ -11,9 +50,9 @@ import org.egov.egf.master.web.contract.FinancialYearContract;
 
 public class BudgetMapper {
 
-    public Budget toDomain(BudgetContract contract) {
+    public Budget toDomain(final BudgetContract contract) {
 
-        Budget budget = new Budget();
+        final Budget budget = new Budget();
 
         budget.setId(contract.getId());
         budget.setName(contract.getName());
@@ -40,25 +79,23 @@ public class BudgetMapper {
         return budget;
     }
 
-    public BudgetContract toContract(Budget budget) {
+    public BudgetContract toContract(final Budget budget) {
 
-        BudgetContract contract = new BudgetContract();
+        final BudgetContract contract = new BudgetContract();
         contract.setId(budget.getId());
         contract.setName(budget.getName());
         if (budget.getFinancialYear() != null)
             contract.setFinancialYear(budget.getFinancialYear());
         contract.setEstimationType(
                 budget.getEstimationType() != null ? EstimationTypeContract.valueOf(budget.getEstimationType().name()) : null);
-        if (budget.getParent() != null) {
+        if (budget.getParent() != null)
             contract.setParent(toContract(budget.getParent()));
-        }
         contract.setDescription(budget.getDescription());
         contract.setActive(budget.getActive());
         contract.setPrimaryBudget(budget.getPrimaryBudget());
         contract.setMaterializedPath(budget.getMaterializedPath());
-        if (budget.getReferenceBudget() != null) {
+        if (budget.getReferenceBudget() != null)
             contract.setReferenceBudget(toContract(budget.getReferenceBudget()));
-        }
         contract.setDocumentNumber(budget.getDocumentNumber());
         if (budget.getStatus() != null)
             contract.setStatus(FinancialStatusContract.builder().id(budget.getStatus().getId())
@@ -73,9 +110,9 @@ public class BudgetMapper {
         return contract;
     }
 
-    public BudgetSearch toSearchDomain(BudgetSearchContract contract) {
+    public BudgetSearch toSearchDomain(final BudgetSearchContract contract) {
 
-        BudgetSearch budgetSearch = new BudgetSearch();
+        final BudgetSearch budgetSearch = new BudgetSearch();
 
         budgetSearch.setId(contract.getId());
         budgetSearch.setName(contract.getName());
@@ -104,9 +141,9 @@ public class BudgetMapper {
         return budgetSearch;
     }
 
-    public BudgetSearchContract toSearchContract(BudgetSearch budgetSearch) {
+    public BudgetSearchContract toSearchContract(final BudgetSearch budgetSearch) {
 
-        BudgetSearchContract contract = new BudgetSearchContract();
+        final BudgetSearchContract contract = new BudgetSearchContract();
 
         contract.setId(budgetSearch.getId());
         contract.setName(budgetSearch.getName());

@@ -3,12 +3,14 @@ package org.egov.mr.consumer;
 import java.util.Map;
 
 import org.egov.mr.config.PropertiesManager;
+import org.egov.mr.service.MarriageCertService;
 import org.egov.mr.service.MarriageDocumentTypeService;
 import org.egov.mr.service.MarriageRegnService;
 import org.egov.mr.service.RegistrationUnitService;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.RegnUnitRequest;
+import org.egov.mr.web.contract.ReissueCertRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,14 @@ public class MarriageRegnConsumer {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private MarriageCertService marriageCertService;
 
 	@Autowired
 	private MarriageDocumentTypeService marriageDocumentTypeService;
 
-	@KafkaListener(topics = { "${kafka.topics.create.registrationunit}", "${kafka.topics.update.registrationunit}",
+	@KafkaListener(topics = { "${kafka.topics.update.reissueappl}","${kafka.topics.create.reissueappl}","${kafka.topics.create.registrationunit}", "${kafka.topics.update.registrationunit}",
 			"${kafka.topics.create.marriageregn}", "${kafka.topics.update.marriageregn}",
 			"${kafka.topics.create.marriagedocumenttype}", "${kafka.topics.update.marriagedocumenttype}" })
 	public void processMessage(@Payload Map<String, Object> consumerRecord,
@@ -98,6 +103,9 @@ public class MarriageRegnConsumer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		}else if(topic.equals(propertiesManager.getCreateReissueMarriageRegnTopicName()))
+			marriageCertService.create(objectMapper.convertValue(consumerRecord,ReissueCertRequest.class));
+		else if(topic.equals(propertiesManager.getUpdateReissueMarriageRegnTopicName()))
+			marriageCertService.update(objectMapper.convertValue(consumerRecord, ReissueCertRequest.class));
 	}
 }

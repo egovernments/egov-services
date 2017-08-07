@@ -13,6 +13,9 @@ public class PropertiesManager {
 
 	@Value("${spring.kafka.bootstrap.servers}")
 	private String kafkaServerConfig;
+	
+	@Value ("${spring.embedded.kafka.brokers}")
+	private String kafkaEmbededBootServer;
 
 	@Value("${auto.offset.reset.config}")
 	private String kafkaOffsetConfig;

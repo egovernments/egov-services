@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.egov.enums.FeeTypeEnum;
 import org.egov.enums.RateTypeEnum;
@@ -21,16 +22,25 @@ import org.egov.models.UOMResponse;
 import org.egov.models.UserInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.consumers.CategoryConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.CategoryService;
 import org.egov.tradelicense.domain.services.UOMService;
 import org.egov.tradelicense.persistence.repository.CategoryRepository;
+import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.MessageListenerContainer;
+import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.kafka.test.utils.ContainerTestUtils;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -38,6 +48,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@DirtiesContext
 @SuppressWarnings("rawtypes")
 public class CategoryServiceTest {
 
@@ -52,6 +63,15 @@ public class CategoryServiceTest {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+	
+	@Autowired
+	CategoryConsumer categoryConsumer;
+	 
+	 @ClassRule
+	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, "category-create-validated","category-update-validated");
+	
+	 @Autowired
+	  private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
 	public static Long categoryId = 1l;
 	public Integer parentId = null;
@@ -67,7 +87,16 @@ public class CategoryServiceTest {
 	public static UOMResponse uomResponse;
 	public static Long uomId = 0L;
 	public static Integer searchCategoryId = 1;
-
+	
+	 @Before
+	  public void setUp() throws Exception {
+	    // wait until the partitions are assigned
+	    for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry
+	        .getListenerContainers()) {
+	      ContainerTestUtils.waitForAssignment(messageListenerContainer,
+	          embeddedKafka.getPartitionsPerTopic());
+	    }
+	  }
 	@SuppressWarnings("unchecked")
 	public void insertvalues() {
 		try {
@@ -132,9 +161,24 @@ public class CategoryServiceTest {
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
-			categoryId = categoryRepository.createCategory(categoryResponse.getCategories().get(0));
-			assertTrue(true);
+			
+		    categoryConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
+		    if( categoryConsumer.getLatch().getCount() != 0){
+		    	assertTrue(false);
+		    }else{
+				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+				 categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
+						null, name, code, active, type, null, pageSize, offset);
 
+				if (categoryResponse.getCategories().size() == 0) {
+					assertTrue(false);
+				}else{
+					categoryId = categoryResponse.getCategories().get(0).getId();
+					assertTrue(true);
+				}
+//		    	assertTrue(true);
+		    }
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -260,13 +304,30 @@ public class CategoryServiceTest {
 			CategoryRequest categoryRequest = new CategoryRequest();
 			categoryRequest.setCategories(categories);
 			categoryRequest.setRequestInfo(requestInfo);
-
+			
+			categoryConsumer.resetCountDown();
+			
 			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
-			categoryRepository.createCategory(categoryResponse.getCategories().get(0));
-			assertTrue(true);
+			
+			categoryConsumer.getLatch().await();
+		    if( categoryConsumer.getLatch().getCount() != 0){
+		    	assertTrue(false);
+		    }else{
+		    	categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
+						null, null, null, null, "SUBCATEGORY", null, null, null);
+
+				if (categoryResponse.getCategories().size() == 0) {
+					assertTrue(false);
+				}else{
+					 categoryResponse.getCategories().get(0).getId();
+					assertTrue(true);
+				}
+		    	
+		    }
+
 
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {
@@ -402,8 +463,13 @@ public class CategoryServiceTest {
 				assertTrue(false);
 			}
 
-			categoryRepository.updateCategory(categoryResponse.getCategories().get(0));
-			assertTrue(true);
+			categoryConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
+		    if( categoryConsumer.getLatch().getCount() != 0){
+		    	assertTrue(false);
+		    }else{
+				assertTrue(true);
+		    	
+		    }
 
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {
@@ -431,7 +497,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, updatedName, code, active, type, parentId, pageSize,
+					null, updatedName, null, active, null, parentId, pageSize,
 					offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
@@ -480,8 +546,14 @@ public class CategoryServiceTest {
 				assertTrue(false);
 			}
 
-			categoryRepository.updateCategory(categoryResponse.getCategories().get(0));
-			assertTrue(true);
+			categoryConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
+		    if( categoryConsumer.getLatch().getCount() != 0){
+		    	assertTrue(false);
+		    }else{
+				assertTrue(true);
+		    	
+		    }
+			
 
 		} catch (Exception e) {
 			assertTrue(false);

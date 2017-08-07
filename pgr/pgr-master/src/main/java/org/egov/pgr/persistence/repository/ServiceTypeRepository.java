@@ -3,7 +3,6 @@ package org.egov.pgr.persistence.repository;
 import org.egov.pgr.domain.model.ServiceTypeSearchCriteria;
 import org.egov.pgr.persistence.dto.ServiceType;
 import org.egov.pgr.persistence.querybuilder.ServiceTypeQueryBuilder;
-import org.egov.pgr.persistence.rowmapper.ServiceTypeRowMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,14 +19,10 @@ public class ServiceTypeRepository {
 
     private ServiceTypeQueryBuilder serviceTypeQueryBuilder;
 
-    private ServiceTypeRowMapper serviceTypeRowMapper;
-
     public ServiceTypeRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                 ServiceTypeQueryBuilder serviceTypeQueryBuilder,
-                                 ServiceTypeRowMapper serviceTypeRowMapper) {
+                                 ServiceTypeQueryBuilder serviceTypeQueryBuilder) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.serviceTypeQueryBuilder = serviceTypeQueryBuilder;
-        this.serviceTypeRowMapper = serviceTypeRowMapper;
     }
 
 

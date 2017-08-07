@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -34,7 +33,7 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 
 	public InstrumentEntity create(InstrumentEntity entity) {
 
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
+	//	entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}

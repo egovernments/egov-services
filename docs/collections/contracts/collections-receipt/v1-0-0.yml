@@ -10,7 +10,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/receipts/v1'
+basePath: '/receipts'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths: 

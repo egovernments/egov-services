@@ -44,7 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.data.sync.employee.config.PropertiesManager;
 import org.egov.data.sync.employee.service.DataSyncEmployeeService;
-import org.egov.data.sync.employee.web.contract.UserRequest;
+import org.egov.data.sync.employee.web.contract.EmployeeSyncRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -70,7 +70,7 @@ public class DataSyncEmployeeConsumer {
     public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         log.info("topic :: " + topic);
         log.info("record :: " + record);
-        dataSyncEmployeeService.create(objectMapper.convertValue(record, UserRequest.class));
+        dataSyncEmployeeService.create(objectMapper.convertValue(record, EmployeeSyncRequest.class));
     }
 
 }

@@ -38,18 +38,25 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.data.sync.employee.web.contract;
+package org.egov.eis.web.contract;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.egov.common.contract.request.RequestInfo;
+import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.EmployeeSync;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
-public class UserRequest {
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EmployeeSyncResponse {
 
-    private RequestInfo requestInfo;
-    private User user;
+    private ResponseInfo responseInfo;
+
+    private List<EmployeeSync> employeeSync = new ArrayList<EmployeeSync>();
 
 }
-

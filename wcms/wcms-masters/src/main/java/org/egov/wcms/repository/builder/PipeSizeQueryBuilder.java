@@ -56,7 +56,8 @@ public class PipeSizeQueryBuilder {
     private ApplicationProperties applicationProperties;
 
     private static final String BASE_QUERY = "SELECT pipesize.id as pipesize_id, pipesize.code as pipesize_code,"
-            + " pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId "
+            + " pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, "
+            + " pipesize.description as pipesize_description,pipesize.tenantId as pipesize_tenantId "
             + " FROM egwtr_pipesize pipesize ";
 
     @SuppressWarnings("rawtypes")

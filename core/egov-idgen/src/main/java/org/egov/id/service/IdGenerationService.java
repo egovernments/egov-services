@@ -343,7 +343,6 @@ public class IdGenerationService {
      */
     private String getCityCode(String tenantId, RequestInfo requestInfo) throws Exception {
 
-        //String citySql = "SELECT code from city where tenantcode = '"+ tenantId +"' ";
         String citySql = "SELECT code from city where tenantcode = ? ";
         // connection and prepared statement
         PreparedStatement pst = null;

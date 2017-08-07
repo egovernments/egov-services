@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.egov.calculator.exception.InvalidTaxCalculationDataException;
 import org.egov.calculator.models.TaxCalculationWrapper;
 import org.egov.calculator.models.TaxperiodWrapper;
 import org.egov.calculator.models.UnitWrapper;
+import org.egov.calculator.repository.DemandRepository;
 import org.egov.calculator.repository.FactorRepository;
 import org.egov.calculator.repository.TaxPeriodRespository;
 import org.egov.calculator.repository.TaxRatesRepository;
@@ -26,10 +28,16 @@ import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
 import org.egov.models.CommonTaxDetails;
+import org.egov.models.Demand;
+import org.egov.models.DemandDetail;
+import org.egov.models.DemandResponse;
 import org.egov.models.Floor;
 import org.egov.models.GuidanceValueResponse;
 import org.egov.models.HeadWiseTax;
+import org.egov.models.LatePaymentPenaltyResponse;
+import org.egov.models.Penalty;
 import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.TaxCalculation;
 import org.egov.models.TaxPeriod;
@@ -71,12 +79,15 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
     @Autowired
     TaxPeriodRespository taxPeriodRespository;
-    
+
     @Autowired
-	PropertiesManager propertiesManager;
+    PropertiesManager propertiesManager;
 
     @Autowired
     ServletContext context;
+
+    @Autowired
+    DemandRepository demandRepository;
 
     /**
      * Description: this method will get all factors based on tenantId and valid date
@@ -599,5 +610,75 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String formatedEffectivedate = simpleDateFormat.format(efiectivedate);
         return formatedEffectivedate;
+    }
+
+    @Override
+    public LatePaymentPenaltyResponse getLatePaymentPenalty(RequestInfoWrapper requestInfo, String tenantId, String upicNo)
+            throws Exception {
+
+        DemandResponse demandResponse = demandRepository.getDemands(upicNo, tenantId, requestInfo);
+        if (demandResponse != null) {
+            List<Penalty> penalityList = new ArrayList<Penalty>();
+            List<Demand> demands = demandResponse.getDemands();
+            for (Demand demand : demands) {
+                Double totalTax = 0.0;
+                Double collectedAmount = 0.0;
+                for (DemandDetail demandDetail : demand.getDemandDetails()) {
+                    totalTax += demandDetail.getTaxAmount().doubleValue();
+                    collectedAmount += demandDetail.getCollectionAmount().doubleValue();
+                }
+                if (totalTax != collectedAmount) {
+                    Double penaltyAmount = totalTax - collectedAmount;
+                    List<Penalty> penalties = getPenalty(demand, penaltyAmount);
+                    penalityList.addAll(penalties);
+                }
+            }
+            LatePaymentPenaltyResponse latePaymentResponse = new LatePaymentPenaltyResponse();
+            latePaymentResponse.setPenalty(penalityList);
+            latePaymentResponse
+                    .setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), true));
+
+            return latePaymentResponse;
+        }
+        return new LatePaymentPenaltyResponse();
+    }
+
+    /**
+     * Description: This method will return list of penalty objects
+     * @param demand
+     * @param penaltyAmount
+     * @return penaltyList
+     */
+
+    private List<Penalty> getPenalty(Demand demand, Double penaltyAmount) {
+        List<Penalty> penaltyList = new ArrayList<Penalty>();
+        Calendar fromDate = Calendar.getInstance();
+        fromDate.setTimeInMillis(demand.getTaxPeriodFrom());
+        Calendar toDate = Calendar.getInstance();
+        toDate.setTimeInMillis(demand.getTaxPeriodTo());
+        int monthsDiff = toDate.get(Calendar.MONTH) - fromDate.get(Calendar.MONTH) + 1;
+        int penalitymonths = monthsDiff - propertiesManager.getNonPenaltyMonths();
+        Calendar startDate = Calendar.getInstance();
+        startDate.setTimeInMillis(demand.getTaxPeriodFrom());
+        startDate.add(Calendar.MONTH, propertiesManager.getNonPenaltyMonths());
+        for (int i = 0; i < penalitymonths; i++) {
+            Penalty penalty = new Penalty();
+            if (i != 0)
+                startDate.add(Calendar.MONTH, 1);
+            String description = new SimpleDateFormat("MMM yyyy").format(startDate.getTime());
+            penalty.setDescription(description);
+            double penalatyForDemand = (Math.ceil((penaltyAmount * propertiesManager.getPenalityPercentage()) / 100));
+            penalty.setAmount(penalatyForDemand);
+            penalty.setAuditDetails(demand.getAuditDetail());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String fromDateFormat = sdf.format(new Date(demand.getTaxPeriodFrom()));
+            String toDateFormat = sdf.format(new Date(demand.getTaxPeriodTo()));
+            String period = fromDateFormat + "-" + toDateFormat;
+            penalty.setPeriod(period);
+            penaltyList.add(penalty);
+        }
+
+        return penaltyList;
+
     }
 }

@@ -33,6 +33,8 @@ public class AssetDepreciatorImpl implements AssetDepreciator {
 		BigDecimal amountToBedepreciated = BigDecimal.ZERO;
 		boolean addCurrentValue = false;
 		ReasonForFailure reasonForFailure = null;
+		BigDecimal aPlusB = null;
+		BigDecimal c = null;
 		
 		
 		for (CalculationAssetDetails calculationAssetDetail : calculationAssetDetailList) {
@@ -54,28 +56,26 @@ public class AssetDepreciatorImpl implements AssetDepreciator {
 				reasonForFailure = ReasonForFailure.DEPRECIATION_RATE_NOT_FOUND;
 			}
 
-			CalculationCurrentValue currentValue = calculationCurrentValues.get(assetId);
+			CalculationCurrentValue calculationCurrentValue = calculationCurrentValues.get(assetId);
 
 			if (status != DepreciationStatus.FAIL && calculationAssetDetail.getGrossValue()!=null) {
 				
-				BigDecimal aPlusB = calculationAssetDetail.getGrossValue();
-				BigDecimal c = BigDecimal.ZERO;
-				
-				if (currentValue != null) {
-						if (currentValue.getCurrentAmountBeforeSeptember() != null) {
-								aPlusB = currentValue.getCurrentAmountBeforeSeptember();
-								currVal = currentValue.getCurrentAmountBeforeSeptember();
-						}if (currentValue.getCurrentAmountAfterSeptember() != null) {
-								currVal = currentValue.getCurrentAmountAfterSeptember();
-								c = currentValue.getCurrentAmountAfterSeptember().subtract(aPlusB);
-					}
+				if (calculationAssetDetail.getAccumulatedDepreciation() != null) {
+					currVal = aPlusB = calculationAssetDetail.getGrossValue()
+							.subtract(calculationAssetDetail.getAccumulatedDepreciation());
 				} else {
-						if (calculationAssetDetail.getAccumulatedDepreciation() != null)
-								currVal = calculationAssetDetail.getGrossValue()
-										.subtract(calculationAssetDetail.getAccumulatedDepreciation());
-						else
-								currVal = calculationAssetDetail.getGrossValue();
+					currVal = aPlusB = calculationAssetDetail.getGrossValue();
 				}
+				if (calculationCurrentValue != null) {
+
+					if (calculationCurrentValue.getCurrentAmountBeforeSeptember() != null) {
+						currVal = aPlusB = calculationCurrentValue.getCurrentAmountBeforeSeptember();
+					}
+					if (calculationCurrentValue.getCurrentAmountAfterSeptember() != null) {
+						currVal = calculationCurrentValue.getCurrentAmountAfterSeptember();
+					}
+				}
+				c = currVal.subtract(aPlusB);
 				// TODO get 0.5 from app.props
 				amountToBedepreciated = aPlusB.add(c.multiply(BigDecimal.valueOf(0.5))).add(depreciationSum)
 						.multiply(BigDecimal.valueOf(depreciationRate / 100));

@@ -25,14 +25,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Import(TestConfiguration.class)
 public class AssetQueryBuilderTest {
 
-    @MockBean
-    private ApplicationProperties applicationProperties;
+	@MockBean
+	private ApplicationProperties applicationProperties;
 
-    @InjectMocks
-    private AssetQueryBuilder assetQueryBuilder;
+	@InjectMocks
+	private AssetQueryBuilder assetQueryBuilder;
 
-    @MockBean
-    private AssetCriteria assetCriteria;
+	@MockBean
+	private AssetCriteria assetCriteria;
 
 	@Before
 	public void initMocks() {
@@ -176,4 +176,4 @@ public class AssetQueryBuilderTest {
 		final String queryWithTenantId = "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,enableyearwisedepriciation=?,depriciationrate=? WHERE code=? and tenantid=?";
 		assertEquals(queryWithTenantId, assetQueryBuilder.getUpdateQuery());
 	}
-	}
+}

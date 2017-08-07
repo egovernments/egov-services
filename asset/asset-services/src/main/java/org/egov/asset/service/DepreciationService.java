@@ -22,7 +22,6 @@ import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
-import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.DepreciationRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
@@ -41,9 +40,6 @@ public class DepreciationService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	@Autowired
-	private AssetConfigurationService assetConfigurationService;
-
 	@Autowired
 	private DepreciationRepository depreciationRepository;
 	
@@ -85,11 +81,13 @@ public class DepreciationService {
 			int to = calendar.get(Calendar.YEAR);
 			depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
 			log.info("financial year value -- " + depreciationCriteria.getFinancialYear());
-		} else {
+		} else if(depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null){
+			
 			String url = applicationProperties.getEgfServiceHostName() + applicationProperties.getEgfFinancialYearSearchPath()
 					+ "?tenantId =" + tenantId + "&finYearRange=" + depreciationCriteria.getFinancialYear();
 			FinancialYearContract financialYearContract = restTemplate.postForObject(url, new RequestInfoWrapper(
 					requestInfo), FinancialYearContractResponse.class).getFinancialYears().get(0);
+			
 			depreciationCriteria.setToDate(financialYearContract.getEndingDate().getTime());
 			depreciationCriteria.setFromDate(financialYearContract.getStartingDate().getTime());
 		}
@@ -109,20 +107,21 @@ public class DepreciationService {
 				, depreciationSumMap, assetCurrentValues, depreciationDetails);
 		
 		Long voucherReference = null;
-		/* TODO get voucherreference do integration */
-		 if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-	                depreciationCriteria.getTenantId()))
-	            try {
-	              //TODO VOUCHER GEN  voucherReference = createVoucherForRevaluation(revaluationRequest);
-	            } catch (final Exception e) {
-	                throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
-	            }
+	/*	 TODO get voucherreference do integration 
+		if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
+				depreciationCriteria.getTenantId()))
+			try {
+				// TODO VOUCHER GEN voucherReference =
+				// createVoucherForRevaluation(revaluationRequest);
+			} catch (final Exception e) {
+				throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
+			}*/
 
 		for (AssetCurrentValue assetCurrentValue :assetCurrentValues) { assetCurrentValue.setTenantId(tenantId);}
 		
 		Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria).depreciationDetails(
 				depreciationDetails).voucherReference(voucherReference).auditDetails(auditDetails).build();
-		kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(),depreciation);
+		saveAsync(depreciation);
 		currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder().assetCurrentValues(
 				assetCurrentValues).requestInfo(requestInfo).build());
 
@@ -130,7 +129,7 @@ public class DepreciationService {
 				depreciation);
 	}
 
-	private void saveAsync(Depreciation depreciation) {
+	public void saveAsync(Depreciation depreciation) {
 
 		List<DepreciationDetail> depreciationDetails = depreciation.getDepreciationDetails();
 		List<Long> depreciationDetailsId = sequenceGenService.getIds(depreciationDetails.size(),
@@ -140,11 +139,10 @@ public class DepreciationService {
 			depreciationDetail.setId(depreciationDetailsId.get(depreciationCount++));
 
 		}
-		// TODO kafkaTemplate
-		save(depreciation);
+		kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(),depreciation);
 	}
 	
-	private void save(Depreciation depreciation) {
+	public void save(Depreciation depreciation) {
 		depreciationRepository.saveDepreciation(depreciation);
 	}
 }

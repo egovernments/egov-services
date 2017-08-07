@@ -77,7 +77,7 @@ public class DepreciationRepository {
 			final List<DepreciationDetail> batchList = assetDepreciationvalues.subList(j,
 					j + batchSize > assetDepreciationvalues.size() ? assetDepreciationvalues.size() : j + batchSize);
 
-			jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			 jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
 				@Override
 				public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
@@ -92,7 +92,7 @@ public class DepreciationRepository {
 					ps.setString(3, depreciation.getFinancialYear());
 					ps.setLong(4, depreciation.getFromDate());
 					ps.setLong(5, depreciation.getToDate());
-					ps.setLong(6, depreciation.getVoucherReference());
+					ps.setObject(6, depreciation.getVoucherReference());
 					ps.setString(7, depreciation.getTenantId());
 					ps.setString(8, depreciationDetail.getStatus().toString());
 					ps.setDouble(9, depreciationDetail.getDepreciationRate());
@@ -130,15 +130,14 @@ public class DepreciationRepository {
 	public List<CalculationCurrentValue> getCalculationCurrentvalue(DepreciationCriteria depreciationCriteria) {
 				
 		String tenantId = depreciationCriteria.getTenantId();
-		Integer year = Integer.parseInt(depreciationCriteria.getFinancialYear());
+		Integer year = Integer.parseInt(depreciationCriteria.getFinancialYear().substring(0,4));
 		String[] sepDate = assetConfigurationService
 				.getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONSEPARATIONDATE, tenantId)
 				.split("/");
 		Long seprationDate = Date
 				.from(LocalDateTime.of(year, Integer.parseInt(sepDate[0]), Integer.parseInt(sepDate[1]),
 						Integer.parseInt(sepDate[2]), Integer.parseInt(sepDate[3]), Integer.parseInt(sepDate[4]))
-						.toInstant(ZoneOffset.UTC))
-				.getTime();
+						.toInstant(ZoneOffset.UTC)).getTime();
 		String sql = depreciationQueryBuilder.getCalculationCurrentvalueQuery(depreciationCriteria.getAssetIds());
 		List<Object> pSValues = new ArrayList<>();
 		pSValues.add(seprationDate);

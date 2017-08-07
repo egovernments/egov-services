@@ -14,6 +14,8 @@ import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.RequestInfo;
 import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -25,8 +27,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 
@@ -36,9 +37,9 @@ import org.slf4j.LoggerFactory;
 @EnableKafka
 @Service
 public class TitleTransferConsumer {
-    
+
 	private static final Logger logger = LoggerFactory.getLogger(WorkflowConsumer.class);
-	
+
 	@Autowired
 	Environment environment;
 
@@ -59,7 +60,7 @@ public class TitleTransferConsumer {
 				environment.getProperty("bootstrap.server.config"));
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("consumer.groupId"));
+		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "titletransferworkflow");
 		return consumerProperties;
 	}
 
@@ -68,9 +69,9 @@ public class TitleTransferConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, TitleTransferRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(TitleTransferRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -78,8 +79,8 @@ public class TitleTransferConsumer {
 	 * This bean will return kafka listner object based on consumer factory
 	 */
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, TitleTransferRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, TitleTransferRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, TitleTransferRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -92,21 +93,23 @@ public class TitleTransferConsumer {
 	 */
 	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.titletransfer.workflow.create')}",
 			"#{environment.getProperty('egov.propertytax.property.titletransfer.workflow.update')}" })
-	public void listen(ConsumerRecord<String, TitleTransferRequest> record) throws Exception {
+	public void listen(ConsumerRecord<String, Object> record) throws Exception {
 
-		TitleTransferRequest titleTransferRequest = record.value();
-		logger.info("TitleTransferConsumer  listen() titleTransferRequest ---->>  "+titleTransferRequest);
+		ObjectMapper objectMapper = new ObjectMapper();
+		TitleTransferRequest titleTransferRequest = objectMapper.convertValue(record.value(),
+				TitleTransferRequest.class);
+		logger.info("TitleTransferConsumer  listen() titleTransferRequest ---->>  " + titleTransferRequest);
 
 		if (record.topic()
 				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.titletransfer.workflow.create"))) {
 
 			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getWorkflowDetailsRequestInfo(titleTransferRequest);
-			logger.info("TitleTransferConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
-			
+			logger.info(
+					"TitleTransferConsumer  listen() WorkflowDetailsRequestInfo ---->>  " + workflowDetailsRequestInfo);
+
 			ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
-					environment.getProperty("titletransfer.businesskey"), 
-					environment.getProperty("titletransfer.type"),
-					environment.getProperty("create.property.comments"));
+					environment.getProperty("titletransfer.businesskey"), environment.getProperty("titletransfer.type"),
+					environment.getProperty("titletransfer.comment"));
 
 			titleTransferRequest.getTitleTransfer().setStateId(processInstance.getId());
 			workflowProducer.send(environment.getProperty("egov.propertytax.property.titletransfer.workflow.created"),
@@ -115,10 +118,11 @@ public class TitleTransferConsumer {
 				.equals(environment.getProperty("egov.propertytax.property.titletransfer.workflow.update"))) {
 
 			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getWorkflowDetailsRequestInfo(titleTransferRequest);
-			logger.info("TitleTransferConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
-			
+			logger.info(
+					"TitleTransferConsumer  listen() WorkflowDetailsRequestInfo ---->>  " + workflowDetailsRequestInfo);
+
 			TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
-					titleTransferRequest.getTitleTransfer().getStateId());
+					titleTransferRequest.getTitleTransfer().getStateId(), environment.getProperty("titletransfer.businesskey"));
 			titleTransferRequest.getTitleTransfer().setStateId(taskResponse.getTask().getId());
 
 			if (taskResponse.getTask().getAction().equalsIgnoreCase(environment.getProperty("action")))

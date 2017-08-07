@@ -39,7 +39,7 @@ public class PropertyBuilder {
 			+ " createdBy,lastModifiedBy, createdTime,lastModifiedTime,demands,id)"
 			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_TITLETRANSFERPROPERTY_QUERY = "UPDATE egpt_Property isUnderWorkflow = ?, lastModifiedBy = ?,"
+	public static final String UPDATE_TITLETRANSFERPROPERTY_QUERY = "UPDATE egpt_property set isUnderWorkflow = ?, lastModifiedBy = ?,"
 			+ " lastModifiedTime = ? WHERE id = ?";
 
 }

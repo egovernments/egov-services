@@ -11,6 +11,7 @@ import org.egov.property.services.PersisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -19,6 +20,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service
 @Slf4j
+@EnableKafka
 public class PropertyConsumer {
 
 	@Autowired
@@ -65,9 +69,9 @@ public class PropertyConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, PropertyRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(PropertyRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -76,8 +80,8 @@ public class PropertyConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -92,15 +96,17 @@ public class PropertyConsumer {
 	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.workflow.started')}",
 			"#{environment.getProperty('egov.propertytax.property.update.workflow.started')}",
 			"#{environment.getProperty('egov.propertytax.property.update.workflow.approved')}" })
-	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
-	  log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord.value(), PropertyRequest.class);
+		log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
 		if (consumerRecord.topic()
 				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow.started"))) {
-			persisterService.addProperty(consumerRecord.value());
+			persisterService.addProperty(propertyRequest);
 		}
 
 		else {
-			persisterService.updateProperty(consumerRecord.value());
+			persisterService.updateProperty(propertyRequest);
 		}
 	}
 }

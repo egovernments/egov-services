@@ -3,23 +3,22 @@ package org.egov.egf.master.web.repository;
 import org.egov.egf.master.web.contract.FinancialConfigurationContract;
 import org.egov.egf.master.web.requests.FinancialConfigurationResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-@Service
+@Repository
 public class FinancialConfigurationContractRepository {
 
+    public static final String SEARCH_URL = "/egf-master/financialconfigurations/_search?";
     private RestTemplate restTemplate;
     private String hostUrl;
-    public static final String SEARCH_URL = "/egf-master/financialconfigurations/_search?";
-
-    @Value("${fetch_data_from}")
     private String fetchDataFrom;
 
-    public FinancialConfigurationContractRepository(@Value("${egf.master.host.url}") String hostUrl,
-            RestTemplate restTemplate) {
+    public FinancialConfigurationContractRepository(@Value("${egf.master.host.url}") String hostUrl, @Value("${fetch_data_from}") String fetchDataFrom,
+                                                    RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         this.hostUrl = hostUrl;
+        this.fetchDataFrom = fetchDataFrom;
     }
 
     public FinancialConfigurationContract findById(FinancialConfigurationContract financialConfigurationContract) {

@@ -63,7 +63,7 @@ export default class SimpleMap extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.lat && nextProps.lat, nextProps.lng){
+    if(nextProps.lat && nextProps.lng){
       this.setState({center : {lat : nextProps.lat, lng : nextProps.lng}});
       this.setState({markers : [{position:{lat : nextProps.lat, lng : nextProps.lng}}]});
     }

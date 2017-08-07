@@ -740,13 +740,11 @@ class grievanceCreate extends Component {
                     </Col>
                     {this.renderImagePreview(files)}
                   </Row>
-                  {this.state.isMapsEnabled ?
+                  {this.state.isMapsEnabled && (this.state.citylat && this.state.citylng) ?
                   <Row>
                     <Col md={12}>
                       <div style={{width: '100%', height: 400}}>
-                        {this.state.citylat && this.state.citylng ?
-                          <SimpleMap lat={this.props.grievanceCreate.lat ? this.props.grievanceCreate.lat : this.state.citylat} lng={this.props.grievanceCreate.lng ? this.props.grievanceCreate.lng : this.state.citylng}  markers={[]} handler={(lat, lng)=>{getAddress(lat, lng);this.props.handleMap(lat, lng, "address")}}/>
-                        : ''}
+                        <SimpleMap lat={this.props.grievanceCreate.lat ? this.props.grievanceCreate.lat : this.state.citylat} lng={this.props.grievanceCreate.lng ? this.props.grievanceCreate.lng : this.state.citylng}  markers={[]} handler={(lat, lng)=>{getAddress(lat, lng);this.props.handleMap(lat, lng, "address")}}/>
                       </div>
                     </Col>
                   </Row> : ''}

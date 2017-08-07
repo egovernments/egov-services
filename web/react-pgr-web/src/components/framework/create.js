@@ -287,13 +287,9 @@ class Report extends Component {
 
   }
 
-  getVal = (path, dateBool) => {
+  getVal = (path) => {
     var _val = _.get(this.props.formData, path);
-    if(dateBool && typeof _val != "undefined" && typeof _val != "object" && _val.indexOf("-") > -1) {
-      var dateArr = _val.split("-");
-      return new Date(dateArr[2], (Number(dateArr[1])-1), dateArr[0]);
-    } else
-      return typeof _val != "undefined" ? _val : "";
+    return typeof _val != "undefined" ? _val : "";
   }
 
   hideField = (_mockData, hideObject, reset) => {

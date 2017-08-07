@@ -196,7 +196,8 @@ class App extends Component {
           {toastMsg && <Snackbar
               open={isSnackBarOpen}
               message={toastMsg}
-              bodyStyle={{"backgroundColor": isSuccess ? "#3ca23c" : (isError ? "#e83e36" : "rgb(95, 92, 98)"), "textAlign": "center"}}
+              style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}
+              bodyStyle={{pointerEvents: 'initial', maxWidth: 'none', "backgroundColor": isSuccess ? "#3ca23c" : (isError ? "#e83e36" : "rgb(95, 92, 98)"), "textAlign": "center"}}
               autoHideDuration={6000}
               onRequestClose={()=>toggleSnackbarAndSetText(false, "", false, false)}
             />}

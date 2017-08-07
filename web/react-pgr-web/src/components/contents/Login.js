@@ -486,7 +486,7 @@ class Login extends Component {
        if(pattern.test(this.state.signUpObject.password) && (this.state.signUpObject.password === this.state.signUpObject.confirmPassword)){
          return '';
        }else{
-         return 'Password should match';
+         return translate('pgr.lbl.pswdmatch');
        }
      }
    }
@@ -806,7 +806,7 @@ class Login extends Component {
                         value={signUpObject.mobileNumber}
                         disabled={optSent}
                         errorText={signUpObject.mobileNumberMsg ? signUpObject.mobileNumberMsg : ""}
-                        onChange={(e) => handleStateChange(e, "signUpObject.mobileNumber", /^\d{10}$/g, 'Enter valid 10 digit mobile number')}
+                        onChange={(e) => handleStateChange(e, "signUpObject.mobileNumber", /^\d{10}$/g, translate('pgr.lbl.mobnum'))}
                     />
                   </Col>
                   <Col xs={12} md={12}>
@@ -817,7 +817,7 @@ class Login extends Component {
                         autoComplete="new-password"
                         type="password"
                         errorText={signUpObject.passwordMsg ? signUpObject.passwordMsg : ""}
-                        onChange={(e) => handleStateChange(e, "signUpObject.password", /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/, 'Should be combination of alphabet, special characters and numbers. Atleast 8 - 20 characters')}
+                        onChange={(e) => handleStateChange(e, "signUpObject.password", /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/, translate('pgr.lbl.btwncharacter'))}
                     />
                   </Col>
                   <Col xs={12} md={12}>
@@ -825,7 +825,7 @@ class Login extends Component {
                         floatingLabelText={translate('core.lbl.confirm.password')}
                         fullWidth={true}
                         value={signUpObject.confirmPassword}
-                        autocomplete="new-password"
+                        autoComplete="new-password"
                         type="password"
                         errorText={!signUpObject.passwordMsg ? this.passwordValidation() : '' }
                         onChange={(e) => handleStateChange(e, "signUpObject.confirmPassword")}
@@ -846,7 +846,7 @@ class Login extends Component {
                         fullWidth={true}
                         value={signUpObject.emailId}
                         errorText={signUpObject.emailId ? signUpObject.emailIdMsg ? signUpObject.emailIdMsg : "" : ''}
-                        onChange={(e) => handleStateChange(e, "signUpObject.emailId", /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}
+                        onChange={(e) => handleStateChange(e, "signUpObject.emailId", /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, translate('pgr.lbl.validemailid'))}
                     />
                   </Col>
                   <Col xs={12} md={12}>

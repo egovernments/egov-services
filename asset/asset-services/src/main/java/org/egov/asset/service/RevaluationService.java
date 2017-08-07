@@ -47,7 +47,7 @@ public class RevaluationService {
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
-    
+
     @Autowired
     private AssetCommonService assetCommonService;
 
@@ -63,7 +63,7 @@ public class RevaluationService {
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 revaluation.getTenantId()))
             try {
-            	log.info("Commencing Voucher Generation for Asset Revaluation");
+                log.info("Commencing Voucher Generation for Asset Revaluation");
                 final Long voucherId = createVoucherForRevaluation(revaluationRequest, headers);
 
                 if (voucherId != null)
@@ -74,7 +74,6 @@ public class RevaluationService {
 
         logAwareKafkaTemplate.send(applicationProperties.getCreateAssetRevaluationTopicName(),
                 KafkaTopicName.SAVEREVALUATION.toString(), revaluationRequest);
-
 
         final List<Revaluation> revaluations = new ArrayList<Revaluation>();
         revaluations.add(revaluation);
@@ -97,10 +96,10 @@ public class RevaluationService {
 
     private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        List<Long> assetIds = new ArrayList<>();
-    	assetIds.add(revaluationRequest.getRevaluation().getAssetId());
-        final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder().tenantId(
-        		revaluationRequest.getRevaluation().getTenantId()).id(assetIds).build()).get(0);
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(revaluation.getAssetId());
+        final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder()
+                .tenantId(revaluationRequest.getRevaluation().getTenantId()).id(assetIds).build()).get(0);
         log.debug("asset for revaluation :: " + asset);
 
         final AssetCategory assetCategory = asset.getAssetCategory();
@@ -137,11 +136,11 @@ public class RevaluationService {
         }
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluationRequest,
                 assetCategory);
-        
+
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequestForRevalaution(revaluationRequest,
-                asset, accountCodeDetails);
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(revaluation, revaluation.getFund(),
+                asset, accountCodeDetails, revaluation.getTenantId());
         log.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
         return voucherService.createVoucher(new VoucherRequest(), revaluation.getTenantId(), headers);

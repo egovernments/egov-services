@@ -281,6 +281,9 @@ public class AssetValidator {
                             + assetCurrentAmount + " and value after revaluation is "
                             + revaluation.getValueAfterRevaluation());
 
+        if (revaluation.getRevaluationDate() == null)
+            throw new RuntimeException("Revaluation Date is Required");
+
     }
 
     private void validateFund(final Long fundId) {

@@ -76,10 +76,8 @@ public class AssetConsumers {
             disposalService.create(objectMapper.convertValue(consumerRecord, DisposalRequest.class));
         else if(topic.equals(applicationProperties.getSaveCurrentvalueTopic())){
         	currentValueService.saveCurrentValue(objectMapper.convertValue(consumerRecord, AssetCurrentValueRequest.class));
-        	log.info("SaveCurrentvalue consumer---------------");
         }else if(topic.equals(applicationProperties.getSaveDepreciationTopic())){
         	depreciationService.save(objectMapper.convertValue(consumerRecord, Depreciation.class));
-        	log.info("saveDepreciation consumer---------------");
         }
         
     }

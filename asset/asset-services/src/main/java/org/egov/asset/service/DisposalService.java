@@ -48,7 +48,7 @@ public class DisposalService {
 
     @Autowired
     private AssetService assetService;
-    
+
     @Autowired
     private AssetRepository assetRepository;
 
@@ -57,7 +57,7 @@ public class DisposalService {
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
-    
+
     @Autowired
     private AssetCommonService assetCommonService;
 
@@ -79,11 +79,12 @@ public class DisposalService {
     }
 
     public void setStatusOfAssetToDisposed(final DisposalRequest disposalRequest) {
-    	
-    	List<Long> assetIds = new ArrayList<>();
-    	assetIds.add(disposalRequest.getDisposal().getAssetId());
-        final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder().tenantId(
-        		disposalRequest.getDisposal().getTenantId()).id(assetIds).build()).get(0);
+
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(disposalRequest.getDisposal().getAssetId());
+        final Asset asset = assetRepository.findForCriteria(
+                AssetCriteria.builder().tenantId(disposalRequest.getDisposal().getTenantId()).id(assetIds).build())
+                .get(0);
         final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(AssetStatusObjectName.ASSETMASTER,
                 Status.DISPOSED, disposalRequest.getDisposal().getTenantId());
         asset.setStatus(assetStatuses.get(0).getStatusValues().get(0).getCode());
@@ -91,7 +92,7 @@ public class DisposalService {
                 .requestInfo(disposalRequest.getRequestInfo()).build();
         assetService.update(assetRequest);
     }
-    
+
     public DisposalResponse createAsync(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         final Disposal disposal = disposalRequest.getDisposal();
 
@@ -120,11 +121,12 @@ public class DisposalService {
 
     private Long createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         final Disposal disposal = disposalRequest.getDisposal();
-          	
-    	List<Long> assetIds = new ArrayList<>();
-    	assetIds.add(disposalRequest.getDisposal().getAssetId());
-        final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder().tenantId(
-        		disposalRequest.getDisposal().getTenantId()).id(assetIds).build()).get(0);
+
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(disposal.getAssetId());
+        final Asset asset = assetRepository.findForCriteria(
+                AssetCriteria.builder().tenantId(disposalRequest.getDisposal().getTenantId()).id(assetIds).build())
+                .get(0);
 
         final AssetCategory assetCategory = asset.getAssetCategory();
 
@@ -142,9 +144,9 @@ public class DisposalService {
                     assetCategory);
             log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-            final VoucherRequest voucherRequest = voucherService.createVoucherRequestForDisposal(disposalRequest, asset,
-                    accountCodeDetails);
-            
+            final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, disposal.getFund(),
+                    asset, accountCodeDetails, disposal.getTenantId());
+
             log.debug("Voucher Request for Disposal :: " + voucherRequest);
 
             return voucherService.createVoucher(voucherRequest, disposal.getTenantId(), headers);

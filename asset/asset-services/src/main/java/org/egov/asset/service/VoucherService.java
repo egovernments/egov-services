@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
-import org.egov.asset.contract.DisposalRequest;
-import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.contract.VoucherResponse;
 import org.egov.asset.model.Asset;
@@ -17,19 +16,21 @@ import org.egov.asset.model.ChartOfAccountContract;
 import org.egov.asset.model.ChartOfAccountContractResponse;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.ChartOfAccountDetailContractResponse;
+import org.egov.asset.model.Disposal;
 import org.egov.asset.model.Function;
 import org.egov.asset.model.Fund;
+import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.VoucherType;
 import org.egov.common.contract.request.RequestInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -37,7 +38,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class VoucherService {
 
     @Autowired
@@ -52,25 +56,68 @@ public class VoucherService {
     @Autowired
     private AssetConfigurationService assetConfigurationService;
 
-    private static final Logger logger = LoggerFactory.getLogger(VoucherService.class);
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
+        final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
+                + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
+        log.debug("Voucher API Request URL :: " + createVoucherUrl);
+        log.debug("VoucherRequest :: " + voucherRequest);
+        final Error err = new Error();
+        VoucherResponse voucherRes = new VoucherResponse();
 
-    public VoucherRequest createVoucherRequestForRevalaution(final RevaluationRequest revaluationRequest,
-            final Asset asset, final List<VouchercreateAccountCodeDetails> accountCodeDetails) {
+        final List<String> cookies = headers.get("cookie");
+        log.debug("cookie::" + cookies);
+
+        final HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        requestHeaders.setAccept(Collections.singletonList(new MediaType("application", "json")));
+        for (final String cookie : cookies)
+            requestHeaders.add(HttpHeaders.COOKIE, cookie);
+
+        log.debug("Request Headers for Voucher Request :: " + requestHeaders);
+
+        final HttpEntity requestEntity = new HttpEntity(voucherRequest, requestHeaders);
+        log.debug("Request Entity ::" + requestEntity);
+        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+        try {
+            response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST, requestEntity, String.class);
+            log.debug("VoucherResponse :: " + response.getBody());
+        } catch (final HttpClientErrorException e) {
+            throw new RuntimeException("Voucher can not be created because :: " + err.getMessage());
+        }
+        try {
+            voucherRes = mapper.readValue(response.toString(), VoucherResponse.class);
+            return voucherRes.getVouchers().get(0).getId();
+        } catch (final IOException e) {
+            log.debug("Voucher response Deserialization Issue :: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public VoucherRequest createVoucherRequest(final Object entity, final Long fundId, final Asset asset,
+            final List<VouchercreateAccountCodeDetails> accountCodeDetails, final String tenantId) {
         final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         final Fund fund = new Fund();
-        fund.setId(revaluationRequest.getRevaluation().getFund());
+        fund.setId(fundId);
 
-        final String tenantId = revaluationRequest.getRevaluation().getTenantId();
         final Voucher voucher = new Voucher();
         voucher.setType(VoucherType.JOURNALVOUCHER.toString());
         voucher.setVoucherDate(sdf.format(new Date()));
         voucher.setLedgers(accountCodeDetails);
         voucher.setDepartment(asset.getDepartment().getId());
-        voucher.setName(assetConfigurationService
-                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
-        voucher.setDescription(assetConfigurationService
-                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
+
+        if (entity instanceof Revaluation) {
+            voucher.setName(assetConfigurationService
+                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
+            voucher.setDescription(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(
+                    AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
+        } else if (entity instanceof Disposal) {
+            voucher.setName(assetConfigurationService
+                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
+            voucher.setDescription(assetConfigurationService
+                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
+        }
         voucher.setFund(fund);
 
         final List<Voucher> vouchers = new ArrayList<>();
@@ -82,59 +129,6 @@ public class VoucherService {
         return voucherRequest;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
-        final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
-                + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
-        logger.debug("Voucher API Request URL :: " + createVoucherUrl);
-        logger.debug("VoucherRequest :: " + voucherRequest);
-        Error err = new Error();
-        VoucherResponse voucherRes = new VoucherResponse();
-
-        final List<String> sessionId = headers.get("sessionId");
-        logger.debug("Session ID ::" + sessionId);
-
-        final HttpHeaders reqHeaders = new HttpHeaders();
-        reqHeaders.add("Cookie", "SESSIONID=" + sessionId);
-
-        logger.debug("Request Headers for Voucher Request :: " + reqHeaders);
-
-        final HttpEntity requestEntity = new HttpEntity(voucherRequest, reqHeaders);
-        logger.debug("Request Entity ::" + requestEntity);
-        try {
-            final ResponseEntity<String> response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST,
-                    requestEntity, String.class);
-            logger.debug("VoucherResponse :: " + response.getBody());
-            try {
-                voucherRes = mapper.readValue(response.toString(), VoucherResponse.class);
-            } catch (final IOException e) {
-                logger.debug("Voucher response Deserialization Issue :: " + e.getMessage());
-            }
-            return voucherRes.getVouchers().get(0).getId();
-        } catch (final HttpClientErrorException e) {
-
-            try {
-                err = mapper.readValue(e.getResponseBodyAsString(), Error.class);
-            } catch (final IOException e1) {
-                e1.printStackTrace();
-            }
-            throw new RuntimeException("Voucher can not be created because :: " + err.getMessage());
-        }
-    }
-
-    public List<ChartOfAccountDetailContract> getSubledgerDetails(final RequestInfo requestInfo, final String tenantId,
-            final Long accountId) {
-        final String url = applicationProperties.getEgfServiceHostName()
-                + applicationProperties.getEgfServiceChartOfAccountsDetailsSearchPath() + "?tenantId=" + tenantId
-                + "&id=" + accountId;
-        logger.debug("subledger details check URL :: " + url);
-        logger.debug("subledger details request info :: " + requestInfo);
-        final ChartOfAccountDetailContractResponse coAccountDetailContractResponse = restTemplate.postForObject(url,
-                requestInfo, ChartOfAccountDetailContractResponse.class);
-        logger.debug("subledger details response :: " + coAccountDetailContractResponse);
-        return coAccountDetailContractResponse.getChartOfAccountDetails();
-    }
-
     public VouchercreateAccountCodeDetails getGlCodes(final RequestInfo requestInfo, final String tenantId,
             final Long accountId, final BigDecimal amount, final Long functionId, final Boolean iscredit,
             final Boolean isDebit) {
@@ -144,17 +138,17 @@ public class VoucherService {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
                 + accountId;
-        logger.debug("Chart of Account URL ::" + url);
-        logger.debug("Chart of Account Request Info :: " + requestInfo);
+        log.debug("Chart of Account URL ::" + url);
+        log.debug("Chart of Account Request Info :: " + requestInfo);
         chartOfAccountContractResponse = restTemplate.postForObject(url, requestInfo,
                 ChartOfAccountContractResponse.class);
-        logger.debug("Chart of Account Response :: " + chartOfAccountContractResponse);
+        log.debug("Chart of Account Response :: " + chartOfAccountContractResponse);
 
         final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
 
         if (!chartOfAccounts.isEmpty()) {
             final ChartOfAccountContract chartOfAccount = chartOfAccounts.get(0);
-            logger.debug("Chart Of Account : " + chartOfAccount);
+            log.debug("Chart Of Account : " + chartOfAccount);
             if (!chartOfAccount.getIsActiveForPosting())
                 throw new RuntimeException(
                         "Chart of Account " + chartOfAccount.getName() + " is not active for posting");
@@ -170,36 +164,21 @@ public class VoucherService {
         final Function function = new Function();
         function.setId(functionId);
         debitAccountCodeDetail.setFunction(function);
-        logger.debug("Account Code Detail :: " + debitAccountCodeDetail);
+        log.debug("Account Code Detail :: " + debitAccountCodeDetail);
 
         return debitAccountCodeDetail;
     }
 
-    public VoucherRequest createVoucherRequestForDisposal(final DisposalRequest disposalRequest, final Asset asset,
-            final List<VouchercreateAccountCodeDetails> accountCodeDetails) {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
-        final Fund fund = new Fund();
-        fund.setId(disposalRequest.getDisposal().getFund());
-
-        final String tenantId = disposalRequest.getDisposal().getTenantId();
-        final Voucher voucher = new Voucher();
-        voucher.setType(VoucherType.JOURNALVOUCHER.toString());
-        voucher.setVoucherDate(sdf.format(new Date()));
-        voucher.setLedgers(accountCodeDetails);
-        voucher.setDepartment(asset.getDepartment().getId());
-        voucher.setName(assetConfigurationService
-                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
-        voucher.setDescription(assetConfigurationService
-                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
-        voucher.setFund(fund);
-
-        final List<Voucher> vouchers = new ArrayList<>();
-        vouchers.add(voucher);
-
-        final VoucherRequest voucherRequest = new VoucherRequest();
-        voucherRequest.setRequestInfo(new RequestInfo());
-        voucherRequest.setVouchers(vouchers);
-        return voucherRequest;
+    public List<ChartOfAccountDetailContract> getSubledgerDetails(final RequestInfo requestInfo, final String tenantId,
+            final Long accountId) {
+        final String url = applicationProperties.getEgfServiceHostName()
+                + applicationProperties.getEgfServiceChartOfAccountsDetailsSearchPath() + "?tenantId=" + tenantId
+                + "&id=" + accountId;
+        log.debug("subledger details check URL :: " + url);
+        log.debug("subledger details request info :: " + requestInfo);
+        final ChartOfAccountDetailContractResponse coAccountDetailContractResponse = restTemplate.postForObject(url,
+                requestInfo, ChartOfAccountDetailContractResponse.class);
+        log.debug("subledger details response :: " + coAccountDetailContractResponse);
+        return coAccountDetailContractResponse.getChartOfAccountDetails();
     }
 }

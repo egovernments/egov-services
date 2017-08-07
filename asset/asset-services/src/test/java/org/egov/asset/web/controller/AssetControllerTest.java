@@ -35,6 +35,7 @@ import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.CurrentValueService;
+import org.egov.asset.service.DepreciationService;
 import org.egov.asset.service.DisposalService;
 import org.egov.asset.service.RevaluationService;
 import org.egov.asset.util.FileUtils;
@@ -81,6 +82,9 @@ public class AssetControllerTest {
 
     @MockBean
     private AssetCommonService assetCommonService;
+    
+    @MockBean
+    private DepreciationService depreciationService;
 
     @Test
     public void test_Should_Search_Asset() throws Exception {

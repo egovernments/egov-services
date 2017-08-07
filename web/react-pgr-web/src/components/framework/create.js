@@ -194,6 +194,7 @@ class Report extends Component {
   makeAjaxCall = (formData, url) => {
     let self = this;
     delete formData.ResponseInfo;
+    //return console.log(formData);
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
@@ -287,8 +288,13 @@ class Report extends Component {
 
   }
 
-  getVal = (path) => {
+  getVal = (path, dateBool) => {
     var _val = _.get(this.props.formData, path);
+    if(dateBool && typeof _val != 'object' && _val && _val.indexOf("-") > -1) {
+      var _date = _val.split("-");
+      return new Date(_date[0], (Number(_date[1])-1), _date[2]);
+    }
+
     return typeof _val != "undefined" ? _val : "";
   }
 

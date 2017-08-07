@@ -13,7 +13,12 @@ export default class UiEmailField extends Component {
 					<DatePicker 
 						style={{"display": (item.hide ? 'none' : 'block'), "marginTop": "24px"}}
 						hintText={item.label + (item.isRequired ? " *" : "")} 
-						disabled={item.isDisabled} 
+						disabled={item.isDisabled}
+						formatDate={function(date) {
+							return ('0' + date.getDate()).slice(-2) + '/'
+             						+ ('0' + (date.getMonth()+1)).slice(-2) + '/'
+             						+ date.getFullYear();
+						}} 
 						value={this.props.getVal(item.jsonPath, true)}
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						onChange={(ev, dat) => {

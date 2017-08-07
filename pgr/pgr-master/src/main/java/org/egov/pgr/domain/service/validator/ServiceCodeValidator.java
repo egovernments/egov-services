@@ -13,8 +13,14 @@ public class ServiceCodeValidator implements ServiceTypeConfigurationValidator {
 
     @Override
     public void validate(ServiceTypeConfiguration serviceTypeConfiguration) {
-        if(serviceTypeConfiguration.isServiceCodeAbsent()){
+        if(null == serviceTypeConfiguration.getServiceCode() && 
+        		serviceTypeConfiguration.isServiceCodeAbsent()
+        		){
             throw new ServiceCodeMandatoryException();
         }
+
+        
     }
+        
+       
 }

@@ -68,7 +68,8 @@ import lombok.Setter;
 public class LedgerContract extends AuditableContract {
 	
 	
-    private String id = null;
+    private String id ;
+   
     private Integer orderId;
     
     @NotNull
@@ -84,10 +85,10 @@ public class LedgerContract extends AuditableContract {
     @Min(value=0)
     @Max(value=999999999)
     private BigDecimal creditAmount;
+   
     private FunctionContract function;
    
-    //@DrillDownTable
-    private Set<LedgerDetailContract> ledgerDetails = new HashSet<LedgerDetailContract>();
+        private Set<LedgerDetailContract> ledgerDetails = new HashSet<LedgerDetailContract>();
 
    
      

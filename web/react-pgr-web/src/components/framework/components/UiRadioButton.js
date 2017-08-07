@@ -19,6 +19,7 @@ export default class UiAadharCard extends Component {
    	}
 
    	renderRadioButtonGroup = (item) => {
+         //console.log(item.name + "-" + );
    		switch (this.props.ui) {
 			case 'google': 
 				return (

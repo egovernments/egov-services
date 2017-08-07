@@ -134,7 +134,7 @@ var localationData = {
   "wc.create.fromDate":"From Date",
   "wc.create.toDate":"To Date",
   "wc.search.Donation.title":"Search Donation",
-  "wc.create.DocumentTypeApplicationType.title":"Create Document Type Application Type",
+  "wc.create.DocumentTypeApplicationType.title":"Create Document Application",
   "wc.create.mandatory":"Mandatory",
   "wc.update.DocumentTypeApplicationTypes.title":"Update Document Type Application Types",
   "wc.search.DocumentTypeApplicationType.title":"Search Document Type Application Type",

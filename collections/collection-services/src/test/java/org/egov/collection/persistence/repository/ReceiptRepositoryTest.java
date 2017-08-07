@@ -193,11 +193,11 @@ public class ReceiptRepositoryTest {
 	 
 	@Test
 	public void test_should_get_stateid(){
-		String query = "SELECT stateid FROM egcl_receiptheader WHERE receiptnumber=?";
-		String receiptNumber = "receiptNumber";
-		Mockito.when(jdbcTemplate.queryForObject(query, new Object[] { receiptNumber }, Long.class)).thenReturn(1L);
+		String query = "SELECT stateid FROM egcl_receiptheader WHERE id=?";
+		Long receiptHeaderId = 116L;
+		Mockito.when(jdbcTemplate.queryForObject(query, new Object[] { receiptHeaderId }, Long.class)).thenReturn(1L);
 		
-		long result = receiptRepository.getStateId(receiptNumber);
+		long result = receiptRepository.getStateId(receiptHeaderId);
 		assertEquals(1L, result);	
 		
 	}

@@ -55,6 +55,7 @@ import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptRes;
 import org.egov.collection.web.contract.ReceiptSearchGetRequest;
+import org.egov.collection.web.contract.ReceiptUpdateRequest;
 import org.egov.collection.web.contract.WorkFlowDetailsResponse;
 import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
@@ -203,13 +204,21 @@ public class ReceiptController {
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
+	public ResponseEntity<?> update(@ModelAttribute @Valid ReceiptUpdateRequest receiptUpdateRequest,
+			final BindingResult modelAttributeBindingResult,
+			@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
 
+		if (modelAttributeBindingResult.hasErrors()){
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, receiptReq.getRequestInfo());
+		}
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		WorkflowDetailsRequest workFlowRequest = receiptReq.getWorkflowDetails();
+		WorkflowDetailsRequest workFlowRequest = receiptReq.getReceipt().get(0).getWorkflowDetails();
+		workFlowRequest.setReceiptHeaderId(receiptUpdateRequest.getId());
+		workFlowRequest.setTenantId(receiptUpdateRequest.getTenantId());
+		workFlowRequest.setRequestInfo(receiptReq.getRequestInfo());
 		if (!validator(workFlowRequest.getTenantId(), workFlowRequest.getReceiptHeaderId())) {
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();

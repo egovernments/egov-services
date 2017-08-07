@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -12,15 +11,13 @@ import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.domain.model.VoucherSearch;
 import org.egov.egf.voucher.persistence.entity.VoucherEntity;
 import org.egov.egf.voucher.persistence.entity.VoucherSearchEntity;
-import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class VoucherJdbcRepository extends JdbcRepository {
 	private static final Logger LOG = LoggerFactory.getLogger(VoucherJdbcRepository.class);
 
@@ -30,24 +27,13 @@ public class VoucherJdbcRepository extends JdbcRepository {
 		LOG.debug("end init voucher");
 	}
 
-	@Transactional
-	public VoucherEntity create(VoucherEntity entity) {
+	public VoucherJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
-		try {
-			super.create(entity);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			if(e.getClass().getSimpleName().equals("PSQLException"))
-			{
-				PSQLException e1=(PSQLException)e;
-			e1.getNextException();
-			}
-			e.printStackTrace();
-			 
-		}
-		 
-		return entity;    
+	public VoucherEntity create(VoucherEntity entity) {
+		super.create(entity);
+		return entity;
 	}
 
 	public VoucherEntity update(VoucherEntity entity) {
@@ -64,109 +50,169 @@ public class VoucherJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
+
+		if (voucherSearchEntity.getSortBy() != null && !voucherSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(voucherSearchEntity.getSortBy());
+			validateEntityFieldName(voucherSearchEntity.getSortBy(), VoucherEntity.class);
+		}
+
+		String orderBy = "order by name";
+		if (voucherSearchEntity.getSortBy() != null && !voucherSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + voucherSearchEntity.getSortBy();
+		}
 
 		searchQuery = searchQuery.replace(":tablename", VoucherEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+if( voucherSearchEntity.getId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "id =:id");
+paramValues.put("id" ,voucherSearchEntity.getId());} 
+if( voucherSearchEntity.getType()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "type =:type");
+paramValues.put("type" ,voucherSearchEntity.getType());} 
+if( voucherSearchEntity.getName()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "name =:name");
+paramValues.put("name" ,voucherSearchEntity.getName());} 
+if( voucherSearchEntity.getDescription()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "description =:description");
+paramValues.put("description" ,voucherSearchEntity.getDescription());} 
+if( voucherSearchEntity.getVoucherNumber()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "voucherNumber =:voucherNumber");
+paramValues.put("voucherNumber" ,voucherSearchEntity.getVoucherNumber());} 
+if( voucherSearchEntity.getVoucherDate()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "voucherDate =:voucherDate");
+paramValues.put("voucherDate" ,voucherSearchEntity.getVoucherDate());} 
+if( voucherSearchEntity.getFundId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "fund =:fund");
+paramValues.put("fund" ,voucherSearchEntity.getFundId());} 
+if( voucherSearchEntity.getStatusId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "status =:status");
+paramValues.put("status" ,voucherSearchEntity.getStatusId());} 
+if( voucherSearchEntity.getOriginalVoucherNumber()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "originalVoucherNumber =:originalVoucherNumber");
+paramValues.put("originalVoucherNumber" ,voucherSearchEntity.getOriginalVoucherNumber());} 
+if( voucherSearchEntity.getRefVoucherNumber()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "refVoucherNumber =:refVoucherNumber");
+paramValues.put("refVoucherNumber" ,voucherSearchEntity.getRefVoucherNumber());} 
+if( voucherSearchEntity.getModuleName()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "moduleName =:moduleName");
+paramValues.put("moduleName" ,voucherSearchEntity.getModuleName());} 
+if( voucherSearchEntity.getLedgers()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "ledgers =:ledgers");
+paramValues.put("ledgers" ,voucherSearchEntity.getLedgers());} 
+if( voucherSearchEntity.getVouchermisId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "vouchermis =:vouchermis");
+paramValues.put("vouchermis" ,voucherSearchEntity.getVouchermisId());} 
+if( voucherSearchEntity.getIds()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "ids =:ids");
+paramValues.put("ids" ,voucherSearchEntity.getIds());} 
+
 		if (voucherSearchEntity.getId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("id =:id");
-			paramValues.put("id", voucherSearchEntity.getId());
-		}
-		if (voucherSearchEntity.getType() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("type =:type");
-			paramValues.put("type", voucherSearchEntity.getType());
-		}
-		if (voucherSearchEntity.getName() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("name =:name");
-			paramValues.put("name", voucherSearchEntity.getName());
-		}
-		if (voucherSearchEntity.getDescription() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("description =:description");
-			paramValues.put("description", voucherSearchEntity.getDescription());
-		}
-		if (voucherSearchEntity.getVoucherNumber() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("voucherNumber =:voucherNumber");
-			paramValues.put("voucherNumber", voucherSearchEntity.getVoucherNumber());
-		}
-		if (voucherSearchEntity.getVoucherDate() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("voucherDate =:voucherDate");
-			paramValues.put("voucherDate", voucherSearchEntity.getVoucherDate());
-		}
-		if (voucherSearchEntity.getFundId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("fund =:fund");
-			paramValues.put("fund", voucherSearchEntity.getFundId());
-		}
-		/*if (voucherSearchEntity.getStatusId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("status =:status");
-			paramValues.put("status", voucherSearchEntity.getStatusId());
-		}*/
-		if (voucherSearchEntity.getOriginalVoucherNumber() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("originalVoucherNumber =:originalVoucherNumber");
-			paramValues.put("originalVoucherNumber", voucherSearchEntity.getOriginalVoucherNumber());
-		}
-		if (voucherSearchEntity.getRefVoucherNumber() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("refVoucherNumber =:refVoucherNumber");
-			paramValues.put("refVoucherNumber", voucherSearchEntity.getRefVoucherNumber());
-		}
-		if (voucherSearchEntity.getModuleName() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("moduleName =:moduleName");
-			paramValues.put("moduleName", voucherSearchEntity.getModuleName());
-		}
-		
+                    if (params.length() > 0) {
+                            params.append(" and ");
+                    }
+                    params.append("id =:id");
+                    paramValues.put("id", voucherSearchEntity.getId());
+                }
+                if (voucherSearchEntity.getCode() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("code =:code");
+                        paramValues.put("code", voucherSearchEntity.getCode());
+                }
+                if (voucherSearchEntity.getName() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("name =:name");
+                        paramValues.put("name", voucherSearchEntity.getName());
+                }
+                if (voucherSearchEntity.getIdentifier() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("description =:description");
+                        paramValues.put("description", voucherSearchEntity.getIdentifier());
+                }
+                if (voucherSearchEntity.getActive() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("active =:active");
+                        paramValues.put("active", voucherSearchEntity.getActive());
+                }
+                if (voucherSearchEntity.getLevel() != null) {
+                        if (params.length() > 0) {
+                                params.append(" and ");
+                        }
+                        params.append("type =:type");
+                        paramValues.put("type", voucherSearchEntity.getLevel());
+                }
 
 		Pagination<Voucher> page = new Pagination<>();
-		page.setOffset(voucherSearchEntity.getOffset());
-		page.setPageSize(voucherSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
+		if (voucherSearchEntity.getOffset() != null) {
+			page.setOffset(voucherSearchEntity.getOffset());
+		}
+		if (voucherSearchEntity.getPageSize() != null) {
+			page.setPageSize(voucherSearchEntity.getPageSize());
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		
+		if (params.length() > 0) {
+		
+		searchQuery = searchQuery.replace(":condition", " where " +
+		params.toString());
+		
+		} else 
+		
+		searchQuery = searchQuery.replace(":condition", "");
+
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<Voucher>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + voucherSearchEntity.getPageSize() + " offset "
-				+ voucherSearchEntity.getOffset() * voucherSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VoucherEntity.class);
 
-		List<VoucherEntity> voucherEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
-				row);
+		List<VoucherEntity> voucherEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
 		page.setTotalResults(voucherEntities.size());
 
-		List<Voucher> vouchers = new ArrayList<Voucher>();
+		List<Voucher> vouchers = new ArrayList<>();
 		for (VoucherEntity voucherEntity : voucherEntities) {
 
 			vouchers.add(voucherEntity.toDomain());
@@ -177,16 +223,17 @@ public class VoucherJdbcRepository extends JdbcRepository {
 	}
 
 	public VoucherEntity findById(VoucherEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<VoucherEntity> vouchers = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<VoucherEntity>());
+		List<VoucherEntity> vouchers = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(VoucherEntity.class));
 		if (vouchers.isEmpty()) {
 			return null;
 		} else {

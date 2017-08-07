@@ -46,6 +46,7 @@ class Report extends Component {
     for(var i=0; i<groups.length; i++) {
       for(var j=0; j<groups[i].fields.length; j++) {
         if(typeof groups[i].fields[j].defaultValue != 'undefined') {
+          //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
@@ -286,13 +287,9 @@ class Report extends Component {
 
   }
 
-  getVal = (path, dateBool) => {
+  getVal = (path) => {
     var _val = _.get(this.props.formData, path);
-    if(dateBool && typeof _val != "undefined" && _val.indexOf("-") > -1) {
-      var dateArr = _val.split("-");
-      return new Date(dateArr[2], (Number(dateArr[1])-1), dateArr[0]);
-    } else
-      return typeof _val != "undefined" ? _val : "";
+    return typeof _val != "undefined" ? _val : "";
   }
 
   hideField = (_mockData, hideObject, reset) => {
@@ -487,21 +484,34 @@ class Report extends Component {
 
   addNewCard = (group, jsonPath, groupName) => {
     let self = this;
-    let {setMockData, metaData, moduleName, actionName} = this.props;
+    let {setMockData, metaData, moduleName, actionName, setFormData, formData} = this.props;
     let mockData = {...this.props.mockData};
     if(!jsonPath) {
-      for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i--) {
+      for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i++) {
         if(groupName == metaData[moduleName + "." + actionName].groups[i].name) {
           var _groupToBeInserted = {...metaData[moduleName + "." + actionName].groups[i]};
           for(var j=(mockData[moduleName + "." + actionName].groups.length-1); j>=0; j--) {
             if(groupName == mockData[moduleName + "." + actionName].groups[j].name) {
-              var regexp = new RegExp("\\[\\d{1}\\]", "g");
+              var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[j].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
+              //console.log(regexp);
               var stringified = JSON.stringify(_groupToBeInserted);
-              var ind = mockData[moduleName + "." + actionName].groups[j].index+1;
-              _groupToBeInserted = JSON.parse(stringified.replace(regexp, "[" + ind + "]"));
-              _groupToBeInserted.index = ind;
-              mockData[moduleName + "." + actionName].groups.splice(ind, 0, _groupToBeInserted);
+              //console.log(stringified);
+              //var ind = j;//mockData[moduleName + "." + actionName].groups[j].index+1;
+              //console.log(mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + ind + "]");
+              _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + j + "]"));
+              //console.log(stringified.match(regexp));
+              //console.log(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + ind + "]"));
+              _groupToBeInserted.index = j;
+              mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
+
+              //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
+              var temp = {...formData};
+              //console.log(temp);
+              //console.log(mockData[moduleName + "." + actionName].groups);
+              self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
+              //console.log(temp);
+              setFormData(temp);
               break;
             }
           }
@@ -537,12 +547,15 @@ class Report extends Component {
       }
 
       for(let i=ind; i<mockData[moduleName + "." + actionName].groups.length; i++) {
-        if(mockData[moduleName + "." + actionName].groups[i].groupName == groupName) {
-          var regexp = new RegExp("\\[\\d{1}\\]", "g");
+        if(mockData[moduleName + "." + actionName].groups[i].name == groupName) {
+          var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
+          //console.log(regexp);
+          //console.log(mockData[moduleName + "." + actionName].groups[i].index);
           var stringified = JSON.stringify(mockData[moduleName + "." + actionName].groups[i]);
-          mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, "[" + i + "]"));
+          mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (mockData[moduleName + "." + actionName].groups[i].index-1) + "]"));
         }
       }
+      //console.log(mockData[moduleName + "." + actionName].groups);
       setMockData(mockData);
     } else {
       var _groups = _.get(mockData[moduleName + "." + actionName], self.getPath(jsonPath));

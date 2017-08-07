@@ -18,6 +18,7 @@ import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Location;
@@ -28,9 +29,9 @@ import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
+import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.asset.util.FileUtils;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.After;
 import org.junit.Before;
@@ -66,11 +67,12 @@ public class RevaluationServiceTest {
     @Mock
     private RevaluationCriteria revaluationCriteria;
 
-    @Mock
-    private AssetCurrentAmountService assetCurrentAmountService;
 
     @Mock
     private RestTemplate restTemplate;
+    
+    @Mock
+    private AssetRepository assetRepository;
 
     @Mock
     private RevaluationRequest revaluationRequest;
@@ -114,8 +116,10 @@ public class RevaluationServiceTest {
     @Test
     public void testCreateAsync() throws NumberFormatException, Exception {
 
-        when(assetCurrentAmountService.getAsset(any(Long.class), any(String.class), any(RequestInfo.class)))
-                .thenReturn(get_Asset());
+    	List<Asset> assets = new ArrayList<>();
+		assets.add(get_Asset());
+		when(assetRepository.findForCriteria(any(AssetCriteria.class)))
+				.thenReturn(assets);
         final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
         PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForRevaluation",
                 any(RevaluationRequest.class), any(HttpHeaders.class));

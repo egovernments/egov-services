@@ -1,0 +1,213 @@
+
+    Voucher:
+      type: object
+      allOf:
+        - ref:'#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          maxLength: 32
+          description: |
+            
+        type:
+          type: string
+          maxLength: 16
+          description: |
+            
+        name:
+          type: string
+          maxLength: 16
+          description: |
+            
+        description:
+          type: string
+          maxLength: 256
+          description: |
+            
+        voucherNumber:
+          type: string
+          maxLength: 32
+          description: |
+            
+        voucherDate:
+          type: string
+          format: date
+          description: |
+            
+        fund:
+          $ref: "#/definitions/Fund"
+          description: |
+            
+        status:
+          $ref: "#/definitions/FinancialStatus"
+          description: |
+            
+        originalVoucherNumber:
+          type: string
+          description: |
+            
+        refVoucherNumber:
+          type: string
+          description: |
+            
+        moduleName:
+          type: string
+          description: |
+            
+        ledgers:
+          type:  array
+          description:  |
+            
+          items:
+            $ref: "#/definitions/Ledger"
+          description: |
+            
+        vouchermis:
+          $ref: "#/definitions/Vouchermis"
+          description: |
+            
+      required:
+      - voucherDate
+    Ledger:
+      type: object
+      allOf:
+        - ref:'#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          description: |
+            
+        orderId:
+          type: integer
+          format: int32
+          description: |
+            
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccount"
+          description: |
+            
+        glcode:
+          type: string
+          maxLength: 16
+          description: |
+            
+        debitAmount:
+          type: number
+          format: double
+          description: |
+            
+        creditAmount:
+          type: number
+          format: double
+          description: |
+            
+        function:
+          $ref: "#/definitions/Function"
+          description: |
+            
+        ledgerDetails:
+          type:  array
+          description:  |
+            
+          items:
+            $ref: "#/definitions/LedgerDetail"
+          description: |
+            
+      required:
+      - chartOfAccount
+      - glcode
+      - debitAmount
+      - creditAmount
+    Vouchermis:
+      type: object
+      allOf:
+        - ref:'#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          maxLength: 32
+          description: |
+            
+        billNumber:
+          type: string
+          description: |
+            
+        function:
+          $ref: "#/definitions/Function"
+          description: |
+            
+        fundsource:
+          $ref: "#/definitions/Fundsource"
+          description: |
+            
+        scheme:
+          $ref: "#/definitions/Scheme"
+          description: |
+            
+        subScheme:
+          $ref: "#/definitions/SubScheme"
+          description: |
+            
+        functionary:
+          $ref: "#/definitions/Functionary"
+          description: |
+            
+        sourcePath:
+          type: string
+          description: |
+            
+        budgetCheckRequired:
+          type: boolean
+          description: |
+            
+        budgetAppropriationNo:
+          type: string
+          description: |
+            
+    LedgerDetail:
+      type: object
+      allOf:
+        - ref:'#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          description: |
+            
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+          description: |
+            
+        accountDetailKey:
+          $ref: "#/definitions/AccountDetailKey"
+          description: |
+            
+        amount:
+          type: number
+          format: double
+          description: |
+            
+      required:
+      - accountDetailKey
+      - amount
+    VoucherRequest:
+      description: Contract class for web request. Array of Voucher items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+    VoucherResponse:
+      description: Contract class for web response. Array of Voucher items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        page:
+          $ref: '#/definitions/Page'

@@ -57,6 +57,7 @@ public class PipeSizeRowMapper implements RowMapper<PipeSize> {
         pipeSize.setSizeInMilimeter(rs.getDouble("pipesize_sizeinmilimeter"));
         pipeSize.setSizeInInch(rs.getDouble("pipesize_sizeininch"));
         pipeSize.setActive(rs.getBoolean("pipesize_active"));
+        pipeSize.setDescription(rs.getString("pipesize_description"));
         pipeSize.setTenantId(rs.getString("pipesize_tenantId"));
         return pipeSize;
     }

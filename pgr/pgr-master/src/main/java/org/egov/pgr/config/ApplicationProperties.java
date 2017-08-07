@@ -153,6 +153,18 @@ public class ApplicationProperties {
     
 	@Value("${kafka.topics.escalationhierarchy.update.key}")
     private String updateEscalationHierarchyKey;
+	
+	@Value("${kafka.topics.servicetypeconfiguration.create.name}") 
+    String createtopicName;
+    
+    @Value("${kafka.topics.servicetypeconfiguration.create.key}") 
+    String createkey;
+    
+    @Value("${kafka.topics.servicetypeconfiguration.update.name}") 
+    private String updateTopicname;
+    
+    @Value("${kafka.topics.servicetypeconfiguration.update.key}") 
+    private String updatekey;
     
 	public String getUpdateEscalationTimeTypeName() {
 		return updateEscalationTimeTypeName;
@@ -283,5 +295,23 @@ public class ApplicationProperties {
 	public String sevaSearchPageSizeMax() {
 		return SEVA_MASTERS_SEARCH_PAGESIZE_MAX;
 	}
+	
+	public String servicetypeconfigurationCreateTopic() {
+		return createtopicName;
+	}
+	
+	public String servicetypeconfigurationCreateKeyName() {
+		return createkey;
+	}
+	
+	public String servicetypeconfigurationUpdateTopic() {
+		return updateTopicname;
+	}
+	
+	public String servicetypeconfigurationUpdateKeyName() {
+		return updatekey;
+	}
+
+	
 	
 }

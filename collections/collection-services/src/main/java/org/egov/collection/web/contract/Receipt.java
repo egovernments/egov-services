@@ -41,4 +41,7 @@ public class Receipt {
 	private Instrument instrument;
 	
 	private Long stateId;
+	
+	@JsonProperty("WorkflowDetails")
+	private WorkflowDetailsRequest workflowDetails;
 }

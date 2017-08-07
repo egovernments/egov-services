@@ -28,7 +28,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -40,7 +40,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -52,7 +52,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -64,7 +64,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -108,7 +108,7 @@ var dat = {
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "^.{1,8}$",
 							"type": "number",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "Maximum length of capacity is 8"

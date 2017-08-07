@@ -1,4 +1,4 @@
-package org.egov.egf.voucher;
+package org.egov;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

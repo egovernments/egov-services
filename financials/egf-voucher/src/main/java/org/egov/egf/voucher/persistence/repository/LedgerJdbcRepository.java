@@ -3,6 +3,7 @@ package org.egov.egf.voucher.persistence.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.voucher.persistence.entity.LedgerEntity;
@@ -27,6 +28,7 @@ public class LedgerJdbcRepository extends JdbcRepository {
 	}
 
 	public LedgerEntity create(LedgerEntity entity) {
+		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}

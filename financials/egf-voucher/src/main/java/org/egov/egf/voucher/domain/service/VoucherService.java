@@ -13,7 +13,6 @@ import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.egov.egf.master.web.repository.FundContractRepository;
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.domain.model.VoucherSearch;
-import org.egov.egf.voucher.domain.model.Vouchermis;
 import org.egov.egf.voucher.domain.repository.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +31,10 @@ public class VoucherService {
 
 	@Autowired
 	private SmartValidator validator;
+	
 	@Autowired
 	private FinancialStatusContractRepository financialStatusContractRepository;
-	 
+
 	@Autowired
 	private FundContractRepository fundContractRepository;
 
@@ -52,7 +52,7 @@ public class VoucherService {
 			}
 			for (Voucher b : vouchers) {
 				b.setId(voucherRepository.getNextSequence());
-				//b.add();
+				// b.add();
 			}
 
 		} catch (CustomBindException e) {
@@ -77,7 +77,7 @@ public class VoucherService {
 				throw new CustomBindException(errors);
 			}
 			for (Voucher b : vouchers) {
-				//b.update();
+				// b.update();
 			}
 
 		} catch (CustomBindException e) {
@@ -122,7 +122,7 @@ public class VoucherService {
 	public List<Voucher> fetchRelated(List<Voucher> vouchers) {
 		for (Voucher voucher : vouchers) {
 			// fetch related items
-			if (voucher.getFund() != null) {
+			/*if (voucher.getFund() != null) {
 				FundContract fund = fundContractRepository.findById(voucher.getFund());
 				if (fund == null) {
 					throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
@@ -135,15 +135,14 @@ public class VoucherService {
 					throw new InvalidDataException("status", "status.invalid", " Invalid status");
 				}
 				voucher.setStatus(status);
-			}
-			/*if (voucher.getVouchermis() != null) {
-				Vouchermis vouchermis = vouchermisRepository.findById(voucher.getVouchermis());
-				if (vouchermis == null) {
-					throw new InvalidDataException("vouchermis", "vouchermis.invalid", " Invalid vouchermis");
-				}
-				voucher.setVouchermis(vouchermis);
-			}
-*/
+			}*/
+			/*
+			 * if (voucher.getVouchermis() != null) { Vouchermis vouchermis =
+			 * vouchermisRepository.findById(voucher.getVouchermis()); if
+			 * (vouchermis == null) { throw new
+			 * InvalidDataException("vouchermis", "vouchermis.invalid",
+			 * " Invalid vouchermis"); } voucher.setVouchermis(vouchermis); }
+			 */
 		}
 
 		return vouchers;
@@ -152,8 +151,6 @@ public class VoucherService {
 	public Pagination<Voucher> search(VoucherSearch voucherSearch) {
 		return voucherRepository.search(voucherSearch);
 	}
-	
-
 
 	@Transactional
 	public Voucher save(Voucher voucher) {

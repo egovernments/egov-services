@@ -8,6 +8,7 @@ Create table egf_voucher(
   voucherDate date NOT NULL,
   fundId varchar(50),
   statusId varchar(50),
+  vouchermisId varchar(50),
   originalVoucherNumber varchar(50),
   refVoucherNumber varchar(50),
   moduleName varchar(50),

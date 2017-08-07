@@ -2,22 +2,18 @@ package org.egov.egf.voucher.web.repository;
 
 import org.egov.egf.voucher.web.contract.VoucherContract;
 import org.egov.egf.voucher.web.requests.VoucherResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class VoucherContractRepository {
+
 	private RestTemplate restTemplate;
 	private String hostUrl;
 	public static final String SEARCH_URL = " /egf-voucher/vouchers/search?";
-	@Autowired
-	private ObjectMapper objectMapper;
 
-	public VoucherContractRepository(@Value("${egf.voucherhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public VoucherContractRepository(@Value("${egf.voucher.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

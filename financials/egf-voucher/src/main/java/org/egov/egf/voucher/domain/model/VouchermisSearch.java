@@ -37,75 +37,25 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.voucher.web.contract;
+package org.egov.egf.voucher.domain.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Set;
-
-import javax.validation.constraints.NotNull;
-
-import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.master.web.contract.FinancialStatusContract;
-import org.egov.egf.master.web.contract.FundContract;
-import org.egov.egf.voucher.domain.model.Ledger;
-import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Builder
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+public class VouchermisSearch extends Vouchermis {
 
-@JsonPropertyOrder({ "id", "type", "name", "description", "voucherNumber", "voucherDate", "fund", "status",
-		"originalVoucherNumber", "refVoucherNumber", "moduleName", "ledgers", "vouchermis" })
-public class VoucherContract extends AuditableContract {
+	private Integer pageSize;
 
-	@Length(max = 32)
-	private String id;
+	private Integer offset;
 
-	@Length(max = 16)
-	private String type;
+	private String sortBy;
 
-	@Length(max = 16)
-	private String name;
-
-	@Length(max = 256)
-	private String description;
-
-	@Length(max = 32)
-	private String voucherNumber;
-
-	@NotNull
-	private Date voucherDate;
-
-	private FundContract fund;
-
-	private FinancialStatusContract status;
-
-	private String originalVoucherContractNumber;
-
-	private String refVoucherContractNumber;
-
-	private String moduleName;
-
-	private Set<Ledger> ledgers;
-
-	private VouchermisContract vouchermis;
-
-	public BigDecimal getTotalAmount() {
-		BigDecimal amount = BigDecimal.ZERO;
-		for (final Ledger detail : ledgers)
-			amount = amount.add(detail.getDebitAmount());
-		return amount;
-	}
-
+	private List<Long> ids = new ArrayList<Long>();
 }

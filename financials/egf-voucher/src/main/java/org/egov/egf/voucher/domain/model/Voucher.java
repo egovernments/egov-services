@@ -49,9 +49,6 @@ import org.egov.common.domain.model.Auditable;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FundContract;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.ja.annotation.DrillDown;
-import org.ja.annotation.DrillDownTable;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -69,17 +66,15 @@ public class Voucher extends Auditable {
 	@Length(max = 32)
 	private String id;
 
- 
 	@Length(max = 16)
 	private String type;
 
- 
 	@Length(max = 16)
 	private String name;
 
 	@Length(max = 256)
 	private String description;
-	
+
 	@Length(max = 32)
 	private String voucherNumber;
 
@@ -91,9 +86,7 @@ public class Voucher extends Auditable {
 	private String originalVoucherNumber;
 	private String refVoucherNumber;
 	private String moduleName;
-	@DrillDownTable
 	private Set<Ledger> ledgers;
-	@DrillDown
 	private Vouchermis vouchermis;
 
 	public BigDecimal getTotalAmount() {

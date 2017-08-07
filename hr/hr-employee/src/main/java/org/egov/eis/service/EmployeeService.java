@@ -40,22 +40,12 @@
 
 package org.egov.eis.service;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.User;
+import org.egov.eis.model.*;
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.repository.*;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
@@ -68,9 +58,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
 @Service
@@ -291,9 +285,10 @@ public class EmployeeService {
             aprDetailRepository.save(employeeRequest);
         }
 
-        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-        if(propertiesManager.getDataSyncEmployeeRequired())
-            employeeDataSyncService.createDataSync(userRequest);
+        EmployeeSync employeeSync = EmployeeSync.builder().code(employee.getCode()).tenantId(employee.getTenantId()).signature(employee.getUser().getSignature()).userName(employee.getUser().getUserName()).build();
+        EmployeeSyncRequest employeeSyncRequest = EmployeeSyncRequest.builder().employeeSync(employeeSync).build();
+        if (propertiesManager.getDataSyncEmployeeRequired())
+            employeeDataSyncService.createDataSync(employeeSyncRequest);
     }
 
     public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
@@ -355,9 +350,10 @@ public class EmployeeService {
         aprDetailService.update(employee);
         employeeDocumentsService.update(employee);
 
-        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-        if(propertiesManager.getDataSyncEmployeeRequired())
-          employeeDataSyncService.createDataSync(userRequest);
+        EmployeeSync employeeSync = EmployeeSync.builder().code(employee.getCode()).tenantId(employee.getTenantId()).signature(employee.getUser().getSignature()).userName(employee.getUser().getUserName()).build();
+        EmployeeSyncRequest employeeSyncRequest = EmployeeSyncRequest.builder().employeeSync(employeeSync).build();
+        if (propertiesManager.getDataSyncEmployeeRequired())
+            employeeDataSyncService.createDataSync(employeeSyncRequest);
     }
 
     public List<EmployeeInfo> getLoggedInEmployee(RequestInfo requestInfo) throws CloneNotSupportedException {

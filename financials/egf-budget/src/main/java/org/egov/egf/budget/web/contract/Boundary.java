@@ -16,10 +16,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Boundary {
 
-	private String id;
-	private String name;
-	private Float longitude;
-	private Float latitude;
-	private Long boundaryNum;
-	private String tenantId;
+    private String id;
+    private String name;
+    private Float longitude;
+    private Float latitude;
+    private Long boundaryNum;
+    private String tenantId;
 }

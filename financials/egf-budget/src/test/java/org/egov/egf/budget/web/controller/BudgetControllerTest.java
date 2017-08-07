@@ -38,124 +38,111 @@ import org.springframework.validation.BindingResult;
 @Import(TestConfiguration.class)
 public class BudgetControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private BudgetService budgetService;
+    @MockBean
+    private BudgetService budgetService;
 
-	@Captor
-	private ArgumentCaptor<BudgetRequest> captor;
+    @Captor
+    private ArgumentCaptor<BudgetRequest> captor;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private final RequestJsonReader resources = new RequestJsonReader();
 
-	@Test
-	public void test_create() throws IOException, Exception {
+    @Test
+    public void test_create() throws IOException, Exception {
 
-		when(budgetService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getBudgets());
+        when(budgetService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgets());
 
-		mockMvc.perform(
-				post("/budgets/_create").content(resources.readRequest("budget/budget_create_valid_request.json"))
-						.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.readResponse("budget/budget_create_valid_response.json")));
+        mockMvc.perform(
+                post("/budgets/_create").content(resources.readRequest("budget/budget_create_valid_request.json"))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(resources.readResponse("budget/budget_create_valid_response.json")));
 
-	}
+    }
 
-	@Test
-	public void test_create_error() throws IOException, Exception {
+    @Test
+    public void test_create_error() throws IOException, Exception {
 
-		when(budgetService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getBudgets()));
+        when(budgetService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgets());
 
-		mockMvc.perform(
-				post("/budgets/_create").content(resources.readRequest("budget/budget_create_invalid_field_value.json"))
-						.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().is5xxServerError());
+        mockMvc.perform(
+                post("/budgets/_create").content(resources.readRequest("budget/budget_create_invalid_field_value.json"))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_update() throws IOException, Exception {
+    @Test
+    public void test_update() throws IOException, Exception {
 
-		List<Budget> budgets = getBudgets();
-		budgets.get(0).setId("1");
+        final List<Budget> budgets = getBudgets();
+        budgets.get(0).setId("1");
 
-		when(budgetService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(budgets);
+        when(budgetService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(budgets);
 
-		mockMvc.perform(
-				post("/budgets/_update").content(resources.readRequest("budget/budget_update_valid_request.json"))
-						.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.readResponse("budget/budget_update_valid_response.json")));
+        mockMvc.perform(
+                post("/budgets/_update").content(resources.readRequest("budget/budget_update_valid_request.json"))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(resources.readResponse("budget/budget_update_valid_response.json")));
 
-	}
+    }
 
-	@Test
-	public void test_update_error() throws IOException, Exception {
+    @Test
+    public void test_update_error() throws IOException, Exception {
 
-		when(budgetService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getBudgets()));
+        when(budgetService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgets());
 
-		mockMvc.perform(
-				post("/budgets/_update").content(resources.readRequest("budget/budget_create_invalid_field_value.json"))
-						.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().is5xxServerError());
+        mockMvc.perform(
+                post("/budgets/_update").content(resources.readRequest("budget/budget_create_invalid_field_value.json"))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_search() throws IOException, Exception {
+    @Test
+    public void test_search() throws IOException, Exception {
 
-		Pagination<Budget> page = new Pagination<>();
-		page.setTotalPages(1);
-		page.setTotalResults(1);
-		page.setCurrentPage(0);
-		page.setPagedData(getBudgets());
-		page.getPagedData().get(0).setId("1");
+        final Pagination<Budget> page = new Pagination<>();
+        page.setTotalPages(1);
+        page.setTotalResults(1);
+        page.setCurrentPage(0);
+        page.setPagedData(getBudgets());
+        page.getPagedData().get(0).setId("1");
 
-		when(budgetService.search(any(BudgetSearch.class))).thenReturn(page);
+        when(budgetService.search(any(BudgetSearch.class))).thenReturn(page);
 
-		mockMvc.perform(post("/budgets/_search").content(resources.getRequestInfo())
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.readResponse("budget/budget_search_valid_response.json")));
+        mockMvc.perform(post("/budgets/_search").content(resources.getRequestInfo())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(resources.readResponse("budget/budget_search_valid_response.json")));
 
-	}
+    }
 
-	/*
-	 * @Test public void test_create_400() throws IOException, Exception {
-	 * 
-	 * BindingResult errors=new BeanPropertyBindingResult(null, null);
-	 * errors.addError(new ObjectError("sample", "sample"));
-	 * 
-	 * CustomBindException customBindException = new
-	 * CustomBindException(errors); when(budgetService.save(any(List.class),
-	 * any(BindingResult.class),
-	 * any(String.class))).thenThrow(customBindException);
-	 * 
-	 * mockMvc.perform(post("/budgets/_create").content(resources.readRequest(
-	 * "budget/budget_create_valid_request.json"))
-	 * .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().
-	 * is4xxClientError())
-	 * .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-	 * .andExpect(content().json(resources.readErrorResponse(
-	 * "common/error_response.json")));
-	 * 
-	 * 
-	 * }
-	 */
+    /*
+     * @Test public void test_create_400() throws IOException, Exception { BindingResult errors=new
+     * BeanPropertyBindingResult(null, null); errors.addError(new ObjectError("sample", "sample")); CustomBindException
+     * customBindException = new CustomBindException(errors); when(budgetService.save(any(List.class), any(BindingResult.class),
+     * any(String.class))).thenThrow(customBindException); mockMvc.perform(post("/budgets/_create").content(resources.readRequest(
+     * "budget/budget_create_valid_request.json")) .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().
+     * is4xxClientError()) .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+     * .andExpect(content().json(resources.readErrorResponse( "common/error_response.json"))); }
+     */
 
-	private List<Budget> getBudgets() {
-		List<Budget> budgets = new ArrayList<Budget>();
-		Budget budget = Budget.builder().name("test")
-				.financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
-				.estimationType(EstimationType.BE).primaryBudget(false).build();
-		budget.setTenantId("default");
-		budgets.add(budget);
-		return budgets;
-	}
+    private List<Budget> getBudgets() {
+        final List<Budget> budgets = new ArrayList<Budget>();
+        final Budget budget = Budget.builder().name("test")
+                .financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
+                .estimationType(EstimationType.BE).primaryBudget(false).build();
+        budget.setTenantId("default");
+        budgets.add(budget);
+        return budgets;
+    }
 
 }

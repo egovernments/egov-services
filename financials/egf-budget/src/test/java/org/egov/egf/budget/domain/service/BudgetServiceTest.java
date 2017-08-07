@@ -33,224 +33,224 @@ import org.springframework.validation.SmartValidator;
 @RunWith(SpringRunner.class)
 public class BudgetServiceTest {
 
-	private BudgetService budgetService;
+    private BudgetService budgetService;
 
-	@Mock
-	private SmartValidator validator;
+    @Mock
+    private SmartValidator validator;
 
-	@Mock
-	private BudgetRepository budgetRepository;
+    @Mock
+    private BudgetRepository budgetRepository;
 
-	@Mock
-	private FinancialYearContractRepository financialYearContractRepository;
+    @Mock
+    private FinancialYearContractRepository financialYearContractRepository;
 
-	private BindingResult errors = new BeanPropertyBindingResult(null, null);
+    private final BindingResult errors = new BeanPropertyBindingResult(null, null);
 
-	private RequestInfo requestInfo = new RequestInfo();
+    private final RequestInfo requestInfo = new RequestInfo();
 
-	@Before
-	public void setup() {
-		budgetService = new BudgetService(validator, budgetRepository, financialYearContractRepository);
-	}
+    @Before
+    public void setup() {
+        budgetService = new BudgetService(validator, budgetRepository, financialYearContractRepository);
+    }
 
-	@Test
-	public final void test_save_with_out_kafka() {
+    @Test
+    public final void test_save_with_out_kafka() {
 
-		List<Budget> expextedResult = getBudgets();
+        final List<Budget> expextedResult = getBudgets();
 
-		when(budgetRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(budgetRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<Budget> actualResult = budgetService.create(expextedResult, errors, requestInfo);
+        final List<Budget> actualResult = budgetService.create(expextedResult, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	@Test(expected = CustomBindException.class)
-	public final void test_save_with_out_kafka_and_with_null_req() {
+    @Test(expected = CustomBindException.class)
+    public final void test_save_with_out_kafka_and_with_null_req() {
 
-		List<Budget> expextedResult = getBudgets();
+        final List<Budget> expextedResult = getBudgets();
 
-		when(budgetRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(budgetRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<Budget> actualResult = budgetService.create(null, errors, requestInfo);
+        final List<Budget> actualResult = budgetService.create(null, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	@Test
-	public final void test_update_with_out_kafka() {
+    @Test
+    public final void test_update_with_out_kafka() {
 
-		List<Budget> expextedResult = getBudgets();
+        final List<Budget> expextedResult = getBudgets();
 
-		when(budgetRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(budgetRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<Budget> actualResult = budgetService.update(expextedResult, errors, requestInfo);
+        final List<Budget> actualResult = budgetService.update(expextedResult, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	@Test(expected = CustomBindException.class)
-	public final void test_update_with_out_kafka_and_with_null_req() {
+    @Test(expected = CustomBindException.class)
+    public final void test_update_with_out_kafka_and_with_null_req() {
 
-		List<Budget> expextedResult = getBudgets();
+        final List<Budget> expextedResult = getBudgets();
 
-		when(budgetRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(budgetRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<Budget> actualResult = budgetService.update(null, errors, requestInfo);
+        final List<Budget> actualResult = budgetService.update(null, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	@Test
-	public final void test_search() {
+    @Test
+    public final void test_search() {
 
-		List<Budget> budgets = getBudgets();
-		BudgetSearch budgetSearch = new BudgetSearch();
-		Pagination<Budget> expextedResult = new Pagination<>();
+        final List<Budget> budgets = getBudgets();
+        final BudgetSearch budgetSearch = new BudgetSearch();
+        final Pagination<Budget> expextedResult = new Pagination<>();
 
-		expextedResult.setPagedData(budgets);
+        expextedResult.setPagedData(budgets);
 
-		when(budgetRepository.search(budgetSearch)).thenReturn(expextedResult);
+        when(budgetRepository.search(budgetSearch)).thenReturn(expextedResult);
 
-		Pagination<Budget> actualResult = budgetService.search(budgetSearch);
+        final Pagination<Budget> actualResult = budgetService.search(budgetSearch);
 
-		assertEquals(expextedResult, actualResult);
-	}
+        assertEquals(expextedResult, actualResult);
+    }
 
-	@Test
-	public final void test_save() {
+    @Test
+    public final void test_save() {
 
-		Budget expextedResult = getBudgets().get(0);
+        final Budget expextedResult = getBudgets().get(0);
 
-		when(budgetRepository.save(any(Budget.class))).thenReturn(expextedResult);
+        when(budgetRepository.save(any(Budget.class))).thenReturn(expextedResult);
 
-		Budget actualResult = budgetService.save(expextedResult);
+        final Budget actualResult = budgetService.save(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
-	}
+        assertEquals(expextedResult, actualResult);
+    }
 
-	@Test
-	public final void test_update() {
+    @Test
+    public final void test_update() {
 
-		Budget expextedResult = getBudgets().get(0);
+        final Budget expextedResult = getBudgets().get(0);
 
-		when(budgetRepository.update(any(Budget.class))).thenReturn(expextedResult);
+        when(budgetRepository.update(any(Budget.class))).thenReturn(expextedResult);
 
-		Budget actualResult = budgetService.update(expextedResult);
+        final Budget actualResult = budgetService.update(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
-	}
+        assertEquals(expextedResult, actualResult);
+    }
 
-	@Test
-	public final void test_fetch_financialyear() {
+    @Test
+    public final void test_fetch_financialyear() {
 
-		List<Budget> budgets = getBudgets();
+        final List<Budget> budgets = getBudgets();
 
-		budgets.get(0).getFinancialYear().setId("1");
-		budgets.get(0).getFinancialYear().setTenantId("tenantId");
-		FinancialYearContract expextedResult = FinancialYearContract.builder().finYearRange("2017-18").id("1").build();
+        budgets.get(0).getFinancialYear().setId("1");
+        budgets.get(0).getFinancialYear().setTenantId("tenantId");
+        final FinancialYearContract expextedResult = FinancialYearContract.builder().finYearRange("2017-18").id("1").build();
 
-		when(financialYearContractRepository.findById(any(FinancialYearSearchContract.class)))
-				.thenReturn(expextedResult);
+        when(financialYearContractRepository.findById(any(FinancialYearSearchContract.class)))
+                .thenReturn(expextedResult);
 
-		List<Budget> actualResult = budgetService.fetchRelated(budgets);
+        final List<Budget> actualResult = budgetService.fetchRelated(budgets);
 
-		assertEquals(expextedResult, actualResult.get(0).getFinancialYear());
-	}
+        assertEquals(expextedResult, actualResult.get(0).getFinancialYear());
+    }
 
-	@Test
-	public final void test_fetch_parent() {
+    @Test
+    public final void test_fetch_parent() {
 
-		List<Budget> budgets = getBudgets();
+        final List<Budget> budgets = getBudgets();
 
-		Budget expextedResult = Budget.builder().id("1").build();
-		expextedResult.setTenantId("tenantId");
+        final Budget expextedResult = Budget.builder().id("1").build();
+        expextedResult.setTenantId("tenantId");
 
-		budgets.get(0).setParent(expextedResult);
+        budgets.get(0).setParent(expextedResult);
 
-		when(budgetRepository.findById(any(Budget.class))).thenReturn(expextedResult);
+        when(budgetRepository.findById(any(Budget.class))).thenReturn(expextedResult);
 
-		List<Budget> actualResult = budgetService.fetchRelated(budgets);
+        final List<Budget> actualResult = budgetService.fetchRelated(budgets);
 
-		assertEquals(expextedResult, actualResult.get(0).getParent());
-	}
+        assertEquals(expextedResult, actualResult.get(0).getParent());
+    }
 
-	@Test
-	public final void test_fetch_reference_budget() {
+    @Test
+    public final void test_fetch_reference_budget() {
 
-		List<Budget> budgets = getBudgets();
+        final List<Budget> budgets = getBudgets();
 
-		Budget expextedResult = Budget.builder().id("1").build();
-		expextedResult.setTenantId("tenantId");
+        final Budget expextedResult = Budget.builder().id("1").build();
+        expextedResult.setTenantId("tenantId");
 
-		budgets.get(0).setReferenceBudget(expextedResult);
+        budgets.get(0).setReferenceBudget(expextedResult);
 
-		when(budgetRepository.findById(any(Budget.class))).thenReturn(expextedResult);
+        when(budgetRepository.findById(any(Budget.class))).thenReturn(expextedResult);
 
-		List<Budget> actualResult = budgetService.fetchRelated(budgets);
+        final List<Budget> actualResult = budgetService.fetchRelated(budgets);
 
-		assertEquals(expextedResult, actualResult.get(0).getReferenceBudget());
-	}
+        assertEquals(expextedResult, actualResult.get(0).getReferenceBudget());
+    }
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_fetch_financialyear_null() {
+    @Test(expected = InvalidDataException.class)
+    public final void test_fetch_financialyear_null() {
 
-		List<Budget> budgets = getBudgets();
+        final List<Budget> budgets = getBudgets();
 
-		budgets.get(0).getFinancialYear().setId("1");
-		budgets.get(0).getFinancialYear().setTenantId("tenantId");
-		FinancialYearContract expextedResult = FinancialYearContract.builder().finYearRange("2017-18").id("1").build();
+        budgets.get(0).getFinancialYear().setId("1");
+        budgets.get(0).getFinancialYear().setTenantId("tenantId");
+        final FinancialYearContract expextedResult = FinancialYearContract.builder().finYearRange("2017-18").id("1").build();
 
-		when(financialYearContractRepository.findById(new FinancialYearSearchContract())).thenReturn(expextedResult);
+        when(financialYearContractRepository.findById(new FinancialYearSearchContract())).thenReturn(expextedResult);
 
-		budgetService.fetchRelated(budgets);
+        budgetService.fetchRelated(budgets);
 
-	}
+    }
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_fetch_parent_null() {
+    @Test(expected = InvalidDataException.class)
+    public final void test_fetch_parent_null() {
 
-		List<Budget> budgets = getBudgets();
+        final List<Budget> budgets = getBudgets();
 
-		Budget expextedResult = Budget.builder().id("1").build();
-		expextedResult.setTenantId("tenantId");
+        final Budget expextedResult = Budget.builder().id("1").build();
+        expextedResult.setTenantId("tenantId");
 
-		budgets.get(0).setParent(expextedResult);
+        budgets.get(0).setParent(expextedResult);
 
-		when(budgetRepository.findById(new Budget())).thenReturn(expextedResult);
+        when(budgetRepository.findById(new Budget())).thenReturn(expextedResult);
 
-		budgetService.fetchRelated(budgets);
+        budgetService.fetchRelated(budgets);
 
-	}
+    }
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_fetch_reference_budget_null() {
+    @Test(expected = InvalidDataException.class)
+    public final void test_fetch_reference_budget_null() {
 
-		List<Budget> budgets = getBudgets();
+        final List<Budget> budgets = getBudgets();
 
-		Budget expextedResult = Budget.builder().id("1").build();
-		expextedResult.setTenantId("tenantId");
+        final Budget expextedResult = Budget.builder().id("1").build();
+        expextedResult.setTenantId("tenantId");
 
-		budgets.get(0).setReferenceBudget(expextedResult);
+        budgets.get(0).setReferenceBudget(expextedResult);
 
-		when(budgetRepository.findById(new Budget())).thenReturn(expextedResult);
+        when(budgetRepository.findById(new Budget())).thenReturn(expextedResult);
 
-		budgetService.fetchRelated(budgets);
+        budgetService.fetchRelated(budgets);
 
-	}
+    }
 
-	private List<Budget> getBudgets() {
-		List<Budget> budgets = new ArrayList<Budget>();
-		Budget budget = Budget.builder().name("test")
-				.financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
-				.estimationType(EstimationType.BE).primaryBudget(false).build();
-		budget.setTenantId("default");
-		budgets.add(budget);
-		return budgets;
-	}
+    private List<Budget> getBudgets() {
+        final List<Budget> budgets = new ArrayList<Budget>();
+        final Budget budget = Budget.builder().name("test")
+                .financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
+                .estimationType(EstimationType.BE).primaryBudget(false).build();
+        budget.setTenantId("default");
+        budgets.add(budget);
+        return budgets;
+    }
 
 }

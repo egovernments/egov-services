@@ -13,6 +13,7 @@ export default class UiTextSearch extends Component {
 					<div style={{position: 'relative', display: 'inline'}}>
 						<TextField 
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
+							errorStyle={{"float":"left"}}
 							fullWidth={true} 
 							floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 							value={this.props.getVal(item.jsonPath)}

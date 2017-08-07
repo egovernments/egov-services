@@ -43,12 +43,27 @@ package org.egov.mr.web.contract;
 
 import java.time.LocalDate;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ResponseInfoFactory {
 
-	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
+	public ResponseInfo getResponseInfo(RequestInfo requestInfo, HttpStatus status) {
+
+		ResponseInfo responseInfo = new ResponseInfo();
+		if (requestInfo != null) {
+			responseInfo.setApiId(requestInfo.getApiId());
+			responseInfo.setResMsgId(requestInfo.getMsgId());
+			// responseInfo.setResMsgId(requestInfo.get);
+			responseInfo.setStatus(status.toString());
+			responseInfo.setVer(requestInfo.getVer());
+			responseInfo.setTs(requestInfo.getTs());
+		}
+		return responseInfo;
+	}
+	
+	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, boolean success) {
 
 		String apiId = null;
 		String ver = null;

@@ -82,7 +82,7 @@ class Report extends Component {
 
   getVal = (path) => {
     var val = _.get(this.props.formData, path);
-    return  val && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
   }
 
   printer = () => {

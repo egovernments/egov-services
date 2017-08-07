@@ -21,109 +21,106 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CustomControllerAdvice {
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public String handleMissingParamsError(Exception ex) {
-		return ex.getMessage();
-	}
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public String handleMissingParamsError(final Exception ex) {
+        return ex.getMessage();
+    }
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(CustomBindException.class)
-	public ErrorResponse handleBindingErrors(CustomBindException ex) {
-		ErrorResponse errRes = new ErrorResponse();
-		BindingResult errors = ex.getErrors();
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		errRes.setResponseInfo(responseInfo);
-		Error error = new Error();
-		if (errors.getGlobalError() != null) {
-			error.setCode(Integer.valueOf(errors.getGlobalError().getCode()));
-			error.setMessage(errors.getGlobalError().getObjectName());
-			error.setDescription(errors.getGlobalError().getDefaultMessage());
-		} else {
-			if (errors.getFieldErrorCount() > 0) {
-				error.setDescription("Missing fields");
-			}
-		}
-		if (errors.hasFieldErrors()) {
-			List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();
-			for (org.springframework.validation.FieldError errs : fieldErrors) {
-				ErrorField f = new ErrorField(errs.getCode(), errs.getDefaultMessage(), errs.getField());
-				error.getFields().add(f);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CustomBindException.class)
+    public ErrorResponse handleBindingErrors(final CustomBindException ex) {
+        final ErrorResponse errRes = new ErrorResponse();
+        final BindingResult errors = ex.getErrors();
+        final ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+        errRes.setResponseInfo(responseInfo);
+        final Error error = new Error();
+        if (errors.getGlobalError() != null) {
+            error.setCode(Integer.valueOf(errors.getGlobalError().getCode()));
+            error.setMessage(errors.getGlobalError().getObjectName());
+            error.setDescription(errors.getGlobalError().getDefaultMessage());
+        } else if (errors.getFieldErrorCount() > 0)
+            error.setDescription("Missing fields");
+        if (errors.hasFieldErrors()) {
+            final List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();
+            for (final org.springframework.validation.FieldError errs : fieldErrors) {
+                final ErrorField f = new ErrorField(errs.getCode(), errs.getDefaultMessage(), errs.getField());
+                error.getFields().add(f);
 
-			}
-		}
-		errRes.setError(error);
-		return errRes;
-	}
+            }
+        }
+        errRes.setError(error);
+        return errRes;
+    }
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(InvalidDataException.class)
-	public ErrorResponse handleBindingErrors(InvalidDataException ex) {
-		ErrorResponse errRes = new ErrorResponse();
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidDataException.class)
+    public ErrorResponse handleBindingErrors(final InvalidDataException ex) {
+        final ErrorResponse errRes = new ErrorResponse();
 
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		errRes.setResponseInfo(responseInfo);
-		Error error = new Error();
-		error.setCode(Integer.valueOf(InvalidDataException.code));
-		error.setMessage(ex.getFieldName());
-		error.setDescription(ex.getDefaultMessage());
-		errRes.setError(error);
+        final ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+        errRes.setResponseInfo(responseInfo);
+        final Error error = new Error();
+        error.setCode(Integer.valueOf(InvalidDataException.code));
+        error.setMessage(ex.getFieldName());
+        error.setDescription(ex.getDefaultMessage());
+        errRes.setError(error);
 
-		return errRes;
-	}
+        return errRes;
+    }
 
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(Throwable.class)
-	public ErrorResponse handleThrowable(Exception ex) {
-		ErrorResponse errRes = new ErrorResponse();
-		ex.printStackTrace();
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		errRes.setResponseInfo(responseInfo);
-		Error error = new Error();
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Throwable.class)
+    public ErrorResponse handleThrowable(final Exception ex) {
+        final ErrorResponse errRes = new ErrorResponse();
+        ex.printStackTrace();
+        final ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+        errRes.setResponseInfo(responseInfo);
+        final Error error = new Error();
 
-		error.setCode(500);
-		error.setMessage("Internal Server Error");
-		error.setDescription(ex.getMessage());
-		return errRes;
-	}
+        error.setCode(500);
+        error.setMessage("Internal Server Error");
+        error.setDescription(ex.getMessage());
+        return errRes;
+    }
 
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(Exception.class)
-	public ErrorResponse handleServerError(Exception ex) {
-		ex.printStackTrace();
-		ErrorResponse errRes = new ErrorResponse();
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public ErrorResponse handleServerError(final Exception ex) {
+        ex.printStackTrace();
+        final ErrorResponse errRes = new ErrorResponse();
 
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
-		errRes.setResponseInfo(responseInfo);
-		Error error = new Error();
+        final ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+        errRes.setResponseInfo(responseInfo);
+        final Error error = new Error();
 
-		error.setCode(500);
-		error.setMessage("Internal Server Error");
-		error.setDescription(ex.getMessage());
-		errRes.setError(error);
-		return errRes;
-	}
+        error.setCode(500);
+        error.setMessage("Internal Server Error");
+        error.setDescription(ex.getMessage());
+        errRes.setError(error);
+        return errRes;
+    }
 
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	@ExceptionHandler(UnauthorizedAccessException.class)
-	public ErrorResponse handleAuthenticationError(UnauthorizedAccessException ex) {
-		ex.printStackTrace();
-		ErrorResponse errRes = new ErrorResponse();
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ErrorResponse handleAuthenticationError(final UnauthorizedAccessException ex) {
+        ex.printStackTrace();
+        final ErrorResponse errRes = new ErrorResponse();
 
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.UNAUTHORIZED.toString());
-		errRes.setResponseInfo(responseInfo);
-		Error error = new Error();
+        final ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(HttpStatus.UNAUTHORIZED.toString());
+        errRes.setResponseInfo(responseInfo);
+        final Error error = new Error();
 
-		error.setCode(404);
-		error.setMessage("Un Authorized Access");
-		error.setDescription(ex.getMessage());
-		errRes.setError(error);
-		return errRes;
-	}
+        error.setCode(404);
+        error.setMessage("Un Authorized Access");
+        error.setDescription(ex.getMessage());
+        errRes.setError(error);
+        return errRes;
+    }
 
 }

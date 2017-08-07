@@ -38,27 +38,20 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.data.sync.employee.web.controller;
+package org.egov.data.sync.employee.web.contract;
 
-import lombok.extern.slf4j.Slf4j;
-import org.egov.data.sync.employee.service.DataSyncEmployeeService;
-import org.egov.data.sync.employee.web.contract.EmployeeSyncRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.*;
 
-@Slf4j
-@RestController
-public class DataSyncEmployeeController {
-
-    @Autowired
-    private DataSyncEmployeeService dataSyncEmployeeService;
-
-    @PostMapping("/datasync/_create")
-    public void createUser(@RequestBody EmployeeSyncRequest employeeSyncRequest) {
-        log.debug("Received EmployeeSyncRequest :: " + employeeSyncRequest);
-        dataSyncEmployeeService.createAsync(employeeSyncRequest);
-    }
-
+@Data
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmployeeSync {
+    private Long id;
+    private String code;
+    private String userName;
+    private String signature;
+    private String tenantId;
 }

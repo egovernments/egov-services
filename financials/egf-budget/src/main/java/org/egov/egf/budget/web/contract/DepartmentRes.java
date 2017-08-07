@@ -19,9 +19,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DepartmentRes {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	@JsonProperty("Department")
-	private List<Department> department;
+    @JsonProperty("Department")
+    private List<Department> department;
 }

@@ -29,278 +29,278 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class BudgetDetailMapperTest {
 
-	@InjectMocks
-	private BudgetDetailMapper budgetDetailMapper;
+    @InjectMocks
+    private BudgetDetailMapper budgetDetailMapper;
 
-	@Before
-	public void setup() {
-		budgetDetailMapper = new BudgetDetailMapper();
-	}
+    @Before
+    public void setup() {
+        budgetDetailMapper = new BudgetDetailMapper();
+    }
 
-	@Test
-	public void test_to_domain() {
+    @Test
+    public void test_to_domain() {
 
-		BudgetDetail expectedDomain = budgetDetailMapper.toDomain(contract());
+        final BudgetDetail expectedDomain = budgetDetailMapper.toDomain(contract());
 
-		assertEquals(expectedDomain.getId(), domain().getId());
-		assertEquals(expectedDomain.getBudgetGroup().getId(), domain().getBudgetGroup().getId());
-		assertEquals(expectedDomain.getBudget().getId(), domain().getBudget().getId());
-		assertEquals(expectedDomain.getOriginalAmount(), domain().getOriginalAmount());
-		assertEquals(expectedDomain.getApprovedAmount(), domain().getApprovedAmount());
-		assertEquals(expectedDomain.getBudgetAvailable(), domain().getBudgetAvailable());
-		assertEquals(expectedDomain.getAnticipatoryAmount(), domain().getAnticipatoryAmount());
-		assertEquals(expectedDomain.getUsingDepartment().getId(), domain().getUsingDepartment().getId());
-		assertEquals(expectedDomain.getExecutingDepartment().getId(), domain().getExecutingDepartment().getId());
-		assertEquals(expectedDomain.getFunction().getId(), domain().getFunction().getId());
-		assertEquals(expectedDomain.getScheme().getId(), domain().getScheme().getId());
-		assertEquals(expectedDomain.getFund().getId(), domain().getFund().getId());
-		assertEquals(expectedDomain.getSubScheme().getId(), domain().getSubScheme().getId());
-		assertEquals(expectedDomain.getFunctionary().getId(), domain().getFunctionary().getId());
-		assertEquals(expectedDomain.getBoundary().getId(), domain().getBoundary().getId());
-		assertEquals(expectedDomain.getMaterializedPath(), domain().getMaterializedPath());
-		assertEquals(expectedDomain.getDocumentNumber(), domain().getDocumentNumber());
-		assertEquals(expectedDomain.getUniqueNo(), domain().getUniqueNo());
-		assertEquals(expectedDomain.getPlanningPercent(), domain().getPlanningPercent());
-		assertEquals(expectedDomain.getStatus().getId(), domain().getStatus().getId());
-		assertEquals(expectedDomain.getCreatedBy().getId(), domain().getCreatedBy().getId());
-		assertEquals(expectedDomain.getLastModifiedBy().getId(), domain().getLastModifiedBy().getId());
-		assertEquals(expectedDomain.getTenantId(), domain().getTenantId());
+        assertEquals(expectedDomain.getId(), domain().getId());
+        assertEquals(expectedDomain.getBudgetGroup().getId(), domain().getBudgetGroup().getId());
+        assertEquals(expectedDomain.getBudget().getId(), domain().getBudget().getId());
+        assertEquals(expectedDomain.getOriginalAmount(), domain().getOriginalAmount());
+        assertEquals(expectedDomain.getApprovedAmount(), domain().getApprovedAmount());
+        assertEquals(expectedDomain.getBudgetAvailable(), domain().getBudgetAvailable());
+        assertEquals(expectedDomain.getAnticipatoryAmount(), domain().getAnticipatoryAmount());
+        assertEquals(expectedDomain.getUsingDepartment().getId(), domain().getUsingDepartment().getId());
+        assertEquals(expectedDomain.getExecutingDepartment().getId(), domain().getExecutingDepartment().getId());
+        assertEquals(expectedDomain.getFunction().getId(), domain().getFunction().getId());
+        assertEquals(expectedDomain.getScheme().getId(), domain().getScheme().getId());
+        assertEquals(expectedDomain.getFund().getId(), domain().getFund().getId());
+        assertEquals(expectedDomain.getSubScheme().getId(), domain().getSubScheme().getId());
+        assertEquals(expectedDomain.getFunctionary().getId(), domain().getFunctionary().getId());
+        assertEquals(expectedDomain.getBoundary().getId(), domain().getBoundary().getId());
+        assertEquals(expectedDomain.getMaterializedPath(), domain().getMaterializedPath());
+        assertEquals(expectedDomain.getDocumentNumber(), domain().getDocumentNumber());
+        assertEquals(expectedDomain.getUniqueNo(), domain().getUniqueNo());
+        assertEquals(expectedDomain.getPlanningPercent(), domain().getPlanningPercent());
+        assertEquals(expectedDomain.getStatus().getId(), domain().getStatus().getId());
+        assertEquals(expectedDomain.getCreatedBy().getId(), domain().getCreatedBy().getId());
+        assertEquals(expectedDomain.getLastModifiedBy().getId(), domain().getLastModifiedBy().getId());
+        assertEquals(expectedDomain.getTenantId(), domain().getTenantId());
 
-	}
+    }
 
-	@Test
-	public void test_to_contract() {
+    @Test
+    public void test_to_contract() {
 
-		BudgetDetailContract expectedContract = budgetDetailMapper.toContract(domain());
+        final BudgetDetailContract expectedContract = budgetDetailMapper.toContract(domain());
 
-		assertEquals(expectedContract.getId(), contract().getId());
-		assertEquals(expectedContract.getBudgetGroup().getId(), contract().getBudgetGroup().getId());
-		assertEquals(expectedContract.getBudget().getId(), contract().getBudget().getId());
-		assertEquals(expectedContract.getOriginalAmount(), contract().getOriginalAmount());
-		assertEquals(expectedContract.getApprovedAmount(), contract().getApprovedAmount());
-		assertEquals(expectedContract.getBudgetAvailable(), contract().getBudgetAvailable());
-		assertEquals(expectedContract.getAnticipatoryAmount(), contract().getAnticipatoryAmount());
-		assertEquals(expectedContract.getUsingDepartment().getId(), contract().getUsingDepartment().getId());
-		assertEquals(expectedContract.getExecutingDepartment().getId(), contract().getExecutingDepartment().getId());
-		assertEquals(expectedContract.getFunction().getId(), contract().getFunction().getId());
-		assertEquals(expectedContract.getScheme().getId(), contract().getScheme().getId());
-		assertEquals(expectedContract.getFund().getId(), contract().getFund().getId());
-		assertEquals(expectedContract.getSubScheme().getId(), contract().getSubScheme().getId());
-		assertEquals(expectedContract.getFunctionary().getId(), contract().getFunctionary().getId());
-		assertEquals(expectedContract.getBoundary().getId(), contract().getBoundary().getId());
-		assertEquals(expectedContract.getMaterializedPath(), contract().getMaterializedPath());
-		assertEquals(expectedContract.getDocumentNumber(), contract().getDocumentNumber());
-		assertEquals(expectedContract.getUniqueNo(), contract().getUniqueNo());
-		assertEquals(expectedContract.getPlanningPercent(), contract().getPlanningPercent());
-		assertEquals(expectedContract.getStatus().getId(), contract().getStatus().getId());
-		assertEquals(expectedContract.getCreatedBy().getId(), contract().getCreatedBy().getId());
-		assertEquals(expectedContract.getLastModifiedBy().getId(), contract().getLastModifiedBy().getId());
-		assertEquals(expectedContract.getTenantId(), contract().getTenantId());
+        assertEquals(expectedContract.getId(), contract().getId());
+        assertEquals(expectedContract.getBudgetGroup().getId(), contract().getBudgetGroup().getId());
+        assertEquals(expectedContract.getBudget().getId(), contract().getBudget().getId());
+        assertEquals(expectedContract.getOriginalAmount(), contract().getOriginalAmount());
+        assertEquals(expectedContract.getApprovedAmount(), contract().getApprovedAmount());
+        assertEquals(expectedContract.getBudgetAvailable(), contract().getBudgetAvailable());
+        assertEquals(expectedContract.getAnticipatoryAmount(), contract().getAnticipatoryAmount());
+        assertEquals(expectedContract.getUsingDepartment().getId(), contract().getUsingDepartment().getId());
+        assertEquals(expectedContract.getExecutingDepartment().getId(), contract().getExecutingDepartment().getId());
+        assertEquals(expectedContract.getFunction().getId(), contract().getFunction().getId());
+        assertEquals(expectedContract.getScheme().getId(), contract().getScheme().getId());
+        assertEquals(expectedContract.getFund().getId(), contract().getFund().getId());
+        assertEquals(expectedContract.getSubScheme().getId(), contract().getSubScheme().getId());
+        assertEquals(expectedContract.getFunctionary().getId(), contract().getFunctionary().getId());
+        assertEquals(expectedContract.getBoundary().getId(), contract().getBoundary().getId());
+        assertEquals(expectedContract.getMaterializedPath(), contract().getMaterializedPath());
+        assertEquals(expectedContract.getDocumentNumber(), contract().getDocumentNumber());
+        assertEquals(expectedContract.getUniqueNo(), contract().getUniqueNo());
+        assertEquals(expectedContract.getPlanningPercent(), contract().getPlanningPercent());
+        assertEquals(expectedContract.getStatus().getId(), contract().getStatus().getId());
+        assertEquals(expectedContract.getCreatedBy().getId(), contract().getCreatedBy().getId());
+        assertEquals(expectedContract.getLastModifiedBy().getId(), contract().getLastModifiedBy().getId());
+        assertEquals(expectedContract.getTenantId(), contract().getTenantId());
 
-	}
+    }
 
-	@Test
-	public void test_to_search_domain() {
+    @Test
+    public void test_to_search_domain() {
 
-		BudgetDetailSearch expectedSearchDomain = budgetDetailMapper.toSearchDomain(searchContract());
+        final BudgetDetailSearch expectedSearchDomain = budgetDetailMapper.toSearchDomain(searchContract());
 
-		assertEquals(expectedSearchDomain.getId(), searchContract().getId());
-		assertEquals(expectedSearchDomain.getBudgetGroup().getId(), searchContract().getBudgetGroup().getId());
-		assertEquals(expectedSearchDomain.getBudget().getId(), searchContract().getBudget().getId());
-		assertEquals(expectedSearchDomain.getOriginalAmount(), searchContract().getOriginalAmount());
-		assertEquals(expectedSearchDomain.getApprovedAmount(), searchContract().getApprovedAmount());
-		assertEquals(expectedSearchDomain.getBudgetAvailable(), searchContract().getBudgetAvailable());
-		assertEquals(expectedSearchDomain.getAnticipatoryAmount(), searchContract().getAnticipatoryAmount());
-		assertEquals(expectedSearchDomain.getUsingDepartment().getId(), searchContract().getUsingDepartment().getId());
-		assertEquals(expectedSearchDomain.getExecutingDepartment().getId(),
-				searchContract().getExecutingDepartment().getId());
-		assertEquals(expectedSearchDomain.getFunction().getId(), searchContract().getFunction().getId());
-		assertEquals(expectedSearchDomain.getScheme().getId(), searchContract().getScheme().getId());
-		assertEquals(expectedSearchDomain.getFund().getId(), searchContract().getFund().getId());
-		assertEquals(expectedSearchDomain.getSubScheme().getId(), searchContract().getSubScheme().getId());
-		assertEquals(expectedSearchDomain.getFunctionary().getId(), searchContract().getFunctionary().getId());
-		assertEquals(expectedSearchDomain.getBoundary().getId(), searchContract().getBoundary().getId());
-		assertEquals(expectedSearchDomain.getMaterializedPath(), searchContract().getMaterializedPath());
-		assertEquals(expectedSearchDomain.getDocumentNumber(), searchContract().getDocumentNumber());
-		assertEquals(expectedSearchDomain.getUniqueNo(), searchContract().getUniqueNo());
-		assertEquals(expectedSearchDomain.getPlanningPercent(), searchContract().getPlanningPercent());
-		assertEquals(expectedSearchDomain.getStatus().getId(), searchContract().getStatus().getId());
-		assertEquals(expectedSearchDomain.getCreatedBy().getId(), searchContract().getCreatedBy().getId());
-		assertEquals(expectedSearchDomain.getLastModifiedBy().getId(), searchContract().getLastModifiedBy().getId());
-		assertEquals(expectedSearchDomain.getTenantId(), searchContract().getTenantId());
-		assertEquals(expectedSearchDomain.getPageSize(), searchContract().getPageSize());
-		assertEquals(expectedSearchDomain.getOffset(), searchContract().getOffset());
+        assertEquals(expectedSearchDomain.getId(), searchContract().getId());
+        assertEquals(expectedSearchDomain.getBudgetGroup().getId(), searchContract().getBudgetGroup().getId());
+        assertEquals(expectedSearchDomain.getBudget().getId(), searchContract().getBudget().getId());
+        assertEquals(expectedSearchDomain.getOriginalAmount(), searchContract().getOriginalAmount());
+        assertEquals(expectedSearchDomain.getApprovedAmount(), searchContract().getApprovedAmount());
+        assertEquals(expectedSearchDomain.getBudgetAvailable(), searchContract().getBudgetAvailable());
+        assertEquals(expectedSearchDomain.getAnticipatoryAmount(), searchContract().getAnticipatoryAmount());
+        assertEquals(expectedSearchDomain.getUsingDepartment().getId(), searchContract().getUsingDepartment().getId());
+        assertEquals(expectedSearchDomain.getExecutingDepartment().getId(),
+                searchContract().getExecutingDepartment().getId());
+        assertEquals(expectedSearchDomain.getFunction().getId(), searchContract().getFunction().getId());
+        assertEquals(expectedSearchDomain.getScheme().getId(), searchContract().getScheme().getId());
+        assertEquals(expectedSearchDomain.getFund().getId(), searchContract().getFund().getId());
+        assertEquals(expectedSearchDomain.getSubScheme().getId(), searchContract().getSubScheme().getId());
+        assertEquals(expectedSearchDomain.getFunctionary().getId(), searchContract().getFunctionary().getId());
+        assertEquals(expectedSearchDomain.getBoundary().getId(), searchContract().getBoundary().getId());
+        assertEquals(expectedSearchDomain.getMaterializedPath(), searchContract().getMaterializedPath());
+        assertEquals(expectedSearchDomain.getDocumentNumber(), searchContract().getDocumentNumber());
+        assertEquals(expectedSearchDomain.getUniqueNo(), searchContract().getUniqueNo());
+        assertEquals(expectedSearchDomain.getPlanningPercent(), searchContract().getPlanningPercent());
+        assertEquals(expectedSearchDomain.getStatus().getId(), searchContract().getStatus().getId());
+        assertEquals(expectedSearchDomain.getCreatedBy().getId(), searchContract().getCreatedBy().getId());
+        assertEquals(expectedSearchDomain.getLastModifiedBy().getId(), searchContract().getLastModifiedBy().getId());
+        assertEquals(expectedSearchDomain.getTenantId(), searchContract().getTenantId());
+        assertEquals(expectedSearchDomain.getPageSize(), searchContract().getPageSize());
+        assertEquals(expectedSearchDomain.getOffset(), searchContract().getOffset());
 
-	}
+    }
 
-	@Test
-	public void test_to_search_contract() {
+    @Test
+    public void test_to_search_contract() {
 
-		BudgetDetailSearchContract expectedSearchContract = budgetDetailMapper.toSearchContract(searchDomain());
+        final BudgetDetailSearchContract expectedSearchContract = budgetDetailMapper.toSearchContract(searchDomain());
 
-		assertEquals(expectedSearchContract.getId(), searchContract().getId());
-		assertEquals(expectedSearchContract.getBudgetGroup().getId(), searchContract().getBudgetGroup().getId());
-		assertEquals(expectedSearchContract.getBudget().getId(), searchContract().getBudget().getId());
-		assertEquals(expectedSearchContract.getOriginalAmount(), searchContract().getOriginalAmount());
-		assertEquals(expectedSearchContract.getApprovedAmount(), searchContract().getApprovedAmount());
-		assertEquals(expectedSearchContract.getBudgetAvailable(), searchContract().getBudgetAvailable());
-		assertEquals(expectedSearchContract.getAnticipatoryAmount(), searchContract().getAnticipatoryAmount());
-		assertEquals(expectedSearchContract.getUsingDepartment().getId(),
-				searchContract().getUsingDepartment().getId());
-		assertEquals(expectedSearchContract.getExecutingDepartment().getId(),
-				searchContract().getExecutingDepartment().getId());
-		assertEquals(expectedSearchContract.getFunction().getId(), searchContract().getFunction().getId());
-		assertEquals(expectedSearchContract.getScheme().getId(), searchContract().getScheme().getId());
-		assertEquals(expectedSearchContract.getFund().getId(), searchContract().getFund().getId());
-		assertEquals(expectedSearchContract.getSubScheme().getId(), searchContract().getSubScheme().getId());
-		assertEquals(expectedSearchContract.getFunctionary().getId(), searchContract().getFunctionary().getId());
-		assertEquals(expectedSearchContract.getBoundary().getId(), searchContract().getBoundary().getId());
-		assertEquals(expectedSearchContract.getMaterializedPath(), searchContract().getMaterializedPath());
-		assertEquals(expectedSearchContract.getDocumentNumber(), searchContract().getDocumentNumber());
-		assertEquals(expectedSearchContract.getUniqueNo(), searchContract().getUniqueNo());
-		assertEquals(expectedSearchContract.getPlanningPercent(), searchContract().getPlanningPercent());
-		assertEquals(expectedSearchContract.getStatus().getId(), searchContract().getStatus().getId());
-		assertEquals(expectedSearchContract.getCreatedBy().getId(), searchContract().getCreatedBy().getId());
-		assertEquals(expectedSearchContract.getLastModifiedBy().getId(), searchContract().getLastModifiedBy().getId());
-		assertEquals(expectedSearchContract.getTenantId(), searchContract().getTenantId());
-		assertEquals(expectedSearchContract.getPageSize(), searchContract().getPageSize());
-		assertEquals(expectedSearchContract.getOffset(), searchContract().getOffset());
+        assertEquals(expectedSearchContract.getId(), searchContract().getId());
+        assertEquals(expectedSearchContract.getBudgetGroup().getId(), searchContract().getBudgetGroup().getId());
+        assertEquals(expectedSearchContract.getBudget().getId(), searchContract().getBudget().getId());
+        assertEquals(expectedSearchContract.getOriginalAmount(), searchContract().getOriginalAmount());
+        assertEquals(expectedSearchContract.getApprovedAmount(), searchContract().getApprovedAmount());
+        assertEquals(expectedSearchContract.getBudgetAvailable(), searchContract().getBudgetAvailable());
+        assertEquals(expectedSearchContract.getAnticipatoryAmount(), searchContract().getAnticipatoryAmount());
+        assertEquals(expectedSearchContract.getUsingDepartment().getId(),
+                searchContract().getUsingDepartment().getId());
+        assertEquals(expectedSearchContract.getExecutingDepartment().getId(),
+                searchContract().getExecutingDepartment().getId());
+        assertEquals(expectedSearchContract.getFunction().getId(), searchContract().getFunction().getId());
+        assertEquals(expectedSearchContract.getScheme().getId(), searchContract().getScheme().getId());
+        assertEquals(expectedSearchContract.getFund().getId(), searchContract().getFund().getId());
+        assertEquals(expectedSearchContract.getSubScheme().getId(), searchContract().getSubScheme().getId());
+        assertEquals(expectedSearchContract.getFunctionary().getId(), searchContract().getFunctionary().getId());
+        assertEquals(expectedSearchContract.getBoundary().getId(), searchContract().getBoundary().getId());
+        assertEquals(expectedSearchContract.getMaterializedPath(), searchContract().getMaterializedPath());
+        assertEquals(expectedSearchContract.getDocumentNumber(), searchContract().getDocumentNumber());
+        assertEquals(expectedSearchContract.getUniqueNo(), searchContract().getUniqueNo());
+        assertEquals(expectedSearchContract.getPlanningPercent(), searchContract().getPlanningPercent());
+        assertEquals(expectedSearchContract.getStatus().getId(), searchContract().getStatus().getId());
+        assertEquals(expectedSearchContract.getCreatedBy().getId(), searchContract().getCreatedBy().getId());
+        assertEquals(expectedSearchContract.getLastModifiedBy().getId(), searchContract().getLastModifiedBy().getId());
+        assertEquals(expectedSearchContract.getTenantId(), searchContract().getTenantId());
+        assertEquals(expectedSearchContract.getPageSize(), searchContract().getPageSize());
+        assertEquals(expectedSearchContract.getOffset(), searchContract().getOffset());
 
-	}
+    }
 
-	public BudgetDetail domain() {
+    public BudgetDetail domain() {
 
-		BudgetDetail budgetDetail = new BudgetDetail();
+        final BudgetDetail budgetDetail = new BudgetDetail();
 
-		budgetDetail.setId("id");
-		budgetDetail.setBudgetGroup(BudgetGroupContract.builder().id("id").build());
-		Budget budget = Budget.builder().id("id").build();
-		budget.setTenantId("tenantId");
-		budgetDetail.setBudget(budget);
-		budgetDetail.setOriginalAmount(BigDecimal.ONE);
-		budgetDetail.setApprovedAmount(BigDecimal.ONE);
-		budgetDetail.setBudgetAvailable(BigDecimal.ONE);
-		budgetDetail.setAnticipatoryAmount(BigDecimal.ONE);
-		budgetDetail.setUsingDepartment(Department.builder().id("id").build());
-		budgetDetail.setExecutingDepartment(Department.builder().id("id").build());
-		budgetDetail.setFunction(FunctionContract.builder().id("id").build());
-		budgetDetail.setScheme(SchemeContract.builder().id("id").build());
-		budgetDetail.setFund(FundContract.builder().id("id").build());
-		budgetDetail.setSubScheme(SubSchemeContract.builder().id("id").build());
-		budgetDetail.setFunctionary(FunctionaryContract.builder().id("id").build());
-		budgetDetail.setBoundary(Boundary.builder().id("id").build());
-		budgetDetail.setMaterializedPath("materializedPath");
-		budgetDetail.setDocumentNumber("documentNumber");
-		budgetDetail.setUniqueNo("uniqueNo");
-		budgetDetail.setPlanningPercent(BigDecimal.ONE);
-		budgetDetail.setStatus(FinancialStatusContract.builder().id("id").build());
-		budgetDetail.setCreatedBy(User.builder().id(1l).build());
-		budgetDetail.setLastModifiedBy(User.builder().id(1l).build());
-		budgetDetail.setTenantId("tenantId");
+        budgetDetail.setId("id");
+        budgetDetail.setBudgetGroup(BudgetGroupContract.builder().id("id").build());
+        final Budget budget = Budget.builder().id("id").build();
+        budget.setTenantId("tenantId");
+        budgetDetail.setBudget(budget);
+        budgetDetail.setOriginalAmount(BigDecimal.ONE);
+        budgetDetail.setApprovedAmount(BigDecimal.ONE);
+        budgetDetail.setBudgetAvailable(BigDecimal.ONE);
+        budgetDetail.setAnticipatoryAmount(BigDecimal.ONE);
+        budgetDetail.setUsingDepartment(Department.builder().id("id").build());
+        budgetDetail.setExecutingDepartment(Department.builder().id("id").build());
+        budgetDetail.setFunction(FunctionContract.builder().id("id").build());
+        budgetDetail.setScheme(SchemeContract.builder().id("id").build());
+        budgetDetail.setFund(FundContract.builder().id("id").build());
+        budgetDetail.setSubScheme(SubSchemeContract.builder().id("id").build());
+        budgetDetail.setFunctionary(FunctionaryContract.builder().id("id").build());
+        budgetDetail.setBoundary(Boundary.builder().id("id").build());
+        budgetDetail.setMaterializedPath("materializedPath");
+        budgetDetail.setDocumentNumber("documentNumber");
+        budgetDetail.setUniqueNo("uniqueNo");
+        budgetDetail.setPlanningPercent(BigDecimal.ONE);
+        budgetDetail.setStatus(FinancialStatusContract.builder().id("id").build());
+        budgetDetail.setCreatedBy(User.builder().id(1l).build());
+        budgetDetail.setLastModifiedBy(User.builder().id(1l).build());
+        budgetDetail.setTenantId("tenantId");
 
-		return budgetDetail;
-	}
+        return budgetDetail;
+    }
 
-	public BudgetDetailContract contract() {
+    public BudgetDetailContract contract() {
 
-		BudgetDetailContract contract = new BudgetDetailContract();
+        final BudgetDetailContract contract = new BudgetDetailContract();
 
-		contract.setId("id");
-		contract.setBudgetGroup(BudgetGroupContract.builder().id("id").build());
-		BudgetContract budget = BudgetContract.builder().id("id").build();
-		budget.setTenantId("tenantId");
-		contract.setBudget(budget);
-		contract.setOriginalAmount(BigDecimal.ONE);
-		contract.setApprovedAmount(BigDecimal.ONE);
-		contract.setBudgetAvailable(BigDecimal.ONE);
-		contract.setAnticipatoryAmount(BigDecimal.ONE);
-		contract.setUsingDepartment(Department.builder().id("id").build());
-		contract.setExecutingDepartment(Department.builder().id("id").build());
-		contract.setFunction(FunctionContract.builder().id("id").build());
-		contract.setScheme(SchemeContract.builder().id("id").build());
-		contract.setFund(FundContract.builder().id("id").build());
-		contract.setSubScheme(SubSchemeContract.builder().id("id").build());
-		contract.setFunctionary(FunctionaryContract.builder().id("id").build());
-		contract.setBoundary(Boundary.builder().id("id").build());
-		contract.setMaterializedPath("materializedPath");
-		contract.setDocumentNumber("documentNumber");
-		contract.setUniqueNo("uniqueNo");
-		contract.setPlanningPercent(BigDecimal.ONE);
-		contract.setStatus(FinancialStatusContract.builder().id("id").build());
-		contract.setCreatedBy(User.builder().id(1l).build());
-		contract.setLastModifiedBy(User.builder().id(1l).build());
-		contract.setTenantId("tenantId");
+        contract.setId("id");
+        contract.setBudgetGroup(BudgetGroupContract.builder().id("id").build());
+        final BudgetContract budget = BudgetContract.builder().id("id").build();
+        budget.setTenantId("tenantId");
+        contract.setBudget(budget);
+        contract.setOriginalAmount(BigDecimal.ONE);
+        contract.setApprovedAmount(BigDecimal.ONE);
+        contract.setBudgetAvailable(BigDecimal.ONE);
+        contract.setAnticipatoryAmount(BigDecimal.ONE);
+        contract.setUsingDepartment(Department.builder().id("id").build());
+        contract.setExecutingDepartment(Department.builder().id("id").build());
+        contract.setFunction(FunctionContract.builder().id("id").build());
+        contract.setScheme(SchemeContract.builder().id("id").build());
+        contract.setFund(FundContract.builder().id("id").build());
+        contract.setSubScheme(SubSchemeContract.builder().id("id").build());
+        contract.setFunctionary(FunctionaryContract.builder().id("id").build());
+        contract.setBoundary(Boundary.builder().id("id").build());
+        contract.setMaterializedPath("materializedPath");
+        contract.setDocumentNumber("documentNumber");
+        contract.setUniqueNo("uniqueNo");
+        contract.setPlanningPercent(BigDecimal.ONE);
+        contract.setStatus(FinancialStatusContract.builder().id("id").build());
+        contract.setCreatedBy(User.builder().id(1l).build());
+        contract.setLastModifiedBy(User.builder().id(1l).build());
+        contract.setTenantId("tenantId");
 
-		return contract;
-	}
+        return contract;
+    }
 
-	public BudgetDetailSearch searchDomain() {
+    public BudgetDetailSearch searchDomain() {
 
-		BudgetDetailSearch budgetDetailSearch = new BudgetDetailSearch();
-		budgetDetailSearch.setId("id");
-		budgetDetailSearch.setBudgetGroup(BudgetGroupContract.builder().id("id").build());
-		Budget budget = Budget.builder().id("id").build();
-		budget.setTenantId("tenantId");
-		budgetDetailSearch.setBudget(budget);
-		budgetDetailSearch.setOriginalAmount(BigDecimal.ONE);
-		budgetDetailSearch.setApprovedAmount(BigDecimal.ONE);
-		budgetDetailSearch.setBudgetAvailable(BigDecimal.ONE);
-		budgetDetailSearch.setAnticipatoryAmount(BigDecimal.ONE);
-		budgetDetailSearch.setUsingDepartment(Department.builder().id("id").build());
-		budgetDetailSearch.setExecutingDepartment(Department.builder().id("id").build());
-		budgetDetailSearch.setFunction(FunctionContract.builder().id("id").build());
-		budgetDetailSearch.setScheme(SchemeContract.builder().id("id").build());
-		budgetDetailSearch.setFund(FundContract.builder().id("id").build());
-		budgetDetailSearch.setSubScheme(SubSchemeContract.builder().id("id").build());
-		budgetDetailSearch.setFunctionary(FunctionaryContract.builder().id("id").build());
-		budgetDetailSearch.setBoundary(Boundary.builder().id("id").build());
-		budgetDetailSearch.setMaterializedPath("materializedPath");
-		budgetDetailSearch.setDocumentNumber("documentNumber");
-		budgetDetailSearch.setUniqueNo("uniqueNo");
-		budgetDetailSearch.setPlanningPercent(BigDecimal.ONE);
-		budgetDetailSearch.setStatus(FinancialStatusContract.builder().id("id").build());
-		budgetDetailSearch.setCreatedBy(User.builder().id(1l).build());
-		budgetDetailSearch.setLastModifiedBy(User.builder().id(1l).build());
-		budgetDetailSearch.setTenantId("tenantId");
-		budgetDetailSearch.setPageSize(1);
-		budgetDetailSearch.setOffset(1);
+        final BudgetDetailSearch budgetDetailSearch = new BudgetDetailSearch();
+        budgetDetailSearch.setId("id");
+        budgetDetailSearch.setBudgetGroup(BudgetGroupContract.builder().id("id").build());
+        final Budget budget = Budget.builder().id("id").build();
+        budget.setTenantId("tenantId");
+        budgetDetailSearch.setBudget(budget);
+        budgetDetailSearch.setOriginalAmount(BigDecimal.ONE);
+        budgetDetailSearch.setApprovedAmount(BigDecimal.ONE);
+        budgetDetailSearch.setBudgetAvailable(BigDecimal.ONE);
+        budgetDetailSearch.setAnticipatoryAmount(BigDecimal.ONE);
+        budgetDetailSearch.setUsingDepartment(Department.builder().id("id").build());
+        budgetDetailSearch.setExecutingDepartment(Department.builder().id("id").build());
+        budgetDetailSearch.setFunction(FunctionContract.builder().id("id").build());
+        budgetDetailSearch.setScheme(SchemeContract.builder().id("id").build());
+        budgetDetailSearch.setFund(FundContract.builder().id("id").build());
+        budgetDetailSearch.setSubScheme(SubSchemeContract.builder().id("id").build());
+        budgetDetailSearch.setFunctionary(FunctionaryContract.builder().id("id").build());
+        budgetDetailSearch.setBoundary(Boundary.builder().id("id").build());
+        budgetDetailSearch.setMaterializedPath("materializedPath");
+        budgetDetailSearch.setDocumentNumber("documentNumber");
+        budgetDetailSearch.setUniqueNo("uniqueNo");
+        budgetDetailSearch.setPlanningPercent(BigDecimal.ONE);
+        budgetDetailSearch.setStatus(FinancialStatusContract.builder().id("id").build());
+        budgetDetailSearch.setCreatedBy(User.builder().id(1l).build());
+        budgetDetailSearch.setLastModifiedBy(User.builder().id(1l).build());
+        budgetDetailSearch.setTenantId("tenantId");
+        budgetDetailSearch.setPageSize(1);
+        budgetDetailSearch.setOffset(1);
 
-		return budgetDetailSearch;
-	}
+        return budgetDetailSearch;
+    }
 
-	public BudgetDetailSearchContract searchContract() {
+    public BudgetDetailSearchContract searchContract() {
 
-		BudgetDetailSearchContract contract = new BudgetDetailSearchContract();
+        final BudgetDetailSearchContract contract = new BudgetDetailSearchContract();
 
-		contract.setId("id");
-		contract.setBudgetGroup(BudgetGroupContract.builder().id("id").build());
-		BudgetContract budget = BudgetContract.builder().id("id").build();
-		budget.setTenantId("tenantId");
-		contract.setBudget(budget);
-		contract.setOriginalAmount(BigDecimal.ONE);
-		contract.setApprovedAmount(BigDecimal.ONE);
-		contract.setBudgetAvailable(BigDecimal.ONE);
-		contract.setAnticipatoryAmount(BigDecimal.ONE);
-		contract.setUsingDepartment(Department.builder().id("id").build());
-		contract.setExecutingDepartment(Department.builder().id("id").build());
-		contract.setFunction(FunctionContract.builder().id("id").build());
-		contract.setScheme(SchemeContract.builder().id("id").build());
-		contract.setFund(FundContract.builder().id("id").build());
-		contract.setSubScheme(SubSchemeContract.builder().id("id").build());
-		contract.setFunctionary(FunctionaryContract.builder().id("id").build());
-		contract.setBoundary(Boundary.builder().id("id").build());
-		contract.setMaterializedPath("materializedPath");
-		contract.setDocumentNumber("documentNumber");
-		contract.setUniqueNo("uniqueNo");
-		contract.setPlanningPercent(BigDecimal.ONE);
-		contract.setStatus(FinancialStatusContract.builder().id("id").build());
-		contract.setCreatedBy(User.builder().id(1l).build());
-		contract.setLastModifiedBy(User.builder().id(1l).build());
-		contract.setTenantId("tenantId");
-		contract.setPageSize(1);
-		contract.setOffset(1);
+        contract.setId("id");
+        contract.setBudgetGroup(BudgetGroupContract.builder().id("id").build());
+        final BudgetContract budget = BudgetContract.builder().id("id").build();
+        budget.setTenantId("tenantId");
+        contract.setBudget(budget);
+        contract.setOriginalAmount(BigDecimal.ONE);
+        contract.setApprovedAmount(BigDecimal.ONE);
+        contract.setBudgetAvailable(BigDecimal.ONE);
+        contract.setAnticipatoryAmount(BigDecimal.ONE);
+        contract.setUsingDepartment(Department.builder().id("id").build());
+        contract.setExecutingDepartment(Department.builder().id("id").build());
+        contract.setFunction(FunctionContract.builder().id("id").build());
+        contract.setScheme(SchemeContract.builder().id("id").build());
+        contract.setFund(FundContract.builder().id("id").build());
+        contract.setSubScheme(SubSchemeContract.builder().id("id").build());
+        contract.setFunctionary(FunctionaryContract.builder().id("id").build());
+        contract.setBoundary(Boundary.builder().id("id").build());
+        contract.setMaterializedPath("materializedPath");
+        contract.setDocumentNumber("documentNumber");
+        contract.setUniqueNo("uniqueNo");
+        contract.setPlanningPercent(BigDecimal.ONE);
+        contract.setStatus(FinancialStatusContract.builder().id("id").build());
+        contract.setCreatedBy(User.builder().id(1l).build());
+        contract.setLastModifiedBy(User.builder().id(1l).build());
+        contract.setTenantId("tenantId");
+        contract.setPageSize(1);
+        contract.setOffset(1);
 
-		return contract;
-	}
+        return contract;
+    }
 
 }

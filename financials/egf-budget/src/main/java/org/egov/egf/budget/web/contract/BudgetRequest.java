@@ -50,7 +50,7 @@ import lombok.Setter;
 @Setter
 public class BudgetRequest {
 
-	private RequestInfo requestInfo;
+    private RequestInfo requestInfo;
 
-	private List<BudgetContract> budgets;
+    private List<BudgetContract> budgets;
 }

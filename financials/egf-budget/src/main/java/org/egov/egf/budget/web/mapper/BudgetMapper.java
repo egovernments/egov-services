@@ -11,9 +11,9 @@ import org.egov.egf.master.web.contract.FinancialYearContract;
 
 public class BudgetMapper {
 
-    public Budget toDomain(BudgetContract contract) {
+    public Budget toDomain(final BudgetContract contract) {
 
-        Budget budget = new Budget();
+        final Budget budget = new Budget();
 
         budget.setId(contract.getId());
         budget.setName(contract.getName());
@@ -40,25 +40,23 @@ public class BudgetMapper {
         return budget;
     }
 
-    public BudgetContract toContract(Budget budget) {
+    public BudgetContract toContract(final Budget budget) {
 
-        BudgetContract contract = new BudgetContract();
+        final BudgetContract contract = new BudgetContract();
         contract.setId(budget.getId());
         contract.setName(budget.getName());
         if (budget.getFinancialYear() != null)
             contract.setFinancialYear(budget.getFinancialYear());
         contract.setEstimationType(
                 budget.getEstimationType() != null ? EstimationTypeContract.valueOf(budget.getEstimationType().name()) : null);
-        if (budget.getParent() != null) {
+        if (budget.getParent() != null)
             contract.setParent(toContract(budget.getParent()));
-        }
         contract.setDescription(budget.getDescription());
         contract.setActive(budget.getActive());
         contract.setPrimaryBudget(budget.getPrimaryBudget());
         contract.setMaterializedPath(budget.getMaterializedPath());
-        if (budget.getReferenceBudget() != null) {
+        if (budget.getReferenceBudget() != null)
             contract.setReferenceBudget(toContract(budget.getReferenceBudget()));
-        }
         contract.setDocumentNumber(budget.getDocumentNumber());
         if (budget.getStatus() != null)
             contract.setStatus(FinancialStatusContract.builder().id(budget.getStatus().getId())
@@ -73,9 +71,9 @@ public class BudgetMapper {
         return contract;
     }
 
-    public BudgetSearch toSearchDomain(BudgetSearchContract contract) {
+    public BudgetSearch toSearchDomain(final BudgetSearchContract contract) {
 
-        BudgetSearch budgetSearch = new BudgetSearch();
+        final BudgetSearch budgetSearch = new BudgetSearch();
 
         budgetSearch.setId(contract.getId());
         budgetSearch.setName(contract.getName());
@@ -104,9 +102,9 @@ public class BudgetMapper {
         return budgetSearch;
     }
 
-    public BudgetSearchContract toSearchContract(BudgetSearch budgetSearch) {
+    public BudgetSearchContract toSearchContract(final BudgetSearch budgetSearch) {
 
-        BudgetSearchContract contract = new BudgetSearchContract();
+        final BudgetSearchContract contract = new BudgetSearchContract();
 
         contract.setId(budgetSearch.getId());
         contract.setName(budgetSearch.getName());

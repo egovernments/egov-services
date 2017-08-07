@@ -92,7 +92,6 @@ public class SupplyTypeRepository {
     public boolean checkSupplyTypeByNameAndCode(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(name);
-        // preparedStatementValues.add(id);
         preparedStatementValues.add(tenantId);
         final String query;
         if (code == null)

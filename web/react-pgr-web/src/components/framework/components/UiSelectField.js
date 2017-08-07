@@ -43,6 +43,7 @@ class UiSelectField extends Component {
 
 			var response=Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
 
+				if(response) {
 					let keys=jp.query(response,splitArray[1].split("|")[1]);
 					let values=jp.query(response,splitArray[1].split("|")[2]);
 					let dropDownData=[];
@@ -55,19 +56,8 @@ class UiSelectField extends Component {
 							}
 							dropDownData.push(obj);
 					}
-
-					// console.log(dropDownData);
-
-
-					// for (var l = 0; l < metaData.reportDetails.searchParams.length; l++) {
-					// 	if (metaData.reportDetails.searchParams[l].type=="url" && metaData.reportDetails.searchParams[l].pattern.search(property)>-1) {
-					// 			metaData.reportDetails.searchParams[l].defaultValue=defaultValue;
-					// 	}
-					// }
-					// console.log(defaultValue);
-					// console.log(i);
-					// console.log(metaData);
-					setDropDownData(item.jsonPath,dropDownData);
+					setDropDownData(item.jsonPath, dropDownData);
+				}
 			},function(err) {
 					console.log(err);
 			});
@@ -101,6 +91,7 @@ class UiSelectField extends Component {
 				return (
 					<SelectField
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
+						errorStyle={{"float":"left"}}
 						fullWidth={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
 						value={this.props.getVal(item.jsonPath)}

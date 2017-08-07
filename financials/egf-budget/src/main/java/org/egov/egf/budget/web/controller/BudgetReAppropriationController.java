@@ -34,113 +34,113 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/budgetreappropriations")
 public class BudgetReAppropriationController {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String PLACEHOLDER = "placeholder";
+    public static final String ACTION_CREATE = "create";
+    public static final String ACTION_UPDATE = "update";
+    public static final String PLACEHOLDER = "placeholder";
 
-	@Autowired
-	private BudgetReAppropriationService budgetReAppropriationService;
+    @Autowired
+    private BudgetReAppropriationService budgetReAppropriationService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public BudgetReAppropriationResponse create(@RequestBody BudgetReAppropriationRequest budgetReAppropriationRequest,
-			BindingResult errors) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BudgetReAppropriationResponse create(@RequestBody final BudgetReAppropriationRequest budgetReAppropriationRequest,
+            final BindingResult errors) {
 
-		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
-		BudgetReAppropriationResponse budgetReAppropriationResponse = new BudgetReAppropriationResponse();
-		budgetReAppropriationResponse.setResponseInfo(getResponseInfo(budgetReAppropriationRequest.getRequestInfo()));
-		List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
-		BudgetReAppropriation budgetReAppropriation = null;
-		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
-		BudgetReAppropriationContract contract = null;
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+        final BudgetReAppropriationResponse budgetReAppropriationResponse = new BudgetReAppropriationResponse();
+        budgetReAppropriationResponse.setResponseInfo(getResponseInfo(budgetReAppropriationRequest.getRequestInfo()));
+        List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
+        BudgetReAppropriation budgetReAppropriation = null;
+        final List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
+        BudgetReAppropriationContract contract = null;
 
-		budgetReAppropriationRequest.getRequestInfo().setAction(ACTION_CREATE);
+        budgetReAppropriationRequest.getRequestInfo().setAction(ACTION_CREATE);
 
-		for (BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationRequest
-				.getBudgetReAppropriations()) {
-			budgetReAppropriation = mapper.toDomain(budgetReAppropriationContract);
-			budgetReAppropriation.setCreatedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
-			budgetReAppropriation.setLastModifiedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
-			budgetreappropriations.add(budgetReAppropriation);
-		}
+        for (final BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationRequest
+                .getBudgetReAppropriations()) {
+            budgetReAppropriation = mapper.toDomain(budgetReAppropriationContract);
+            budgetReAppropriation.setCreatedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
+            budgetReAppropriation.setLastModifiedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
+            budgetreappropriations.add(budgetReAppropriation);
+        }
 
-		budgetreappropriations = budgetReAppropriationService.create(budgetreappropriations, errors,
-				budgetReAppropriationRequest.getRequestInfo());
+        budgetreappropriations = budgetReAppropriationService.create(budgetreappropriations, errors,
+                budgetReAppropriationRequest.getRequestInfo());
 
-		for (BudgetReAppropriation bra : budgetreappropriations) {
-			contract = mapper.toContract(bra);
-			budgetReAppropriationContracts.add(contract);
-		}
+        for (final BudgetReAppropriation bra : budgetreappropriations) {
+            contract = mapper.toContract(bra);
+            budgetReAppropriationContracts.add(contract);
+        }
 
-		budgetReAppropriationResponse.setBudgetReAppropriations(budgetReAppropriationContracts);
+        budgetReAppropriationResponse.setBudgetReAppropriations(budgetReAppropriationContracts);
 
-		return budgetReAppropriationResponse;
-	}
+        return budgetReAppropriationResponse;
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public BudgetReAppropriationResponse update(
-			@RequestBody @Valid BudgetReAppropriationRequest budgetReAppropriationRequest, BindingResult errors) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BudgetReAppropriationResponse update(
+            @RequestBody @Valid final BudgetReAppropriationRequest budgetReAppropriationRequest, final BindingResult errors) {
 
-		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
-		budgetReAppropriationRequest.getRequestInfo().setAction(ACTION_UPDATE);
-		BudgetReAppropriationResponse budgetReAppropriationResponse = new BudgetReAppropriationResponse();
-		budgetReAppropriationResponse.setResponseInfo(getResponseInfo(budgetReAppropriationRequest.getRequestInfo()));
-		List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
-		BudgetReAppropriation budgetReAppropriation = null;
-		BudgetReAppropriationContract contract = null;
-		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+        budgetReAppropriationRequest.getRequestInfo().setAction(ACTION_UPDATE);
+        final BudgetReAppropriationResponse budgetReAppropriationResponse = new BudgetReAppropriationResponse();
+        budgetReAppropriationResponse.setResponseInfo(getResponseInfo(budgetReAppropriationRequest.getRequestInfo()));
+        List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
+        BudgetReAppropriation budgetReAppropriation = null;
+        BudgetReAppropriationContract contract = null;
+        final List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
 
-		for (BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationRequest
-				.getBudgetReAppropriations()) {
-			budgetReAppropriation = mapper.toDomain(budgetReAppropriationContract);
-			budgetReAppropriation.setLastModifiedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
-			budgetreappropriations.add(budgetReAppropriation);
-		}
+        for (final BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationRequest
+                .getBudgetReAppropriations()) {
+            budgetReAppropriation = mapper.toDomain(budgetReAppropriationContract);
+            budgetReAppropriation.setLastModifiedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
+            budgetreappropriations.add(budgetReAppropriation);
+        }
 
-		budgetreappropriations = budgetReAppropriationService.update(budgetreappropriations, errors,
-				budgetReAppropriationRequest.getRequestInfo());
+        budgetreappropriations = budgetReAppropriationService.update(budgetreappropriations, errors,
+                budgetReAppropriationRequest.getRequestInfo());
 
-		for (BudgetReAppropriation bra : budgetreappropriations) {
-			contract = mapper.toContract(bra);
-			budgetReAppropriationContracts.add(contract);
-		}
-		budgetReAppropriationResponse.setBudgetReAppropriations(budgetReAppropriationContracts);
+        for (final BudgetReAppropriation bra : budgetreappropriations) {
+            contract = mapper.toContract(bra);
+            budgetReAppropriationContracts.add(contract);
+        }
+        budgetReAppropriationResponse.setBudgetReAppropriations(budgetReAppropriationContracts);
 
-		return budgetReAppropriationResponse;
-	}
+        return budgetReAppropriationResponse;
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public BudgetReAppropriationResponse search(
-			@ModelAttribute BudgetReAppropriationSearchContract budgetReAppropriationSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public BudgetReAppropriationResponse search(
+            @ModelAttribute final BudgetReAppropriationSearchContract budgetReAppropriationSearchContract,
+            @RequestBody final RequestInfo requestInfo, final BindingResult errors) {
 
-		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
-		BudgetReAppropriationSearch domain = mapper.toSearchDomain(budgetReAppropriationSearchContract);
-		BudgetReAppropriationContract contract = null;
-		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
-		Pagination<BudgetReAppropriation> budgetreappropriations = budgetReAppropriationService.search(domain);
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+        final BudgetReAppropriationSearch domain = mapper.toSearchDomain(budgetReAppropriationSearchContract);
+        BudgetReAppropriationContract contract = null;
+        final List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
+        final Pagination<BudgetReAppropriation> budgetreappropriations = budgetReAppropriationService.search(domain);
 
-		for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations.getPagedData()) {
-			contract = mapper.toContract(budgetReAppropriation);
-			budgetReAppropriationContracts.add(contract);
-		}
+        for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations.getPagedData()) {
+            contract = mapper.toContract(budgetReAppropriation);
+            budgetReAppropriationContracts.add(contract);
+        }
 
-		BudgetReAppropriationResponse response = new BudgetReAppropriationResponse();
-		response.setBudgetReAppropriations(budgetReAppropriationContracts);
-		response.setPage(new PaginationContract(budgetreappropriations));
-		response.setResponseInfo(getResponseInfo(requestInfo));
+        final BudgetReAppropriationResponse response = new BudgetReAppropriationResponse();
+        response.setBudgetReAppropriations(budgetReAppropriationContracts);
+        response.setPage(new PaginationContract(budgetreappropriations));
+        response.setResponseInfo(getResponseInfo(requestInfo));
 
-		return response;
+        return response;
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
-				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
+                .resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+    }
 
 }

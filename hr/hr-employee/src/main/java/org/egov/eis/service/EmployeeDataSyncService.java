@@ -1,8 +1,8 @@
 package org.egov.eis.service;
 
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.web.contract.UserRequest;
-import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.contract.EmployeeSyncRequest;
+import org.egov.eis.web.contract.EmployeeSyncResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,12 +16,12 @@ public class EmployeeDataSyncService {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public void createDataSync(UserRequest userRequest) {
+    public void createDataSync(EmployeeSyncRequest employeeSyncRequest) {
         String url = propertiesManager.getHybridDataSyncServiceHostName()
                 + propertiesManager.getHybridDataSyncServiceBasePath()
                 + propertiesManager.getHybridDataSyncServiceCreatePath();
 
         System.err.print(url);
-        restTemplate.postForObject(url, userRequest, UserResponse.class);
+        restTemplate.postForObject(url, employeeSyncRequest, EmployeeSyncResponse.class);
     }
 }

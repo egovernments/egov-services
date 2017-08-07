@@ -11,60 +11,60 @@ import org.springframework.stereotype.Service;
 @Service
 public class BudgetQueueRepository {
 
-	private FinancialProducer financialProducer;
+    private final FinancialProducer financialProducer;
 
-	private String validatedTopic;
+    private final String validatedTopic;
 
-	private String budgetValidatedKey;
+    private final String budgetValidatedKey;
 
-	private String completedTopic;
+    private final String completedTopic;
 
-	private String budgetCompletedKey;
+    private final String budgetCompletedKey;
 
-	@Autowired
-	public BudgetQueueRepository(FinancialProducer financialProducer,
-			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.budget.budget.validated.key}") String budgetValidatedKey,
-			@Value("${kafka.topics.egf.budget.service.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.budget.budget.completed.key}") String budgetCompletedKey) {
+    @Autowired
+    public BudgetQueueRepository(final FinancialProducer financialProducer,
+            @Value("${kafka.topics.egf.budget.service.validated.topic}") final String validatedTopic,
+            @Value("${kafka.topics.egf.budget.budget.validated.key}") final String budgetValidatedKey,
+            @Value("${kafka.topics.egf.budget.service.completed.topic}") final String completedTopic,
+            @Value("${kafka.topics.egf.budget.budget.completed.key}") final String budgetCompletedKey) {
 
-		this.financialProducer = financialProducer;
-		this.validatedTopic = validatedTopic;
-		this.budgetValidatedKey = budgetValidatedKey;
-		this.completedTopic = completedTopic;
-		this.budgetCompletedKey = budgetCompletedKey;
-	}
+        this.financialProducer = financialProducer;
+        this.validatedTopic = validatedTopic;
+        this.budgetValidatedKey = budgetValidatedKey;
+        this.completedTopic = completedTopic;
+        this.budgetCompletedKey = budgetCompletedKey;
+    }
 
-	public void addToQue(BudgetRequest request) {
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+    public void addToQue(final BudgetRequest request) {
+        final HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		switch (request.getRequestInfo().getAction().toLowerCase()) {
+        switch (request.getRequestInfo().getAction().toLowerCase()) {
 
-		case "create":
-			topicMap.put("budget_create", request);
-			System.out.println("push create topic" + request);
-			break;
-		case "update":
-			topicMap.put("budget_update", request);
-			break;
+        case "create":
+            topicMap.put("budget_create", request);
+            System.out.println("push create topic" + request);
+            break;
+        case "update":
+            topicMap.put("budget_update", request);
+            break;
 
-		}
-		financialProducer.sendMessage(validatedTopic, budgetValidatedKey, topicMap);
-	}
+        }
+        financialProducer.sendMessage(validatedTopic, budgetValidatedKey, topicMap);
+    }
 
-	public void addToSearchQue(BudgetRequest request) {
+    public void addToSearchQue(final BudgetRequest request) {
 
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+        final HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		if (!request.getBudgets().isEmpty()) {
+        if (!request.getBudgets().isEmpty()) {
 
-			topicMap.put("budget_persisted", request);
+            topicMap.put("budget_persisted", request);
 
-			System.out.println("push search topic" + request);
+            System.out.println("push search topic" + request);
 
-		}
+        }
 
-		financialProducer.sendMessage(completedTopic, budgetCompletedKey, topicMap);
+        financialProducer.sendMessage(completedTopic, budgetCompletedKey, topicMap);
 
-	}
+    }
 }

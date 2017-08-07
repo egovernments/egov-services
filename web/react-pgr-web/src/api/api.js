@@ -86,7 +86,10 @@ module.exports = {
                     throw new Error("Server returned unexpected error. Please contact system administrator.");
                 }
             } catch(e) {
-                throw new Error("Oops! Something isn't right. Please try again later.");
+                if(e.message) {
+                    throw new Error(e.message);
+                } else 
+                    throw new Error("Oops! Something isn't right. Please try again later.");
             }
         });
     },

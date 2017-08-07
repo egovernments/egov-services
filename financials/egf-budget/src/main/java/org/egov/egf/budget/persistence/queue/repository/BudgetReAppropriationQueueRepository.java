@@ -11,60 +11,60 @@ import org.springframework.stereotype.Service;
 @Service
 public class BudgetReAppropriationQueueRepository {
 
-	private FinancialProducer financialProducer;
+    private final FinancialProducer financialProducer;
 
-	private String validatedTopic;
+    private final String validatedTopic;
 
-	private String budgetReAppValidatedKey;
+    private final String budgetReAppValidatedKey;
 
-	private String completedTopic;
+    private final String completedTopic;
 
-	private String budgetReAppCompletedKey;
+    private final String budgetReAppCompletedKey;
 
-	@Autowired
-	public BudgetReAppropriationQueueRepository(FinancialProducer financialProducer,
-			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.budget.budgetreapp.validated.key}") String budgetReAppValidatedKey,
-			@Value("${kafka.topics.egf.budget.service.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.budget.budgetreapp.completed.key}") String budgetReAppCompletedKey) {
+    @Autowired
+    public BudgetReAppropriationQueueRepository(final FinancialProducer financialProducer,
+            @Value("${kafka.topics.egf.budget.service.validated.topic}") final String validatedTopic,
+            @Value("${kafka.topics.egf.budget.budgetreapp.validated.key}") final String budgetReAppValidatedKey,
+            @Value("${kafka.topics.egf.budget.service.completed.topic}") final String completedTopic,
+            @Value("${kafka.topics.egf.budget.budgetreapp.completed.key}") final String budgetReAppCompletedKey) {
 
-		this.financialProducer = financialProducer;
-		this.validatedTopic = validatedTopic;
-		this.budgetReAppValidatedKey = budgetReAppValidatedKey;
-		this.completedTopic = completedTopic;
-		this.budgetReAppCompletedKey = budgetReAppCompletedKey;
-	}
+        this.financialProducer = financialProducer;
+        this.validatedTopic = validatedTopic;
+        this.budgetReAppValidatedKey = budgetReAppValidatedKey;
+        this.completedTopic = completedTopic;
+        this.budgetReAppCompletedKey = budgetReAppCompletedKey;
+    }
 
-	public void addToQue(BudgetReAppropriationRequest request) {
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+    public void addToQue(final BudgetReAppropriationRequest request) {
+        final HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		switch (request.getRequestInfo().getAction().toLowerCase()) {
+        switch (request.getRequestInfo().getAction().toLowerCase()) {
 
-		case "create":
-			topicMap.put("budgetreappropriation_create", request);
-			System.out.println("push create topic" + request);
-			break;
-		case "update":
-			topicMap.put("budgetreappropriation_update", request);
-			break;
+        case "create":
+            topicMap.put("budgetreappropriation_create", request);
+            System.out.println("push create topic" + request);
+            break;
+        case "update":
+            topicMap.put("budgetreappropriation_update", request);
+            break;
 
-		}
-		financialProducer.sendMessage(validatedTopic, budgetReAppValidatedKey, topicMap);
-	}
+        }
+        financialProducer.sendMessage(validatedTopic, budgetReAppValidatedKey, topicMap);
+    }
 
-	public void addToSearchQue(BudgetReAppropriationRequest request) {
+    public void addToSearchQue(final BudgetReAppropriationRequest request) {
 
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+        final HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		if (!request.getBudgetReAppropriations().isEmpty()) {
+        if (!request.getBudgetReAppropriations().isEmpty()) {
 
-			topicMap.put("budgetreappropriation_persisted", request);
+            topicMap.put("budgetreappropriation_persisted", request);
 
-			System.out.println("push search topic" + request);
+            System.out.println("push search topic" + request);
 
-		}
+        }
 
-		financialProducer.sendMessage(completedTopic, budgetReAppCompletedKey, topicMap);
+        financialProducer.sendMessage(completedTopic, budgetReAppCompletedKey, topicMap);
 
-	}
+    }
 }

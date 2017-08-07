@@ -14,23 +14,23 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class BudgetReAppropriationSearchEntity extends BudgetReAppropriationEntity {
-	private Integer pageSize;
-	private Integer offset;
-	private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
+    private String sortBy;
 
-	@Override
-	public BudgetReAppropriation toDomain() {
-		BudgetReAppropriation budgetReAppropriation = new BudgetReAppropriation();
-		super.toDomain(budgetReAppropriation);
-		return budgetReAppropriation;
-	}
+    @Override
+    public BudgetReAppropriation toDomain() {
+        final BudgetReAppropriation budgetReAppropriation = new BudgetReAppropriation();
+        super.toDomain(budgetReAppropriation);
+        return budgetReAppropriation;
+    }
 
-	public BudgetReAppropriationSearchEntity toEntity(BudgetReAppropriationSearch budgetReAppropriationSearch) {
-		super.toEntity((BudgetReAppropriation) budgetReAppropriationSearch);
-		this.pageSize = budgetReAppropriationSearch.getPageSize();
-		this.offset = budgetReAppropriationSearch.getOffset();
-		this.sortBy = budgetReAppropriationSearch.getSortBy();
-		return this;
-	}
+    public BudgetReAppropriationSearchEntity toEntity(final BudgetReAppropriationSearch budgetReAppropriationSearch) {
+        super.toEntity(budgetReAppropriationSearch);
+        pageSize = budgetReAppropriationSearch.getPageSize();
+        offset = budgetReAppropriationSearch.getOffset();
+        sortBy = budgetReAppropriationSearch.getSortBy();
+        return this;
+    }
 
 }

@@ -42,8 +42,8 @@ package org.egov.egf.budget.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.web.contract.PaginationContract;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -54,10 +54,10 @@ import lombok.Data;
 @JsonInclude(value = Include.NON_NULL)
 public class BudgetResponse {
 
-	private ResponseInfo responseInfo;
+    private ResponseInfo responseInfo;
 
-	private List<BudgetContract> budgets = new ArrayList<BudgetContract>();
+    private List<BudgetContract> budgets = new ArrayList<BudgetContract>();
 
-	private PaginationContract page;
+    private PaginationContract page;
 
 }

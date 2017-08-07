@@ -51,7 +51,7 @@ class Report extends Component {
   }
 
   getVal = (path) => {
-    return _.get(this.props.formData, path) || "";
+    return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
   }
 
   initData() {

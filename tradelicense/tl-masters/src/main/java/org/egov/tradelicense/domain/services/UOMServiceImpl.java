@@ -49,7 +49,7 @@ public class UOMServiceImpl implements UOMService {
 		for (UOM uom : uomRequest.getUoms()) {
 
 			Boolean isExists = utilityHelper.checkWhetherDuplicateRecordExits(uom.getTenantId(), uom.getCode(),
-					ConstantUtility.UOM_TABLE_NAME, null);
+					null, ConstantUtility.UOM_TABLE_NAME, null);
 			if (isExists)
 				throw new DuplicateIdException(propertiesManager.getUomCustomMsg(),uomRequest.getRequestInfo());
 
@@ -85,7 +85,7 @@ public class UOMServiceImpl implements UOMService {
 		for (UOM uom : uomRequest.getUoms()) {
 
 			Boolean isExists = utilityHelper.checkWhetherDuplicateRecordExits(uom.getTenantId(), uom.getCode(),
-					ConstantUtility.UOM_TABLE_NAME, uom.getId());
+					null, ConstantUtility.UOM_TABLE_NAME, uom.getId());
 
 			if (isExists)
 				throw new DuplicateIdException(propertiesManager.getUomCustomMsg(),uomRequest.getRequestInfo());

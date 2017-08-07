@@ -21,6 +21,17 @@ public class UtilityBuilder {
 		return uniqueQuery.toString();
 	}
 
+	public static String getUniqueTenantNameQuery(String tableName, String name, String tenantId, Long id) {
+
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
+		uniqueQuery.append(" where name = '" + name + "'");
+		uniqueQuery.append(" AND tenantId = '" + tenantId + "'");
+		if (id != null) {
+			uniqueQuery.append(" AND id !=" + id);
+		}
+
+		return uniqueQuery.toString();
+	}
 	public static String getCategoryParentValidationQuery(String tableName, Long parentId) {
 
 		StringBuffer categoryParentValidationQuery = new StringBuffer("select count(*) from " + tableName);

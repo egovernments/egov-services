@@ -286,8 +286,13 @@ class Report extends Component {
 
   }
 
-  getVal = (path) => {
-    return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
+  getVal = (path, dateBool) => {
+    var _val = _.get(this.props.formData, path);
+    if(dateBool && typeof _val != "undefined" && _val.indexOf("-") > -1) {
+      var dateArr = _val.split("-");
+      return new Date(dateArr[2], (Number(dateArr[1])-1), dateArr[0]);
+    } else
+      return typeof _val != "undefined" ? _val : "";
   }
 
   hideField = (_mockData, hideObject, reset) => {

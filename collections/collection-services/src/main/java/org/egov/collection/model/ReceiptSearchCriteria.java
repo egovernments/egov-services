@@ -80,4 +80,6 @@ public class ReceiptSearchCriteria {
     private String sortBy;
     
     private String sortOrder;
+
+    private String transactionId;
 }

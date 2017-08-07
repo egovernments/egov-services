@@ -119,7 +119,8 @@ public class ReceiptCommonModel {
 					.payeeAddress(receiptHeader.getPayeeAddress()).payeeEmail(receiptHeader.getPayeeEmail())
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
-			Receipt receipt = Receipt.builder().stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).build();
+			Receipt receipt = Receipt.builder().stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).
+                    transactionId(receiptHeader.getTransactionId()).build();
 			receipts.add(receipt);
 		}
 

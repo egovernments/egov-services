@@ -4,8 +4,10 @@ import java.util.Date;
 
 import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.voucher.domain.model.Voucher;
+import org.egov.egf.voucher.domain.model.Vouchermis;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +23,7 @@ import lombok.Setter;
 @Builder
 public class VoucherEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_voucher";
+	public static final String SEQUENCE_NAME = "seq_egf_voucher";
 	private String id;
 	private String type;
 	private String name;
@@ -28,11 +31,12 @@ public class VoucherEntity extends AuditableEntity {
 	private String voucherNumber;
 	private Date voucherDate;
 	private String fundId;
-	//private String statusId;
+	private String statusId;
 	private String originalVoucherNumber;
 	private String refVoucherNumber;
 	private String moduleName;
-	
+	private String vouchermisId;
+
 	public Voucher toDomain() {
 		Voucher voucher = new Voucher();
 		super.toDomain(voucher);
@@ -43,10 +47,11 @@ public class VoucherEntity extends AuditableEntity {
 		voucher.setVoucherNumber(this.voucherNumber);
 		voucher.setVoucherDate(this.voucherDate);
 		voucher.setFund(FundContract.builder().id(fundId).build());
-		//voucher.setStatus(EgfStatus.builder().id(statusId).build());
+		voucher.setStatus(FinancialStatusContract.builder().id(statusId).build());
 		voucher.setOriginalVoucherNumber(this.originalVoucherNumber);
 		voucher.setRefVoucherNumber(this.refVoucherNumber);
 		voucher.setModuleName(this.moduleName);
+		//voucher.setVouchermis(Vouchermis.builder().id(vouchermisId).build());
 		return voucher;
 	}
 
@@ -59,10 +64,11 @@ public class VoucherEntity extends AuditableEntity {
 		this.voucherNumber = voucher.getVoucherNumber();
 		this.voucherDate = voucher.getVoucherDate();
 		this.fundId = voucher.getFund() != null ? voucher.getFund().getId() : null;
-		//this.statusId = voucher.getStatus() != null ? voucher.getStatus().getId() : null;
+		this.statusId = voucher.getStatus() != null ? voucher.getStatus().getId() : null;
 		this.originalVoucherNumber = voucher.getOriginalVoucherNumber();
 		this.refVoucherNumber = voucher.getRefVoucherNumber();
 		this.moduleName = voucher.getModuleName();
+		this.vouchermisId = voucher.getVouchermis() != null ? voucher.getVouchermis().getId() : null;
 		return this;
 	}
 

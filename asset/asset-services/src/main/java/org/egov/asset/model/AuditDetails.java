@@ -1,14 +1,14 @@
 package org.egov.asset.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
 public class AuditDetails {
 
 	private String createdBy = null;

@@ -101,7 +101,7 @@ public class WorkflowService {
 	}
 	
 	public WorkflowDetailsRequest update(WorkflowDetailsRequest workflowDetails) {
-		workflowDetails.setStateId(receiptRepository.getStateId(workflowDetails.getReceiptNumber()));
+		workflowDetails.setStateId(receiptRepository.getStateId(workflowDetails.getReceiptHeaderId()));
 		try{
 			collectionProducer.producer(applicationProperties.getKafkaUpdateworkflowTopic(),
 					applicationProperties.getKafkaUpdateworkflowTopicKey(), workflowDetails);

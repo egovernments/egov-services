@@ -45,6 +45,7 @@ import java.util.List;
 
 import lombok.EqualsAndHashCode;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +76,7 @@ public class ReceiptDetailQueryBuilder {
 			+ " as rh_depositedBranch,rh.tenantId as rh_tenantId,rh.displayMsg as rh_displayMsg,"
 			+ "rh.voucherheader as rh_voucherheader,rh.cancellationRemarks as rh_cancellationRemarks,"
 			+ "rh.createdBy as rh_createdBy,rh.createdDate as rh_createdDate,"
-			+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,"
+			+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,rh.transactionid as rh_transactionid ,"
 			+ "rd.id as rd_id,rd.receiptHeader as rh_id,"
 			+ "rd.dramount as rd_dramount,rd.cramount as rd_cramount,rd.actualcramountToBePaid as "
 			+ "rd_actualcramountToBePaid,rd.ordernumber as rd_ordernumber,"
@@ -235,6 +236,13 @@ public class ReceiptDetailQueryBuilder {
 			selectQuery.append(" rh.id IN "
 					+ getIdQuery(searchCriteria.getIds()));
 		}
+
+        if(StringUtils.isNotBlank(searchCriteria.getTransactionId())) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                    selectQuery);
+            selectQuery.append(" rh.transactionid = ? ");
+            preparedStatementValues.add(searchCriteria.getTransactionId());
+        }
 	}
 
 	private static String getIdQuery(List<Long> idList) {
@@ -289,13 +297,13 @@ public class ReceiptDetailQueryBuilder {
 				+ "collmodesnotallwd, consumercode, channel, fund, fundsource, function, boundary, department, voucherheader, "
 				+ "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
 				+ "manualreceiptnumber, manualreceiptdate, reference_ch_id, stateid, location, isreconciled, "
-				+ "status) "
+				+ "status, transactionid) "
 				+ "VALUES (:id, :payeename, :payeeaddress, :payeeemail, :paidby, :referencenumber, :receipttype, "
 				+ ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
 				+ ":collmodesnotallwd, :consumercode, :channel, :fund, :fundsource, :function, :boundary, :department, :voucherheader, "
 				+ ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, :referencedesc, "
 				+ ":manualreceiptnumber, :manualreceiptdate, :reference_ch_id, :stateid, :location, :isreconciled, "
-				+ ":status)";
+				+ ":status, :transactionid)";
 	}
 
 	public static String insertReceiptDetails() {

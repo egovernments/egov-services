@@ -63,8 +63,8 @@ var dat = {
     "level": 0,
     "groups": [
 	{
-        "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
-        "name": "applicantDetails", //Follow Title case pattern
+        "label": "wc.create.groups.applicationParticular.title", //Cut short labels by taking initial path from parent
+        "name": "applicationParticular", //Follow Title case pattern
         "children": [],
         "multiple": false,
         "fields": [{
@@ -90,7 +90,20 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
 			"values": [{"label":"With Property", "value":true},{"label":"Without Property", "value":false}],
-			"defaultValue":true
+			"defaultValue":true,
+      "showHideFields": [{
+             "ifValue": false,
+             "hide": [{
+              "name": "applicantDetails",
+              "isGroup": true,
+              "isField": false
+             }],
+             "show": [{
+              "name": "NoOfFlats",
+              "isGroup": false,
+              "isField": true
+             }]
+            }]
           }
         ]
       },{
@@ -223,7 +236,7 @@ var dat = {
           },
 		  {
             "name": "consumerNo",
-            "jsonPath": "Connection.property.propertyTaxDue",
+            "jsonPath": "Connection.property.consumerNo",
             "label": "wc.create.groups.applicantDetails.consumerNo",
             "pattern": "",
             "type": "text",
@@ -234,7 +247,7 @@ var dat = {
           },
 		  {
             "name": "connectionDate",
-            "jsonPath": "Connection.property.propertyTaxDue",
+            "jsonPath": "Connection.property.connectionDate",
             "label": "wc.create.groups.applicantDetails.connectionDate",
             "pattern": "",
             "type": "datePicker",
@@ -277,7 +290,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "showHideFields": [{
-                   "ifValue": "test",
+                   "ifValue": "Private",
                    "hide": [{
                     "name": "description",
                     "isGroup": false,
@@ -290,18 +303,7 @@ var dat = {
                    }]
                   }]
           },
-		  {
-            "name": "NoOfFlats",
-            "jsonPath": "Connection.NoOfFlats",
-            "label": "No of Flats",
-            "pattern": "",
-            "type": "number",
-            "hide":true,
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+
           {
             "name": "CategoryType",
             "jsonPath": "Connection.categoryType",
@@ -403,7 +405,28 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+
+            "showHideFields": [{
+                   "ifValue": "TEMPORARY",
+                   "show": [{
+                    "name": "fromDate",
+                    "isGroup": true,
+                    "isField": false
+                  },
+                  {
+                   "name": "toDate",
+                   "isGroup": true,
+                   "isField": false
+                  }
+                ]
+              }],
+              "show": [{
+               "name": "Metered",
+               "isGroup": true,
+               "isField": false
+              }]
+
           },
           {
             "name": "SourceType",
@@ -465,10 +488,23 @@ var dat = {
             "patternErrMsg": ""
           },
 		  {
-            "name": "FromDate",
+            "name": "fromDate",
             "jsonPath": "Connection.fromDate",
             "label": "From Date",
             "pattern": "",
+            "type": "datePicker",
+            "hide":true,
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "toDate",
+            "jsonPath": "Connection.toDate",
+            "label": "To Date",
+            "pattern": "",
+            "hide":true,
             "type": "datePicker",
             "isRequired": false,
             "isDisabled": false,
@@ -476,16 +512,17 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "ToDate",
-            "jsonPath": "Connection.toDate",
-            "label": "To Date",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
+                "name": "NoOfFlats",
+                "jsonPath": "Connection.NoOfFlats",
+                "label": "No of Flats",
+                "pattern": "",
+                "type": "number",
+                "hide":true,
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }
         ]
       },
 	  {

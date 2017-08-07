@@ -30,6 +30,8 @@ public class UserBuilder {
 			+ "createdBy, lastModifiedBy, createdTime, lastModifiedTime, id) VALUES(?,?,?,?,?,?,?,?,?,?,?) ";
 			
 	public static final String GET_OWNERTABLE_ID = "SELECT id from egpt_property_owner where property = ? and owner = ?";
+	
+	public static final String DELETE_OWNER = "DELETE from egpt_property_owner where property = ? and owner = ?";
 
 
 }

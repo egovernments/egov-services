@@ -219,7 +219,7 @@ public class ActionControllerTest {
 	public void testShouldGetModuleList() throws Exception {
 
 		
-		when(actionService.getAllActionsBasedOnRoles(any(ActionRequest.class))).thenReturn(getModuleList());
+		when(actionService.getAllActions(any(ActionRequest.class))).thenReturn(getModuleList());
 
 		ResponseInfo responseInfo = ResponseInfo.builder().build();
 		
@@ -234,11 +234,11 @@ public class ActionControllerTest {
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 				.thenReturn(responseInfo);
 
-		mockMvc.perform(post("/v1/actions/_list").contentType(MediaType.APPLICATION_JSON_UTF8)
+		mockMvc.perform(post("/v1/actions/_get").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("actionListRequest.json")))
-		        .andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(new Resources().getFileContents("actionListResponse.json")));
+		        .andExpect(status().isOk());
+				
+				
 
 	}
 
@@ -247,7 +247,7 @@ public class ActionControllerTest {
 	public void testShouldNotGetModuleListWithoutTenant() throws Exception {
 
 		
-		when(actionService.getAllActionsBasedOnRoles(any(ActionRequest.class))).thenReturn(getModuleList());
+		when(actionService.getAllActions(any(ActionRequest.class))).thenReturn(getModuleList());
 
 		ResponseInfo responseInfo = ResponseInfo.builder().build();
 
@@ -255,7 +255,7 @@ public class ActionControllerTest {
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 				.thenReturn(responseInfo);
 
-		mockMvc.perform(post("/v1/actions/_list").contentType(MediaType.APPLICATION_JSON_UTF8)
+		mockMvc.perform(post("/v1/actions/_get").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("actionListRequestWithoutTenant.json")))
 		        .andExpect(status().isBadRequest())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -268,7 +268,7 @@ public class ActionControllerTest {
 	public void testShouldNotGetModuleListWithoutRoleCode() throws Exception {
 
 		
-		when(actionService.getAllActionsBasedOnRoles(any(ActionRequest.class))).thenReturn(getModuleList());
+		when(actionService.getAllActions(any(ActionRequest.class))).thenReturn(getModuleList());
 
 		ResponseInfo responseInfo = ResponseInfo.builder().build();
 
@@ -276,7 +276,7 @@ public class ActionControllerTest {
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 				.thenReturn(responseInfo);
 
-		mockMvc.perform(post("/v1/actions/_list").contentType(MediaType.APPLICATION_JSON_UTF8)
+		mockMvc.perform(post("/v1/actions/_get").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("actionListRequestWithoutRoleCode.json")))
 		        .andExpect(status().isBadRequest())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -285,19 +285,14 @@ public class ActionControllerTest {
 	}
 	
 	
-	private List<Module> getModuleList(){
+	private List<Action> getModuleList(){
 		
-		List<Module> moduleList = new ArrayList<Module>();
-
 		List<Action> actionList = new ArrayList<Action>();
-		
-		List<Module> subModule = new ArrayList<Module>();
 		
 		Module module = new Module(); 
 		
 		module.setId(74l);
 		module.setName("ess");
-		module.setSubModules(subModule);
 		module.setCode("ESS");
 		module.setDisplayName("Employee Self Service");
 		module.setEnabled(false);
@@ -327,8 +322,8 @@ public class ActionControllerTest {
 		
 		module.setActionList(actionList);
 		
-		moduleList.add(module);
 		
-		return moduleList;
+		
+		return actionList;
 	}
 }

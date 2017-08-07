@@ -229,6 +229,7 @@ public class ReceiptService {
 		LOGGER.info("Persisting recieptdetail");
 		Receipt receipt = new Receipt();
 		AuditDetails auditDetail = getAuditDetails(requestInfo.getUserInfo());
+        String transactionId = idGenRepository.generateTransactionNumber(requestInfo,tenantId);
 		for (BillDetail billDetail : bill.getBillDetails()) {
 			if(billDetail.getAmountPaid().longValueExact() > 0){
 				String instrumentId = null;
@@ -257,7 +258,7 @@ public class ReceiptService {
 					parametersMap = prepareReceiptHeader(bill, tenantId,
 							auditDetail, billDetail, receiptHeaderId,
 							businessDetails);
-					
+                    parametersMap.put("transactionid",transactionId);
 					LOGGER.info("Rcpt no generated: " + billDetail.getReceiptNumber());
 					LOGGER.info("InstrumentId: " + instrumentId
 							+ " ReceiptHeaderId: " + receiptHeaderId);
@@ -278,6 +279,7 @@ public class ReceiptService {
 		}
 		receipt.setBill(Arrays.asList(bill));
 		receipt.setAuditDetails(auditDetail);
+        receipt.setTransactionId(transactionId);
 		return receipt;
 	}
 

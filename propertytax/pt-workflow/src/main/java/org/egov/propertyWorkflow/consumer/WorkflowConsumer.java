@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -83,9 +84,9 @@ public class WorkflowConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, PropertyRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(PropertyRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -93,8 +94,8 @@ public class WorkflowConsumer {
 	 * This bean will return kafka listner object based on consumer factory
 	 */
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -108,17 +109,19 @@ public class WorkflowConsumer {
 
 	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.create.demand')}",
 			"#{environment.getProperty('egov.propertytax.property.update.workflow')}" })
-	public void listen(ConsumerRecord<String, PropertyRequest> record) throws Exception {
+	public void listen(ConsumerRecord<String, Object> record) throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
 
-		PropertyRequest propertyRequest = record.value();
-		logger.info("WorkflowConsumer  listen() propertyRequest ---->>  "+propertyRequest);
+		PropertyRequest propertyRequest = objectMapper.convertValue(record.value(), PropertyRequest.class);
+		logger.info("WorkflowConsumer  listen() propertyRequest ---->>  " + propertyRequest);
 
 		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.create.demand"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				logger.info("WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
+				logger.info(
+						"WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  " + workflowDetailsRequestInfo);
 				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
 						environment.getProperty("businessKey"), environment.getProperty("type"),
 						environment.getProperty("create.property.comments"));
@@ -132,9 +135,10 @@ public class WorkflowConsumer {
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				logger.info("WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
+				logger.info(
+						"WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  " + workflowDetailsRequestInfo);
 				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
-						property.getPropertyDetail().getStateId());
+						property.getPropertyDetail().getStateId(), environment.getProperty("businessKey"));
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
 				String action = workflowDetailsRequestInfo.getWorkflowDetails().getAction();
 				if (action.equalsIgnoreCase(environment.getProperty("property.approved"))) {
@@ -218,12 +222,12 @@ public class WorkflowConsumer {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 				// Add query parameter
 				.queryParam("code", property.getTenantId());
-		logger.info("WorkflowConsumer builderuri :" +builder.buildAndExpand().toUri()+ 
-				"\n WorkflowConsumer PropertyRequest :" +propertyRequest.getRequestInfo());
+		logger.info("WorkflowConsumer builderuri :" + builder.buildAndExpand().toUri()
+				+ "\n WorkflowConsumer PropertyRequest :" + propertyRequest.getRequestInfo());
 		try {
 			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(),
 					propertyRequest.getRequestInfo(), SearchTenantResponse.class);
-			logger.info("WorkflowConsumer SearchTenantResponse  ---->>  "+searchTenantResponse);
+			logger.info("WorkflowConsumer SearchTenantResponse  ---->>  " + searchTenantResponse);
 			if (searchTenantResponse.getTenant().size() > 0) {
 				City city = searchTenantResponse.getTenant().get(0).getCity();
 				String cityCode = city.getCode();
@@ -267,11 +271,11 @@ public class WorkflowConsumer {
 		idGeneration.setIdRequests(idRequests);
 		idGeneration.setRequestInfo(propertyRequest.getRequestInfo());
 		String response = null;
-		logger.info("WorkflowConsumer idGenerationUrl :" +idGenerationUrl.toString()+ 
-				"\n WorkflowConsumer idGenerationRequest :" +idGeneration);
-	    try {
+		logger.info("WorkflowConsumer idGenerationUrl :" + idGenerationUrl.toString()
+				+ "\n WorkflowConsumer idGenerationRequest :" + idGeneration);
+		try {
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
-			logger.info("WorkflowConsumer getupicnumber response  ---->>  "+response);
+			logger.info("WorkflowConsumer getupicnumber response  ---->>  " + response);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

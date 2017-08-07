@@ -3,25 +3,14 @@
         summary: Get the list of vouchers
         description: vouchers
         tags: 
-          - voucher
           - Voucher
         parameters:
-          - name: requestInfo
-            in: body
-            description: Common Request info for the Services
-            schema:
-              $ref: '#/definitions/RequestInfo'
-          - name: tenantId
-            in: query
-            description: Unique id for  a tenant.
-            required: true
-            type: string
-            format: varchar
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: ids
             type: array
             items: 
-              type: integer
-            format: int64
+             type: string
             in: query
             maxItems: 50
             description: comma seperated list of Ids 
@@ -31,13 +20,11 @@
             in: query
             description: |
               
-              
             maxLength: 16
           - name: name
             type: string
             in: query
             description: |
-              
               
             maxLength: 16
           - name: description
@@ -45,13 +32,11 @@
             in: query
             description: |
               
-              
             maxLength: 256
           - name: voucherNumber
             type: string
             in: query
             description: |
-              
               
             maxLength: 32
           - name: voucherDate
@@ -60,13 +45,11 @@
             in: query
             description: |
               
-              
           - name: fund
             type: integer
             format: int64
             in: query
             description: |
-              
               
           - name: status
             type: integer
@@ -74,24 +57,20 @@
             in: query
             description: |
               
-              
           - name: originalVoucherNumber
             type: string
             in: query
             description: |
-              
               
           - name: refVoucherNumber
             type: string
             in: query
             description: |
               
-              
           - name: moduleName
             type: string
             in: query
             description: |
-              
               
           - name: ledgers
             type: object
@@ -100,28 +79,20 @@
             in: query
             description: |
               
-              
           - name: vouchermis
             type: integer
             format: int64
             in: query
             description: |
               
-              
-          - name: pageSize
-            type: integer
-            format: int32
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
             in: query
             description: |
-              
-              
-          - name: offSet
-            type: integer
-            format: int32
-            in: query
-            description: |
-              
-              
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
         responses:
           200:
             description: Voucher retrieved Successfully
@@ -130,21 +101,16 @@
           400:
             description: Invalid Input
             schema:
-              $ref: '#/definitions/ErrorResponse'
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     /vouchers/_create:
       post:
         summary: Create  new  vouchers
         description: Create  new vouchers
         tags: 
-          - voucher
+          - Voucher
           - Voucher
         parameters:
-          - name: tenantId
-            in: query
-            description: Unique id for  a tenant.
-            required: true
-            type: string
-            format: varchar
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: voucherRequest
             in: body
             description: Create  new 
@@ -158,27 +124,16 @@
           400:
             description: Invalid Input
             schema:
-              $ref: '#/definitions/ErrorResponse'
-    /vouchers/{id}/_update:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /vouchers/_update:
       post:
         summary: Update any of the vouchers
         description: Update any of the vouchers
         tags: 
-          - voucher
+          - Voucher
           - Voucher
         parameters:
-          - name: tenantId
-            in: query
-            description: Unique id for  a tenant.
-            required: true
-            type: string
-            format: varchar
-          - name: id
-            in: path
-            description: Unique id of the Voucher
-            required: true
-            type: integer
-            format: int64
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: voucherRequest
             in: body
             description: common Request info
@@ -192,122 +147,122 @@
           400:
             description: Invalid Input
             schema:
-              $ref: '#/definitions/ErrorResponse'
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 definitions:
     Voucher:
       type: object
+      allOf:
+        - ref:'#/definitions/Auditable'
       properties:
         id:
           type: string
+          maxLength: 32
           description: |
             
-            
-          maxLength: 32
         type:
           type: string
+          maxLength: 16
           description: |
             
-            
-          maxLength: 16
         name:
           type: string
+          maxLength: 16
           description: |
             
-            
-          maxLength: 16
         description:
           type: string
+          maxLength: 256
           description: |
             
-            
-          maxLength: 256
         voucherNumber:
           type: string
+          maxLength: 32
           description: |
             
-            
-          maxLength: 32
         voucherDate:
           type: string
           format: date
           description: |
             
-            
         fund:
-          $ref: "#/definitions/FundContract"
+          $ref: "#/definitions/Fund"
+          description: |
+            
         status:
-          $ref: "#/definitions/EgfStatus"
+          $ref: "#/definitions/FinancialStatus"
+          description: |
+            
         originalVoucherNumber:
           type: string
           description: |
-            
             
         refVoucherNumber:
           type: string
           description: |
             
-            
         moduleName:
           type: string
           description: |
-            
             
         ledgers:
           type:  array
           description:  |
             
-            
           items:
             $ref: "#/definitions/Ledger"
+          description: |
+            
         vouchermis:
           $ref: "#/definitions/Vouchermis"
+          description: |
+            
       required:
-      - type
-      - name
       - voucherDate
     Ledger:
       type: object
+      allOf:
+        - ref:'#/definitions/Auditable'
       properties:
         id:
           type: string
           description: |
-            
             
         orderId:
           type: integer
           format: int32
           description: |
             
-            
         chartOfAccount:
-          $ref: "#/definitions/ChartOfAccountContract"
-        glcode:
-          type: string
+          $ref: "#/definitions/ChartOfAccount"
           description: |
             
-            
+        glcode:
+          type: string
           maxLength: 16
+          description: |
+            
         debitAmount:
           type: number
           format: double
           description: |
-            
             
         creditAmount:
           type: number
           format: double
           description: |
             
-            
         function:
-          $ref: "#/definitions/FunctionContract"
+          $ref: "#/definitions/Function"
+          description: |
+            
         ledgerDetails:
           type:  array
           description:  |
             
-            
           items:
             $ref: "#/definitions/LedgerDetail"
+          description: |
+            
       required:
       - chartOfAccount
       - glcode
@@ -315,87 +270,94 @@ definitions:
       - creditAmount
     Vouchermis:
       type: object
+      allOf:
+        - ref:'#/definitions/Auditable'
       properties:
         id:
           type: string
+          maxLength: 32
           description: |
             
-            
-          maxLength: 32
         billNumber:
           type: string
           description: |
             
-            
         function:
-          $ref: "#/definitions/FunctionContract"
+          $ref: "#/definitions/Function"
+          description: |
+            
         fundsource:
-          $ref: "#/definitions/FundsourceContract"
+          $ref: "#/definitions/Fundsource"
+          description: |
+            
         scheme:
-          $ref: "#/definitions/SchemeContract"
+          $ref: "#/definitions/Scheme"
+          description: |
+            
         subScheme:
-          $ref: "#/definitions/SubSchemeContract"
+          $ref: "#/definitions/SubScheme"
+          description: |
+            
         functionary:
-          $ref: "#/definitions/FunctionaryContract"
+          $ref: "#/definitions/Functionary"
+          description: |
+            
         sourcePath:
           type: string
           description: |
-            
             
         budgetCheckRequired:
           type: boolean
           description: |
             
-            
         budgetAppropriationNo:
           type: string
           description: |
             
-            
     LedgerDetail:
       type: object
+      allOf:
+        - ref:'#/definitions/Auditable'
       properties:
         id:
           type: string
           description: |
             
-            
         accountDetailType:
           $ref: "#/definitions/AccountDetailType"
+          description: |
+            
         accountDetailKey:
           $ref: "#/definitions/AccountDetailKey"
+          description: |
+            
         amount:
           type: number
           format: double
           description: |
             
-            
       required:
       - accountDetailKey
       - amount
     VoucherRequest:
-      description: Contract class to receive request. Array of Voucher items  are used in case of create . Where as single Voucher item is used for update
+      description: Contract class for web request. Array of Voucher items  are used in case of create or update
       properties:
         requestInfo:
-          $ref: '#/definitions/RequestInfo'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         vouchers:
           description: Used for search result and create only
           type:  array
           items:
             $ref: '#/definitions/Voucher'
-        voucher:
-          $ref: '#/definitions/Voucher'
     VoucherResponse:
-      description: Contract class to send response. Array of Voucher items  are used in case of search results or response for create. Where as single Voucher item is used for update
+      description: Contract class for web response. Array of Voucher items  are used in case of search ,create or update request. 
       properties:
         responseInfo:
-          $ref: '#/definitions/ResponseInfo'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         vouchers:
           description: Used for search result and create only
           type:  array
           items:
             $ref: '#/definitions/Voucher'
-        voucher:
-          $ref: '#/definitions/Voucher'
         page:
           $ref: '#/definitions/Page'

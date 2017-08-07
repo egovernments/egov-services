@@ -258,20 +258,20 @@ public class ReceiptRepository {
 
 	}
 
-	public long getStateId(String receiptNumber) {
+	public long getStateId(Long receiptHeaderId) {
 		logger.info("Updating stateId..");
 		long stateId = 0L;
-		String query = "SELECT stateid FROM egcl_receiptheader WHERE receiptnumber=?";
+		String query = "SELECT stateid FROM egcl_receiptheader WHERE id=?";
 		try {
 			Long id = jdbcTemplate.queryForObject(query,
-					new Object[] { receiptNumber }, Long.class);
+					new Object[] { receiptHeaderId }, Long.class);
 			stateId = Long.valueOf(id);
 		} catch (Exception e) {
 			logger.error("Couldn't fetch stateId for the receipt: "
-					+ receiptNumber);
+					+ receiptHeaderId);
 			return stateId;
 		}
-		logger.info("StateId obtained for receipt: " + receiptNumber + " is: "
+		logger.info("StateId obtained for receipt: " + receiptHeaderId + " is: "
 				+ stateId);
 		return stateId;
 	}

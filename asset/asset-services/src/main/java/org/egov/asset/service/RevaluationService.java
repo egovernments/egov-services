@@ -4,27 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
+import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class RevaluationService {
 
     @Autowired
@@ -37,7 +43,7 @@ public class RevaluationService {
     private ApplicationProperties applicationProperties;
 
     @Autowired
-    private AssetCurrentAmountService assetCurrentAmountService;
+    private AssetRepository assetRepository;
 
     @Autowired
     private VoucherService voucherService;
@@ -45,22 +51,27 @@ public class RevaluationService {
     @Autowired
     private AssetConfigurationService assetConfigurationService;
 
-    private static final Logger logger = LoggerFactory.getLogger(RevaluationService.class);
+    @Autowired
+    private AssetCommonService assetCommonService;
+
+    @Autowired
+    private CurrentValueService currentValueService;
 
     public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        logger.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
+        log.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
 
         revaluation.setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
 
         if (revaluation.getAuditDetails() == null)
-            revaluation.setAuditDetails(assetCurrentAmountService.getAuditDetails(revaluationRequest.getRequestInfo()));
+            revaluation.setAuditDetails(assetCommonService.getAuditDetails(revaluationRequest.getRequestInfo()));
 
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 revaluation.getTenantId()))
             try {
-                logger.info("Commencing Voucher Generation for Asset Revaluation");
+                log.info("Commencing Voucher Generation for Asset Revaluation");
                 final Long voucherId = createVoucherForRevaluation(revaluationRequest, headers);
+
                 if (voucherId != null)
                     revaluation.setVoucherReference(voucherId);
             } catch (final Exception e) {
@@ -77,6 +88,23 @@ public class RevaluationService {
 
     public void create(final RevaluationRequest revaluationRequest) {
         revaluationRepository.create(revaluationRequest);
+        saveRevaluationAmountToCurrentAmount(revaluationRequest);
+    }
+
+    public void saveRevaluationAmountToCurrentAmount(final RevaluationRequest revaluationRequest) {
+        
+        final Revaluation revaluation = revaluationRequest.getRevaluation();
+        final List<AssetCurrentValue> assetCurrentValues = new ArrayList<AssetCurrentValue>();
+        final AssetCurrentValue assetCurrentValue = new AssetCurrentValue();
+        assetCurrentValue.setAssetId(revaluation.getAssetId());
+        assetCurrentValue.setAssetTranType(TransactionType.REVALUATION);
+        assetCurrentValue.setCurrentAmount(revaluation.getValueAfterRevaluation());
+        assetCurrentValue.setTenantId(revaluation.getTenantId());
+        assetCurrentValues.add(assetCurrentValue);
+        final AssetCurrentValueRequest assetCurrentValueRequest = new AssetCurrentValueRequest();
+        assetCurrentValueRequest.setRequestInfo(revaluationRequest.getRequestInfo());
+        assetCurrentValueRequest.setAssetCurrentValues(assetCurrentValues);
+        currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
     }
 
     public RevaluationResponse search(final RevaluationCriteria revaluationCriteria) {
@@ -91,14 +119,17 @@ public class RevaluationService {
 
     private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        final Asset asset = assetCurrentAmountService.getAsset(revaluation.getAssetId(), revaluation.getTenantId(),
-                revaluationRequest.getRequestInfo());
-        logger.debug("asset for revaluation :: " + asset);
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(revaluation.getAssetId());
+        final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder()
+                .tenantId(revaluationRequest.getRevaluation().getTenantId()).id(assetIds).build()).get(0);
+        log.debug("asset for revaluation :: " + asset);
 
         final AssetCategory assetCategory = asset.getAssetCategory();
 
         if (revaluation.getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
-            logger.info("subledger details check for Type of change INCREASED");
+            log.info("subledger details check for Type of change INCREASED");
+
             final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
                     .getSubledgerDetails(revaluationRequest.getRequestInfo(), revaluation.getTenantId(),
                             assetCategory.getAssetAccount());
@@ -112,7 +143,8 @@ public class RevaluationService {
                 throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
 
         } else if (revaluation.getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
-            logger.info("subledger details check for Type of change DECREASED");
+            log.info("subledger details check for Type of change DECREASED");
+
             final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
                     .getSubledgerDetails(revaluationRequest.getRequestInfo(), revaluation.getTenantId(),
                             assetCategory.getAssetAccount());
@@ -128,11 +160,11 @@ public class RevaluationService {
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluationRequest,
                 assetCategory);
 
-        logger.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
+        log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequestForRevalaution(revaluationRequest,
-                asset, accountCodeDetails);
-        logger.debug("Voucher Request for Revaluation :: " + voucherRequest);
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(revaluation, revaluation.getFund(),
+                asset, accountCodeDetails, revaluation.getTenantId());
+        log.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
         return voucherService.createVoucher(new VoucherRequest(), revaluation.getTenantId(), headers);
 

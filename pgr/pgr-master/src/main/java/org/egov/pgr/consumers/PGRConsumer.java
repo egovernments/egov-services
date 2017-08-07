@@ -46,16 +46,17 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.domain.model.OTPConfig;
+import org.egov.pgr.persistence.repository.ServiceTypeConfigurationRepository;
 import org.egov.pgr.service.EscalationHierarchyService;
 import org.egov.pgr.service.EscalationTimeTypeService;
+/*import org.egov.pgr.web.contract.RouterReq;*/
+import org.egov.pgr.service.GrievanceTypeService;
 import org.egov.pgr.service.OTPConfigService;
 import org.egov.pgr.service.ReceivingCenterTypeService;
 import org.egov.pgr.service.ReceivingModeTypeService;
 import org.egov.pgr.service.RouterService;
 /*import org.egov.pgr.service.RouterService;*/
 import org.egov.pgr.service.ServiceGroupService;
-/*import org.egov.pgr.web.contract.RouterReq;*/
-import org.egov.pgr.service.GrievanceTypeService;
 import org.egov.pgr.web.contract.EscalationHierarchyReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
@@ -105,6 +106,9 @@ public class PGRConsumer {
 	@Autowired 
 	private EscalationHierarchyService escalationHierarchyService; 
 
+	@Autowired
+	private ServiceTypeConfigurationRepository serviceTypeConfigurationRepository;
+	
    	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
 			"${kafka.topics.receivingmode.create.name}", "${kafka.topics.receivingcenter.update.name}",
@@ -112,8 +116,9 @@ public class PGRConsumer {
 			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.servicetype.update.name}","${kafka.topics.router.create.name}",
 			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.escalationtimetype.create.name}", 
 			"${kafka.topics.escalationtimetype.update.name}", "${kafka.topics.otpconfig.update.name}", "${kafka.topics.otpconfig.create.name}",
-			"${kafka.topics.escalationhierarchy.update.name}", "${kafka.topics.escalationhierarchy.create.name}"})
-	
+			"${kafka.topics.escalationhierarchy.update.name}", "${kafka.topics.escalationhierarchy.create.name}", "${kafka.topics.servicetypeconfiguration.create.name}",
+			"${kafka.topics.servicetypeconfiguration.update.name}" })
+
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("RECORD: " + record.toString());
 		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
@@ -169,7 +174,12 @@ public class PGRConsumer {
 			} else if (record.topic().equals(applicationProperties.getUpdateEscalationHierarchyTopicName())) {
 				LOGGER.info("Consuming Update Escalation Hierarchy Request");
 				escalationHierarchyService.update(objectMapper.readValue(record.value(), EscalationHierarchyReq.class));
+			}else if (record.topic().equals(applicationProperties.servicetypeconfigurationCreateTopic())) {
+				serviceTypeConfigurationRepository.save(objectMapper.readValue(record.value(), org.egov.pgr.persistence.dto.ServiceTypeConfiguration.class));
 			}
+			else if (record.topic().equals(applicationProperties.servicetypeconfigurationUpdateTopic())) {
+				serviceTypeConfigurationRepository.update(objectMapper.readValue(record.value(), org.egov.pgr.persistence.dto.ServiceTypeConfiguration.class));
+				}
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

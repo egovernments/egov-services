@@ -60,23 +60,26 @@ class UiMultiSelectField extends Component {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<SelectField
-						style={{"display": (item.hide ? 'none' : 'block')}}
-						errorStyle={{"float":"left"}}
-						fullWidth={true}
-						multiple={true}
-						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
-						value={this.props.getVal(item.jsonPath)}
-						disabled={item.isDisabled}
-						onChange={(ev, key, val) => {
-							this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}
-						}
-						errorText={this.props.fieldErrors[item.jsonPath]}
-						maxHeight={200}>
-				            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
-				                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-				            ))}
-		            </SelectField>
+					<div style={{"display": "flex", "flex-direction": "column-reverse"}}>
+						<SelectField
+							style={{"display": (item.hide ? 'none' : 'block')}}
+							errorStyle={{"float":"left"}}
+							fullWidth={true}
+							multiple={true}
+							floatingLabelText={item.label + (item.isRequired ? " *" : "")}
+							value={this.props.getVal(item.jsonPath)}
+							disabled={item.isDisabled}
+							onChange={(ev, key, val) => {
+								this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}
+							}
+							errorText={this.props.fieldErrors[item.jsonPath]}
+							maxHeight={200}>
+								<MenuItem value={null} key="00000" primaryText="" />
+					            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
+					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+					            ))}
+			            </SelectField>
+		            </div>
 				);
 		}
 	}

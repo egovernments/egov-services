@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.asset.model.enums.TransactionType;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,18 +18,20 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AssetCurrentValue {
 	
-	@JsonProperty("tenantId")
+	private Long id;
+	
 	@NotNull
 	private String tenantId;
 	
-	@JsonProperty("assetId")
 	@NotNull
 	private Long assetId;
 	
-	@JsonProperty("currentAmmount")
-	private BigDecimal currentAmmount;
+	private BigDecimal currentAmount;
+	
+	private TransactionType assetTranType;
 
-
+	private AuditDetails auditDetails;
 }

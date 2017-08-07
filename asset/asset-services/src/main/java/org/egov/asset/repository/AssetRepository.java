@@ -290,11 +290,11 @@ public class AssetRepository {
 
         final List<YearWiseDepreciation> dbYearWiseDepreciations = getDBYearWiseDepreciations(oldAsset);
 
-        final List<YearWiseDepreciation> rywds = new ArrayList<YearWiseDepreciation>();
-        final List<YearWiseDepreciation> uywds = new ArrayList<YearWiseDepreciation>();
-        final List<YearWiseDepreciation> iywds = new ArrayList<YearWiseDepreciation>();
+        final List<YearWiseDepreciation> rywds = new ArrayList<>();
+        final List<YearWiseDepreciation> uywds = new ArrayList<>();
+        final List<YearWiseDepreciation> iywds = new ArrayList<>();
 
-        final List<Long> dbYWDIds = new ArrayList<Long>();
+        final List<Long> dbYWDIds = new ArrayList<>();
         for (final YearWiseDepreciation dbYwd : dbYearWiseDepreciations)
             dbYWDIds.add(dbYwd.getId());
 

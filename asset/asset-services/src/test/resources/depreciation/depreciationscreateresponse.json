@@ -1,0 +1,24 @@
+{
+  "responseInfo": null,
+  "depreciation": {
+    "voucherReference": null,
+    "auditDetails": null,
+    "depreciationDetails": [
+      {
+        "id": 2,
+        "assetId": 2,
+        "status": "SUCCESS",
+        "depreciationRate": 6.33,
+        "valueBeforeDepreciation": 5500,
+        "depreciationValue": 500,
+        "valueAfterDepreciation": 5000,
+        "reasonForFailure": null
+      }
+    ],
+    "tenantId": null,
+    "financialYear": null,
+    "fromDate": null,
+    "toDate": null,
+    "assetIds": []
+  }
+}

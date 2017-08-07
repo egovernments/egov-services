@@ -84,10 +84,10 @@ public class WorkFlowUtil {
 	 * @return TaskResponse
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String stateId)
+	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String stateId, String businessKey)
 			throws JsonProcessingException {
 
-		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
+		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo,businessKey );
 		StringBuilder workFlowUpdateUrl = new StringBuilder();
 		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.hostname"));
 		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.basepath"));
@@ -151,14 +151,14 @@ public class WorkFlowUtil {
 	 * @param WorkflowDetailsRequestInfo
 	 * @return TaskRequest
 	 */
-	private TaskRequest getTaskRequest(WorkflowDetailsRequestInfo workflowDetailsRequest) {
+	private TaskRequest getTaskRequest(WorkflowDetailsRequestInfo workflowDetailsRequest,String businessKey) {
 		WorkFlowDetails workflowDetails = workflowDetailsRequest.getWorkflowDetails();
 		RequestInfo requestInfo = workflowDetailsRequest.getRequestInfo();
 		TaskRequest taskRequest = new TaskRequest();
 		Task task = new Task();
 		Position assignee = new Position();
 		taskRequest.setRequestInfo(requestInfo);
-		task.setBusinessKey(environment.getProperty("businessKey"));
+		task.setBusinessKey(businessKey);
 		task.setAction(workflowDetails.getAction());
 		task.setStatus(workflowDetails.getStatus());
 		task.setTenantId(workflowDetailsRequest.getTenantId());

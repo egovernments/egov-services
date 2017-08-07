@@ -51,6 +51,7 @@ import org.egov.common.domain.model.Auditable;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.hibernate.validator.constraints.Length;
+import org.ja.annotation.DrillDownTable;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -67,7 +68,8 @@ import lombok.Setter;
 public class Ledger extends Auditable {
 	
 	
-    private String id = null;
+    private String id ;
+   
     private Integer orderId;
     
     @NotNull
@@ -83,9 +85,10 @@ public class Ledger extends Auditable {
     @Min(value=0)
     @Max(value=999999999)
     private BigDecimal creditAmount;
+   
     private FunctionContract function;
    
-    //@DrillDownTable
+    @DrillDownTable
     private Set<LedgerDetail> ledgerDetails = new HashSet<LedgerDetail>();
 
    

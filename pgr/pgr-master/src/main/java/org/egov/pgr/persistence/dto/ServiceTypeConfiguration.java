@@ -1,5 +1,7 @@
 package org.egov.pgr.persistence.dto;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,13 +9,23 @@ import lombok.Getter;
 @Getter
 public class ServiceTypeConfiguration {
 
+	@NotNull
     private String tenantId;
 
+    @NotNull
     private String serviceCode;
 
-    private boolean isApplicationFeesEnabled;
+    private boolean applicationFeesEnabled;
 
-    private boolean isNotificationEnabled;
+    private boolean notificationEnabled;
 
-    private boolean isSlaEnabled;
+    private boolean slaEnabled;
+    
+    private String glCode;
+    
+    private boolean online;
+    
+    private String source;
+    
+    private String url;
 }

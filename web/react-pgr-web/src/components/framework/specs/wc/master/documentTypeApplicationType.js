@@ -17,7 +17,7 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/wcms/masters/master/_getapplicationtypes?|$..key|$..object",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -29,7 +29,7 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/wcms/masters/documenttype/_search?|$..name|$..name",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -42,7 +42,7 @@ var dat = {
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
-							"default": true,
+							"defaultValue": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -54,7 +54,7 @@ var dat = {
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
-							"default": true,
+							"defaultValue": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -246,7 +246,7 @@ var dat = {
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
-							"default": true,
+							"defaultValue":true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}

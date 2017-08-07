@@ -70,9 +70,9 @@ public class TaxCalculatorConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, PropertyRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(PropertyRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -81,8 +81,8 @@ public class TaxCalculatorConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -96,22 +96,23 @@ public class TaxCalculatorConsumer {
 	 */
 	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.tax.calculaion')}",
 			"#{environment.getProperty('egov.propertytax.property.update.tax.calculaion')}" })
-	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
-	    log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
+		log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
 		ObjectMapper objectMapper = new ObjectMapper();
-		Property property = consumerRecord.value().getProperties().get(0);
+		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord.value(), PropertyRequest.class);
+		Property property = propertyRequest.getProperties().get(0);
 		CalculationRequest calculationRequest = new CalculationRequest();
-		calculationRequest.setRequestInfo(consumerRecord.value().getRequestInfo());
+		calculationRequest.setRequestInfo(propertyRequest.getRequestInfo());
 		calculationRequest.setProperty(property);
 		String url = environment.getProperty("egov.services.pt_calculator.hostname")
 				+ environment.getProperty("egov.services.pt_calculator.calculatorpath");
-		log.info("Calculator url is:" +url+ "CalculationRequest is:" +calculationRequest);
+		log.info("Calculator url is:" + url + "CalculationRequest is:" + calculationRequest);
 		CalculationResponse calculationResponse = restTemplate.postForObject(url, calculationRequest,
 				CalculationResponse.class);
-		log.info( "CalculationResponse is:" + calculationResponse);
+		log.info("CalculationResponse is:" + calculationResponse);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
-        if (!property.getChannel().toString().equalsIgnoreCase(environment.getProperty("egov.property.channel.type"))) {
+		if (!property.getChannel().toString().equalsIgnoreCase(environment.getProperty("egov.property.channel.type"))) {
 
 			if (consumerRecord.topic()
 					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.tax.calculaion"))) {
@@ -131,8 +132,8 @@ public class TaxCalculatorConsumer {
 
 		else {
 
-			String upicNo = upicGeneration.generateUpicNo(property, consumerRecord.value().getRequestInfo());
-			consumerRecord.value().getProperties().get(0).setUpicNumber(upicNo);
+			String upicNo = upicGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
+			propertyRequest.getProperties().get(0).setUpicNumber(upicNo);
 			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
 					consumerRecord.value());
 		}

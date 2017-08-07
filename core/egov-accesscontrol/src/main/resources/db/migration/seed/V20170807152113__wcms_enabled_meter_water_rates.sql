@@ -1,0 +1,1 @@
+update service set enabled=true where code='METERWATERRATES' and enabled=false and tenantId='default';

@@ -21,200 +21,200 @@ import static org.egov.pgr.common.contract.AttributeValues.createOrUpdateAttribu
 @Builder
 public class ServiceRequest {
 
-	public static final String VALUES_POSITION_ID = "systemPositionId";
-	public static final String VALUES_ESCALATED_FLAG = "systemIsEscalated";
-	public static final String VALUES_STATE_ID = "systemStateId";
-	public static final String STATE_DETAILS = "systemStateDetails";
-	private static final String WORKFLOW_TYPE = "Complaint";
-	public static final String STATUS = "systemStatus";
-	public static final String VALUES_APPROVAL_COMMENT_KEY = "systemApprovalComments";
-	public static final String PREVIOUS_ASSIGNEE = "systemPreviousAssignee";
-	private static final String ESCALATION_STATUS = "status";
-	private static final String VALUES_APPROVAL_COMMENT_VALUE = "Complaint is escalated";
-	private static final String VALUES_DESIGNATION_ID = "systemDesignationId";
-	private static final String VALUES_DEPARTMENT_ID = "systemDepartmentId";
-	private static final String ESCALATION_HOURS = "systemEscalationHours";
-	private static final String TRUE = "true";
+    public static final String VALUES_POSITION_ID = "systemPositionId";
+    public static final String VALUES_ESCALATED_FLAG = "systemIsEscalated";
+    public static final String VALUES_STATE_ID = "systemStateId";
+    public static final String STATE_DETAILS = "systemStateDetails";
+    private static final String WORKFLOW_TYPE = "Complaint";
+    public static final String STATUS = "systemStatus";
+    public static final String VALUES_APPROVAL_COMMENT_KEY = "systemApprovalComments";
+    public static final String PREVIOUS_ASSIGNEE = "systemPreviousAssignee";
+    private static final String ESCALATION_STATUS = "status";
+    private static final String VALUES_APPROVAL_COMMENT_VALUE = "Complaint is escalated";
+    private static final String VALUES_DESIGNATION_ID = "systemDesignationId";
+    private static final String VALUES_DEPARTMENT_ID = "systemDepartmentId";
+    private static final String ESCALATION_HOURS = "systemEscalationHours";
+    private static final String TRUE = "true";
 
-	private String tenantId;
+    private String tenantId;
 
-	@JsonProperty("serviceRequestId")
-	@Setter
-	private String crn;
+    @JsonProperty("serviceRequestId")
+    @Setter
+    private String crn;
 
-	@JsonProperty("status")
-	private Boolean status;
+    @JsonProperty("status")
+    private Boolean status;
 
-	@JsonProperty("serviceName")
-	private String complaintTypeName;
+    @JsonProperty("serviceName")
+    private String complaintTypeName;
 
-	@JsonProperty("serviceCode")
-	private String complaintTypeCode;
+    @JsonProperty("serviceCode")
+    private String complaintTypeCode;
 
-	private String description;
+    private String description;
 
-	private String agencyResponsible;
+    private String agencyResponsible;
 
-	private String serviceNotice;
+    private String serviceNotice;
 
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-	@JsonProperty("requestedDatetime")
-	@Setter
-	private Date createdDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    @JsonProperty("requestedDatetime")
+    @Setter
+    private Date createdDate;
 
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-	@JsonProperty("updatedDatetime")
-	@Setter
-	private Date lastModifiedDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    @JsonProperty("updatedDatetime")
+    @Setter
+    private Date lastModifiedDate;
 
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-	@JsonProperty("expectedDatetime")
-	@Setter
-	private Date escalationDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    @JsonProperty("expectedDatetime")
+    @Setter
+    private Date escalationDate;
 
-	private String address;
+    private String address;
 
-	@JsonProperty("addressId")
-	private String crossHierarchyId;
+    @JsonProperty("addressId")
+    private String crossHierarchyId;
 
-	private Integer zipcode;
+    private Integer zipcode;
 
-	@JsonProperty("lat")
-	private Double latitude;
+    @JsonProperty("lat")
+    private Double latitude;
 
-	@JsonProperty("lng")
-	private Double longitude;
+    @JsonProperty("lng")
+    private Double longitude;
 
-	@JsonProperty("media_urls")
-	private List<String> mediaUrls;
+    @JsonProperty("mediaUrls")
+    private List<String> mediaUrls;
 
-	@Setter
-	@JsonProperty("first_name")
-	private String firstName;
+    @Setter
+    @JsonProperty("firstName")
+    private String firstName;
 
-	@JsonProperty("last_name")
-	private String lastName;
+    @JsonProperty("lastName")
+    private String lastName;
 
-	@JsonProperty("phone")
-	private String phone;
+    @JsonProperty("phone")
+    private String phone;
 
-	@JsonProperty("email")
-	private String email;
+    @JsonProperty("email")
+    private String email;
 
-	@JsonProperty("device_id")
-	private String deviceId;
+    @JsonProperty("deviceId")
+    private String deviceId;
 
-	@JsonProperty("account_id")
-	private String accountId;
+    @JsonProperty("accountId")
+    private String accountId;
 
-	private List<AttributeEntry> attribValues = new ArrayList<>();
+    private List<AttributeEntry> attribValues = new ArrayList<>();
 
-	private void setAssignee(String assignee) {
-		createOrUpdateAttributeEntry(attribValues, VALUES_POSITION_ID, assignee);
-	}
+    private void setAssignee(String assignee) {
+        createOrUpdateAttributeEntry(attribValues, VALUES_POSITION_ID, assignee);
+    }
 
-	private void setStateId(String stateId) {
-		createOrUpdateAttributeEntry(attribValues, VALUES_STATE_ID, stateId);
-	}
+    private void setStateId(String stateId) {
+        createOrUpdateAttributeEntry(attribValues, VALUES_STATE_ID, stateId);
+    }
 
-	public void setPreviousAssignee(String previousAssignee) {
-		createOrUpdateAttributeEntry(attribValues, PREVIOUS_ASSIGNEE, previousAssignee);
-	}
+    public void setPreviousAssignee(String previousAssignee) {
+        createOrUpdateAttributeEntry(attribValues, PREVIOUS_ASSIGNEE, previousAssignee);
+    }
 
-	@JsonIgnore
-	public String getPositionId() {
-		return getDynamicSingleValue(VALUES_POSITION_ID);
-	}
+    @JsonIgnore
+    public String getPositionId() {
+        return getDynamicSingleValue(VALUES_POSITION_ID);
+    }
 
-	public void setPositionId(String assigneeId) {
-		createOrUpdateAttributeEntry(attribValues, VALUES_POSITION_ID, assigneeId);
-	}
+    public void setPositionId(String assigneeId) {
+        createOrUpdateAttributeEntry(attribValues, VALUES_POSITION_ID, assigneeId);
+    }
 
-	public void setEscalatedFlag() {
-		createOrUpdateAttributeEntry(attribValues, VALUES_ESCALATED_FLAG, TRUE);
-	}
+    public void setEscalatedFlag() {
+        createOrUpdateAttributeEntry(attribValues, VALUES_ESCALATED_FLAG, TRUE);
+    }
 
-	public boolean isEscalated() {
-		return TRUE.equals(getDynamicSingleValue(VALUES_ESCALATED_FLAG));
-	}
+    public boolean isEscalated() {
+        return TRUE.equals(getDynamicSingleValue(VALUES_ESCALATED_FLAG));
+    }
 
-	public void setDesignation(String designationId) {
-		createOrUpdateAttributeEntry(attribValues, VALUES_DESIGNATION_ID, designationId);
-	}
+    public void setDesignation(String designationId) {
+        createOrUpdateAttributeEntry(attribValues, VALUES_DESIGNATION_ID, designationId);
+    }
 
-	public void setDepartment(String departmentId) {
-		createOrUpdateAttributeEntry(attribValues, VALUES_DEPARTMENT_ID, departmentId);
-	}
+    public void setDepartment(String departmentId) {
+        createOrUpdateAttributeEntry(attribValues, VALUES_DEPARTMENT_ID, departmentId);
+    }
 
-	public void setEscalationHours(String escalationHours) {
-		createOrUpdateAttributeEntry(attribValues, ESCALATION_HOURS, escalationHours);
-	}
+    public void setEscalationHours(String escalationHours) {
+        createOrUpdateAttributeEntry(attribValues, ESCALATION_HOURS, escalationHours);
+    }
 
-	@JsonIgnore
-	public String getEscalationHours() {
-		return getDynamicSingleValue(ESCALATION_HOURS);
-	}
+    @JsonIgnore
+    public String getEscalationHours() {
+        return getDynamicSingleValue(ESCALATION_HOURS);
+    }
 
-	public WorkflowRequest getWorkFlowRequestForEscalation(RequestInfo requestInfo) {
-		String crn = this.getCrn();
-		Map<String, Attribute> valuesToSet = getWorkFlowRequestValues();
-		valuesToSet.put(PREVIOUS_ASSIGNEE, Attribute.asStringAttr(PREVIOUS_ASSIGNEE, getDynamicSingleValue
-				(VALUES_POSITION_ID)));
+    public WorkflowRequest getWorkFlowRequestForEscalation(RequestInfo requestInfo) {
+        String crn = this.getCrn();
+        Map<String, Attribute> valuesToSet = getWorkFlowRequestValues();
+        valuesToSet.put(PREVIOUS_ASSIGNEE, Attribute.asStringAttr(PREVIOUS_ASSIGNEE, getDynamicSingleValue
+                (VALUES_POSITION_ID)));
 
-		WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
-				.assignee(null)
-				.action(WorkflowRequest.Action.forComplaintStatus(getDynamicSingleValue(STATUS)))
-				.requestInfo(requestInfo)
-				.values(valuesToSet)
-				.status(getDynamicSingleValue(ESCALATION_STATUS))
-				.type(WORKFLOW_TYPE)
-				.businessKey(WORKFLOW_TYPE)
-				.tenantId(getTenantId())
-				.crn(crn);
+        WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
+                .assignee(null)
+                .action(WorkflowRequest.Action.forComplaintStatus(getDynamicSingleValue(STATUS)))
+                .requestInfo(requestInfo)
+                .values(valuesToSet)
+                .status(getDynamicSingleValue(ESCALATION_STATUS))
+                .type(WORKFLOW_TYPE)
+                .businessKey(WORKFLOW_TYPE)
+                .tenantId(getTenantId())
+                .crn(crn);
 
-		return workflowRequestBuilder.build();
-	}
+        return workflowRequestBuilder.build();
+    }
 
-	private Map<String, Attribute> getWorkFlowRequestValues() {
-		Map<String, Attribute> valuesToSet = new HashMap<>();
-		valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
-		valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId()));
-		valuesToSet.put(VALUES_APPROVAL_COMMENT_KEY, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT_KEY,
-				VALUES_APPROVAL_COMMENT_VALUE));
-		return valuesToSet;
-	}
+    private Map<String, Attribute> getWorkFlowRequestValues() {
+        Map<String, Attribute> valuesToSet = new HashMap<>();
+        valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
+        valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId()));
+        valuesToSet.put(VALUES_APPROVAL_COMMENT_KEY, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT_KEY,
+                VALUES_APPROVAL_COMMENT_VALUE));
+        return valuesToSet;
+    }
 
-	private String getCurrentStateId() {
-		return Objects.isNull(getDynamicSingleValue(VALUES_STATE_ID)) ? null : getDynamicSingleValue(VALUES_STATE_ID);
-	}
+    private String getCurrentStateId() {
+        return Objects.isNull(getDynamicSingleValue(VALUES_STATE_ID)) ? null : getDynamicSingleValue(VALUES_STATE_ID);
+    }
 
-	public String getDesignation() {
-		return getDynamicSingleValue(VALUES_DESIGNATION_ID);
-	}
+    public String getDesignation() {
+        return getDynamicSingleValue(VALUES_DESIGNATION_ID);
+    }
 
-	public void update(WorkflowResponse workflowResponse) {
-		setAssignee(workflowResponse.getAssignee());
-		setStateId(workflowResponse.getValueForKey(VALUES_STATE_ID));
-	}
+    public void update(WorkflowResponse workflowResponse) {
+        setAssignee(workflowResponse.getAssignee());
+        setStateId(workflowResponse.getValueForKey(VALUES_STATE_ID));
+    }
 
-	public void update(Position position) {
-		setDesignation(position.getDesignationId());
-		setDepartment(position.getDepartmentId());
-	}
+    public void update(Position position) {
+        setDesignation(position.getDesignationId());
+        setDepartment(position.getDepartmentId());
+    }
 
-	public boolean isAttributeEntryPresent(String key) {
-		return getDynamicSingleValue(key) != null;
-	}
+    public boolean isAttributeEntryPresent(String key) {
+        return getDynamicSingleValue(key) != null;
+    }
 
-	public boolean isNewAssigneeSameAsPreviousAssignee() {
-		return Objects.equals(getPositionId(), getPreviousAssignee());
-	}
+    public boolean isNewAssigneeSameAsPreviousAssignee() {
+        return Objects.equals(getPositionId(), getPreviousAssignee());
+    }
 
-	private String getPreviousAssignee() {
-		return getDynamicSingleValue(PREVIOUS_ASSIGNEE);
-	}
+    private String getPreviousAssignee() {
+        return getDynamicSingleValue(PREVIOUS_ASSIGNEE);
+    }
 
-	private String getDynamicSingleValue(String key) {
-		return AttributeValues.getAttributeSingleValue(attribValues, key);
-	}
+    private String getDynamicSingleValue(String key) {
+        return AttributeValues.getAttributeSingleValue(attribValues, key);
+    }
 }

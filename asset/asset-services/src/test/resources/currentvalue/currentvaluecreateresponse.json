@@ -1,0 +1,20 @@
+{
+  "ResponseInfo": null,
+  "AssetCurrentValues": [
+    {
+      "id": null,
+      "tenantId": "ap.kurnool",
+      "assetId": 1,
+      "currentAmount": 5000,
+      "assetTranType": "DISPOSAL",
+      "auditDetails": {
+        "createdBy": "5",
+        "createdDate": 1495978422356,
+        "lastModifiedBy": "5",
+        "lastModifiedDate": 1495978422356
+      }
+    }
+  ]
+}
+
+

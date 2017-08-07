@@ -151,6 +151,8 @@ public class ReceiptHeader {
     private Date lastModifiedDate;
     
     private String cancellationRemarks;
+
+    private String transactionId;
     
     
     
@@ -165,6 +167,6 @@ public class ReceiptHeader {
     			.cancellationRemarks(cancellationRemarks).reference_ch_id(reference_ch_id).receiptDate(receiptDate).
     			department(department).depositedBranch(depositedBranch).tenantId(tenantId).displayMsg(displayMsg).
     			voucherheader(voucherheader).version(version).createdBy(createdBy).createdDate(createdDate).
-    			lastModifiedBy(lastModifiedBy).lastModifiedDate(lastModifiedDate).build();
+    			lastModifiedBy(lastModifiedBy).lastModifiedDate(lastModifiedDate).transactionId(transactionId).build();
     }
 }

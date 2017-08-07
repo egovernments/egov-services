@@ -16,14 +16,23 @@ public class ServiceTypeConfigurationRepositoryTest {
     public void test_should_persist_servicetype_configuration(){
 
     }
+    
+    @Test
+    public void test_should_update_servicetype_configuration(){
+
+    }
 
     private ServiceTypeConfiguration getDto(){
         return ServiceTypeConfiguration.builder()
                 .tenantId("default")
                 .serviceCode("NOC")
-                .isApplicationFeesEnabled(true)
-                .isNotificationEnabled(true)
-                .isSlaEnabled(true)
+                .applicationFeesEnabled(true)
+                .notificationEnabled(true)
+                .slaEnabled(true)
+                .glCode("123")
+                .online(true)
+                .source("abc")
+                .url("http://egov.org")
                 .build();
     }
 }

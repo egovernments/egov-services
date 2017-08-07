@@ -1,5 +1,6 @@
 package org.egov.pgr.domain.service.validator;
 
+import org.egov.pgr.domain.exception.ServiceCodeMandatoryException;
 import org.egov.pgr.domain.exception.TenantIdMandatoryException;
 import org.egov.pgr.domain.model.ServiceTypeConfiguration;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,5 @@ public class TenantIdValidator implements ServiceTypeConfigurationValidator {
             throw new TenantIdMandatoryException();
         }
     }
+    
 }

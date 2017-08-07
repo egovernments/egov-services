@@ -45,10 +45,10 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.voucher.domain.model.Ledger;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -69,18 +69,17 @@ public class VoucherContract extends AuditableContract {
 	@Length(max = 32)
 	private String id;
 
-	@NotEmpty
-	@NotNull
+ 
 	@Length(max = 16)
 	private String type;
 
-	@NotEmpty
-	@NotNull
+ 
 	@Length(max = 16)
 	private String name;
 
 	@Length(max = 256)
 	private String description;
+	
 	@Length(max = 32)
 	private String voucherNumber;
 
@@ -88,18 +87,16 @@ public class VoucherContract extends AuditableContract {
 	private Date voucherDate;
 
 	private FundContract fund;
-	private EgfStatusContract status;
+	private FinancialStatusContract status;
 	private String originalVoucherContractNumber;
 	private String refVoucherContractNumber;
 	private String moduleName;
-	//@DrillDownTable
-	private Set<LedgerContract> ledgers;    
-	//@DrillDown
-	private VouchermisContract vouchermis;   
+		private Set<Ledger> ledgers;
+		private VoucherContractmis vouchermis;
 
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;
-		for (final LedgerContract detail : ledgers)
+		for (final Ledger detail : ledgers)
 			amount = amount.add(detail.getDebitAmount());
 		return amount;
 	}

@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/treatmentplant/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "TreatmentPlants[0].code",
 		"useTimestamp": true,
 		"objectName": "TreatmentPlants",
 		"groups": [
@@ -76,7 +77,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""

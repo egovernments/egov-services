@@ -288,7 +288,7 @@ class Report extends Component {
 
   getVal = (path, dateBool) => {
     var _val = _.get(this.props.formData, path);
-    if(dateBool && typeof _val != "undefined" && _val.indexOf("-") > -1) {
+    if(dateBool && typeof _val != "undefined" && typeof _val != "object" && _val.indexOf("-") > -1) {
       var dateArr = _val.split("-");
       return new Date(dateArr[2], (Number(dateArr[1])-1), dateArr[0]);
     } else

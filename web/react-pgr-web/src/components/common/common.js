@@ -8,12 +8,12 @@ var localationData = {
   "reports.common.sendername": "Sender Name",
   "reports.common.action": "Action",
   "wc.create.name": "Name",
-  "wc.create.groups.applicantDetails.title":"Applicant Particulars",
+  "wc.create.groups.applicantDetails.title":"Applicant Details",
   "wc.create.groups.applicantDetails.propertyIdentifier":"PT Assessment Number",
   "wc.create.groups.applicantDetails.nameOfApplicant":"Name of Applicant",
   "wc.create.groups.applicantDetails.mobileNumber":"Mobile Number",
   "wc.create.groups.applicantDetails.email":"Email",
-  "wc.create.groups.applicantDetails.adharNumber":"Aadhaar Number",
+  "wc.create.groups.applicantDetails.adharNumber":"Aadhar Number",
   "wc.create.groups.applicantDetails.locality":"Locality",
   "wc.create.groups.applicantDetails.address":"Address",
   "wc.create.groups.applicantDetails.zone":"Zone / Ward / Block",
@@ -26,7 +26,7 @@ var localationData = {
   "wc.create.groups.connectionDetails.usageType":"Usage Type",
   "wc.create.groups.connectionDetails.hscPipeSizeType":"H.S.C Pipe Size (Inches)",
   "wc.create.groups.connectionDetails.fields.sumpCapacity":"Sump Capacity (Litres)",
-  "wc.create.groups.connectionDetails.fields.numberOfPersons":"No.of persons",
+  "wc.create.groups.connectionDetails.fields.numberOfPersons":"No.of Persons",
   "wc.create.groups.approvalDetails.title":"Approval Details",
   "wc.create.groups.approvalDetails.fields.department":"Approver Department",
   "wc.create.groups.approvalDetails.fields.designation":"Approver Designation",
@@ -496,7 +496,8 @@ var localationData = {
   "tl.update.groups.licensevalidity.title": "License Validity",
   "tl.update.groups.licensevalidity.natureofbusiness": "Nature Of Business",
   "tl.update.groups.licensevalidity.licensecategory": "License Category",
-  "tl.update.groups.licensedocumenttype.basedonfinancialyear": "Based on Financial Year"
+  "tl.update.groups.licensedocumenttype.basedonfinancialyear": "Based on Financial Year",
+  "wc.create.groups.applicationParticular.title":"Application Particular"
 }
 
 export function translate(locale_text){

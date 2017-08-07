@@ -354,6 +354,7 @@ var dat = {
 						"isDisabled": false,
 						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
 						"requiredErrMsg": "",
+						"defaultValue":"Donation.minPipeSize",
 						"patternErrMsg": ""
 					},
 					{

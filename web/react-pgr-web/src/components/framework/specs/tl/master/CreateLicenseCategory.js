@@ -34,7 +34,7 @@ var dat = {
 						{
 							"name": "active",
 							"jsonPath": "categories[0].active",
-							"label": "Active",
+							"label": "tl.create.groups.categorytype.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -49,10 +49,10 @@ var dat = {
 	},
 	"tl.search": {
 		"numCols": 12/1,
-		"url": "/v1/category/_search",
+		"url": "/tl-masters/category/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "categories",
 		"groups": [
 			{
 				"label": "tl.search.groups.categorytype.title",
@@ -64,7 +64,7 @@ var dat = {
 							"label": "tl.search.groups.categorytype.category",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "",
+              "url": "/tl-masters/category/_search?|$..name|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -74,19 +74,19 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.code"},{label: "wc.search.result.categoryType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["code","name", "description", "active"],
-			"resultPath": "CategoryTypes",
-			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
-			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			"header": [{label: "tl.create.groups.categorytype.code"},{label: "tl.create.groups.categorytype.name"}, {label: "tl.create.groups.categorytype.active"}],
+			"values": ["code","name", "active"],
+			"resultPath": "categories",
+			"rowClickUrlUpdate": "/update/tl/CreateLicenseCategory/{id}",
+			"rowClickUrlView": "/view/tl/CreateLicenseCategory/{id}"
 			}
 	},
 	"tl.view": {
 		"numCols": 12/2,
-		"url": "/v1/category/_search",
+		"url": "/tl-masters/category/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "categories",
 		"groups": [
 			{
 				"label": "tl.view.groups.categorytype.title",
@@ -94,7 +94,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "name",
-						"jsonPath": "categories.name",
+						"jsonPath": "categories[0].name",
 						"label": "tl.view.groups.categorytype.name",
 						"pattern": "",
 						"type": "text",
@@ -105,7 +105,7 @@ var dat = {
 					},
 					{
 						"name": "code",
-						"jsonPath": "categories.code",
+						"jsonPath": "categories[0].code",
 						"label": "tl.view.groups.categorytype.code",
 						"pattern": "",
 						"type": "text",
@@ -120,12 +120,12 @@ var dat = {
 	},
 	"tl.update": {
 		"numCols": 12/2,
-		"searchUrl": "/v1/category/_search",
-		"url":"/v1/category/_update",
+		"searchUrl": "/tl-masters/category/_search?id={id}",
+		"url": "/tl-masters/tl-tradelicense/category/Flammables/{CategoryType.code}/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "categories",
 		"groups": [
 			{
 				"label": "tl.update.groups.categorytype.title",
@@ -152,6 +152,18 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
+					},
+					{
+						"name": "active",
+						"jsonPath": "categories.active",
+						"label": "tl.update.groups.categorytype.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":true
 					}
 				]
 			}

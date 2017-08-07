@@ -520,16 +520,37 @@ class Report extends Component {
     let {setMockData, formData, moduleName, actionName} = this.props;
     let self = this;
     let mockData = {...this.props.mockData};
-    var _groups = _.get(mockData[moduleName + "." + actionName], self.getPath(jsonPath));
-    _groups.splice(index, 1);
-    var regexp = new RegExp("\\[\\d{1}\\]", "g");
-    for(var i=index; i<_groups.length; i++) {
-      var stringified = JSON.stringify(_groups[i]);
-      _groups[i] = JSON.parse(stringified.replace(regexp, "[" + i + "]"));
-    }
 
-    _.set(mockData, self.getPath(jsonPath), _groups);
-    setMockData(mockData);
+    if(!jsonPath) {
+      var ind = 0;
+      for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
+        if(index == i && groupName == mockData[moduleName + "." + actionName].groups[i].name) {
+          mockData[moduleName + "." + actionName].groups.splice(i, 1);
+          ind = i;
+          break;
+        }
+      }
+
+      for(let i=ind; i<mockData[moduleName + "." + actionName].groups.length; i++) {
+        if(mockData[moduleName + "." + actionName].groups[i].groupName == groupName) {
+          var regexp = new RegExp("\\[\\d{1}\\]", "g");
+          var stringified = JSON.stringify(mockData[moduleName + "." + actionName].groups[i]);
+          mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, "[" + i + "]"));
+        }
+      }
+      setMockData(mockData);
+    } else {
+      var _groups = _.get(mockData[moduleName + "." + actionName], self.getPath(jsonPath));
+      _groups.splice(index, 1);
+      var regexp = new RegExp("\\[\\d{1}\\]", "g");
+      for(var i=index; i<_groups.length; i++) {
+        var stringified = JSON.stringify(_groups[i]);
+        _groups[i] = JSON.parse(stringified.replace(regexp, "[" + i + "]"));
+      }
+
+      _.set(mockData, self.getPath(jsonPath), _groups);
+      setMockData(mockData);
+      }
   }
 
   render() {

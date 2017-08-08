@@ -39,15 +39,6 @@
  */
 package org.egov.egf.budget.domain.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.Budget;
@@ -58,6 +49,7 @@ import org.egov.egf.budget.persistence.queue.repository.BudgetDetailQueueReposit
 import org.egov.egf.budget.persistence.repository.BudgetDetailJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetDetailRequest;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,6 +57,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BudgetDetailRepositoryTest {
@@ -84,13 +85,21 @@ public class BudgetDetailRepositoryTest {
 
     private final RequestInfo requestInfo = new RequestInfo();
 
+    @Mock
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
+    @Mock
+    private BudgetDetailESRepository budgetDetailESRepository;
+
     @Before
     public void setup() {
         budgetDetailRepositoryWithKafka = new BudgetDetailRepository(budgetDetailJdbcRepository,
-                budgetDetailQueueRepository, "yes");
+                budgetDetailQueueRepository, "yes",
+                financialConfigurationContractRepository,budgetDetailESRepository);
 
         budgetDetailRepositoryWithOutKafka = new BudgetDetailRepository(budgetDetailJdbcRepository,
-                budgetDetailQueueRepository, "no");
+                budgetDetailQueueRepository, "no",
+                financialConfigurationContractRepository,budgetDetailESRepository);
     }
 
     @Test

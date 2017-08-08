@@ -39,9 +39,6 @@
  */
 package org.egov.egf.budget.domain.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
@@ -50,11 +47,17 @@ import org.egov.egf.budget.persistence.entity.BudgetReAppropriationEntity;
 import org.egov.egf.budget.persistence.queue.repository.BudgetReAppropriationQueueRepository;
 import org.egov.egf.budget.persistence.repository.BudgetReAppropriationJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationRequest;
+import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetReAppropriationMapper;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BudgetReAppropriationRepository {
@@ -65,13 +68,23 @@ public class BudgetReAppropriationRepository {
 
     private final String persistThroughKafka;
 
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
+    private BudgetReAppropriationESRepository budgetReAppropriationESRepository;
+
+
     @Autowired
     public BudgetReAppropriationRepository(final BudgetReAppropriationJdbcRepository budgetReAppropriationJdbcRepository,
             final BudgetReAppropriationQueueRepository budgetReAppropriationQueueRepository,
-            @Value("${persist.through.kafka}") final String persistThroughKafka) {
+            @Value("${persist.through.kafka}") final String persistThroughKafka,
+                                           FinancialConfigurationContractRepository financialConfigurationContractRepository,
+                                           BudgetReAppropriationESRepository budgetReAppropriationESRepository
+    ) {
         this.budgetReAppropriationJdbcRepository = budgetReAppropriationJdbcRepository;
         this.budgetReAppropriationQueueRepository = budgetReAppropriationQueueRepository;
         this.persistThroughKafka = persistThroughKafka;
+        this.financialConfigurationContractRepository =financialConfigurationContractRepository;
+        this.budgetReAppropriationESRepository = budgetReAppropriationESRepository;
 
     }
 
@@ -181,7 +194,17 @@ public class BudgetReAppropriationRepository {
 
     public Pagination<BudgetReAppropriation> search(final BudgetReAppropriationSearch domain) {
 
-        return budgetReAppropriationJdbcRepository.search(domain);
+        if (financialConfigurationContractRepository.fetchDataFrom() != null
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+
+            BudgetReAppropriationSearchContract budgetReAppropriationSearchContract = new BudgetReAppropriationSearchContract();
+            ModelMapper mapper = new ModelMapper();
+            mapper.map(domain, budgetReAppropriationSearchContract);
+            Pagination<BudgetReAppropriation> budgetReAppropriations = budgetReAppropriationESRepository.search(budgetReAppropriationSearchContract);
+            return budgetReAppropriations;
+        } else {
+            return budgetReAppropriationJdbcRepository.search(domain);
+        }
 
     }
 

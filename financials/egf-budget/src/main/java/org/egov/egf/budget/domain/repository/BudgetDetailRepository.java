@@ -39,9 +39,6 @@
  */
 package org.egov.egf.budget.domain.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.BudgetDetail;
@@ -50,11 +47,17 @@ import org.egov.egf.budget.persistence.entity.BudgetDetailEntity;
 import org.egov.egf.budget.persistence.queue.repository.BudgetDetailQueueRepository;
 import org.egov.egf.budget.persistence.repository.BudgetDetailJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetDetailRequest;
+import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetDetailMapper;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BudgetDetailRepository {
@@ -65,13 +68,22 @@ public class BudgetDetailRepository {
 
     private final String persistThroughKafka;
 
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
+    private BudgetDetailESRepository budgetDetailESRepository;
+
     @Autowired
     public BudgetDetailRepository(final BudgetDetailJdbcRepository budgetDetailJdbcRepository,
-            final BudgetDetailQueueRepository budgetDetailQueueRepository,
-            @Value("${persist.through.kafka}") final String persistThroughKafka) {
+                                  final BudgetDetailQueueRepository budgetDetailQueueRepository,
+                                  @Value("${persist.through.kafka}") final String persistThroughKafka,
+                                  FinancialConfigurationContractRepository financialConfigurationContractRepository,
+                                  BudgetDetailESRepository budgetDetailESRepository
+    ) {
         this.budgetDetailJdbcRepository = budgetDetailJdbcRepository;
         this.budgetDetailQueueRepository = budgetDetailQueueRepository;
         this.persistThroughKafka = persistThroughKafka;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+        this.budgetDetailESRepository = budgetDetailESRepository;
 
     }
 
@@ -177,7 +189,18 @@ public class BudgetDetailRepository {
 
     public Pagination<BudgetDetail> search(final BudgetDetailSearch domain) {
 
-        return budgetDetailJdbcRepository.search(domain);
+        if (financialConfigurationContractRepository.fetchDataFrom() != null
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+
+            BudgetDetailSearchContract budgetDetailSearchContract = new BudgetDetailSearchContract();
+            ModelMapper mapper = new ModelMapper();
+            mapper.map(domain, budgetDetailSearchContract);
+            Pagination<BudgetDetail> budgetDetails = budgetDetailESRepository.search(budgetDetailSearchContract);
+            return budgetDetails;
+        } else {
+
+            return budgetDetailJdbcRepository.search(domain);
+        }
 
     }
 

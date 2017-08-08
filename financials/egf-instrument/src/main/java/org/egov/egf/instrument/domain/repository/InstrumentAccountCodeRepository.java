@@ -10,8 +10,11 @@ import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.persistence.entity.InstrumentAccountCodeEntity;
 import org.egov.egf.instrument.persistence.queue.repository.InstrumentAccountCodeQueueRepository;
 import org.egov.egf.instrument.persistence.repository.InstrumentAccountCodeJdbcRepository;
+import org.egov.egf.instrument.web.contract.InstrumentAccountCodeSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentAccountCodeMapper;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,157 +23,164 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class InstrumentAccountCodeRepository {
 
-	private InstrumentAccountCodeJdbcRepository instrumentAccountCodeJdbcRepository;
+    private InstrumentAccountCodeJdbcRepository instrumentAccountCodeJdbcRepository;
 
-	private InstrumentAccountCodeQueueRepository instrumentAccountCodeQueueRepository;
+    private InstrumentAccountCodeQueueRepository instrumentAccountCodeQueueRepository;
 
-	private String persistThroughKafka;
+    private String persistThroughKafka;
 
-	@Autowired
-	public InstrumentAccountCodeRepository(InstrumentAccountCodeJdbcRepository instrumentAccountCodeJdbcRepository,
-			InstrumentAccountCodeQueueRepository instrumentAccountCodeQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka) {
-		this.instrumentAccountCodeJdbcRepository = instrumentAccountCodeJdbcRepository;
-		this.instrumentAccountCodeQueueRepository = instrumentAccountCodeQueueRepository;
-		this.persistThroughKafka = persistThroughKafka;
+    private InstrumentAccountCodeESRepository instrumentAccountCodeESRepository;
 
-	}
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	public InstrumentAccountCode findById(InstrumentAccountCode instrumentAccountCode) {
-		InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
-				.findById(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
-		if (entity != null)
-			return entity.toDomain();
+    @Autowired
+    public InstrumentAccountCodeRepository(InstrumentAccountCodeJdbcRepository instrumentAccountCodeJdbcRepository,
+            InstrumentAccountCodeQueueRepository instrumentAccountCodeQueueRepository,
+            @Value("${persist.through.kafka}") String persistThroughKafka,
+            InstrumentAccountCodeESRepository instrumentAccountCodeESRepository,
+            FinancialConfigurationContractRepository financialConfigurationContractRepository) {
+        this.instrumentAccountCodeJdbcRepository = instrumentAccountCodeJdbcRepository;
+        this.instrumentAccountCodeQueueRepository = instrumentAccountCodeQueueRepository;
+        this.persistThroughKafka = persistThroughKafka;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+        this.instrumentAccountCodeESRepository = instrumentAccountCodeESRepository;
 
-		return null;
+    }
 
-	}
+    public InstrumentAccountCode findById(InstrumentAccountCode instrumentAccountCode) {
+        InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
+                .findById(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
+        if (entity != null)
+            return entity.toDomain();
 
-	@Transactional
-	public List<InstrumentAccountCode> save(List<InstrumentAccountCode> instrumentAccountCodes,
-			RequestInfo requestInfo) {
+        return null;
 
-		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+    }
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+    @Transactional
+    public List<InstrumentAccountCode> save(List<InstrumentAccountCode> instrumentAccountCodes,
+            RequestInfo requestInfo) {
 
-			InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentAccountCodes(new ArrayList<>());
+        InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
 
-			for (InstrumentAccountCode iac : instrumentAccountCodes) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-				request.getInstrumentAccountCodes().add(mapper.toContract(iac));
+            InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentAccountCodes(new ArrayList<>());
 
-			}
+            for (InstrumentAccountCode iac : instrumentAccountCodes) {
 
-			instrumentAccountCodeQueueRepository.addToQue(request);
+                request.getInstrumentAccountCodes().add(mapper.toContract(iac));
 
-			return instrumentAccountCodes;
-		} else {
+            }
 
-			List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
+            instrumentAccountCodeQueueRepository.addToQue(request);
 
-			for (InstrumentAccountCode iac : instrumentAccountCodes) {
+            return instrumentAccountCodes;
+        } else {
 
-				resultList.add(save(iac));
-			}
+            List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
 
-			InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentAccountCodes(new ArrayList<>());
+            for (InstrumentAccountCode iac : instrumentAccountCodes) {
 
-			for (InstrumentAccountCode iac : resultList) {
+                resultList.add(save(iac));
+            }
 
-				request.getInstrumentAccountCodes().add(mapper.toContract(iac));
+            InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentAccountCodes(new ArrayList<>());
 
-			}
+            for (InstrumentAccountCode iac : resultList) {
 
-			instrumentAccountCodeQueueRepository.addToSearchQue(request);
+                request.getInstrumentAccountCodes().add(mapper.toContract(iac));
 
-			return resultList;
-		}
+            }
 
-	}
+            instrumentAccountCodeQueueRepository.addToSearchQue(request);
 
-	@Transactional
-	public List<InstrumentAccountCode> update(List<InstrumentAccountCode> instrumentAccountCodes,
-			RequestInfo requestInfo) {
+            return resultList;
+        }
 
-		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+    }
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+    @Transactional
+    public List<InstrumentAccountCode> update(List<InstrumentAccountCode> instrumentAccountCodes,
+            RequestInfo requestInfo) {
 
-			InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentAccountCodes(new ArrayList<>());
+        InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
 
-			for (InstrumentAccountCode iac : instrumentAccountCodes) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-				request.getInstrumentAccountCodes().add(mapper.toContract(iac));
+            InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentAccountCodes(new ArrayList<>());
 
-			}
+            for (InstrumentAccountCode iac : instrumentAccountCodes) {
 
-			instrumentAccountCodeQueueRepository.addToQue(request);
+                request.getInstrumentAccountCodes().add(mapper.toContract(iac));
 
-			return instrumentAccountCodes;
-		} else {
+            }
 
-			List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
+            instrumentAccountCodeQueueRepository.addToQue(request);
 
-			for (InstrumentAccountCode iac : instrumentAccountCodes) {
+            return instrumentAccountCodes;
+        } else {
 
-				resultList.add(update(iac));
-			}
+            List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
 
-			InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentAccountCodes(new ArrayList<>());
+            for (InstrumentAccountCode iac : instrumentAccountCodes) {
 
-			for (InstrumentAccountCode iac : resultList) {
+                resultList.add(update(iac));
+            }
 
-				request.getInstrumentAccountCodes().add(mapper.toContract(iac));
+            InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentAccountCodes(new ArrayList<>());
 
-			}
+            for (InstrumentAccountCode iac : resultList) {
 
-			instrumentAccountCodeQueueRepository.addToSearchQue(request);
+                request.getInstrumentAccountCodes().add(mapper.toContract(iac));
 
-			return resultList;
-		}
+            }
 
-	}
+            instrumentAccountCodeQueueRepository.addToSearchQue(request);
 
-	@Transactional
-	public InstrumentAccountCode save(InstrumentAccountCode instrumentAccountCode) {
-		InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
-				.create(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
-		return entity.toDomain();
-	}
+            return resultList;
+        }
 
-	@Transactional
-	public InstrumentAccountCode update(InstrumentAccountCode instrumentAccountCode) {
-		InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
-				.update(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
-		return entity.toDomain();
-	}
+    }
 
-	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch domain) {
+    @Transactional
+    public InstrumentAccountCode save(InstrumentAccountCode instrumentAccountCode) {
+        InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
+                .create(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
+        return entity.toDomain();
+    }
 
-		// if() {
-		// InstrumentAccountCodeSearchContract
-		// instrumentAccountCodeSearchContract = new
-		// InstrumentAccountCodeSearchContract();
-		// ModelMapper mapper = new ModelMapper();
-		// mapper.map(domain,instrumentAccountCodeSearchContract );
-		// Pagination<InstrumentAccountCode> instrumentaccountcodes =
-		// instrumentAccountCodeESRepository.search(instrumentAccountCodeSearchContract);
-		// return instrumentaccountcodes;
-		// }
+    @Transactional
+    public InstrumentAccountCode update(InstrumentAccountCode instrumentAccountCode) {
+        InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
+                .update(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
+        return entity.toDomain();
+    }
 
-		return instrumentAccountCodeJdbcRepository.search(domain);
+    public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch domain) {
 
-	}
+        if (financialConfigurationContractRepository.fetchDataFrom() != null
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+
+            InstrumentAccountCodeSearchContract instrumentAccountCodeSearchContract = new InstrumentAccountCodeSearchContract();
+            ModelMapper mapper = new ModelMapper();
+            mapper.map(domain, instrumentAccountCodeSearchContract);
+            return instrumentAccountCodeESRepository.search(instrumentAccountCodeSearchContract);
+        } else {
+
+            return instrumentAccountCodeJdbcRepository.search(domain);
+        }
+
+    }
 
 }

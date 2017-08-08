@@ -42,7 +42,9 @@ public class AssetConfigurationService {
                 .name(assetConfigurationKey.toString()).tenantId(tenantId).build();
         final Map<String, List<String>> assetConfiguration = assetConfigurationRepository
                 .findForCriteria(assetConfigurationCriteria);
-        System.out.println("---------------------------"+assetConfiguration);
+        if(assetConfiguration.isEmpty())
+        	throw new RuntimeException("no asset configuration found for the key--"+assetConfigurationKey.toString()
+        	+" tenant value--"+tenantId);
         return assetConfiguration.get(assetConfigurationKey.toString()).get(0);
     }
 

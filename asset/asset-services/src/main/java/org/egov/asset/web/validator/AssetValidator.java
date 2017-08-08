@@ -16,6 +16,7 @@ import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
@@ -268,10 +269,17 @@ public class AssetValidator {
         if (revaluation.getFunction() == null)
             throw new RuntimeException("Function from financials is necessary for asset revaluation");
 
-        final Set<Long> assetIdsForCurrentAmt = new HashSet<>();
-        assetIdsForCurrentAmt.add(asset.getId());
-        final BigDecimal assetCurrentAmount = currentValueService.getCurrentAmount(revaluation.getAssetId(),
-                revaluation.getTenantId(), revaluationRequest.getRequestInfo());
+         BigDecimal assetCurrentAmount = null;
+         Set<Long> ids = new HashSet<>();
+         ids.add(revaluation.getAssetId());
+         List<AssetCurrentValue> assetCurrentValues = currentValueService.getCurrentValues(ids,revaluation.getTenantId(),
+        		 revaluationRequest.getRequestInfo()).getAssetCurrentValues();
+         if(!assetCurrentValues.isEmpty())
+        	 assetCurrentAmount = assetCurrentValues.get(0).getCurrentAmount();
+         else if(asset.getAccumulatedDepreciation()!=null)
+        	 assetCurrentAmount = asset.getGrossValue().subtract(asset.getAccumulatedDepreciation());
+         else 
+        	 assetCurrentAmount = asset.getGrossValue();
 
         log.debug("Asset Current Value :: " + assetCurrentAmount);
 

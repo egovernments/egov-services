@@ -355,6 +355,77 @@ class Report extends Component {
     return _mockData;
   }
 
+  enField = (_mockData, enableStr, reset) => {
+    let {moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(enableStr == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + "." + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
+          if(!reset) {
+            _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+            setFormData(_formData);  
+          }
+          break;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  disField = (_mockData, disableStr, reset) => {
+    let {moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(disableStr == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + "." + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
+          if(!reset) {
+            _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+            setFormData(_formData);  
+          }
+          
+          break;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  checkIfHasEnDisFields = (jsonPath, val) => {
+    let _mockData = {...this.props.mockData};
+    let {moduleName, actionName, setMockData} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields.length) {
+          for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+            if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
+              }
+            } else {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable[y], true);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable[z], true);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    setMockData(_mockData);
+  }
+
   checkIfHasShowHideFields = (jsonPath, val) => {
     let _mockData = {...this.props.mockData};
     let {moduleName, actionName, setMockData} = this.props;
@@ -395,6 +466,7 @@ class Report extends Component {
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
+      this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
       _.forEach(depedants, function(value,key) {

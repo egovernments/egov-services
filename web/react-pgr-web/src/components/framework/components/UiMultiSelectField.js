@@ -38,7 +38,7 @@ class UiMultiSelectField extends Component {
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
-							obj["key"]=keys[k];
+							obj["key"]= item.convertToString ? keys[k].toString() : keys[k];
 							obj["value"]=values[k];
 							dropDownData.push(obj);
 					}

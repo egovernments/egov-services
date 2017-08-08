@@ -689,7 +689,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'exemptedArea', 'buildingCost', 'landCost']
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
         },
         pattern: {
           current: [],

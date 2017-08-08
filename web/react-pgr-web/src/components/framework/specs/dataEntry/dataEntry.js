@@ -297,9 +297,9 @@ var dat = {
 							"name": "AadhaarNumber",
 							"jsonPath": "properties[0].owners[0].aadhaarNumber",
 							"label": "pt.create.groups.propertyAddress.fields.aadhaarNumber",
-							"pattern": "",
+							"pattern": "^\\d{12}$",
 							"type": "aadhar",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
@@ -1069,8 +1069,8 @@ var dat = {
 						},
 						{
 							"name": "Add Room",
-							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].unitType",
-							"label": "pt.create.groups.propertyAddress.fields.unitType",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].addRoom",
+							"label": "pt.create.groups.propertyAddress.fields.addRoom",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -1082,12 +1082,12 @@ var dat = {
 							"showHideFields": [{
 								   "ifValue": "YES",
 								   "hide": [{
-									"name": "FloorDetails",
+									"name": "",
 									"isGroup": true,
 									"isField": false
 								   }],
 								   "show": [{
-									"name": "VacantLand",
+									"name": "Room",
 									"isGroup": true,
 									"isField": false
 								   }]

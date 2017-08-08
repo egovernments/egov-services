@@ -600,7 +600,7 @@ calcAssessableArea = (e, type) => {
 													</Col>		
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Construction type *"
+														  floatingLabelText="Construction Class *"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.structure? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.structure}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.structure : ""}
 														  onChange={(event, index, value) => {
@@ -904,12 +904,12 @@ calcAssessableArea = (e, type) => {
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Exempted Area *"
+														  floatingLabelText="Exempted Area "
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
 														  onChange={(e) => {	  
 															  calcAssessableArea(e,'exempted');
-															  handleChangeFloor(e,"floor" , "exemptedArea", true, "")}}
+															  handleChangeNextOne(e,"floor" , "exemptedArea", false, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1009,7 +1009,7 @@ calcAssessableArea = (e, type) => {
                                               <th>Unit Type</th>
 											  <th>Flat No.</th>
                                               <th>Unit No.</th>
-                                              <th>Construction Type</th>
+                                              <th>Construction Class</th>
                                               <th>Usage Type</th>
                                               <th>Usage Sub Type</th>
                                               <th>Firm Name</th>

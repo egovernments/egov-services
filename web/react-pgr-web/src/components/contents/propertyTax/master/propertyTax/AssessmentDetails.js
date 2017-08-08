@@ -360,7 +360,7 @@ handleDepartment = (e) => {
                                           }
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Extent of Site (Sq. Mtrs) *"
+                                                  floatingLabelText="Total Area *"
 												  hintText="14"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}

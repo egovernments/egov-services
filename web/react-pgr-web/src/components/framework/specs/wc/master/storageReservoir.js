@@ -128,7 +128,7 @@ var dat = {
 		"objectName": "StorageReservoir",
 		"groups": [
 			{
-				"label": "wc.create.storageReservoir.title",
+				"label": "wc.search.storageReservoir.title",
 				"name": "searchStorageReservoir",
 				"fields": [
 						{
@@ -174,7 +174,7 @@ var dat = {
 		"objectName": "StorageReservoirs",
 		"groups": [
 			{
-				"label": "wc.create.storageReservoir.title",
+				"label": "wc.view.storageReservoir.title",
 				"name": "viewStorageReservoir",
 				"fields": [
 						{
@@ -290,13 +290,12 @@ var dat = {
 		"searchUrl": "/wcms/masters/storagereservoir/_search?id={id}",
 		"url":"/wcms/masters/storagereservoir/_update",
 		"tenantIdRequired": true,
-
 		"useTimestamp": true,
 		"isResponseArray" : true,
 		"objectName": "StorageReservoir[0]",
 		"groups": [
 			{
-				"label": "wc.create.storageReservoir.title",
+				"label": "wc.update.storageReservoir.title",
 				"name": "updateStorageReservoir",
 				"fields": [
 						{

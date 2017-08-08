@@ -79,6 +79,9 @@ let menuConvention={
   "Water Charge.WCMS Masters.TreatmentPlant.SearchTreatmentPlantApi":"/search/wc/treatmentPlants/view",
   "Water Charge.WCMS Masters.StorageReservoir.ModifyStorageReservoirApi":"/search/wc/storageReservoir/update",
   "Water Charge.WCMS Masters.StorageReservoir.SearchStorageReservoirApi":"/search/wc/storageReservoir/view",
+  "Water Charge.WCMS Masters.MeterWaterRates.SearchMeterWaterRatesApi":"/search/wc/meterWaterRates/view",
+  "Water Charge.WCMS Masters.MeterWaterRates.ModifyMeterWaterRatesApi":"/search/wc/meterWaterRates/update",
+  "Water Charge.WCMS Masters.MeterWaterRates.CreatMeterWaterRatesApi":"/create/wc/meterWaterRates",
 
   "Collection.Collection-Transactions.CreateReceipt":"/transaction/collection/collection",
 

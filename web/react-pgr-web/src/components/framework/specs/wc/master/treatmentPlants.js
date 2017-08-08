@@ -116,7 +116,7 @@ var dat = {
 		"objectName": "treatmentplant",
 		"groups": [
 			{
-				"label": "wc.create.groups.treatmentplant.title",
+				"label": "wc.search.groups.treatmentplant.title",
 				"name": "searchTreatmentPlant",
 				"fields": [
 					{
@@ -162,7 +162,7 @@ var dat = {
 		"objectName": "TreatmentPlants",
 		"groups": [
 			{
-				"label": "wc.create.groups.treatmentplant.title",
+				"label": "wc.view.groups.treatmentplant.title",
 				"name": "viewTreatmentPlant",
 				"fields": [
 						{
@@ -271,7 +271,7 @@ var dat = {
 		"objectName": "TreatmentPlants",
 		"groups": [
 			{
-				"label": "wc.create.groups.treatmentplant.title",
+				"label": "wc.update.groups.treatmentplant.title",
 				"name": "updateTreatmentPlant",
 				"fields": [
 						{

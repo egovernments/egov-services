@@ -131,7 +131,8 @@ public class InstrumentAccountCodeService {
 		if (instrumentaccountcodes != null)
 			for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
 				// fetch related items
-				if (instrumentAccountCode.getInstrumentType() != null) {
+				if (instrumentAccountCode.getInstrumentType() != null
+						&& instrumentAccountCode.getInstrumentType().getName() != null) {
 					InstrumentType instrumentType = instrumentTypeRepository
 							.findById(instrumentAccountCode.getInstrumentType());
 					if (instrumentType == null) {
@@ -140,9 +141,10 @@ public class InstrumentAccountCodeService {
 					}
 					instrumentAccountCode.setInstrumentType(instrumentType);
 				}
-				if (instrumentAccountCode.getAccountCode() != null) {
+				if (instrumentAccountCode.getAccountCode() != null
+						&& instrumentAccountCode.getAccountCode().getGlcode() != null) {
 					ChartOfAccountContract accountCode = chartOfAccountContractRepository
-							.findById(instrumentAccountCode.getAccountCode());
+							.findByGlcode(instrumentAccountCode.getAccountCode());
 					if (accountCode == null) {
 						throw new InvalidDataException("accountCode", "accountCode.invalid", " Invalid accountCode");
 					}

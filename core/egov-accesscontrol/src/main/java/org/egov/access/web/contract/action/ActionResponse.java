@@ -9,12 +9,11 @@ import org.egov.common.contract.response.ResponseInfo;
 
 import java.util.List;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActionResponse {
-    private ResponseInfo responseInfo;
-    private List<ActionContract> actions;
+	private ResponseInfo responseInfo;
+	private List<ActionContract> actions;
 }

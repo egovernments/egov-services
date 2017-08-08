@@ -24,7 +24,6 @@ public class ActionRepositoryTest {
 	@Autowired
 	private ActionRepository actionRepository;
 
-		
 	@Test
 	@Sql(scripts = { "/sql/clearAction.sql" })
 	public void testshouldcreateactions() {
@@ -66,6 +65,40 @@ public class ActionRepositoryTest {
 
 	@Test
 	@Sql(scripts = { "/sql/clearAction.sql", "/sql/insertActionData.sql" })
+	public void TestCheckActionNameExit() {
+
+		boolean exist = actionRepository.checkActionNameExit("Get all ReceivingMode");
+		assertThat(exist == true);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearAction.sql", "/sql/insertActionData.sql" })
+	public void TestCheckActionNameDoesNotExit() {
+
+		boolean exist = actionRepository.checkActionNameExit("TestActionName");
+		assertThat(exist == false);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearAction.sql", "/sql/insertActionData.sql" })
+	public void TestCheckCombinationOfUrlAndqueryparamsExist() {
+
+		boolean exist = actionRepository.checkCombinationOfUrlAndqueryparamsExist("/pgr/receivingmode", "tenantId=");
+		assertThat(exist == true);
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearAction.sql", "/sql/insertActionData.sql" })
+	public void TestCheckCombinationOfUrlAndqueryparamsNotExist() {
+
+		boolean exist = actionRepository.checkCombinationOfUrlAndqueryparamsExist("/test/testreceivingmode", "test=");
+		assertThat(exist == false);
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearAction.sql", "/sql/insertActionData.sql" })
 	public void testShouldUpdateActions() {
 
 		ActionRequest actionRequest = new ActionRequest();
@@ -90,7 +123,7 @@ public class ActionRepositoryTest {
 	}
 
 	@Test
-	@Sql(scripts = { "/sql/clearAction.sql", "/sql/insertActionData.sql"})
+	@Sql(scripts = { "/sql/clearAction.sql", "/sql/insertActionData.sql" })
 	public void testShouldGetmodules() {
 
 		ActionRequest actionRequest = new ActionRequest();
@@ -104,7 +137,7 @@ public class ActionRepositoryTest {
 		roleCodes.add("SUPERUSER");
 
 		actionRequest.setRoleCodes(roleCodes);
-		
+
 		actionRequest.setEnabled(false);
 
 		List<Module> modules = actionRepository.getAllActionsBasedOnRoles(actionRequest).getModules();

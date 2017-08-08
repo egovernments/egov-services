@@ -147,10 +147,10 @@ public class InstrumentService {
 			for (Instrument instrument : instruments) {
 
 				instrument.setId(UUID.randomUUID().toString().replace("-", ""));
-				
+
 				// fetch related items
 
-				if (instrument.getInstrumentType() != null) {
+				if (instrument.getInstrumentType() != null && instrument.getInstrumentType().getName() != null) {
 					InstrumentType instrumentType = instrumentTypeRepository.findById(instrument.getInstrumentType());
 					if (instrumentType == null) {
 						throw new InvalidDataException("instrumentType", "instrumentType.invalid",
@@ -158,16 +158,16 @@ public class InstrumentService {
 					}
 					instrument.setInstrumentType(instrumentType);
 				}
-				if (instrument.getBank() != null) {
-					BankContract bank = bankContractRepository.findById(instrument.getBank());
+				if (instrument.getBank() != null && instrument.getBank().getCode() != null) {
+					BankContract bank = bankContractRepository.findByCode(instrument.getBank());
 					if (bank == null) {
 						throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
 					}
 					instrument.setBank(bank);
 				}
-				if (instrument.getBankAccount() != null) {
+				if (instrument.getBankAccount() != null && instrument.getBankAccount().getAccountNumber() != null) {
 					BankAccountContract bankAccount = bankAccountContractRepository
-							.findById(instrument.getBankAccount());
+							.findByAccountNumber(instrument.getBankAccount());
 					if (bankAccount == null) {
 						throw new InvalidDataException("bankAccount", "bankAccount.invalid", " Invalid bankAccount");
 					}

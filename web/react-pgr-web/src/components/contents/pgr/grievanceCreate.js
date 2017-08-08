@@ -625,23 +625,23 @@ class grievanceCreate extends Component {
                       }
                       {this.state.isReceivingCenterReq ?
                         <Col xs={12} sm={4} md={3} lg={3}>
-                          <TextField floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={this.props.fieldErrors.externalCRN ? this.props.fieldErrors.externalCRN : ""} value={this.props.grievanceCreate.externalCRN?this.props.grievanceCreate.externalCRN:""} onChange={(event, value) => this.props.handleChange(value, "externalCRN", true, '')}/>
+                          <TextField floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={this.props.fieldErrors.externalCRN ? this.props.fieldErrors.externalCRN : ""} value={this.props.grievanceCreate.externalCRN?this.props.grievanceCreate.externalCRN:""} maxLength="20" onChange={(event, value) => this.props.handleChange(value, "externalCRN", true, '')}/>
                         </Col>
                       : ''}
                     </Row>
                     <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(event, value) => handleChange(value, "firstName", true, /^[a-zA-Z ]{1,50}$/, 'Should contain only alphabets and space. Max: 50 Characters')}
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} maxLength="100" onChange={(event, value) => handleChange(value, "firstName", true, /^[a-zA-Z ]{1,100}$/, translate('pgr.lbl.alphaspace'))}
                         />
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g, 'Enter valid 10 digit mobile number')} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} maxLength="10" onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g, 'Enter valid 10 digit mobile number')} />
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(event, value) => handleChange(value, "email", false, /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}  />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} maxLength="50" onChange={(event, value) => handleChange(value, "email", false, /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}  />
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(event, value) => handleChange(value, "requesterAddress", false, /^.{1,256}$/, 'Max: 256 Characters')} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} maxLength="250" onChange={(event, value) => handleChange(value, "requesterAddress", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))} />
                       </Col>
                     </Row>
                   </Grid>
@@ -705,10 +705,10 @@ class grievanceCreate extends Component {
                   {this.state.attributes ? this.loadSD() : ''}
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(event, value) => handleChange(value, "description", true, /^.{10,500}$/, "Atleast 10 characters. Max: 500 Characters")}/>
+                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} maxLength="1000" onChange={(event, value) => handleChange(value, "description", true, /^.[^]{10,1000}$/, translate('pgr.lbl.min')+' 10 '+translate('pgr.lbl.characters')+'. '+translate('pgr.lbl.max')+' 1000 '+translate('pgr.lbl.characters'))}/>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(event, value) => handleChange(value, "address", false, /^.{1,500}$/, "Max: 500 Characters")}/>
+                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} maxLength="100" onChange={(event, value) => handleChange(value, "address", false, /^.[^]{0,100}$/, translate('pgr.lbl.max')+' 100 '+translate('pgr.lbl.characters'))}/>
                     </Col>
                     <Col xs={12} sm={4} md={6} lg={6}>
                       <AutoComplete

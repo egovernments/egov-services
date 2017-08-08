@@ -14,34 +14,38 @@ import static org.junit.Assert.assertEquals;
 
 public class ValidateActionRequestTest {
 
-    @Test
-    public void testThatValidateActionRequestContractContainsInfoAboutRequestInfoAndValidateAction() {
-        RequestInfo requestInfo = RequestInfo.builder().build();
-        RoleContract role = RoleContract.builder().name("role name").build();
-        TenantRoleContract tenantRole = TenantRoleContract.builder().roles(Arrays.asList(role)).tenantId("tenantId").build();
-        ValidateActionContract validateAction = ValidateActionContract.builder().tenantRole(tenantRole).actionUrl("url").build();
+	@Test
+	public void testThatValidateActionRequestContractContainsInfoAboutRequestInfoAndValidateAction() {
+		RequestInfo requestInfo = RequestInfo.builder().build();
+		RoleContract role = RoleContract.builder().name("role name").build();
+		TenantRoleContract tenantRole = TenantRoleContract.builder().roles(Arrays.asList(role)).tenantId("tenantId")
+				.build();
+		ValidateActionContract validateAction = ValidateActionContract.builder().tenantRole(tenantRole).actionUrl("url")
+				.build();
 
-        ValidateActionRequest validateActionRequest = ValidateActionRequest.builder().
-                requestInfo(requestInfo).validateAction(validateAction).build();
+		ValidateActionRequest validateActionRequest = ValidateActionRequest.builder().requestInfo(requestInfo)
+				.validateAction(validateAction).build();
 
-        assertEquals(requestInfo, validateActionRequest.getRequestInfo());
-        assertEquals(validateAction, validateActionRequest.getValidateAction());
-    }
+		assertEquals(requestInfo, validateActionRequest.getRequestInfo());
+		assertEquals(validateAction, validateActionRequest.getValidateAction());
+	}
 
-    @Test
-    public void testToDomainReturnsActionValidationCriteria() {
-        RequestInfo requestInfo = RequestInfo.builder().build();
-        RoleContract role = RoleContract.builder().name("role name").build();
-        TenantRoleContract tenantRole = TenantRoleContract.builder().roles(Arrays.asList(role)).tenantId("tenantId").build();
-        ValidateActionContract validateAction = ValidateActionContract.builder().tenantRole(tenantRole).actionUrl("url").build();
+	@Test
+	public void testToDomainReturnsActionValidationCriteria() {
+		RequestInfo requestInfo = RequestInfo.builder().build();
+		RoleContract role = RoleContract.builder().name("role name").build();
+		TenantRoleContract tenantRole = TenantRoleContract.builder().roles(Arrays.asList(role)).tenantId("tenantId")
+				.build();
+		ValidateActionContract validateAction = ValidateActionContract.builder().tenantRole(tenantRole).actionUrl("url")
+				.build();
 
-        ValidateActionRequest validateActionRequest = ValidateActionRequest.builder().
-                requestInfo(requestInfo).validateAction(validateAction).build();
-        ValidateActionCriteria criteria = validateActionRequest.toDomain();
+		ValidateActionRequest validateActionRequest = ValidateActionRequest.builder().requestInfo(requestInfo)
+				.validateAction(validateAction).build();
+		ValidateActionCriteria criteria = validateActionRequest.toDomain();
 
-        assertEquals(Arrays.asList("role name"), criteria.getRoleNames());
-        assertEquals("tenantId", criteria.getTenantId());
-        assertEquals("url", criteria.getActionUrl());
+		assertEquals(Arrays.asList("role name"), criteria.getRoleNames());
+		assertEquals("tenantId", criteria.getTenantId());
+		assertEquals("url", criteria.getActionUrl());
 
-    }
+	}
 }

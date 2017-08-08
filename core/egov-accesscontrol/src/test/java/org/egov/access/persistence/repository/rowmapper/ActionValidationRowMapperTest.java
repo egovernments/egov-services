@@ -13,16 +13,16 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActionValidationRowMapperTest {
-    @Mock
-    private ResultSet resultSet;
+	@Mock
+	private ResultSet resultSet;
 
-    @Test
-    public void testActionValidationRowMapperShouldReturnTrueIfActionIsValidated() throws SQLException {
-        ActionValidationRowMapper actionValidationRowMapper = new ActionValidationRowMapper();
-        when(resultSet.getBoolean("exists")).thenReturn(true);
-        assert actionValidationRowMapper.mapRow(resultSet, 1).isAllowed();
+	@Test
+	public void testActionValidationRowMapperShouldReturnTrueIfActionIsValidated() throws SQLException {
+		ActionValidationRowMapper actionValidationRowMapper = new ActionValidationRowMapper();
+		when(resultSet.getBoolean("exists")).thenReturn(true);
+		assert actionValidationRowMapper.mapRow(resultSet, 1).isAllowed();
 
-        when(resultSet.getBoolean("exists")).thenReturn(false);
-        assertFalse(actionValidationRowMapper.mapRow(resultSet, 1).isAllowed());
-    }
+		when(resultSet.getBoolean("exists")).thenReturn(false);
+		assertFalse(actionValidationRowMapper.mapRow(resultSet, 1).isAllowed());
+	}
 }

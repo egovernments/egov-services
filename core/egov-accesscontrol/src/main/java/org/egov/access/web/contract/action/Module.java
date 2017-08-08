@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.egov.access.domain.model.Action;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Module {
-	private Long id ; 
+	private Long id;
 	private String name;
 	private List<Module> subModules;
 	private List<Action> actionList;
@@ -26,5 +24,5 @@ public class Module {
 	private String orderNumber;
 	private String tenantId;
 	private boolean enabled;
-	
+
 }

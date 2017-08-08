@@ -20,6 +20,9 @@ public class PropertiesManager {
 	@Value("${auto.offset.reset.config}")
 	private String kafkaOffsetConfig;
 
+	@Value("${app.timezone}")
+	private String appTimeZone;
+
 	@Value("${invalid.input}")
 	private String invalidInput;
 
@@ -58,6 +61,9 @@ public class PropertiesManager {
 
 	@Value("${duplicate.category.name}")
 	private String categoryNameDuplicate;
+	
+	@Value("${duplicate.feematrix.code}")
+	private String feeMatrixCustomMsg;
 
 	@Value("${invalid.category.id.msg}")
 	private String invalidCategoryIdMsg;

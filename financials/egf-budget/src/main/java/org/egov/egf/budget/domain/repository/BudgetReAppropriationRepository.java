@@ -50,7 +50,6 @@ import org.egov.egf.budget.web.contract.BudgetReAppropriationRequest;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetReAppropriationMapper;
 import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -75,15 +74,15 @@ public class BudgetReAppropriationRepository {
 
     @Autowired
     public BudgetReAppropriationRepository(final BudgetReAppropriationJdbcRepository budgetReAppropriationJdbcRepository,
-            final BudgetReAppropriationQueueRepository budgetReAppropriationQueueRepository,
-            @Value("${persist.through.kafka}") final String persistThroughKafka,
+                                           final BudgetReAppropriationQueueRepository budgetReAppropriationQueueRepository,
+                                           @Value("${persist.through.kafka}") final String persistThroughKafka,
                                            FinancialConfigurationContractRepository financialConfigurationContractRepository,
                                            BudgetReAppropriationESRepository budgetReAppropriationESRepository
     ) {
         this.budgetReAppropriationJdbcRepository = budgetReAppropriationJdbcRepository;
         this.budgetReAppropriationQueueRepository = budgetReAppropriationQueueRepository;
         this.persistThroughKafka = persistThroughKafka;
-        this.financialConfigurationContractRepository =financialConfigurationContractRepository;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
         this.budgetReAppropriationESRepository = budgetReAppropriationESRepository;
 
     }
@@ -102,7 +101,7 @@ public class BudgetReAppropriationRepository {
 
     @Transactional
     public List<BudgetReAppropriation> save(final List<BudgetReAppropriation> budgetReAppropriations,
-            final RequestInfo requestInfo) {
+                                            final RequestInfo requestInfo) {
 
         final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
 
@@ -142,7 +141,7 @@ public class BudgetReAppropriationRepository {
 
     @Transactional
     public List<BudgetReAppropriation> update(final List<BudgetReAppropriation> budgetReAppropriations,
-            final RequestInfo requestInfo) {
+                                              final RequestInfo requestInfo) {
 
         final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
 
@@ -197,9 +196,9 @@ public class BudgetReAppropriationRepository {
         if (financialConfigurationContractRepository.fetchDataFrom() != null
                 && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
+            BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
             BudgetReAppropriationSearchContract budgetReAppropriationSearchContract = new BudgetReAppropriationSearchContract();
-            ModelMapper mapper = new ModelMapper();
-            mapper.map(domain, budgetReAppropriationSearchContract);
+            budgetReAppropriationSearchContract = mapper.toSearchContract(domain);
             Pagination<BudgetReAppropriation> budgetReAppropriations = budgetReAppropriationESRepository.search(budgetReAppropriationSearchContract);
             return budgetReAppropriations;
         } else {

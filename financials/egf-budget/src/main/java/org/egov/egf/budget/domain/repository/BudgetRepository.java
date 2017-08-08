@@ -50,7 +50,6 @@ import org.egov.egf.budget.web.contract.BudgetRequest;
 import org.egov.egf.budget.web.contract.BudgetSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetMapper;
 import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -187,9 +186,9 @@ public class BudgetRepository {
         if (financialConfigurationContractRepository.fetchDataFrom() != null
                 && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
+            BudgetMapper mapper = new BudgetMapper();
             BudgetSearchContract budgetSearchContract = new BudgetSearchContract();
-            ModelMapper mapper = new ModelMapper();
-            mapper.map(domain, budgetSearchContract);
+            budgetSearchContract = mapper.toSearchContract(domain);
             Pagination<Budget> budgets = budgetESRepository.search(budgetSearchContract);
             return budgets;
         } else {

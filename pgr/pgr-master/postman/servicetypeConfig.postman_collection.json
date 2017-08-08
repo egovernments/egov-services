@@ -1,0 +1,71 @@
+{
+	"variables": [],
+	"info": {
+		"name": "servicetypeConfig",
+		"_postman_id": "e6d81f2f-926a-e16a-2f23-5dcb87c8c97c",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "servicetype_config_create",
+			"request": {
+				"url": "http://localhost:8093/pgr-master/servicetypeconfiguration//v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10-03-2017 00:00:00\",\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"1\"\n  },\n  \"serviceTypeConfiguration\": {\n    \"tenantId\" : \"default\",\n    \"serviceCode\" : \"Noc\",\n    \"applicationFeesEnabled\": false,\n    \"notificationEnabled\": true,\n    \"slaEnabled\": true,\n    \"glCode\": \"gl\",\n    \"source\": \"source\",\n    \"online\": true,\n    \"url\": \"url\"\n      }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "update_servicetype_config",
+			"request": {
+				"url": "http://localhost:8093/pgr-master/servicetypeconfiguration//v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10-03-2017 00:00:00\",\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"1\"\n  },\n  \"serviceTypeConfiguration\": {\n    \"tenantId\" : \"default\",\n    \"serviceCode\" : \"NOC\",\n    \"applicationFeesEnabled\": false,\n    \"notificationEnabled\": false,\n    \"slaEnabled\": false,\n    \"glCode\": \"gl\",\n    \"source\": \"SOURCE\",\n    \"online\": false,\n    \"url\": \"URL\"\n      }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "search_servicetype_config",
+			"request": {
+				"url": "http://localhost:8093/pgr-master/servicetypeconfiguration/v1/_search",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \n    \"serviceCode\" : \"NOC\",\n    \"tenantId\" : \"default\"\n      \n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

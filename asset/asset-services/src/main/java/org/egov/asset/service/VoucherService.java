@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.VoucherRequest;
@@ -72,13 +73,7 @@ public class VoucherService {
         final List<MediaType> acceptableMediaTypes = new LinkedList<>();
         acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
         requestHeaders.setAccept(acceptableMediaTypes);
-
-        if (!cookies.isEmpty()) {
-            final String[] cookieArr = cookies.get(0).split(";");
-            log.debug("JSESSION ID :: " + cookieArr[1]);
-            log.debug("SESSION ID :: " + cookieArr[2]);
-            requestHeaders.set(HttpHeaders.COOKIE, cookieArr[1]);
-        }
+        requestHeaders.set(HttpHeaders.COOKIE, cookies.stream().collect(Collectors.joining(";")));
 
         log.debug("Request Headers for Voucher Request :: " + requestHeaders);
 
@@ -101,7 +96,8 @@ public class VoucherService {
     }
 
     public VoucherRequest createVoucherRequest(final Object entity, final Long fundId, final Long depratmentId,
-            final List<VouchercreateAccountCodeDetails> accountCodeDetails, final String tenantId) {
+            final List<VouchercreateAccountCodeDetails> accountCodeDetails, final RequestInfo requestInfo,
+            final String tenantId) {
         final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         final Fund fund = new Fund();
@@ -135,7 +131,7 @@ public class VoucherService {
         vouchers.add(voucher);
 
         final VoucherRequest voucherRequest = new VoucherRequest();
-        voucherRequest.setRequestInfo(new RequestInfo());
+        voucherRequest.setRequestInfo(requestInfo);
         voucherRequest.setVouchers(vouchers);
         return voucherRequest;
     }

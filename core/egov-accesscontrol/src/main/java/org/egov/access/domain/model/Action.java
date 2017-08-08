@@ -17,25 +17,25 @@ import java.util.Date;
 @EqualsAndHashCode
 public class Action {
 
-    private Long id;
-    private String name;
-    private String url;
-    private String displayName;
-    private Integer orderNumber;
-    private String queryParams;
-    private String parentModule;
-    private boolean enabled;
-    private String serviceCode;
-    private String tenantId;
+	private Long id;
+	private String name;
+	private String url;
+	private String displayName;
+	private Integer orderNumber;
+	private String queryParams;
+	private String parentModule;
+	private boolean enabled;
+	private String serviceCode;
+	private String tenantId;
 
-    private Date createdDate;
+	private Date createdDate;
 
-    private Long createdBy;
+	private Long createdBy;
 
-    private Date lastModifiedDate;
+	private Date lastModifiedDate;
 
-    private Long lastModifiedBy;
-    
-    private String path;
+	private Long lastModifiedBy;
+
+	private String path;
 
 }

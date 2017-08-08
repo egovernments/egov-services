@@ -34,7 +34,10 @@ export default class UiDocumentList extends Component {
 							  fullWidth={true} 
 							  value={self.props.getVal(item.jsonPath + "[" + i + "].fileStoreId")}
 							  label={doc["displayName"]}>
-							    <input type="file" style={{ display: 'none' }} onChange={(e) => self.props.handler({target:{value: e.target.files[0]}}, (item.jsonPath + "[" + i + "].fileStoreId"), true, '', item.requiredErrMsg, item.patternErrMsg)}/>
+							    <input type="file" style={{ display: 'none' }} onChange={(e) => {
+							    	self.props.handler({target:{value: e.target.files[0]}}, (item.jsonPath + "[" + i + "].fileStoreId"), true, '', item.requiredErrMsg, item.patternErrMsg)
+							    	self.props.handler({target:{value: e.target.files[0].name}}, (item.jsonPath + "[" + i + "].name"), true, '', item.requiredErrMsg, item.patternErrMsg)
+							    }}/>
 							</RaisedButton>
 						</Col>
 					)

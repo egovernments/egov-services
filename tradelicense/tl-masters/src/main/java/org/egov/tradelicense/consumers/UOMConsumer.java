@@ -12,7 +12,6 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.UOMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -31,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author: Pavan Kumar Kamma
  */
 @Service
-@Configuration
 @EnableKafka
 public class UOMConsumer {
 
@@ -114,10 +112,5 @@ public class UOMConsumer {
 			uomService.updateUom(objectReceived);
 		}
 		latch.countDown();
-	}
-
-	@Bean
-	public UOMConsumer getReceiver() {
-		return this;
 	}
 }

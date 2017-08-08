@@ -19,7 +19,6 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.DocumentTypeConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.DocumentTypeService;
-import org.egov.tradelicense.persistence.repository.DocumentTypeRepository;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
@@ -48,14 +47,11 @@ public class DocumentTypeServiceTest {
 	DocumentTypeService documentTypeService;
 
 	@Autowired
-	DocumentTypeRepository documentTypeRepository;
+	private PropertiesManager propertiesManager;
 
 	@Autowired
-	private PropertiesManager propertiesManager;
-	
-	@Autowired
 	DocumentTypeConsumer documentTypeConsumer;
-	
+
 	@Autowired
 	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
@@ -66,12 +62,11 @@ public class DocumentTypeServiceTest {
 	public static Long DocumentTypeId = 1l;
 	public String tenantId = "default";
 	public String name = "shubham";
-	public String ApplicationType = "NEW";
+	public String applicationType = "NEW";
 	public String updatedName = "nitin";
 	public String updateApplicationType = "RENEW";
 	public String enabled = "True";
 
-	
 	@Before
 	public void setUp() throws Exception {
 		// wait until the partitions are assigned
@@ -80,7 +75,7 @@ public class DocumentTypeServiceTest {
 			ContainerTestUtils.waitForAssignment(messageListenerContainer, 0);
 		}
 	}
-	
+
 	/**
 	 * Description : test method to test createDocumentType
 	 */
@@ -93,7 +88,7 @@ public class DocumentTypeServiceTest {
 		DocumentType documentType = new DocumentType();
 		documentType.setTenantId(tenantId);
 		documentType.setName(name);
-		documentType.setApplicationType(ApplicationTypeEnum.fromValue(ApplicationType));
+		documentType.setApplicationType(ApplicationTypeEnum.fromValue(applicationType));
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -110,13 +105,28 @@ public class DocumentTypeServiceTest {
 		documentTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			DocumentTypeResponse documentTypeResponse = documentTypeService.createDocumentTypeMaster(documentTypeRequest);
+			DocumentTypeResponse documentTypeResponse = documentTypeService
+					.createDocumentTypeMaster(documentTypeRequest);
 			if (documentTypeResponse.getDocumentTypes().size() == 0) {
 				assertTrue(false);
 			}
-			DocumentTypeId = documentTypeRepository.createDocumentType(documentTypeResponse.getDocumentTypes().get(0));
-			assertTrue(true);
 
+			documentTypeConsumer.getLatch().await();
+			if (documentTypeConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
+				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+				documentTypeResponse = documentTypeService.getDocumentTypeMaster(requestInfo, tenantId, null, name,
+						enabled, applicationType, pageSize, offset);
+
+				if (documentTypeResponse.getDocumentTypes().size() == 0) {
+					assertTrue(false);
+				} else {
+					DocumentTypeId = documentTypeResponse.getDocumentTypes().get(0).getId();
+					assertTrue(true);
+				}
+			}
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -138,7 +148,7 @@ public class DocumentTypeServiceTest {
 
 		try {
 			DocumentTypeResponse documentTypeResponse = documentTypeService.getDocumentTypeMaster(requestInfo, tenantId,
-					new Integer[] { DocumentTypeId.intValue() }, name, enabled, ApplicationType, pageSize, offset);
+					new Integer[] { DocumentTypeId.intValue() }, name, enabled, applicationType, pageSize, offset);
 			if (documentTypeResponse.getDocumentTypes().size() == 0)
 				assertTrue(false);
 
@@ -162,7 +172,7 @@ public class DocumentTypeServiceTest {
 		DocumentType documentType = new DocumentType();
 		documentType.setTenantId(tenantId);
 		documentType.setName(name);
-		documentType.setApplicationType(ApplicationTypeEnum.fromValue(ApplicationType));
+		documentType.setApplicationType(ApplicationTypeEnum.fromValue(applicationType));
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -179,12 +189,11 @@ public class DocumentTypeServiceTest {
 		documentTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			DocumentTypeResponse documentTypeResponse = documentTypeService.createDocumentTypeMaster(documentTypeRequest);
+			DocumentTypeResponse documentTypeResponse = documentTypeService
+					.createDocumentTypeMaster(documentTypeRequest);
 			if (documentTypeResponse.getDocumentTypes().size() == 0) {
 				assertTrue(false);
 			}
-			DocumentTypeId = documentTypeRepository.createDocumentType(documentTypeResponse.getDocumentTypes().get(0));
-			assertTrue(true);
 
 		} catch (Exception e) {
 			if (e instanceof DuplicateIdException) {
@@ -225,12 +234,15 @@ public class DocumentTypeServiceTest {
 		documentTypeRequest.setRequestInfo(requestInfo);
 
 		try {
+
+			documentTypeConsumer.resetCountDown();
+
 			DocumentTypeResponse documentTyperes = documentTypeService.updateDocumentTypeMaster(documentTypeRequest);
 
-			if (documentTyperes.getDocumentTypes().size() == 0)
+			documentTypeConsumer.getLatch().await();
+			if (documentTyperes.getDocumentTypes().size() == 0) {
 				assertTrue(false);
-			
-			documentTypeRepository.updateDocumentType(documentTypeRequest.getDocumentTypes().get(0));
+			}
 
 			assertTrue(true);
 
@@ -258,11 +270,15 @@ public class DocumentTypeServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
+
 			DocumentTypeResponse documentTypeResponse = documentTypeService.getDocumentTypeMaster(requestInfo, tenantId,
 					new Integer[] { DocumentTypeId.intValue() }, updatedName, enabled, updateApplicationType, pageSize,
 					offset);
-			if (documentTypeResponse.getDocumentTypes().size() == 0)
+
+			if (documentTypeResponse.getDocumentTypes().size() == 0) {
 				assertTrue(false);
+
+			}
 
 			assertTrue(true);
 
@@ -284,7 +300,7 @@ public class DocumentTypeServiceTest {
 		documentType.setId(DocumentTypeId);
 		documentType.setTenantId(tenantId);
 		documentType.setName(updatedName);
-		documentType.setApplicationType(ApplicationTypeEnum.fromValue("NEW"));
+		documentType.setApplicationType(ApplicationTypeEnum.fromValue(updateApplicationType));
 
 		long createdTime = new Date().getTime();
 
@@ -302,12 +318,24 @@ public class DocumentTypeServiceTest {
 		documentTypeRequest.setRequestInfo(requestInfo);
 
 		try {
+
+			documentTypeConsumer.resetCountDown();
+
 			DocumentTypeResponse categoryResponse = documentTypeService.updateDocumentTypeMaster(documentTypeRequest);
 
-			if (categoryResponse.getDocumentTypes().size() == 0)
+			documentTypeConsumer.getLatch().await();
+			if (categoryResponse.getDocumentTypes().size() == 0) {
 				assertTrue(false);
 
-			assertTrue(true);
+			}
+
+			documentTypeConsumer.getLatch().await();
+			if (documentTypeConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
+				assertTrue(true);
+
+			}
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -324,7 +352,7 @@ public class DocumentTypeServiceTest {
 		List<DocumentType> documentTypes = new ArrayList<>();
 
 		DocumentType documentType = new DocumentType();
-		documentType.setId(DocumentTypeId);
+		documentType.setId(DocumentTypeId + 1);
 		documentType.setTenantId(tenantId);
 		documentType.setName(updatedName);
 		documentType.setApplicationType(ApplicationTypeEnum.fromValue(updateApplicationType));
@@ -344,10 +372,12 @@ public class DocumentTypeServiceTest {
 		documentTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			DocumentTypeResponse documentTyperesponse = documentTypeService.updateDocumentTypeMaster(documentTypeRequest);
+			DocumentTypeResponse documentTyperesponse = documentTypeService
+					.updateDocumentTypeMaster(documentTypeRequest);
 
-			if (documentTyperesponse.getDocumentTypes().size() == 0)
+			if (documentTyperesponse.getDocumentTypes().size() == 0) {
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 
@@ -377,7 +407,8 @@ public class DocumentTypeServiceTest {
 
 		try {
 			DocumentTypeResponse DocumentTypeResponse = documentTypeService.getDocumentTypeMaster(requestInfo, tenantId,
-					new Integer[] { DocumentTypeId.intValue() }, updatedName, enabled, "RENEW", pageSize, offset);
+					new Integer[] { DocumentTypeId.intValue() }, updatedName, enabled, updateApplicationType, pageSize,
+					offset);
 			if (DocumentTypeResponse.getDocumentTypes().size() == 0)
 				assertTrue(false);
 

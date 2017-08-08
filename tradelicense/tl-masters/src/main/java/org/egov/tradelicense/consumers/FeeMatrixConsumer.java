@@ -114,9 +114,4 @@ public class FeeMatrixConsumer {
 		}
 		latch.countDown();
 	}
-
-	@Bean
-	public FeeMatrixConsumer getReceiver() {
-		return this;
-	}
 }

@@ -115,9 +115,4 @@ public class CategoryConsumer {
 		}
 		latch.countDown();
 	}
-
-	@Bean
-	public CategoryConsumer getReceiver() {
-		return this;
-	}
 }

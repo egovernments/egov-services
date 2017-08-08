@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.egov.models.AuditDetails;
 import org.egov.models.RequestInfo;
@@ -19,7 +18,6 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.UOMConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.UOMService;
-import org.egov.tradelicense.persistence.repository.UOMRepository;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
@@ -51,17 +49,14 @@ public class UomServiceTest {
 	private PropertiesManager propertiesManager;
 
 	@Autowired
-	UOMRepository uomRepository;
-
-	@Autowired
 	UOMConsumer uomConsumer;
-
-	@Autowired
-	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
 	@ClassRule
 	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, "uom-create-validated",
 			"uom-update-validated");
+
+	@Autowired
+	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
 	public static Long uomId = 1l;
 	public String tenantId = "default";
@@ -111,12 +106,13 @@ public class UomServiceTest {
 		uomRequest.setRequestInfo(requestInfo);
 
 		try {
+
 			UOMResponse uomResponse = uomService.createUomMaster(uomRequest);
 			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
 			}
 
-			uomConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
+			uomConsumer.getLatch().await();
 			if (uomConsumer.getLatch().getCount() != 0) {
 				assertTrue(false);
 			} else {
@@ -202,8 +198,6 @@ public class UomServiceTest {
 				assertTrue(false);
 			}
 
-			assertTrue(false);
-
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {
 				assertTrue(true);
@@ -245,12 +239,15 @@ public class UomServiceTest {
 		uomRequest.setRequestInfo(requestInfo);
 
 		try {
+
+			uomConsumer.resetCountDown();
+
 			UOMResponse uomResponse = uomService.updateUomMaster(uomRequest);
 
-			if (uomResponse.getUoms().size() == 0)
+			uomConsumer.getLatch().await();
+			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
-
-			uomRepository.updateUom(uom);
+			}
 
 			assertTrue(true);
 
@@ -280,8 +277,9 @@ public class UomServiceTest {
 		try {
 			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { uomId.intValue() },
 					updatedName, code, searchActive, pageSize, offset);
-			if (uomResponse.getUoms().size() == 0)
+			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 
@@ -321,12 +319,15 @@ public class UomServiceTest {
 		uomRequest.setRequestInfo(requestInfo);
 
 		try {
+
+			uomConsumer.resetCountDown();
+
 			UOMResponse uomResponse = uomService.updateUomMaster(uomRequest);
 
-			if (uomResponse.getUoms().size() == 0)
+			uomConsumer.getLatch().await();
+			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
-
-			uomRepository.updateUom(uom);
+			}
 
 			assertTrue(true);
 
@@ -369,10 +370,9 @@ public class UomServiceTest {
 		try {
 			UOMResponse uomResponse = uomService.updateUomMaster(uomRequest);
 
-			if (uomResponse.getUoms().size() == 0)
+			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
-
-			assertTrue(true);
+			}
 
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {

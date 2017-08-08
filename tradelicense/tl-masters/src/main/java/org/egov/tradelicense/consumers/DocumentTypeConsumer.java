@@ -116,9 +116,4 @@ public class DocumentTypeConsumer {
 		}
 		latch.countDown();
 	}
-
-	@Bean
-	public DocumentTypeConsumer getReceiver() {
-		return this;
-	}
 }

@@ -28,7 +28,6 @@ export default class UiTextSearch extends Component {
 	}
 
 	render () {
-		
 		return (
 	      <div>
 	        {this.renderTextSearch(this.props.item)}

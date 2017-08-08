@@ -363,7 +363,7 @@ public class WaterConnectionRepository {
                 connection.getHscPipeSizeType(), connection.getSourceType(), connection.getConnectionStatus(),
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), connection.getStatus(), connection.getStateId(),
+                new Date(new java.util.Date().getTime()), connection.getStateId(),
                  connection.getAcknowledgementNumber() };
         jdbcTemplate.update(insertQuery, obj);
         

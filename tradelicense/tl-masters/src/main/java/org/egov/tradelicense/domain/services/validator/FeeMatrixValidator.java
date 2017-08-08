@@ -80,7 +80,7 @@ public class FeeMatrixValidator {
 					(isNew ? null : feeMatrix.getId()));
 
 			if (isExists) {
-				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+				throw new DuplicateIdException(propertiesManager.getFeeMatrixCustomMsg(), requestInfo);
 			}
 
 			if (!isNew) {

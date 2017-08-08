@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Slf4j
 @NoArgsConstructor
 @Service
@@ -50,7 +52,8 @@ public class EmployeeListener {
 			if (topic.equals(propertiesManager.getUpdateEmployeeIndexerTopic())) {
 				EmployeeIndex esEmployeeIndex = elasticSearchRepository.getIndex(INDEX_NAME, INDEX_TYPE,
 						employeeRequest.getEmployee().getId());
-				employeeAdapter.setOldCreatedByAndCreatedDateForEditEmployee(esEmployeeIndex, newEmployeeIndex);
+				if (!isEmpty(newEmployeeIndex))
+					employeeAdapter.setOldCreatedByAndCreatedDateForEditEmployee(esEmployeeIndex, newEmployeeIndex);
 			}
 
 			elasticSearchRepository.index(INDEX_NAME, INDEX_TYPE, newEmployeeIndex.getEmployeeDetails().getEmployeeId(),

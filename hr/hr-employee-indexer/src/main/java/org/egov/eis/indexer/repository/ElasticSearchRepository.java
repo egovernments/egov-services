@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Service
 public class ElasticSearchRepository {
 
@@ -40,6 +42,8 @@ public class ElasticSearchRepository {
 		try {
 			EmployeeIndexGetWrapper employeeIndexGetWrapper = restTemplate.getForObject(url, EmployeeIndexGetWrapper.class);
 			System.out.println("response=" + employeeIndexGetWrapper);
+			if (isEmpty(employeeIndexGetWrapper))
+				return null;
 			return employeeIndexGetWrapper.get_source(); // returns employeeIndex
 		} catch (RestClientException rce) {
 			rce.getRootCause().printStackTrace();

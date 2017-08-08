@@ -41,6 +41,8 @@ public class ReportService {
 	
 	@Autowired
 	private IntegrationService integrationService;
+	
+	
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 

@@ -39,7 +39,7 @@ public class DocumentTypeController {
 	public DocumentTypeResponse createDocumentTypeMaster(@Valid @RequestBody DocumentTypeRequest documentTypeRequest)
 			throws Exception {
 
-		return documentTypeService.createDocumentType(documentTypeRequest);
+		return documentTypeService.createDocumentTypeMaster(documentTypeRequest);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class DocumentTypeController {
 	public DocumentTypeResponse updateDocumentTypeMaster(@Valid @RequestBody DocumentTypeRequest documentTypeRequest)
 			throws Exception {
 
-		return documentTypeService.updateDocumentType(documentTypeRequest);
+		return documentTypeService.updateDocumentTypeMaster(documentTypeRequest);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class DocumentTypeController {
 			@RequestParam(required = false) String applicationType, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
-		return documentTypeService.getDocumentType(requestInfo.getRequestInfo(), tenantId, ids, name, enabled,
+		return documentTypeService.getDocumentTypeMaster(requestInfo.getRequestInfo(), tenantId, ids, name, enabled,
 				applicationType, pageSize, offSet);
 	}
 }

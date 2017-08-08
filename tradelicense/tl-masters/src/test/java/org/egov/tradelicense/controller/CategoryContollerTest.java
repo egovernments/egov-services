@@ -50,7 +50,7 @@ public class CategoryContollerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -122,9 +122,10 @@ public class CategoryContollerTest {
 
 			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/category/_create").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("categoryDetailsCreateRequest.json"))).andExpect(status().isOk())
+			mockMvc.perform(
+					post("/category/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+							.content(getFileContents("categoryDetailsCreateRequest.json")))
+					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("categoryDetailsCreateResponse.json")));
 
@@ -251,12 +252,12 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(String.class),any(Integer.class), any(Integer.class),
-					any(Integer.class))).thenReturn(categoryResponse);
+					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+					any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/category/_search").param("tenantId", "default")
-					.param("type", "SUBCATEGORY").contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("categorySearchRequest.json"))).andExpect(status().isOk())
+			mockMvc.perform(post("/category/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categorySearchRequest.json")))
+					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("categorySearchResponse.json")));
 
@@ -301,11 +302,11 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
-					any(Integer.class))).thenReturn(categoryResponse);
+					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+					any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/category/_search").param("tenantId", "default")
-					.param("type", "SUBCATEGORY").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/category/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
+					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("categoryDetailsSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("categoryDetailsSearchResponse.json")));

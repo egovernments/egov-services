@@ -2,17 +2,18 @@ package org.egov.tradelicense.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.FeeMatrixRequest;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.persistence.repository.FeeMatrixRepository;
+import org.egov.tradelicense.domain.services.FeeMatrixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -31,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @Service
 @Configuration
-@Profile("production")
+@EnableKafka
 public class FeeMatrixConsumer {
 
 	@Autowired
@@ -41,11 +42,20 @@ public class FeeMatrixConsumer {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	FeeMatrixRepository feeMatrixRepository;
-	
+	FeeMatrixService feeMatrixService;
 
-	 @Autowired
-	 private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	private CountDownLatch latch = new CountDownLatch(1);
+
+	public void resetCountDown() {
+		this.latch = new CountDownLatch(1);
+	}
+
+	public CountDownLatch getLatch() {
+		return latch;
+	}
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -93,7 +103,20 @@ public class FeeMatrixConsumer {
 	@KafkaListener(topics = { "#{propertiesManager.getCreateFeeMatrixValidated()}",
 			"#{propertiesManager.getUpdateFeeMatrixValidated()}" })
 	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
+
 		Boolean isNew = (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateFeeMatrixValidated()));
-		feeMatrixRepository.persistNewFeeMatrix(objectMapper.convertValue(consumerRecord.value(), FeeMatrixRequest.class), isNew);
+		FeeMatrixRequest objectReceived = objectMapper.convertValue(consumerRecord.value(), FeeMatrixRequest.class);
+
+		if (isNew) {
+			feeMatrixService.persistNewFeeMatrix(objectReceived);
+		} else {
+			feeMatrixService.persistUpdatedFeeMatrix(objectReceived);
+		}
+		latch.countDown();
+	}
+
+	@Bean
+	public FeeMatrixConsumer getReceiver() {
+		return this;
 	}
 }

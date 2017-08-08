@@ -40,7 +40,7 @@ public class PenaltyRateValidator {
 		try {
 			penaltyRates = penaltyRateRepository.searchPenaltyRate(tenantId, null, applicationType, null, null);
 		} catch (Exception e) {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 		}
 
 		if (validateNew) {
@@ -74,10 +74,10 @@ public class PenaltyRateValidator {
 				fromRange = penaltyRate.getFromRange();
 				if (applicationType.equalsIgnoreCase(oldApplicationType)) {
 					if (!fromRange.equals(oldToRange)) {
-						throw new InvalidRangeException(requestInfo);
+						throw new InvalidRangeException(propertiesManager.getInvalidSequenceRangeMsg(), requestInfo);
 					}
 				} else {
-					throw new InvalidInputException(requestInfo);
+					throw new InvalidInputException(propertiesManager.getInvalidApplicationTypeMsg(), requestInfo);
 				}
 			}
 			oldApplicationType = penaltyRate.getApplicationType().toString();

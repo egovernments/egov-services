@@ -3,6 +3,8 @@ package org.egov.models;
 import org.egov.enums.FeeTypeEnum;
 import org.egov.enums.RateTypeEnum;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,4 +29,7 @@ public class CategoryDetail {
 	private RateTypeEnum rateType = null;
 
 	private Long uomId = null;
+	
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
 }

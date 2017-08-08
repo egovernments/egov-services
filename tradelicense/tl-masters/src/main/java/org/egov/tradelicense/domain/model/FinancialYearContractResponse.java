@@ -41,8 +41,6 @@ package org.egov.tradelicense.domain.model;
 
 import java.util.List;
 
-import org.egov.models.ResponseInfo;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -50,7 +48,7 @@ import lombok.Data;
 
 @JsonInclude(value = Include.NON_NULL)
 public @Data class FinancialYearContractResponse {
-	private ResponseInfo responseInfo;
+	private FinancialYearResponseInfo responseInfo;
 	private List<FinancialYearContract> financialYears;
 	private FinancialYearContract financialYear;
 }

@@ -56,9 +56,9 @@ public class CategoryRepository {
 				ps.setString(1, category.getTenantId());
 				ps.setString(2, category.getName());
 				ps.setString(3, category.getCode());
-				ps.setBoolean(4,  ( category.getActive() == null ? true : category.getActive()) ); 
+				ps.setBoolean(4, (category.getActive() == null ? true : category.getActive()));
 				ps.setObject(5, category.getParentId());
-				
+
 				if (category.getBusinessNature() == null) {
 					ps.setString(6, null);
 				} else {
@@ -90,6 +90,8 @@ public class CategoryRepository {
 	public Long createCategoryDetail(CategoryDetail categoryDetail) {
 
 		String categoryDetailInsert = CategoryQueryBuilder.INSERT_CATEGORY_DETAIL_QUERY;
+		AuditDetails auditDetails = categoryDetail.getAuditDetails();
+
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -99,7 +101,10 @@ public class CategoryRepository {
 				ps.setString(2, categoryDetail.getFeeType().toString());
 				ps.setString(3, categoryDetail.getRateType().toString());
 				ps.setLong(4, categoryDetail.getUomId());
-
+				ps.setString(5, auditDetails.getCreatedBy());
+				ps.setString(6, auditDetails.getLastModifiedBy());
+				ps.setLong(7, auditDetails.getCreatedTime());
+				ps.setLong(8, auditDetails.getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -130,9 +135,9 @@ public class CategoryRepository {
 				ps.setString(1, category.getTenantId());
 				ps.setString(2, category.getName());
 				ps.setString(3, category.getCode());
-				ps.setBoolean(4,  ( category.getActive() == null ? true : category.getActive()) );
+				ps.setBoolean(4, (category.getActive() == null ? true : category.getActive()));
 				ps.setObject(5, category.getParentId());
-				
+
 				if (category.getBusinessNature() == null) {
 					ps.setString(6, null);
 				} else {
@@ -159,6 +164,8 @@ public class CategoryRepository {
 	public CategoryDetail updateCategoryDetail(CategoryDetail categoryDetail) {
 
 		String categoryDetailsUpdateSql = CategoryQueryBuilder.UPDATE_CATEGORY_DETAIL_QUERY;
+		AuditDetails auditDetails = categoryDetail.getAuditDetails();
+
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -168,7 +175,9 @@ public class CategoryRepository {
 				ps.setString(2, categoryDetail.getFeeType().toString());
 				ps.setString(3, categoryDetail.getRateType().toString());
 				ps.setLong(4, categoryDetail.getUomId());
-				ps.setLong(5, categoryDetail.getId());
+				ps.setString(5, auditDetails.getLastModifiedBy());
+				ps.setLong(6, auditDetails.getLastModifiedTime());
+				ps.setLong(7, categoryDetail.getId());
 
 				return ps;
 			}
@@ -189,20 +198,20 @@ public class CategoryRepository {
 	 * @param offSet
 	 * @return List<Category>
 	 */
-	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String active, String type,
-			Integer categoryId, Integer pageSize, Integer offSet) {
+	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String active,
+			String type, Integer categoryId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		
+
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
-		
-		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, type, categoryId,
-				pageSize, offSet, preparedStatementValues);
+
+		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, type,
+				categoryId, pageSize, offSet, preparedStatementValues);
 		List<Category> categories = getCategories(categorySearchQuery.toString(), preparedStatementValues);
 
 		return categories;
@@ -219,7 +228,7 @@ public class CategoryRepository {
 	public List<CategoryDetail> getCategoryDetailsByCategoryId(Long categoryId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		
+
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
@@ -247,13 +256,19 @@ public class CategoryRepository {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
 
 		for (Map<String, Object> row : rows) {
-			
+
 			CategoryDetail categoryDetail = new CategoryDetail();
 			categoryDetail.setId(getLong(row.get("id")));
 			categoryDetail.setCategoryId(getLong(row.get("categoryId")));
 			categoryDetail.setFeeType(FeeTypeEnum.fromValue(getString(row.get("feeType"))));
 			categoryDetail.setRateType(RateTypeEnum.fromValue(getString(row.get("rateType"))));
 			categoryDetail.setUomId(getLong(row.get("uomId")));
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+			categoryDetail.setAuditDetails(auditDetails);
 
 			categoryDetails.add(categoryDetail);
 		}
@@ -273,7 +288,7 @@ public class CategoryRepository {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
 
 		for (Map<String, Object> row : rows) {
-			
+
 			Category category = new Category();
 			category.setId(getLong(row.get("id")));
 			category.setTenantId(getString(row.get("tenantid")));
@@ -332,7 +347,7 @@ public class CategoryRepository {
 	private Long getLong(Object object) {
 		return object == null ? 0 : Long.parseLong(object.toString());
 	}
-	
+
 	/**
 	 * This method will cast the given object to Boolean
 	 * 

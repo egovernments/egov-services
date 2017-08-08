@@ -2,7 +2,7 @@ package org.egov.tradelicense.persistence.repository.builder;
 
 import java.util.List;
 
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.util.ConstantUtility;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for Category API's
@@ -23,10 +23,12 @@ public class CategoryQueryBuilder {
 			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
 
 	public static final String INSERT_CATEGORY_DETAIL_QUERY = "INSERT INTO " + categoryDetailTableName
-			+ " (categoryId, feeType, rateType, uomId)" + " VALUES(?,?,?,?)";
+			+ " (categoryId, feeType, rateType, uomId, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_CATEGORY_DETAIL_QUERY = "UPDATE " + categoryDetailTableName
-			+ " SET categoryId = ?, feeType = ?, rateType = ?," + " uomId = ?" + " WHERE id = ?";
+			+ " SET categoryId = ?, feeType = ?, rateType = ?," + " uomId = ?,"
+			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
 
 	public static final String buildCategoryDetailSearchQuery(Long categoryId, Integer pageSize, Integer offSet,
 			List<Object> preparedStatementValues) {
@@ -96,7 +98,7 @@ public class CategoryQueryBuilder {
 				searchSql.append(" AND parentId IS NULL ");
 			}
 		}
-		
+
 		if (active != null) {
 
 			if (active.equalsIgnoreCase("False")) {
@@ -110,7 +112,7 @@ public class CategoryQueryBuilder {
 			}
 
 		}
-		
+
 		if (pageSize != null) {
 			searchSql.append(" limit ? ");
 			preparedStatementValues.add(pageSize);

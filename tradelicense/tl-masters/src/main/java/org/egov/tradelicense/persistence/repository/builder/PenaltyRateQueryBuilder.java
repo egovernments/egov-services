@@ -2,7 +2,7 @@ package org.egov.tradelicense.persistence.repository.builder;
 
 import java.util.List;
 
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.util.ConstantUtility;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for PenaltyRate API's
@@ -31,7 +31,7 @@ public class PenaltyRateQueryBuilder {
 
 		if (applicationType != null && !applicationType.isEmpty()) {
 			searchSql.append(" AND applicationType = ? ");
-			preparedStatementValues.add(applicationType);
+			preparedStatementValues.add(applicationType.toUpperCase());
 		}
 
 		if (ids != null && ids.length > 0) {

@@ -10,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ApplicationTypeEnum {
 
-	NEW("New"),
+	NEW("NEW"),
 
-	RENEW("Renew");
+	RENEW("RENEW");
 
 	private String value;
 
@@ -23,13 +23,13 @@ public enum ApplicationTypeEnum {
 	@Override
 	@JsonValue
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(value).toUpperCase();
 	}
 
 	@JsonCreator
 	public static ApplicationTypeEnum fromValue(String text) {
 		for (ApplicationTypeEnum applicationTypeEnum : ApplicationTypeEnum.values()) {
-			if (String.valueOf(applicationTypeEnum.value).equals(text)) {
+			if (String.valueOf(applicationTypeEnum.value).equals(text.toUpperCase())) {
 				return applicationTypeEnum;
 			}
 		}

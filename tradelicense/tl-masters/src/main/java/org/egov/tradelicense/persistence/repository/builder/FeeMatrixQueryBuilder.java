@@ -2,7 +2,7 @@ package org.egov.tradelicense.persistence.repository.builder;
 
 import java.util.List;
 
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.util.ConstantUtility;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for FeeMatrix API's
@@ -24,10 +24,12 @@ public class FeeMatrixQueryBuilder {
 			+ " WHERE id = ?";
 
 	public static final String INSERT_FEE_MATRIX_DETAIL_QUERY = "INSERT INTO " + feeMatrixDetailTableName
-			+ " (feeMatrixId, uomFrom, uomTo, amount)" + " VALUES(?,?,?,?)";
+			+ " (feeMatrixId, uomFrom, uomTo, amount, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_FEE_MATRIX_DETAIL_QUERY = "UPDATE " + feeMatrixDetailTableName
-			+ " SET feeMatrixId = ?, uomFrom = ?, uomTo = ?, amount = ?" + " WHERE id = ?";
+			+ " SET feeMatrixId = ?, uomFrom = ?, uomTo = ?, amount = ?," + " lastModifiedBy = ?, lastModifiedTime = ?"
+			+ " WHERE id = ?";
 
 	public static final String buildFeeMatrixDetailSearchQuery(Long feeMatrixId, List<Object> preparedStatementValues) {
 

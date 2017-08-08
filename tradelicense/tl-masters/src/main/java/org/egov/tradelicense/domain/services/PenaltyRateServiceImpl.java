@@ -1,11 +1,7 @@
 package org.egov.tradelicense.domain.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.egov.enums.ApplicationTypeEnum;
-import org.egov.models.AuditDetails;
 import org.egov.models.PenaltyRate;
 import org.egov.models.PenaltyRateRequest;
 import org.egov.models.PenaltyRateResponse;
@@ -18,7 +14,6 @@ import org.egov.tradelicense.domain.services.validator.PenaltyRateValidator;
 import org.egov.tradelicense.persistence.repository.PenaltyRateRepository;
 import org.egov.tradelicense.producers.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,9 +40,6 @@ public class PenaltyRateServiceImpl implements PenaltyRateService {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	@Transactional
@@ -79,7 +71,7 @@ public class PenaltyRateServiceImpl implements PenaltyRateService {
 
 			} catch (Exception e) {
 
-				throw new InvalidInputException(requestInfo);
+				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 			}
 		}
 	}
@@ -112,7 +104,7 @@ public class PenaltyRateServiceImpl implements PenaltyRateService {
 
 			} catch (Exception e) {
 
-				throw new InvalidInputException(requestInfo);
+				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 			}
 		}
 	}
@@ -130,7 +122,7 @@ public class PenaltyRateServiceImpl implements PenaltyRateService {
 			penaltyRateResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 		}
 
 		return penaltyRateResponse;

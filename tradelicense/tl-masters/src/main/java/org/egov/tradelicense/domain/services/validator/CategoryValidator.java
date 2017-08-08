@@ -11,7 +11,7 @@ import org.egov.tradelicense.domain.exception.DuplicateNameException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -43,21 +43,21 @@ public class CategoryValidator {
 				category.setAuditDetails(auditDetails);
 				categoryId = category.getId();
 				if (categoryId == null) {
-					throw new InvalidInputException(requestInfo);
+					throw new InvalidInputException(propertiesManager.getInvalidCategoryIdMsg(), requestInfo);
 				}
 			}
 
 			// checking for existence of duplicate record
 			Boolean isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
-					category.getCode(),null, ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
+					category.getCode(), null, ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
 
 			if (isDuplicateRecordExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 			}
-			
+
 			// checking for existence of duplicate record
-			 isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
-					 null, category.getName(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
+			isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(), null,
+					category.getName(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
 
 			if (isDuplicateRecordExists) {
 				throw new DuplicateNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
@@ -100,12 +100,13 @@ public class CategoryValidator {
 
 				if (!isUomExists) {
 
-					throw new InvalidInputException(requestInfo);
+					throw new InvalidInputException(propertiesManager.getInvalidUomIdMsg(), requestInfo);
 				}
+				categoryDetail.setAuditDetails(category.getAuditDetails());
 			}
 
 		} else {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(propertiesManager.getInvalidParentIdMsg(), requestInfo);
 		}
 	}
 

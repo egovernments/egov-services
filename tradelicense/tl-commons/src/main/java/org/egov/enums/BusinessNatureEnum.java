@@ -10,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum BusinessNatureEnum {
 
-	PERMENANT("Permanent"),
+	PERMANENT("PERMANENT"),
 
-	TEMPORARY("Temporary");
+	TEMPORARY("TEMPORARY");
 
 	private String value;
 
@@ -23,13 +23,13 @@ public enum BusinessNatureEnum {
 	@Override
 	@JsonValue
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(value).toUpperCase();
 	}
 
 	@JsonCreator
 	public static BusinessNatureEnum fromValue(String text) {
 		for (BusinessNatureEnum businessNature : BusinessNatureEnum.values()) {
-			if (String.valueOf(businessNature.value).equals(text)) {
+			if (String.valueOf(businessNature.value).equals(text.toUpperCase())) {
 				return businessNature;
 			}
 		}

@@ -9,11 +9,10 @@ import java.util.List;
 import org.egov.models.AuditDetails;
 import org.egov.models.FeeMatrix;
 import org.egov.models.FeeMatrixDetail;
-import org.egov.models.FeeMatrixRequest;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.domain.services.validator.FeeMatrixValidator;
 import org.egov.tradelicense.persistence.repository.builder.FeeMatrixQueryBuilder;
-import org.egov.tradelicense.persistence.repository.helper.FeeMatrixHelper;
-import org.egov.tradelicense.utility.TimeStampUtil;
+import org.egov.tradelicense.util.TimeStampUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -35,51 +34,18 @@ public class FeeMatrixRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	FeeMatrixHelper feeMatrixHelper;
-	
+	FeeMatrixValidator feeMatrixValidator;
+
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public void persistNewFeeMatrix( FeeMatrixRequest feeMatrixRequest, Boolean isNew){
-		
-		Long feeMatrixId;
-		for( FeeMatrix feeMatrix : feeMatrixRequest.getFeeMatrices()){
-
-//				feeMatrix.setAuditDetails(auditDetails);
-				
-				if( isNew ){
-					
-					feeMatrixId = this.createFeeMatrix( feeMatrix);
-					feeMatrix.setId(feeMatrixId);
-					
-				}else{
-					feeMatrixId = feeMatrix.getId();
-					feeMatrix = this.updateFeeMatrix( feeMatrix);
-				}
-			
-				for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
-					feeMatrixDetail.setFeeMatrixId(feeMatrixId);
-					
-					if( isNew ){
-						
-						this.createFeeMatrixDetails( feeMatrixDetail);
-					}else{
-						
-						feeMatrixDetail = this.updateFeeMatrixDetail(feeMatrixDetail);
-					}
-					
-				}
-
-		}
-		
-	}
 	/**
 	 * Description : this method will create FeeMatrix in database
 	 * 
 	 * @param FeeMatrix
 	 * @return feeMatrixId
 	 */
-	public Long createFeeMatrix( FeeMatrix feeMatrix) {
+	public Long createFeeMatrix(FeeMatrix feeMatrix) {
 
 		AuditDetails auditDetails = feeMatrix.getAuditDetails();
 		String feeMatrixInsertQuery = FeeMatrixQueryBuilder.INSERT_FEE_MATRIX_QUERY;
@@ -118,9 +84,10 @@ public class FeeMatrixRepository {
 	 * @param FeeMatrixDetail
 	 * @return feeMatrixDetailId
 	 */
-	public Long createFeeMatrixDetails( FeeMatrixDetail feeMatrixDetail) {
+	public Long createFeeMatrixDetails(FeeMatrixDetail feeMatrixDetail) {
 
 		String feeMatrixInsertQuery = FeeMatrixQueryBuilder.INSERT_FEE_MATRIX_DETAIL_QUERY;
+		AuditDetails auditDetails = feeMatrixDetail.getAuditDetails();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -130,6 +97,10 @@ public class FeeMatrixRepository {
 				ps.setLong(2, feeMatrixDetail.getUomFrom());
 				ps.setLong(3, feeMatrixDetail.getUomTo());
 				ps.setDouble(4, feeMatrixDetail.getAmount());
+				ps.setString(5, auditDetails.getCreatedBy());
+				ps.setString(6, auditDetails.getLastModifiedBy());
+				ps.setLong(7, auditDetails.getCreatedTime());
+				ps.setLong(8, auditDetails.getLastModifiedTime());
 
 				return ps;
 			}
@@ -148,7 +119,7 @@ public class FeeMatrixRepository {
 	 * @param FeeMatrix
 	 * @return feeMatrix
 	 */
-	public FeeMatrix updateFeeMatrix( FeeMatrix feeMatrix) {
+	public FeeMatrix updateFeeMatrix(FeeMatrix feeMatrix) {
 
 		AuditDetails auditDetails = feeMatrix.getAuditDetails();
 		String feeMatrixUpdateQuery = FeeMatrixQueryBuilder.UPDATE_FEE_MATRIX_QUERY;
@@ -186,6 +157,8 @@ public class FeeMatrixRepository {
 	public FeeMatrixDetail updateFeeMatrixDetail(FeeMatrixDetail feeMatrixDetail) {
 
 		String feeMatrixDetailUpdateSql = FeeMatrixQueryBuilder.UPDATE_FEE_MATRIX_DETAIL_QUERY;
+		AuditDetails auditDetails = feeMatrixDetail.getAuditDetails();
+
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -195,7 +168,9 @@ public class FeeMatrixRepository {
 				ps.setLong(2, feeMatrixDetail.getUomFrom());
 				ps.setLong(3, feeMatrixDetail.getUomTo());
 				ps.setDouble(4, feeMatrixDetail.getAmount());
-				ps.setLong(5, feeMatrixDetail.getId());
+				ps.setString(5, auditDetails.getLastModifiedBy());
+				ps.setLong(6, auditDetails.getLastModifiedTime());
+				ps.setLong(7, feeMatrixDetail.getId());
 
 				return ps;
 			}
@@ -232,7 +207,7 @@ public class FeeMatrixRepository {
 		}
 		String feeMatrixSearchQuery = FeeMatrixQueryBuilder.buildSearchQuery(tenantId, ids, categoryId, subCategoryId,
 				financialYear, applicationType, businessNature, pageSize, offSet, preparedStatementValues);
-		List<FeeMatrix> feeMatrices = feeMatrixHelper.getFeeMatrices(feeMatrixSearchQuery.toString(),
+		List<FeeMatrix> feeMatrices = feeMatrixValidator.getFeeMatrices(feeMatrixSearchQuery.toString(),
 				preparedStatementValues);
 
 		return feeMatrices;

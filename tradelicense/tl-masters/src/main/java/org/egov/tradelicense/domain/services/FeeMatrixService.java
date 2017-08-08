@@ -18,7 +18,7 @@ public interface FeeMatrixService {
 	 * @param FeeMatrixRequest
 	 * @return FeeMatrixResponse
 	 */
-	public FeeMatrixResponse createFeeMatrixMaster( FeeMatrixRequest feeMatrixRequest);
+	public FeeMatrixResponse createFeeMatrixMaster(FeeMatrixRequest feeMatrixRequest);
 
 	/**
 	 * Description : service method for updating feeMatrix master
@@ -47,4 +47,22 @@ public interface FeeMatrixService {
 	public FeeMatrixResponse getFeeMatrixMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			Integer categoryId, Integer subCategoryId, String financialYear, String applicationType,
 			String businessNature, Integer pageSize, Integer offSet);
+
+	/**
+	 * Description : service method for creating feeMatrix master
+	 * 
+	 * 
+	 * @param FeeMatrixRequest
+	 * @return FeeMatrixResponse
+	 */
+	public void persistNewFeeMatrix(FeeMatrixRequest objectReceived);
+
+	/**
+	 * Description : service method for updating feeMatrix master
+	 * 
+	 * 
+	 * @param FeeMatrixRequest
+	 * @return FeeMatrixResponse
+	 */
+	public void persistUpdatedFeeMatrix(FeeMatrixRequest objectReceived);
 }

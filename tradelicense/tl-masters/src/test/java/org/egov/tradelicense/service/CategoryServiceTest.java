@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.egov.enums.FeeTypeEnum;
 import org.egov.enums.RateTypeEnum;
@@ -25,8 +24,8 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.CategoryConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.CategoryService;
-import org.egov.tradelicense.domain.services.UOMService;
 import org.egov.tradelicense.persistence.repository.CategoryRepository;
+import org.egov.tradelicense.persistence.repository.UOMRepository;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
@@ -36,7 +35,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.kafka.test.rule.KafkaEmbedded;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
@@ -59,19 +57,20 @@ public class CategoryServiceTest {
 	private PropertiesManager propertiesManager;
 
 	@Autowired
-	UOMService uomRepository;
+	UOMRepository uomRepository;
 
 	@Autowired
 	CategoryRepository categoryRepository;
-	
+
 	@Autowired
 	CategoryConsumer categoryConsumer;
-	 
-	 @ClassRule
-	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, "category-create-validated","category-update-validated");
-	
-	 @Autowired
-	  private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+
+	@ClassRule
+	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, "category-create-validated",
+			"category-update-validated");
+
+	@Autowired
+	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
 	public static Long categoryId = 1l;
 	public Integer parentId = null;
@@ -87,16 +86,16 @@ public class CategoryServiceTest {
 	public static UOMResponse uomResponse;
 	public static Long uomId = 0L;
 	public static Integer searchCategoryId = 1;
-	
-	 @Before
-	  public void setUp() throws Exception {
-	    // wait until the partitions are assigned
-	    for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry
-	        .getListenerContainers()) {
-	      ContainerTestUtils.waitForAssignment(messageListenerContainer,
-	          embeddedKafka.getPartitionsPerTopic());
-	    }
-	  }
+
+	@Before
+	public void setUp() throws Exception {
+		// wait until the partitions are assigned
+		for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry
+				.getListenerContainers()) {
+			ContainerTestUtils.waitForAssignment(messageListenerContainer, 0);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public void insertvalues() {
 		try {
@@ -120,8 +119,7 @@ public class CategoryServiceTest {
 			uoms.add(uom);
 			uomRequest.setUoms(uoms);
 			uomRequest.setRequestInfo(requestInfo);
-			uomResponse = uomRepository.createUomMaster(uomRequest);
-			uomId = uomResponse.getUoms().get(0).getId();
+			uomId = uomRepository.createUom(uomRequest.getUoms().get(0));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -161,24 +159,24 @@ public class CategoryServiceTest {
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
-			
-		    categoryConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
-		    if( categoryConsumer.getLatch().getCount() != 0){
-		    	assertTrue(false);
-		    }else{
+
+			categoryConsumer.getLatch().await();
+			if (categoryConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
 				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
-				 categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-						null, name, code, active, type, null, pageSize, offset);
+				categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, name, code, active,
+						type, null, pageSize, offset);
 
 				if (categoryResponse.getCategories().size() == 0) {
 					assertTrue(false);
-				}else{
+				} else {
 					categoryId = categoryResponse.getCategories().get(0).getId();
 					assertTrue(true);
 				}
-//		    	assertTrue(true);
-		    }
+				// assertTrue(true);
+			}
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -304,30 +302,29 @@ public class CategoryServiceTest {
 			CategoryRequest categoryRequest = new CategoryRequest();
 			categoryRequest.setCategories(categories);
 			categoryRequest.setRequestInfo(requestInfo);
-			
+
 			categoryConsumer.resetCountDown();
-			
+
 			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
-			
+
 			categoryConsumer.getLatch().await();
-		    if( categoryConsumer.getLatch().getCount() != 0){
-		    	assertTrue(false);
-		    }else{
-		    	categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-						null, null, null, null, "SUBCATEGORY", null, null, null);
+			if (categoryConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
+				categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, null, null, null,
+						"SUBCATEGORY", null, null, null);
 
 				if (categoryResponse.getCategories().size() == 0) {
 					assertTrue(false);
-				}else{
-					 categoryResponse.getCategories().get(0).getId();
+				} else {
+					categoryResponse.getCategories().get(0).getId();
 					assertTrue(true);
 				}
-		    	
-		    }
 
+			}
 
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {
@@ -463,13 +460,13 @@ public class CategoryServiceTest {
 				assertTrue(false);
 			}
 
-			categoryConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
-		    if( categoryConsumer.getLatch().getCount() != 0){
-		    	assertTrue(false);
-		    }else{
+			categoryConsumer.getLatch().await();
+			if (categoryConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
 				assertTrue(true);
-		    	
-		    }
+
+			}
 
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {
@@ -496,9 +493,8 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					null, updatedName, null, active, null, parentId, pageSize,
-					offset);
+			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
+					updatedName, null, active, null, parentId, pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 
@@ -546,14 +542,13 @@ public class CategoryServiceTest {
 				assertTrue(false);
 			}
 
-			categoryConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
-		    if( categoryConsumer.getLatch().getCount() != 0){
-		    	assertTrue(false);
-		    }else{
+			categoryConsumer.getLatch().await();
+			if (categoryConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
 				assertTrue(true);
-		    	
-		    }
-			
+
+			}
 
 		} catch (Exception e) {
 			assertTrue(false);

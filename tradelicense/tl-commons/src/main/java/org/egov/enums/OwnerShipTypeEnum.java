@@ -10,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum OwnerShipTypeEnum {
 
-	STATE_GOVERNEMNT("State_Government"),
+	STATE_GOVERNMENT("STATE_GOVERNMENT"),
 
-	RENTED("Rented");
+	RENTED("RENTED");
 
 	private String value;
 
@@ -23,13 +23,13 @@ public enum OwnerShipTypeEnum {
 	@Override
 	@JsonValue
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(value).toUpperCase();
 	}
 
 	@JsonCreator
 	public static OwnerShipTypeEnum fromValue(String text) {
 		for (OwnerShipTypeEnum ownerShipTypeEnum : OwnerShipTypeEnum.values()) {
-			if (String.valueOf(ownerShipTypeEnum.value).equals(text)) {
+			if (String.valueOf(ownerShipTypeEnum.value).equals(text.toUpperCase())) {
 				return ownerShipTypeEnum;
 			}
 		}

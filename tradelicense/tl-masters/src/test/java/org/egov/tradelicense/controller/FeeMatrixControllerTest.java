@@ -48,7 +48,7 @@ public class FeeMatrixControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -78,12 +78,10 @@ public class FeeMatrixControllerTest {
 
 		try {
 
-			when(feeMatrixService.createFeeMatrixMaster( any(FeeMatrixRequest.class)))
-					.thenReturn(feeMatrixResponse);
+			when(feeMatrixService.createFeeMatrixMaster(any(FeeMatrixRequest.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/feematrix/_create")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("feeMatrixCreateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/feematrix/_create").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("feeMatrixCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("feeMatrixCreateResponse.json")));
 
@@ -123,9 +121,8 @@ public class FeeMatrixControllerTest {
 
 			when(feeMatrixService.updateFeeMatrixMaster(any(FeeMatrixRequest.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/feematrix/_update")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("feeMatrixUpdateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/feematrix/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("feeMatrixUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("feeMatrixUpdateResponse.json")));
 

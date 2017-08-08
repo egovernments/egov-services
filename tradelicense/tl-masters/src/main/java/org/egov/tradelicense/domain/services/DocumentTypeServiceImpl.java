@@ -2,7 +2,6 @@ package org.egov.tradelicense.domain.services;
 
 import java.util.List;
 
-import org.egov.models.AuditDetails;
 import org.egov.models.DocumentType;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
@@ -10,12 +9,11 @@ import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
+import org.egov.tradelicense.domain.services.validator.DocumentTypeValidator;
 import org.egov.tradelicense.persistence.repository.DocumentTypeRepository;
-import org.egov.tradelicense.persistence.repository.helper.DocumentTypeHelper;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.producers.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +34,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 	DocumentTypeRepository documentTypeRepository;
 
 	@Autowired
-	DocumentTypeHelper documentTypeHelper;
+	DocumentTypeValidator documentTypeValidator;
 
 	@Autowired
 	UtilityHelper utilityHelper;
@@ -44,27 +42,15 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
 
+	@Autowired
+	Producer producer;
+
 	@Override
-	@Transactional
-	public DocumentTypeResponse createDocumentType(DocumentTypeRequest documentTypeRequest) {
+	public DocumentTypeResponse createDocumentTypeMaster(DocumentTypeRequest documentTypeRequest) {
 
 		RequestInfo requestInfo = documentTypeRequest.getRequestInfo();
-		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
-		for (DocumentType documentType : documentTypeRequest.getDocumentTypes()) {
-
-			Boolean isExists = documentTypeHelper.checkWhetherDocumentTypeExists(documentType);
-
-			if (isExists)
-				throw new DuplicateIdException(propertiesManager.getDocumentTypeCustomMsg(), requestInfo);
-
-			try {
-				documentType.setAuditDetails(auditDetails);
-				Long id = documentTypeRepository.createDocumentType(documentType);
-				documentType.setId(id);
-			} catch (Exception e) {
-				throw new InvalidInputException(requestInfo);
-			}
-		}
+		documentTypeValidator.validateDocumentTypeRequest(documentTypeRequest, true);
+		producer.send(propertiesManager.getCreateDocumentTypeValidated(), documentTypeRequest);
 		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		documentTypeResponse.setDocumentTypes(documentTypeRequest.getDocumentTypes());
@@ -75,46 +61,56 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
 	@Override
 	@Transactional
-	public DocumentTypeResponse updateDocumentType(DocumentTypeRequest documentTypeRequest) {
+	public void createDocumentType(DocumentTypeRequest documentTypeRequest) {
 
 		RequestInfo requestInfo = documentTypeRequest.getRequestInfo();
+
 		for (DocumentType documentType : documentTypeRequest.getDocumentTypes()) {
-
-			Boolean isExists = documentTypeHelper.checkWhetherRecordExitswithName(documentType.getTenantId(),
-					documentType.getName(), ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getId(),
-					documentType.getApplicationType().toString());
-
-			if (isExists)
-				throw new DuplicateIdException(propertiesManager.getDocumentTypeCustomMsg(),
-						documentTypeRequest.getRequestInfo());
-			
 			try {
 
-				AuditDetails auditDetails = documentType.getAuditDetails();
-				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
-				documentType.setAuditDetails(auditDetails);
-				documentType = documentTypeRepository.updateDocumentType(documentType);
+				documentTypeRepository.createDocumentType(documentType);
 
-			} catch (Exception e) {
-				throw new InvalidInputException(documentTypeRequest.getRequestInfo());
-
+			} catch (Exception ex) {
+				throw new InvalidInputException(ex.getLocalizedMessage(), requestInfo);
 			}
 		}
+	}
 
+	@Override
+	public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest) {
+
+		RequestInfo requestInfo = documentTypeRequest.getRequestInfo();
+		documentTypeValidator.validateDocumentTypeRequest(documentTypeRequest, false);
+		producer.send(propertiesManager.getUpdateDocumentTypeValidated(), documentTypeRequest);
 		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
-
 		documentTypeResponse.setDocumentTypes(documentTypeRequest.getDocumentTypes());
-		ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(documentTypeRequest.getRequestInfo(), true);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		documentTypeResponse.setResponseInfo(responseInfo);
 
 		return documentTypeResponse;
+	}
+
+	@Override
+	@Transactional
+	public void updateDocumentType(DocumentTypeRequest documentTypeRequest) {
+		RequestInfo requestInfo = documentTypeRequest.getRequestInfo();
+
+		for (DocumentType documentType : documentTypeRequest.getDocumentTypes()) {
+
+			try {
+
+				documentTypeRepository.updateDocumentType(documentType);
+
+			} catch (Exception ex) {
+				throw new InvalidInputException(ex.getLocalizedMessage(), requestInfo);
+			}
+		}
 
 	}
 
 	@Override
-	public DocumentTypeResponse getDocumentType(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String enabled, String applicationType, Integer pageSize, Integer offSet) {
+	public DocumentTypeResponse getDocumentTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			String name, String enabled, String applicationType, Integer pageSize, Integer offSet) {
 
 		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
 		try {
@@ -125,7 +121,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 			documentTypeResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 		}
 
 		return documentTypeResponse;

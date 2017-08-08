@@ -47,7 +47,7 @@ public class DocumentTypeControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -72,7 +72,7 @@ public class DocumentTypeControllerTest {
 
 		try {
 
-			when(documentTypeService.createDocumentType(any(DocumentTypeRequest.class)))
+			when(documentTypeService.createDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documentTypeResponse);
 
 			mockMvc.perform(post("/documenttype/_create").param("tenantId", "default")
@@ -94,7 +94,7 @@ public class DocumentTypeControllerTest {
 	 * Description : Test method for updateDocumentType() method
 	 */
 	@Test
-	public void testUpdateDocumentType() throws Exception {
+	public void testUpdateDocumentTypeMaster() throws Exception {
 
 		DocumentTypeResponse documenttypeResponse = new DocumentTypeResponse();
 		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
@@ -111,7 +111,7 @@ public class DocumentTypeControllerTest {
 
 		try {
 
-			when(documentTypeService.updateDocumentType(any(DocumentTypeRequest.class)))
+			when(documentTypeService.updateDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documenttypeResponse);
 			mockMvc.perform(post("/documenttype/_update").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("documenttypeUpdateRequest.json"))).andExpect(status().isOk())
@@ -121,7 +121,6 @@ public class DocumentTypeControllerTest {
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
-			e.printStackTrace();
 		}
 
 		assertTrue(Boolean.TRUE);
@@ -149,9 +148,9 @@ public class DocumentTypeControllerTest {
 
 		try {
 
-			when(documentTypeService.getDocumentType(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-							.thenReturn(documentTypeResponse);
+			when(documentTypeService.getDocumentTypeMaster(any(RequestInfo.class), any(String.class),
+					any(Integer[].class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+					any(Integer.class))).thenReturn(documentTypeResponse);
 
 			mockMvc.perform(post("/documenttype/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeSearchRequest.json")))

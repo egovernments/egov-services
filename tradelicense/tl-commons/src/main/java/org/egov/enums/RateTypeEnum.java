@@ -10,11 +10,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum RateTypeEnum {
 
-	FLAT_BY_RANGE("Flat_By_Range"),
+	FLAT_BY_RANGE("FLAT_BY_RANGE"),
 
-	FLAT_BY_PERCENTAGE("Flat_By_Percentage"),
+	FLAT_BY_PERCENTAGE("FLAT_BY_PERCENTAGE"),
 
-	UNIT_BY_RANGE("Unit_By_Range");
+	UNIT_BY_RANGE("UNIT_BY_RANGE");
 
 	private String value;
 
@@ -25,13 +25,13 @@ public enum RateTypeEnum {
 	@Override
 	@JsonValue
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(value).toUpperCase();
 	}
 
 	@JsonCreator
 	public static RateTypeEnum fromValue(String text) {
 		for (RateTypeEnum rateType : RateTypeEnum.values()) {
-			if (String.valueOf(rateType.value).equals(text)) {
+			if (String.valueOf(rateType.value).equals(text.toUpperCase())) {
 				return rateType;
 			}
 		}

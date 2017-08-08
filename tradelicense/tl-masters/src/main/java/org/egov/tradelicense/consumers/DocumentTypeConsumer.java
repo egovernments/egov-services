@@ -2,16 +2,18 @@ package org.egov.tradelicense.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.egov.models.DocumentTypeRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -20,15 +22,17 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
- * Consumer class will use for listening documentType object from kafka server to
- * insert data in postgres database
+ * Consumer class will use for listening documentType object from kafka server
+ * to insert data in postgres database
  * 
  * @author: Pavan Kumar Kamma
  */
 @Service
 @Configuration
-@Profile("production")
+@EnableKafka
 public class DocumentTypeConsumer {
 
 	@Autowired
@@ -39,6 +43,19 @@ public class DocumentTypeConsumer {
 
 	@Autowired
 	DocumentTypeService documentTypeService;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	private CountDownLatch latch = new CountDownLatch(1);
+
+	public void resetCountDown() {
+		this.latch = new CountDownLatch(1);
+	}
+
+	public CountDownLatch getLatch() {
+		return latch;
+	}
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -87,12 +104,21 @@ public class DocumentTypeConsumer {
 			"#{propertiesManager.getUpdateDocumentTypeValidated()}" })
 	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
 
+		DocumentTypeRequest objectReceived = objectMapper.convertValue(consumerRecord.value(),
+				DocumentTypeRequest.class);
+
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateDocumentTypeValidated())) {
-			//documentTypeService.createDocumentType(consumerRecord.value());
+			documentTypeService.createDocumentType(objectReceived);
 		}
 
 		else {
-			//documentTypeService.updateDocumentType(consumerRecord.value());
+			documentTypeService.updateDocumentType(objectReceived);
 		}
+		latch.countDown();
+	}
+
+	@Bean
+	public DocumentTypeConsumer getReceiver() {
+		return this;
 	}
 }

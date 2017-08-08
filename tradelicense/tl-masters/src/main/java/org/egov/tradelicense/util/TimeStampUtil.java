@@ -1,4 +1,4 @@
-package org.egov.tradelicense.utility;
+package org.egov.tradelicense.util;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;

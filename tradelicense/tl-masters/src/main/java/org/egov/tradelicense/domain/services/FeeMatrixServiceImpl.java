@@ -13,7 +13,6 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.FeeMatrixValidator;
 import org.egov.tradelicense.persistence.repository.FeeMatrixRepository;
-import org.egov.tradelicense.persistence.repository.helper.FeeMatrixHelper;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
 import org.egov.tradelicense.producers.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 
 	@Autowired
 	FeeMatrixRepository feeMatrixRepository;
-	
+
 	@Autowired
 	FeeMatrixValidator feeMatrixValidator;
 
@@ -42,16 +41,14 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 	UtilityHelper utilityHelper;
 
 	@Autowired
-	FeeMatrixHelper feeMatrixHelper;
-	@Autowired
 	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private Producer Producer;
-	
+
 	@Override
 	@Transactional
-	public FeeMatrixResponse createFeeMatrixMaster( FeeMatrixRequest feeMatrixRequest) {
+	public FeeMatrixResponse createFeeMatrixMaster(FeeMatrixRequest feeMatrixRequest) {
 
 		RequestInfo requestInfo = feeMatrixRequest.getRequestInfo();
 		feeMatrixValidator.validateFeeMatrixRequest(feeMatrixRequest, Boolean.TRUE);
@@ -63,7 +60,25 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 
 		return feeMatrixResponse;
 	}
-	
+
+	public void persistNewFeeMatrix(FeeMatrixRequest feeMatrixRequest) {
+
+		Long feeMatrixId;
+
+		for (FeeMatrix feeMatrix : feeMatrixRequest.getFeeMatrices()) {
+
+			feeMatrixId = feeMatrixRepository.createFeeMatrix(feeMatrix);
+			feeMatrix.setId(feeMatrixId);
+
+			for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
+
+				feeMatrixDetail.setFeeMatrixId(feeMatrixId);
+				feeMatrixRepository.createFeeMatrixDetails(feeMatrixDetail);
+			}
+
+		}
+
+	}
 
 	public FeeMatrixResponse updateFeeMatrixMaster(FeeMatrixRequest feeMatrixRequest) {
 
@@ -78,6 +93,25 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 		return feeMatrixResponse;
 	}
 
+	public void persistUpdatedFeeMatrix(FeeMatrixRequest feeMatrixRequest) {
+
+		Long feeMatrixId;
+
+		for (FeeMatrix feeMatrix : feeMatrixRequest.getFeeMatrices()) {
+
+			feeMatrixId = feeMatrix.getId();
+			feeMatrix = feeMatrixRepository.updateFeeMatrix(feeMatrix);
+
+			for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
+
+				feeMatrixDetail.setFeeMatrixId(feeMatrixId);
+				feeMatrixDetail = feeMatrixRepository.updateFeeMatrixDetail(feeMatrixDetail);
+			}
+
+		}
+
+	}
+
 	public FeeMatrixResponse getFeeMatrixMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			Integer categoryId, Integer subCategoryId, String financialYear, String applicationType,
 			String businessNature, Integer pageSize, Integer offSet) {
@@ -88,7 +122,7 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 					financialYear, applicationType, businessNature, pageSize, offSet);
 			for (int i = 0; i < feeMatrices.size(); i++) {
 				FeeMatrix feeMatrix = feeMatrices.get(i);
-				List<FeeMatrixDetail> feeMatrixDetails = feeMatrixHelper
+				List<FeeMatrixDetail> feeMatrixDetails = feeMatrixValidator
 						.getFeeMatrixDetailsByFeeMatrixId(feeMatrix.getId());
 				feeMatrix.setFeeMatrixDetails(feeMatrixDetails);
 			}
@@ -97,7 +131,7 @@ public class FeeMatrixServiceImpl implements FeeMatrixService {
 			feeMatrixResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 		}
 
 		return feeMatrixResponse;

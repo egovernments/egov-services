@@ -10,11 +10,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum FeeTypeEnum {
 
-	LICENSE("License"),
+	LICENSE("LICENSE"),
 
-	MOTOR("Motor"),
+	MOTOR("MOTOR"),
 
-	WORKFORCE("Workforce");
+	WORKFORCE("WORKFORCE");
 
 	private String value;
 
@@ -25,13 +25,13 @@ public enum FeeTypeEnum {
 	@Override
 	@JsonValue
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(value).toUpperCase();
 	}
 
 	@JsonCreator
 	public static FeeTypeEnum fromValue(String text) {
 		for (FeeTypeEnum feeType : FeeTypeEnum.values()) {
-			if (String.valueOf(feeType.value).equals(text)) {
+			if (String.valueOf(feeType.value).equals(text.toUpperCase())) {
 				return feeType;
 			}
 		}

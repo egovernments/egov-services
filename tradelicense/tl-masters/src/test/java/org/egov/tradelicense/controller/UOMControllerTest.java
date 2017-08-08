@@ -47,7 +47,7 @@ public class UOMControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -74,9 +74,8 @@ public class UOMControllerTest {
 
 			when(uomService.createUomMaster(any(UOMRequest.class))).thenReturn(uomResponse);
 
-			mockMvc.perform(post("/uom/_create").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomCreateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/uom/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomCreateResponse.json")));
 
@@ -111,9 +110,8 @@ public class UOMControllerTest {
 		try {
 
 			when(uomService.updateUomMaster(any(UOMRequest.class))).thenReturn(uomResponse);
-			mockMvc.perform(post("/uom/_update").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomUpdateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/uom/_update").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomUpdateResponse.json")));
 
@@ -152,9 +150,8 @@ public class UOMControllerTest {
 					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(uomResponse);
 
-			mockMvc.perform(post("/uom/_search").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomSearchRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/uom/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomSearchResponse.json")));
 

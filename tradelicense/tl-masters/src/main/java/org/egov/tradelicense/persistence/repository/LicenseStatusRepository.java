@@ -19,8 +19,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-
-
 /**
  * Repository class for create/update/search LicenseStatus master
  * 
@@ -55,10 +53,9 @@ public class LicenseStatusRepository {
 				ps.setString(1, licenseStatus.getTenantId());
 				ps.setString(2, licenseStatus.getName());
 				ps.setString(3, licenseStatus.getCode());
-				if(licenseStatus.getActive() != null){
+				if (licenseStatus.getActive() != null) {
 					ps.setBoolean(4, licenseStatus.getActive());
-				}
-				else{
+				} else {
 					ps.setBoolean(4, true);
 				}
 				ps.setString(5, auditDetails.getCreatedBy());
@@ -75,7 +72,6 @@ public class LicenseStatusRepository {
 
 		return Long.valueOf(holder.getKey().intValue());
 	}
-
 
 	/**
 	 * Description : this method will update LicenseStatus in database
@@ -96,10 +92,9 @@ public class LicenseStatusRepository {
 				ps.setString(1, licenseStatus.getTenantId());
 				ps.setString(2, licenseStatus.getCode());
 				ps.setString(3, licenseStatus.getName());
-				if(licenseStatus.getActive() != null){
+				if (licenseStatus.getActive() != null) {
 					ps.setBoolean(4, licenseStatus.getActive());
-				}
-				else{
+				} else {
 					ps.setBoolean(4, true);
 				}
 				ps.setString(5, licenseStatus.getAuditDetails().getLastModifiedBy());
@@ -114,7 +109,6 @@ public class LicenseStatusRepository {
 		return licenseStatus;
 	}
 
-
 	/**
 	 * Description : This method for search LicenseStatus
 	 * 
@@ -127,8 +121,8 @@ public class LicenseStatusRepository {
 	 * @param offSet
 	 * @return List<LicenseStatus>
 	 */
-	public List<LicenseStatus> searchLicenseStatus(String tenantId, Integer[] ids, String name, String code, String active,
-			Integer pageSize, Integer offSet) {
+	public List<LicenseStatus> searchLicenseStatus(String tenantId, Integer[] ids, String name, String code,
+			String active, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
 		if (pageSize == null) {
@@ -137,18 +131,20 @@ public class LicenseStatusRepository {
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
-		String LicenseStatusSearchQuery = LicenseStatusQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, pageSize, offSet,
+		String LicenseStatusSearchQuery = LicenseStatusQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active,
+				pageSize, offSet, preparedStatementValues);
+		List<LicenseStatus> LicenseStatuslst = getLicenseStatusSearchQuery(LicenseStatusSearchQuery.toString(),
 				preparedStatementValues);
-		List<LicenseStatus> LicenseStatuslst = getLicenseStatusSearchQuery(LicenseStatusSearchQuery.toString(), preparedStatementValues);
 
 		return LicenseStatuslst;
 	}
 
-
 	/**
-	 * This method will execute the given query & will build the LicenseStatus objects
+	 * This method will execute the given query & will build the LicenseStatus
+	 * objects
 	 * 
-	 * @param query String that need to be executed
+	 * @param query
+	 *            String that need to be executed
 	 * @return {@link LicenseStatus} List of LicenseStatus
 	 */
 	private List<LicenseStatus> getLicenseStatusSearchQuery(String query, List<Object> preparedStatementValues) {
@@ -175,7 +171,6 @@ public class LicenseStatusRepository {
 
 		return LicenseStatuslst;
 	}
-
 
 	/**
 	 * This method will cast the given object to String

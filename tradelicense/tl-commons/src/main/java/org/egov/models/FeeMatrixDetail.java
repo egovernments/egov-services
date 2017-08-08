@@ -2,6 +2,8 @@ package org.egov.models;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +31,7 @@ public class FeeMatrixDetail {
 
 	@NotNull
 	private Double amount = null;
+	
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
 }

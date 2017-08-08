@@ -307,7 +307,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "wardName",
@@ -319,7 +320,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "zoneName",
@@ -331,7 +333,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "storageReservoirName",

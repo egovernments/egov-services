@@ -43,26 +43,7 @@ public class ServiceTypeConfigurationController {
         return serviceTypeConfigurations.stream()
                 .map(org.egov.pgr.web.contract.ServiceTypeConfiguration::new)
                 .collect(Collectors.toList());
-
         		
     }
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

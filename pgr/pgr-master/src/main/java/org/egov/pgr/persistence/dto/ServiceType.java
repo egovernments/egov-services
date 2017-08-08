@@ -1,10 +1,7 @@
 package org.egov.pgr.persistence.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -12,8 +9,10 @@ import java.util.List;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ServiceType {
 
     private Long id;
@@ -25,8 +24,8 @@ public class ServiceType {
     private String type;
     private List<String> keywords;
     private Integer category;
-    private Integer slahours;
-    private String tenantid;
+    private Integer slaHours;
+    private String tenantId;
     private Boolean isday;
     private Boolean isactive;
     private boolean hasfinancialimpact;
@@ -38,16 +37,17 @@ public class ServiceType {
     public org.egov.pgr.domain.model.ServiceType toDomain(){
         return org.egov.pgr.domain.model.ServiceType.builder()
                 .serviceCode(code)
+                .serviceName(name)
                 .type(type)
                 .department(department)
                 .description(description)
-                .slaHours(slahours)
+                .slaHours(slaHours)
                 .metadata(null == metadata ? false : metadata)
                 .active(isactive)
                 .category(category)
                 .hasFinancialImpact(hasfinancialimpact)
                 .isDay(isday)
-                .tenantId(tenantid)
+                .tenantId(tenantId)
                 .keywords(keywords)
                 .build();
     }

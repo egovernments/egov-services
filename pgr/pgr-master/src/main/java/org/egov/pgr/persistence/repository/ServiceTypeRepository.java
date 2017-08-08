@@ -50,9 +50,9 @@ public class ServiceTypeRepository {
         parametersMap.put("isactive", serviceType.getIsactive());
         parametersMap.put("isday", serviceType.getIsday());
         parametersMap.put("metadata", serviceType.getMetadata());
-        parametersMap.put("slahours", serviceType.getSlahours());
+        parametersMap.put("slahours", serviceType.getSlaHours());
         parametersMap.put("type", serviceType.getType());
-        parametersMap.put("tenantid", serviceType.getTenantid());
+        parametersMap.put("tenantid", serviceType.getTenantId());
         parametersMap.put("hasfinancialimpact", serviceType.isHasfinancialimpact());
         parametersMap.put("createdby", serviceType.getCreatedBy());
         parametersMap.put("createddate", serviceType.getCreatedDate());

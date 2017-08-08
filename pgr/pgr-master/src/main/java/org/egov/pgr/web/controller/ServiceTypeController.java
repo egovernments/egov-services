@@ -1,6 +1,7 @@
 package org.egov.pgr.web.controller;
 
 import org.egov.pgr.domain.service.ServiceTypeService;
+import org.egov.pgr.web.contract.RequestInfoBody;
 import org.egov.pgr.web.contract.ServiceType;
 import org.egov.pgr.web.contract.ServiceTypeRequest;
 import org.egov.pgr.web.contract.ServiceTypeResponse;
@@ -27,7 +28,15 @@ public class ServiceTypeController {
     }
 
     @PostMapping("/v2/_search")
-    public List<ServiceType> search(@RequestBody ServiceTypeSearchCriteria serviceTypeSearchCriteria){
+    public List<ServiceType> search(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
+                                    @RequestParam(value = "serviceCode") String serviceCode,
+                                    @RequestBody RequestInfoBody requestInfoBody){
+
+        ServiceTypeSearchCriteria serviceTypeSearchCriteria = ServiceTypeSearchCriteria.builder()
+                .tenantId(tenantId)
+                .serviceCode(serviceCode)
+                .build();
+
         List<org.egov.pgr.domain.model.ServiceType> serviceTypeList = serviceTypeService.search(serviceTypeSearchCriteria);
 
         return serviceTypeList.stream()

@@ -75,7 +75,7 @@ public class VoucherServiceTest {
                         .thenReturn("Creating Voucher for Asset Revaluation");
 
         final VoucherRequest generatedVoucherRequest = voucherService.createVoucherRequest(revaluation,
-                revaluation.getFund(), asset, accountCodeDetails, tenantId);
+                revaluation.getFund(), asset.getDepartment().getId(), accountCodeDetails, tenantId);
 
         final Fund fund = get_Fund(revaluationRequest);
         final Voucher voucher = getVoucher(asset, fund, tenantId);

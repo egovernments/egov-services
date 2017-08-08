@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.contract.VoucherResponse;
-import org.egov.asset.model.Asset;
 import org.egov.asset.model.ChartOfAccountContract;
 import org.egov.asset.model.ChartOfAccountContractResponse;
 import org.egov.asset.model.ChartOfAccountDetailContract;
@@ -70,9 +69,13 @@ public class VoucherService {
 
         final HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-        requestHeaders.setAccept(Collections.singletonList(new MediaType("application", "json")));
-        for (final String cookie : cookies)
-            requestHeaders.add(HttpHeaders.COOKIE, cookie);
+        final List<MediaType> acceptableMediaTypes = new LinkedList<>();
+        acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+        requestHeaders.setAccept(acceptableMediaTypes);
+
+        log.debug("JSESSION ID :: " + cookies.get(1));
+        log.debug("SESSION ID :: " + cookies.get(2));
+        requestHeaders.set(HttpHeaders.COOKIE, cookies.get(1));
 
         log.debug("Request Headers for Voucher Request :: " + requestHeaders);
 
@@ -94,7 +97,7 @@ public class VoucherService {
         return null;
     }
 
-    public VoucherRequest createVoucherRequest(final Object entity, final Long fundId, final Asset asset,
+    public VoucherRequest createVoucherRequest(final Object entity, final Long fundId, final Long depratmentId,
             final List<VouchercreateAccountCodeDetails> accountCodeDetails, final String tenantId) {
         final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -105,14 +108,18 @@ public class VoucherService {
         voucher.setType(VoucherType.JOURNALVOUCHER.toString());
         voucher.setVoucherDate(sdf.format(new Date()));
         voucher.setLedgers(accountCodeDetails);
-        voucher.setDepartment(asset.getDepartment().getId());
+        voucher.setDepartment(depratmentId);
+
+        log.debug("Entity :: " + entity);
 
         if (entity instanceof Revaluation) {
+            log.info("Setting Revaluation Voucher Name and Description ");
             voucher.setName(assetConfigurationService
                     .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
             voucher.setDescription(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(
                     AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
         } else if (entity instanceof Disposal) {
+            log.info("Setting Disposal Voucher Name and Description ");
             voucher.setName(assetConfigurationService
                     .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
             voucher.setDescription(assetConfigurationService
@@ -120,6 +127,7 @@ public class VoucherService {
         }
         voucher.setFund(fund);
 
+        log.debug("Voucher :: " + voucher);
         final List<Voucher> vouchers = new ArrayList<>();
         vouchers.add(voucher);
 

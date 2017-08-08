@@ -121,46 +121,44 @@ public class DisposalService {
 
     private Long createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         final Disposal disposal = disposalRequest.getDisposal();
-
+        final RequestInfo requestInfo = disposalRequest.getRequestInfo();
         final List<Long> assetIds = new ArrayList<>();
+        final String tenantId = disposal.getTenantId();
         assetIds.add(disposal.getAssetId());
-        final Asset asset = assetRepository.findForCriteria(
-                AssetCriteria.builder().tenantId(disposalRequest.getDisposal().getTenantId()).id(assetIds).build())
-                .get(0);
+        final Asset asset = assetRepository
+                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
 
         final AssetCategory assetCategory = asset.getAssetCategory();
 
-        final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService.getSubledgerDetails(
-                disposalRequest.getRequestInfo(), disposal.getTenantId(), assetCategory.getAssetAccount());
+        final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
+                .getSubledgerDetails(requestInfo, tenantId, assetCategory.getAssetAccount());
         final List<ChartOfAccountDetailContract> subledgerDetailsForAssetSaleAccount = voucherService
-                .getSubledgerDetails(disposalRequest.getRequestInfo(), disposal.getTenantId(),
-                        disposal.getAssetSaleAccount());
+                .getSubledgerDetails(requestInfo, tenantId, disposal.getAssetSaleAccount());
 
         if (subledgerDetailsForAssetAccount != null && subledgerDetailsForAssetSaleAccount != null
                 && !subledgerDetailsForAssetAccount.isEmpty() && !subledgerDetailsForAssetSaleAccount.isEmpty())
             throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
         else {
-            final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposalRequest,
-                    assetCategory);
+            final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
+                    requestInfo);
             log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
             final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, disposal.getFund(),
-                    asset, accountCodeDetails, disposal.getTenantId());
+                    asset.getDepartment().getId(), accountCodeDetails, tenantId);
 
             log.debug("Voucher Request for Disposal :: " + voucherRequest);
 
-            return voucherService.createVoucher(voucherRequest, disposal.getTenantId(), headers);
+            return voucherService.createVoucher(voucherRequest, tenantId, headers);
         }
 
     }
 
-    private List<VouchercreateAccountCodeDetails> getAccountDetails(final DisposalRequest disposalRequest,
-            final AssetCategory assetCategory) {
-        final Disposal disposal = disposalRequest.getDisposal();
+    private List<VouchercreateAccountCodeDetails> getAccountDetails(final Disposal disposal,
+            final AssetCategory assetCategory, final RequestInfo requestInfo) {
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-        accountCodeDetails.add(voucherService.getGlCodes(disposalRequest.getRequestInfo(), disposal.getTenantId(),
+        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, disposal.getTenantId(),
                 disposal.getAssetSaleAccount(), disposal.getSaleValue(), disposal.getFunction(), false, true));
-        accountCodeDetails.add(voucherService.getGlCodes(disposalRequest.getRequestInfo(), disposal.getTenantId(),
+        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, disposal.getTenantId(),
                 assetCategory.getAssetAccount(), disposal.getSaleValue(), disposal.getFunction(), true, false));
         return accountCodeDetails;
     }

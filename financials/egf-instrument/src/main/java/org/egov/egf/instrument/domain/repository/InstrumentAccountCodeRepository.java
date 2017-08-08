@@ -170,7 +170,7 @@ public class InstrumentAccountCodeRepository {
     public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch domain) {
 
         if (financialConfigurationContractRepository.fetchDataFrom() != null
-                && !financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
             InstrumentAccountCodeSearchContract instrumentAccountCodeSearchContract = new InstrumentAccountCodeSearchContract();
             ModelMapper mapper = new ModelMapper();

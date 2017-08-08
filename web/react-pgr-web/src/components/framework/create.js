@@ -45,7 +45,7 @@ class Report extends Component {
   setDefaultValues (groups, dat) {
     for(var i=0; i<groups.length; i++) {
       for(var j=0; j<groups[i].fields.length; j++) {
-        if(typeof groups[i].fields[j].defaultValue != 'undefined') {
+        if(typeof groups[i].fields[j].defaultValue == 'string' || typeof groups[i].fields[j].defaultValue == 'number' || typeof groups[i].fields[j].defaultValue == 'boolean') {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
@@ -54,6 +54,29 @@ class Report extends Component {
           for(var k=0; k<groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
+        }
+      }
+    }
+  }
+
+  setInitialUpdateChildData(form, children) {
+    let _form = JSON.parse(JSON.stringify(form));
+    for(var i=0; i<children.length; i++) {
+      for(var j=0; j<children[i].groups.length; j++) {
+        if(children[i].groups[j].multiple) {
+          var arr = _.get(_form, children[i].groups[j].jsonPath);
+          var ind = j;
+          var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace("[", "\[").replace("]", "\]") + "\\[\\d{1}\\]", 'g');
+          for(var k=1; k < arr.length; k++) {
+            j++;
+            children[i].groups[j].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + "[" + k + "]")));
+            children[i].groups[j].groups[ind+1].index = ind+1;
+          }
+        }
+
+        if(children[i].groups[j].children && children[i].groups[j].children.length) {
+          this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
     }
@@ -73,6 +96,10 @@ class Report extends Component {
           specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
           specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
         }
+      }
+
+      if(specs[moduleName + "." + actionName].groups[ind].children && specs[moduleName + "." + actionName].groups[ind].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind].children);
       }
     }
 

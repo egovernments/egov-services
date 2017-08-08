@@ -27,7 +27,7 @@ class AgreementSearch extends React.Component {
         electionwards: [],
         modify: false,
         users: [],
-        hideCollectTaxOption: false
+        hideCollectTaxOption: true
   }
   this.handleChange = this.handleChange.bind(this);
   this.search = this.search.bind(this);
@@ -113,13 +113,14 @@ class AgreementSearch extends React.Component {
     }
 
     var res = commonApiPost("asset-services", "assetCategories", "_search", {tenantId});
-    var bool = false;
-
+    var bool = true;
+    console.log(res.getResponseHeader("userInfo"));
     if(res && res.getResponseHeader("userInfo") && res.getResponseHeader("userInfo").roles) {
       var roles = res.getResponseHeader("userInfo").roles;
+      console.log(roles);
       for(var i=0; i<roles.length; i++) {
         if(roles[i].name == "Collection Operator") {
-          bool = true;
+          bool = false;
           break;
         }
       }

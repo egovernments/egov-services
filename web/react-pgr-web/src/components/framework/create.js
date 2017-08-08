@@ -59,12 +59,32 @@ class Report extends Component {
     }
   }
 
+  setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
+    let {setMockData} = this.props;
+    let _form = JSON.parse(JSON.stringify(form));
+    for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
+      if(specs[moduleName + "." + actionName].groups[i].multiple) {
+        var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
+        var ind = i;
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
+        var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace("[", "\[").replace("]", "\]") + "\\[\\d{1}\\]", 'g');
+        for(var j=1; j < arr.length; j++) {
+          i++;
+          specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
+          specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+        }
+      }
+    }
+
+    setMockData(specs); 
+  }
+
   displayUI(results) {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
 
-    specifications =typeof(results)=="string"?JSON.parse(results):results;
+    specifications =typeof(results)=="string" ? JSON.parse(results) : results;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
@@ -85,12 +105,15 @@ class Report extends Component {
             var obj = {};
             _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
             self.props.setFormData(obj);
+            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
           } else {
             self.props.setFormData(res);
+            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
           }
       }, function(err){
 
       })
+
     } else {
       var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
@@ -596,24 +619,13 @@ class Report extends Component {
           for(var j=(mockData[moduleName + "." + actionName].groups.length-1); j>=0; j--) {
             if(groupName == mockData[moduleName + "." + actionName].groups[j].name) {
               var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[j].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
-              //console.log(regexp);
               var stringified = JSON.stringify(_groupToBeInserted);
-              //console.log(stringified);
-              //var ind = j;//mockData[moduleName + "." + actionName].groups[j].index+1;
-              //console.log(mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + ind + "]");
-              _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + j + "]"));
-              //console.log(stringified.match(regexp));
-              //console.log(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + ind + "]"));
-              _groupToBeInserted.index = j;
+              _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (j+1) + "]"));
+              _groupToBeInserted.index = j+1;
               mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
-
-              //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
               var temp = {...formData};
-              //console.log(temp);
-              //console.log(mockData[moduleName + "." + actionName].groups);
               self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
-              //console.log(temp);
               setFormData(temp);
               break;
             }
@@ -635,7 +647,8 @@ class Report extends Component {
 
   removeCard = (jsonPath, index, groupName) => {
     //Remove at that index and update upper array values
-    let {setMockData, formData, moduleName, actionName} = this.props;
+    let {setMockData, moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
     let self = this;
     let mockData = {...this.props.mockData};
 
@@ -654,8 +667,16 @@ class Report extends Component {
           var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
           //console.log(regexp);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
+          //console.log(mockData[moduleName + "." + actionName].groups[i].index);
           var stringified = JSON.stringify(mockData[moduleName + "." + actionName].groups[i]);
           mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (mockData[moduleName + "." + actionName].groups[i].index-1) + "]"));
+          var grps = [..._.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)];
+          //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
+          grps.splice((mockData[moduleName + "." + actionName].groups[i].index-1), 1);
+          //console.log(grps);
+          _.set(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath, grps);
+          //console.log(_formData);
+          setFormData(_formData);
         }
       }
       //console.log(mockData[moduleName + "." + actionName].groups);

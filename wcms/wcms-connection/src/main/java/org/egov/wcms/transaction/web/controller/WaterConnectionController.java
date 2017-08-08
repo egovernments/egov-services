@@ -129,25 +129,33 @@ public class WaterConnectionController {
         return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
 
     }
-    @PostMapping(value = "/{ackNumber}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final WaterConnectionReq waterConnectionRequest,
-            final BindingResult errors,@PathVariable("ackNumber") final String applicationCode) {
-        String [] acknumarray=applicationCode.split(Pattern.quote("{"));
-        String acknumer=acknumarray[1].split(Pattern.quote("}"))[0];
-         Connection connection=null;
-        waterConnectionRequest.getConnection().setAcknowledgementNumber(acknumer);
+            final BindingResult errors) {
+        Connection connection=null;
+        if(waterConnectionRequest.getConnection().getAcknowledgementNumber()==null){
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Error error = new Error();
+        error.setDescription("AcknowledgementNumber is Required");
+        errorResponse.setError(error);
+        if (errorResponse!=null)
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        waterConnectionRequest.getConnection().setAcknowledgementNumber(waterConnectionRequest.getConnection().getAcknowledgementNumber());
         if (errors.hasErrors()) {
             final ErrorResponse errRes = connectionValidator.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        Connection waterConn=waterConnectionService.findByApplicationNmber(acknumer);
+        Connection waterConn=waterConnectionService.findByApplicationNmber(waterConnectionRequest.getConnection().getAcknowledgementNumber());
         if(waterConn==null){
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = new Error();
         error.setDescription("Entered AcknowledgementNumber is not valid");
         errorResponse.setError(error);
+        if (errorResponse!=null)
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         else
         {

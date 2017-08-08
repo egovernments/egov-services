@@ -34,16 +34,15 @@ import org.egov.asset.service.AssetConfigurationService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.CurrentValueService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-@Component
-public class AssetValidator {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetValidator.class);
+@Component
+@Slf4j
+public class AssetValidator {
 
     @Autowired
     private AssetCategoryValidator assetCategoryValidator;
@@ -127,11 +126,11 @@ public class AssetValidator {
 
         if (existingName != null) {
             if (existingName.equalsIgnoreCase(assetRequest.getAsset().getName())) {
-                logger.info("duplicate asset with same name found");
+                log.info("duplicate asset with same name found");
                 throw new RuntimeException("Duplicate asset name asset already exists");
             }
         } else
-            logger.info("no duplicate asset with same name found");
+            log.info("no duplicate asset with same name found");
     }
 
     public void validateRevaluationCriteria(final RevaluationCriteria revaluationCriteria) {
@@ -231,7 +230,7 @@ public class AssetValidator {
     private void validateAssetForCapitalizedStatus(final Asset asset) {
         final List<AssetStatus> assetStatus = assetMasterService.getStatuses(AssetStatusObjectName.ASSETMASTER,
                 Status.CAPITALIZED, asset.getTenantId());
-        logger.debug("asset status ::" + assetStatus);
+        log.debug("asset status ::" + assetStatus);
         if (!assetStatus.isEmpty()) {
             final String status = assetStatus.get(0).getStatusValues().get(0).getCode();
             if (!status.equals(asset.getStatus()))
@@ -271,9 +270,10 @@ public class AssetValidator {
 
         final Set<Long> assetIdsForCurrentAmt = new HashSet<>();
         assetIdsForCurrentAmt.add(asset.getId());
-        final BigDecimal assetCurrentAmount = currentValueService
-                .getCurrentValues(assetIdsForCurrentAmt, revaluation.getTenantId(), revaluationRequest.getRequestInfo())
-                .getAssetCurrentValues().get(0).getCurrentAmount();
+        final BigDecimal assetCurrentAmount = currentValueService.getCurrentAmount(revaluation.getAssetId(),
+                revaluation.getTenantId(), revaluationRequest.getRequestInfo());
+
+        log.debug("Asset Current Value :: " + assetCurrentAmount);
 
         if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
                 && (revaluation.getValueAfterRevaluation().compareTo(assetCurrentAmount) == 0

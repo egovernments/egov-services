@@ -6,6 +6,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -33,6 +34,7 @@ public class ServiceType {
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
+    private List<AttributeDefinition> attributeDefinitions;
 
     public org.egov.pgr.domain.model.ServiceType toDomain(){
         return org.egov.pgr.domain.model.ServiceType.builder()
@@ -49,6 +51,17 @@ public class ServiceType {
                 .isDay(isday)
                 .tenantId(tenantId)
                 .keywords(keywords)
+                .attributes(mapToDomainAttributes())
                 .build();
+    }
+
+    public boolean isKeywordPresent(List<String> keywordsList){
+        return keywords.stream().anyMatch(keywordsList::contains);
+    }
+
+    private List<org.egov.pgr.domain.model.AttributeDefinition> mapToDomainAttributes(){
+        return attributeDefinitions.stream()
+                .map(a -> a.toDomain())
+                .collect(Collectors.toList());
     }
 }

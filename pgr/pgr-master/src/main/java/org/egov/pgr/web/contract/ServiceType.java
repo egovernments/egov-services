@@ -10,7 +10,9 @@ import org.egov.pgr.domain.model.AuditDetails;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -33,8 +35,10 @@ public class ServiceType {
     private Boolean days;
     private Boolean active;
     private boolean hasFinancialImpact;
+    private List<AttributeDefinition> attributes;
 
-    public ServiceType(org.egov.pgr.domain.model.ServiceType serviceType) {
+    public ServiceType(org.egov.pgr.domain.model.ServiceType serviceType,
+                       List<org.egov.pgr.domain.model.AttributeDefinition> attributeDefinitions) {
         this.serviceName = serviceType.getServiceName();
         this.active = serviceType.getActive();
         this.category = serviceType.getCategory();
@@ -48,8 +52,21 @@ public class ServiceType {
         this.keywords = serviceType.getKeywords();
         this.type = serviceType.getType();
         this.slaHours = serviceType.getSlaHours();
+        this.attributes = mapAttributes(attributeDefinitions);
     }
 
+    public ServiceType(ServiceType serviceType) {
+    }
 
-//    private List<Attribute> attributes;
+    private List<AttributeDefinition> mapAttributes(
+            List<org.egov.pgr.domain.model.AttributeDefinition> attributes){
+        if (null == attributes) {
+            return Collections.emptyList();
+        }
+
+        return attributes.stream()
+                .map(AttributeDefinition::new)
+                .collect(Collectors.toList());
+
+    }
 }

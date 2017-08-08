@@ -410,23 +410,17 @@ var dat = {
             "showHideFields": [{
                    "ifValue": "TEMPORARY",
                    "show": [{
-                    "name": "fromDate",
-                    "isGroup": true,
-                    "isField": false
-                  },
-                  {
-                   "name": "toDate",
-                   "isGroup": true,
-                   "isField": false
-                  }
-                ]
-              }],
-              "show": [{
-               "name": "Metered",
-               "isGroup": true,
-               "isField": false
+                                "name": "fromDate",
+                                "isGroup": false,
+                                "isField": true
+                              },
+                              {
+                               "name": "toDate",
+                               "isGroup": false,
+                               "isField": true
+                             }],
+                  "hide":[]
               }]
-
           },
           {
             "name": "SourceType",

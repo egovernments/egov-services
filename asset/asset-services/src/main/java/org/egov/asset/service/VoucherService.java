@@ -73,9 +73,12 @@ public class VoucherService {
         acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
         requestHeaders.setAccept(acceptableMediaTypes);
 
-        log.debug("JSESSION ID :: " + cookies.get(1));
-        log.debug("SESSION ID :: " + cookies.get(2));
-        requestHeaders.set(HttpHeaders.COOKIE, cookies.get(1));
+        if (!cookies.isEmpty()) {
+            final String[] cookieArr = cookies.get(0).split(";");
+            log.debug("JSESSION ID :: " + cookieArr[1]);
+            log.debug("SESSION ID :: " + cookieArr[2]);
+            requestHeaders.set(HttpHeaders.COOKIE, cookieArr[1]);
+        }
 
         log.debug("Request Headers for Voucher Request :: " + requestHeaders);
 

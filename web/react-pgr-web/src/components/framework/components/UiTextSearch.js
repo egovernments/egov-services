@@ -12,6 +12,7 @@ export default class UiTextSearch extends Component {
 				return (
 					<div style={{position: 'relative', display: 'inline'}}>
 						<TextField 
+							onBlur={(ev) => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true} 

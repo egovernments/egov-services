@@ -58,22 +58,24 @@ export default class UiDocumentList extends Component {
 			Api.commonApiPost(context, query, {}, "", useTimestamp).then(function(res) {
 				var documents = [];
 				var arr = _.get(res, item.pathToArray);
-				for(var k=0; k<arr.length; k++) {
-					var temp = {
-						"fileStoreId": "",
-						"displayName": arr[k][item.displayNameJsonPath],
-						"name": ""
-					};
-					for(var i=0; i<item.autoFillFields.length; i++) {
-						temp[item.autoFillFields[i].name] = arr[k][item.autoFillFields[i].jsonPath];
+				if(arr && arr.length) {
+					for(var k=0; k<arr.length; k++) {
+						var temp = {
+							"fileStoreId": "",
+							"displayName": arr[k][item.displayNameJsonPath],
+							"name": ""
+						};
+						for(var i=0; i<item.autoFillFields.length; i++) {
+							temp[item.autoFillFields[i].name] = arr[k][item.autoFillFields[i].jsonPath];
+						}
+
+						documents.push(temp);
 					}
 
-					documents.push(temp);
+					self.setState({documents}, function() {
+						self.props.handler({target: {value: documents}}, item.jsonPath, false, '');
+					});
 				}
-
-				self.setState({documents}, function() {
-					self.props.handler({target: {value: documents}}, item.jsonPath, false, '');
-				});
 
 			}, function(err) {
 				console.log(err);

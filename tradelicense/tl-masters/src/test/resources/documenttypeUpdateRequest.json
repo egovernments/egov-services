@@ -14,7 +14,7 @@
          {  
           "id": 4,
             "tenantId": "default",
-            "name": "New",
+            "name": "document",
             "mandatory": true,
             "enabled": true,
             "applicationType": "New",

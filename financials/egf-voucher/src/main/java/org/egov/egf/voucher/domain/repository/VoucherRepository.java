@@ -189,21 +189,29 @@ public class VoucherRepository {
 
 	@Transactional
 	public Voucher save(Voucher voucher) {
+
 		Voucher savedVoucher = voucherJdbcRepository.create(new VoucherEntity().toEntity(voucher)).toDomain();
+
 		VouchermisEntity misEntity = new VouchermisEntity().toEntity(voucher.getVouchermis());
 		misEntity.setVoucherId(savedVoucher.getId());
+
 		Vouchermis savedMis = vouchermisJdbcRepository.create(misEntity).toDomain();
 		savedVoucher.setVouchermis(savedMis);
+
 		Set<Ledger> savedLedgers = new LinkedHashSet<>();
 		Ledger savedLedger = null;
 		LedgerEntity ledgerEntity = null;
 		LedgerDetail savedDetail = null;
 		LedgerDetailEntity ledgerDetailEntity = null;
+
 		for (Ledger ledger : voucher.getLedgers()) {
+
 			ledgerEntity = new LedgerEntity().toEntity(ledger);
 			ledgerEntity.setVoucherId(savedVoucher.getId());
 			savedLedger = ledgerJdbcRepository.create(ledgerEntity).toDomain();
+
 			if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+
 				Set<LedgerDetail> savedLedgerDetails = new LinkedHashSet<>();
 				for (LedgerDetail detail : ledger.getLedgerDetails()) {
 					ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
@@ -212,12 +220,17 @@ public class VoucherRepository {
 					savedLedgerDetails.add(savedDetail);
 
 				}
+
 				savedLedger.setLedgerDetails(savedLedgerDetails);
 			}
+
 			savedLedgers.add(savedLedger);
+
 		}
 		savedVoucher.setLedgers(savedLedgers);
+
 		return savedVoucher;
+
 	}
 
 	@Transactional
@@ -227,6 +240,7 @@ public class VoucherRepository {
 	}
 
 	public void addToQue(VoucherRequest request) {
+
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
@@ -235,9 +249,11 @@ public class VoucherRepository {
 			message.put("voucher_update", request);
 		}
 		voucherQueueRepository.addToQue(message);
+
 	}
 
 	public void addToSearchQueue(VoucherRequest request) {
+
 		Map<String, Object> message = new HashMap<>();
 
 		message.put("voucher_persisted", request);

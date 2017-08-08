@@ -2,6 +2,7 @@ package org.egov.tradelicense.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -12,7 +13,7 @@ import org.egov.tradelicense.domain.services.PenaltyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -31,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @Service
 @Configuration
-@Profile("production")
+@EnableKafka
 public class PenaltyRateConsumer {
 
 	@Autowired
@@ -42,9 +43,19 @@ public class PenaltyRateConsumer {
 
 	@Autowired
 	PenaltyRateService penaltyRateService;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	private CountDownLatch latch = new CountDownLatch(1);
+
+	public void resetCountDown() {
+		this.latch = new CountDownLatch(1);
+	}
+
+	public CountDownLatch getLatch() {
+		return latch;
+	}
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -93,12 +104,20 @@ public class PenaltyRateConsumer {
 			"#{propertiesManager.getUpdatePenaltyRateValidated()}" })
 	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
 
+		PenaltyRateRequest objectReceived = objectMapper.convertValue(consumerRecord.value(), PenaltyRateRequest.class);
+
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreatePenaltyRateValidated())) {
-			penaltyRateService.createPenaltyRate(objectMapper.convertValue(consumerRecord.value(), PenaltyRateRequest.class));
+			penaltyRateService.createPenaltyRate(objectReceived);
 		}
 
 		else {
-			penaltyRateService.updatePenaltyRate(objectMapper.convertValue(consumerRecord.value(), PenaltyRateRequest.class));
+			penaltyRateService.updatePenaltyRate(objectReceived);
 		}
+		latch.countDown();
+	}
+
+	@Bean
+	public PenaltyRateConsumer getReceiver() {
+		return this;
 	}
 }

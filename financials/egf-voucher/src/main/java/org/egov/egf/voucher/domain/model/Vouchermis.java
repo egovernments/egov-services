@@ -48,6 +48,7 @@ import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,6 +57,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Vouchermis  extends Auditable implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

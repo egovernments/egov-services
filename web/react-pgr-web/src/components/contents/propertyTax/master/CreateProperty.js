@@ -378,7 +378,6 @@ createPropertyTax = () => {
 				"creationReason": createProperty.reasonForCreation || null,
 				"address": {
 					"tenantId": "default",
-					 "latitude": null,
 					"longitude": null,
 					"addressNumber": createProperty.doorNo || null,
 					"addressLine1": createProperty.locality || null,
@@ -549,12 +548,7 @@ createPropertyTax = () => {
 				setLoadingStatus('hide');
 				toggleSnackbarAndSetText(true, err.message);
 			  })
-		  }
-		  
-	 
-			  
-		
-		
+		  }	
 	}	  
 		  
 	
@@ -631,12 +625,15 @@ createActivate = () => {
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
 				
-				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> :
-					<div>
-						<Amenities />                  
-						<ConstructionTypes/>				  
-						<FloorDetails/>
-					</div>}
+				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ?                  
+						<div>
+							<ConstructionTypes/>
+							<VacantLand/> 
+						</div>:
+						<div>                 
+							<ConstructionTypes/>				  
+							<FloorDetails/>
+						</div>}
 				  <DocumentUpload />
 				  <Workflow />
 				  

@@ -31,7 +31,7 @@ public class DocumentType {
 	private String tenantId = null;
 
 	@NotNull
-	@Size(max = 256)
+	@Size(min = 4, max = 256)
 	private String name = null;
 
 	private Boolean mandatory = true;

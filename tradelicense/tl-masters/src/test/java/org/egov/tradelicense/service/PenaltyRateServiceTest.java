@@ -16,15 +16,23 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.UserInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.consumers.PenaltyRateConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
 import org.egov.tradelicense.persistence.repository.PenaltyRateRepository;
+import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.listener.MessageListenerContainer;
+import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.kafka.test.utils.ContainerTestUtils;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -32,6 +40,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@DirtiesContext
+@SuppressWarnings("rawtypes")
 public class PenaltyRateServiceTest {
 
 	@Autowired
@@ -42,6 +52,16 @@ public class PenaltyRateServiceTest {
 
 	@Autowired
 	PenaltyRateRepository penaltyRateRepository;
+	
+	@Autowired
+	PenaltyRateConsumer penaltyRateConsumer;
+	
+	@Autowired
+	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+
+	@ClassRule
+	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, "penaltyrate-create-validated",
+			"penaltyrate-update-validated");
 
 	public static Long penaltyRateId = 1l;
 	public String tenantId = "default";
@@ -52,6 +72,15 @@ public class PenaltyRateServiceTest {
 	public Long updatedFromRange = 50l;
 	public Long updatedToRange = 100l;
 
+	@Before
+	public void setUp() throws Exception {
+		// wait until the partitions are assigned
+		for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry
+				.getListenerContainers()) {
+			ContainerTestUtils.waitForAssignment(messageListenerContainer, 0);
+		}
+	}
+	
 	/**
 	 * Description : test method to create PenaltyRate
 	 */
@@ -89,7 +118,8 @@ public class PenaltyRateServiceTest {
 				assertTrue(false);
 			}
 
-			penaltyRateId = penaltyRateRepository.craeatePenaltyRate(tenantId, penaltyRateResponse.getPenaltyRates().get(0));
+			penaltyRateId = penaltyRateRepository.craeatePenaltyRate(tenantId,
+					penaltyRateResponse.getPenaltyRates().get(0));
 
 			assertTrue(true);
 

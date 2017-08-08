@@ -2,7 +2,6 @@ package org.egov.tradelicense.domain.services;
 
 import java.util.List;
 
-import org.egov.models.AuditDetails;
 import org.egov.models.LicenseStatus;
 import org.egov.models.LicenseStatusRequest;
 import org.egov.models.LicenseStatusResponse;
@@ -10,11 +9,11 @@ import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
+import org.egov.tradelicense.domain.services.validator.LicenseStatusValidator;
 import org.egov.tradelicense.persistence.repository.LicenseStatusRepository;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.producers.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Service
-public class LicenseStatusServiceImpl implements LicenseStatusService{
-
+public class LicenseStatusServiceImpl implements LicenseStatusService {
 
 	@Autowired
 	UtilityHelper utilityHelper;
@@ -39,76 +37,70 @@ public class LicenseStatusServiceImpl implements LicenseStatusService{
 	private LicenseStatusRepository licenseStatusRepository;
 
 	@Autowired
+	LicenseStatusValidator licenseStatusValidator;
+
+	@Autowired
+	Producer producer;
+
+	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
 	@Override
-	@Transactional
 	public LicenseStatusResponse createLicenseStatusMaster(LicenseStatusRequest licenseStatusRequest) {
 
 		RequestInfo requestInfo = licenseStatusRequest.getRequestInfo();
-		AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
-		for (LicenseStatus licenseStatus : licenseStatusRequest.getLicenseStatuses()) {
-
-			Boolean isExists = utilityHelper.checkWhetherLicenseStatusExists(licenseStatus.
-					getTenantId(), licenseStatus.getName(), licenseStatus.getCode(), null, ConstantUtility.LICENSE_STATUS_TABLE_NAME);
-
-
-			if (isExists){
-				throw new DuplicateIdException(propertiesManager.getLicenseStatusCustomMsg(), requestInfo);
-			}
-
-			try {
-				licenseStatus.setAuditDetails(auditDetails);
-				Long id = licenseStatusRepository.createLicenseStatus(licenseStatus);
-				licenseStatus.setId(id);
-			}
-			catch(Exception e){
-				throw new InvalidInputException(requestInfo);
-			}
-		}
+		licenseStatusValidator.validateLicenseStatusRequest(licenseStatusRequest, true);
+		producer.send(propertiesManager.getCreateLicenseStatusValidated(), licenseStatusRequest);
 		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		licenseStatusResponse.setLicenseStatuses( licenseStatusRequest.getLicenseStatuses() );
+		licenseStatusResponse.setLicenseStatuses(licenseStatusRequest.getLicenseStatuses());
 		licenseStatusResponse.setResponseInfo(responseInfo);
-
 
 		return licenseStatusResponse;
 	}
 
 	@Override
 	@Transactional
-	public LicenseStatusResponse updateLicenseStatusMaster(LicenseStatusRequest licenseStatusRequest) {
+	public void createLicenseStatus(LicenseStatusRequest licenseStatusRequest) {
 
 		RequestInfo requestInfo = licenseStatusRequest.getRequestInfo();
 		for (LicenseStatus licenseStatus : licenseStatusRequest.getLicenseStatuses()) {
 
-			Boolean isExists = utilityHelper.checkWhetherLicenseStatusExists(licenseStatus.getTenantId(), licenseStatus.getName(),
-					licenseStatus.getCode() , licenseStatus.getId(), ConstantUtility.LICENSE_STATUS_TABLE_NAME);
-
-			if (isExists)
-				throw new DuplicateIdException(propertiesManager.getLicenseStatusCustomMsg(), requestInfo);
-
-			
 			try {
-
-				AuditDetails auditDetails = licenseStatus.getAuditDetails();
-				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
-				licenseStatus.setAuditDetails(auditDetails);
-				licenseStatus = licenseStatusRepository.updateLicenseStatus(licenseStatus);
-
-			} catch (Exception e) {
-
-				throw new InvalidInputException(requestInfo);
+				licenseStatusRepository.createLicenseStatus(licenseStatus);
+			} catch (Exception ex) {
+				throw new InvalidInputException(ex.getMessage(), requestInfo);
 			}
 		}
 
-		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
+	}
 
+	@Override
+	public LicenseStatusResponse updateLicenseStatusMaster(LicenseStatusRequest licenseStatusRequest) {
+
+		RequestInfo requestInfo = licenseStatusRequest.getRequestInfo();
+		licenseStatusValidator.validateLicenseStatusRequest(licenseStatusRequest, false);
+		producer.send(propertiesManager.getUpdateLicenseStatusValidated(), licenseStatusRequest);
+		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
 		licenseStatusResponse.setLicenseStatuses(licenseStatusRequest.getLicenseStatuses());
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(licenseStatusRequest.getRequestInfo(),
-				true);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		licenseStatusResponse.setResponseInfo(responseInfo);
 		return licenseStatusResponse;
+	}
+
+	@Override
+	@Transactional
+	public void updateLicenseStatus(LicenseStatusRequest licenseStatusRequest) {
+		RequestInfo requestInfo = licenseStatusRequest.getRequestInfo();
+		for (LicenseStatus licenseStatus : licenseStatusRequest.getLicenseStatuses()) {
+
+			try {
+				licenseStatusRepository.updateLicenseStatus(licenseStatus);
+			} catch (Exception ex) {
+				throw new InvalidInputException(ex.getMessage(), requestInfo);
+			}
+		}
+
 	}
 
 	@Override
@@ -118,13 +110,14 @@ public class LicenseStatusServiceImpl implements LicenseStatusService{
 		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
 
 		try {
-			List<LicenseStatus> licenseStatuslst = licenseStatusRepository.searchLicenseStatus(tenantId, ids, name, code, active, pageSize, offSet);
+			List<LicenseStatus> licenseStatuslst = licenseStatusRepository.searchLicenseStatus(tenantId, ids, name,
+					code, active, pageSize, offSet);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			licenseStatusResponse.setLicenseStatuses(licenseStatuslst);
 			licenseStatusResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 		}
 
 		return licenseStatusResponse;

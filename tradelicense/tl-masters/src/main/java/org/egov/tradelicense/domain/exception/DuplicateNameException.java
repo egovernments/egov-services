@@ -19,12 +19,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DuplicateNameException extends RuntimeException {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	private String customMsg ;
+
+	private String customMsg;
 
 	private RequestInfo requestInfo;
 }
-
-

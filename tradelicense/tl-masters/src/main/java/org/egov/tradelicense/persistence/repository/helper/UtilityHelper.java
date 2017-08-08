@@ -24,15 +24,15 @@ public class UtilityHelper {
 	 * @param code
 	 * @return True / false if record exists / record does n't exists
 	 */
-	public Boolean checkWhetherDuplicateRecordExits(String tenantId, String code, String name, String tableName, Long id) {
+	public Boolean checkWhetherDuplicateRecordExits(String tenantId, String code, String name, String tableName,
+			Long id) {
 
 		Boolean isExists = Boolean.TRUE;
-		String query ;
+		String query;
 		int count = 0;
-		
-		if( code != null){
-			query= UtilityBuilder.getUniqueTenantCodeQuery(tableName, code, tenantId, id);
-			
+
+		if (code != null) {
+			query = UtilityBuilder.getUniqueTenantCodeQuery(tableName, code, tenantId, id);
 
 			try {
 				count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
@@ -44,8 +44,8 @@ public class UtilityHelper {
 				isExists = Boolean.FALSE;
 			}
 		}
-		if(  name != null){
-			
+		if (name != null) {
+
 			query = UtilityBuilder.getUniqueTenantNameQuery(tableName, name, tenantId, id);
 			isExists = Boolean.TRUE;
 			try {
@@ -61,6 +61,7 @@ public class UtilityHelper {
 
 		return isExists;
 	}
+
 	/**
 	 * This will generate the audit details for the creation of master services
 	 * 
@@ -104,6 +105,43 @@ public class UtilityHelper {
 	}
 
 	/**
+	 * This will check whether any record exists with the given tenantId , name
+	 * & applicationName in database or not
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @param tableName
+	 * @param id
+	 * @param applicationName
+	 * @return True / false if record exists / record does n't exists
+	 */
+	public Boolean checkDocumentTypeDuplicate(String tenantId, String name, String tableName, Long id,
+			String applicationName) {
+
+		Boolean isExists = Boolean.TRUE;
+
+		String query = UtilityBuilder.getUniqueTenantCodeQuerywithName(tableName, name, tenantId, applicationName, id);
+
+		int count = 0;
+
+		try {
+
+			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+
+		}
+
+		if (count == 0)
+			isExists = Boolean.FALSE;
+
+		return isExists;
+
+	}
+
+	/**
 	 * This will check whether any duplicate fee Matrix record exists or not
 	 * 
 	 * @param tenantId
@@ -135,7 +173,7 @@ public class UtilityHelper {
 
 		return isExists;
 	}
-	
+
 	/**
 	 * This will check whether any record exists with the given tenantId & name
 	 * in database or not
@@ -144,7 +182,8 @@ public class UtilityHelper {
 	 * @param name
 	 * @return True / false if record exists / record does n't exists
 	 */
-	public Boolean checkWhetherLicenseStatusExists(String tenantId, String name, String code, Long id, String tableName) {
+	public Boolean checkWhetherLicenseStatusExists(String tenantId, String name, String code, Long id,
+			String tableName) {
 
 		Boolean isExists = Boolean.TRUE;
 
@@ -167,5 +206,35 @@ public class UtilityHelper {
 
 		return isExists;
 
+	}
+
+	/**
+	 * This will check whether any record exists with the given tenantId ,code &
+	 * name exists in database or not
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @return True / false if record exists / record does n't exists
+	 */
+	public Boolean checkWhetherDuplicateUomRecordExits(String tenantId, String code, String name, String tableName,
+			Long id) {
+
+		Boolean isExists = Boolean.TRUE;
+		String query;
+		int count = 0;
+
+		query = UtilityBuilder.getUniqueTenantNameCodeQuery(tableName, code, name, tenantId, id);
+
+		try {
+			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		if (count == 0) {
+			isExists = Boolean.FALSE;
+		}
+
+		return isExists;
 	}
 }

@@ -227,6 +227,11 @@
 										<exclude>org.egov.egf.budget.web.contract.*</exclude>
 										<exclude>org.egov.egf.budget.persistence.entity.*</exclude>
 										<exclude>org.egov.egf.budget.domain.model.*</exclude>
+										<exclude>org.egov.egf.budget.domain.repository.BudgetESRepository</exclude>
+										<exclude>org.egov.egf.budget.domain.repository.BudgetDetailESRepository</exclude>
+										<exclude>org.egov.egf.budget.domain.repository.BudgetReAppropriationESRepository</exclude>
+										<exclude>org.egov.egf.budget.domain.repository.ElasticSearchQueryFactory</exclude>
+										<exclude>org.egov.egf.budget.domain.repository.ElasticSearchUtils</exclude>
 									</excludes>
 									<limits>
 										<limit>

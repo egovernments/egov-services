@@ -52,4 +52,5 @@ import lombok.Setter;
 public class BudgetSearchContract extends BudgetContract {
     private Integer pageSize;
     private Integer offset;
+    private String sortBy;
 }

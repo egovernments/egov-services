@@ -2,13 +2,14 @@ package org.egov.pgr.persistence.repository;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.pgr.domain.model.ServiceTypeConfigurationSearchCriteria;
 import org.egov.pgr.persistence.dto.ServiceTypeConfiguration;
 import org.egov.pgr.persistence.querybuilder.ServiceTypeConfigurationQueryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,8 +18,6 @@ public class ServiceTypeConfigurationRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     private ServiceTypeConfigurationQueryBuilder serviceTypeConfigurationQueryBuilder;
 
@@ -40,11 +39,21 @@ public class ServiceTypeConfigurationRepository {
                 getNamedQuery(serviceTypeConfiguration));
     }
     
+    public List<org.egov.pgr.domain.model.ServiceTypeConfiguration> search(ServiceTypeConfigurationSearchCriteria serviceTypeSearchCriteria){
+
+        List<ServiceTypeConfiguration> serviceTypeList =  namedParameterJdbcTemplate.query(serviceTypeConfigurationQueryBuilder.buildSearchQuery(serviceTypeSearchCriteria),
+                getSearchNamedQuery(serviceTypeSearchCriteria), new BeanPropertyRowMapper(ServiceTypeConfiguration.class));
+
+        return serviceTypeList.stream()
+                .map(ServiceTypeConfiguration::toDomain)
+                .collect(Collectors.toList());
+    }
     
-    private Map<String, Object> getNamedQueryforSearch(ServiceTypeConfigurationSearchCriteria serviceTypeConfigurationSearchCriteria){
+    
+    private Map<String, Object> getSearchNamedQuery(ServiceTypeConfigurationSearchCriteria serviceTypeSearchCriteria){
         Map<String, Object> parametersMap = new HashMap();
-        parametersMap.put("tenantid", serviceTypeConfigurationSearchCriteria.getTenantId());
-        parametersMap.put("servicecode", serviceTypeConfigurationSearchCriteria.getServiceCode());
+        parametersMap.put("serviceCode", serviceTypeSearchCriteria.getServiceCode());
+        parametersMap.put("tenantid", serviceTypeSearchCriteria.getTenantId());
 
         return parametersMap;
     }

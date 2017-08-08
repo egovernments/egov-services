@@ -112,19 +112,20 @@ public class TaxCalculatorConsumer {
 		log.info("CalculationResponse is:" + calculationResponse);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
+		propertyRequest.getProperties().get(0).getPropertyDetail().setTaxCalculations(taxCalculations);
 		if (!property.getChannel().toString().equalsIgnoreCase(environment.getProperty("egov.property.channel.type"))) {
 
 			if (consumerRecord.topic()
 					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.tax.calculaion"))) {
 
 				producer.send(environment.getProperty("egov.propertytax.create.tax.calculated"),
-						consumerRecord.value());
+						propertyRequest);
 
 			} else if (consumerRecord.topic()
 					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.tax.calculaion"))) {
 
 				producer.send(environment.getProperty("egov.propertytax.update.tax.calculated"),
-						consumerRecord.value());
+						propertyRequest);
 
 			}
 
@@ -135,7 +136,7 @@ public class TaxCalculatorConsumer {
 			String upicNo = upicGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
 			propertyRequest.getProperties().get(0).setUpicNumber(upicNo);
 			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
-					consumerRecord.value());
+					propertyRequest);
 		}
 
 	}

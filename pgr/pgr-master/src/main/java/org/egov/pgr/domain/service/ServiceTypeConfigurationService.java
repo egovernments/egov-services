@@ -2,7 +2,10 @@ package org.egov.pgr.domain.service;
 
 import java.util.List;
 
+import org.egov.pgr.domain.model.ServiceType;
 import org.egov.pgr.domain.model.ServiceTypeConfiguration;
+import org.egov.pgr.domain.model.ServiceTypeConfigurationSearchCriteria;
+import org.egov.pgr.domain.model.ServiceTypeSearchCriteria;
 import org.egov.pgr.domain.service.validator.ServiceTypeConfigurationValidator;
 import org.egov.pgr.persistence.repository.ServiceTypeConfigurationMessageQueueRepository;
 import org.egov.pgr.persistence.repository.ServiceTypeConfigurationRepository;
@@ -49,9 +52,21 @@ public class ServiceTypeConfigurationService {
 
 	}
 	
+	public List<ServiceTypeConfiguration> search(ServiceTypeConfigurationSearchCriteria serviceTypeSearchCriteria){
+        validateSearch(serviceTypeSearchCriteria);
+        return serviceTypeConfigurationRepository.search(serviceTypeSearchCriteria);
+    }
+	
+	
 	private void validate(ServiceTypeConfiguration serviceTypeConfiguration) {
 		validators.stream().filter(validator -> validator.canValidate(serviceTypeConfiguration))
 				.forEach(v -> v.validate(serviceTypeConfiguration));
 	}
+	
+	 private void validateSearch(ServiceTypeConfigurationSearchCriteria serviceTypeSearchCriteria){
+		 validators.stream()
+	                .filter(validator -> validator.canValidater(serviceTypeSearchCriteria))
+	                .forEach(v -> v.validater(serviceTypeSearchCriteria));
+	    }
 
 }

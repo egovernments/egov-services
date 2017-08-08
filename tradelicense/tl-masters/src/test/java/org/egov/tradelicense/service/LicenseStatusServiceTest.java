@@ -15,14 +15,23 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.UserInfo;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.consumers.LicenseStatusConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.LicenseStatusService;
+import org.egov.tradelicense.persistence.repository.LicenseStatusRepository;
+import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.listener.MessageListenerContainer;
+import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.kafka.test.utils.ContainerTestUtils;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -30,6 +39,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@DirtiesContext
+@SuppressWarnings("rawtypes")
 public class LicenseStatusServiceTest {
 
 	@Autowired
@@ -37,6 +48,19 @@ public class LicenseStatusServiceTest {
 
 	@Autowired
 	LicenseStatusService licenseStatusService;
+
+	@Autowired
+	LicenseStatusRepository licenseStatusRepository;
+	
+	@Autowired
+	LicenseStatusConsumer licenseStatusConsumer;
+	
+	@Autowired
+	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+
+	@ClassRule
+	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, "licensestatus-create-validated",
+			"licensestatus-update-validated");
 
 	public static Long LicenseId = 1l;
 	public String tenantId = "default";
@@ -46,6 +70,16 @@ public class LicenseStatusServiceTest {
 	public String CodeToUpdate = "nitin";
 	public String active = "True";
 
+	
+	@Before
+	public void setUp() throws Exception {
+		// wait until the partitions are assigned
+		for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry
+				.getListenerContainers()) {
+			ContainerTestUtils.waitForAssignment(messageListenerContainer, 0);
+		}
+	}
+	
 	/**
 	 * Description : Test method for createLicenceStatus() method
 	 */
@@ -81,8 +115,8 @@ public class LicenseStatusServiceTest {
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
 			}
-			this.LicenseId = licenseStatusResponse.getLicenseStatuses().get(0).getId();
 
+			licenseStatusRepository.createLicenseStatus(licenseStatusResponse.getLicenseStatuses().get(0));
 			assertTrue(true);
 
 		} catch (Exception e) {
@@ -154,9 +188,6 @@ public class LicenseStatusServiceTest {
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
 			}
-			this.LicenseId = licenseStatusResponse.getLicenseStatuses().get(0).getId();
-
-			assertTrue(true);
 
 		} catch (Exception e) {
 			if (e instanceof DuplicateIdException) {
@@ -203,9 +234,11 @@ public class LicenseStatusServiceTest {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService
 					.updateLicenseStatusMaster(licenseStatusRequest);
 
-			if (licenseStatusResponse.getLicenseStatuses().size() == 0)
+			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
+			}
 
+			licenseStatusRepository.updateLicenseStatus(licenseStatusResponse.getLicenseStatuses().get(0));
 			assertTrue(true);
 
 		} catch (Exception e) {
@@ -235,8 +268,9 @@ public class LicenseStatusServiceTest {
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
 					tenantId, new Integer[] { LicenseId.intValue() }, NameToupdate, code, active, pageSize, offset);
-			if (licenseStatusResponse.getLicenseStatuses().size() == 0)
+			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 
@@ -279,9 +313,11 @@ public class LicenseStatusServiceTest {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService
 					.updateLicenseStatusMaster(LicenseStatusRequest);
 
-			if (licenseStatusResponse.getLicenseStatuses().size() == 0)
+			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
+			}
 
+			licenseStatusRepository.updateLicenseStatus(licenseStatusResponse.getLicenseStatuses().get(0));
 			assertTrue(true);
 
 		} catch (Exception e) {
@@ -323,10 +359,9 @@ public class LicenseStatusServiceTest {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService
 					.updateLicenseStatusMaster(licenseStatusRequest);
 
-			if (licenseStatusResponse.getLicenseStatuses().size() == 0)
+			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
-
-			assertTrue(true);
+			}
 
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {

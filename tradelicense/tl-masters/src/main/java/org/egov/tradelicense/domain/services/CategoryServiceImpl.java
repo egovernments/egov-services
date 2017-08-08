@@ -85,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 			} catch (Exception e) {
 
-				throw new InvalidInputException(requestInfo);
+				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 			}
 		}
 	}
@@ -127,7 +127,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 			} catch (Exception e) {
 
-				throw new InvalidInputException(requestInfo);
+				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 			}
 		}
 	}
@@ -164,7 +164,7 @@ public class CategoryServiceImpl implements CategoryService {
 			categoryResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 		}
 
 		return categoryResponse;

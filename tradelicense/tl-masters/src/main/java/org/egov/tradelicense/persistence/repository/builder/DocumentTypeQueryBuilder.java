@@ -2,7 +2,7 @@ package org.egov.tradelicense.persistence.repository.builder;
 
 import java.util.List;
 
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.util.ConstantUtility;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for DocumentType API's

@@ -44,19 +44,19 @@ public class CategoryConsumer {
 	@Autowired
 	CategoryService categoryService;
 
-	 @Autowired
-	 private ObjectMapper objectMapper;
-	 
-	 private CountDownLatch latch = new CountDownLatch(1);
+	@Autowired
+	private ObjectMapper objectMapper;
 
-	 public void resetCountDown(){
-		 this.latch = new CountDownLatch(1);
-	 }
-	 
-	  public CountDownLatch getLatch() {
-	    return latch;
-	  }
-	  
+	private CountDownLatch latch = new CountDownLatch(1);
+
+	public void resetCountDown() {
+		this.latch = new CountDownLatch(1);
+	}
+
+	public CountDownLatch getLatch() {
+		return latch;
+	}
+
 	/**
 	 * This method for getting consumer configuration bean
 	 */
@@ -103,10 +103,9 @@ public class CategoryConsumer {
 	@KafkaListener(topics = { "#{propertiesManager.getCreateCategoryValidated()}",
 			"#{propertiesManager.getUpdateCategoryValidated()}" })
 	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
-	    
 
 		CategoryRequest objectReceived = objectMapper.convertValue(consumerRecord.value(), CategoryRequest.class);
-		
+
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateCategoryValidated())) {
 			categoryService.createCategory(objectReceived);
 		}
@@ -116,8 +115,9 @@ public class CategoryConsumer {
 		}
 		latch.countDown();
 	}
+
 	@Bean
-	public CategoryConsumer getReceiver(){
+	public CategoryConsumer getReceiver() {
 		return this;
 	}
 }

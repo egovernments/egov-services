@@ -46,8 +46,23 @@ public interface PenaltyRateService {
 	public PenaltyRateResponse getPenaltyRateMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String applicationType, Integer pageSize, Integer offSet);
 
-	public void createPenaltyRate(PenaltyRateRequest value);
+	/**
+	 * Description : service method for creating penaltyRate master
+	 * 
+	 * @param tenantId
+	 * @param PenaltyRateRequest
+	 * @return PenaltyRateResponse
+	 * @throws Exception
+	 */
+	public void createPenaltyRate(PenaltyRateRequest penaltyRateRequest);
 
-	public void updatePenaltyRate(PenaltyRateRequest convertValue);
+	/**
+	 * Description : service method for updating penaltyRate master
+	 * 
+	 * @param PenaltyRateRequest
+	 * @return PenaltyRateResponse
+	 * @throws Exception
+	 */
+	public void updatePenaltyRate(PenaltyRateRequest penaltyRateRequest);
 
 }

@@ -47,7 +47,7 @@ public class PenaltyRateControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -153,9 +153,9 @@ public class PenaltyRateControllerTest {
 					any(Integer[].class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(penaltyRateResponse);
 
-			mockMvc.perform(post("/penaltyrate/_search").param("tenantId", "default")
-					.param("applicationType", "New").contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("penaltyRateSearchRequest.json"))).andExpect(status().isOk())
+			mockMvc.perform(post("/penaltyrate/_search").param("tenantId", "default").param("applicationType", "New")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateSearchRequest.json")))
+					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("penaltyRateSearchResponse.json")));
 

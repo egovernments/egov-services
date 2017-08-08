@@ -4,6 +4,7 @@ import org.egov.models.RequestInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -13,14 +14,16 @@ import lombok.Setter;
  *
  */
 
-@AllArgsConstructor
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class InvalidInputException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	private String customMsg;
+
 	private RequestInfo requestInfo;
 
 }

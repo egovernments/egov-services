@@ -90,7 +90,7 @@ public class PenaltyRateRepository {
 				ps.setString(2, penaltyRate.getApplicationType().toString());
 				ps.setLong(3, penaltyRate.getFromRange());
 				ps.setLong(4, penaltyRate.getToRange());
-				ps.setDouble(5, penaltyRate.getToRange());
+				ps.setDouble(5, penaltyRate.getRate());
 				ps.setString(6, auditDetails.getLastModifiedBy());
 				ps.setLong(7, auditDetails.getLastModifiedTime());
 				ps.setLong(8, penaltyRate.getId());
@@ -114,8 +114,8 @@ public class PenaltyRateRepository {
 	 * @return List<PenaltyRate>
 	 * @throws Exception
 	 */
-	public List<PenaltyRate> searchPenaltyRate(String tenantId, Integer[] ids, String applicationType,
-			Integer pageSize, Integer offSet) {
+	public List<PenaltyRate> searchPenaltyRate(String tenantId, Integer[] ids, String applicationType, Integer pageSize,
+			Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
 		if (pageSize == null) {
@@ -126,12 +126,11 @@ public class PenaltyRateRepository {
 		}
 		String penaltyRateSearchQuery = PenaltyRateQueryBuilder.buildSearchQuery(tenantId, ids, applicationType,
 				pageSize, offSet, preparedStatementValues);
-		List<PenaltyRate> penaltyRates = getPenaltyRates(penaltyRateSearchQuery.toString(),
-				preparedStatementValues);
+		List<PenaltyRate> penaltyRates = getPenaltyRates(penaltyRateSearchQuery.toString(), preparedStatementValues);
 
 		return penaltyRates;
 	}
-	
+
 	/**
 	 * This method will execute the given query & will build the PenaltyRate
 	 * object
@@ -148,7 +147,7 @@ public class PenaltyRateRepository {
 			PenaltyRate penaltyRate = new PenaltyRate();
 			penaltyRate.setId(getLong(row.get("id")));
 			penaltyRate.setTenantId(getString(row.get("tenantid")));
-			penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationTypeId"))));
+			penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
 			penaltyRate.setFromRange(getLong(row.get("fromRange")));
 			penaltyRate.setToRange(getLong(row.get("toRange")));
 			penaltyRate.setRate(getDouble(row.get("rate")));

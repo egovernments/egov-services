@@ -13,8 +13,8 @@ public class PropertiesManager {
 
 	@Value("${spring.kafka.bootstrap.servers}")
 	private String kafkaServerConfig;
-	
-	@Value ("${spring.embedded.kafka.brokers}")
+
+	@Value("${spring.embedded.kafka.brokers}")
 	private String kafkaEmbededBootServer;
 
 	@Value("${auto.offset.reset.config}")
@@ -55,9 +55,27 @@ public class PropertiesManager {
 
 	@Value("${duplicate.category.code}")
 	private String categoryCustomMsg;
-	
+
 	@Value("${duplicate.category.name}")
 	private String categoryNameDuplicate;
+
+	@Value("${invalid.category.id.msg}")
+	private String invalidCategoryIdMsg;
+
+	@Value("${invalid.uom.id.msg}")
+	private String invalidUomIdMsg;
+
+	@Value("${invalid.parent.id.msg}")
+	private String invalidParentIdMsg;
+
+	@Value("${invalid.sequence.range.msg}")
+	private String InvalidSequenceRangeMsg;
+
+	@Value("${invalid.applicationtype.msg}")
+	private String InvalidApplicationTypeMsg;
+
+	@Value("${invalid.financialyear.msg}")
+	private String InvalidFinancialYearMsg;
 
 	@Value("${duplicate.subcategory.code}")
 	private String subCategoryCustomMsg;

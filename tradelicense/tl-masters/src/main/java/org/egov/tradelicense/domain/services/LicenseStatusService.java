@@ -28,7 +28,6 @@ public interface LicenseStatusService {
 	 */
 	public LicenseStatusResponse updateLicenseStatusMaster(LicenseStatusRequest licenseStatusRequest);
 
-
 	/**
 	 * Description : service method for searching LicenseStatus master
 	 * 
@@ -43,7 +42,23 @@ public interface LicenseStatusService {
 	 * @return LicenseStatusResponse
 	 * @throws Exception
 	 */
-	public LicenseStatusResponse getLicenseStatusMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code,
-			String active, Integer pageSize, Integer offSet);
+	public LicenseStatusResponse getLicenseStatusMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			String name, String code, String active, Integer pageSize, Integer offSet);
+
+	/**
+	 * Description : service method for creating LicenseStatus master
+	 * 
+	 * @param LicenseStatusRequest
+	 * @return LicenseStatusResponse
+	 */
+	public void createLicenseStatus(LicenseStatusRequest licenseStatusRequest);
+
+	/**
+	 * Description : service method for updating LicenseStatus master
+	 * 
+	 * @param LicenseStatusRequest
+	 * @return LicenseStatusResponse
+	 */
+	public void updateLicenseStatus(LicenseStatusRequest licenseStatusRequest);
 
 }

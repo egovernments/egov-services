@@ -57,6 +57,7 @@ import org.egov.egf.budget.persistence.entity.BudgetReAppropriationEntity;
 import org.egov.egf.budget.persistence.queue.repository.BudgetReAppropriationQueueRepository;
 import org.egov.egf.budget.persistence.repository.BudgetReAppropriationJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,13 +84,22 @@ public class BudgetReAppropriationRepositoryTest {
 
     private final RequestInfo requestInfo = new RequestInfo();
 
+    @Mock
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
+    @Mock
+    private BudgetReAppropriationESRepository budgetReAppropriationESRepository;
+
+
     @Before
     public void setup() {
         budgetReAppropriationRepositoryWithKafka = new BudgetReAppropriationRepository(
-                budgetReAppropriationJdbcRepository, budgetReAppropriationQueueRepository, "yes");
+                budgetReAppropriationJdbcRepository, budgetReAppropriationQueueRepository, "yes",
+                financialConfigurationContractRepository,budgetReAppropriationESRepository);
 
         budgetReAppropriationRepositoryWithOutKafka = new BudgetReAppropriationRepository(
-                budgetReAppropriationJdbcRepository, budgetReAppropriationQueueRepository, "no");
+                budgetReAppropriationJdbcRepository, budgetReAppropriationQueueRepository, "no",
+                financialConfigurationContractRepository,budgetReAppropriationESRepository);
     }
 
     @Test

@@ -2,14 +2,7 @@ package org.egov.tradelicense.persistence.repository.builder;
 
 import java.util.List;
 
-/**
- * This Class contains INSERT, UPDATE and SELECT queries for LicenseStatus API's
- * 
- * @author Shubham pratap Singh
- * 
- */
-
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.util.ConstantUtility;
 
 public class LicenseStatusQueryBuilder {
 

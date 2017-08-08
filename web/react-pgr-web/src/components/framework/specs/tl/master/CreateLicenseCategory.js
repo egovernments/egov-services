@@ -26,7 +26,7 @@ var dat = {
 							"label": "tl.create.groups.categorytype.code",
 							"pattern": "",
 							"type": "text",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -65,7 +65,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
               "url": "/tl-masters/category/_search?|$..name|$..name",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -109,7 +109,7 @@ var dat = {
 						"label": "tl.view.groups.categorytype.code",
 						"pattern": "",
 						"type": "text",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -148,7 +148,7 @@ var dat = {
 						"label": "tl.update.groups.categorytype.code",
 						"pattern": "",
 						"type": "text",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""

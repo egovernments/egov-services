@@ -229,7 +229,7 @@ class Dashboard extends Component {
   }
 
   checkIfDate = (val, i) => {
-    if(this.workflowResult && this.workflowResult.reportHeader && this.workflowResult.reportHeader.length && this.workflowResult.reportHeader[i] && this.workflowResult.reportHeader[i].type == "epoch") {
+    if(this.state.workflowResult && this.state.workflowResult.reportHeader && this.state.workflowResult.reportHeader.length && this.state.workflowResult.reportHeader[i] && this.state.workflowResult.reportHeader[i].type == "epoch") {
       var _date = new Date(Number(val));
       return ('0' + _date.getDate()).slice(-2) + '/'
              + ('0' + (_date.getMonth()+1)).slice(-2) + '/'

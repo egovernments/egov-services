@@ -694,7 +694,6 @@ public class IndexerListener {
         indexObj.put("active", fundContract.getActive());
         indexObj.put("createdBy", fundContract.getCreatedBy());
         indexObj.put("identifier", fundContract.getIdentifier());
-        indexObj.put("isParent", fundContract.getIsParent());
         indexObj.put("lastModifiedBy", fundContract.getLastModifiedBy());
         indexObj.put("level", fundContract.getLevel());
         indexObj.put("parent", fundContract.getParent());
@@ -747,7 +746,6 @@ public class IndexerListener {
         indexObj.put("level", functionContract.getLevel());
         indexObj.put("createdBy", functionContract.getCreatedBy());
         indexObj.put("parentId", functionContract.getParentId());
-        indexObj.put("isParent", functionContract.getIsParent());
         indexObj.put("lastModifiedBy", functionContract.getLastModifiedBy());
         indexObj.put("tenantId", functionContract.getTenantId());
 

@@ -1,15 +1,20 @@
 package org.egov;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.egov.domain.model.ReportDefinitions;
+import org.egov.swagger.model.ReportDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.EnvironmentAware;
@@ -19,10 +24,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -47,7 +50,11 @@ public class ReportApp implements EnvironmentAware {
     @Autowired
     private static ReportDefinitions reportDefinitions;
     
-    public ReportApp(ResourceLoader resourceLoader) {
+    public void setReportDefinitions(ReportDefinitions reportDefinitions) {
+		ReportApp.reportDefinitions = reportDefinitions;
+	}
+
+	public ReportApp(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
     }
     
@@ -58,24 +65,65 @@ public class ReportApp implements EnvironmentAware {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
 	}
+	
 	@PostConstruct
 	@Bean("reportDefinitions")
 	public static ReportDefinitions loadYaml() {
-		
+    
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+	List<ReportDefinition> localrd = new ArrayList<ReportDefinition>();
+	ReportDefinitions rd = new ReportDefinitions();
+	ReportDefinitions localReportDefinitions = new ReportDefinitions();
+	BufferedReader br = null;
+	FileReader fr = null;
 	try {
     //Local Testing
-	Resource resource = resourceLoader.getResource("file:/ws/egov-services/pgr/pgr-master/src/main/resources/application.yml");
+	Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
+	
 	File file = resource.getFile();
-	reportDefinitions = mapper.readValue(file, ReportDefinitions.class);
+	
+	try {
+
+		fr = new FileReader("/ws/reportFileLocations.txt");
+		br = new BufferedReader(fr);
+
+		String yamlLocation;
+
+		while ((yamlLocation = br.readLine()) != null) {
+			System.out.println(yamlLocation);
+			if(yamlLocation.startsWith("https")) {
+			URL oracle = new URL(yamlLocation);
+			rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+			localrd.addAll(rd.getReportDefinitions());
+			} else if(yamlLocation.startsWith("file")){
+				resource = resourceLoader.getResource(yamlLocation);
+				file = resource.getFile();
+				rd = mapper.readValue(file, ReportDefinitions.class);
+				localrd.addAll(rd.getReportDefinitions());
+				
+			} else {
+				URL oracle = new URL(yamlLocation);
+				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+				localrd.addAll(rd.getReportDefinitions());
+			}
+		}
+
+	} catch (IOException e) {
+		e.printStackTrace();
+
+	} 
+		localReportDefinitions.setReportDefinitions(localrd);
+		reportDefinitions = localReportDefinitions;
+	
+	
      
      //Dev Server
 	 /*URL oracle = new URL(ReportApp.env.getProperty("report.yaml.path"));
 	 reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);*/
 	 
-	LOGGER.info("Report Defintion PGR: "+reportDefinitions.toString());
+	/*LOGGER.info("Report Defintion PGR: "+reportDefinitions.toString());*/
 	return reportDefinitions;
-	} catch (Exception e) {
+	}catch (Exception e) {
 	// TODO Auto-generated catch block
 	e.printStackTrace();
 	}

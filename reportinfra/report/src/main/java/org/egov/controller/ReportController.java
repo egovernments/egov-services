@@ -35,7 +35,7 @@ public class ReportController {
 	@Autowired
     public static ResourceLoader resourceLoader;
 
-	@PostMapping("/report/metadata/_get")
+	@PostMapping("/metadata/_get")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
@@ -47,7 +47,7 @@ public class ReportController {
 		}
 	}
 	
-	@PostMapping("/report/_get")
+	@PostMapping("/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {

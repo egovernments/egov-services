@@ -9,11 +9,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ModuleSearchRowMapper implements RowMapper<Module> {
-	
-		
+
 	@Override
 	public Module mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		
+
 		Module module = new Module();
 		module.setId(rs.getLong("id"));
 		module.setCode(rs.getString("code"));
@@ -24,5 +23,4 @@ public class ModuleSearchRowMapper implements RowMapper<Module> {
 		return module;
 	}
 
-	
 }

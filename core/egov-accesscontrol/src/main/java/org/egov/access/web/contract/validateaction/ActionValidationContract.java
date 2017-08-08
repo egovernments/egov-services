@@ -9,6 +9,6 @@ import lombok.NonNull;
 @Builder
 @AllArgsConstructor
 public class ActionValidationContract {
-    @NonNull
-    private String allowed;
+	@NonNull
+	private String allowed;
 }

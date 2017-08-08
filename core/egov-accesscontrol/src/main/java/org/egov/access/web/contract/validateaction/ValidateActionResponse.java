@@ -9,6 +9,6 @@ import org.egov.common.contract.response.ResponseInfo;
 @Builder
 @AllArgsConstructor
 public class ValidateActionResponse {
-    private ResponseInfo responseInfo;
-    private ActionValidationContract actionValidation;
+	private ResponseInfo responseInfo;
+	private ActionValidationContract actionValidation;
 }

@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/categorytype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "CategoryTypes[0].code",
 		"objectName": "CategoryType",
 		"groups": [
 			{

@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/sourcetype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "SourceTypes[0].code",
 		"objectName": "SourceType",
 		"groups": [
 			{

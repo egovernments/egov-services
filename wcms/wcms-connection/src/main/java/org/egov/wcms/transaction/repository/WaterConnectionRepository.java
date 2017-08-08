@@ -249,6 +249,7 @@ public class WaterConnectionRepository {
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), connection.getStateId(),
                 connection.getAcknowledgementNumber() };
+       
         }
         else{
             if(connectiondemand.getDemandid() !=null)

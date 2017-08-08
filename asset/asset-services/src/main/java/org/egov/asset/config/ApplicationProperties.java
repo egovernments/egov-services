@@ -60,6 +60,18 @@ public class ApplicationProperties {
     private final String searchPagenoMax = "search.pageno.max";
     private final String searchPageSizeMax = "search.pagesize.max";
 
+    public String getSearchPageSizeDefault() {
+        return environment.getProperty(searchPageSizeDefault);
+    }
+
+    public String getSearchPagenoMax() {
+        return environment.getProperty(searchPagenoMax);
+    }
+
+    public String getSearchPageSizeMax() {
+        return environment.getProperty(searchPageSizeMax);
+    }
+
     @Value("${egov.assetcategory.async}")
     private Boolean assetCategoryAsync;
 

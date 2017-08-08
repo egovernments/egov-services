@@ -685,12 +685,19 @@ paths:
     post:
       description: Updates a mis data for the demand. As of now this API updates the consumerCode in demand.
       parameters:
-        - name: demand
-          in: body
-          description: Request header for the demand.
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: demandId
+          in: query
+          description: Id(s) of the Demand(s) to be updated
           required: true
-          schema:
-            $ref: '#/definitions/DemandRequest'
+          type: array
+          items: 
+            type: string
+        - name: consumerCode
+          in: query
+          description: Unique identification to be updated, provided by business details.
+          required: true
+          type: string
       tags:
         - Demand
       responses:

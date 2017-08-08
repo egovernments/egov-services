@@ -85,7 +85,6 @@ let menuConvention={
   "Trade License.Trade License Masters.License Category.CreateLicenseCategory":"/create/tl/CreateLicenseCategory",
   "Trade License.Trade License Masters.License Category.ViewLicenseCategory":"/search/tl/CreateLicenseCategory/view",
   "Trade License.Trade License Masters.License Category.ModifyLicenseCategory": "/search/tl/CreateLicenseCategory/update",
-
   "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy"
 
 }

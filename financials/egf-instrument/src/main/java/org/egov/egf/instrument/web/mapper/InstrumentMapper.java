@@ -1,8 +1,5 @@
 package org.egov.egf.instrument.web.mapper;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.model.InstrumentVoucher;
@@ -11,6 +8,9 @@ import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.contract.InstrumentVoucherContract;
 import org.egov.egf.instrument.web.contract.TransactionTypeContract;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InstrumentMapper {
 
@@ -37,7 +37,7 @@ public class InstrumentMapper {
 
 		if (contract.getInstrumentVouchers() != null) {
 
-			Set<InstrumentVoucher> instrumentVouchers = new HashSet<>();
+			List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 
 			if (contract.getInstrumentVouchers() != null)
 				for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
@@ -84,7 +84,7 @@ public class InstrumentMapper {
 
 		if (instrument.getInstrumentVouchers() != null) {
 
-			Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<>();
+			List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 			if (instrument.getInstrumentVouchers() != null)
 				for (InstrumentVoucher iv : instrument.getInstrumentVouchers()) {
@@ -132,7 +132,7 @@ public class InstrumentMapper {
 
 		if (contract.getInstrumentVouchers() != null) {
 
-			Set<InstrumentVoucher> instrumentVouchers = new HashSet<>();
+			List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 			if (contract.getInstrumentVouchers() != null)
 				for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
 					instrumentVouchers.add(InstrumentVoucher.builder().instrument(toDomain(ivc.getInstrument()))
@@ -181,7 +181,7 @@ public class InstrumentMapper {
 
 		if (instrumentSearch.getInstrumentVouchers() != null) {
 
-			Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<>();
+			List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 			if (instrumentSearch.getInstrumentVouchers() != null)
 				for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers()) {

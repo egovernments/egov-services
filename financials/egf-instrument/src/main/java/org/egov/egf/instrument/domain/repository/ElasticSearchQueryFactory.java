@@ -1,11 +1,5 @@
 package org.egov.egf.instrument.domain.repository;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeSearchContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
@@ -13,6 +7,12 @@ import org.egov.egf.instrument.web.contract.SurrenderReasonSearchContract;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 
 @Service
 public class ElasticSearchQueryFactory {
@@ -32,18 +32,19 @@ public class ElasticSearchQueryFactory {
         elasticSearchUtils.add(instrumentSearchContract.getBank(), "bank", boolQueryBuilder);
         elasticSearchUtils.add(instrumentSearchContract.getBranchName(), "branchName", boolQueryBuilder);
         elasticSearchUtils.add(instrumentSearchContract.getBankAccount(), "bankAccount", boolQueryBuilder);
-        
+
         elasticSearchUtils.add(instrumentSearchContract.getFinancialStatus(), "financialStatus", boolQueryBuilder);
         elasticSearchUtils.add(instrumentSearchContract.getTransactionType(), "transactionType", boolQueryBuilder);
         elasticSearchUtils.add(instrumentSearchContract.getPayee(), "payee", boolQueryBuilder);
         elasticSearchUtils.add(instrumentSearchContract.getDrawer(), "drawer", boolQueryBuilder);
         elasticSearchUtils.add(instrumentSearchContract.getSurrenderReason(), "surrenderReason", boolQueryBuilder);
         elasticSearchUtils.add(instrumentSearchContract.getSerialNo(), "serialNo", boolQueryBuilder);
-        elasticSearchUtils.add(instrumentSearchContract.getInstrumentVouchers(), "instrumentVouchers", boolQueryBuilder);
-        
+        if (!instrumentSearchContract.getInstrumentVouchers().isEmpty())
+            elasticSearchUtils.add(instrumentSearchContract.getInstrumentVouchers(), "instrumentVouchers", boolQueryBuilder);
+
         return boolQueryBuilder;
     }
-    
+
     public BoolQueryBuilder searchInstrumentType(InstrumentTypeSearchContract instrumentTypeSearchContract) {
         BoolQueryBuilder boolQueryBuilder = boolQuery();
         if (instrumentTypeSearchContract.getIds() != null && !instrumentTypeSearchContract.getIds().isEmpty())
@@ -74,25 +75,24 @@ public class ElasticSearchQueryFactory {
         return boolQueryBuilder;
     }
 
-    
+
     public List<String> prepareOrderBys(String sortBy) {
         List<String> orderByList = new ArrayList<String>();
         List<String> sortByList = new ArrayList<String>();
         if (sortBy.contains(",")) {
-                sortByList = Arrays.asList(sortBy.split(","));
+            sortByList = Arrays.asList(sortBy.split(","));
         } else {
-                sortByList = Arrays.asList(sortBy);
+            sortByList = Arrays.asList(sortBy);
         }
         for (String s : sortByList) {
-                if (s.contains(" ") && (s.toLowerCase().trim().endsWith("asc") || s.toLowerCase().trim().endsWith("desc"))) {
-                    orderByList.add(s.trim());
-                }
-                else {
-                    
-                    orderByList.add(s.trim() + " asc");
-                }
+            if (s.contains(" ") && (s.toLowerCase().trim().endsWith("asc") || s.toLowerCase().trim().endsWith("desc"))) {
+                orderByList.add(s.trim());
+            } else {
+
+                orderByList.add(s.trim() + " asc");
+            }
         }
-        
+
         return orderByList;
     }
 

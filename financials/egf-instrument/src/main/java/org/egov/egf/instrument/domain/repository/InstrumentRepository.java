@@ -164,7 +164,7 @@ public class InstrumentRepository {
     public Pagination<Instrument> search(InstrumentSearch domain) {
 
         if (financialConfigurationContractRepository.fetchDataFrom() != null
-                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+                && !financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
             InstrumentSearchContract instrumentSearchContract = new InstrumentSearchContract();
             ModelMapper mapper = new ModelMapper();

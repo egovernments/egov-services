@@ -40,9 +40,7 @@
 package org.egov.egf.instrument.domain.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -168,6 +166,6 @@ public class Instrument extends Auditable {
 	 * instrument is attached.
 	 */
 	// @DrillDownTable
-	private Set<InstrumentVoucher> instrumentVouchers = new HashSet<InstrumentVoucher>(0);
+	private List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 
 }

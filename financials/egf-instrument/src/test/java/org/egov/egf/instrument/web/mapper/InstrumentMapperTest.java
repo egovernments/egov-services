@@ -1,24 +1,8 @@
 package org.egov.egf.instrument.web.mapper;
 
-import static org.junit.Assert.assertEquals;
-
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.egov.common.contract.request.User;
-import org.egov.egf.instrument.domain.model.Instrument;
-import org.egov.egf.instrument.domain.model.InstrumentSearch;
-import org.egov.egf.instrument.domain.model.InstrumentType;
-import org.egov.egf.instrument.domain.model.InstrumentVoucher;
-import org.egov.egf.instrument.domain.model.SurrenderReason;
-import org.egov.egf.instrument.domain.model.TransactionType;
-import org.egov.egf.instrument.web.contract.InstrumentContract;
-import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
-import org.egov.egf.instrument.web.contract.InstrumentTypeContract;
-import org.egov.egf.instrument.web.contract.InstrumentVoucherContract;
-import org.egov.egf.instrument.web.contract.SurrenderReasonContract;
-import org.egov.egf.instrument.web.contract.TransactionTypeContract;
+import org.egov.egf.instrument.domain.model.*;
+import org.egov.egf.instrument.web.contract.*;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -27,6 +11,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InstrumentMapperTest {
@@ -175,7 +165,7 @@ public class InstrumentMapperTest {
 		instrument.setInstrumentType(InstrumentType.builder().id("id").build());
 		instrument.setSurrenderReason(SurrenderReason.builder().id("id").build());
 
-		Set<InstrumentVoucher> instrumentVouchers = new HashSet<>();
+		List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 
 		instrumentVouchers.add(InstrumentVoucher.builder().instrument(Instrument.builder().id("id").build())
 				.voucherHeaderId("voucherHeaderId").build());
@@ -207,7 +197,7 @@ public class InstrumentMapperTest {
 		contract.setInstrumentType(InstrumentTypeContract.builder().id("id").build());
 		contract.setSurrenderReason(SurrenderReasonContract.builder().id("id").build());
 
-		Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<>();
+		List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 		instrumentVouchers.add(InstrumentVoucherContract.builder()
 				.instrument(InstrumentContract.builder().id("id").build()).voucherHeaderId("voucherHeaderId").build());
@@ -239,7 +229,7 @@ public class InstrumentMapperTest {
 		instrumentSearch.setInstrumentType(InstrumentType.builder().id("id").build());
 		instrumentSearch.setSurrenderReason(SurrenderReason.builder().id("id").build());
 
-		Set<InstrumentVoucher> instrumentVouchers = new HashSet<>();
+		List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 
 		instrumentVouchers.add(InstrumentVoucher.builder().instrument(Instrument.builder().id("id").build())
 				.voucherHeaderId("voucherHeaderId").build());
@@ -273,7 +263,7 @@ public class InstrumentMapperTest {
 		contract.setInstrumentType(InstrumentTypeContract.builder().id("id").build());
 		contract.setSurrenderReason(SurrenderReasonContract.builder().id("id").build());
 
-		Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<>();
+		List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 		instrumentVouchers.add(InstrumentVoucherContract.builder()
 				.instrument(InstrumentContract.builder().id("id").build()).voucherHeaderId("voucherHeaderId").build());

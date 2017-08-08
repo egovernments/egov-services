@@ -31,7 +31,7 @@ public class VoucherService {
 
 	@Autowired
 	private SmartValidator validator;
-	
+
 	@Autowired
 	private FinancialStatusContractRepository financialStatusContractRepository;
 
@@ -49,10 +49,6 @@ public class VoucherService {
 
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
-			}
-			for (Voucher b : vouchers) {
-				b.setId(voucherRepository.getNextSequence());
-				// b.add();
 			}
 
 		} catch (CustomBindException e) {
@@ -76,9 +72,6 @@ public class VoucherService {
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}
-			for (Voucher b : vouchers) {
-				// b.update();
-			}
 
 		} catch (CustomBindException e) {
 
@@ -92,7 +85,9 @@ public class VoucherService {
 	private BindingResult validate(List<Voucher> vouchers, String method, BindingResult errors) {
 
 		try {
+
 			switch (method) {
+
 			case Constants.ACTION_VIEW:
 				// validator.validate(voucherContractRequest.getVoucher(),
 				// errors);
@@ -112,6 +107,7 @@ public class VoucherService {
 			default:
 
 			}
+
 		} catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
@@ -120,30 +116,25 @@ public class VoucherService {
 	}
 
 	public List<Voucher> fetchRelated(List<Voucher> vouchers) {
-		for (Voucher voucher : vouchers) {
-			// fetch related items
-			/*if (voucher.getFund() != null) {
-				FundContract fund = fundContractRepository.findById(voucher.getFund());
-				if (fund == null) {
-					throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
+		if (null != vouchers)
+			for (Voucher voucher : vouchers) {
+
+				// fetch related items
+				if (voucher.getFund() != null) {
+					FundContract fund = fundContractRepository.findById(voucher.getFund());
+					if (fund == null) {
+						throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
+					}
+					voucher.setFund(fund);
 				}
-				voucher.setFund(fund);
+				if (voucher.getStatus() != null) {
+					FinancialStatusContract status = financialStatusContractRepository.findById(voucher.getStatus());
+					if (status == null) {
+						throw new InvalidDataException("status", "status.invalid", " Invalid status");
+					}
+					voucher.setStatus(status);
+				}
 			}
-			if (voucher.getStatus() != null) {
-				FinancialStatusContract status = financialStatusContractRepository.findById(voucher.getStatus());
-				if (status == null) {
-					throw new InvalidDataException("status", "status.invalid", " Invalid status");
-				}
-				voucher.setStatus(status);
-			}*/
-			/*
-			 * if (voucher.getVouchermis() != null) { Vouchermis vouchermis =
-			 * vouchermisRepository.findById(voucher.getVouchermis()); if
-			 * (vouchermis == null) { throw new
-			 * InvalidDataException("vouchermis", "vouchermis.invalid",
-			 * " Invalid vouchermis"); } voucher.setVouchermis(vouchermis); }
-			 */
-		}
 
 		return vouchers;
 	}

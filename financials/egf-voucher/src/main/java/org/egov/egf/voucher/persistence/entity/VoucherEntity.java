@@ -7,6 +7,7 @@ import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.voucher.domain.model.Voucher;
+import org.egov.egf.voucher.domain.model.Vouchermis;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,7 +51,7 @@ public class VoucherEntity extends AuditableEntity {
 		voucher.setOriginalVoucherNumber(this.originalVoucherNumber);
 		voucher.setRefVoucherNumber(this.refVoucherNumber);
 		voucher.setModuleName(this.moduleName);
-		//voucher.setVouchermis(Vouchermis.builder().id(vouchermisId).build());
+		voucher.setVouchermis(Vouchermis.builder().id(vouchermisId).build());
 		return voucher;
 	}
 

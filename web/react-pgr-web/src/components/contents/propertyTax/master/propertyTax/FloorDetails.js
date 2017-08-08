@@ -196,6 +196,17 @@ class FloorDetails extends Component {
 			return false;
 		}
 		
+		if(allRooms) {
+			for(var i = 0; i<allRooms.length;i++){
+			if(allRooms[i].isStructured == 'YES'){
+				allRooms[i].isStructured = true;
+			} else {
+				allRooms[i].isStructured = false;
+			}
+		}
+		
+		}
+		
 		var rooms = allRooms.filter(function(item, index, array){
 			if(!item.hasOwnProperty('flatNo')){
 				return item;
@@ -891,11 +902,7 @@ calcArea = (e, type) => {
 														<br/>
 														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid}  primary={true} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
-															 if(floorDetails.floor.isStructured == 'YES'){
-																	floorDetails.floor.isStructured = true;
-																} else {
-																	floorDetails.floor.isStructured = false;
-																}
+															
 															 this.props.resetObject("floor", false);
 															 setTimeout(()=>{
 																	_this.createFloorObject();

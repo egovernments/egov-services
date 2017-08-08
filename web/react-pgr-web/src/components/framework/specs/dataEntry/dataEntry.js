@@ -8,6 +8,7 @@ var rooms = {
    "label": "Room",
    "name": "Room",
    "multiple": true,
+   "hide":true,
    "children": [],
    "fields": [
 		{
@@ -21,8 +22,8 @@ var rooms = {
 			"requiredErrMsg": "",
 			"url":"",
 			"patternErrMsg": "",
-			"defaultValue":[]
-		},
+			"defaultValue":[{key:"1", value:"Basement-3"},{key:2, value:"Basement-2"},{key:3, value:"Basement-1"},{key:4, value:"Ground Floor"},{key:5, value:"1st Floor"},{key:6, value:"2nd Floor"},{key:7, value:"3rd Floor"},{key:8, value:"4th Floor"},{key:9, value:"5th Floor"},{key:10, value:"6th Floor"},{key:11, value:"7th Floor"},{key:12, value:"8th Floor"},{key:13, value:"9th Floor"},{key:14, value:"10th Floor"},{key:15, value:"11th Floor"},{key:16, value:"12th Floor"},{key:17, value:"13th Floor"},{key:18, value:"14th Floor"},{key:19, value:"15th Floor"},{key:20, value:"16th Floor"},{key:21, value:"17th Floor"},{key:22, value:"18th Floor"},{key:23, value:"19th Floor"},{key:24, value:"20th Floor"},{key:25, value:"20th Floor"},{key:26, value:"21th Floor"},{key:27, value:"22th Floor"},{key:28, value:"23th Floor"},{key:29, value:"24th Floor"},{key:30, value:"25th Floor"},{key:31, value:"26th Floor"},{key:32, value:"27th Floor"},{key:33, value:"28th Floor"},{key:34, value:"29th Floor"},{key:35, value:"30th Floor"}]
+		},	
 		{
 			"name": "UnitType",
 			"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].unitType",
@@ -34,7 +35,7 @@ var rooms = {
 			"requiredErrMsg": "",
 			"url":"",
 			"patternErrMsg": "",
-			"defaultValue":[]
+			"defaultValue":[{key:"FLAT", value:"Flat"},{key:"ROOM", value:"Room"}]
 		},
 		{
 			"name": "UnitNumber",
@@ -56,7 +57,7 @@ var rooms = {
 			"isRequired": true,
 			"isDisabled": false,
 			"requiredErrMsg": "",
-			"url":"",
+			"url":"pt-property/property/structureclasses/_search?|$..id|$..name",
 			"patternErrMsg": "",
 			"defaultValue":[]
 		},
@@ -69,7 +70,7 @@ var rooms = {
 			"isRequired": true,
 			"isDisabled": false,
 			"requiredErrMsg": "",
-			"url":"",
+			"url":"pt-property/property/usages/_search?|$..id|$..name",
 			"patternErrMsg": "",
 			"defaultValue":[]
 		},
@@ -82,7 +83,7 @@ var rooms = {
 			"isRequired": false,
 			"isDisabled": false,
 			"requiredErrMsg": "",
-			"url":"",
+			"url":"pt-property/property/usages/_search?|$..id|$..name",
 			"patternErrMsg": "",
 			"defaultValue":[]
 		},
@@ -106,7 +107,7 @@ var rooms = {
 			"isRequired": true,
 			"isDisabled": false,
 			"requiredErrMsg": "",
-			"url":"",
+			"url":"pt-property/property/occuapancies/_search?|$..code|$..name",
 			"patternErrMsg": "",
 			"defaultValue":[]
 		},
@@ -176,7 +177,7 @@ var rooms = {
 			"isDisabled": false,
 			"requiredErrMsg": "",
 			"patternErrMsg": "",
-			"defaultValue":[]
+			"defaultValue":[{key:true, value:"Yes"},{key:false, value:"No"}]
 		},
 		{
 			"name": "Length",
@@ -279,7 +280,7 @@ var dat = {
 							"label": "pt.create.groups.propertyAddress.fields.upicNumber",
 							"pattern": "",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
@@ -289,6 +290,7 @@ var dat = {
 			{
 				"label": "Owner Details",
 				"name": "OwnerDetails",
+				"jsonPath": "properties[0].owners",
 				"multiple":true,
 				"fields": [
 						{
@@ -337,7 +339,7 @@ var dat = {
 							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue": [{key:"", value:null},{key:'MALE', value:'Male'}, {key:'FEMALE', value:'Female'}, {key:'OTHERS', value:'Others'}],
+							"defaultValue": [{key:'MALE', value:'Male'}, {key:'FEMALE', value:'Female'}, {key:'OTHERS', value:'Others'}],
 						},
 						{
 							"name": "Email",
@@ -361,7 +363,7 @@ var dat = {
 							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue": [{key:-1, value:'None'}, {key:'FATHER', value:'Father'}, {key:'HUSBAND', value:'Husband'}, {key:'MOTHER', value:'Mother'}, {key:'OTHERS', value:'Others'}],
+							"defaultValue": [{key:'FATHER', value:'Father'}, {key:'HUSBAND', value:'Husband'}, {key:'MOTHER', value:'Mother'}, {key:'OTHERS', value:'Others'}],
 						},
 						{
 							"name": "Guardian",
@@ -385,7 +387,7 @@ var dat = {
 							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue": [{key:-1, value:'None'},{key:'Ex_Service_man', value:'Ex-Service man'}, {key:'Freedom_Fighter', value:'Freedom Fighter'}, {key:'Freedom_fighers_wife', value:"Freedom figher's wife"}],
+							"defaultValue": [{key:'Ex_Service_man', value:'Ex-Service man'}, {key:'Freedom_Fighter', value:'Freedom Fighter'}, {key:'Freedom_fighers_wife', value:"Freedom figher's wife"}],
 						},
 						{
 							"name": "PercentageOfOwnerShip",
@@ -643,7 +645,7 @@ var dat = {
 							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue":[{key:"", value:""}, {key:"NEWPROPERTY", value:"New Property"}, {key:"SUBDIVISION", value:"Bifurcation"}]
+							"defaultValue":[{key:"NEWPROPERTY", value:"New Property"}, {key:"SUBDIVISION", value:"Bifurcation"}]
 						},
 						{
 							"name": "PropertyType",
@@ -686,7 +688,7 @@ var dat = {
 							"label": "pt.create.groups.propertyAddress.fields.propertySubType",
 							"pattern": "",
 							"type": "singleValueList",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
@@ -954,7 +956,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"url":"",
-							"defaultValue":[{key:"",value:null}, {key:"1",value:"Options"}],
+							"defaultValue":[{key:"1",value:"Options"}],
 							"patternErrMsg": "",
 						},
 						{
@@ -1035,6 +1037,7 @@ var dat = {
 			{
 				"label": "Floor Details",
 				"name": "FloorDetails",
+				"jsonPath": "properties[0].propertyDetail.floors",
 				"multiple":true,
 				"children":[rooms],
 				"fields": [
@@ -1049,7 +1052,7 @@ var dat = {
 							"requiredErrMsg": "",
 							"url":"",
 							"patternErrMsg": "",
-							"defaultValue":[{key:"", value:null},{key:"1", value:"Basement-3"},{key:2, value:"Basement-2"},{key:3, value:"Basement-1"},{key:4, value:"Ground Floor"},{key:5, value:"1st Floor"},{key:6, value:"2nd Floor"},{key:7, value:"3rd Floor"},{key:8, value:"4th Floor"},{key:9, value:"5th Floor"},{key:10, value:"6th Floor"},{key:11, value:"7th Floor"},{key:12, value:"8th Floor"},{key:13, value:"9th Floor"},{key:14, value:"10th Floor"},,{key:15, value:"11th Floor"},{key:16, value:"12th Floor"},{key:17, value:"13th Floor"},{key:18, value:"14th Floor"},{key:19, value:"15th Floor"},{key:20, value:"16th Floor"},{key:21, value:"17th Floor"},{key:22, value:"18th Floor"},{key:23, value:"19th Floor"},{key:24, value:"20th Floor"},{key:25, value:"20th Floor"},{key:26, value:"21th Floor"},{key:27, value:"22th Floor"},{key:28, value:"23th Floor"},{key:29, value:"24th Floor"},{key:30, value:"25th Floor"},{key:31, value:"26th Floor"},{key:32, value:"27th Floor"},{key:33, value:"28th Floor"},{key:34, value:"29th Floor"},{key:35, value:"30th Floor"}]
+							"defaultValue":[{key:"1", value:"Basement-3"},{key:2, value:"Basement-2"},{key:3, value:"Basement-1"},{key:4, value:"Ground Floor"},{key:5, value:"1st Floor"},{key:6, value:"2nd Floor"},{key:7, value:"3rd Floor"},{key:8, value:"4th Floor"},{key:9, value:"5th Floor"},{key:10, value:"6th Floor"},{key:11, value:"7th Floor"},{key:12, value:"8th Floor"},{key:13, value:"9th Floor"},{key:14, value:"10th Floor"},{key:15, value:"11th Floor"},{key:16, value:"12th Floor"},{key:17, value:"13th Floor"},{key:18, value:"14th Floor"},{key:19, value:"15th Floor"},{key:20, value:"16th Floor"},{key:21, value:"17th Floor"},{key:22, value:"18th Floor"},{key:23, value:"19th Floor"},{key:24, value:"20th Floor"},{key:25, value:"20th Floor"},{key:26, value:"21th Floor"},{key:27, value:"22th Floor"},{key:28, value:"23th Floor"},{key:29, value:"24th Floor"},{key:30, value:"25th Floor"},{key:31, value:"26th Floor"},{key:32, value:"27th Floor"},{key:33, value:"28th Floor"},{key:34, value:"29th Floor"},{key:35, value:"30th Floor"}]
 						},
 						{
 							"name": "UnitType",
@@ -1062,7 +1065,33 @@ var dat = {
 							"requiredErrMsg": "",
 							"url":"",
 							"patternErrMsg": "",
-							"defaultValue":[{key:"", value:null},{key:"FLAT", value:"Flat"},{key:"ROOM", value:"Room"}]
+							"defaultValue":[{key:"FLAT", value:"Flat"},{key:"ROOM", value:"Room"}]
+						},
+						{
+							"name": "Add Room",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].unitType",
+							"label": "pt.create.groups.propertyAddress.fields.unitType",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"url":"",
+							"patternErrMsg": "",
+							"defaultValue":[{key:"YES", value:"Yes"},{key:"NO", value:"No"}],
+							"showHideFields": [{
+								   "ifValue": "YES",
+								   "hide": [{
+									"name": "FloorDetails",
+									"isGroup": true,
+									"isField": false
+								   }],
+								   "show": [{
+									"name": "VacantLand",
+									"isGroup": true,
+									"isField": false
+								   }]
+								  }],
 						},
 						{
 							"name": "UnitNumber",
@@ -1134,11 +1163,11 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"url":"pt-property/property/occuapancies/_search?|$..id|$..name",
+							"url":"pt-property/property/occuapancies/_search?|$..code|$..name",
 							"patternErrMsg": "",
 							"defaultValue":[],
-							 "showHideFields": [{
-								   "ifValue": "Owner",
+							"showHideFields": [{
+								   "ifValue": "OWNER",
 								   "hide": [{
 									"name": "AnnualRent",
 									"isGroup": false,
@@ -1217,7 +1246,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue":[{key:"", value:null},{key:true, value:"Yes"},{key:false, value:"No"}]
+							"defaultValue":[{key:true, value:"Yes"},{key:false, value:"No"}]
 						},
 						{
 							"name": "Length",

@@ -49,7 +49,7 @@ class UiSelectField extends Component {
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
-							obj["key"]=keys[k] && keys[k].toString();
+							obj["key"]= item.convertToString ? keys[k].toString() : keys[k];
 							obj["value"]=values[k];
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+"-"+values[k]

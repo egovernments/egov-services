@@ -28,8 +28,7 @@ import FloorDetails from './propertyTax/FloorDetails';
 import DocumentUpload from './propertyTax/DocumentUpload';
 import Workflow from './propertyTax/Workflow';
 import VacantLand from './propertyTax/vacantLand';
-
-
+import PropertyFactors from './propertyTax/PropertyFactors';
 
 var flag = 0;
 const styles = {
@@ -624,14 +623,12 @@ createActivate = () => {
 				  <OwnerDetails />
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
-				
+					<PropertyFactors/>
 				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ?                  
 						<div>
-							<ConstructionTypes/>
 							<VacantLand/> 
 						</div>:
 						<div>                 
-							<ConstructionTypes/>				  
 							<FloorDetails/>
 						</div>}
 				  <DocumentUpload />
@@ -672,7 +669,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
+          required: ['reasonForCreation', 'approver','propertyType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo']
         },
         pattern: {
           current: [],
@@ -682,7 +679,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
         },
         pattern: {
           current: [],
@@ -692,7 +689,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'exemptedArea', 'buildingCost', 'landCost']
         },
         pattern: {
           current: [],

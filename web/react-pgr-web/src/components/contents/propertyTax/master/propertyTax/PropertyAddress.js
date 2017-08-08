@@ -441,6 +441,28 @@ class PropertyAddress extends Component {
 												  maxLength={6}
                                               />
                                           </Col>
+										  <Col xs={12} md={3} sm={6}>
+                                              <SelectField  className="fullWidth selectOption"
+                                                  floatingLabelText="Ready Reckoner"
+                                                  errorText={fieldErrors.readyReckoner ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.readyReckoner}</span> : ""}
+                                                  value={propertyAddress.readyReckoner ? propertyAddress.readyReckoner : ""}
+                                                  onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "readyReckoner", false, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												>
+												<MenuItem value={1} primaryText="Option"/>
+                                              </SelectField>
+                                          </Col>
                                           <Col xs={12} md={12}>
                                               <Checkbox
                                                 label="Is correspondence address different from property address?"

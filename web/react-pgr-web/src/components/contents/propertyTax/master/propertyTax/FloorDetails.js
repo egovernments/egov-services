@@ -333,21 +333,7 @@ componentDidUpdate(){
 
 }
 
-handleAge = (year) => {
-/*	var query = {
-		fromYear : year,
-		toYear: year
-	}
-	var currentThis = this;
 
-	Api.commonApiPost('/property/depreciations/_search',query).then((res)=>{
-	  console.log(res);
-	  currentThis.setState({structureclasses: res.structureClasses})
-	}).catch((err)=> {
-	  console.log(err)
-	})*/
-}	
-	
 calcArea = (e, type) => {
 		let {floorDetails, handleChangeNextOne, handleChangeFloor} = this.props;
 		
@@ -370,7 +356,6 @@ calcArea = (e, type) => {
 					hasLW = true;
 				}
 				
-				handleChangeNextOne(f, "floor","assessableArea", false, "");
 				handleChangeFloor(f, "floor","builtupArea", true, "");
 				
 			} else if(type == 'width' 	&& floorDetails.floor.hasOwnProperty('length')){
@@ -383,7 +368,6 @@ calcArea = (e, type) => {
 					hasLW = true;
 				}
 				
-				handleChangeNextOne(f, "floor","assessableArea", false, "");
 				handleChangeFloor(f, "floor","builtupArea", true, "");
 				
 			} 			
@@ -392,7 +376,52 @@ calcArea = (e, type) => {
 		this.setState({
 			hasLengthWidth: hasLW
 		});
+}
+
+handleAge = (year) => {
+/*	var query = {
+		fromYear : year,
+		toYear: year
+	}
+	var currentThis = this;
+	Api.commonApiPost('/property/depreciations/_search',query).then((res)=>{
+	  console.log(res);
+	  currentThis.setState({structureclasses: res.structureClasses})
+	}).catch((err)=> {
+	  console.log(err)
+	})*/
 }	
+
+calcAssessableArea = (e, type) => {
+	
+	let {floorDetails, handleChangeNextOne, handleChangeFloor} = this.props;
+	
+	let f = {
+			target:{
+				value: ''
+			}
+		}
+	
+	if(floorDetails.hasOwnProperty('floor')) {
+	
+		if(type == 'exempted' && floorDetails.floor.hasOwnProperty('carpetArea')){
+		
+			f.target.value = parseFloat(floorDetails.floor.carpetArea) - parseFloat(e.target.value);
+	
+			handleChangeNextOne(f, "floor","assessableArea", false, "");
+			
+		} else if(type == 'carpet' && floorDetails.floor.hasOwnProperty('exemptedArea')){
+		
+			f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
+			
+			handleChangeNextOne(f, "floor","assessableArea", false, "");
+			
+		} 			
+	}	
+}
+
+				
+
  
   
    render(){
@@ -428,7 +457,7 @@ calcArea = (e, type) => {
 		  isFloorValid
 				} = this.props;
 
-				let {handleAge} = this;
+				let {calcAssessableArea, handleAge} = this;
 		let cThis = this;
 		
 		console.log(floorDetails);
@@ -717,7 +746,27 @@ calcArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<DatePicker  className="fullWidth datepicker"
 														  formatDate={(date)=> this.formatDate(date)}
-														  floatingLabelText="Construction Date *"
+														  floatingLabelText="Construction Start Date"
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :""): ""}
+														  onChange={(event,date) => {
+															  var e = {
+																target:{
+																	value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+																}
+															  }
+															handleAge(date.getFullYear());
+															handleChangeFloor(e,"floor" ,"constructionStartDate", false, "")}}
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  textFieldStyle={{width: '100%'}}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														/>
+													</Col>
+													<Col xs={12} md={3} sm={6}>
+														<DatePicker  className="fullWidth datepicker"
+														  formatDate={(date)=> this.formatDate(date)}
+														  floatingLabelText="Construction End Date *"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
 														  onChange={(event,date) => {
 															  var e = {
@@ -777,7 +826,7 @@ calcArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-															<MenuItem value={-1} primaryText="None" />
+																<MenuItem value={-1} primaryText="None" />
 															  <MenuItem value='YES' primaryText="Yes" />
 															  <MenuItem value='NO' primaryText="No" />
 														</SelectField>
@@ -821,12 +870,11 @@ calcArea = (e, type) => {
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Plinth Area *"
+														  floatingLabelText="Builtup Area *"
 														  hintText="27.75"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.builtupArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.builtupArea}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.builtupArea : ""}
 														  onChange={(e) => {
-															  handleChangeNextOne(e, "floor","assessableArea", false, "")
 															  handleChangeFloor(e, "floor","builtupArea", true, "")
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -837,6 +885,38 @@ calcArea = (e, type) => {
 														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
 														/>
 													</Col>
+													
+													<Col xs={12} md={3} sm={6}>
+														<TextField  className="fullWidth"
+														  floatingLabelText="Carpet Area *"
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.carpetArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.carpetArea}</span> :""): ""}
+														  value={floorDetails.floor ? floorDetails.floor.carpetArea : ""}
+														  onChange={(e) => {
+															  calcAssessableArea(e,'carpet');
+															  handleChangeFloor(e,"floor" , "carpetArea", true, "")}}
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  maxLength={5}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														/>
+													</Col>
+													
+													<Col xs={12} md={3} sm={6}>
+														<TextField  className="fullWidth"
+														  floatingLabelText="Exempted Area *"
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :""): ""}
+														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
+														  onChange={(e) => {	  
+															  calcAssessableArea(e,'exempted');
+															  handleChangeFloor(e,"floor" , "exemptedArea", true, "")}}
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  maxLength={5}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														/>
+													</Col>
 
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
@@ -844,6 +924,34 @@ calcArea = (e, type) => {
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  maxLength={10}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														/>
+													</Col>
+															
+													<Col xs={12} md={3} sm={6}>
+														<TextField  className="fullWidth"
+														  floatingLabelText="Building cost *"
+														  errorText={fieldErrors.floor ?(fieldErrors.floor.buildingCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.buildingCost}</span>:"" ): ""}
+														  value={floorDetails.floor ? floorDetails.floor.buildingCost : ""}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"buildingCost", true, /^[0-9]+$/i)}}
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  maxLength={10}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														/>
+													</Col>
+													
+													<Col xs={12} md={3} sm={6}>
+														<TextField  className="fullWidth"
+														  floatingLabelText="Land cost *"
+														  errorText={fieldErrors.floor ?(fieldErrors.floor.landCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.landCost}</span>:"" ): ""}
+														  value={floorDetails.floor ? floorDetails.floor.landCost : ""}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"landCost", true, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -865,39 +973,7 @@ calcArea = (e, type) => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
-													<Col xs={12} md={3} sm={6}>
-														<DatePicker  className="fullWidth datepicker"
-														formatDate={(date)=> this.formatDate(date)}
-														  floatingLabelText="Building Permission Date"
-														  errorText={fieldErrors.floor ?(fieldErrors.floor.bpaDate? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaDate}</span>:"") : ""}
-														  onChange={(event,date) => {
-															  var e = {
-																target:{
-																	value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-																}
-															  }
-															  handleChangeNextOne(e,"floor" ,"bpaDate", false, "")}}
-														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
-														  underlineFocusStyle={styles.underlineFocusStyle}
-														  textFieldStyle={{width: '100%'}}
-														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														/>
-													</Col>
-													<Col xs={12} md={3} sm={6}>
-														<TextField  className="fullWidth"
-														  floatingLabelText="Plinth area in Building plan"
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.bpaBuiltupArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaBuiltupArea}</span>:"") : ""}
-														  value={floorDetails.floor ? floorDetails.floor.bpaBuiltupArea : ""}
-														  onChange={(e) => {handleChangeNextOne(e, "floor","bpaBuiltupArea", false,  /^\d+$/g)}}
-														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
-														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={6}
-														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														/>
-													</Col>
-
+													
 													<Col xs={12} style={{textAlign:"right"}}>
 														<br/>
 														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid}  primary={true} onClick={()=>{
@@ -941,16 +1017,18 @@ calcArea = (e, type) => {
                                               <th>Occupant Name</th>
                                               <th>Annual Rent</th>
                                               <th>Manual ARV</th>
-                                              <th>Construction Date</th>
+                                              <th>Construction End Date</th>
                                               <th>Effective From Date</th>
                                               <th>Unstructured land</th>
                                               <th>Length</th>
                                               <th>Breadth</th>
-                                              <th>Plinth Area</th>
+											  <th>Carpet Area</th>
+											  <th>Exempted Area</th>
+											  <th>Building Cost</th>
+											  <th>Land Cost</th>
+                                              <th>Builtup Area</th>
                                               <th>Occupancy Certificate Number</th>
                                               <th>Building Permission Number</th>
-                                              <th>Building Permission Date</th>
-                                              <th>Plinth Area In Building Plan</th>
                                               <th style={{minWidth:70}}></th>
                                             </tr>
                                           </thead>
@@ -976,6 +1054,10 @@ calcArea = (e, type) => {
                                                     <td>{i.isStructured || 'NA'}</td>
                                                     <td>{i.length || 'NA'}</td>
                                                     <td>{i.width || 'NA'}</td>
+													<td>{i.carpetArea || 'NA'}</td>
+													<td>{i.exemptedArea || 'NA'}</td>
+													<td>{i.buildingCost || 'NA'}</td>
+													<td>{i.landCost || 'NA'}</td>
                                                     <td>{i.builtupArea || 'NA'}</td>
                                                     <td>{i.occupancyCertiNumber || 'NA'}</td>
                                                     <td>{i.bpaNo || 'NA'}</td>

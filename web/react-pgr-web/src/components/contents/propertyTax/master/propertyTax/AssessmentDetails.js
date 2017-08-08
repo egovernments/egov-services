@@ -372,7 +372,36 @@ handleDepartment = (e) => {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
+										   <Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText="Sequence No. *"
+												  hintText="14"
+                                                  errorText={fieldErrors.sequenceNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.sequenceNo}</span> : ""}
+                                                  value={assessmentDetails.sequenceNo ? assessmentDetails.sequenceNo : ""}
+                                                  onChange={(e) => {handleChange(e, "sequenceNo", true, /^\d+$/g)}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  maxLength={4}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                              />
+                                          </Col>
+										  <Col xs={12} md={3} sm={6}>
+                                              <Checkbox
+                                                label="Is Authorized?"
+                                                style={styles.checkbox}
+                                                defaultChecked ={assessmentDetails.isAuthorized}
+                                                onCheck = {(e, i, v) => {
+                                                  var e = {
+                                                    target: {
+                                                      value:i
+                                                    }
+                                                  }
+                                                  handleChange(e, "isAuthorized", false, '')
+                                                }}
 
+                                              />
+                                          </Col>
                                       </Row>
                                   </Grid>
                       </CardText>

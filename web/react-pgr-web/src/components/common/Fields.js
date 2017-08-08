@@ -21,25 +21,25 @@ export default class Fields extends Component{
       switch(obj.dataType){
         case "string":
           return (
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <TextField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, '')} errorText={this.props.error ? this.props.error : ""}/>
             </Col>
           );
         case "integer":
           return (
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <TextField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+$/)} errorText={this.props.error ? this.props.error : ""} />
             </Col>
           );
         case "double":
           return (
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <TextField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+(\.\d+)?$/)} errorText={this.props.error ? this.props.error : ""}/>
             </Col>
           );
         case "date":
           return(
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <DatePicker fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value ? new Date(this.props.value.split('-')[2], this.props.value.split('-')[1]-1, this.props.value.split('-')[0]) : ''}
               formatDate={(date)=>{
                 let dateObj = new Date(date);
@@ -71,7 +71,7 @@ export default class Fields extends Component{
             //console.log((this.props.value && date && time) ? new Date(date.split('-')[2], date.split('-')[1]-1, date.split('-')[0], time.split(':')[0], time.split(':')[1], time.split(':')[2]) : '');
           }
           return (
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <DatePicker fullWidth={true} ref={obj.code} floatingLabelText={description} value={(this.props.value && date && time) ? new Date(date.split('-')[2], date.split('-')[1]-1, date.split('-')[0], time.split(':')[0], time.split(':')[1], time.split(':')[2]) : ''}
               formatDate={(date)=>{
                 let dateObj = new Date(date);
@@ -99,7 +99,7 @@ export default class Fields extends Component{
           );
         case "singlevaluelist":
           return(
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <SelectField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
                 this.props.handler(value, obj.code, obj.required, "")
               }} >
@@ -111,7 +111,7 @@ export default class Fields extends Component{
           );
         case "multivaluelist":
           return(
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <SelectField fullWidth={true} ref={obj.code} multiple={true} floatingLabelText={description}  value={this.props.value} onChange={(event, key, value) => {
                 this.props.handler(value, obj.code, obj.required, "")
               }} >
@@ -130,7 +130,7 @@ export default class Fields extends Component{
           );
         case "multifile":
           return (
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <div>{description}</div>
               <input type="file" multiple className="form-control"/>
             </Col>
@@ -145,10 +145,6 @@ export default class Fields extends Component{
     }
   }
   render(){
-    return (
-      <div>
-        {this.renderFields(this.props.obj)}
-      </div>
-    );
+    return this.renderFields(this.props.obj);
   }
 }

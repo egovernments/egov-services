@@ -38,7 +38,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -67,10 +66,9 @@ public class RevaluationServiceTest {
     @Mock
     private RevaluationCriteria revaluationCriteria;
 
-
     @Mock
     private RestTemplate restTemplate;
-    
+
     @Mock
     private AssetRepository assetRepository;
 
@@ -85,6 +83,9 @@ public class RevaluationServiceTest {
 
     @Mock
     private ChartOfAccountDetailContract chartOfAccountDetailContract;
+
+    @Mock
+    private CurrentValueService currentValueService;
 
     @Before
     public void setUp() throws Exception {
@@ -108,7 +109,8 @@ public class RevaluationServiceTest {
         revaluationRequest.getRevaluation().setId(Long.valueOf("15"));
 
         doNothing().when(revaluationRepository).create(revaluationRequest);
-        revaluationService.create(Matchers.any(RevaluationRequest.class));
+        revaluationService.create(revaluationRequest);
+        revaluationService.saveRevaluationAmountToCurrentAmount(revaluationRequest);
         assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
                 revaluationRequest.getRevaluation().toString());
     }
@@ -116,10 +118,9 @@ public class RevaluationServiceTest {
     @Test
     public void testCreateAsync() throws NumberFormatException, Exception {
 
-    	List<Asset> assets = new ArrayList<>();
-		assets.add(get_Asset());
-		when(assetRepository.findForCriteria(any(AssetCriteria.class)))
-				.thenReturn(assets);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(get_Asset());
+        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
         final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
         PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForRevaluation",
                 any(RevaluationRequest.class), any(HttpHeaders.class));

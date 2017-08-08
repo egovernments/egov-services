@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/treatmentplant/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "TreatmentPlants[0].code",
 		"useTimestamp": true,
 		"objectName": "TreatmentPlants",
 		"groups": [
@@ -76,7 +77,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -306,7 +307,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "wardName",
@@ -318,7 +320,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "zoneName",
@@ -330,7 +333,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "storageReservoirName",

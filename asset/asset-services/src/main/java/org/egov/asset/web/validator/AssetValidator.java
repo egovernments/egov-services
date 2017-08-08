@@ -53,10 +53,10 @@ public class AssetValidator {
 
     @Autowired
     private AssetMasterService assetMasterService;
-    
+
     @Autowired
     private CurrentValueService currentValueService;
-    
+
     @Autowired
     private AssetRepository assetRepository;
 
@@ -165,10 +165,11 @@ public class AssetValidator {
     public void validateDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         validateRequestHeaderSessionId(headers);
         final Disposal disposal = disposalRequest.getDisposal();
-        List<Long> assetIds = new ArrayList<>();
-		assetIds.add(disposalRequest.getDisposal().getAssetId());
-		final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder().tenantId(
-				disposalRequest.getDisposal().getTenantId()).id(assetIds).build()).get(0);
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(disposalRequest.getDisposal().getAssetId());
+        final Asset asset = assetRepository.findForCriteria(
+                AssetCriteria.builder().tenantId(disposalRequest.getDisposal().getTenantId()).id(assetIds).build())
+                .get(0);
         validateAssetForCapitalizedStatus(asset);
         validateAssetForCapitalizedStatus(asset);
 
@@ -244,10 +245,11 @@ public class AssetValidator {
     public void validateRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         validateRequestHeaderSessionId(headers);
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        List<Long> assetIds = new ArrayList<>();
-		assetIds.add(revaluation.getAssetId());
-		final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder().tenantId(
-				revaluation.getTenantId()).id(assetIds).build()).get(0);
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(revaluation.getAssetId());
+        final Asset asset = assetRepository
+                .findForCriteria(AssetCriteria.builder().tenantId(revaluation.getTenantId()).id(assetIds).build())
+                .get(0);
         validateAssetForCapitalizedStatus(asset);
         validateAssetForCapitalizedStatus(asset);
         final boolean enableVoucherGeneration = assetConfigurationService
@@ -267,11 +269,11 @@ public class AssetValidator {
         if (revaluation.getFunction() == null)
             throw new RuntimeException("Function from financials is necessary for asset revaluation");
 
-        Set<Long> assetIdsForCurrentAmt = new HashSet<>();
+        final Set<Long> assetIdsForCurrentAmt = new HashSet<>();
         assetIdsForCurrentAmt.add(asset.getId());
-		final BigDecimal assetCurrentAmount = currentValueService
-				.getCurrentValues(assetIdsForCurrentAmt, revaluation.getTenantId(), revaluationRequest.getRequestInfo())
-				.getAssetCurrentValues().get(0).getCurrentAmount();
+        final BigDecimal assetCurrentAmount = currentValueService
+                .getCurrentValues(assetIdsForCurrentAmt, revaluation.getTenantId(), revaluationRequest.getRequestInfo())
+                .getAssetCurrentValues().get(0).getCurrentAmount();
 
         if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
                 && (revaluation.getValueAfterRevaluation().compareTo(assetCurrentAmount) == 0
@@ -330,10 +332,11 @@ public class AssetValidator {
 
     public void validateAssetForUpdate(final AssetRequest assetRequest) {
         final Asset assetFromReq = assetRequest.getAsset();
-        List<Long> ids = new ArrayList<>();
+        final List<Long> ids = new ArrayList<>();
         ids.add(assetFromReq.getId());
-        AssetCriteria assetCriteria = AssetCriteria.builder().id(ids).tenantId(assetFromReq.getTenantId()).build();
-        final Asset asset = assetService.getAssets(assetCriteria,assetRequest.getRequestInfo()).getAssets().get(0);
+        final AssetCriteria assetCriteria = AssetCriteria.builder().id(ids).tenantId(assetFromReq.getTenantId())
+                .build();
+        final Asset asset = assetService.getAssets(assetCriteria, assetRequest.getRequestInfo()).getAssets().get(0);
         if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
         else

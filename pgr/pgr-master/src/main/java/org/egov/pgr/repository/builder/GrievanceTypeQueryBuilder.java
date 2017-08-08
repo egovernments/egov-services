@@ -47,9 +47,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceTypeQueryBuilder {
+public class GrievanceTypeQueryBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceTypeQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(GrievanceTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, comp.category, comp.slahours, "
     			+ " comp.hasfinancialimpact, comp.isactive, comp.isday, adef.code attributecode, "
@@ -219,15 +219,15 @@ public class ServiceTypeQueryBuilder {
     }
 
     public static String checkServiceCodeIfExists() {
-    	return " SELECT code FROM service_definition WHERE code = ? and tenantid = ? ";
+    	return " SELECT code FROM service_definition WHERE trim(code) = ? and tenantid = ? ";
     }
 
     public static String checkComplaintCodeIfExists() {
-    	return " SELECT code FROM egpgr_complainttype WHERE code = ? and tenantid = ? ";
+    	return " SELECT code FROM egpgr_complainttype WHERE trim(code) = ? and tenantid = ? ";
     }
 
     public static String checkServiceNameIfExists() {
-    	return " SELECT name,code from egpgr_complainttype WHERE upper(name) = ? and tenantid = ? ";
+    	return " SELECT name,code from egpgr_complainttype WHERE trim(upper(name)) = ? and tenantid = ? ";
     }
 
     public static String selectServiceNameAndCodeNotInQuery() {

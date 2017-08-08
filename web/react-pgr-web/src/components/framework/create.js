@@ -194,6 +194,7 @@ class Report extends Component {
   makeAjaxCall = (formData, url) => {
     let self = this;
     delete formData.ResponseInfo;
+    //return console.log(formData);
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
@@ -287,13 +288,19 @@ class Report extends Component {
 
   }
 
-  getVal = (path) => {
+  getVal = (path, dateBool) => {
     var _val = _.get(this.props.formData, path);
+    if(dateBool && typeof _val != 'object' && _val && _val.indexOf("-") > -1) {
+      var _date = _val.split("-");
+      return new Date(_date[0], (Number(_date[1])-1), _date[2]);
+    }
+
     return typeof _val != "undefined" ? _val : "";
   }
 
   hideField = (_mockData, hideObject, reset) => {
-    let {moduleName, actionName, setFormData} = this.props;
+    let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
+    let _requiredFields = [...this.props.requiredFields];
     let _formData = {...this.props.formData};
     if(hideObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
@@ -303,6 +310,18 @@ class Report extends Component {
             if(!reset) {
               _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);  
+              //Check if required is true, if yes remove from required fields
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                let ind = _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                _requiredFields.splice(ind, 1);
+                delRequiredFields(_requiredFields);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+              if(_requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath) == -1) {
+                _requiredFields.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                addRequiredFields(_requiredFields);
+              }
             }
             
             break;
@@ -322,8 +341,9 @@ class Report extends Component {
   }
 
   showField = (_mockData, showObject, reset) => {
-    let {moduleName, actionName, setFormData} = this.props;
+    let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
     let _formData = {...this.props.formData};
+    let _requiredFields = [...this.props.requiredFields];
     if(showObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
@@ -332,6 +352,17 @@ class Report extends Component {
             if(!reset) {
               _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);  
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                if(_requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath) == -1) {
+                  _requiredFields.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                  addRequiredFields(_requiredFields);
+                }
+              }
+            } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                let ind = _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                _requiredFields.splice(ind, 1);
+                delRequiredFields(_requiredFields);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
             }
             break;
           }
@@ -347,6 +378,77 @@ class Report extends Component {
     }
 
     return _mockData;
+  }
+
+  enField = (_mockData, enableStr, reset) => {
+    let {moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(enableStr == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + "." + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
+          if(!reset) {
+            _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+            setFormData(_formData);  
+          }
+          break;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  disField = (_mockData, disableStr, reset) => {
+    let {moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(disableStr == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + "." + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
+          if(!reset) {
+            _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+            setFormData(_formData);  
+          }
+          
+          break;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  checkIfHasEnDisFields = (jsonPath, val) => {
+    let _mockData = {...this.props.mockData};
+    let {moduleName, actionName, setMockData} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields.length) {
+          for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+            if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
+              }
+            } else {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable[y], true);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable[z], true);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    setMockData(_mockData);
   }
 
   checkIfHasShowHideFields = (jsonPath, val) => {
@@ -381,17 +483,18 @@ class Report extends Component {
     setMockData(_mockData);
   }
 
-  handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
-      let {getVal}=this;
-      let {handleChange,mockData,setDropDownData}=this.props;
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
+      let {getVal} = this;
+      let {handleChange,mockData,setDropDownData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
+      this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
-      _.forEach(depedants, function(value,key) {
+      _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
                 let splitArray=value.pattern.split("?");
                 let context="";
@@ -609,7 +712,8 @@ const mapStateToProps = state => ({
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
-  isFormValid: state.frameworkForm.isFormValid
+  isFormValid: state.frameworkForm.isFormValid,
+  requiredFields: state.frameworkForm.requiredFields
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -646,7 +750,16 @@ const mapDispatchToProps = dispatch => ({
   setDropDownData:(fieldName,dropDownData)=>{
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
   },
-  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+  delRequiredFields: (requiredFields) => {
+    dispatch({type: "DEL_REQUIRED_FIELDS", requiredFields})
+  },
+  addRequiredFields: (requiredFields) => {
+    dispatch({type: "ADD_REQUIRED_FIELDS", requiredFields})
+  },
+  removeFieldErrors: (key) => {
+    dispatch({type: "REMOVE_FROM_FIELD_ERRORS", key})
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

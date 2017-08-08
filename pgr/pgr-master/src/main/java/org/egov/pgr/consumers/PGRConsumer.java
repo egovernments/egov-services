@@ -46,6 +46,7 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.domain.model.OTPConfig;
+import org.egov.pgr.domain.service.ServiceTypeService;
 import org.egov.pgr.persistence.repository.ServiceTypeConfigurationRepository;
 import org.egov.pgr.service.EscalationHierarchyService;
 import org.egov.pgr.service.EscalationTimeTypeService;
@@ -57,13 +58,7 @@ import org.egov.pgr.service.ReceivingModeTypeService;
 import org.egov.pgr.service.RouterService;
 /*import org.egov.pgr.service.RouterService;*/
 import org.egov.pgr.service.ServiceGroupService;
-import org.egov.pgr.web.contract.EscalationHierarchyReq;
-import org.egov.pgr.web.contract.EscalationTimeTypeReq;
-import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
-import org.egov.pgr.web.contract.ReceivingModeTypeReq;
-import org.egov.pgr.web.contract.RouterTypeReq;
-import org.egov.pgr.web.contract.ServiceGroupRequest;
-import org.egov.pgr.web.contract.ServiceRequest;
+import org.egov.pgr.web.contract.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +103,9 @@ public class PGRConsumer {
 
 	@Autowired
 	private ServiceTypeConfigurationRepository serviceTypeConfigurationRepository;
+
+	@Autowired
+	private ServiceTypeService serviceTypeService;
 	
    	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
@@ -117,7 +115,8 @@ public class PGRConsumer {
 			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.escalationtimetype.create.name}", 
 			"${kafka.topics.escalationtimetype.update.name}", "${kafka.topics.otpconfig.update.name}", "${kafka.topics.otpconfig.create.name}",
 			"${kafka.topics.escalationhierarchy.update.name}", "${kafka.topics.escalationhierarchy.create.name}", "${kafka.topics.servicetypeconfiguration.create.name}",
-			"${kafka.topics.servicetypeconfiguration.update.name}" })
+			"${kafka.topics.servicetypeconfiguration.update.name}","${kafka.topics.servicetypes.create.name}",
+			"${kafka.topics.servicetypes.create.key}" })
 
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("RECORD: " + record.toString());
@@ -147,7 +146,7 @@ public class PGRConsumer {
 			} else if (record.topic().equals(applicationProperties.getUpdateServiceGroupTopicName())) {
 				LOGGER.info("Consuming update ServiceGroup request");
 				serviceGroupService.update(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
-			} else if (record.topic().equals(applicationProperties.getUpdateServiceTypeTopicName())) {
+			} else if (record.topic().equals(applicationProperties.getUpdateGrievanceTypeTopicName())) {
 				LOGGER.info("Consuming update GrievanceType request");
 				grievanceTypeService.update(objectMapper.readValue(record.value(), ServiceRequest.class));
 			} else if (record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())) {
@@ -179,7 +178,10 @@ public class PGRConsumer {
 			}
 			else if (record.topic().equals(applicationProperties.servicetypeconfigurationUpdateTopic())) {
 				serviceTypeConfigurationRepository.update(objectMapper.readValue(record.value(), org.egov.pgr.persistence.dto.ServiceTypeConfiguration.class));
-				}
+			}
+			else if(record.topic().equals(applicationProperties.getCreateServiceTypeTopicName())) {
+				serviceTypeService.persistServiceType(objectMapper.readValue(record.value(), ServiceTypeRequest.class).toDomain());
+			}
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

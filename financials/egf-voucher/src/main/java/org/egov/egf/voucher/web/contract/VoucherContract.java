@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.voucher.web.contract;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
@@ -57,29 +58,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","type","name","description","voucherNumber","voucherDate","fund","status","originalVoucherNumber","refVoucherNumber","moduleName","ledgers","vouchermis"})
+@JsonPropertyOrder({ "id", "type", "name", "description", "voucherNumber", "voucherDate", "fund", "status",
+		"originalVoucherNumber", "refVoucherNumber", "moduleName", "ledgers", "vouchermis" })
 public class VoucherContract extends AuditableContract {
 
 	@Length(max = 32)
 	private String id;
 
- 
 	@Length(max = 16)
 	private String type;
 
- 
 	@Length(max = 16)
 	private String name;
 
 	@Length(max = 256)
 	private String description;
-	
+
 	@Length(max = 32)
 	private String voucherNumber;
 
@@ -87,12 +88,18 @@ public class VoucherContract extends AuditableContract {
 	private Date voucherDate;
 
 	private FundContract fund;
+
 	private FinancialStatusContract status;
+
 	private String originalVoucherContractNumber;
+
 	private String refVoucherContractNumber;
+
 	private String moduleName;
-		private Set<Ledger> ledgers;
-		private VoucherContractmis vouchermis;
+
+	private Set<Ledger> ledgers;
+
+	private VouchermisContract vouchermis;
 
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;

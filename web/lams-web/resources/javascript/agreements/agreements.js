@@ -146,6 +146,18 @@ $(".onlyNumber").on("keydown", function(e) {
     }*/
 });
 
+$(".onlyAlphaNum").on("keydown", function(e) {
+  var key = e.keyCode ? e.keyCode : e.which;
+  if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
+          (key == 65 && (e.ctrlKey || e.metaKey)) ||
+          (key >= 35 && key <= 40) ||
+          (key >= 48 && key <= 57 && !(e.shiftKey || e.altKey)) ||
+          (key >= 96 && key <= 105)
+      )) {
+      e.preventDefault();
+  }
+});
+
 //it will split object string where it has .
 function fillValueToObject(currentState) {
     if (currentState.id.includes(".")) {
@@ -200,16 +212,21 @@ var commomFieldsRules = {
         phone: true
     },
     tenderNumber: {
-        required: true
+        required: true,
+        alphaNumer: true
+
     },
     tenderDate: {
         required: true
+
     },
     tin: {
         required: false
+
     },
-    tradeLicenseNumber: {
-        required: false
+    tradelicenseNumber: {
+        required: false,
+        alphaNumer: true
     },
     caseNumber: {
         required: true
@@ -845,6 +862,11 @@ $.validator.addMethod('alloName', function(value) {
     return /^[a-zA-Z ]*$/.test(value);
 }, 'Please enter a valid name.');
 
+$.validator.addMethod('alphaNumer', function(value) {
+  return /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value);
+}, 'Please enter only Alpha/Numeric Value');
+
+
 finalValidatinRules["messages"] = {
     "allottee.name": {
         required: "Enter Name of the Allottee/Lessee"
@@ -876,7 +898,7 @@ finalValidatinRules["messages"] = {
     tin: {
         required: "Enter valid TIN number"
     },
-    tradeLicenseNumber: {
+    tradelicenseNumber: {
         required: "Enter respective Trade license number"
     },
     // caseNumber: {
@@ -1152,9 +1174,9 @@ $("#createAgreementForm").validate({
         agreement["asset"]["assetCategory"]["name"] = assetDetails["assetCategory"]["name"];
         if($("#rentIncrementMethod").val()) {
             agreement["rentIncrementMethod"] = {};
-            agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();    
+            agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         }
-        
+
         agreement["tenantId"] = tenantId;
         agreement["source"] = "SYSTEM";
         agreement["action"] = "CREATE";//Different in case of cancel/evict. Please remove

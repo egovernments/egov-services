@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/storagereservoir/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "StorageReservoirs[0].code",
 		"useTimestamp": true,
 		"objectName": "StorageReservoir",
 		"groups": [
@@ -289,7 +290,7 @@ var dat = {
 		"searchUrl": "/wcms/masters/storagereservoir/_search?id={id}",
 		"url":"/wcms/masters/storagereservoir/_update",
 		"tenantIdRequired": true,
-		"idJsonPath": "StorageReservoirs[0].id",
+
 		"useTimestamp": true,
 		"isResponseArray" : true,
 		"objectName": "StorageReservoir[0]",
@@ -331,7 +332,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "wardName",
@@ -343,7 +345,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "zoneName",
@@ -355,7 +358,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "noOfMainDistributionLines",

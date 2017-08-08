@@ -3,6 +3,8 @@ var dat = {
 		"numCols": 12/3,
 		"url":  "/wcms/masters/documenttype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "DocumentTypes[0].code",
+		"useTimestamp": true,
 		"objectName": "documentType",
 		"groups": [
 			{

@@ -21,119 +21,97 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class CurrentValueService {
-	
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private CurrentValueRepository currentValueRepository;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private SequenceGenService sequenceGenService;
+    @Autowired
+    private CurrentValueRepository currentValueRepository;
 
-	@Autowired
-	private AssetCommonService assetCommonService;
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private SequenceGenService sequenceGenService;
 
-	public AssetCurrentValueResponse getCurrentValues(final Set<Long> assetIds, final String tenantId,
-			final RequestInfo requestInfo) {
+    @Autowired
+    private AssetCommonService assetCommonService;
 
-		return new AssetCurrentValueResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
-				currentValueRepository.getCurrentValues(assetIds, tenantId));
-	}
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	public AssetCurrentValueResponse createCurrentValueAsync(AssetCurrentValueRequest assetCurrentValueRequest) {
+    public AssetCurrentValueResponse getCurrentValues(final Set<Long> assetIds, final String tenantId,
+            final RequestInfo requestInfo) {
 
-		RequestInfo requestInfo = assetCurrentValueRequest.getRequestInfo();
-		List<AssetCurrentValue> assetCurrentValues = assetCurrentValueRequest.getAssetCurrentValues();
-		AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo);
+        return new AssetCurrentValueResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
+                currentValueRepository.getCurrentValues(assetIds, tenantId));
+    }
 
-		List<Long> idList = sequenceGenService.getIds(assetCurrentValues.size(), Sequence.CURRENTVALUESEQUENCE.toString());
-		int i = 0;
-		for (AssetCurrentValue assetCurrentValue : assetCurrentValues) {
-			assetCurrentValue.setAuditDetails(auditDetails);
-			assetCurrentValue.setId(idList.get(i++));
-		}
-		kafkaTemplate.send(applicationProperties.getSaveCurrentvalueTopic(), assetCurrentValueRequest);
-		return new AssetCurrentValueResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
-				assetCurrentValues);
-	}
+    public AssetCurrentValueResponse createCurrentValueAsync(final AssetCurrentValueRequest assetCurrentValueRequest) {
 
-	public void saveCurrentValue(AssetCurrentValueRequest assetCurrentValueRequest) {
+        final RequestInfo requestInfo = assetCurrentValueRequest.getRequestInfo();
+        final List<AssetCurrentValue> assetCurrentValues = assetCurrentValueRequest.getAssetCurrentValues();
+        final AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo);
 
-		currentValueRepository.create(assetCurrentValueRequest.getAssetCurrentValues());
-	}
+        final List<Long> idList = sequenceGenService.getIds(assetCurrentValues.size(),
+                Sequence.CURRENTVALUESEQUENCE.toString());
+        int i = 0;
+        for (final AssetCurrentValue assetCurrentValue : assetCurrentValues) {
+            assetCurrentValue.setAuditDetails(auditDetails);
+            assetCurrentValue.setId(idList.get(i++));
+        }
+        kafkaTemplate.send(applicationProperties.getSaveCurrentvalueTopic(), assetCurrentValueRequest);
+        return new AssetCurrentValueResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
+                assetCurrentValues);
+    }
 
-	public void getAssetDepreciation(final Long assetId, final String tenantId) {
-		// TODO
-	}
+    public void saveCurrentValue(final AssetCurrentValueRequest assetCurrentValueRequest) {
 
+        currentValueRepository.create(assetCurrentValueRequest.getAssetCurrentValues());
+    }
 
-	/*
-	 * public AssetCurrentValueResponse getCurrentAmount(final Long assetId,
-	 * final String tenantId, final RequestInfo requestInfo) {
-	 * 
-	 * BigDecimal currentValue = null; final Asset asset = getAsset(assetId,
-	 * tenantId, requestInfo); final Revaluation revaluation =
-	 * getRevaluateAsset(assetId, tenantId); currentValue =
-	 * asset.getGrossValue();
-	 * 
-	 * if (revaluation != null) { currentValue =
-	 * revaluation.getCurrentCapitalizedValue(); if
-	 * (revaluation.getTypeOfChange().toString().equals(TypeOfChangeEnum.
-	 * INCREASED.toString())) currentValue =
-	 * currentValue.add(revaluation.getRevaluationAmount()); else if
-	 * (revaluation.getTypeOfChange().toString().equals(TypeOfChangeEnum.
-	 * DECREASED.toString())) currentValue =
-	 * currentValue.subtract(revaluation.getRevaluationAmount()); }
-	 * 
-	 * return getResponse(currentValue, tenantId, assetId); }
-	 */
+    public void getAssetDepreciation(final Long assetId, final String tenantId) {
+        // TODO
+    }
 
-	/*
-	 * public Revaluation getRevaluateAsset(final Long assetId, final String
-	 * tenantId) {
-	 * 
-	 * log.info("AssetCurrentAmountService getRevaluateAsset");
-	 * 
-	 * final List<Long> assetIds = new ArrayList<>(); assetIds.add(assetId);
-	 * 
-	 * final RevaluationCriteria revaluationCriteria =
-	 * RevaluationCriteria.builder().assetId(assetIds)
-	 * .tenantId(tenantId).status("ACTIVE").build();
-	 * 
-	 * final RevaluationResponse revaluationResponse =
-	 * revaluationService.search(revaluationCriteria);
-	 * 
-	 * Revaluation revaluation = null; if
-	 * (!revaluationResponse.getRevaluations().isEmpty()) revaluation =
-	 * revaluationResponse.getRevaluations().get(0);
-	 * 
-	 * return revaluation; }
-	 */
+    /*
+     * public AssetCurrentValueResponse getCurrentAmount(final Long assetId,
+     * final String tenantId, final RequestInfo requestInfo) { BigDecimal
+     * currentValue = null; final Asset asset = getAsset(assetId, tenantId,
+     * requestInfo); final Revaluation revaluation = getRevaluateAsset(assetId,
+     * tenantId); currentValue = asset.getGrossValue(); if (revaluation != null)
+     * { currentValue = revaluation.getCurrentCapitalizedValue(); if
+     * (revaluation.getTypeOfChange().toString().equals(TypeOfChangeEnum.
+     * INCREASED.toString())) currentValue =
+     * currentValue.add(revaluation.getRevaluationAmount()); else if
+     * (revaluation.getTypeOfChange().toString().equals(TypeOfChangeEnum.
+     * DECREASED.toString())) currentValue =
+     * currentValue.subtract(revaluation.getRevaluationAmount()); } return
+     * getResponse(currentValue, tenantId, assetId); }
+     */
 
-	/*
-	 * public Asset getAsset(final Long assetId, final String tenantId, final
-	 * RequestInfo requestInfo) {
-	 * 
-	 * log.info("AssetCurrentAmountService getAsset");
-	 * 
-	 * final AssetCriteria assetCriteria = new AssetCriteria(); final List<Long>
-	 * assetIds = new ArrayList<>(); assetIds.add(assetId);
-	 * assetCriteria.setId(assetIds); assetCriteria.setTenantId(tenantId); final
-	 * AssetResponse assetResponse = assetService.getAssets(assetCriteria,
-	 * requestInfo);
-	 * 
-	 * Asset asset = null; if (assetResponse.getAssets().size() != 0) asset =
-	 * assetResponse.getAssets().get(0);
-	 * 
-	 * if (asset == null) throw new RuntimeException("Invalid Asset");
-	 * 
-	 * return asset; }
-	 */
+    /*
+     * public Revaluation getRevaluateAsset(final Long assetId, final String
+     * tenantId) { log.info("AssetCurrentAmountService getRevaluateAsset");
+     * final List<Long> assetIds = new ArrayList<>(); assetIds.add(assetId);
+     * final RevaluationCriteria revaluationCriteria =
+     * RevaluationCriteria.builder().assetId(assetIds)
+     * .tenantId(tenantId).status("ACTIVE").build(); final RevaluationResponse
+     * revaluationResponse = revaluationService.search(revaluationCriteria);
+     * Revaluation revaluation = null; if
+     * (!revaluationResponse.getRevaluations().isEmpty()) revaluation =
+     * revaluationResponse.getRevaluations().get(0); return revaluation; }
+     */
+
+    /*
+     * public Asset getAsset(final Long assetId, final String tenantId, final
+     * RequestInfo requestInfo) { log.info("AssetCurrentAmountService getAsset"
+     * ); final AssetCriteria assetCriteria = new AssetCriteria(); final
+     * List<Long> assetIds = new ArrayList<>(); assetIds.add(assetId);
+     * assetCriteria.setId(assetIds); assetCriteria.setTenantId(tenantId); final
+     * AssetResponse assetResponse = assetService.getAssets(assetCriteria,
+     * requestInfo); Asset asset = null; if (assetResponse.getAssets().size() !=
+     * 0) asset = assetResponse.getAssets().get(0); if (asset == null) throw new
+     * RuntimeException("Invalid Asset"); return asset; }
+     */
 }

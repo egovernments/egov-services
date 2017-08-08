@@ -42,8 +42,8 @@ package org.egov.pgr.repository;
 import org.egov.pgr.domain.model.Attribute;
 import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.domain.model.Value;
-import org.egov.pgr.repository.builder.ServiceTypeQueryBuilder;
-import org.egov.pgr.repository.rowmapper.ServiceTypeRowMapper;
+import org.egov.pgr.repository.builder.GrievanceTypeQueryBuilder;
+import org.egov.pgr.repository.rowmapper.GrievanceTypeRowMapper;
 import org.egov.pgr.web.contract.ServiceGetRequest;
 import org.egov.pgr.web.contract.ServiceRequest;
 import org.slf4j.Logger;
@@ -58,19 +58,19 @@ import java.util.*;
 import java.util.Map.Entry;
 
 @Repository
-public class ServiceTypeRepository {
+public class GrievanceTypeRepository {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceTypeRepository.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(GrievanceTypeRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ServiceTypeQueryBuilder serviceTypeQueryBuilder;
+    private GrievanceTypeQueryBuilder grievanceTypeQueryBuilder;
 
     public ServiceRequest persistServiceType(final ServiceRequest serviceRequest) {
         LOGGER.info("Service Type Request::" + serviceRequest);
-        final String complaintInsert = serviceTypeQueryBuilder.insertComplaintTypeQuery();
+        final String complaintInsert = grievanceTypeQueryBuilder.insertComplaintTypeQuery();
         boolean active = (null != serviceRequest.getService().getActive() ? serviceRequest.getService().getActive() : true);
         boolean days = (null != serviceRequest.getService().getDays() ? serviceRequest.getService().getDays() : false);
         final Object[] object = new Object[]{serviceRequest.getService().getServiceName(),
@@ -80,7 +80,7 @@ public class ServiceTypeRepository {
         };
         jdbcTemplate.update(complaintInsert, object);
 
-        final String serviceInsert = serviceTypeQueryBuilder.insertServiceTypeQuery();
+        final String serviceInsert = grievanceTypeQueryBuilder.insertServiceTypeQuery();
         final Object[] obj = new Object[]{serviceRequest.getService().getServiceCode(),
                 serviceRequest.getService().getTenantId(), serviceRequest.getRequestInfo().getUserInfo().getId(),
                 new Date(new java.util.Date().getTime())};
@@ -97,7 +97,7 @@ public class ServiceTypeRepository {
     }
 
     private void persistAttributeValues(ServiceRequest serviceRequest) {
-        final String serviceInsertAttribValues = ServiceTypeQueryBuilder.insertServiceTypeQueryAttribValues();
+        final String serviceInsertAttribValues = GrievanceTypeQueryBuilder.insertServiceTypeQueryAttribValues();
         List<Attribute> attributeList = new ArrayList<>();
         if (null != serviceRequest.getService().getAttributes()) {
             attributeList = serviceRequest.getService().getAttributes();
@@ -112,7 +112,7 @@ public class ServiceTypeRepository {
             jdbcTemplate.update(serviceInsertAttribValues, obj1);
             if (null != attribute.getAttributes()) {
                 if (attribute.getAttributes().size() > 0) {
-                    final String valueInsertQuery = ServiceTypeQueryBuilder.insertValueDefinitionQuery();
+                    final String valueInsertQuery = GrievanceTypeQueryBuilder.insertValueDefinitionQuery();
                     List<Value> valueList = attribute.getAttributes();
                     for (int j = 0; j < valueList.size(); j++) {
                         Value value = valueList.get(j);
@@ -129,7 +129,7 @@ public class ServiceTypeRepository {
 
     private void persistKeywordServiceCodeMapping(ServiceRequest serviceRequest) {
         GrievanceType grievanceType = serviceRequest.getService();
-        final String serviceKeywordMappingQuery = ServiceTypeQueryBuilder.insertServiceKeyworkMappingQuery();
+        final String serviceKeywordMappingQuery = GrievanceTypeQueryBuilder.insertServiceKeyworkMappingQuery();
         for (int i = 0; i < grievanceType.getKeywords().size(); i++) {
             final Object[] obj1 = new Object[]{grievanceType.getServiceCode(), grievanceType.getKeywords().get(i), grievanceType.getTenantId(),
                     serviceRequest.getRequestInfo().getUserInfo().getId(),
@@ -140,19 +140,19 @@ public class ServiceTypeRepository {
 
     public ServiceRequest persistModifyServiceType(final ServiceRequest serviceRequest) {
         LOGGER.info("Service Type Request::" + serviceRequest);
-        final String serviceTypeUpdate = ServiceTypeQueryBuilder.updateServiceTypeQuery();
+        final String serviceTypeUpdate = GrievanceTypeQueryBuilder.updateServiceTypeQuery();
         final GrievanceType grievanceType = serviceRequest.getService();
         final Object[] obj = new Object[]{grievanceType.getServiceName(),
                 grievanceType.getDescription(), grievanceType.getCategory(), grievanceType.getSlaHours(), grievanceType.getActive(), grievanceType.isHasFinancialImpact(), grievanceType.getDays(), serviceRequest.getRequestInfo().getUserInfo().getId(),
                 new Date(new java.util.Date().getTime()), grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(serviceTypeUpdate, obj);
-        final String valueRemove = ServiceTypeQueryBuilder.removeValueQuery();
+        final String valueRemove = GrievanceTypeQueryBuilder.removeValueQuery();
         final Object[] objValueRemove = new Object[]{grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(valueRemove, objValueRemove);
-        final String attributeRemove = ServiceTypeQueryBuilder.removeAttributeQuery();
+        final String attributeRemove = GrievanceTypeQueryBuilder.removeAttributeQuery();
         final Object[] objAttributeRemove = new Object[]{grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(attributeRemove, objAttributeRemove);
-        final String serviceKeywordRemove = ServiceTypeQueryBuilder.removeServiceKeywordMapping();
+        final String serviceKeywordRemove = GrievanceTypeQueryBuilder.removeServiceKeywordMapping();
         final Object[] objserviceKeywordRemove = new Object[]{grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(serviceKeywordRemove, objserviceKeywordRemove);
         if (serviceRequest.getService().isMetadata()) {
@@ -172,7 +172,7 @@ public class ServiceTypeRepository {
         preparedStatementValues.add(name);
         preparedStatementValues.add(tenantId);
         preparedStatementValues.add(code);
-        final String query = ServiceTypeQueryBuilder.selectServiceNameAndCodeQuery();
+        final String query = GrievanceTypeQueryBuilder.selectServiceNameAndCodeQuery();
         final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
         if (!serviceTypes.isEmpty())
@@ -184,10 +184,10 @@ public class ServiceTypeRepository {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(serviceCode);
         preparedStatementValues.add(tenantId);
-        final String query = ServiceTypeQueryBuilder.checkServiceCodeIfExists();
+        final String query = GrievanceTypeQueryBuilder.checkServiceCodeIfExists();
         final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
-        final String query2 = ServiceTypeQueryBuilder.checkComplaintCodeIfExists();
+        final String query2 = GrievanceTypeQueryBuilder.checkComplaintCodeIfExists();
         final List<Map<String, Object>> serviceTypes2 = jdbcTemplate.queryForList(query2,
                 preparedStatementValues.toArray());
 
@@ -201,7 +201,7 @@ public class ServiceTypeRepository {
         preparedStatementValues.add(serviceName.toUpperCase().trim());
         preparedStatementValues.add(tenantId);
 
-        final String query = ServiceTypeQueryBuilder.checkServiceNameIfExists();
+        final String query = GrievanceTypeQueryBuilder.checkServiceNameIfExists();
         final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
         if (!serviceTypes.isEmpty()) {
@@ -214,13 +214,13 @@ public class ServiceTypeRepository {
 
     public List<GrievanceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        String queryStr = serviceTypeQueryBuilder.getQuery(serviceTypeGetRequest, preparedStatementValues);
-        ServiceTypeRowMapper serviceTypeRowMapper = new ServiceTypeRowMapper();
+        String queryStr = grievanceTypeQueryBuilder.getQuery(serviceTypeGetRequest, preparedStatementValues);
+        GrievanceTypeRowMapper serviceTypeRowMapper = new GrievanceTypeRowMapper();
         jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), serviceTypeRowMapper);
         return assembleServiceTypeObject(serviceTypeRowMapper);
     }
 
-    private List<GrievanceType> assembleServiceTypeObject(ServiceTypeRowMapper rowMapper) {
+    private List<GrievanceType> assembleServiceTypeObject(GrievanceTypeRowMapper rowMapper) {
         final String separator = ">";
         List<GrievanceType> grievanceTypeList = new ArrayList<>();
         Set<Entry<String, GrievanceType>> sMapEntrySet = rowMapper.serviceMap.entrySet();
@@ -264,7 +264,7 @@ public class ServiceTypeRepository {
 
     public List<String> getKeywordsForService(GrievanceType grievanceType) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        String queryStr = serviceTypeQueryBuilder.fetchServiceKeywords();
+        String queryStr = grievanceTypeQueryBuilder.fetchServiceKeywords();
         preparedStatementValues.add(grievanceType.getServiceCode());
         preparedStatementValues.add(grievanceType.getTenantId());
         List<String> keywords = new ArrayList<>();

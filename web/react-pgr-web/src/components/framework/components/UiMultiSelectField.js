@@ -38,7 +38,7 @@ class UiMultiSelectField extends Component {
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
-							obj["key"]=keys[k];
+							obj["key"]= item.convertToString ? keys[k].toString() : keys[k];
 							obj["value"]=values[k];
 							dropDownData.push(obj);
 					}
@@ -74,6 +74,7 @@ class UiMultiSelectField extends Component {
 							}
 							errorText={this.props.fieldErrors[item.jsonPath]}
 							maxHeight={200}>
+								<MenuItem value={null} key="00000" primaryText="" />
 					            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
 					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
 					            ))}

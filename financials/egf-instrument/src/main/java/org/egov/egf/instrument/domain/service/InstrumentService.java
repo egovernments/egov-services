@@ -143,11 +143,11 @@ public class InstrumentService {
 
 	public List<Instrument> fetchRelated(List<Instrument> instruments) {
 
-		// entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		if (instruments != null)
 			for (Instrument instrument : instruments) {
 
 				instrument.setId(UUID.randomUUID().toString().replace("-", ""));
+				
 				// fetch related items
 
 				if (instrument.getInstrumentType() != null) {

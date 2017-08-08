@@ -35,8 +35,18 @@ public class ServiceTypeConfiguration {
     
     private String url;
     
+    public static final String
     
-    
+    TENANTID = "tenantId",
+    SERVICECODE = "serviceCode",
+    GLCODE = "glCode",
+    ONLINE = "online",
+    SOURCE = "source",
+    URL = "url",
+    APPLICATIONFEESENABLED = "applicationFeesEnabled",
+    NOTIFICATIONENABLED = "notificationEnabled",
+    SLAENABLED = "slaEnabled";
+  
     public org.egov.pgr.domain.model.ServiceTypeConfiguration toDomain(){
         return org.egov.pgr.domain.model.ServiceTypeConfiguration.builder()
                 .serviceCode(serviceCode)

@@ -299,7 +299,8 @@ class Report extends Component {
   }
 
   hideField = (_mockData, hideObject, reset) => {
-    let {moduleName, actionName, setFormData} = this.props;
+    let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
+    let _requiredFields = [...this.props.requiredFields];
     let _formData = {...this.props.formData};
     if(hideObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
@@ -309,6 +310,18 @@ class Report extends Component {
             if(!reset) {
               _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);  
+              //Check if required is true, if yes remove from required fields
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                let ind = _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                _requiredFields.splice(ind, 1);
+                delRequiredFields(_requiredFields);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+              if(_requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath) == -1) {
+                _requiredFields.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                addRequiredFields(_requiredFields);
+              }
             }
             
             break;
@@ -328,8 +341,9 @@ class Report extends Component {
   }
 
   showField = (_mockData, showObject, reset) => {
-    let {moduleName, actionName, setFormData} = this.props;
+    let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
     let _formData = {...this.props.formData};
+    let _requiredFields = [...this.props.requiredFields];
     if(showObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
@@ -338,6 +352,17 @@ class Report extends Component {
             if(!reset) {
               _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);  
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                if(_requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath) == -1) {
+                  _requiredFields.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                  addRequiredFields(_requiredFields);
+                }
+              }
+            } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                let ind = _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                _requiredFields.splice(ind, 1);
+                delRequiredFields(_requiredFields);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
             }
             break;
           }
@@ -458,9 +483,9 @@ class Report extends Component {
     setMockData(_mockData);
   }
 
-  handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
-      let {getVal}=this;
-      let {handleChange,mockData,setDropDownData}=this.props;
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
+      let {getVal} = this;
+      let {handleChange,mockData,setDropDownData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       // console.log(obj);
@@ -469,7 +494,7 @@ class Report extends Component {
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
-      _.forEach(depedants, function(value,key) {
+      _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
                 let splitArray=value.pattern.split("?");
                 let context="";
@@ -687,7 +712,8 @@ const mapStateToProps = state => ({
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
-  isFormValid: state.frameworkForm.isFormValid
+  isFormValid: state.frameworkForm.isFormValid,
+  requiredFields: state.frameworkForm.requiredFields
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -724,7 +750,16 @@ const mapDispatchToProps = dispatch => ({
   setDropDownData:(fieldName,dropDownData)=>{
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
   },
-  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+  delRequiredFields: (requiredFields) => {
+    dispatch({type: "DEL_REQUIRED_FIELDS", requiredFields})
+  },
+  addRequiredFields: (requiredFields) => {
+    dispatch({type: "ADD_REQUIRED_FIELDS", requiredFields})
+  },
+  removeFieldErrors: (key) => {
+    dispatch({type: "REMOVE_FROM_FIELD_ERRORS", key})
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

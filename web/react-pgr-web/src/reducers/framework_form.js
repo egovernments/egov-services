@@ -32,6 +32,33 @@ export default (state = defaultState, action) => {
               fieldErrors: {},
               isFormValid: action.requiredFields.length == 0 ? true : false
             }
+
+        case "DEL_REQUIRED_FIELDS":
+            var _isFormValid = reValidate(state.form, state.fieldErrors, action.requiredFields);
+            return {
+                ...state,
+                requiredFields: action.requiredFields,
+                isFormValid: _isFormValid
+            }
+
+        case "ADD_REQUIRED_FIELDS":
+            var _isFormValid = reValidate(state.form, state.fieldErrors, action.requiredFields);
+            return {
+                ...state,
+                requiredFields: action.requiredFields,
+                isFormValid: _isFormValid
+            }
+
+        case "REMOVE_FROM_FIELD_ERRORS":
+            var _fieldErrors = {...state.fieldErrors};
+            delete _fieldErrors[action.key];
+            var _isFormValid = reValidate(state.form, _fieldErrors, state.requiredFields);
+            return {
+                ...state,
+                fieldErrors: _fieldErrors,
+                isFormValid: _isFormValid
+            }
+
         case "HANDLE_CHANGE_FRAMEWORK":
             var currentState = { ...state };
             _.set(currentState.form, action.property, action.value);
@@ -119,6 +146,22 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
 function checkIfHasAllReqFields(reqFields, form) {
     for(var i=0; i<reqFields.length; i++) {
         if(!_.get(form, reqFields[i])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function reValidate(form, fieldErrors, requiredFields) {
+    for(var key in fieldErrors) {
+        if(fieldErrors[key]) {
+            return false;
+        }
+    }
+
+    for(var i=0; i<requiredFields.length; i++) {
+        if(!_.get(form, requiredFields[i])) {
             return false;
         }
     }

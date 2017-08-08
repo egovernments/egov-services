@@ -572,11 +572,7 @@ var dat = {
 							"defaultValue": false,
 							"showHideFields": [{
 								   "ifValue": true,
-								   "hide": [{
-									"name": "",
-									"isGroup": true,
-									"isField": false
-								   }],
+								   "hide": [],
 								   "show": [{
 									"name": "DoorNo2",
 									"isGroup": false,
@@ -1081,11 +1077,7 @@ var dat = {
 							"defaultValue":[{key:"YES", value:"Yes"},{key:"NO", value:"No"}],
 							"showHideFields": [{
 								   "ifValue": "YES",
-								   "hide": [{
-									"name": "",
-									"isGroup": true,
-									"isField": false
-								   }],
+								   "hide": [],
 								   "show": [{
 									"name": "Room",
 									"isGroup": true,
@@ -1173,11 +1165,7 @@ var dat = {
 									"isGroup": false,
 									"isField": true
 								   }],
-								   "show": [{
-									"name": "",
-									"isGroup": true,
-									"isField": false
-								   }]
+								   "show": []
 							  }]
 						},
 						{

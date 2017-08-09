@@ -243,7 +243,7 @@ definitions:
       applicationDate:
         type: string
         format: date
-        description: date on which applicaiton has been generated for new Trade License
+        description: date on which applicaiton has been generated for new Trade License in DD-MM-YY format
       adhaarNumber:
         type: string
         description : Adhaar Number of trade owner
@@ -322,11 +322,11 @@ definitions:
       tradeCommencementDate:
         type: string
         format: date
-        description:  Commencement Date of the trade
+        description:  Commencement Date of the trade in DD-MM-YY format
       agreementDate:
         type: string
         format: date
-        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running
+        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running in DD-MM-YY format
       agreementNo:
         type: string
         maxLength: 128
@@ -342,7 +342,7 @@ definitions:
       expiryDate:
         type: string
         format: date
-        description: Expiry Date of the Trade License
+        description: Expiry Date of the Trade License in DD-MM-YY format
       feeDetails:
         type: array
         description: List of Fee Details for Trade License,  Required only for Legacy Trade License

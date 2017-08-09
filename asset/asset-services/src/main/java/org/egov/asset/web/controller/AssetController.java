@@ -168,6 +168,7 @@ public class AssetController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         log.debug("Request Headers :: " + headers);
+        log.debug("Origin Host :: " + headers.getOrigin());
         assetValidator.validateRevaluation(revaluationRequest, headers);
         final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest, headers);
 
@@ -203,6 +204,7 @@ public class AssetController {
         }
         
         log.debug("Request Headers :: " + headers);
+        log.debug("Origin Host :: " + headers.getOrigin());
         assetValidator.validateDisposal(disposalRequest,headers);
 
         final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest,headers);

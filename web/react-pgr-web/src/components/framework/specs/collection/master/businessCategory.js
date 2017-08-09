@@ -95,14 +95,14 @@ var dat = {
 	},
 	"collection.view": {
 		"numCols": 12/3,
-		"url":  "/egov-common-masters/businessCategory/_search?id={id}",
+		"url":  "/egov-common-masters/businessCategory/_search?ids={id}",
 		"tenantIdRequired": true,
 		"idJsonPath": "BusinessCategoryInfo[0].id",
 		"useTimestamp": true,
 		"objectName": "BusinessCategoryInfo",
 		"groups": [
 			{
-				"label": "wc.create.businessCategoryType.title",
+				"label": "wc.view.businessCategoryType.title",
 				"name": "businessCategoryType",
 				"fields": [
 						{
@@ -145,20 +145,19 @@ var dat = {
 	},
 	"collection.update": {
 		"numCols": 12/3,
-		"searchUrl":  "/egov-common-masters/businessCategory/_search?id={id}",
-    "url":"/egov-common-masters/businessCategory/{BusinessCategoryInfo.code}/_update",
+		"searchUrl":  "/egov-common-masters/businessCategory/_search?ids={id}",
+    "url":"/egov-common-masters/businessCategory/{BusinessCategoryInfo[0].id}/_update",
 		"tenantIdRequired": true,
-		"idJsonPath": "BusinessCategoryInfo[0].code",
 		"useTimestamp": true,
 		"objectName": "BusinessCategoryInfo",
 		"groups": [
 			{
-				"label": "wc.create.businessCategoryType.title",
+				"label": "wc.update.businessCategoryType.title",
 				"name": "businessCategoryType",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "BusinessCategoryInfo.name",
+							"jsonPath": "BusinessCategoryInfo[0].name",
 							"label": "wc.create.group.fields.businessName",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -169,7 +168,7 @@ var dat = {
 						},
             {
 							"name": "code",
-							"jsonPath": "BusinessCategoryInfo.code",
+							"jsonPath": "BusinessCategoryInfo[0].code",
 							"label": "wc.create.group.fields.businessCode",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -180,7 +179,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "documentType.active",
+							"jsonPath": "documentType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

@@ -1,0 +1,73 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Tl_Services",
+		"_postman_id": "c7ee2cf6-a12c-0463-f8c3-45e48cd45b8e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tl_Services_Create",
+			"request": {
+				"url": "http://localhost:8080/tlservices/v1/tradelicense/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"RequestInfo\": {\n \"action\": \"create\",\n\"did\": \"1\",\n\"msgId\": \"20170310130900\",\n\"requesterId\": \"yosadhara\",\n\"authToken\": \"2c099ea9-9919-47a2-b173-8b498aa07923\",\n\"apiId\": \"1\",\n\"ver\": \"1.0\",\n\"ts\": 1,\n\"key\": \"abcdkey\",\n\"tenantId\": \"default\"\n},\n  \"licesnses\": [\n  {\n  \"tenantId\": \"pavantest\",\n  \"applicationType\":\"NEW\",\n  \"applicationNumber\":\"8908799\",\n  \"licenseNumber\":\"uikjdj9008\",\n  \"oldLicenseNumber\":\"oo8879967\",\n  \"applicationDate\": null,\n  \"adhaarNumber\":\"081208020070\",\n  \"mobileNumber\":\"9987876565\",\n  \"ownerName\":\"Shubham\",\n  \"fatherSpouseName\":\"hhhdsksk\",\n  \"emailId\":\"pshubhamtechi@gmail.com\",\n  \"ownerAddress\":\"uuhkdsh\",\n  \"propertyAssesmentNo\":\"bjajdgjdg\",\n  \"localityId\":\"797799\",\n  \"wardId\":\"97927572\",\n  \"tradeAddress\":\"984789\",\n  \"ownerShipType\":\"RENTED\",\n  \"tradeTitle\":\"juice\",\n  \"tradeType\":\"PERMENANT\",\n  \"categoryId\":null,\n  \"subCategoryId\":null,\n  \"uomId\":null,\n  \"uomValue\":null,\n  \"remarks\":null,\n  \"tradeCommencementDate\":null,\n  \"agrementDate\":null,\n  \"agrementNo\":null,\n  \"isLegacy\":false,\n  \"active\":true,\n  \"expiryDate\":null,\n\"feeDetails\":null,\n\"supportDocuments\":null,\n\"auditDetails\":null\n\n  \n  \n }\n]\n\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Tl_Services_Search",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/tlservices/v1/tradelicense/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tlservices",
+						"v1",
+						"tradelicense",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"RequestInfo\": {\n \"action\": \"create\",\n\"did\": \"1\",\n\"msgId\": \"20170310130900\",\n\"requesterId\": \"yosadhara\",\n\"authToken\": \"2c099ea9-9919-47a2-b173-8b498aa07923\",\n\"apiId\": \"1\",\n\"ver\": \"1.0\",\n\"ts\": 1,\n\"key\": \"abcdkey\",\n\"tenantId\": \"default\"\n}\n\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

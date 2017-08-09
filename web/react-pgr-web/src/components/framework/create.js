@@ -301,7 +301,7 @@ class Report extends Component {
 
   getVal = (path, dateBool) => {
     var _val = _.get(this.props.formData, path);
-    if(dateBool && typeof _val != 'object' && _val && _val.indexOf("-") > -1) {
+    if(dateBool && typeof _val == 'string' && _val && _val.indexOf("-") > -1) {
       var _date = _val.split("-");
       return new Date(_date[0], (Number(_date[1])-1), _date[2]);
     }

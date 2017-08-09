@@ -112,7 +112,7 @@ class Revaluation extends React.Component {
     	getCommonMasterById("asset-services", "assets", id, function(err, res) {
           if(res) {
           	checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
-            commonApiPost("asset-services", "assets", "currentvalue/_search", {tenantId, assetId: res["Assets"][0].id}, function(er, res) {
+            commonApiPost("asset-services", "assets", "currentvalue/_search", {tenantId, assetIds: res["Assets"][0].id}, function(er, res) {
               if(res && res.AssetCurrentValue) {
                 _this.setState({
                   revaluationSet: {
@@ -440,11 +440,11 @@ class Revaluation extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Revaluation Date </label>
+                              <label>Revaluation Date <span>*</span> </label>
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
-                                <input id="revaluationDate" className="datepicker" type="text" value={revaluationSet.revaluationDate} onChange={(e) => handleChange(e, "revaluationDate")}/>
+                                <input id="revaluationDate" className="datepicker" type="text" value={revaluationSet.revaluationDate} onChange={(e) => handleChange(e, "revaluationDate")} required/>
                               </div>
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>

@@ -619,6 +619,11 @@ paths:
             type: boolean
             in: query
             description: is residential of the UsageMaster
+          - name: parent
+            type: string
+            in: query
+            description: search should return all the usage where the given usage code as parent
+            maxLength: 64
           - name: orderNumber
             type: integer
             format: int32

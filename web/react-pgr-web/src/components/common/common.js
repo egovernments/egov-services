@@ -306,6 +306,12 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.buildingCost": "Building Cost",
   "pt.create.groups.propertyAddress.fields.landCost": "Land Cost",
   "pt.create.groups.propertyAddress.fields.assessableArea": "Assessable Area",
+  "pt.create.groups.propertyAddress.fields.totalArea": "Total Area",
+  "pt.create.groups.propertyAddress.fields.propertyAge": "Property Age",
+  "pt.create.groups.propertyAddress.fields.currentAssessmentDate": "Current Assessment Date",
+  "pt.create.groups.propertyAddress.fields.firstAssessmentDate": "First Assessment Date", 
+  "pt.create.groups.propertyAddress.fields.revisedAssessmentDate": "Revised Assessment Date",
+  "pt.create.groups.propertyAddress.fields.lastAssessmentDate": "Last Assessment Date",
   
   //Add Demand
   "pt.create.groups.addDemand.fields.installment": "Installment",

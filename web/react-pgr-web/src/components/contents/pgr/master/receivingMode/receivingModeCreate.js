@@ -164,7 +164,8 @@ class receivingModeCreate extends Component {
                         id="name"
                         errorText={fieldErrors.name ? fieldErrors.name : ""}
                         value={receivingmodeSet.name ? receivingmodeSet.name : "" }
-                        onChange={(e) => {handleChange(e, "name", true, /^[^-\s][a-zA-Z ]*$/)}}/>
+                        maxLength="100"
+                        onChange={(e) => {handleChange(e, "name", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Please use only alphabets, space and special characters')}}/>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
@@ -173,17 +174,19 @@ class receivingModeCreate extends Component {
                         id="code"
                         errorText={fieldErrors.code ? fieldErrors.code : ""}
                         value={receivingmodeSet.code ? receivingmodeSet.code : ""}
-                        onChange={(e) => {handleChange(e, "code", true, /^[a-zA-Z]+$/)}}
+                        maxLength="20"
+                        onChange={(e) => {handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}}
                         disabled={this.state.id ? true : false }/>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
-                        floatingLabelText={translate("core.lbl.description")+"*"}
+                        floatingLabelText={translate("core.lbl.description")}
                         id="description"
                         errorText={fieldErrors.description ? fieldErrors.description : ""}
                         value={receivingmodeSet.description ? receivingmodeSet.description : ""}
-                        onChange={(e) => {handleChange(e, "description", true, /^[^-\s][a-zA-Z0-9_\s-]+$/)}}/>
+                        maxLength="250"
+                        onChange={(e) => {handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Please use only alphabets, space and special characters')}}/>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField
@@ -263,11 +266,11 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
     validationData: {
       required: {
         current: [],
-        required: ["name","code","description","channels"]
+        required: ["name","code","channels"]
       },
       pattern: {
          current: [],
-         required: ["name","code","description"]
+         required: []
        }
       }
     });
@@ -287,8 +290,8 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["name","code","description","channels"],
-          required:["name","code","description","channels"]
+          current: ["name","code","channels"],
+          required:["name","code","channels"]
         },
         pattern: {
           current: [],
@@ -304,12 +307,12 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
      object
    })
   },
-   handleChange: (e, property, isRequired, pattern) => {
+   handleChange: (e, property, isRequired, pattern,errorMsg) => {
      dispatch({
        type: "HANDLE_CHANGE",
        property,
        value: e.target.value,
-       isRequired, pattern
+       isRequired, pattern, errorMsg
      });
    },
    setLoadingStatus: (loadingStatus) => {

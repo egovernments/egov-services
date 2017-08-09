@@ -635,7 +635,7 @@ class grievanceCreate extends Component {
                         />
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} maxLength="10" onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g, 'Enter valid 10 digit mobile number')} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} maxLength="10" onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g, translate('core.lbl.enter.mobilenumber'))} />
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} maxLength="50" onChange={(event, value) => handleChange(value, "email", false, /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}  />

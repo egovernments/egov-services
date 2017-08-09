@@ -536,7 +536,6 @@ calcAssessableArea = (e, type) => {
 														</SelectField>
 													</Col>
 													{(floorDetails.floor ? (floorDetails.floor.unitType == 'FLAT' ? true: false ): false) &&
-														<span>
 															<Col xs={12} md={3} sm={6}>
 																 <SelectField  className="fullWidth selectOption"
 																	floatingLabelText="Is Room in Flat?"
@@ -573,7 +572,10 @@ calcAssessableArea = (e, type) => {
 																  {renderOption(_this.state.roomInFlat)}																								
 																</SelectField>
 															</Col>	
-															{(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true: false ): false) && 
+															
+												
+													}
+													{(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true: false ): false) && 
 																<Col xs={12} md={3} sm={6}>			
 																	<TextField  className="fullWidth"
 																	  hintText="201"
@@ -588,10 +590,6 @@ calcAssessableArea = (e, type) => {
 																	  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 																</Col>
 															}
-															
-														</span>	  
-														
-													}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText="Unit Number *"

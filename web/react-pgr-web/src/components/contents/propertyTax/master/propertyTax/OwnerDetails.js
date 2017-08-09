@@ -234,7 +234,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.emailId? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.emailId}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.emailId:""}
                             onChange={(e) => {
-                                handleChangeNextOne(e, "owner", "emailId", false, /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/);
+                                handleChangeNextOne(e, "owner", "emailId", false, /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

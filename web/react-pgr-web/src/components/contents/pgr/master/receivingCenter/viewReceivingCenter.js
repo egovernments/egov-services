@@ -110,7 +110,7 @@ class ViewReceivingCenter extends Component {
                      {translate("pgr.lbl.active")}
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewReceivingCenter.active? "true": 'false'}
+                    {viewReceivingCenter.active? "Yes": 'No'}
                    </Col>
                  </Row>
                  <Row style={styles.addBorderBottom}>

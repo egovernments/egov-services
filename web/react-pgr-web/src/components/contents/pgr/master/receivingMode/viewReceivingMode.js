@@ -107,7 +107,7 @@ class viewReceivingSet extends Component {
                      {translate("pgr.lbl.active")}
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewReceivingSet.active? "True" : "False"}
+                    {viewReceivingSet.active? "Yes" : "No"}
                    </Col>
                  </Row>
                  <Row style={styles.addBorderBottom}>

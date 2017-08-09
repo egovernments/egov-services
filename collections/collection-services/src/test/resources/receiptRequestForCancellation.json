@@ -16,6 +16,7 @@
     "Receipt": [
         {
             "tenantId": "default",
+            "transactionId": "10127859476354",
             "Bill": [{
                 "id": null,
                 "payeeName": "abc",

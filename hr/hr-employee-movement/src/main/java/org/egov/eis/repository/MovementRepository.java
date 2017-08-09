@@ -116,6 +116,7 @@ public class MovementRepository {
 
     @Autowired
     private MovementDocumentsRepository documentsRepository;
+    
 
     public List<Movement> findForCriteria(final MovementSearchRequest movementSearchRequest,
             final RequestInfo requestInfo) {
@@ -139,7 +140,6 @@ public class MovementRepository {
             processInstance = workFlowService.start(movementRequest);
         if (processInstance.getId() != null)
             stateId = Long.valueOf(processInstance.getId());
-        final String movementInsertQuery = MovementQueryBuilder.insertMovementQuery();
         final Date now = new Date();
         final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
                 movementRequest.getRequestInfo());
@@ -158,14 +158,13 @@ public class MovementRepository {
                     userResponse.getUsers().get(0).getId(), now, movement.getTenantId() };
             if (movement.getDocuments() != null && !movement.getDocuments().isEmpty())
                 documentsRepository.save(movement.getId(), movement.getDocuments(), movement.getTenantId());
-            jdbcTemplate.update(movementInsertQuery, obj);
+            jdbcTemplate.update(MovementQueryBuilder.insertMovementQuery(), obj);
         }
         return movementRequest;
     }
 
     public Movement updateMovement(final MovementRequest movementRequest) {
         final Task task = workFlowService.update(movementRequest);
-        final String movementInsertQuery = MovementQueryBuilder.updateMovementQuery();
         final Date now = new Date();
         final Movement movement = movementRequest.getMovement().get(0);
         final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
@@ -184,7 +183,7 @@ public class MovementRepository {
                 userResponse.getUsers().get(0).getId(), now,
                 userResponse.getUsers().get(0).getId(), now,
                 movement.getId(), movement.getTenantId() };
-        jdbcTemplate.update(movementInsertQuery, obj);
+        jdbcTemplate.update(MovementQueryBuilder.updateMovementQuery(), obj);
         if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) && movement.getStatus()
                 .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
                         MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
@@ -248,7 +247,7 @@ public class MovementRepository {
         final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
         final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
         final String source = movement.getTenantId();
-        final String destination = movement.getRemarks();
+        final String destination = movement.getTransferedLocation();
         final RequestInfo sourceRequestInfo = movementRequest.getRequestInfo();
         final RequestInfo destinationRequestInfo = movementRequest.getRequestInfo();
         destinationRequestInfo.getUserInfo().setTenantId(destination);

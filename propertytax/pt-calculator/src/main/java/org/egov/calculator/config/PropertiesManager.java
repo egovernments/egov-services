@@ -70,6 +70,8 @@ public class PropertiesManager {
     private String vacantland;
     
     private String businessService;
+    
+    private String usage;
 
     public String getInvalidInput() {
         return environment.getProperty("invalid.input");
@@ -165,5 +167,9 @@ public class PropertiesManager {
 
     public String getBusinessService() {
         return environment.getProperty("business.service");
+    }
+
+    public String getUsage() {
+        return environment.getProperty("usage");
     }
 }

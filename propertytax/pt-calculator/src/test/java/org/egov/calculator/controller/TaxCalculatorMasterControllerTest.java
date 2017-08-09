@@ -479,35 +479,34 @@ public class TaxCalculatorMasterControllerTest {
 	 * 
 	 */
 	@Test
-	public void testShouldSearchTaxRates() throws Exception {
+        public void testShouldSearchTaxRates() throws Exception {
 
-		TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
-		TaxRates taxRates = new TaxRates();
-		taxRates.setTenantId("default");
-		List<TaxRates> listOfTaxRates = new ArrayList<>();
-		listOfTaxRates.add(taxRates);
-		taxRatesResponse.setResponseInfo(new ResponseInfo());
-		taxRatesResponse.setTaxRates(listOfTaxRates);
+                TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
+                TaxRates taxRates = new TaxRates();
+                taxRates.setTenantId("default");
+                List<TaxRates> listOfTaxRates = new ArrayList<>();
+                listOfTaxRates.add(taxRates);
+                taxRatesResponse.setResponseInfo(new ResponseInfo());
+                taxRatesResponse.setTaxRates(listOfTaxRates);
 
-		try {
+                try {
 
-			when(taxCalculatorMasterService.getTaxRate(any(RequestInfo.class), any(String.class), any(String.class),
-					any(String.class), any(Double.class), any(String.class))).thenReturn(taxRatesResponse);
+                        when(taxCalculatorMasterService.getTaxRate(any(RequestInfo.class), any(String.class), any(String.class),
+                                        any(String.class), any(Double.class), any(String.class),any(String.class),any(String.class))).thenReturn(taxRatesResponse);
 
-			mockMvc.perform(post("/properties/taxes/taxrates/_search").param("tenantId", "default")
-					.param("taxHead", "taxHead-C").param("validDate", "04/06/2017").param("validARVAmount", "1100")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("taxratesSearchRequest.json")))
-					.andExpect(status().isOk())
-					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-					.andExpect(content().json(getFileContents("taxratesSearchResponse.json")));
-		} catch (Exception e) {
+                        mockMvc.perform(post("/properties/taxes/taxrates/_search").param("tenantId", "default")
+                                        .param("taxHead", "taxHead-C").param("validDate", "04/06/2017").param("validARVAmount", "1100")
+                                        .contentType(MediaType.APPLICATION_JSON).content(getFileContents("taxratesSearchRequest.json")))
+                                        .andExpect(status().isOk())
+                                        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                                        .andExpect(content().json(getFileContents("taxratesSearchResponse.json")));
+                } catch (Exception e) {
 
-			assertTrue(Boolean.FALSE);
-			e.printStackTrace();
-		}
-		assertTrue(Boolean.TRUE);
-	}
-
+                        assertTrue(Boolean.FALSE);
+                        e.printStackTrace();
+                }
+                assertTrue(Boolean.TRUE);
+        }
 	/**
 	 *
 	 * @param fileName

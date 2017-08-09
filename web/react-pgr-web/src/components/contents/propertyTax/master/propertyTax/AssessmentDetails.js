@@ -123,6 +123,7 @@ class AssessmentDetails extends Component {
         propertytypes: [],
         reasonForCreation:[],
         departments:[],
+		usages:[]
     }
   } 
 
@@ -144,6 +145,15 @@ class AssessmentDetails extends Component {
 		toggleSnackbarAndSetText(true, err.message);
         console.log(err)
       })
+	  
+	  
+        Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
+          console.log(res);
+          currentThis.setState({usages : res.usageMasters})
+        }).catch((err)=> {
+          console.log(err)
+        })
+		
   } 
 
 handleDepartment = (e) => {
@@ -333,6 +343,51 @@ handleDepartment = (e) => {
                                                   <MenuItem value={1} primaryText="Options"/>
                                               </SelectField>
                                           </Col>
+										  <Col xs={12} md={3} sm={6}>
+														<SelectField  className="fullWidth selectOption"
+														  floatingLabelText="Usage type *"
+														  errorText={fieldErrors.usage ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.usage}</span> : ""}
+														  value={assessmentDetails.usage ? assessmentDetails.usage : ""}
+														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
+															  var e = {
+																target: {
+																  value: value
+																}
+															  };
+															  handleChange(e,"usage", true, "")}
+														  }
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														>
+															  {renderOption(this.state.usages)}
+
+														</SelectField>
+													</Col>
+													<Col xs={12} md={3} sm={6}>
+														<SelectField  className="fullWidth selectOption"
+														  floatingLabelText="Usage sub type"
+														  errorText={fieldErrors.usageSubType ?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.usageSubType}</span> : ""}
+														  value={assessmentDetails.usageSubType ? assessmentDetails.usageSubType : ""}
+														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
+															  var e = {
+																target: {
+																  value: value
+																}
+															  };
+															  handleChange(e,"usageSubType", false, "")}
+														  }
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														>
+															{renderOption(this.state.usages)}
+														</SelectField>
+													</Col>
 										  {(getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('Central Government') ||
 											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government')) 
 											&& <Col xs={12} md={3} sm={6}>
@@ -390,7 +445,7 @@ handleDepartment = (e) => {
                                               <Checkbox
                                                 label="Is Authorized?"
                                                 style={styles.checkbox}
-                                                defaultChecked ={assessmentDetails.isAuthorized}
+                                                defaultChecked ={true}
                                                 onCheck = {(e, i, v) => {
                                                   var e = {
                                                     target: {

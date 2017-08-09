@@ -104,8 +104,8 @@ public class TaxCalculatorMasterServiceTest {
         calculationFactor.setFactorCode("propertytax");
         calculationFactor.setFactorType(CalculationFactorTypeEnum.AGE);
         calculationFactor.setFactorValue(1234.12);
-        calculationFactor.setFromDate("10/06/2007  00:00:00");
-        calculationFactor.setToDate("25/06/2017  00:00:00");
+        calculationFactor.setFromDate("10/06/2007 00:00:00");
+        calculationFactor.setToDate("25/06/2017 00:00:00");
         calculationFactor.setId(factorId);
         long createdTime = new Date().getTime();
 

@@ -40,13 +40,109 @@
 
 package org.egov.wcms.repository.builder;
 
+import java.util.List;
+
+import org.egov.wcms.model.MeterCostCriteria;
 import org.springframework.stereotype.Component;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 @Component
 public class MeterCostQueryBuilder {
 
-    public static String insertMeterCostQuery() {
-        return "INSERT INTO egwtr_metercost(id,pipesize,metermake,amount,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(nextval('seq_egwtr_meter_cost'),?,?,?,?,?,?,?,?,?)";
-    }
+	public static final String BASE_QUERY = "Select wmc.id as wmc_id,wmc.code as wmc_code,"
+			+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+			+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+			+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+			+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc";
+
+	@SuppressWarnings("rawtypes")
+	public String getQuery(MeterCostCriteria meterCostCriteria, List<Object> preparedStatementValues) {
+		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		addWhereClause(selectQuery, meterCostCriteria, preparedStatementValues);
+		addOrderByClause(selectQuery, meterCostCriteria);
+		return selectQuery.toString();
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addWhereClause(StringBuilder selectQuery, MeterCostCriteria meterCostCriteria,
+			List<Object> preparedStatementValues) {
+		if (meterCostCriteria.getTenantId() == null)
+			return;
+		selectQuery.append(" WHERE");
+		boolean isAppendAndClause = false;
+		if (meterCostCriteria.getTenantId() != null) {
+			isAppendAndClause = true;
+			selectQuery.append(" wmc.tenantId = ?");
+			preparedStatementValues.add(meterCostCriteria.getTenantId());
+		}
+		if (meterCostCriteria.getCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" wmc.code = ?");
+			preparedStatementValues.add(meterCostCriteria.getCode());
+		}
+		if (meterCostCriteria.getName() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" wmc.metermake = ?");
+			preparedStatementValues.add(meterCostCriteria.getName());
+		}
+		if (meterCostCriteria.getActive() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" wmc.active = ?");
+			preparedStatementValues.add(meterCostCriteria.getActive());
+		}
+		if (meterCostCriteria.getPipeSizeId() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" wmc.pipesizeid = ?");
+			preparedStatementValues.add(meterCostCriteria.getPipeSizeId());
+		}
+		if (meterCostCriteria.getIds() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" wmc.id IN " + getIdQuery(meterCostCriteria.getIds()));
+		}
+	}
+
+	private void addOrderByClause(StringBuilder selectQuery, MeterCostCriteria meterCostCriteria) {
+		String sortBy = (meterCostCriteria.getSortby() == null ? "wmc.metermake"
+				: "wmc." + meterCostCriteria.getSortby());
+		String sortOrder = (meterCostCriteria.getSortOrder() == null ? "ASC" : meterCostCriteria.getSortOrder());
+		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+	}
+
+	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+		if (appendAndClauseFlag)
+			queryString.append(" AND");
+		return true;
+	}
+
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
+	}
+
+	public String insertMeterCostQuery() {
+		return "INSERT INTO egwtr_metercost(id,code,pipesizeid,metermake,amount,active,createdby,lastmodifiedby,createddate,"
+				+ "lastmodifieddate,tenantid) values " + "(?,?,?,?,?,?,?,?,?,?,?)";
+	}
+
+	public String updateMeterCostQuery() {
+		return "Update egwtr_metercost set pipesizeid=?, metermake=?, amount=?, active=?,"
+				+ " lastmodifiedby=?, lastmodifieddate=? where code = ? and tenantId = ?";
+	}
+
+	public String selectMeterCostByNameAndTenantIdQuery() {
+        return "select code FROM egwtr_metercost where metermake = ? and tenantId = ?";
+	
+	}
+
+	public String selectMeterCostByNameTenantIdAndCodeNotInQuery() {
+        return "select code from egwtr_metercost where metermake = ? and tenantId = ? and code != ? ";
+	}
 }

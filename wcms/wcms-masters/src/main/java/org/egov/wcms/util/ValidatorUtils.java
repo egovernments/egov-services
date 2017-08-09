@@ -47,6 +47,7 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.model.CategoryType;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.model.DocumentTypeApplicationType;
+import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.model.MeterWaterRates;
 import org.egov.wcms.model.PipeSize;
 import org.egov.wcms.model.PropertyTypeCategoryType;
@@ -62,6 +63,7 @@ import org.egov.wcms.service.CategoryTypeService;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
+import org.egov.wcms.service.MeterCostService;
 import org.egov.wcms.service.MeterWaterRatesService;
 import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.service.PropertyCategoryService;
@@ -75,7 +77,7 @@ import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.egov.wcms.web.contract.MeterCostRequest;
+import org.egov.wcms.web.contract.MeterCostReq;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -128,6 +130,9 @@ public class ValidatorUtils {
 
     @Autowired
     private StorageReservoirService storageReservoirService;
+    
+    @Autowired
+    private MeterCostService meterCostService;
 
     @Autowired
     private TreatmentPlantService treatmentPlantService;
@@ -518,7 +523,7 @@ public class ValidatorUtils {
         }
     }
 
-    public List<ErrorResponse> validateMeterCostRequest(final MeterCostRequest meterCostRequest) {
+    public List<ErrorResponse> validateMeterCostRequest(final MeterCostReq meterCostRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(meterCostRequest);
@@ -529,18 +534,68 @@ public class ValidatorUtils {
         return errorResponses;
     }
 
-    private Error getError(final MeterCostRequest meterCostRequest) {
+    private Error getError(final MeterCostReq meterCostRequest) {
         final List<ErrorField> errorFields = getErrorFields(meterCostRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_USAGETYPE_REQUEST_MESSAGE).errorFields(errorFields).build();
+                .message(WcmsConstants.INVALID_METER_COST_REQUEST_MESSAGE).errorFields(errorFields).build();
     }
 
-    private List<ErrorField> getErrorFields(final MeterCostRequest meterCostRequest) {
+    private List<ErrorField> getErrorFields(final MeterCostReq meterCostRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        addTenantIdValidationErrors(meterCostRequest.getMeterCost().getTenantId(), errorFields);
-        addActiveValidationErrors(meterCostRequest.getMeterCost().getActive(), errorFields);
+       List<MeterCost> meterCosts= meterCostRequest.getMeterCost();
+        for(MeterCost meterCost:meterCosts){
+        addMeterCostValidationErrors(meterCost,errorFields);
+        }
         return errorFields;
     }
+
+    private void addMeterCostValidationErrors(MeterCost meterCost, List<ErrorField> errorFields) {
+    
+		if (StringUtils.isBlank(meterCost.getTenantId())) {
+              final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
+                      .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+                      .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+              errorFields.add(errorField);
+          } else if(meterCost.getActive() == null) {
+              final ErrorField errorField = ErrorField.builder().code(WcmsConstants.ACTIVE_MANDATORY_CODE)
+                      .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
+                      .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME).build();
+              errorFields.add(errorField);
+          }
+          else if(meterCost.getCode() == null || meterCost.getCode().isEmpty()) {
+              final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                      .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
+                      .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
+              errorFields.add(errorField);
+          }
+          else if(meterCost.getAmount().toString() == null || meterCost.getAmount().toString().isEmpty()){
+         	 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.AMOUNT_MANDATORY_CODE)
+                     .message(WcmsConstants.AMOUNT_MANDATORY_ERROR_MESSAGE)
+                     .field(WcmsConstants.AMOUNT_MANDATORY_FIELD_NAME).build();
+        	 errorFields.add(errorField);
+          }
+          else if(meterCost.getPipeSizeId().toString() == null || meterCost.getPipeSizeId().toString().isEmpty()){
+        	 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_MANDATORY_CODE)
+                     .message(WcmsConstants.PIPESIZE_MANDATORY_ERROR_MESSAGE)
+                     .field(WcmsConstants.PIPESIZE_MANDATORY_FIELD_NAME).build();
+             errorFields.add(errorField);
+          }
+          else if(meterCost.getMeterMake() == null || meterCost.getMeterMake().isEmpty()){
+    	   final ErrorField errorField = ErrorField.builder().code(WcmsConstants.METERMAKE_MANDATORY_CODE)
+                   .message(WcmsConstants.METERMAKE_MANDATORY_ERROR_MESSAGE)
+                   .field(WcmsConstants.METERMAKE_MANDATORY_FIELD_NAME).build();
+           errorFields.add(errorField);
+          }
+          else if(!meterCostService.checkMeterMakeAlreadyExists(meterCost)){
+       	   final ErrorField errorField = ErrorField.builder().code(WcmsConstants.NAMETENANTID_UNIQUE_CODE)
+                   .message(WcmsConstants.NAMETENANTID_UNIQUE_ERROR_MESSAGE)
+                   .field(WcmsConstants.NAMETENANTID_UNIQUE_FIELD_NAME).build();
+           errorFields.add(errorField);  
+          }
+          else 
+        	  return;
+		
+	}
 
     public List<ErrorResponse> validatePropertyPipeSizeRequest(
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {

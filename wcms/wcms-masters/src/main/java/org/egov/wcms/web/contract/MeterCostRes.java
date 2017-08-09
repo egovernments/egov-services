@@ -40,9 +40,10 @@
 
 package org.egov.wcms.web.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.model.MeterCost;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -60,12 +61,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class MeterCostRequest {
+public class MeterCostRes {
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
     @JsonProperty("MeterCost")
-    private MeterCost meterCost;
+    private List<MeterCost> meterCost = new ArrayList<>();
 
 }

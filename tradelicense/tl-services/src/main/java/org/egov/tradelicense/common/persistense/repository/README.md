@@ -1,0 +1,1 @@
+trade license service persistance repositories will come here

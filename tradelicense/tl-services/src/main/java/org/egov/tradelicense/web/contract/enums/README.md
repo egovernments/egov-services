@@ -1,0 +1,1 @@
+trade license service web contract enums will come here

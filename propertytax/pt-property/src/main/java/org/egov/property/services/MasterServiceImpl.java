@@ -644,13 +644,13 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet) throws Exception {
+			Integer offSet, String parent) throws Exception {
 
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 
 		try {
 			List<UsageMaster> usageList = propertyMasterRepository.searchUsage(tenantId, ids, name, code, nameLocal,
-					active, isResidential, orderNumber, pageSize, offSet);
+					active, isResidential, orderNumber, pageSize, offSet, parent);
 			usageMasterResponse.setUsageMasters(usageList);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			usageMasterResponse.setResponseInfo(responseInfo);
@@ -913,8 +913,8 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Override
 	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset, Integer year)
-			throws Exception {
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset,
+			Integer year) throws Exception {
 
 		List<Depreciation> depreciations = propertyMasterRepository.searchDepreciations(tenantId, ids, fromYear, toYear,
 				code, nameLocal, pageSize, offset, year);
@@ -1022,7 +1022,7 @@ public class MasterServiceImpl implements Masterservice {
 	public DocumentTypeResponse createDocumentTypeMaster(String tenantId, DocumentTypeRequest documentTypeRequest)
 			throws Exception {
 		for (DocumentType documentType : documentTypeRequest.getDocumentType()) {
-			AuditDetails auditDetails=getAuditDetail(documentTypeRequest.getRequestInfo());
+			AuditDetails auditDetails = getAuditDetail(documentTypeRequest.getRequestInfo());
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordWithTenantIdAndNameExits(
 					documentType.getTenantId(), documentType.getCode(), documentType.getApplication().toString(),
 					ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, null);

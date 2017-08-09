@@ -39,19 +39,20 @@ public class SearchMasterBuilder {
 	 * @param preparedStatementValues
 	 * @param fromYear
 	 * @param toYear
+	 * @param parent
 	 * @return {@link String} search query
 	 */
 	@SuppressWarnings("unchecked")
 	public static String buildSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
 			String nameLocal, String code, Boolean active, Boolean isResidential, Integer orderNumber, String category,
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues, Integer fromYear, Integer toYear,
-			Integer year) {
+			Integer year, String parent) {
 
 		StringBuffer searchSql = new StringBuffer();
 
 		searchSql.append("select * from " + tableName + " where ");
 
-		searchSql.append(" tenantId = ? ");
+		searchSql.append("tenantId =? ");
 		preparedStatementValues.add(tenantId);
 
 		if (ids != null && ids.length > 0) {
@@ -67,19 +68,24 @@ public class SearchMasterBuilder {
 
 				count++;
 			}
-			searchSql.append(" AND id IN (" + searchIds + ") ");
+			searchSql.append("AND id IN (" + searchIds + ") ");
 		}
 
 		if (code != null && !code.isEmpty()) {
-			searchSql.append(" AND code =? ");
+			searchSql.append("AND code =? ");
 			preparedStatementValues.add(code);
+		}
+
+		if (parent != null && !parent.isEmpty()) {
+			searchSql.append("AND parent =? ");
+			preparedStatementValues.add(parent);
 		}
 
 		JSONObject dataSearch = new JSONObject();
 
 		if (name != null || nameLocal != null || active != null || isResidential != null || orderNumber != null
 				|| category != null || fromYear != null || toYear != null)
-			searchSql.append(" AND data @> ?::jsonb");
+			searchSql.append("AND data @> ?::jsonb ");
 
 		if (name != null && !name.isEmpty())
 			dataSearch.put("name", name);
@@ -102,7 +108,7 @@ public class SearchMasterBuilder {
 		if (year != null) {
 
 			preparedStatementValues.add(year);
-			searchSql.append(" AND ?  BETWEEN (data::json->>'fromYear')::int AND (data::json->>'toyear')::int");
+			searchSql.append(" AND ?  BETWEEN (data::json->>'fromYear')::int AND (data::json->>'toyear')::int ");
 		} else {
 			if (fromYear != null)
 				dataSearch.put("fromYear", fromYear);
@@ -118,13 +124,13 @@ public class SearchMasterBuilder {
 		if (pageSize == null)
 			pageSize = 30;
 
-		searchSql.append(" limit ? ");
+		searchSql.append("limit ? ");
 		preparedStatementValues.add(pageSize);
 
 		if (offSet == null)
 			offSet = 0;
 
-		searchSql.append(" offset ? ");
+		searchSql.append("offset ? ");
 		preparedStatementValues.add(offSet);
 
 		return searchSql.toString();

@@ -859,7 +859,6 @@ public class PropertyServiceTest {
 			usageMaster.setCode("1234");
 			usageMaster.setNameLocal("test_namelocal");
 			usageMaster.setDescription("test_description");
-			usageMaster.setParent(new Long(1));
 
 			long createdTime = new Date().getTime();
 
@@ -899,7 +898,6 @@ public class PropertyServiceTest {
 			usageMaster.setCode("1234");
 			usageMaster.setNameLocal("update_namelocal");
 			usageMaster.setDescription("update_description");
-			usageMaster.setParent(new Long(1));
 
 			long createdTime = new Date().getTime();
 
@@ -1277,241 +1275,241 @@ public class PropertyServiceTest {
 		}
 	}
 
-	@Test
-	public void testUpdateProperty() throws Exception {
-		try {
-			PropertyRequest propertyRequest = new PropertyRequest();
-			List<Property> properties = new ArrayList<Property>();
-
-			Property property = new Property();
-
-			AuditDetails auditDetails = new AuditDetails();
-			auditDetails.setCreatedBy("Sandrapati");
-			auditDetails.setLastModifiedBy("sandrapati");
-			auditDetails.setCreatedTime((long) 123456);
-			auditDetails.setLastModifiedTime((long) 987654);
-			property.setId((long) 1);
-			property.setTenantId("default");
-			property.setUpicNumber("anil123");
-			property.setVltUpicNumber("vltUpicNumberupdate2");
-			property.setCreationReason(CreationReasonEnum.NEWPROPERTY.valueOf("NEWPROPERTY"));
-
-			Address address = new Address();
-			address.setId((long) 1);
-			address.setTenantId("default");
-			address.setLatitude((double) 12);
-			address.setLongitude((double) 20);
-			address.setAddressNumber("1-2-3");
-			address.setAddressLine1("acgaurds");
-			address.setAddressLine2("khirathabad");
-			address.setLandmark("noori");
-			address.setCity("hyderabad");
-			address.setPincode("500004");
-			address.setDetail("Testing");
-
-			address.setAuditDetails(auditDetails);
-
-			property.setAddress(address);
-
-			List<User> owners = new ArrayList<User>();
-			User owner = new User();
-			owner.setId((long) 1);
-			owner.setTenantId("default");
-			owner.setUserName("Anilkumar");
-			owner.setSalutation("testing");
-			owner.setName("anil");
-			owner.setGender("male");
-			owner.setMobileNumber("9333555666");
-			owner.setEmailId("anil@wtc.com");
-			owner.setAadhaarNumber("123456789123");
-			owner.setActive(true);
-			owner.setLocale("no");
-			owner.setType("house");
-			owner.setAccountLocked(true);
-			property.getOwners().add(owner);
-			List<Role> roles = new ArrayList<Role>();
-
-			Role role = new Role();
-			role.setName("ANil");
-			role.setDescription("Testing");
-			owner.getRoles().add(role);
-			owner.setRoles(roles);
-
-			owner.setAuditDetails(auditDetails);
-
-			owner.setDob("25/09/1989");
-			owner.setAltContactNumber("9874562134");
-			owner.setFatherOrHusbandName("svs");
-			owner.setBloodGroup("O+");
-			owner.setPan("stvt5854k");
-			owner.setPermanentAddress("eluru");
-			owner.setPermanentCity("eluru");
-			owner.setPermanentPincode("534001");
-			owner.setCorrespondenceCity("Hyderabad");
-			owner.setCorrespondencePincode("500004");
-			owner.setCorrespondenceAddress("Khirathabad");
-			owner.setSignature("S Anilkumar");
-			owner.setIdentificationMark("mole on right hand");
-			owner.setPhoto("anil.png");
-
-			owner.setIsPrimaryOwner(true);
-			owner.setIsSecondaryOwner(true);
-			owner.setOwnerShipPercentage((double) 10);
-			owner.setOwnerType("Sandrapati Anilkumar");
-
-			property.setOwners(owners);
-
-			PropertyDetail propertyDetail = new PropertyDetail();
-			propertyDetail.setId((long) 1);
-			propertyDetail.setSource(SourceEnum.MUNICIPAL_RECORDS.valueOf("MUNICIPAL_RECORDS"));
-			propertyDetail.setRegdDocNo("regdocupdate1");
-			propertyDetail.setRegdDocDate("25/05/2017");
-			propertyDetail.setReason("testing");
-			propertyDetail.setStatus(StatusEnum.ACTIVE.valueOf("ACTIVE"));
-			propertyDetail.setIsVerified(true);
-			propertyDetail.setVerificationDate("25/05/2017");
-			propertyDetail.setIsExempted(true);
-			propertyDetail.setExemptionReason("Testing");
-			propertyDetail.setPropertyType("Land");
-			propertyDetail.setCategory("Land");
-			propertyDetail.setUsage("Anil");
-			propertyDetail.setDepartment("Land department");
-			propertyDetail.setApartment("apartment");
-			propertyDetail.setSiteLength((double) 10);
-			propertyDetail.setSiteBreadth((double) 15);
-			propertyDetail.setSitalArea((double) 10);
-			propertyDetail.setTotalBuiltupArea((double) 20);
-			propertyDetail.setUndividedShare((double) 5);
-			propertyDetail.setNoOfFloors((long) 1);
-			propertyDetail.setIsSuperStructure(true);
-			propertyDetail.setLandOwner("Anil");
-			propertyDetail.setFloorType("normal");
-			propertyDetail.setWoodType("normal");
-			propertyDetail.setRoofType("normal");
-			propertyDetail.setWallType("normal");
-			propertyDetail.setAuditDetails(auditDetails);
-
-			List<Floor> floors = propertyDetail.getFloors();
-
-			Floor floor = new Floor();
-			floor.setId((long) 1);
-			floor.setFloorNo("f1");
-			floor.setAuditDetails(auditDetails);
-
-			List<Unit> units = new ArrayList<Unit>();
-
-			Unit unit = new Unit();
-			unit.setId((long) 1);
-			unit.setUnitNo(1);
-			unit.setUnitType(UnitTypeEnum.FLAT.valueOf("FLAT"));
-			unit.setLength((double) 15);
-			unit.setWidth((double) 15);
-			unit.setBuiltupArea((double) 15);
-			unit.setAssessableArea((double) 25);
-			unit.setBpaBuiltupArea((double) 35);
-			unit.setBpaNo("bpa1");
-			unit.setBpaDate("25/05/2017");
-			unit.setUsage("construction");
-			unit.setOccupancyType("business");
-			unit.setOccupierName("Anil");
-			unit.setFirmName("wtc");
-			unit.setRentCollected((double) 12);
-			unit.setStructure("rectangle");
-			unit.setAge("27");
-			unit.setExemptionReason("new property purchase");
-			unit.setIsStructured(true);
-			unit.setOccupancyDate("25/05/2017");
-			unit.setConstCompletionDate("25/05/2017");
-			unit.setManualArv((double) 5);
-			unit.setArv((double) 10);
-			unit.setElectricMeterNo("emno1");
-			unit.setWaterMeterNo("waterno1");
-			unit.setAuditDetails(auditDetails);
-			floor.getUnits().add(unit);
-			floor.setUnits(units);
-			propertyDetail.getFloors().add(floor);
-
-			propertyDetail.setFloors(floors);
-
-			List<Document> documents = propertyDetail.getDocuments();
-			Document document = new Document();
-			document.setId((long) 1);
-			document.setDocumentType("documenttype");
-			document.setFileStore("filestoredoc1");
-			document.setAuditDetails(auditDetails);
-			propertyDetail.getDocuments().add(document);
-			propertyDetail.setDocuments(documents);
-
-			propertyDetail.setStateId("stateId1");
-			propertyDetail.setApplicationNo("appno1");
-
-			WorkFlowDetails workFlowDetails = new WorkFlowDetails();
-			workFlowDetails.setDepartment("IT");
-			workFlowDetails.setDesignation("se");
-			workFlowDetails.setAssignee((long) 10);
-			workFlowDetails.setAction("working");
-			workFlowDetails.setStatus("processing");
-
-			propertyDetail.setWorkFlowDetails(workFlowDetails);
-
-			property.setPropertyDetail(propertyDetail);
-
-			VacantLandDetail vacantLandDetails = new VacantLandDetail();
-			vacantLandDetails.setId((long) 1);
-			vacantLandDetails.setSurveyNumber("snupdate1");
-			vacantLandDetails.setPattaNumber("pt1");
-			vacantLandDetails.setMarketValue((double) 150000);
-			vacantLandDetails.setCapitalValue((double) 100000);
-			vacantLandDetails.setLayoutApprovedAuth("approved");
-			vacantLandDetails.setLayoutPermissionNo("pn1");
-			vacantLandDetails.setLayoutPermissionDate("25/05/2017");
-			vacantLandDetails.setResdPlotArea((double) 152);
-			vacantLandDetails.setNonResdPlotArea((double) 154);
-			vacantLandDetails.setAuditDetails(auditDetails);
-
-			property.setVacantLand(vacantLandDetails);
-
-			property.setAssessmentDate("25/05/2017");
-			property.setOccupancyDate("25/05/2017");
-			property.setGisRefNo("gf10");
-			property.setIsAuthorised(true);
-			property.setIsUnderWorkflow(true);
-
-			PropertyLocation propertyLocation = new PropertyLocation();
-
-			Boundary adminBoundary = new Boundary();
-			Boundary locationBoundary = new Boundary();
-			Boundary revenueBoundary = new Boundary();
-
-			adminBoundary.setName("test");
-			locationBoundary.setName("testing");
-			revenueBoundary.setName("testing");
-			propertyLocation.setId((long) 5);
-			propertyLocation.setAdminBoundary(adminBoundary);
-			propertyLocation.setLocationBoundary(locationBoundary);
-			propertyLocation.setRevenueBoundary(revenueBoundary);
-
-			propertyLocation.setNorthBoundedBy("north");
-			propertyLocation.setSouthBoundedBy("south");
-			propertyLocation.setWestBoundedBy("west");
-			propertyLocation.setEastBoundedBy("east");
-			propertyLocation.setAuditDetails(auditDetails);
-			property.setBoundary(propertyLocation);
-
-			property.setActive(true);
-			property.setChannel(ChannelEnum.SYSTEM.valueOf("SYSTEM"));
-			property.setAuditDetails(auditDetails);
-			properties.add(property);
-
-			propertyRequest.setProperties(properties);
-			propertyRequest.setRequestInfo(getRequestInfoObject());
-
-			producer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
-					propertyRequest);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	 @Test
+	 public void testUpdateProperty() throws Exception {
+	 try {
+	 PropertyRequest propertyRequest = new PropertyRequest();
+	 List<Property> properties = new ArrayList<Property>();
+	
+	 Property property = new Property();
+	
+	 AuditDetails auditDetails = new AuditDetails();
+	 auditDetails.setCreatedBy("Sandrapati");
+	 auditDetails.setLastModifiedBy("sandrapati");
+	 auditDetails.setCreatedTime((long) 123456);
+	 auditDetails.setLastModifiedTime((long) 987654);
+	 property.setId((long) 1);
+	 property.setTenantId("default");
+	 property.setUpicNumber("anil123");
+	 property.setVltUpicNumber("vltUpicNumberupdate2");
+	 property.setCreationReason(CreationReasonEnum.NEWPROPERTY.valueOf("NEWPROPERTY"));
+	
+	 Address address = new Address();
+	 address.setId((long) 1);
+	 address.setTenantId("default");
+	 address.setLatitude((double) 12);
+	 address.setLongitude((double) 20);
+	 address.setAddressNumber("1-2-3");
+	 address.setAddressLine1("acgaurds");
+	 address.setAddressLine2("khirathabad");
+	 address.setLandmark("noori");
+	 address.setCity("hyderabad");
+	 address.setPincode("500004");
+	 address.setDetail("Testing");
+	
+	 address.setAuditDetails(auditDetails);
+	
+	 property.setAddress(address);
+	
+	 List<User> owners = new ArrayList<User>();
+	 User owner = new User();
+	 owner.setId((long) 1);
+	 owner.setTenantId("default");
+	 owner.setUserName("Anilkumar");
+	 owner.setSalutation("testing");
+	 owner.setName("anil");
+	 owner.setGender("male");
+	 owner.setMobileNumber("9333555666");
+	 owner.setEmailId("anil@wtc.com");
+	 owner.setAadhaarNumber("123456789123");
+	 owner.setActive(true);
+	 owner.setLocale("no");
+	 owner.setType("house");
+	 owner.setAccountLocked(true);
+	 property.getOwners().add(owner);
+	 List<Role> roles = new ArrayList<Role>();
+	
+	 Role role = new Role();
+	 role.setName("ANil");
+	 role.setDescription("Testing");
+	 owner.getRoles().add(role);
+	 owner.setRoles(roles);
+	
+	 owner.setAuditDetails(auditDetails);
+	
+	 owner.setDob("25/09/1989");
+	 owner.setAltContactNumber("9874562134");
+	 owner.setFatherOrHusbandName("svs");
+	 owner.setBloodGroup("O+");
+	 owner.setPan("stvt5854k");
+	 owner.setPermanentAddress("eluru");
+	 owner.setPermanentCity("eluru");
+	 owner.setPermanentPincode("534001");
+	 owner.setCorrespondenceCity("Hyderabad");
+	 owner.setCorrespondencePincode("500004");
+	 owner.setCorrespondenceAddress("Khirathabad");
+	 owner.setSignature("S Anilkumar");
+	 owner.setIdentificationMark("mole on right hand");
+	 owner.setPhoto("anil.png");
+	
+	 owner.setIsPrimaryOwner(true);
+	 owner.setIsSecondaryOwner(true);
+	 owner.setOwnerShipPercentage((double) 10);
+	 owner.setOwnerType("Sandrapati Anilkumar");
+	
+	 property.setOwners(owners);
+	
+	 PropertyDetail propertyDetail = new PropertyDetail();
+	 propertyDetail.setId((long) 1);
+	 propertyDetail.setSource(SourceEnum.MUNICIPAL_RECORDS.valueOf("MUNICIPAL_RECORDS"));
+	 propertyDetail.setRegdDocNo("regdocupdate1");
+	 propertyDetail.setRegdDocDate("25/05/2017");
+	 propertyDetail.setReason("testing");
+	 propertyDetail.setStatus(StatusEnum.ACTIVE.valueOf("ACTIVE"));
+	 propertyDetail.setIsVerified(true);
+	 propertyDetail.setVerificationDate("25/05/2017");
+	 propertyDetail.setIsExempted(true);
+	 propertyDetail.setExemptionReason("Testing");
+	 propertyDetail.setPropertyType("Land");
+	 propertyDetail.setCategory("Land");
+	 propertyDetail.setUsage("Anil");
+	 propertyDetail.setDepartment("Land department");
+	 propertyDetail.setApartment("apartment");
+	 propertyDetail.setSiteLength((double) 10);
+	 propertyDetail.setSiteBreadth((double) 15);
+	 propertyDetail.setSitalArea((double) 10);
+	 propertyDetail.setTotalBuiltupArea((double) 20);
+	 propertyDetail.setUndividedShare((double) 5);
+	 propertyDetail.setNoOfFloors((long) 1);
+	 propertyDetail.setIsSuperStructure(true);
+	 propertyDetail.setLandOwner("Anil");
+	 propertyDetail.setFloorType("normal");
+	 propertyDetail.setWoodType("normal");
+	 propertyDetail.setRoofType("normal");
+	 propertyDetail.setWallType("normal");
+	 propertyDetail.setAuditDetails(auditDetails);
+	
+	 List<Floor> floors = propertyDetail.getFloors();
+	
+	 Floor floor = new Floor();
+	 floor.setId((long) 1);
+	 floor.setFloorNo("f1");
+	 floor.setAuditDetails(auditDetails);
+	
+	 List<Unit> units = new ArrayList<Unit>();
+	
+	 Unit unit = new Unit();
+	 unit.setId((long) 1);
+	 unit.setUnitNo(1);
+	 unit.setUnitType(UnitTypeEnum.FLAT.valueOf("FLAT"));
+	 unit.setLength((double) 15);
+	 unit.setWidth((double) 15);
+	 unit.setBuiltupArea((double) 15);
+	 unit.setAssessableArea((double) 25);
+	 unit.setBpaBuiltupArea((double) 35);
+	 unit.setBpaNo("bpa1");
+	 unit.setBpaDate("25/05/2017");
+	 unit.setUsage("construction");
+	 unit.setOccupancyType("business");
+	 unit.setOccupierName("Anil");
+	 unit.setFirmName("wtc");
+	 unit.setRentCollected((double) 12);
+	 unit.setStructure("rectangle");
+	 unit.setAge("27");
+	 unit.setExemptionReason("new property purchase");
+	 unit.setIsStructured(true);
+	 unit.setOccupancyDate("25/05/2017");
+	 unit.setConstCompletionDate("25/05/2017");
+	 unit.setManualArv((double) 5);
+	 unit.setArv((double) 10);
+	 unit.setElectricMeterNo("emno1");
+	 unit.setWaterMeterNo("waterno1");
+	 unit.setAuditDetails(auditDetails);
+	 floor.getUnits().add(unit);
+	 floor.setUnits(units);
+	 propertyDetail.getFloors().add(floor);
+	
+	 propertyDetail.setFloors(floors);
+	
+	 List<Document> documents = propertyDetail.getDocuments();
+	 Document document = new Document();
+	 document.setId((long) 1);
+	 document.setDocumentType("documenttype");
+	 document.setFileStore("filestoredoc1");
+	 document.setAuditDetails(auditDetails);
+	 propertyDetail.getDocuments().add(document);
+	 propertyDetail.setDocuments(documents);
+	
+	 propertyDetail.setStateId("stateId1");
+	 propertyDetail.setApplicationNo("appno1");
+	
+	 WorkFlowDetails workFlowDetails = new WorkFlowDetails();
+	 workFlowDetails.setDepartment("IT");
+	 workFlowDetails.setDesignation("se");
+	 workFlowDetails.setAssignee((long) 10);
+	 workFlowDetails.setAction("working");
+	 workFlowDetails.setStatus("processing");
+	
+	 propertyDetail.setWorkFlowDetails(workFlowDetails);
+	
+	 property.setPropertyDetail(propertyDetail);
+	
+	 VacantLandDetail vacantLandDetails = new VacantLandDetail();
+	 vacantLandDetails.setId((long) 1);
+	 vacantLandDetails.setSurveyNumber("snupdate1");
+	 vacantLandDetails.setPattaNumber("pt1");
+	 vacantLandDetails.setMarketValue((double) 150000);
+	 vacantLandDetails.setCapitalValue((double) 100000);
+	 vacantLandDetails.setLayoutApprovedAuth("approved");
+	 vacantLandDetails.setLayoutPermissionNo("pn1");
+	 vacantLandDetails.setLayoutPermissionDate("25/05/2017");
+	 vacantLandDetails.setResdPlotArea((double) 152);
+	 vacantLandDetails.setNonResdPlotArea((double) 154);
+	 vacantLandDetails.setAuditDetails(auditDetails);
+	
+	 property.setVacantLand(vacantLandDetails);
+	
+	 property.setAssessmentDate("25/05/2017");
+	 property.setOccupancyDate("25/05/2017");
+	 property.setGisRefNo("gf10");
+	 property.setIsAuthorised(true);
+	 property.setIsUnderWorkflow(true);
+	
+	 PropertyLocation propertyLocation = new PropertyLocation();
+	
+	 Boundary adminBoundary = new Boundary();
+	 Boundary locationBoundary = new Boundary();
+	 Boundary revenueBoundary = new Boundary();
+	
+	 adminBoundary.setName("test");
+	 locationBoundary.setName("testing");
+	 revenueBoundary.setName("testing");
+	 propertyLocation.setId((long) 5);
+	 propertyLocation.setAdminBoundary(adminBoundary);
+	 propertyLocation.setLocationBoundary(locationBoundary);
+	 propertyLocation.setRevenueBoundary(revenueBoundary);
+	
+	 propertyLocation.setNorthBoundedBy("north");
+	 propertyLocation.setSouthBoundedBy("south");
+	 propertyLocation.setWestBoundedBy("west");
+	 propertyLocation.setEastBoundedBy("east");
+	 propertyLocation.setAuditDetails(auditDetails);
+	 property.setBoundary(propertyLocation);
+	
+	 property.setActive(true);
+	 property.setChannel(ChannelEnum.SYSTEM.valueOf("SYSTEM"));
+	 property.setAuditDetails(auditDetails);
+	 properties.add(property);
+	
+	 propertyRequest.setProperties(properties);
+	 propertyRequest.setRequestInfo(getRequestInfoObject());
+	
+	 producer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
+	 propertyRequest);
+	 } catch (Exception e) {
+	 e.printStackTrace();
+	 }
+	 }
 
 	@Test
 	public void createDepreciation() {

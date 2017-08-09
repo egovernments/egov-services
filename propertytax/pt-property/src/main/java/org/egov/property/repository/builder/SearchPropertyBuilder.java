@@ -39,9 +39,9 @@ public class SearchPropertyBuilder {
 			+ "JOIN egpt_property_owner puser on puser.property = prop.id where";
 
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
-			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
-			String ownerName, int demandFrom, int demandTo, String propertyId, String applicationNo,
+			String upicNo, Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
+			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
+			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo,
 			List<Object> preparedStatementValues) {// TODO remove unused
 													// argument [Pranav]
 
@@ -171,10 +171,10 @@ public class SearchPropertyBuilder {
 		// then we need to put the default page size and page number
 		//
 
-		if (pageNumber == -1 || pageNumber == 0)
+		if (pageNumber == null || pageNumber == 0)
 			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
 
-		if (pageSize == -1)
+		if (pageSize == null)
 			pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
 
 		int offset = 0;
@@ -243,10 +243,10 @@ public class SearchPropertyBuilder {
 
 		searchQuery.append(" ORDER BY upicnumber");
 
-		if (pageNumber == -1 || pageNumber == 0)
+		if (pageNumber == null || pageNumber == 0)
 			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
 
-		if (pageSize == -1)
+		if (pageSize == null)
 			pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
 
 		int offset = 0;

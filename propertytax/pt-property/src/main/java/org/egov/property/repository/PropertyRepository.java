@@ -475,9 +475,9 @@ public class PropertyRepository {
 	}
 
 	public Map<String, Object> searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
-			int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber, String aadhaarNumber,
-			String houseNoBldgApt, int revenueZone, int revenueWard, int locality, String ownerName, int demandFrom,
-			int demandTo, String propertyId, String applicationNo) {
+			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
+			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
+			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo) {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -556,13 +556,17 @@ public class PropertyRepository {
 
 			UserResponseInfo userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
-			
 			logger.info("PropertyRepository UserResponseInfo :" + userResponse);
-			
+
 			userResponse.getUser().forEach(user -> {
+				user.setIsPrimaryOwner(owner.getIsPrimaryOwner());
+				user.setIsSecondaryOwner(owner.getIsSecondaryOwner());
+				user.setOwnerShipPercentage(owner.getOwnerShipPercentage());
+				user.setOwnerType(owner.getOwnerType());
+				user.setOwner(owner.getOwner());
+				user.setAuditDetails(getAuditDetailsForOwner(owner.getId()));
 				users.add(user);
 			});
-			;
 
 		});
 
@@ -1049,9 +1053,9 @@ public class PropertyRepository {
 
 		jdbcTemplate.update(pscTitleTransfer, titleTransferKey);
 
-		Long title_Transfer_id = Long.parseLong(String.valueOf(titleTransferKey.getKey().intValue()).trim());
+		Long titleTransferId = Long.parseLong(String.valueOf(titleTransferKey.getKey().intValue()).trim());
 
-		return title_Transfer_id;
+		return titleTransferId;
 
 	}
 
@@ -1193,7 +1197,7 @@ public class PropertyRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(demands);
 
-				ps.setObject(16, property.getDemands());
+				ps.setObject(16, jsonObject);
 				ps.setLong(17, getLong(property.getId()));
 				return ps;
 			}
@@ -1209,7 +1213,7 @@ public class PropertyRepository {
 	 * @param property
 	 * @param propertyId
 	 */
-	public void saveAddressHistory(Property property, Long propertyId) {
+	public void saveAddressHistory(Property property) {
 		Long createdTime = new Date().getTime();
 
 		Address address = property.getAddress();
@@ -1217,7 +1221,7 @@ public class PropertyRepository {
 		Object[] addressArgs = { address.getTenantId(), address.getLatitude(), address.getLongitude(),
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(), address.getAuditDetails().getCreatedBy(),
-				address.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, propertyId, address.getId() };
+				address.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, property.getId(), address.getId() };
 
 		jdbcTemplate.update(AddressBuilder.INSERT_ADDRESSHISTORY_QUERY, addressArgs);
 
@@ -1229,7 +1233,7 @@ public class PropertyRepository {
 	 * @param property
 	 * @param propertyId
 	 */
-	public void savePropertyDetailsHistory(Property property, Long propertyId) {
+	public void savePropertyDetailsHistory(Property property) {
 		Long createdTime = new Date().getTime();
 		PropertyDetail propertyDetails = property.getPropertyDetail();
 		final PreparedStatementCreator pscPropertyDetails = new PreparedStatementCreator() {
@@ -1269,7 +1273,7 @@ public class PropertyRepository {
 				ps.setString(30, propertyDetails.getAuditDetails().getLastModifiedBy());
 				ps.setLong(31, getLong(createdTime));
 				ps.setLong(32, getLong(createdTime));
-				ps.setLong(33, getLong(propertyId));
+				ps.setLong(33, getLong(property.getId()));
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(propertyDetails.getTaxCalculations());
@@ -1496,8 +1500,9 @@ public class PropertyRepository {
 	public void saveUserHistory(User owner, Long propertyId) {
 		Long createdTime = new Date().getTime();
 
-		Long id = jdbcTemplate.queryForObject(UserBuilder.GET_OWNERTABLE_ID, new Object[] { owner.getId(), propertyId },
-				Long.class);
+		Integer propertyOwnerId = jdbcTemplate.queryForObject(UserBuilder.GET_OWNERTABLE_ID,
+				new Object[] { propertyId, owner.getId() }, Integer.class);
+		Long id = Long.parseLong(String.valueOf(propertyOwnerId).trim());
 		Object[] userPropertyArgs = { propertyId, owner.getId(), owner.getIsPrimaryOwner(), owner.getIsSecondaryOwner(),
 				owner.getOwnerShipPercentage(), owner.getOwnerType(), owner.getAuditDetails().getCreatedBy(),
 				owner.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, id };
@@ -1847,4 +1852,28 @@ public class PropertyRepository {
 
 		}
 	}
+
+	/**
+	 * User property delete query
+	 * 
+	 * @param owner
+	 * @param propertyId
+	 */
+	public void deleteUser(Long userId, Long propertyId) {
+		jdbcTemplate.update(UserBuilder.DELETE_OWNER, new Object[] { propertyId, userId });
+	}
+
+	/**
+	 * This will give the audit details for the given user Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForOwner(Long ownerId) {
+		String query = UserBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { ownerId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
 }

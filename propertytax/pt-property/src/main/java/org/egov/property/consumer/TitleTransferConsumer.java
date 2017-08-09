@@ -9,6 +9,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.PropertyRequest;
 import org.egov.models.TitleTransferRequest;
 import org.egov.property.services.PersisterService;
+import org.egov.property.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -32,6 +33,9 @@ public class TitleTransferConsumer {
 	@Autowired
 	Environment environment;
 
+	@Autowired
+	PropertyService propertyService;
+	
 	@Autowired
 	PersisterService persisterService;
 
@@ -105,8 +109,7 @@ public class TitleTransferConsumer {
 				environment.getProperty("egov.propertytax.property.titletransfer.workflow.updated"))) {
 			persisterService.updateTitleTransfer(titleTransferRequest);
 		} else {
-			PropertyRequest propertyRequest = persisterService
-					.savePropertyHistoryandUpdateProperty(titleTransferRequest);
+			PropertyRequest propertyRequest = propertyService.savePropertyHistoryandUpdateProperty(titleTransferRequest);
 
 			producer.send(environment.getProperty("egov.propertytax.property.titletransfer.db.saved"), propertyRequest);
 

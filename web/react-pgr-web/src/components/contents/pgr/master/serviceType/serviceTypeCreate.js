@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -17,8 +14,6 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-
-var flag = 0;
 const styles = {
   headerStyle : {
     color: 'rgb(90, 62, 27)',
@@ -27,29 +22,8 @@ const styles = {
   marginStyle:{
     margin: '15px'
   },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
+  setTopMargin: {
+    marginTop: 34
   }
 };
 
@@ -276,9 +250,8 @@ class ServiceTypeCreate extends Component {
           //if( (createServiceType.attribute.datatype=="Single value list" || createServiceType.attribute.datatype == "Multi select") && (createServiceType.attribute.dataType!=undefined)) {
           return (
               <div>
-                <div className="clearfix"></div>
                   <Row>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
                             floatingLabelText="Key"
@@ -288,7 +261,7 @@ class ServiceTypeCreate extends Component {
                             id="attributesKey"
                         />
                     </Col>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
                             floatingLabelText="Name"
@@ -298,7 +271,7 @@ class ServiceTypeCreate extends Component {
                             id="attributesName"
                         />
                     </Col>
-                    <Col xs={12} md={3} sm={3} style={styles.textRight}>
+                    <Col xs={12} sm={4} md={3} lg={3} style={styles.textRight}>
                     <br/>
                     { (editIndex == -1 || editIndex == undefined ) &&
                       <RaisedButton type="button" label="Add" primary="true" onClick={()=> {
@@ -360,7 +333,7 @@ class ServiceTypeCreate extends Component {
 
           return (
 
-              <RaisedButton style={{margin:'15px 5px'}} type="button" primary="true"  onClick={()=>{showCustomFieldForm(true)}} float="right"  label={translate('pgr.lbl.create')} labelColor={white}/>
+              <RaisedButton style={{margin:'15px 5px'}} type="button" primary="true"  onClick={()=>{showCustomFieldForm(true)}} float="right"  label={translate('pgr.lbl.create')}/>
             )
 
       }
@@ -434,7 +407,7 @@ class ServiceTypeCreate extends Component {
             {
               return (
                 <div>
-                  <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText={translate('core.lbl.code')}
@@ -444,7 +417,7 @@ class ServiceTypeCreate extends Component {
                           id="attributesName"
                       />
                   </Col>
-                  <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText="Group Code"
@@ -454,7 +427,7 @@ class ServiceTypeCreate extends Component {
                           id="groupCode"
                       />
                   </Col>
-                  <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText="Datatype Description"
@@ -464,7 +437,7 @@ class ServiceTypeCreate extends Component {
                           id="datatypeDescription"
                       />
                   </Col>
-                  <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText={translate('core.lbl.description')}
@@ -475,7 +448,7 @@ class ServiceTypeCreate extends Component {
                       />
                   </Col>
 
-                  <Col  xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText={translate('core.error.required')}
                            fullWidth={true}
@@ -497,7 +470,7 @@ class ServiceTypeCreate extends Component {
                       </SelectField>
                   </Col>
 
-                  <Col  xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText="Variable"
                            fullWidth={true}
@@ -518,7 +491,7 @@ class ServiceTypeCreate extends Component {
 
                       </SelectField>
                   </Col>
-                  <Col  xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText="Data Type"
                            fullWidth={true}
@@ -595,7 +568,7 @@ class ServiceTypeCreate extends Component {
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate('core.lbl.code') +" *"}
@@ -606,7 +579,7 @@ class ServiceTypeCreate extends Component {
                                       disabled={this.state.id ? true : false }
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.add.name")+" *"}
@@ -617,8 +590,7 @@ class ServiceTypeCreate extends Component {
 
                                   />
                               </Col>
-
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.description")}
@@ -629,9 +601,7 @@ class ServiceTypeCreate extends Component {
                                       id="description"
                                   />
                               </Col>
-
-
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="SLA Hours *"
@@ -642,7 +612,7 @@ class ServiceTypeCreate extends Component {
                                       id="slaHours"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                     <SelectField
                                        floatingLabelText={translate("core.category")+" *"}
                                        fullWidth={true}
@@ -666,14 +636,10 @@ class ServiceTypeCreate extends Component {
                                       ))}
                                       </SelectField>
                               </Col>
-
-                              <div className="clearfix"></div>
-
-                              <Col xs={12} md={3} sm={6}>
-
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
-                                    style={styles.active}
+                                    style={styles.setTopMargin}
                                     checked = {createServiceType.active || false}
                                     onCheck = {(e, i, v) => { console.log(createServiceType.active, i);
 
@@ -687,11 +653,10 @@ class ServiceTypeCreate extends Component {
                                     id="active"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
-
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
                                     label="Has Financial Impact"
-                                    style={styles.hasFinancialImpact}
+                                    style={styles.setTopMargin}
                                     checked = {createServiceType.hasFinancialImpact || false}
                                     onCheck = {(e, i, v) => { console.log(createServiceType.hasFinancialImpact, i);
 
@@ -723,7 +688,6 @@ class ServiceTypeCreate extends Component {
                                                                    id="metadata"
                                                                  />
                                                              </Col>*/}
-                              <div className="clearfix"></div>
                                 {/*promotionFunc()*/}
 
                           </Row>
@@ -731,7 +695,7 @@ class ServiceTypeCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" primary="true" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" primary="true" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
               </div>
           </form>
           <Dialog

@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-import Divider from 'material-ui/Divider';
 import {Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {List, ListItem} from 'material-ui/List';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';

@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton, Table, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -36,30 +34,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -469,10 +443,10 @@ componentWillUpdate() {
       const viewTable = function() {
       	  if(isSearchClicked)
       		return (
-   	        <Card>
+   	        <Card style={styles.marginStyle}>
               <CardText>
                   <Row>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
                             floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
@@ -481,7 +455,7 @@ componentWillUpdate() {
                             disabled={true}
                         />
                     </Col>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText={translate('pgr.lbl.grievance.type')+ " *"}
                            fullWidth={true}
@@ -503,7 +477,7 @@ componentWillUpdate() {
 						  })}
                         </SelectField>
                     </Col>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText={translate('core.lbl.department') + ' *'}
                            fullWidth={true}
@@ -526,7 +500,7 @@ componentWillUpdate() {
 
                         </SelectField>
                     </Col>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText={translate('pgr.lbl.designation')+" *"}
                            fullWidth={true}
@@ -548,7 +522,7 @@ componentWillUpdate() {
 							})}
                         </SelectField>
                     </Col>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText={translate('pgr.lbl.toposition')+" *"}
                            fullWidth={true}
@@ -604,58 +578,52 @@ componentWillUpdate() {
 
       return(<div className="defineEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
-          <Card  style={styles.marginStyle}>
+          <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.escalation')} < /div>} />
               <CardText>
-                  <Card>
-                      <CardText>
-                          <Grid>
-                              <Row>
-                                  <Col xs={12} md={4} mdPush={4}>
-                                        <AutoComplete
-                                          floatingLabelText={translate('pgr.lbl.position')+" *"}
-                                          fullWidth={true}
-                                          filter={function filter(searchText, key) {
-                                                    return key.toLowerCase().includes(searchText.toLowerCase());
-                                                 }}
-                                          dataSource={this.state.positionSource}
-                                          dataSourceConfig={this.state.dataSourceConfig}
-                                          value={defineEscalation.fromPosition ? defineEscalation.fromPosition : ""}
-                                          onNewRequest={(chosenRequest, index) => {
-                  	                        var e = {
-                  	                          target: {
-                  	                            value: chosenRequest.id
-                  	                          }
-                  	                        };
-                  	                        handleChange(e, "fromPosition", true, "");
-                  	                       }}
-                                        />
-                                  </Col>
-                              </Row>
-                          </Grid>
-                      </CardText>
-                  </Card>
-                  <div style={{textAlign:'center'}}>
-
-                      <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false: true} label={translate('core.lbl.search')} />
-
-                  </div>
-                  {this.state.noData &&
-                    <Card style = {{textAlign:"center"}}>
-                      <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
-                      <CardText>
-                          <RaisedButton primary={true} style={{margin:'10px 0'}} label={translate('pgr.lbl.addesc')} labelColor={white} onClick={() => {
-                            this.setState({
-                              isSearchClicked: true,
-                              noData:false
-                            })
-                          }}/>
-                     </CardText>
-                  </Card>
-                  }
-                  {this.state.noData ? '' : viewTable()}
+                  <Grid>
+                      <Row>
+                          <Col xs={12} sm={4} md={3} lg={3}>
+                                <AutoComplete
+                                  floatingLabelText={translate('pgr.lbl.position')+" *"}
+                                  fullWidth={true}
+                                  filter={function filter(searchText, key) {
+                                            return key.toLowerCase().includes(searchText.toLowerCase());
+                                         }}
+                                  dataSource={this.state.positionSource}
+                                  dataSourceConfig={this.state.dataSourceConfig}
+                                  value={defineEscalation.fromPosition ? defineEscalation.fromPosition : ""}
+                                  onNewRequest={(chosenRequest, index) => {
+          	                        var e = {
+          	                          target: {
+          	                            value: chosenRequest.id
+          	                          }
+          	                        };
+          	                        handleChange(e, "fromPosition", true, "");
+          	                       }}
+                                />
+                          </Col>
+                      </Row>
+                  </Grid>
               </CardText>
           </Card>
+          <div style={{textAlign:'center'}}>
+              <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false: true} label={translate('core.lbl.search')} />
+          </div>
+          {this.state.noData &&
+            <Card style = {{textAlign:"center"}}>
+              <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
+              <CardText>
+                  <RaisedButton primary={true} style={{margin:'10px 0'}} label={translate('pgr.lbl.addesc')} onClick={() => {
+                    this.setState({
+                      isSearchClicked: true,
+                      noData:false
+                    })
+                  }}/>
+             </CardText>
+          </Card>
+          }
+          {this.state.noData ? '' : viewTable()}
           </form>
       </div>)
     }

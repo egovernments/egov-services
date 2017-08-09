@@ -410,11 +410,19 @@ calcAssessableArea = (e, type) => {
 	
 			handleChangeNextOne(f, "floor","assessableArea", false, "");
 			
-		} else if(type == 'carpet' && floorDetails.floor.hasOwnProperty('exemptedArea')){
-		
-			f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
+		} else if(type == 'carpet'){
 			
-			handleChangeNextOne(f, "floor","assessableArea", false, "");
+			if(floorDetails.floor.hasOwnProperty('exemptedArea')) {
+				f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
+			
+				handleChangeNextOne(f, "floor","assessableArea", false, "");
+			} else {
+				f.target.value = parseFloat(e.target.value);
+			
+				handleChangeNextOne(f, "floor","assessableArea", false, "");
+			}
+		
+			
 			
 		} 			
 	}	

@@ -85,10 +85,11 @@ class Report extends Component {
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
+    var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
-        var ind = i;
+        ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
         var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace("[", "\[").replace("]", "\]") + "\\[\\d{1}\\]", 'g');
         for(var j=1; j < arr.length; j++) {
@@ -98,8 +99,8 @@ class Report extends Component {
         }
       }
 
-      if(specs[moduleName + "." + actionName].groups[ind].children && specs[moduleName + "." + actionName].groups[ind].children.length) {
-        this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind].children);
+      if(specs[moduleName + "." + actionName].groups[ind || i].children && specs[moduleName + "." + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind || i].children);
       }
     }
 
@@ -300,7 +301,7 @@ class Report extends Component {
 
   getVal = (path, dateBool) => {
     var _val = _.get(this.props.formData, path);
-    if(dateBool && typeof _val != 'object' && _val && _val.indexOf("-") > -1) {
+    if(dateBool && typeof _val == 'string' && _val && _val.indexOf("-") > -1) {
       var _date = _val.split("-");
       return new Date(_date[0], (Number(_date[1])-1), _date[2]);
     }
@@ -740,13 +741,16 @@ class Report extends Component {
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
           var stringified = JSON.stringify(mockData[moduleName + "." + actionName].groups[i]);
           mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (mockData[moduleName + "." + actionName].groups[i].index-1) + "]"));
-          var grps = [..._.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)];
-          //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
-          grps.splice((mockData[moduleName + "." + actionName].groups[i].index-1), 1);
-          //console.log(grps);
-          _.set(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath, grps);
-          //console.log(_formData);
-          setFormData(_formData);
+          
+          if(_.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)) {
+            var grps = [..._.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)];
+            //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
+            grps.splice((mockData[moduleName + "." + actionName].groups[i].index-1), 1);
+            //console.log(grps);
+            _.set(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath, grps);
+            //console.log(_formData);
+            setFormData(_formData);
+          }
         }
       }
       //console.log(mockData[moduleName + "." + actionName].groups);

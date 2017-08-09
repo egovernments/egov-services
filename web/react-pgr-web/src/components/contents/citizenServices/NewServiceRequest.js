@@ -1,0 +1,255 @@
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
+import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
+import Snackbar from 'material-ui/Snackbar';
+import TextField from 'material-ui/TextField';
+import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
+import DatePicker from 'material-ui/DatePicker';
+import SelectField from 'material-ui/SelectField';
+import AutoComplete from 'material-ui/AutoComplete';
+import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import Fields from '../../common/Fields';
+import Api from '../../../api/api';
+import {translate, validate_fileupload} from '../../common/common';
+import FormSection from './FormSection';
+
+const STATUS_NEW = "DSNEW";
+const FILES_MODULE_TAG = "citizenservices";
+
+class NewServiceRequest extends Component{
+
+    constructor(){
+      super();
+    }
+
+    isGroupExists = (groupCode, groupsArray) => {
+      return groupsArray.find((group) => group.code === groupCode);
+    };
+
+    fieldGrouping = (response) => {
+
+      let userType=localStorage.getItem('type');
+
+      /*response.attributes=[{
+        variable:true,
+        code:"firstName",
+        dataType:"string",
+        description:'core.lbl.add.name',
+        required:true,
+        groupCode:null,
+        roles:[],
+        actions:[],
+        constraints:null,
+        attribValues:[]
+      },
+      {
+        variable:true,
+        code:"phone",
+        dataType:"Integer",
+        description:'core.lbl.mobilenumber',
+        required:true,
+        groupCode:null,
+        roles:[],
+        actions:[],
+        constraints:null,
+        attribValues:[]
+      },
+      {
+        variable:true,
+        code:"email",
+        dataType:"string",
+        description:'core.lbl.email.compulsory',
+        required:false,
+        groupCode:null,
+        roles:[],
+        actions:[],
+        constraints:null,
+        attribValues:[]
+      }, ...response.attributes];*/
+
+      //Filter form fields based on current role and action
+      /*let formFields = response.attributes.filter((field) => (field.roles.indexOf(userType) > -1
+                      && field.actions.indexOf(STATUS_NEW) > -1) ||
+                      (field.roles.length == 0 && field.actions.length ==0) ||
+                      (field.roles.length == 0 > -1 && field.actions.indexOf(STATUS_NEW) > -1) ||
+                      (field.roles.indexOf(userType) > -1 && field.actions.length ==0));*/
+
+      let formFields = response.attributes.filter((field) => field.variable
+            && field.code != "CHECKLIST" && field.code !="DOCUMENTS");
+
+      let formSections = [{fields : formFields}];
+      let requiredFields = formFields.filter((field)=> field.required);
+
+      this.props.initForm(requiredFields);
+
+      this.setState({
+          pageTitle:response.serviceName,
+          formSections
+      });
+
+      //Basic fields with out any groups
+      /*let commonFields = formFields.filter((field) => !field.groupCode ||
+                         !this.isGroupExists(field.groupCode, response.groups));
+
+      let formSections = [{fields : commonFields}];
+
+      let requiredFields = [commonFields.map((field)=> field.code)];
+
+      this.props.initForm(requiredFields);
+
+      response.groups.map((group)=>{
+         let fields = formFields.filter((field) => field.groupCode == group.code);
+
+         let constraintObj = group.constraints.find((constraint) => constraint.action == STATUS_NEW
+                       && constraint.role == userType);
+
+         let constraint = "";
+
+        if(constraintObj){
+          constraint = constraintObj.constraint;
+        }
+
+        if(fields.length > 0){
+            formSections.push({
+              ...group,
+              constraint,
+              fields
+            });
+        }
+      });*/
+
+
+    }
+
+    renderFormSection = () =>{
+         if(this.state.formSections && this.state.formSections.length > 0){
+           return this.state.formSections.map((section, index) =>{
+             return <FormSection key={index} fields={section.fields} groupName={section.name}
+                values={this.props.form} constraint={section.constraint}
+                errors={this.props.fieldErrors}
+                addFile={this.props.addFile}
+                removeFile={this.props.removeFile}
+                files={this.props.files}
+                dialogOpener={this.props.toggleDailogAndSetText}
+                handler={this.props.handleChange}></FormSection>
+           });
+         }
+         else
+           return [];
+    };
+
+    componentWillMount(){
+
+      //console.log('service code', this.props.match.params.serviceCode);
+
+      /*let response=JSON.parse(`{ "responseInfo": null, "tenantId": "default", "serviceCode": "NOC", "attributes": [ { "variable": true, "code": "NOCNAME", "dataType": "string", "required": true, "dataTypeDescription": null, "description": "core.noc.name", "url": null, "groupCode": "group1", "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCAGE", "dataType": "double", "required": true, "dataTypeDescription": null, "description": "core.noc.age", "url": null, "groupCode": "group1", "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCFEES", "dataType": "integer", "required": false, "dataTypeDescription": null, "description": "core.noc.fees", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCDATE", "dataType": "date", "required": false, "dataTypeDescription": null, "description": "core.noc.date", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCENDDATE", "dataType": "datetime", "required": true, "dataTypeDescription": null, "description": "core.noc.enddate", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCSTATUS", "dataType": "singlevaluelist", "required": true, "dataTypeDescription": null, "description": "core.noc.status", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [ { "key": "NOCSTATUSAPPROVED", "name": "core.noc.status.approved", "isActive": true }, { "key": "NOCSTATUSREJECTED", "name": "core.noc.status.rejected", "isActive": true } ] }, { "variable": true, "code": "NOCSLIMIT", "dataType": "multivaluelist", "required": false, "dataTypeDescription": null, "description": "core.noc.limit", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [ { "key": "NOCLIMITONE", "name": "core.noc.limit.one", "isActive": true }, { "key": "NOCLIMITTWO", "name": "core.noc.limit.two", "isActive": true }, { "key": "NOCLIMITTHREE", "name": "core.noc.limit.three", "isActive": true }, { "key": "NOCLIMITFOUR", "name": "core.noc.limit.four", "isActive": false } ] }, { "variable": true, "code": "NOCFILE", "dataType": "file", "required": true, "dataTypeDescription": null, "description": "core.noc.file", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCMULTIFILE", "dataType": "multifile", "required": false, "dataTypeDescription": null, "description": "core.noc.multifile", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] } ] }`);
+      /*response['serviceName']="NOC Certificate";
+      this.fieldGrouping(response);*/
+
+      this.setState({pageTitle:""});
+      this.props.setLoadingStatus('loading');
+
+      var currentThis=this;
+      Api.commonApiPost("/pgr-master/service/v2/_search",{serviceCode : this.props.match.params.serviceCode, keywords:"deliverable"}).then(function(response)
+      {
+        currentThis.props.setLoadingStatus('hide');
+        currentThis.fieldGrouping(response[0]);
+      },function(err) {
+        currentThis.props.setLoadingStatus('hide');
+      });
+
+    }
+
+    //TODO cover multivaluelist attribValues functionality
+    prepareAndSubmitRequest = () =>{
+
+        let userType=localStorage.getItem('type');
+        let serviceRequest={};
+        let attribValues = [];
+        let fileAttribValues=[]; //store filestoreId by code
+        this.props.setLoadingStatus('loading');
+
+        serviceRequest['serviceCode'] = this.props.match.params.serviceCode;
+        attribValues.push({key:"status", name:STATUS_NEW}); //populating Register status
+
+        if(userType === 'CITIZEN'){
+          var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
+          var userRequest={};
+          userRequest['id']=[localStorage.getItem('id')];
+          userRequest['tenantId']=tenantId;
+          serviceRequest['tenantId'] = tenantId;
+
+          let ApiRequests=[];
+          //for getting citizen services
+          ApiRequests.push(Api.commonApiPost("/user/v1/_search",{},userRequest));
+
+          if(this.props.files && this.props.files.length > 0){
+            console.log('files is there');
+            let formData = new FormData();
+            formData.append("tenantId", tenantId);
+            formData.append("module", FILES_MODULE_TAG);
+            this.props.files.map((field)=>{
+                var fileAttribValue={key:field.code, name:""};
+                field.files.map((file)=>{
+                  fileAttribValues.push(fileAttribValue);
+                  formData.append("file", file);
+                });
+            });
+
+            console.log('fileAttribValues', fileAttribValues);
+
+          }
+          else{
+            console.log('files is not there');
+          }
+
+          Promise.all([
+              Api.commonApiPost("/user/v1/_search",{},userRequest),
+              Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:"deliverable"},{})
+          ])
+          .then((responses)=>{
+             console.log('responses', responses);
+             let user=responses[0].user[0];
+             serviceRequest['firstName'] = user.name;
+             serviceRequest['phone'] = user.mobileNumber ;
+             serviceRequest['email'] = user.emailId || "";
+             serviceRequest['attribValues']=attribValues;
+
+
+             console.log('serviceRequest', serviceRequest);
+
+
+          }).catch((err) => {
+            this.props.setLoadingStatus('hide');
+          });
+        }
+
+    }
+
+
+
+    render(){
+
+       const formSections=this.renderFormSection();
+
+       return(
+         <Grid fluid={true}>
+           <h1 className="application-title">{this.state.pageTitle}</h1>
+           { formSections }
+           <br/>
+           <Row>
+             <Col xs={12} className="text-center">
+               <RaisedButton label="Submit" fullWidth={false} primary={true} disabled={!this.props.isFormValid} />
+             </Col>
+           </Row>
+         </Grid>
+       )
+    }
+}
+
+export default NewServiceRequest;

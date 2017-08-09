@@ -41,7 +41,6 @@ package org.egov.wcms.transaction.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
@@ -68,7 +67,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,10 +115,13 @@ public class WaterConnectionController {
         if(waterConnectionRequest.getConnection().getIsLegacy()){
             waterConnectionRequest.getConnection().setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
             waterConnectionRequest.getConnection().setAcknowledgementNumber(waterConnectionRequest.getConnection().getConsumerNumber());
-        }else
+        }else{
         waterConnectionRequest.getConnection().setAcknowledgementNumber(connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
-       
+        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
+                    Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
+        
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
+        }
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);
@@ -167,7 +168,8 @@ public class WaterConnectionController {
         
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        
+        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
+                Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
         waterConnectionRequest.getConnection().setId(waterConn.getId());
         connection = waterConnectionService.updateWaterConnection(
                 applicationProperties.getUpdateNewConnectionTopicName(),

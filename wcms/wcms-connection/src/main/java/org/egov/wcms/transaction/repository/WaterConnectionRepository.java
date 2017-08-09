@@ -144,7 +144,9 @@ public class WaterConnectionRepository {
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
                     statement.setLong(29, waterConnectionRequest.getConnection().getParentConnectionId());
-
+                
+                
+                statement.setDouble(28, waterConnectionRequest.getConnection().getNumberOfFamily());
                 // Please verify if there's proper validation on all these fields to avoid NPE.
                 return statement;
             }, keyHolder);
@@ -247,7 +249,7 @@ public class WaterConnectionRepository {
                 connection.getPipesizeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), connection.getStateId(),
+                new Date(new java.util.Date().getTime()), connection.getStateId(),connection.getNumberOfFamily(),
                 connection.getAcknowledgementNumber() };
        
         }
@@ -364,7 +366,7 @@ public class WaterConnectionRepository {
                 connection.getHscPipeSizeType(), connection.getSourceType(), connection.getConnectionStatus(),
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), connection.getStateId(),
+                new Date(new java.util.Date().getTime()), connection.getStateId(),connection.getNumberOfFamily(),
                  connection.getAcknowledgementNumber() };
         jdbcTemplate.update(insertQuery, obj);
         

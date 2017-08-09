@@ -617,7 +617,14 @@ definitions:
       noOfFlats:
         type: integer
         description: If user select PropertyType as Residential/Non-Residential required No of flats.
-        
+      numberOfFamily:
+        type: integer
+        description: readonly field and autocalculate noofpersons/4+1 .
+      subUsageType:
+        type: string 
+        description: This field holds pre-defined value of supported  sub usageType.check
+         master API to look at supported values your ULB.
+
       workOrderNumber:
         type: string
         description: workOrderNumber generated once Officer submits Generate WOrkorder .

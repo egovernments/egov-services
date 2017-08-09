@@ -118,13 +118,13 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,stateid) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,stateid,numberOfFamily) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?)";
+                + ",?,?,?)";
     }
     public static String insertDemandConnection() {
 
@@ -139,13 +139,13 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,legacyconsumernumber,consumerNumber,executionDate,noOfFlats,numberOfFamily) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?,?,?,?)";
+                + ",?,?,?,?,?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {
@@ -161,7 +161,7 @@ public class WaterConnectionQueryBuilder {
 
         return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
                 + "categorytype = ?,hscpipesizetype = ?,sourcetype = ?,connectionstatus =?,"
-                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=? "
+                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=? ,numberOfFamily=?"
                 + " where acknowledgmentnumber = ?";
     }
 

@@ -7,10 +7,16 @@ import org.egov.pgrrest.common.persistence.repository.ServiceRequestTypeJpaRepos
 import org.egov.pgrrest.common.persistence.repository.SubmissionAttributeJpaRepository;
 import org.egov.pgrrest.common.persistence.repository.SubmissionJpaRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
+import org.egov.pgrrest.read.persistence.specification.SubmissionSpecification;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +24,7 @@ public class SubmissionRepository {
     private SubmissionJpaRepository submissionJpaRepository;
     private SubmissionAttributeJpaRepository submissionAttributeJpaRepository;
     private ServiceRequestTypeJpaRepository serviceTypeJpaRepository;
+    private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
 
     public SubmissionRepository(SubmissionJpaRepository submissionJpaRepository,
                                 SubmissionAttributeJpaRepository submissionAttributeJpaRepository,
@@ -91,6 +98,24 @@ public class SubmissionRepository {
             .findByCrnListAndTenantId(crnList, tenantId);
         return submissionAttributes.stream()
             .collect(Collectors.groupingBy(SubmissionAttribute::getCrn));
+    }
+
+    public List<ServiceRequest> find(ServiceRequestSearchCriteria searchCriteria) {
+        final List<Submission> submissions = getSubmissions(searchCriteria);
+        enrichSubmissionsWithAttributeEntries(searchCriteria.getTenantId(), submissions);
+        enrichSubmissionsWithServiceTypes(searchCriteria.getTenantId(), submissions);
+        return submissions.stream()
+            .map(Submission::toDomain)
+            .collect(Collectors.toList());
+    }
+
+    private List<Submission> getSubmissions(ServiceRequestSearchCriteria searchCriteria) {
+        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
+        return this.submissionJpaRepository.findAll(specification, getDefaultSort());
+    }
+
+    private Sort getDefaultSort() {
+        return new Sort(Sort.Direction.DESC, DEFAULT_SORT_FIELD);
     }
 
 }

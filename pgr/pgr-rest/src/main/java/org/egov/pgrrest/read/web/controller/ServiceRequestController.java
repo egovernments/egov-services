@@ -74,17 +74,14 @@ public class ServiceRequestController {
                                               @RequestParam(value = "positionId", required = false) Long positionId,
                                               @RequestParam(value = "userId", required = false) Long userId,
                                               @RequestParam(value = "name", required = false) String name,
-                                              @RequestParam(value = "mobileNumber", required = false) String
-                                                  mobileNumber,
+                                              @RequestParam(value = "mobileNumber", required = false) String mobileNumber,
                                               @RequestParam(value = "emailId", required = false) String emailId,
                                               @RequestParam(value = "keyword", required = false) String keyword,
-                                              @RequestParam(value = "receivingMode", required = false)
-                                                      String receivingMode,
+                                              @RequestParam(value = "receivingMode", required = false) String receivingMode,
                                               @RequestParam(value = "locationId", required = false) Long locationId,
                                               @RequestParam(value = "fromIndex", required = false) Integer fromIndex,
                                               @RequestParam(value = "sizePerPage", required = false) Integer pageSize,
-                                              @RequestParam(value = "childLocationId", required = false) Long
-                                                  childLocationId,
+                                              @RequestParam(value = "childLocationId", required = false) Long childLocationId,
                                               @RequestBody RequestInfoBody requestInfoBody) {
 
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
@@ -112,7 +109,7 @@ public class ServiceRequestController {
         final List<ServiceRequest> submissions = serviceRequestService.findAll(serviceRequestSearchCriteria);
         return createResponse(submissions);
     }
-    
+
     @PostMapping(value = "/v1/_count")
     public CountResponse getServiceRequestCount(@RequestParam(value = "tenantId") String tenantId,
                                                 @RequestParam(value = "serviceRequestId", required = false)
@@ -137,7 +134,7 @@ public class ServiceRequestController {
                                                 @RequestParam(value = "emailId", required = false) String emailId,
                                                 @RequestParam(value = "keyword", required = false) String keyword,
                                                 @RequestParam(value = "receivingMode", required = false)
-                                                        String receivingMode,
+                                                    String receivingMode,
                                                 @RequestParam(value = "locationId", required = false) Long locationId,
                                                 @RequestParam(value = "childLocationId", required = false)
                                                     Long childLocationId,

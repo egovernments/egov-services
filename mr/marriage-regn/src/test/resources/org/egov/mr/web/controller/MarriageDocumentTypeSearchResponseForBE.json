@@ -1,8 +1,8 @@
 {
     "responseInfo": {
-        "resMsgId": null,
+        "resMsgId": "search with from and to values",
         "status": "400",
-        "apiId": null,
+        "apiId": "mr-services",
         "ver": null,
         "ts": null,
         "key": null,
@@ -10,10 +10,10 @@
     },
     "error": {
         "code": 400,
-        "message": "[marriageDocTypes[0].name] : Required Query Parameter Missing ",
+        "message": "[isActive] : Required Query Parameter Missing ",
         "description": "Error While Binding Results",
         "fields": [
-           
+            
         ]
     }
 }

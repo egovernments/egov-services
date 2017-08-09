@@ -64,8 +64,8 @@ public class InstrumentAccountCodeJdbcRepositoryTest {
 			"/sql/instrumentaccountcode/insertInstrumentAccountCodeData.sql" })
 	public void test_update() {
 
-		InstrumentAccountCodeEntity instrumentAccountCode = InstrumentAccountCodeEntity.builder().instrumentTypeId("1")
-				.accountCodeId("1").build();
+		InstrumentAccountCodeEntity instrumentAccountCode = InstrumentAccountCodeEntity.builder().instrumentTypeId("name")
+				.accountCodeId("glcode").build();
 		instrumentAccountCode.setTenantId("default");
 		InstrumentAccountCodeEntity actualResult = instrumentAccountCodeJdbcRepository.update(instrumentAccountCode);
 
@@ -84,8 +84,8 @@ public class InstrumentAccountCodeJdbcRepositoryTest {
 
 		Pagination<InstrumentAccountCode> page = (Pagination<InstrumentAccountCode>) instrumentAccountCodeJdbcRepository
 				.search(getInstrumentAccountCodeSearch());
-		assertThat(page.getPagedData().get(0).getAccountCode().getId()).isEqualTo("1");
-		assertThat(page.getPagedData().get(0).getInstrumentType().getId()).isEqualTo("1");
+		assertThat(page.getPagedData().get(0).getAccountCode().getGlcode()).isEqualTo("glcode");
+		assertThat(page.getPagedData().get(0).getInstrumentType().getName()).isEqualTo("name");
 
 	}
 
@@ -108,8 +108,8 @@ public class InstrumentAccountCodeJdbcRepositoryTest {
 		InstrumentAccountCodeEntity instrumentAccountCodeEntity = InstrumentAccountCodeEntity.builder().id("1").build();
 		instrumentAccountCodeEntity.setTenantId("default");
 		InstrumentAccountCodeEntity result = instrumentAccountCodeJdbcRepository.findById(instrumentAccountCodeEntity);
-		assertThat(result.getAccountCodeId()).isEqualTo("1");
-		assertThat(result.getInstrumentTypeId()).isEqualTo("1");
+		assertThat(result.getAccountCodeId()).isEqualTo("glcode");
+		assertThat(result.getInstrumentTypeId()).isEqualTo("name");
 
 	}
 
@@ -147,8 +147,8 @@ public class InstrumentAccountCodeJdbcRepositoryTest {
 		search.setOffset(null);
 		Pagination<InstrumentAccountCode> page = (Pagination<InstrumentAccountCode>) instrumentAccountCodeJdbcRepository
 				.search(getInstrumentAccountCodeSearch());
-		assertThat(page.getPagedData().get(0).getAccountCode().getId()).isEqualTo("1");
-		assertThat(page.getPagedData().get(0).getInstrumentType().getId()).isEqualTo("1");
+		assertThat(page.getPagedData().get(0).getAccountCode().getGlcode()).isEqualTo("glcode");
+		assertThat(page.getPagedData().get(0).getInstrumentType().getName()).isEqualTo("name");
 
 	}
 
@@ -190,8 +190,8 @@ public class InstrumentAccountCodeJdbcRepositoryTest {
 
 	private InstrumentAccountCodeSearch getInstrumentAccountCodeSearch() {
 		InstrumentAccountCodeSearch instrumentAccountCodeSearch = new InstrumentAccountCodeSearch();
-		instrumentAccountCodeSearch.setInstrumentType(InstrumentType.builder().id("1").build());
-		instrumentAccountCodeSearch.setAccountCode(ChartOfAccountContract.builder().id("1").build());
+		instrumentAccountCodeSearch.setInstrumentType(InstrumentType.builder().name("name").build());
+		instrumentAccountCodeSearch.setAccountCode(ChartOfAccountContract.builder().glcode("glcode").build());
 		instrumentAccountCodeSearch.setPageSize(500);
 		instrumentAccountCodeSearch.setOffset(0);
 		instrumentAccountCodeSearch.setSortBy("accountCodeId desc");

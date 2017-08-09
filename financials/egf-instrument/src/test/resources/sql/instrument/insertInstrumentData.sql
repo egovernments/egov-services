@@ -1,2 +1,2 @@
 insert into egf_instrument (id,transactionDate,transactionNumber,amount,instrumentTypeId,bankId,branchName,bankAccountId,financialStatusId,transactionType,payee,drawer,surrenderReasonId,serialNo,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)
-values('1','01-01-2017','transactionNumber',1,'1','1','branchName','1','1','Credit','payee','drawer','1','serialNo',1,now(),1,now(),'default');
+values('1','01-01-2017','transactionNumber',1,'name','code','branchName','accountNumber','1','Credit','payee','drawer','1','serialNo',1,now(),1,now(),'default');

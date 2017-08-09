@@ -180,7 +180,7 @@ public class InstrumentAccountCodeServiceTest {
 
 		instrumentAccountCodes.get(0).setAccountCode(expextedResult);
 
-		when(chartOfAccountContractRepository.findById(any(ChartOfAccountContract.class))).thenReturn(expextedResult);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class))).thenReturn(expextedResult);
 
 		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes);
 
@@ -213,7 +213,7 @@ public class InstrumentAccountCodeServiceTest {
 
 		instrumentAccountCodes.get(0).setAccountCode(expextedResult);
 
-		when(chartOfAccountContractRepository.findById(null)).thenReturn(expextedResult);
+		when(chartOfAccountContractRepository.findByGlcode(null)).thenReturn(expextedResult);
 
 		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes);
 

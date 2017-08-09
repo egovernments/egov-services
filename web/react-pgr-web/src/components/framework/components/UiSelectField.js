@@ -50,7 +50,7 @@ class UiSelectField extends Component {
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
 							obj["key"]= item.convertToString ? keys[k].toString() : keys[k];
-							obj["value"]=values[k];
+							obj["value"]= values[k];
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+"-"+values[k]
 							}
@@ -63,7 +63,7 @@ class UiSelectField extends Component {
 			});
 		}
 		else if (item.hasOwnProperty("defaultValue") && typeof(item.defaultValue)=="object") {
-			setDropDownData(item.jsonPath,item.defaultValue);
+			setDropDownData(item.jsonPath, item.defaultValue);
 		}
    }
 

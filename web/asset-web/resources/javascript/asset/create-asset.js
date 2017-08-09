@@ -2080,7 +2080,7 @@ class CreateAsset extends React.Component {
                         </div>
                         <div className="col-sm-6 label-view-text">
                           <input id="depreciationRate" name="depreciationRate" value={depreciationRate} type="number"
-                            onChange={(e)=>{handleChange(e, "depreciationRate")}} disabled={readonly} />
+                            onChange={(e)=>{handleChange(e, "depreciationRate")}} min="0" disabled={readonly} />
                         </div>
                       </div>
                     </div>}

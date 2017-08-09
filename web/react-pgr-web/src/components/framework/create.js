@@ -85,10 +85,11 @@ class Report extends Component {
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
+    var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
-        var ind = i;
+        ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
         var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace("[", "\[").replace("]", "\]") + "\\[\\d{1}\\]", 'g');
         for(var j=1; j < arr.length; j++) {
@@ -98,8 +99,8 @@ class Report extends Component {
         }
       }
 
-      if(specs[moduleName + "." + actionName].groups[ind].children && specs[moduleName + "." + actionName].groups[ind].children.length) {
-        this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind].children);
+      if(specs[moduleName + "." + actionName].groups[ind || i].children && specs[moduleName + "." + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind || i].children);
       }
     }
 

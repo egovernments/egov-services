@@ -52,7 +52,7 @@ public class BillingServiceRepository {
             taxDetails = taxCalculation.getPropertyTaxes();
             demand = new Demand();
             demand.setTenantId(tenantId);
-            demand.setBusinessService("PT");
+            demand.setBusinessService("Property Tax");
             demand.setConsumerType(propertyType);
             demand.setConsumerCode(property.getPropertyDetail().getApplicationNo());
             demand.setMinimumAmountPayable(BigDecimal.ONE);

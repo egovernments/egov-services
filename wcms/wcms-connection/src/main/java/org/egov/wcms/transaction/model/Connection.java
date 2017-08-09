@@ -106,6 +106,13 @@ public class Connection {
     private String waterTreatment;
 
     private String waterTreatmentId;
+    
+    @NotNull
+    private String subUsageType;
+
+    private String subUsageTypeId;
+    
+    private int numberOfFamily;
 
     @NotNull
     private String connectionStatus;

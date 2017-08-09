@@ -13,12 +13,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.UOM;
-import org.egov.models.UOMRequest;
-import org.egov.models.UOMResponse;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.contract.UOM;
+import org.egov.tl.commons.web.requests.UOMRequest;
+import org.egov.tl.commons.web.requests.UOMResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.UOMService;

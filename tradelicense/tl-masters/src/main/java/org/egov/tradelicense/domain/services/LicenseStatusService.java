@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.services;
 
-import org.egov.models.LicenseStatusRequest;
-import org.egov.models.LicenseStatusResponse;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.LicenseStatusRequest;
+import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 
 /**
  * Service class for LicenseStatus master

@@ -2,6 +2,10 @@ package org.egov.pgr.persistence.dto;
 
 import lombok.*;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Builder
 @Getter
 @Setter
@@ -21,6 +25,7 @@ public class AttributeDefinition {
     private String code;
     private String url;
     private String groupCode;
+    private List<ValueDefinition> valueDefinitions;
 
     public org.egov.pgr.domain.model.AttributeDefinition toDomain() {
         return org.egov.pgr.domain.model.AttributeDefinition.builder()
@@ -33,7 +38,12 @@ public class AttributeDefinition {
                 .url(url)
                 .groupCode(groupCode)
                 .readOnly(isReadOnly())
+                .valueDefinitions(mapToDomainValueDefinitions())
                 .build();
+    }
+
+    public boolean isValueList(){
+        return dataType.equalsIgnoreCase("multivaluelist") || dataType.equalsIgnoreCase("singlevaluelist");
     }
 
     private boolean isRequired() {
@@ -42,6 +52,16 @@ public class AttributeDefinition {
 
     private boolean isReadOnly() {
         return variable == NO;
+    }
+
+    private List mapToDomainValueDefinitions(){
+
+        if(null == valueDefinitions)
+            return Collections.EMPTY_LIST;
+
+        return   valueDefinitions.stream()
+                    .map(ValueDefinition::toDomain)
+                    .collect(Collectors.toList());
     }
 
 }

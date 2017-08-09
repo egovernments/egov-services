@@ -1,7 +1,6 @@
 package org.egov.demand.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -9,7 +8,6 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -21,12 +19,12 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
-import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
@@ -203,6 +201,24 @@ public class DemandServiceTest {
 		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK)).thenReturn(getResponseInfo(requestInfo));
 		
 		assertEquals(demandService.getDemandDetails(any(DemandDetailCriteria.class),any(RequestInfo.class)), demandDetailResponse);
+	}
+	
+	@Test
+	public void testShouldUpdateMISAsync(){
+		
+		DemandUpdateMisRequest demandRequest=DemandUpdateMisRequest.builder().tenantId("default").consumerCode("ConsumerCode").build();
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(null);
+		when(applicationProperties.getUpdateMISTopicName()).thenReturn("someTopicName");
+		
+		assertEquals(demandService.updateMISAsync(demandRequest), demandResponse);
+	}
+	
+	@Test
+	public void testShouldUpdateMIS(){
+		doNothing().when(demandRepository).updateMIS(any(DemandUpdateMisRequest.class));
+		DemandUpdateMisRequest request=DemandUpdateMisRequest.builder().tenantId("default").build();
+		demandService.updateMIS(request);
 	}
 	
 	public static ResponseInfo getResponseInfo(RequestInfo requestInfo) {

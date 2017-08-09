@@ -1,11 +1,12 @@
 package org.egov.tradelicense.domain.services.validator;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.LicenseStatus;
-import org.egov.models.LicenseStatusRequest;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.LicenseStatus;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.LicenseStatusRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
 import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class LicenseStatusValidator {
 				licenseStatusId = licenseStatus.getId();
 
 				if (licenseStatusId == null) {
-					// throw new InvalidInputException(requestInfo);
+					throw new InvalidInputException(propertiesManager.getInvalidLicenseStatusIdMsg(), requestInfo);
 				}
 			}
 

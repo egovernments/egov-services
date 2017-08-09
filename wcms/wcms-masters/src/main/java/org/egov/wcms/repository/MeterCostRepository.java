@@ -40,36 +40,127 @@
 
 package org.egov.wcms.repository;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.wcms.config.ApplicationProperties;
+import org.egov.wcms.model.MeterCostCriteria;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.repository.builder.MeterCostQueryBuilder;
-import org.egov.wcms.web.contract.MeterCostRequest;
+import org.egov.wcms.repository.rowmapper.MeterCostRowMapper;
+import org.egov.wcms.web.contract.MeterCostReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Repository
-@Slf4j
+
 public class MeterCostRepository {
+	public static final Logger logger = LoggerFactory.getLogger(MeterCostRepository.class);
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-    public MeterCostRequest persistCreateMeterCost(final MeterCostRequest meterCostRequest) {
-        log.info("MeterCostRequest::" + meterCostRequest);
-        final String meterCostInsert = MeterCostQueryBuilder.insertMeterCostQuery();
-        final MeterCost meterCost = meterCostRequest.getMeterCost();
-        final Object[] obj = new Object[] { meterCost.getPipeSize(), meterCost.getMeterMake(), meterCost.getAmount(),
-                meterCost.getActive(), Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                meterCost.getTenantId() };
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-        jdbcTemplate.update(meterCostInsert, obj);
-        return meterCostRequest;
-    }
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
-}
+	@Autowired
+	private MeterCostQueryBuilder meterCostQueryBuilder;
+
+	@Autowired
+	private MeterCostRowMapper meterCostRowMapper;
+
+	public MeterCostReq persistCreateMeterCost(final MeterCostReq meterCostRequest) {
+		logger.info("MeterCostRequest::" + meterCostRequest);
+		List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
+		List<Object[]> batchArguments = new ArrayList<>();
+		String insertQuery = meterCostQueryBuilder.insertMeterCostQuery();
+		for (MeterCost meterCost : meterCosts) {
+			final Object[] obj = { getNextSequenceForMeterCost("seq_egwtr_meter_cost"), meterCost.getCode(),
+					meterCost.getPipeSizeId(), meterCost.getMeterMake(), meterCost.getAmount(), meterCost.getActive(),
+					Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
+					Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
+					new java.util.Date().getTime(), new java.util.Date().getTime(),
+					meterCost.getTenantId() };
+			batchArguments.add(obj);
+		}
+		jdbcTemplate.batchUpdate(insertQuery, batchArguments);
+		return meterCostRequest;
+	}
+
+	public MeterCostReq persistUpdateMeterCost(MeterCostReq meterCostRequest) {
+		logger.info("MeterCostRequest::" + meterCostRequest);
+		List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
+		List<Object[]> batchArguments = new ArrayList<>();
+		String updateMeterCostQuery = meterCostQueryBuilder.updateMeterCostQuery();
+		for (MeterCost meterCost : meterCosts) {
+			Object[] obj = { meterCost.getPipeSizeId(), meterCost.getMeterMake(), meterCost.getAmount(),
+					meterCost.getActive(), meterCostRequest.getRequestInfo().getUserInfo().getId(),
+					new java.util.Date().getTime(), meterCost.getCode(), meterCost.getTenantId() };
+			batchArguments.add(obj);
+		}
+		jdbcTemplate.batchUpdate(updateMeterCostQuery, batchArguments);
+		return meterCostRequest;
+	}
+
+	public List<MeterCost> pushCreateMeterCostReqToQueue(MeterCostReq meterCostRequest) {
+		try {
+			kafkaTemplate.send(applicationProperties.getCreateMeterCostTopicName(), meterCostRequest);
+		} catch (final Exception ex) {
+			logger.error("Exception Encountered : " + ex);
+		}
+		return meterCostRequest.getMeterCost();
+	}
+
+	public List<MeterCost> pushUpdateMeterCostReqToQueue(MeterCostReq meterCostRequest) {
+		try {
+			kafkaTemplate.send(applicationProperties.getUpdateMeterCostTopicName(), meterCostRequest);
+		} catch (Exception ex) {
+			logger.error("Exception Encountered : " + ex);
+		}
+		return meterCostRequest.getMeterCost();
+	}
+
+	private Long getNextSequenceForMeterCost(String sequenceName) {
+		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
+	}
+
+	public List<MeterCost> searchMeterCostByCriteria(MeterCostCriteria meterCostCriteria) {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String searchQuery = meterCostQueryBuilder.getQuery(meterCostCriteria, preparedStatementValues);
+		return jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(), meterCostRowMapper);
+
+	}
+
+	public Boolean checkMeterMakeAlreadyExistsInDB(MeterCost meterCost) {
+		String code=meterCost.getCode();
+		String name=meterCost.getMeterMake();
+		String tenantId=meterCost.getTenantId();
+	
+		        final List<Object> preparedStatementValues = new ArrayList<>();
+		        preparedStatementValues.add(name);
+		        preparedStatementValues.add(tenantId);
+		        final String query;
+		        if (code == null)
+		            query = meterCostQueryBuilder.selectMeterCostByNameAndTenantIdQuery();
+		        else {
+		            preparedStatementValues.add(code);
+		            query = meterCostQueryBuilder.selectMeterCostByNameTenantIdAndCodeNotInQuery();
+		        }
+		        final List<Map<String, Object>> meterMake = jdbcTemplate.queryForList(query,
+		                preparedStatementValues.toArray());
+		        if (!meterMake.isEmpty())
+		            return false;
+
+		        return true;
+		    }
+		
+	}
+

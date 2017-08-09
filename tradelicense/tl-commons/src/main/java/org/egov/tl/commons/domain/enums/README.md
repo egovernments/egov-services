@@ -1,0 +1,1 @@
+trade license domain specific enums will come here

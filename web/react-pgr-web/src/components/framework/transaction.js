@@ -8,14 +8,22 @@ import ShowFields from "./showFields";
 import {translate} from '../common/common';
 import Api from '../../api/api';
 import UiButton from './components/UiButton';
-import UiDynamicTable from './components/UiDynamicTable';
+
 import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
+import UiDynamicTable from './components/UiDynamicTable';
+
+import jp from "jsonpath";
+import $ from "jquery";
+
 
 var specifications={};
 
 let reqRequired = [];
 class Transaction extends Component {
+  state={
+    pathname:""
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -66,16 +74,27 @@ class Transaction extends Component {
     } catch(e) {}
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    reqRequired = [];
     this.setLabelAndReturnRequired(obj);
-    initForm(reqRequired, []);
+    initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
+
+    this.setState({
+      pathname:this.props.history.location.pathname
+    })
   }
 
   componentDidMount() {
       this.initData();
+  }
+  componentWillReceiveProps(nextProps)
+  {
+    if (this.state.pathname!=nextProps.history.location.pathname) {
+      this.initData();
+    }
   }
 
   search = (e) => {
@@ -90,24 +109,58 @@ class Transaction extends Component {
 
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
+      self.props.handleChange({target:{value:res.Bill}},"Receipt[0].Bill",false,false);
+      self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].tenantId",false,false);
+      self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.instrumentType.tenantId",false,false);
+      self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bankAccount.tenantId",false,false);
+      self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
+
+
       var resultList = {
-        resultHeader: [{label: "#"}, ...self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header],
+        resultHeader: self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header,
         resultValues: []
       };
-      var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
-      var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
+
+      let objectPath=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath;
+      let tableObjectPath=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.tableResultPath;
+      var values = _.get(res,objectPath);
+      // var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
+      let headers=Object.assign([],resultList.resultHeader);
+
       if(values && values.length) {
         for(var i=0; i<values.length; i++) {
-          var tmp = [i+1];
-          for(var j=0; j<specsValuesList.length; j++) {
-            tmp.push(_.get(values[i], specsValuesList[j]));
+          var tmp = [];
+          for(var j=0; j<headers.length; j++) {
+              // tmp.push({jsonPath:objectPath+"["+i+"]."+headers[j].jsonPath,...headers[j]})
+            tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
+            // tmp.push(_.get(values[i], specsValuesList[j]));
           }
           resultList.resultValues.push(tmp);
         }
       }
+
+
+      console.log(resultList);
+
+      // var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
+      // var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
+      // if(values && values.length) {
+      //   for(var i=0; i<values.length; i++) {
+      //     var tmp = [i+1];
+      //     for(var j=0; j<specsValuesList.length; j++) {
+      //       tmp.push(_.get(values[i], specsValuesList[j]));
+      //     }
+      //     resultList.resultValues.push(tmp);
+      //   }
+      // }
+      // self.setState({
+      //   resultList,
+      //   values,
+      //   showResult: true
+      // });
+
       self.setState({
         resultList,
-        values,
         showResult: true
       });
 
@@ -122,9 +175,159 @@ class Transaction extends Component {
     return _.get(this.props.formData, path) || "";
   }
 
+
+    hideField = (_mockData, hideObject, reset) => {
+      let {moduleName, actionName, setFormData} = this.props;
+      let _formData = {...this.props.formData};
+      if(hideObject.isField) {
+        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+          for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+            if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+              _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? false : true;
+              if(!reset) {
+                _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+                setFormData(_formData);
+              }
+
+              break;
+            }
+          }
+        }
+      } else {
+        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+          if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+            _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
+            break;
+          }
+        }
+      }
+
+      return _mockData;
+    }
+
+    showField = (_mockData, showObject, reset) => {
+      let {moduleName, actionName, setFormData} = this.props;
+      let _formData = {...this.props.formData};
+      if(showObject.isField) {
+        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+          for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+            if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+              _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? true : false;
+              if(!reset) {
+                _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+                setFormData(_formData);
+              }
+              break;
+            }
+          }
+        }
+      } else {
+        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+          if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+            _mockData[moduleName + "." + actionName].groups[i].hide = reset ? true : false;
+            break;
+          }
+        }
+      }
+
+      return _mockData;
+    }
+
+    checkIfHasShowHideFields = (jsonPath, val) => {
+      let _mockData = {...this.props.mockData};
+      let {moduleName, actionName, setMockData} = this.props;
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+          if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
+            for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+              if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+                for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                  _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
+                }
+
+                for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                  _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z]);
+                }
+              } else {
+                for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                  _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
+                }
+
+                for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                  _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      setMockData(_mockData);
+    }
+
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
-      let {handleChange}=this.props;
+      let {getVal}=this;
+      let {handleChange,mockData,setDropDownData}=this.props;
+      let hashLocation = window.location.hash;
+      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+      // console.log(obj);
+      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      this.checkIfHasShowHideFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+
+      _.forEach(depedants, function(value,key) {
+            if (value.type=="dropDown") {
+                let splitArray=value.pattern.split("?");
+                let context="";
+          			let id={};
+          			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
+          				context+=splitArray[0].split("/")[j]+"/";
+          			}
+
+          			let queryStringObject=splitArray[1].split("|")[0].split("&");
+          			for (var i = 0; i < queryStringObject.length; i++) {
+          				if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                    }
+          				}
+          			}
+
+                Api.commonApiPost(context,id).then(function(response)
+                {
+                  let keys=jp.query(response,splitArray[1].split("|")[1]);
+                  let values=jp.query(response,splitArray[1].split("|")[2]);
+                  let dropDownData=[];
+                  for (var k = 0; k < keys.length; k++) {
+                      let obj={};
+                      obj["key"]=keys[k];
+                      obj["value"]=values[k];
+                      dropDownData.push(obj);
+                  }
+                  setDropDownData(value.jsonPath,dropDownData);
+                },function(err) {
+                    console.log(err);
+                });
+                // console.log(id);
+                // console.log(context);
+            }
+
+            else if (value.type=="textField") {
+              let object={
+                target:{
+                  value:eval(eval(value.pattern))
+                }
+              }
+              handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
+            }
+      });
   }
 
   rowClickHandler = (index) => {
@@ -135,13 +338,95 @@ class Transaction extends Component {
     this.props.setRoute(_url);
   }
 
+  makeAjaxCall = (formData, url) => {
+    let self = this;
+    delete formData.ResponseInfo;
+    //return console.log(formData);
+    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+      self.props.setLoadingStatus('hide');
+      self.initData();
+      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
+      setTimeout(function() {
+        if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+          if(self.props.actionName == "update") {
+            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+          } else {
+            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+          }
+          self.props.setRoute(hash);
+        }
+      }, 1500);
+    }, function(err) {
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, err.message);
+    })
+  }
+
+  create=(e) => {
+    let self = this, _url;
+    e.preventDefault();
+    self.props.setLoadingStatus('loading');
+    var formData = {...this.props.formData};
+    if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
+      if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
+
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
+        }
+      } else
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
+    }
+
+    if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
+      var match = _url.match(/\{.*\}/)[0];
+      var jPath = match.replace(/\{|}/g,"");
+      _url = _url.replace(match, _.get(formData, jPath));
+    }
+
+    //Check if documents, upload and get fileStoreId
+    if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
+      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+      let _docs = [];
+      let counter = documents.length, breakOut = 0;
+      for(let i=0; i<documents.length; i++) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
+          if(breakOut == 1) return;
+          if(err) {
+            breakOut = 1;
+            self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err, false, true);
+          } else {
+            _docs.push({
+              ...documents[i],
+              fileStoreId: res.files[0].fileStoreId
+            })
+            counter--;
+            if(counter == 0 && breakOut == 0) {
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+              self.makeAjaxCall(formData, _url);
+            }
+          }
+        })
+      }
+    } else {
+      self.makeAjaxCall(formData, _url);
+    }
+
+  }
+
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
-    showResult=false;
+    // showResult=true;
 
-    console.log(mockData);
+    console.log(isFormValid);
+
+
+    console.log(formData);
 
     return (
       <div className="SearchResult">
@@ -151,15 +436,22 @@ class Transaction extends Component {
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit"}} ui="google"/>
+            <UiButton item={{"label": "Search", "uiType":"submit","isDisabled": isFormValid ? false : true}} ui="google"/>
             <br/>
-            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
-            <br/>
-
           </div>
-          {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+          {/*showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>*/}
 
         </form>
+
+                  {showResult && <UiDynamicTable resultList={resultList} ui="google"  handler={handleChange} getVal={getVal} fieldErrors={fieldErrors}/>}
+
+                  <br/>
+                  {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+                  <div style={{"textAlign": "center"}}>
+                    <br/>
+                  {showResult &&  <UiButton item={{"label": "Pay", "uiType":"button"}} ui="google"/>}
+                    <br/>
+                  </div>
       </div>
     );
   }
@@ -172,7 +464,8 @@ const mapStateToProps = state => ({
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
-  flag: state.report.flag
+  flag: state.report.flag,
+  isFormValid: state.frameworkForm.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -204,7 +497,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_ACTION_NAME", actionName})
   },
   handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
-    dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
+    dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
@@ -218,3 +511,7 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
+
+
+/*let res=
+{"ResposneInfo":null,"Bill":[{"id":"3","payeeName":"M Sambasivudu","payeeAddress":null,"payeeEmail":null,"isActive":true,"isCancelled":false,"billDetails":[{"id":"3","tenantId":"default","bill":"3","businessService":"Property Tax","billNumber":"3","billDate":1502090587494,"consumerCode":"1016000001","consumerType":"PRIVATE","billDescription":"Property Tax Consumer Code: 1016000001","displayMessage":"Property Tax Consumer Code: 1016000001","minimumAmount":4.00,"totalAmount":3649.00,"collectionModesNotAllowed":[""],"callBackForApportioning":false,"partPaymentAllowed":true,"billAccountDetails":[{"id":"25","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1443637800000-1459448999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"26","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1443637800000-1459448999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"27","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1443637800000-1459448999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"28","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1459449000000-1475260199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"29","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1459449000000-1475260199000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"30","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1459449000000-1475260199000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"31","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1475260200000-1490984999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"32","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1475260200000-1490984999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"33","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1475260200000-1490984999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"34","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1490985000000-1506796199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"35","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1490985000000-1506796199000","crAmountToBePaid":1126.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"36","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1490985000000-1506796199000","crAmountToBePaid":24.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"}]}],"tenantId":"default","auditDetail":null}]}*/

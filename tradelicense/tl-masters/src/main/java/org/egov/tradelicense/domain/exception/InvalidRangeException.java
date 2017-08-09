@@ -1,6 +1,6 @@
 package org.egov.tradelicense.domain.exception;
 
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

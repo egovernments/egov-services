@@ -116,7 +116,7 @@ export default class Fields extends Component{
                 this.props.handler(value, obj.code, obj.required, "")
               }} >
               {obj.attribValues.map((dd, index) => (
-                  dd.isActive ? <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.name)} /> : ''
+                  dd.isActive ? <MenuItem value={translate(dd.key)} insetChildren={true} key={index} primaryText={translate(dd.name)} /> : ''
               ))}
               </SelectField>
             </Col>

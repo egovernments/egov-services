@@ -153,7 +153,7 @@ public class ReceiptControllerTest {
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 
-		return Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
+		return Receipt.builder().tenantId("default").transactionId("10127859476354").bill(Arrays.asList(billInfo)).build();
 	}
 
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
@@ -167,7 +167,7 @@ public class ReceiptControllerTest {
 				.channel("567hfghr").consumerType("Good").fund("56").fundSource("78").function("678").boundary("67")
 				.department("78").voucherheader("VOUHEAD").depositedBranch("ICICI").version(1L).createdBy(1L)
 				.lastModifiedBy(1L).tenantId("default").receiptDate(dateFormat.parse("2016-02-02"))
-				.cancellationRemarks("payee name data entered is not proper").build();
+				.cancellationRemarks("payee name data entered is not proper").transactionId("10127859476354").build();
 		ReceiptHeader receiptHeader = ReceiptHeader.builder().id(1L).build();
 		ReceiptDetail detail1 = ReceiptDetail.builder().id(1L).chartOfAccount("456").dramount(600.0).cramount(800.0)
 				.ordernumber(5L).receiptHeader(receiptHeader).actualcramountToBePaid(800.0)

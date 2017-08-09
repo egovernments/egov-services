@@ -2,15 +2,18 @@ package org.egov.tradelicense.persistence.repository.helper;
 
 import java.util.Date;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.RequestInfo;
-import org.egov.models.UserInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class UtilityHelper {
 
 	@Autowired
@@ -37,7 +40,7 @@ public class UtilityHelper {
 			try {
 				count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 			}
 
 			if (count == 0) {
@@ -51,7 +54,7 @@ public class UtilityHelper {
 			try {
 				count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 			}
 
 			if (count == 0) {
@@ -133,7 +136,7 @@ public class UtilityHelper {
 
 		} catch (Exception e) {
 
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 
 		}
 
@@ -167,7 +170,7 @@ public class UtilityHelper {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count == 0) {
@@ -200,7 +203,7 @@ public class UtilityHelper {
 
 		} catch (Exception e) {
 
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 
 		}
 
@@ -231,7 +234,7 @@ public class UtilityHelper {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count == 0) {

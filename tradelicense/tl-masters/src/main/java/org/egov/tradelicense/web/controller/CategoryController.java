@@ -2,9 +2,9 @@ package org.egov.tradelicense.web.controller;
 
 import javax.validation.Valid;
 
-import org.egov.models.CategoryRequest;
-import org.egov.models.CategoryResponse;
-import org.egov.models.RequestInfoWrapper;
+import org.egov.tl.commons.web.requests.CategoryRequest;
+import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.domain.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

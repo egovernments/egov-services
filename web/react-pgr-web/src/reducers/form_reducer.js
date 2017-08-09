@@ -206,6 +206,28 @@ console.log('Here', validatePropertyFloor);
 }
 
 
+function validateFileField(isRequired, code, files, validationData, errorMsg){
+   var errorText="";
+   if(isRequired){
+     if (files && files.length > 0) {
+       if (_.indexOf(validationData.required.current, code) === -1) {
+         validationData.required.current.push(code);
+       }
+     } else {
+       validationData.required.current = _.remove(validationData.required.current, (item) => {
+         return item !== code
+       });
+       errorText = errorMsg || "This document is required";
+     }
+   }
+
+   return {
+     errorText: errorText,
+     validationData: validationData,
+     isFormValid: ((validationData.required.required.length === validationData.required.current.length) && (validationData.pattern ? validationData.pattern.current.length === 0 : true))
+   };
+}
+
 export default(state = defaultState, action) => {
   switch (action.type) {
 
@@ -393,7 +415,7 @@ export default(state = defaultState, action) => {
       }
       break;
 
-      case 'FILE_UPLOAD':
+     case 'FILE_UPLOAD':
       var filearray = [];
       filearray = [...state.files];
       filearray.push(action.files);
@@ -429,7 +451,68 @@ export default(state = defaultState, action) => {
       };
       break;
 
-      case "HANDLE_CHANGE_NEXT_ONE":
+    case 'FILE_UPLOAD_BY_CODE': //this is used add file for particular field
+          var filesArray = [];
+          filesArray = [...state.files];
+          var field=filesArray.find((field) => field.code == action.code);
+          var files=[];
+          if(field){
+            field.files=[...field.files, ...action.files];
+            files=[...field.files];
+          }
+          else{
+            filesArray.push({code:action.code, files:action.files});
+            files=action.files;
+          }
+
+          validationData = validateFileField(action.isRequired, action.code, files, state.validationData, action.errorMsg);
+
+          return {
+            ...state,
+            files: filesArray,
+            fieldErrors: {
+              ...state.fieldErrors,
+              [action.code]: validationData.errorText
+            },
+            validationData: validationData.validationData,
+            isFormValid: validationData.isFormValid
+          };
+
+    case 'FILE_REMOVE_BY_CODE': //this is used to remove file by code {code:'YourFieldCode', files:[{...}]}
+
+      filearray=[];
+      filearray=[...state.files];
+
+      var codePos = filearray.map(function(field) {return field.code; }).indexOf(action.code);
+      var idx=-1;
+
+      var files = filearray[codePos].files;
+      for(let i = 0; i < files.length; i++) {
+          if (files[i].name === action.name) {
+              idx = i;
+              break;
+          }
+      }
+
+      if(idx !== -1){
+        //remove the index idx object
+        files.splice(idx, 1);
+      }
+
+      validationData = validateFileField(action.isRequired, action.code, files, state.validationData, action.errorMsg);
+
+      return {
+        ...state,
+        files: filearray,
+        fieldErrors: {
+          ...state.fieldErrors,
+          [action.code]: validationData.errorText
+        },
+        validationData: validationData.validationData,
+        isFormValid: validationData.isFormValid
+      };
+
+    case "HANDLE_CHANGE_NEXT_ONE":
 
         validationData = undefined;
         validationData = validate(action.isRequired, action.pattern, action.propertyOne, action.value, state.validationData);

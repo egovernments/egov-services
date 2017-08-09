@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton, Table, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -34,30 +32,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -382,10 +356,10 @@ class DefineEscalationTime extends Component {
       const viewTable = function() {
       	  if(isSearchClicked)
       		return (
-   	        <Card>
+   	        <Card style={styles.marginStyle}>
               <CardText>
                   <Row>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText={translate("pgr.lbl.designation")}
                            fullWidth={true}
@@ -404,7 +378,7 @@ class DefineEscalationTime extends Component {
                               })}
                         </SelectField>
                     </Col>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
                             floatingLabelText={translate("pgr.noof.hours")}
@@ -416,17 +390,15 @@ class DefineEscalationTime extends Component {
                             id="noOfHours"
                         />
                     </Col>
-                    <div className="clearfix"></div>
-                    <Col xs={12} md={12} style={{textAlign:"center"}}>
+                  </Row>
+                  <div className="text-center">
                         {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.add")} primary={true} onClick={() => {
                           addEscalation();
                         }}/>}
                         {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.update")} primary={true} onClick={() => {
-
                           updateEscalation();
                         }}/>}
-                    </Col>
-                  </Row>
+                  </div>
               </CardText>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -449,62 +421,56 @@ class DefineEscalationTime extends Component {
 
       return(<div className="defineEscalationTime">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
-          <Card  style={styles.marginStyle}>
+          <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation Time < /div>} />
               <CardText>
-                  <Card>
-                      <CardText>
-                          <Grid>
-                              <Row>
-                                  <Col xs={12} md={4} mdPush={4}>
-                                        <AutoComplete
-                                          floatingLabelText={translate("pgr.lbl.grievance.type")}
-                                          fullWidth={true}
-                                          filter={function filter(searchText, key) {
-                                                    return key.toLowerCase().includes(searchText.toLowerCase());
-                                                 }}
-                                          dataSource={this.state.grievanceTypeSource}
-                                          dataSourceConfig={this.state.dataSourceConfig}
-                                          onKeyUp={handleAutoCompleteKeyUp}
-                                          errorText={fieldErrors.grievanceType ? fieldErrors.grievanceType : "" }
-                                          value={defineEscalationTime.grievanceType ? defineEscalationTime.grievanceType : ""}
-                                          onNewRequest={(chosenRequest, index) => {
-                  	                        var e = {
-                  	                          target: {
-                  	                            value: chosenRequest
-                  	                          }
-                  	                        };
-                  	                        handleChange(e, "grievanceType", true, "");
-                  	                       }}
-                                        />
-                                  </Col>
-                              </Row>
-                          </Grid>
-                      </CardText>
-                  </Card>
-                  <div style={{textAlign:'center'}}>
-
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.grievanceType ? false : true} label={translate("core.lbl.search")} primary={true}/>
-
-                  </div>
-                  {this.state.noData &&
-                    <Card style = {{textAlign:"center"}}>
-                      <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} >{translate("pgr.lbl.escdetail")}</strong>}/>
-                      <CardText>
-
-                          <RaisedButton style={{margin:'10px 0'}} label={translate("pgr.lbl.addesc")} primary={true} onClick={() => {
-
-                            this.setState({
-                              isSearchClicked: true,
-                              noData:false
-                            })
-                          }}/>
-                     </CardText>
-                  </Card>
-                  }
-                  {viewTable()}
+                  <Grid>
+                      <Row>
+                          <Col xs={12} sm={6} md={6} lg={6}>
+                                <AutoComplete
+                                  floatingLabelText={translate("pgr.lbl.grievance.type")}
+                                  fullWidth={true}
+                                  filter={function filter(searchText, key) {
+                                            return key.toLowerCase().includes(searchText.toLowerCase());
+                                         }}
+                                  dataSource={this.state.grievanceTypeSource}
+                                  dataSourceConfig={this.state.dataSourceConfig}
+                                  onKeyUp={handleAutoCompleteKeyUp}
+                                  errorText={fieldErrors.grievanceType ? fieldErrors.grievanceType : "" }
+                                  value={defineEscalationTime.grievanceType ? defineEscalationTime.grievanceType : ""}
+                                  onNewRequest={(chosenRequest, index) => {
+          	                        var e = {
+          	                          target: {
+          	                            value: chosenRequest
+          	                          }
+          	                        };
+          	                        handleChange(e, "grievanceType", true, "");
+          	                       }}
+                                />
+                          </Col>
+                      </Row>
+                  </Grid>
               </CardText>
           </Card>
+          <div style={{textAlign:'center'}}>
+              <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.grievanceType ? false : true} label={translate("core.lbl.search")} primary={true}/>
+          </div>
+          {this.state.noData &&
+            <Card style = {{textAlign:"center"}}>
+              <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} >{translate("pgr.lbl.escdetail")}</strong>}/>
+              <CardText>
+
+                  <RaisedButton style={{margin:'10px 0'}} label={translate("pgr.lbl.addesc")} primary={true} onClick={() => {
+
+                    this.setState({
+                      isSearchClicked: true,
+                      noData:false
+                    })
+                  }}/>
+             </CardText>
+          </Card>
+          }
+          {viewTable()}
           </form>
       </div>)
     }

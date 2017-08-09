@@ -13,12 +13,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.DocumentType;
-import org.egov.models.DocumentTypeRequest;
-import org.egov.models.DocumentTypeResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.DocumentType;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.DocumentTypeRequest;
+import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.DocumentTypeService;

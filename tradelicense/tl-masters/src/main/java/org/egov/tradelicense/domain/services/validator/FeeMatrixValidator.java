@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.enums.ApplicationTypeEnum;
-import org.egov.enums.BusinessNatureEnum;
-import org.egov.models.AuditDetails;
-import org.egov.models.FeeMatrix;
-import org.egov.models.FeeMatrixDetail;
-import org.egov.models.FeeMatrixRequest;
-import org.egov.models.RequestInfo;
-import org.egov.models.RequestInfoWrapper;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.FeeMatrix;
+import org.egov.tl.commons.web.contract.FeeMatrixDetail;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
+import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
+import org.egov.tl.commons.web.requests.FeeMatrixRequest;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
@@ -32,11 +32,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author phani
  *
  */
 @Component
+@Slf4j
 public class FeeMatrixValidator {
 
 	@Autowired
@@ -109,27 +112,33 @@ public class FeeMatrixValidator {
 
 		URI uri = UriComponentsBuilder.fromUriString(financialYearURI.toString())
 				.queryParam("id", Long.valueOf(financialYear)).build(true).encode().toUri();
+
+		FinancialYearContractResponse financialYearContractResponse = null;
+
 		try {
-			FinancialYearContractResponse financialYearContractResponse = restTemplate.postForObject(uri,
-					requestInfoWrapper, FinancialYearContractResponse.class);
 
-			if (financialYearContractResponse != null) {
+			financialYearContractResponse = restTemplate.postForObject(uri, requestInfoWrapper,
+					FinancialYearContractResponse.class);
 
-				List<FinancialYearContract> FinancialYearContracts = financialYearContractResponse.getFinancialYears();
-
-				if (FinancialYearContracts == null || FinancialYearContracts.size() == 0) {
-
-					throw new InvalidInputException(propertiesManager.getInvalidFinancialYearMsg(),
-							requestInfoWrapper.getRequestInfo());
-				}
-
-			} else {
-				throw new InvalidInputException(propertiesManager.getInvalidFinancialYearMsg(),
-						requestInfoWrapper.getRequestInfo());
-			}
 		} catch (Exception e) {
 			throw new InvalidInputException(e.getMessage(), requestInfoWrapper.getRequestInfo());
 		}
+
+		if (financialYearContractResponse != null) {
+
+			List<FinancialYearContract> FinancialYearContracts = financialYearContractResponse.getFinancialYears();
+
+			if (FinancialYearContracts == null || FinancialYearContracts.size() == 0) {
+
+				throw new InvalidInputException(propertiesManager.getInvalidFinancialYearMsg(),
+						requestInfoWrapper.getRequestInfo());
+			}
+
+		} else {
+			throw new InvalidInputException(propertiesManager.getInvalidFinancialYearMsg(),
+					requestInfoWrapper.getRequestInfo());
+		}
+
 	}
 
 	/**
@@ -147,7 +156,7 @@ public class FeeMatrixValidator {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 		}
 
 		if (count == 0) {

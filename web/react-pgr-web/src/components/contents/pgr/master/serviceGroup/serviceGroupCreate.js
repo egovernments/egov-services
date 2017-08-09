@@ -1,12 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -17,38 +13,12 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-
-var flag = 0;
 const styles = {
   headerStyle : {
     fontSize : 19
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -190,8 +160,6 @@ class ServiceGroupCreate extends Component {
 
       let {submitForm,handleOpenNClose} = this;
 
-      console.log(isFormValid);
-
       return(
         <div className="createServiceGroup">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
@@ -200,7 +168,7 @@ class ServiceGroupCreate extends Component {
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
@@ -210,7 +178,7 @@ class ServiceGroupCreate extends Component {
                                       id="name"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.code")+"*"}
@@ -221,7 +189,7 @@ class ServiceGroupCreate extends Component {
                                       disabled={this.state.id ? true : false }
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.description")}

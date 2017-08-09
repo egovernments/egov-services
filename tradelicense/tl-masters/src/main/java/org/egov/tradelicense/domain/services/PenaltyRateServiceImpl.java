@@ -2,12 +2,12 @@ package org.egov.tradelicense.domain.services;
 
 import java.util.List;
 
-import org.egov.models.PenaltyRate;
-import org.egov.models.PenaltyRateRequest;
-import org.egov.models.PenaltyRateResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfoFactory;
+import org.egov.tl.commons.web.contract.PenaltyRate;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.PenaltyRateRequest;
+import org.egov.tl.commons.web.requests.PenaltyRateResponse;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.PenaltyRateValidator;

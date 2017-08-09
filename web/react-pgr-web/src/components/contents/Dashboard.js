@@ -58,7 +58,8 @@ class Dashboard extends Component {
       hasData:false,
       workflowResult: {}
     };
-}
+  }
+
   componentWillMount() {
 
 	 $('#searchTable').DataTable({
@@ -77,40 +78,58 @@ class Dashboard extends Component {
     let {currentUser}=this.props;
 
     if(currentUser.type=="CITIZEN") {
-      Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
-          for(var i=0; i<response.serviceRequests.length; i++) {
-            var d1 = response.serviceRequests[i].requestedDatetime.split(" ")[0].split("-");
-            var d11 = response.serviceRequests[i].requestedDatetime.split(" ")[1].split(":");
-            response.serviceRequests[i].clientTime = new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime();
-          }
-
-          response.serviceRequests.sort(function(s1, s2) {
-              var d1 = s1.requestedDatetime.split(" ")[0].split("-");
-                  var d11 = s1.requestedDatetime.split(" ")[1].split(":");
-                  var d2 = s2.requestedDatetime.split(" ")[0].split("-");
-                  var d22 = s2.requestedDatetime.split(" ")[1].split(":");
-                  if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() < new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
-                    return 1;
-                  } else if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() > new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
-                    return -1;
-                  }
-                  return 0;
-            })
-
-          current.setState({
-            serviceRequests: response.serviceRequests,
-			      localArray: response.serviceRequests,
-            hasData:true
-          });
-		   current.props.setLoadingStatus('hide');
-      }).catch((error)=>{
+      Promise.all([
+          Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
+          Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:"deliverable"},{})
+      ])
+      .then((responses)=>{
+        
+        //if any error occurs
+        if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
           current.setState({
             serviceRequests: [],
-			      localArray:[],
-            hasData:true
+            localArray:[],
+             hasData:false
           });
-		  current.props.setLoadingStatus('hide');
-      })
+          return;
+        }
+
+        //inbox items
+        let inboxResponse = responses[0];
+
+        for(var i=0; i<inboxResponse.serviceRequests.length; i++) {
+          var d1 = inboxResponse.serviceRequests[i].requestedDatetime.split(" ")[0].split("-");
+          var d11 = inboxResponse.serviceRequests[i].requestedDatetime.split(" ")[1].split(":");
+          inboxResponse.serviceRequests[i].clientTime = new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime();
+        }
+
+        inboxResponse.serviceRequests.sort(function(s1, s2) {
+            var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+            var d11 = s1.requestedDatetime.split(" ")[1].split(":");
+            var d2 = s2.requestedDatetime.split(" ")[0].split("-");
+            var d22 = s2.requestedDatetime.split(" ")[1].split(":");
+            if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() < new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
+              return 1;
+            } else if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() > new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
+              return -1;
+            }
+            return 0;
+        });
+
+        //citizen services
+        let citizenServices=responses[1];
+
+        current.props.setLoadingStatus('hide');
+
+        current.setState({
+          serviceRequests: inboxResponse.serviceRequests,
+          localArray: inboxResponse.serviceRequests,
+          citizenServices,
+          hasData:true
+        });
+
+      });
+
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
 
@@ -214,6 +233,10 @@ class Dashboard extends Component {
 	  this.setState({localArray:b});
   }
 
+  filterCitizenServices = (name) =>{
+     this.setState({servicesFilter:name});
+  }
+
   handleChange = (value) => {
     this.setState({
       slideIndex: value,
@@ -240,6 +263,15 @@ class Dashboard extends Component {
   }
 
   render() {
+    //filter citizen services
+    let services=[];
+    if(this.state.servicesFilter){
+      services = this.state.citizenServices.filter(
+        (service)=> service.serviceName.toLowerCase().indexOf(this.state.servicesFilter.toLowerCase()) > -1);
+    }
+    else{
+      services=this.state.citizenServices;
+    }
 
     let {workflowResult} = this.state;
     let {handleRowClick, checkIfDate} = this;
@@ -270,7 +302,7 @@ class Dashboard extends Component {
 									<td>{i+1}</td>
 									<td  style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</td>
 									<td><span style={{"display": "none"}}>{e.clientTime}</span>{e.requestedDatetime}</td>
-									<td>{e.firstName}</td>
+    									<td>{e.firstName}</td>
 									<td>
                     {e.attribValues && e.attribValues.map((item, index)=>{
                       if(item['key'] == 'keyword')
@@ -306,7 +338,10 @@ class Dashboard extends Component {
               value={this.state.slideIndex}
             >
               <Tab label="My Request" value={0}/>
-              <Tab label="New Grievances" value={1}  onClick={()=>{this.props.history.push("/pgr/createGrievance")}}/>
+              <Tab label="Services" value={1} />
+              <Tab label="Create Grievance" value={2} onClick={()=>{
+                  this.props.history.push("/pgr/createGrievance")
+                }} />
             </Tabs>
             <SwipeableViews
               index={this.state.slideIndex}
@@ -319,7 +354,7 @@ class Dashboard extends Component {
 							<TextField
 								hintText="Search"
 								floatingLabelText="Search"
-								fullWidth="true"
+								fullWidth={true}
 								onChange={(e, value) =>this.localHandleChange(value)}
 							/>
 						</Col>
@@ -336,7 +371,7 @@ class Dashboard extends Component {
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
                              <Card style={{minHeight:320}}>
-                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
+                                 <CardHeader subtitleStyle={styles.status}
                                   title={e.serviceName}
                                   subtitle={e.attribValues && e.attribValues.map((item,index)=>{
                                       if(item.key =="systemStatus"){
@@ -366,9 +401,19 @@ class Dashboard extends Component {
               <div style={styles.slide}>
                   <Grid>
                     <Row>
-                      <Col>
-                          <Link to={`/pgr/createGrievance`} target=""><RaisedButton label="Create Grievance" secondary={true} /></Link>
-                      </Col>
+                      <TextField
+        								hintText="Search"
+        								floatingLabelText="Search"
+        								fullWidth={true}
+                        onChange={(e, value) => this.filterCitizenServices(value)}
+        							/>
+                    </Row>
+                    <Row>
+                      {services && services.map((service, index) => {
+                         return <ServiceMenu key={index} service={service} onClick={()=>{
+                             this.props.setRoute(`/services/apply/${service.serviceCode}`);
+                           }}></ServiceMenu>;
+                      })}
                     </Row>
                   </Grid>
               </div>
@@ -478,15 +523,21 @@ class Dashboard extends Component {
       }
 
 
-
-
-
-
-
       </div>
     );
   }
 }
+
+const ServiceMenu = ({service, onClick}) =>{
+    return(
+      <Col md={3} sm={4} xs={12}>
+        <div className="service-menu-item">
+            <RaisedButton fullWidth={true} label={service.serviceName} secondary={true} onClick={onClick} />
+        </div>
+      </Col>
+    )
+};
+
 
 const mapStateToProps = state => ({
     currentUser: state.common.currentUser
@@ -503,8 +554,5 @@ const mapDispatchToProps = dispatch => ({
     },
     setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 });
-
-
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

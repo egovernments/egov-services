@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -442,11 +441,10 @@ class createRouter extends Component {
                 <CardText style={{padding:0}}>
                    <Grid>
                      <Row>
-                     <Col xs={12} md={8}>
+                     <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
-                          hintText=""
-                          floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                           fullWidth={true}
+                          floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                           filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.complaintSource}
                           dataSourceConfig={this.state.complaintSourceConfig}
@@ -466,7 +464,7 @@ class createRouter extends Component {
                            }}
                           />
                      </Col>
-                     <Col xs={12} md={8}>
+                     <Col xs={12} sm={6} md={6} lg={6}>
                       <SelectField
                         fullWidth={true}
                         floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
@@ -482,7 +480,7 @@ class createRouter extends Component {
                                     ))}
                        </SelectField>
                      </Col>
-                     <Col xs={12} md={8}>
+                     <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
                           hintText=""
                           floatingLabelText={translate("pgr.lbl.boundary") + " *"}
@@ -506,11 +504,10 @@ class createRouter extends Component {
                            }}
                           />
                      </Col>
-                     <Col xs={12} md={8}>
+                     <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
-                          hintText=""
-                          floatingLabelText={translate("pgr.lbl.position") + " *"}
                           fullWidth={true}
+                          floatingLabelText={translate("pgr.lbl.position") + " *"}
                           filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.positionSource}
                           dataSourceConfig={this.state.allSourceConfig}

@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.services;
 
-import org.egov.models.DocumentTypeRequest;
-import org.egov.models.DocumentTypeResponse;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.DocumentTypeRequest;
+import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 
 /**
  * Service class for DocumentType master

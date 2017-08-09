@@ -57,6 +57,7 @@ import org.egov.collection.model.PositionSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.TransactionType;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
@@ -125,7 +126,8 @@ public class ReceiptService {
 		bill.setBillDetails(apportionPaidAmount(
 					receiptReq.getRequestInfo(), bill, receiptReq.getTenantId()));
 		// return receiptRepository.pushToQueue(receiptReq); //async call
-
+		
+		configureDebitAmountHead(receiptReq);
 		receipt = create(bill, receiptReq.getRequestInfo(),
 				receiptReq.getTenantId(), receipt.getInstrument()); // sync call
 		if(null != receipt.getBill()){
@@ -235,6 +237,7 @@ public class ReceiptService {
 				String instrumentId = null;
 				Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
 			try{
+				instrument.setTransactionType(TransactionType.Debit);
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){
@@ -464,6 +467,24 @@ public class ReceiptService {
 		   LOGGER.info("WorkflowDetailsRequest :"+workFlowDetailsRequest);
 			receiptRepository.pushUpdateDetailsToQueque(workFlowDetailsRequest);
 			}
+	
+	private void configureDebitAmountHead(ReceiptReq receiptReq){
+		LOGGER.info("Fetching glcode for instrument type: "+
+						receiptReq.getReceipt().get(0).getInstrument().getInstrumentType().getName());
+		String glcode = null;
+		try{
+			glcode = instrumentRepository.getAccountCodeId(receiptReq.getRequestInfo(), 
+					receiptReq.getReceipt().get(0).getInstrument(), receiptReq.getReceipt().get(0).getTenantId());
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_MSG, CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_DESC);
+			
+		}
+		LOGGER.info("glcode obtained is: "+glcode);
+		
+
+	}
 
 	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
 		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
@@ -485,10 +506,11 @@ public class ReceiptService {
 		positionSearchCriteriaWrapper.setPositionSearchCriteria(positionSearchCriteria);
 		positionSearchCriteriaWrapper.setRequestInfo(requestInfo);
 		
+	/*	workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));	
+		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper)); */
+		
 		
 		try{
-	//		workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));	
-	//		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper));
 			workflowService.start(workflowDetails);
 		}catch(Exception e){
 			LOGGER.error("Starting workflow failed: "+e.getCause());

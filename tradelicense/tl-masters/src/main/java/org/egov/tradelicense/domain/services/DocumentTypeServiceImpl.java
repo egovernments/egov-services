@@ -2,12 +2,12 @@ package org.egov.tradelicense.domain.services;
 
 import java.util.List;
 
-import org.egov.models.DocumentType;
-import org.egov.models.DocumentTypeRequest;
-import org.egov.models.DocumentTypeResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfoFactory;
+import org.egov.tl.commons.web.contract.DocumentType;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.DocumentTypeRequest;
+import org.egov.tl.commons.web.requests.DocumentTypeResponse;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.DocumentTypeValidator;

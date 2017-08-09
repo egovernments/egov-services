@@ -2,13 +2,13 @@ package org.egov.tradelicense.domain.services;
 
 import java.util.List;
 
-import org.egov.models.FeeMatrix;
-import org.egov.models.FeeMatrixDetail;
-import org.egov.models.FeeMatrixRequest;
-import org.egov.models.FeeMatrixResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfoFactory;
+import org.egov.tl.commons.web.contract.FeeMatrix;
+import org.egov.tl.commons.web.contract.FeeMatrixDetail;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.FeeMatrixRequest;
+import org.egov.tl.commons.web.requests.FeeMatrixResponse;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.FeeMatrixValidator;

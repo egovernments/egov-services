@@ -35,7 +35,7 @@ var chequeOrDD={
     "children": [],
     "fields": [{
         "name": "chequeOrDDNumber",
-        "jsonPath": "collection.modeOfPayment.chequeOrDD.chequeOrDDNumber",
+        "jsonPath": "Receipt[0].instrument.transactionNumber",
         "label": "Cheque/DD Number",
         "pattern": "",
         "type": "text",
@@ -46,7 +46,7 @@ var chequeOrDD={
       },
 			{
 	        "name": "chequeOrDDDate",
-	        "jsonPath": "collection.modeOfPayment.chequeOrDD.chequeOrDDDate",
+	        "jsonPath": "Receipt[0].instrument.transactionDate",
 	        "label": "Cheque/DD Date",
 	        "pattern": "",
 	        "type": "datePicker",
@@ -58,19 +58,20 @@ var chequeOrDD={
 			,
 			{
 					"name": "chequeOrDDBankName",
-					"jsonPath": "collection.modeOfPayment.chequeOrDD.chequeOrDDBankName",
+					"jsonPath": "Receipt[0].instrument.bank.id",
 					"label": "Cheque/DD Bank Name",
 					"pattern": "",
-					"type": "text",
+					"type": "autoCompelete",
 					"isRequired": true,
 					"isDisabled": false,
 					"requiredErrMsg": "",
-					"patternErrMsg": ""
+					"patternErrMsg": "",
+          "url":"egf-masters/banks/_search?|$..id|$..name"
 				}
 				,
 				{
 						"name": "chequeOrDDBranchName",
-						"jsonPath": "collection.modeOfPayment.chequeOrDD.chequeOrDDBranchName",
+						"jsonPath": "Receipt[0].instrument.branchName",
 						"label": "Cheque/DD Branch Name",
 						"pattern": "",
 						"type": "text",
@@ -78,18 +79,7 @@ var chequeOrDD={
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
-					},
-					{
-			        "name": "paidBy",
-			        "jsonPath": "collection.modeOfPayment.paidBy",
-			        "label": "Paid By",
-			        "pattern": "",
-			        "type": "text",
-			        "isRequired": true,
-			        "isDisabled": false,
-			        "requiredErrMsg": "", //Remove required messages
-			        "patternErrMsg": ""
-			      }
+					}
     ]
   }]
 }
@@ -168,16 +158,17 @@ var chequeOrDD={
 
 var dat = {
   "collection.transaction": {
-    "numCols": "6",
+    "numCols": 3,
     "url": "/billing-service/bill/_generate",
     "tenantIdRequired": true,
-    "objectName": "search",
+    "objectName": "Collection",
+    "useTimestamp": true,
     "groups": [{
       "label": "Pay tax",
       "name": "createDocumentType",
       "fields": [{
           "name": "mobile",
-          "jsonPath": "collection.search.mobile",
+          "jsonPath": "mobile",
           "label": "Mobile",
           "pattern": "",
           "type": "number",
@@ -188,7 +179,7 @@ var dat = {
         },
         {
           "name": "email",
-          "jsonPath": "collection.search.email",
+          "jsonPath": "email",
           "label": "Email",
           "pattern": "",
           "type": "email",
@@ -199,7 +190,7 @@ var dat = {
         },
         {
           "name": "billerService",
-          "jsonPath": "collection.search.billerService",
+          "jsonPath": "billerService",
           "label": "Billing service name",
           "pattern": "",
           "type": "singleValueList",
@@ -211,7 +202,7 @@ var dat = {
         },
         {
           "name": "consumerCode",
-          "jsonPath": "collection.search.consumerCode",
+          "jsonPath": "consumerCode",
           "label": "Consumer Code",
           "pattern": "",
           "type": "text",
@@ -222,27 +213,96 @@ var dat = {
         }
       ]
     }],
+    "result": {
+      "header": [
+      {
+        "name": "businessService",
+        "jsonPath": "businessService",
+        "label": "Biller Service Name",
+        "pattern": "",
+        "type": "label",
+        "isRequired": true,
+        "isDisabled": false,
+        "requiredErrMsg": "",
+        "patternErrMsg": "",
+        "isLabel":false
+      },
+      {
+        "name": "consumerCode",
+        "jsonPath": "consumerCode",
+        "label": "Consumer code",
+        "pattern": "",
+        "type": "label",
+        "isRequired": true,
+        "isDisabled": false,
+        "requiredErrMsg": "",
+        "patternErrMsg": "",
+        "isLabel":false
+      },
+      {
+        "name": "totalAmount",
+        "jsonPath": "totalAmount",
+        "label": "Amount Due",
+        "pattern": "",
+        "type": "label",
+        "isRequired": true,
+        "isDisabled": false,
+        "requiredErrMsg": "",
+        "patternErrMsg": "",
+        "isLabel":false
+      },
+      {
+        "name": "minimumAmount",
+        "jsonPath": "minimumAmount",
+        "label": "Minimum amount payable",
+        "pattern": "",
+        "type": "label",
+        "isRequired": true,
+        "isDisabled": false,
+        "requiredErrMsg": "",
+        "patternErrMsg": "",
+        "isLabel":false
+      },
+      {
+        "name": "amountPaid",
+        "jsonPath": "amountPaid",
+        "label": "Amount paid(Rs)",
+        "pattern": "",
+        "type": "text",
+        "isRequired": true,
+        "isDisabled": false,
+        "requiredErrMsg": "",
+        "patternErrMsg": "",
+        "isLabel":false
+      }],
+      // "values": ["businessService", "consumerCode", "totalAmount","minimumAmount","bill"],
+      "resultPath": "Bill[0].billDetails",
+      "tableResultPath":"Receipt[0].Bill[0].billDetails",
+
+      // "rowClickUrlUpdate": "/update/wc/pipeSize/{id}",
+      // "rowClickUrlView": "/view/wc/pipeSize/{id}"
+    },
     "transaction": [{
       "label": "Payment",
       "name": "paymentMode",
-      "children": [cashOrMops,chequeOrDD],
+      "children": [chequeOrDD],
       "fields": [
-				{
-					"name": "totalAmountPaid",
-					"jsonPath": "collection.create.paymentMode.totalAmountPaid",
-					"label": "Total Amount Paid",
-					"pattern": "",
-					"type": "label",
-					"isRequired": false,
-					"isDisabled": false,
-					"isHidden": false,
-					"defaultValue": "",
-					"requiredErrMsg": "",
-					"patternErrMsg": ""
-				},
+				// {
+				// 	"name": "totalAmountPaid",
+				// 	"jsonPath": "Receipt[0].instrument.amount",
+				// 	"label": "Total Amount Paid",
+				// 	"pattern": "",
+				// 	"type": "label",
+				// 	"isRequired": false,
+				// 	"isDisabled": false,
+				// 	"isHidden": false,
+				// 	"defaultValue": "",
+				// 	"requiredErrMsg": "",
+				// 	"patternErrMsg": ""
+				// },
 				{
         "name": "modeOfPayment",
-        "jsonPath": "collection.create.modeOfPayment",
+        "jsonPath": "Receipt[0].instrument.instrumentType.name",
         "label": "Mode Of Payment",
         "pattern": "",
         "type": "singleValueList",
@@ -280,7 +340,19 @@ var dat = {
           //   "value": "SBI MOPS Bank Callan"
           // }
         ]
-      }]
+      },
+      {
+          "name": "paidBy",
+          "jsonPath": "Receipt[0].Bill[0].payeeName",
+          "label": "Paid By",
+          "pattern": "",
+          "type": "text",
+          "isRequired": true,
+          "isDisabled": false,
+          "requiredErrMsg": "", //Remove required messages
+          "patternErrMsg": ""
+        }
+    ]
     }]
   }
 }

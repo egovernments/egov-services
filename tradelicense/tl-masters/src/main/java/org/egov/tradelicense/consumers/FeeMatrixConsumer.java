@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.FeeMatrixRequest;
+import org.egov.tl.commons.web.requests.FeeMatrixRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.FeeMatrixService;
 import org.springframework.beans.factory.annotation.Autowired;

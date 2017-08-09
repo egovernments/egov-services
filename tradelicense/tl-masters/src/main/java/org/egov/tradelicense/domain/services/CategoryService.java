@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.services;
 
-import org.egov.models.CategoryRequest;
-import org.egov.models.CategoryResponse;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.CategoryRequest;
+import org.egov.tl.commons.web.requests.CategoryResponse;
 
 /**
  * Service class for Category master

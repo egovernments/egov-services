@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.models.Error;
-import org.egov.models.ErrorRes;
-import org.egov.models.ResponseInfo;
+import org.egov.tl.commons.web.contract.Error;
+import org.egov.tl.commons.web.contract.ErrorRes;
+import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

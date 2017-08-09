@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.LicenseStatus;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.LicenseStatusQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

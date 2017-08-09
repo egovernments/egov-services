@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.enums.ApplicationTypeEnum;
-import org.egov.models.AuditDetails;
-import org.egov.models.PenaltyRate;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.PenaltyRate;
+import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.PenaltyRateQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

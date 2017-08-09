@@ -2,12 +2,12 @@ package org.egov.tradelicense.domain.services;
 
 import java.util.List;
 
-import org.egov.models.LicenseStatus;
-import org.egov.models.LicenseStatusRequest;
-import org.egov.models.LicenseStatusResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfoFactory;
+import org.egov.tl.commons.web.contract.LicenseStatus;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.LicenseStatusRequest;
+import org.egov.tl.commons.web.requests.LicenseStatusResponse;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.LicenseStatusValidator;

@@ -2,13 +2,13 @@ package org.egov.tradelicense.domain.services;
 
 import java.util.List;
 
-import org.egov.models.Category;
-import org.egov.models.CategoryDetail;
-import org.egov.models.CategoryRequest;
-import org.egov.models.CategoryResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfoFactory;
+import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.CategoryRequest;
+import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.CategoryValidator;

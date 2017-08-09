@@ -67,6 +67,12 @@ public class PropertiesManager {
 
 	@Value("${invalid.category.id.msg}")
 	private String invalidCategoryIdMsg;
+	
+	@Value("${invalid.documenttype.id.msg}")
+	private String invalidDocumentTypeIdMsg;
+	
+	@Value("${invalid.license.status.id.msg}")
+	private String invalidLicenseStatusIdMsg;
 
 	@Value("${invalid.uom.id.msg}")
 	private String invalidUomIdMsg;

@@ -1,0 +1,170 @@
+{
+	"variables": [],
+	"info": {
+		"name": "FeeMatrix",
+		"_postman_id": "dfc305fe-4e35-77bd-cf8f-ca73a7ed7f5d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "FeeMatrix Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/tl-masters/v1/feematrix/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tl-masters",
+						"v1",
+						"feematrix",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"1871c87b-d682-420e-8ba1-c11dd0d2c5dc\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"New\",\r\n            \"categoryId\": 1,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 2,\r\n            \"financialYear\": \"3\",\r\n            \"effectiveFrom\": \"29/07/17\",\r\n            \"effectiveTo\": \"29/07/17\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"feeMatrixId\": 1,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/tl-masters/v1/feematrix/_update?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tl-masters",
+						"v1",
+						"feematrix",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"1871c87b-d682-420e-8ba1-c11dd0d2c5dc\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 1,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"New\",\r\n            \"categoryId\": 1,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 2,\r\n            \"financialYear\": \"3\",\r\n            \"effectiveFrom\": \"29/07/17\",\r\n            \"effectiveTo\": \"29/07/17\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"feeMatrixId\": 1,\r\n            \t\"uomFrom\": \"50\",\r\n            \t\"uomTo\": \"100\",\r\n            \t\"amount\": 150\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/tl-masters/v1/feematrix/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tl-masters",
+						"v1",
+						"feematrix",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"1871c87b-d682-420e-8ba1-c11dd0d2c5dc\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

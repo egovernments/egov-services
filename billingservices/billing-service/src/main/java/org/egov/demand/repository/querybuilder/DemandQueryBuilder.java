@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.enums.Type;
 import org.springframework.stereotype.Component;
 
@@ -103,6 +104,9 @@ public class DemandQueryBuilder {
 	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE egbs_demanddetail SET "
 			+ "id=?,demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,"
 			+ "lastModifiedby=?,lastModifiedtime=?,tenantid=? WHERE id=? AND tenantid=?;";
+	
+	public final String DEMAND_UPDATE_CONSUMERCODE_QUERY="UPDATE egbs_demand SET consumercode=?, lastmodifiedby=?, lastmodifiedtime=? "
+			+ " WHERE tenantid=? AND id IN (";
 	
 	public String getDemandQueryForConsumerCodes(Map<String,Set<String>> businessConsumercodeMap,String tenantId){
 		
@@ -187,7 +191,7 @@ public class DemandQueryBuilder {
 		log.info("the query String for demand : " + demandQuery.toString());
 		return demandQuery.toString();
 	}
-
+	
 	public static String getDemandDetailQuery(DemandDetailCriteria demandDetailCriteria,
 			List<Object> preparedStatementValues) {
 
@@ -225,6 +229,11 @@ public class DemandQueryBuilder {
 		addPagingClause(demandDetailQuery, preparedStatementValues);
 		log.info("the query String for demand detail: " + demandDetailQuery.toString());
 		return demandDetailQuery.toString();
+	}
+	//query builder for update mis(updating consumer code)
+	public String getDemandUpdateMisQuery(DemandUpdateMisRequest demandRequest){
+
+		return DEMAND_UPDATE_CONSUMERCODE_QUERY+getIdQueryForStrings(demandRequest.getId());
 	}
 
 	private static void addOrderByClause(StringBuilder demandQueryBuilder,String columnName) {

@@ -55,6 +55,9 @@ import lombok.ToString;
 @ToString
 public class ApplicationProperties {
 
+	@Value("${kafka.topics.updateMIS.demand}")
+	private String updateMISTopicName;
+	
 	@Value("${egov.services.user_service.hostname}")
 	private String userServiceHostName;
 

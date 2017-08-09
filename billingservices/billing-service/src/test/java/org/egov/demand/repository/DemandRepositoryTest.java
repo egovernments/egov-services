@@ -17,6 +17,7 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
 import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
 import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
@@ -119,6 +120,19 @@ public class DemandRepositoryTest {
 		System.err.println(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length);
 		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demandDetails.size());
 		
+	}
+	
+	@Test
+	@PrepareForTest({DemandQueryBuilder.class})
+	public void testShouldUpdateMIS(){
+		DemandUpdateMisRequest demandRequest=DemandUpdateMisRequest.builder().tenantId("default").build();
+		PowerMockito.mockStatic(DemandQueryBuilder.class);
+		String query="";
+		 PowerMockito.when(demandQueryBuilder.getDemandUpdateMisQuery(any(DemandUpdateMisRequest.class))).thenReturn(query);
+		
+		 when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+		
+		demandRepository.updateMIS(demandRequest);
 	}
 
 	public ResponseInfo getResponseInfo(RequestInfo requestInfo) {

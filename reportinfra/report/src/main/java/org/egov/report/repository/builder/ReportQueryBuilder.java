@@ -52,13 +52,17 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
 		    {
 		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
+		            	if(sc.getSearchClause() != null) {
 		            	baseQuery.append(" " +sc.getSearchClause());
+		            	}
 		            }
 		    }
 			
 		
 	}
+	if(groupByQuery != null){
     baseQuery.append(" "+ groupByQuery);
+	}
     LOGGER.info("generate baseQuery :"+baseQuery);
     return baseQuery.toString();
 } }

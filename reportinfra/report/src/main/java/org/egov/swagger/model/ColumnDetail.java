@@ -16,7 +16,7 @@ public class ColumnDetail extends ColumnDef  {
 public ColumnDetail() {
 		
 	}
-  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name) {
+  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isMandatory) {
 		super();
 		this.showColumn = showColumn;
 		this.label = label;
@@ -24,6 +24,7 @@ public ColumnDetail() {
 		this.defaultValue = defaultValue;
 		this.total = total;
 		this.name(name);
+		this.isMandatory = isMandatory;
   }	
 
   public ColumnDetail(String label, TypeEnum type, String name) {

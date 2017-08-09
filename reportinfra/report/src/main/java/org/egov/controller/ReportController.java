@@ -14,6 +14,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,11 +36,12 @@ public class ReportController {
 	@Autowired
     public static ResourceLoader resourceLoader;
 
-	@PostMapping("/metadata/_get")
+	@PostMapping("/{moduleName}/metadata/_get")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final MetaDataRequest metaDataRequest,
+	public ResponseEntity<?> create(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
 		try{
+		System.out.println("The Module Name from the URI is :"+moduleName);
 		MetadataResponse mdr = reportService.getMetaData(metaDataRequest);
 		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		} catch(NullPointerException e){
@@ -47,7 +49,7 @@ public class ReportController {
 		}
 	}
 	
-	@PostMapping("/_get")
+	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
@@ -59,7 +61,7 @@ public class ReportController {
 		}
 	}
 	
-	@PostMapping("/report/_reload")
+	@PostMapping("/{moduleName}/_reload")
 	@ResponseBody
 	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {

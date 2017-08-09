@@ -26,8 +26,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -66,46 +71,56 @@ public class ReportApp implements EnvironmentAware {
 		SpringApplication.run(ReportApp.class, args);
 	}
 	
-	@PostConstruct
+	
 	@Bean("reportDefinitions")
 	public static ReportDefinitions loadYaml() {
     
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+	mapper.setSerializationInclusion(Include.NON_NULL);
 	List<ReportDefinition> localrd = new ArrayList<ReportDefinition>();
 	ReportDefinitions rd = new ReportDefinitions();
 	ReportDefinitions localReportDefinitions = new ReportDefinitions();
+	ReportDefinition validateRD = new ReportDefinition();
+	
 	BufferedReader br = null;
 	FileReader fr = null;
 	try {
     //Local Testing
 	Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
-	
 	File file = resource.getFile();
 	
 	try {
 
-		fr = new FileReader("/ws/reportFileLocations.txt");
+		fr = new FileReader(file);
 		br = new BufferedReader(fr);
 
 		String yamlLocation;
-
 		while ((yamlLocation = br.readLine()) != null) {
-			System.out.println(yamlLocation);
 			if(yamlLocation.startsWith("https")) {
-			URL oracle = new URL(yamlLocation);
-			rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
-			localrd.addAll(rd.getReportDefinitions());
-			} else if(yamlLocation.startsWith("file")){
-				resource = resourceLoader.getResource(yamlLocation);
-				file = resource.getFile();
-				rd = mapper.readValue(file, ReportDefinitions.class);
-				localrd.addAll(rd.getReportDefinitions());
-				
-			} else {
+				LOGGER.info("Coming in to the https loop");
+				LOGGER.info("The Yaml Location is : "+yamlLocation);
 				URL oracle = new URL(yamlLocation);
 				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
 				localrd.addAll(rd.getReportDefinitions());
-			}
+				
+				} else if(yamlLocation.startsWith("file://")){
+					LOGGER.info("Coming in to the file loop");
+					LOGGER.info("The Yaml Location is : "+yamlLocation);
+					resource = resourceLoader.getResource(yamlLocation.toString());
+					file = resource.getFile();
+					rd = mapper.readValue(file, ReportDefinitions.class);
+					localrd.addAll(rd.getReportDefinitions());
+					
+				} else {
+					LOGGER.info("Coming in to the else loop");
+					LOGGER.info("The Yaml Location is : "+yamlLocation);
+					URL oracle = new URL(yamlLocation);
+					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+					localrd.addAll(rd.getReportDefinitions());
+				}
+			
 		}
 
 	} catch (IOException e) {
@@ -116,12 +131,12 @@ public class ReportApp implements EnvironmentAware {
 		reportDefinitions = localReportDefinitions;
 	
 	
-     
+     /*LOGGER.info("Duplicate Report Definitions are "+reportDefinitions.getDuplicateReportDefinition());*/
      //Dev Server
 	 /*URL oracle = new URL(ReportApp.env.getProperty("report.yaml.path"));
 	 reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);*/
 	 
-	/*LOGGER.info("Report Defintion PGR: "+reportDefinitions.toString());*/
+	LOGGER.info("Report Defintion PGR: "+reportDefinitions.toString());
 	return reportDefinitions;
 	}catch (Exception e) {
 	// TODO Auto-generated catch block

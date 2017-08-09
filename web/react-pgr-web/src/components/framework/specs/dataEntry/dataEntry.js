@@ -8,7 +8,7 @@ var rooms = {
    "label": "Room",
    "name": "Room",
    "multiple": true,
-   "hide":true,
+
    "children": [],
    "fields": [
 		{
@@ -62,7 +62,7 @@ var rooms = {
 			"defaultValue":[]
 		},
 		{
-			"name": "UsageType",
+			"name": "UsageType2",
 			"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].usage",
 			"label": "pt.create.groups.propertyAddress.fields.usageType",
 			"pattern": "",
@@ -571,6 +571,19 @@ var dat = {
 							"patternErrMsg": "",
 						},
 						{
+							"name": "ReadyReckoner",
+							"jsonPath": "ReadyReckoner",
+							"label": "pt.create.groups.propertyAddress.fields.readyReckoner",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": [],
+						},
+						{
 							"name": "IsCorrespondanceAddressDifferentFromAddress",
 							"jsonPath": "IsCorrespondanceAddressDifferentFromAddress",
 							"label": "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress",
@@ -771,68 +784,23 @@ var dat = {
 							"url":"",
 							"defaultValue": [{key:1, name:1},{key:2, name:2},{key:3, name:3},{key:4, name:4},{key:5, name:5},{key:6, name:6},{key:7, name:7},{key:8, name:8},{key:9, name:9},{key:10, name:10}]
 						},
-						
-				]
-			},
-			{
-				"label": "Construction Type",
-				"name": "ConstructionType",
-				"fields": [
 						{
-							"name": "FloorType",
-							"jsonPath": "properties[0].propertyDetail.floorType",
-							"label": "pt.create.groups.propertyAddress.fields.floorType",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"url":"pt-property/property/floortypes/_search?|$..code|$..name",
-							"patternErrMsg": "",
-							"defaultValue":[]
-						},
-						{
-							"name": "RoofType",
-							"jsonPath": "properties[0].propertyDetail.roofType",
-							"label": "pt.create.groups.propertyAddress.fields.roofType",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"url":"pt-property/property/rooftypes/_search?|$..code|$..name",
-							"patternErrMsg": "",
-							"defaultValue":[]
-						},
-						{
-							"name": "WallType",
-							"jsonPath": "properties[0].propertyDetail.wallType",
-							"label": "pt.create.groups.propertyAddress.fields.wallType",
+							"name": "ParkingFactor",
+							"jsonPath": "properties[0].ParkingFactor",
+							"label": "pt.create.groups.propertyAddress.fields.parkingFactor",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"url":"pt-property/property/walltypes/_search?|$..code|$..name",
 							"patternErrMsg": "",
-							"defaultValue":[]
-						},	
-						{
-							"name": "WoodType",
-							"jsonPath": "properties[0].propertyDetail.woodType",
-							"label": "pt.create.groups.propertyAddress.fields.woodType",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"url":"pt-property/property/woodtypes/_search?|$..code|$..name",
-							"patternErrMsg": "",
-							"defaultValue":[]
-						},	
+							"url":"",
+							"defaultValue": [{key:1, name:1},{key:2, name:2},{key:3, name:3},{key:4, name:4},{key:5, name:5},{key:6, name:6},{key:7, name:7},{key:8, name:8},{key:9, name:9},{key:10, name:10}]
+						},
 						
 				]
 			},
+			
 			{
 				"label": "Vacant Land",
 				"name": "VacantLand",
@@ -1175,7 +1143,18 @@ var dat = {
 							"patternErrMsg": "",
 						},
 						{
-							"name": "ConstructionDate",
+							"name": "ConstructionStartDate",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].constCompletionDate",
+							"label": "pt.create.groups.propertyAddress.fields.constructionStartDate",
+							"pattern": "",
+							"type": "datePicker",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+						},
+						{
+							"name": "ConstructionEndDate",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].constCompletionDate",
 							"label": "pt.create.groups.propertyAddress.fields.constructionDate",
 							"pattern": "",
@@ -1261,6 +1240,71 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "CarpetArea",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].carpetArea",
+							"label": "pt.create.groups.propertyAddress.fields.carpetArea",
+							"pattern": "",
+							"type": "number",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"depedants":[{
+									"jsonPath":"properties[0].propertyDetail.floors[0].units[0].builtupArea",
+									"type":"textField",
+									"pattern":"`${getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')!='' ? -parseInt(getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')):0} + getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea')`",
+									"rg":"",
+									"isRequired": false,
+									"requiredErrMsg": "",
+									"patternErrMsg": ""
+								}]
+						},
+						{
+							"name": "ExemptedArea",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].exemptedArea",
+							"label": "pt.create.groups.propertyAddress.fields.exemptedArea",
+							"pattern": "",
+							"type": "number",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "BuildingCost",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].buildingCost",
+							"label": "pt.create.groups.propertyAddress.fields.buildingCost",
+							"pattern": "",
+							"type": "number",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "LandCost",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].landCost",
+							"label": "pt.create.groups.propertyAddress.fields.landCost",
+							"pattern": "",
+							"type": "number",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "AssessableArea",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].assessableArea",
+							"label": "pt.create.groups.propertyAddress.fields.assessableArea",
+							"pattern": "",
+							"type": "number",
+							"isRequired": true,
+							"isHidden":true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""

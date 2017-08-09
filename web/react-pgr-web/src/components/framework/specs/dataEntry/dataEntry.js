@@ -263,7 +263,7 @@ var rooms = {
 
 var dat = {
 	"dataEntry.create": {
-		"numCols": 12/3,
+		"numCols": 12/4,
 		"version": "v1",
 		"url": "pt-property/properties/_create",
 		"useTimestamp": true,
@@ -347,6 +347,17 @@ var dat = {
 							"label": "pt.create.groups.propertyAddress.fields.email",
 							"pattern": "",
 							"type": "email",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "PanNumber",
+							"jsonPath": "properties[0].owners[0].pan",
+							"label": "pt.create.groups.propertyAddress.fields.pan",
+							"pattern": "",
+							"type": "number",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -718,85 +729,47 @@ var dat = {
 				]
 			},
 			{
-				"label": "Amenities",
-				"name": "Amenities",
+				"label":"Property Factors",
+				"name": "PropertyFactors",
 				"fields": [
 						{
-							"name": "Lift",
-							"jsonPath": "Lift",
-							"label": "pt.create.groups.propertyAddress.fields.lift",
+							"name": "ToiletFactor",
+							"jsonPath": "properties[0].ToiletFactor",
+							"label": "pt.create.groups.propertyAddress.fields.toiletFactor",
 							"pattern": "",
-							"type": "checkbox",
+							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
+							"url":"",
 							"patternErrMsg": "",
+							"defaultValue": [{key:1, name:1},{key:2, name:2},{key:3, name:3},{key:4, name:4},{key:5, name:5},{key:6, name:6},{key:7, name:7},{key:8, name:8},{key:9, name:9},{key:10, name:10}]
 						},
 						{
-							"name": "Toilet",
-							"jsonPath": "Toilet",
-							"label": "pt.create.groups.propertyAddress.fields.toilet",
+							"name": "RoadFactor",
+							"jsonPath": "properties[0].RoadFactor",
+							"label": "pt.create.groups.propertyAddress.fields.roadFactor",
 							"pattern": "",
-							"type": "checkbox",
+							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
+							"url":"",
+							"defaultValue": [{key:1, name:1},{key:2, name:2},{key:3, name:3},{key:4, name:4},{key:5, name:5},{key:6, name:6},{key:7, name:7},{key:8, name:8},{key:9, name:9},{key:10, name:10}]
 						},
 						{
-							"name": "WaterTap",
-							"jsonPath": "WaterTap",
-							"label": "pt.create.groups.propertyAddress.fields.waterTap",
+							"name": "LiftFactor",
+							"jsonPath": "properties[0].LiftFactor",
+							"label": "pt.create.groups.propertyAddress.fields.liftFactor",
 							"pattern": "",
-							"type": "checkbox",
+							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-						},
-						{
-							"name": "Electricity",
-							"jsonPath": "Electricity",
-							"label": "pt.create.groups.propertyAddress.fields.electricity",
-							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-						},
-						{
-							"name": "AttachedBathroom",
-							"jsonPath": "AttachedBathroom",
-							"label": "pt.create.groups.propertyAddress.fields.attachedBathroom",
-							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-						},
-						{
-							"name": "CableConnection",
-							"jsonPath": "CableConnection",
-							"label": "pt.create.groups.propertyAddress.fields.cableConnection",
-							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-						},
-						{
-							"name": "WaterHarvesting",
-							"jsonPath": "WaterHarvesting",
-							"label": "pt.create.groups.propertyAddress.fields.waterHarvesting",
-							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
+							"url":"",
+							"defaultValue": [{key:1, name:1},{key:2, name:2},{key:3, name:3},{key:4, name:4},{key:5, name:5},{key:6, name:6},{key:7, name:7},{key:8, name:8},{key:9, name:9},{key:10, name:10}]
 						},
 						
 				]
@@ -1234,7 +1207,12 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue":[{key:true, value:"Yes"},{key:false, value:"No"}]
+							"defaultValue":[{key:"true", value:"Yes"},{key:"false", value:"No"}],
+							"enableDisableFields": [{
+								"ifValue": "true",
+								"disable": ["PlinthArea"],
+								"enable": ["Length", "Breadth"]
+							}]
 						},
 						{
 							"name": "Length",
@@ -1245,7 +1223,16 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"depedants":[{
+									"jsonPath":"properties[0].propertyDetail.floors[0].units[0].builtupArea",
+									"type":"textField",
+									"pattern":"`${getVal('properties[0].propertyDetail.floors[0].units[0].length')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].width')!='' ? getVal('properties[0].propertyDetail.floors[0].units[0].length'):0} * getVal('properties[0].propertyDetail.floors[0].units[0].width')`",
+									"rg":"",
+									"isRequired": false,
+									"requiredErrMsg": "",
+									"patternErrMsg": ""
+								}]
 						},
 						{
 							"name": "Breadth",
@@ -1256,7 +1243,16 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"depedants":[{
+									"jsonPath":"properties[0].propertyDetail.floors[0].units[0].builtupArea",
+									"type":"textField",
+									"pattern":"`${getVal('properties[0].propertyDetail.floors[0].units[0].length')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].width')!='' ? getVal('properties[0].propertyDetail.floors[0].units[0].width'):0} * getVal('properties[0].propertyDetail.floors[0].units[0].length')`",
+									"rg":"",
+									"isRequired": false,
+									"requiredErrMsg": "",
+									"patternErrMsg": ""
+								}]
 						},
 						{
 							"name": "PlinthArea",
@@ -1323,7 +1319,8 @@ var dat = {
 						{
 						  "name": "File",
 						  "jsonPath": "File",
-						  "type": "documentList",
+						  "label":"Boom",
+						  "type": "singleFileUpload",
 						  "pathToArray": "DocumentTypeApplicationTypes",
 						  "displayNameJsonPath": "documentType",
 						  "url": "",

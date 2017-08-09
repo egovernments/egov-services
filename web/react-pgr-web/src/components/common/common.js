@@ -288,6 +288,7 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.eastBoundedBy":"East",
   "pt.create.groups.propertyAddress.fields.westBoundedBy":"West",
   "pt.create.groups.propertyAddress.fields.addRoom": "Add Room",
+  "pt.create.groups.propertyAddress.fields.pan": "Pan Number",
 
   //employee Object
   "employee.Employee.fields.code": "Code",

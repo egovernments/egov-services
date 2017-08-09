@@ -2,7 +2,7 @@ var meterReading = {
  "name": "MeterReading",
  "version": "v1",
  "level": 2,
- "jsonPath": "connection.floors[0].rooms",
+ "jsonPath": "Connection.meter[0].meterReadings",
  "groups": [
   {
    "label": "Meter Reading",
@@ -12,7 +12,7 @@ var meterReading = {
    "fields": [
     {
      "name": "Reading1",
-     "jsonPath": "connection.floors[0].rooms[0].roomNo",
+     "jsonPath": "Connection.meter[0].meterReadings[0].reading",
      "label": "Reading 1",
      "pattern": "",
      "type": "number",
@@ -21,9 +21,20 @@ var meterReading = {
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
     },
+    {
+     "name": "Reading1",
+     "jsonPath": "Connection.meter[0].meterReadings[0].readingDate",
+     "label": "Reading1 Date",
+     "pattern": "",
+     "type": "datePicker",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    },
 	{
      "name": "Reading2",
-     "jsonPath": "connection.floors[0].rooms[0].roomNo",
+     "jsonPath": "Connection.meter[0].meterReadings[1].reading",
      "label": "Reading 2",
      "pattern": "",
      "type": "number",
@@ -32,9 +43,20 @@ var meterReading = {
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
     },
+    {
+     "name": "Reading2",
+     "jsonPath": "Connection.meter[0].meterReadings[1].readingDate",
+     "label": "Reading2 Date",
+     "pattern": "",
+     "type": "datePicker",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    },
 	{
      "name": "Reading3",
-     "jsonPath": "connection.floors[0].rooms[0].roomNo",
+     "jsonPath": "Connection.meter[0].meterReadings[2].reading",
      "label": "Reading 3",
      "pattern": "",
      "type": "number",
@@ -43,6 +65,17 @@ var meterReading = {
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
     },
+    {
+     "name": "Reading3",
+     "jsonPath": "Connection.meter[0].meterReadings[2].readingDate",
+     "label": "Reading3 Date",
+     "pattern": "",
+     "type": "datePicker",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    }
 
    ]
   }
@@ -81,7 +114,7 @@ var dat = {
           },
           {
             "name": "With Property",
-            "jsonPath": "connection.withProperty",
+            "jsonPath": "Connection.withProperty",
             "label": "",
             "pattern": "",
             "type": "radio",
@@ -126,8 +159,8 @@ var dat = {
                 "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.asset.email": "properties[0].owners[0].emailId",
                 "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors"
-
+                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors",
+                "Connection.asset.locality":"properties[0].boundary.revenueBoundary.id"
               }
             },
             "requiredErrMsg": "",
@@ -184,9 +217,10 @@ var dat = {
             "jsonPath": "Connection.asset.locality",
             "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
-            "type": "number",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -523,41 +557,52 @@ var dat = {
         "label": "Metered",
         "name": "Metered",
         "hide":true,
-		"children":[meterReading],
-        "fields": [{
-            "name": "meterMake",
-            "jsonPath": "Connection.meterMake",
-            "label": "Meter Make",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-		  {
-            "name": "meterCost",
-            "jsonPath": "Connection.meterCost",
-            "label": "Meter Make",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-		  {
-            "name": "initialMeterReading",
-            "jsonPath": "Connection.initialMeterReading",
-            "label": "Initial Meter Reading",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }]
-      },
+        		"children":[meterReading],
+                "fields": [{
+                    "name": "meterMake",
+                    "jsonPath": "Connection.meter[0].meterMake",
+                    "label": "Meter Make",
+                    "pattern": "",
+                    "type": "text",
+                    "isRequired": false,
+                    "isDisabled": false,
+                    "requiredErrMsg": "",
+                    "patternErrMsg": ""
+                  },
+                  {
+                      "name": "meterSlNo",
+                      "jsonPath": "Connection.meter[0].meterSlNo",
+                      "label": "Meter SlNo",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+        		  {
+                    "name": "meterCost",
+                    "jsonPath": "Connection.meter[0].meterCost",
+                    "label": "Meter Cost",
+                    "pattern": "",
+                    "type": "text",
+                    "isRequired": false,
+                    "isDisabled": false,
+                    "requiredErrMsg": "",
+                    "patternErrMsg": ""
+                  },
+        		  {
+                    "name": "initialMeterReading",
+                    "jsonPath": "Connection.meter[0].initialMeterReading",
+                    "label": "Initial Meter Reading",
+                    "pattern": "",
+                    "type": "text",
+                    "isRequired": false,
+                    "isDisabled": false,
+                    "requiredErrMsg": "",
+                    "patternErrMsg": ""
+                  }]
+              },
 	  {
         "label": "Donation",
         "name": "Donation",

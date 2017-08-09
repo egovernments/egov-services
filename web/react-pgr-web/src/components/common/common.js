@@ -210,6 +210,12 @@ var localationData = {
   "wc.search.meterWaterRates.title": " Search Meter Water Rate",
   "wc.update.meterWaterRates.title": " Update Meter Water Rate",
   "wc.view.meterWaterRates.title": " View Meter Water Rate",
+  "wc.create.businessCategoryType.title" :"Create Business Category",
+  "wc.update.businessCategoryType.title" :"Update Business Category",
+  "wc.view.businessCategoryType.title" :"View Business Category",
+  "wc.search.businessCategoryType.title" :"Search Business Category",
+  "wc.create.group.fields.businessName": "Business Category Name",
+  "wc.create.group.fields.businessCode": "Business Category Code",
 
 
 

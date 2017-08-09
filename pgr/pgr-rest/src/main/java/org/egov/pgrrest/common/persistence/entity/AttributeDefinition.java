@@ -80,7 +80,7 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
 
     private AttributeDataType getEnumDataType() {
         return Stream.of(AttributeDataType.values())
-            .filter(dataType -> dataType.getName().equals(this.dataType))
+            .filter(dataType -> dataType.getName().equalsIgnoreCase(this.dataType))
             .findFirst()
             .orElseThrow(() -> new InvalidAttributeDataTypeException(this.dataType, this.id.getCode()));
     }

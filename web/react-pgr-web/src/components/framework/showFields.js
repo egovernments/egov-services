@@ -58,14 +58,14 @@ export default class ShowFields extends Component {
                             }
                         })}
                       </Row>
-                      {group.multiple && groupIndex == (groups.length-1) && <Row>
+                      {group.multiple && (!groups[groupIndex+1] || (groups[groupIndex+1] && groups[groupIndex+1].name != group.name)) && <Row>
                         <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
                           <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath, group.name)}}>
                             <span className="glyphicon glyphicon-plus"></span>
                           </FloatingActionButton>
                         </Col>
                       </Row>}
-                      {group.multiple && groupIndex < (groups.length-1) && <Row>
+                      {group.multiple && (groups[groupIndex+1] && groups[groupIndex+1].name == group.name) && <Row>
                         <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
                           <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex, group.name)}}>
                             <span className="glyphicon glyphicon-minus"></span>

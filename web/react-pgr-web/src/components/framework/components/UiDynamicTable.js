@@ -128,13 +128,49 @@ class UiDynamicTable extends Component {
 				let {renderFields}=this;
 				// console.log(resultList);
 
+				const totalAmount=()=>{
+					 let bill=getVal("Receipt[0].Bill");
+					 let sum=0;
+					 for (var i = 0; i < bill.length; i++) {
+						 	if (bill[i].hasOwnProperty("amountPaid")) {
+						 		sum+=bill[i].amountPaid;
+						 	}
+					 }
+					 return sum;
+				}
 
 			const renderTable = function () {
   			return (
   				<Card className="uiCard">
 		          <CardHeader title={<strong> {translate("ui.table.title")} </strong>}/>
 		          <CardText>
+
+							{/*
+								resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
+									 return (
+											 <Card className="uiCard">
+												 <CardHeader key={i} title={<strong> {translate(getVal("Receipt[0].Bill[0].billDetails["+i+"].businessService"))} </strong>}/>
+												   <CardText key={i2}>
+															 {
+																 item.map((item2, i2)=>{
+																	 return renderFields(item2)
+															 		})
+														 		}
+													 </CardText>
+												  </CardHeader>
+												 </Card>
+										 )
+
+							})*/}
+
+
 		          <Table id="dynamicTable" bordered responsive className="table-striped">
+
+
+
+
+
+
 		          <thead>
 		            <tr>
 		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
@@ -166,6 +202,7 @@ class UiDynamicTable extends Component {
 
 		          </tbody>
 		        </Table>
+						<strong>{"Amount paid (Rs)"+" "+ getVal("Receipt[0].instrument.amount") || 0}</strong>
 		      </CardText>
 		      </Card>
   			)

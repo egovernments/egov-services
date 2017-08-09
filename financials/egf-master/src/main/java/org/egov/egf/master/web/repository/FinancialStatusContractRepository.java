@@ -40,4 +40,26 @@ public class FinancialStatusContractRepository {
 		}
 
 	}
+
+	public FinancialStatusContract findByModuleCode(FinancialStatusContract financialStatusContract) {
+
+	        String url = String.format("%s%s", hostUrl, SEARCH_URL);
+	        StringBuffer content = new StringBuffer();
+	        if (financialStatusContract.getCode() != null) {
+	                content.append("code=" + financialStatusContract.getCode());
+	        }
+
+	        if (financialStatusContract.getModuleType() != null) {
+	                content.append("&moduleType=" + financialStatusContract.getModuleType());
+	        }
+	        url = url + content.toString();
+	        FinancialStatusResponse result = restTemplate.postForObject(url, null, FinancialStatusResponse.class);
+
+	        if (result.getFinancialStatuses() != null && result.getFinancialStatuses().size() == 1) {
+	                return result.getFinancialStatuses().get(0);
+	        } else {
+	                return null;
+	        }
+
+	}
 }

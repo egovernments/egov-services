@@ -14,8 +14,9 @@ public class FinancialConfigurationContractRepository {
     private String hostUrl;
     private String fetchDataFrom;
 
-    public FinancialConfigurationContractRepository(@Value("${egf.master.host.url}") String hostUrl, @Value("${fetch_data_from}") String fetchDataFrom,
-                                                    RestTemplate restTemplate) {
+    public FinancialConfigurationContractRepository(@Value("${egf.master.host.url}") String hostUrl,
+            @Value("${fetch_data_from}") String fetchDataFrom,
+            RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         this.hostUrl = hostUrl;
         this.fetchDataFrom = fetchDataFrom;
@@ -27,6 +28,33 @@ public class FinancialConfigurationContractRepository {
         StringBuffer content = new StringBuffer();
         if (financialConfigurationContract.getId() != null) {
             content.append("id=" + financialConfigurationContract.getId());
+        }
+
+        if (financialConfigurationContract.getTenantId() != null) {
+            content.append("&tenantId=" + financialConfigurationContract.getTenantId());
+        }
+        url = url + content.toString();
+        FinancialConfigurationResponse result = restTemplate.postForObject(url, null,
+                FinancialConfigurationResponse.class);
+
+        if (result.getFinancialConfigurations() != null && result.getFinancialConfigurations().size() == 1) {
+            return result.getFinancialConfigurations().get(0);
+        } else {
+            return null;
+        }
+
+    }
+
+    public FinancialConfigurationContract findByModuleAndName(FinancialConfigurationContract financialConfigurationContract) {
+
+        String url = String.format("%s%s", hostUrl, SEARCH_URL);
+        StringBuffer content = new StringBuffer();
+        if (financialConfigurationContract.getName() != null) {
+            content.append("name=" + financialConfigurationContract.getName());
+        }
+
+        if (financialConfigurationContract.getModule() != null) {
+            content.append("&module=" + financialConfigurationContract.getModule());
         }
 
         if (financialConfigurationContract.getTenantId() != null) {

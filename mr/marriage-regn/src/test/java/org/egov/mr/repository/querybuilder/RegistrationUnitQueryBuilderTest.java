@@ -31,8 +31,6 @@ public class RegistrationUnitQueryBuilderTest {
 	@MockBean
 	private KafkaTemplate<String, Object> kafkaTemplate;
 
-	
-
 	@SuppressWarnings({ "static-access" })
 	@Test
 	public void getSelectQueryWithTenantIdTest() {
@@ -50,6 +48,16 @@ public class RegistrationUnitQueryBuilderTest {
 
 	@SuppressWarnings({ "static-access" })
 	@Test
+	public void getSelectQuery() {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		RegistrationUnitSearchCriteria regnUnitSearchWithTenantId = registrationUnitSearchCriteria.builder().build();
+		String selectQueryWithTenantId = "SELECT * FROM egmr_registration_unit ";
+		assertEquals(selectQueryWithTenantId,
+				registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchWithTenantId, preparedStatementValues));
+	}
+
+	@SuppressWarnings({ "static-access" })
+	@Test
 	public void getSelectQueryWithNameTest() {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
@@ -61,6 +69,22 @@ public class RegistrationUnitQueryBuilderTest {
 
 		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("Bangalore");
+		expectedPreparedStatementValues.add("1");
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+
+	@SuppressWarnings({ "static-access" })
+	@Test
+	public void getSelectQueryWithNameTestWithZero() {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+		RegistrationUnitSearchCriteria regnUnitSearchWithName = registrationUnitSearchCriteria.builder().tenantId("1")
+				.name("").build();
+		String selectQueryWithName = "SELECT * FROM egmr_registration_unit WHERE tenantId=? ORDER BY createdTime ASC ;";
+		assertEquals(selectQueryWithName,
+				registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchWithName, preparedStatementValues));
+
+		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("1");
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
 	}
@@ -84,6 +108,22 @@ public class RegistrationUnitQueryBuilderTest {
 
 	@SuppressWarnings({ "static-access" })
 	@Test
+	public void getSelectQueryWithLocalityTestWithZero() {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+		RegistrationUnitSearchCriteria regnUnitSearchWithLocality = registrationUnitSearchCriteria.builder()
+				.tenantId("1").locality(0L).build();
+		String selectQueryWithLocality = "SELECT * FROM egmr_registration_unit WHERE tenantId=? ORDER BY createdTime ASC ;";
+		assertEquals(selectQueryWithLocality,
+				registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchWithLocality, preparedStatementValues));
+
+		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		expectedPreparedStatementValues.add("1");
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+
+	@SuppressWarnings({ "static-access" })
+	@Test
 	public void getSelectQueryWithZoneTest() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		RegistrationUnitSearchCriteria regnUnitSearchWithZone = registrationUnitSearchCriteria.builder().zone(123L)
@@ -94,6 +134,21 @@ public class RegistrationUnitQueryBuilderTest {
 
 		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add(123L);
+		expectedPreparedStatementValues.add("1");
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+
+	@SuppressWarnings({ "static-access" })
+	@Test
+	public void getSelectQueryWithZoneTestwithZero() {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		RegistrationUnitSearchCriteria regnUnitSearchWithZone = registrationUnitSearchCriteria.builder().zone(0L)
+				.tenantId("1").build();
+		String selectQueryWithZone = "SELECT * FROM egmr_registration_unit WHERE tenantId=? ORDER BY createdTime ASC ;";
+		assertEquals(selectQueryWithZone,
+				registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchWithZone, preparedStatementValues));
+
+		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("1");
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
 	}
@@ -132,6 +187,21 @@ public class RegistrationUnitQueryBuilderTest {
 
 	@SuppressWarnings({ "static-access" })
 	@Test
+	public void getSelectQueryWithIdAndTenantIdTestWithZero() {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		RegistrationUnitSearchCriteria regnUnitSearchWithIdAndTenant = registrationUnitSearchCriteria.builder().id(0L)
+				.tenantId("1").build();
+		String selectQueryWithIdAndTenantId = "SELECT * FROM egmr_registration_unit WHERE tenantId=? ORDER BY createdTime ASC ;";
+		assertEquals(selectQueryWithIdAndTenantId,
+				registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchWithIdAndTenant, preparedStatementValues));
+
+		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		expectedPreparedStatementValues.add("1");
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+
+	@SuppressWarnings({ "static-access" })
+	@Test
 	public void getSelectQueryCriteriaTest() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		RegistrationUnitSearchCriteria regnUnitSearchCriteria = registrationUnitSearchCriteria.builder().id(1L)
@@ -150,4 +220,21 @@ public class RegistrationUnitQueryBuilderTest {
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
 	}
 
+	@Test
+	public void testInsert() {
+		String insertQuery = "INSERT INTO egmr_registration_unit(id,code,name,isactive,tenantid,locality,zone,revenueWard,block,street,electionWard,doorNo,pinCode,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ;";
+		assertEquals(insertQuery, registrationUnitQueryBuilder.getCreateQuery());
+	}
+
+	@Test
+	public void testGetNextValId() {
+		String query = "SELECT NEXTVAL('seq_registartion_unit') ;";
+		assertEquals(query, registrationUnitQueryBuilder.getIdNextValForRegnUnit());
+	}
+
+	@Test
+	public void testGetUpdateQuery() {
+		String updateQuery = "UPDATE egmr_registration_unit SET code=?, name=?,isactive=?,locality=?,zone=?,revenueWard=?,block=?,street=?,electionWard=?,doorNo=?,pinCode=?,createdBy=?,lastModifiedBy=?,createdTime=?,lastModifiedTime=?WHERE id=? AND tenantId=? ;";
+		assertEquals(updateQuery, registrationUnitQueryBuilder.getUpdateQuery());
+	}
 }

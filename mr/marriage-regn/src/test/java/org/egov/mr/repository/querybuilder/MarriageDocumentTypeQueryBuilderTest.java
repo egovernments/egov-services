@@ -82,6 +82,21 @@ public class MarriageDocumentTypeQueryBuilderTest {
 	}
 
 	@Test
+	public void testSearchSelectQueryWithNull() {
+		List<Object> preparedStatementValues = new ArrayList<>();
+
+		MarriageDocumentTypeSearchCriteria marriageDocType = MarriageDocumentTypeSearchCriteria.builder().build();
+		String expectedQuery = "SELECT * FROM egmr_marriage_document_type ";
+
+		String actualQuery = mdtQueryBuilder.getSelectQuery(marriageDocType, preparedStatementValues);
+
+		List<Object> expectedPSV = new ArrayList<>();
+
+		assertEquals(expectedPSV, preparedStatementValues);
+		assertEquals(expectedQuery, actualQuery);
+	}
+
+	@Test
 	public void testSearchSelectQueryWithTenantIdAndApplType() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 
@@ -115,6 +130,13 @@ public class MarriageDocumentTypeQueryBuilderTest {
 		expectedPSV.add("ap.kurnool");
 
 		assertEquals(expectedPSV, preparedStatementValues);
+		assertEquals(expectedQuery, actualQuery);
+	}
+
+	@Test
+	public void testgetIdNextValForMarriageDocType() {
+		String expectedQuery = "SELECT NEXTVAL('seq_marriage_document_type') ;";
+		String actualQuery = mdtQueryBuilder.getIdNextValForMarriageDocType();
 		assertEquals(expectedQuery, actualQuery);
 	}
 }

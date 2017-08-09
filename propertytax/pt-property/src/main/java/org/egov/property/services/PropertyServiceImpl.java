@@ -63,8 +63,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -92,6 +94,9 @@ public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
 	PropertyMasterRepository propertyMasterRepository;
+
+	@Autowired
+	PersisterService persisterService;
 
 	private static final Logger logger = LoggerFactory.getLogger(UpicNoGeneration.class);
 
@@ -166,7 +171,7 @@ public class PropertyServiceImpl implements PropertyService {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
 			logger.info("PropertyServiceImpl idGenerationUrl : " + idGenerationUrl.toString()
-					+ " \n IdGenerationRequest  : " + idGeneration);
+			+ " \n IdGenerationRequest  : " + idGeneration);
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 			logger.info("PropertyServiceImpl IdGenerationResponse : " + response);
 		} catch (Exception ex) {
@@ -228,7 +233,7 @@ public class PropertyServiceImpl implements PropertyService {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo)
-			throws Exception {
+					throws Exception {
 
 		List<Property> updatedPropety = null;
 
@@ -400,17 +405,20 @@ public class PropertyServiceImpl implements PropertyService {
 		Boolean isPropertyUnderWorkflow = propertyRepository
 				.isPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
 		TitleTransferResponse titleTransferResponse = null;
+
 		if (isPropertyUnderWorkflow) {
 			throw new PropertyUnderWorkflowException(environment.getProperty("invalid.property.status"),
 					titleTransferRequest.getRequestInfo());
 
 		} else {
 			Boolean isValidated = validateTitleTransfer(titleTransferRequest);
+
 			if (!isValidated) {
 				throw new PropertyUnderWorkflowException(environment.getProperty("invalid.title.transfer"),
 						titleTransferRequest.getRequestInfo());
+
 			} else {
-				propertyRepository.updateIsPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
+
 				String acknowldgeMentNumber = generateAcknowledegeMentNumber(
 						titleTransferRequest.getTitleTransfer().getTenantId(), titleTransferRequest.getRequestInfo());
 
@@ -418,6 +426,7 @@ public class PropertyServiceImpl implements PropertyService {
 
 				producer.send(environment.getProperty("egov.propertytax.property.titletransfer.create"),
 						titleTransferRequest);
+				propertyRepository.updateIsPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
 
 				titleTransferResponse = new TitleTransferResponse();
 				titleTransferResponse.setResponseInfo(responseInfoFactory
@@ -761,7 +770,7 @@ public class PropertyServiceImpl implements PropertyService {
 		idGeneration.setRequestInfo(requestInfo);
 		RestTemplate restTemplate = new RestTemplate();
 		logger.info("PropertyServiceImpl calling the idgenearion service url = " + idGenerationUrl.toString()
-				+ " Request = " + idGeneration.toString());
+		+ " Request = " + idGeneration.toString());
 		String response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 
 		logger.info("PropertyServiceImpl After the calling  idgenearion  response = " + response);
@@ -806,6 +815,26 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 	private String getString(Object object) {
 		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * Save property history and update property
+	 * 
+	 * @param titleTransferRequest
+	 * @throws Exception
+	 */
+	@Transactional
+	public PropertyRequest savePropertyHistoryandUpdateProperty(TitleTransferRequest titleTransferRequest)
+			throws Exception {
+		Property property = persisterService.getPropertyUsingUpicNo(titleTransferRequest);
+		persisterService.addPropertyHistory(titleTransferRequest,property);
+		Property updatedProperty = persisterService.updateTitleTransferProperty(titleTransferRequest, property);
+		PropertyRequest propertyRequest = new PropertyRequest();
+		propertyRequest.setRequestInfo(titleTransferRequest.getRequestInfo());
+		List<Property> properties = new ArrayList<Property>();
+		properties.add(updatedProperty);
+		propertyRequest.setProperties(properties);
+		return propertyRequest;
 	}
 
 }

@@ -4,7 +4,6 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -23,29 +22,8 @@ const styles = {
   marginStyle:{
     margin: '15px'
   },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    margin: 37
+  setTopMargin: {
+    marginTop: 34
   }
 };
 
@@ -179,7 +157,7 @@ class receivingModeCreate extends Component {
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
-                    <Col xs={12} md={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
                         floatingLabelText={translate("core.lbl.add.name")+"*"}
@@ -188,7 +166,7 @@ class receivingModeCreate extends Component {
                         value={receivingmodeSet.name ? receivingmodeSet.name : "" }
                         onChange={(e) => {handleChange(e, "name", true, /^[^-\s][a-zA-Z ]*$/)}}/>
                     </Col>
-                    <Col xs={12} md={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
                         floatingLabelText={translate("core.lbl.code")+"*"}
@@ -198,7 +176,7 @@ class receivingModeCreate extends Component {
                         onChange={(e) => {handleChange(e, "code", true, /^[a-zA-Z]+$/)}}
                         disabled={this.state.id ? true : false }/>
                     </Col>
-                    <Col xs={12} md={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
                         floatingLabelText={translate("core.lbl.description")+"*"}
@@ -207,7 +185,7 @@ class receivingModeCreate extends Component {
                         value={receivingmodeSet.description ? receivingmodeSet.description : ""}
                         onChange={(e) => {handleChange(e, "description", true, /^[^-\s][a-zA-Z0-9_\s-]+$/)}}/>
                     </Col>
-                    <Col xs={12} md={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField
                           multiple="true"
                           errorText={fieldErrors.channels ? fieldErrors.channels : ""}
@@ -234,9 +212,8 @@ class receivingModeCreate extends Component {
                               />
                      </SelectField>
                    </Col>
-                    <div className="clearfix"></div>
-                    <Col xs={12} md={3}>
-                    <Checkbox label={translate("pgr.lbl.active")} id="active" style={styles.checkbox}
+                    <Col xs={12} sm={4} md={3} lg={3}>
+                    <Checkbox label={translate("pgr.lbl.active")} id="active" style={styles.setTopMargin}
                       checked ={receivingmodeSet.active ? true : false}
                       onCheck={(e,isInputChecked) => {
                        var e={

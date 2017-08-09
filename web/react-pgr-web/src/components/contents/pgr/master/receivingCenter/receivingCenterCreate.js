@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -16,7 +14,6 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-var flag = 0;
 const styles = {
   headerStyle : {
     fontSize : 19
@@ -24,29 +21,8 @@ const styles = {
   marginStyle:{
     margin: '15px'
   },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
+  setTopMargin: {
+    marginTop: 34
   }
 };
 
@@ -173,7 +149,7 @@ class CreateReceivingCenter extends Component {
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
@@ -183,7 +159,7 @@ class CreateReceivingCenter extends Component {
                                       id="name"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.code")+"*"}
@@ -194,7 +170,7 @@ class CreateReceivingCenter extends Component {
                                       disabled={this.state.id ? true : false }
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.description")}
@@ -205,11 +181,10 @@ class CreateReceivingCenter extends Component {
                                       id="description"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
-                              {console.log(createReceivingCenter.active)}
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
-                                    style={styles.checkbox}
+                                    style={styles.setTopMargin}
                                     checked = {createReceivingCenter.active || false}
                                     onCheck = {(e, i, v) => { console.log(createReceivingCenter.active, i);
 
@@ -224,10 +199,10 @@ class CreateReceivingCenter extends Component {
                                   />
                               </Col>
                               <div className="clearfix"></div>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
                                     label={translate("pgr.lbl.crn")}
-                                    style={styles.checkbox}
+                                    style={styles.setTopMargin}
                                     checked ={createReceivingCenter.iscrnrequired}
                                     onCheck = {(e, i, v) => {
                                       var e = {
@@ -240,7 +215,7 @@ class CreateReceivingCenter extends Component {
                                     id="iscrnrequired"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       type="number"

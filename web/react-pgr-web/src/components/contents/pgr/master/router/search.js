@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -68,27 +67,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
   }
 };
 
@@ -277,23 +255,23 @@ class searchRouter extends Component {
    const viewTable = function() {
       if(isSearchClicked)
       return (
-          <Card>
+          <Card style={styles.marginStyle}>
             <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
             <CardText>
-            <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
-             <thead>
-                <tr>
-                  <th>#</th>
-                  <th>{translate("pgr.lbl.grievance.type")}</th>
-                  <th>{translate("pgr.lbl.boundarytype")}</th>
-                  <th>{translate("pgr.lbl.boundary")}</th>
-                  <th>{translate("pgr.lbl.position")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {renderBody()}
-              </tbody>
-            </Table>
+              <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+               <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{translate("pgr.lbl.grievance.type")}</th>
+                    <th>{translate("pgr.lbl.boundarytype")}</th>
+                    <th>{translate("pgr.lbl.boundary")}</th>
+                    <th>{translate("pgr.lbl.position")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {renderBody()}
+                </tbody>
+              </Table>
            </CardText>
         </Card>
     )
@@ -307,7 +285,7 @@ class searchRouter extends Component {
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={6} md={6} lg={6}>
                     <AutoComplete
                         hintText=""
                         floatingLabelText={translate("pgr.lbl.grievance.type")}
@@ -328,7 +306,7 @@ class searchRouter extends Component {
                          }}
                         />
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={6} md={6} lg={6}>
                     <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
                             var e = {target: {value: val}};
                             loadBoundaries(val);
@@ -338,7 +316,7 @@ class searchRouter extends Component {
                                   ))}
                      </SelectField>
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={6} md={6} lg={6}>
                     <AutoComplete
                         hintText=""
                         floatingLabelText={translate("pgr.lbl.boundary")}
@@ -364,12 +342,10 @@ class searchRouter extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-
              <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} primary={true}/>
-
            </div>
+           {viewTable()}
          </form>
-         {viewTable()}
         </div>
     );
   }

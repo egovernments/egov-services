@@ -1,9 +1,12 @@
 package org.egov.egf.instrument.domain.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -14,6 +17,7 @@ import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
+import org.egov.egf.instrument.web.requests.InstrumentDepositRequest;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -51,6 +55,7 @@ public class InstrumentService {
 	private BankAccountContractRepository bankAccountContractRepository;
 
 	private InstrumentTypeRepository instrumentTypeRepository;
+	
 
 	@Autowired
 	public InstrumentService(SmartValidator validator, InstrumentRepository instrumentRepository,
@@ -209,6 +214,46 @@ public class InstrumentService {
 	@Transactional
 	public Instrument update(Instrument instrument) {
 		return instrumentRepository.update(instrument);
+	}
+
+	public List<Instrument> deposit(List<Instrument> instruments,
+			BindingResult errors, RequestInfo requestInfo) {
+		try {
+			instruments = fetchRelated(instruments);
+			validate(instruments, ACTION_CREATE, errors);
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+		} catch (CustomBindException e) {
+			throw new CustomBindException(errors);
+		}
+		FinancialStatusContract financialStatusContract = new FinancialStatusContract();
+		financialStatusContract.setCode("Deposited");
+		financialStatusContract.setModuleType("Instrument");
+		for(Instrument i:instruments){
+			i.setFinancialStatus(financialStatusContractRepository.findByModuleCode(financialStatusContract));
+		}
+		return instrumentRepository.update(instruments, requestInfo);
+	}
+
+	public List<Instrument> deposit(
+			InstrumentDepositRequest instrumentDepositRequest,
+			BindingResult errors, RequestInfo requestInfo) {
+		Instrument instrument = new Instrument();
+		instrument.setId(instrumentDepositRequest.getInstrumentDepositId());
+		instrument.setTenantId(instrumentDepositRequest.getTenantId());
+		
+		FinancialStatusContract financialStatusContract = new FinancialStatusContract();
+		financialStatusContract.setCode("Deposited");
+		financialStatusContract.setModuleType("Instrument");
+		
+		instrument = instrumentRepository.findById(instrument);
+		FinancialStatusContract financialStatusContract1 = new FinancialStatusContract();
+		financialStatusContract1 = financialStatusContractRepository.findByModuleCode(financialStatusContract);
+		instrument.setFinancialStatus(financialStatusContract1);
+		List<Instrument> instrumentsToUpdate = new ArrayList<>();
+		instrumentsToUpdate.add(instrument);
+		return instrumentRepository.update(instrumentsToUpdate, requestInfo);
 	}
 
 }

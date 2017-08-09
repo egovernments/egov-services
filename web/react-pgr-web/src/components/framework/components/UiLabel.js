@@ -52,9 +52,9 @@ export default class UiLabel extends Component {
  		return (
       <div>
    			<Row>
-            {item.isLabel && <Col xs={12}>
+            {!item.hasOwnProperty("isLabel")?<Col xs={12}>
               <label><span style={{"fontWeight":"bold"}}>{item.label}</span></label>
-            </Col>}
+            </Col>:""}
             <Col style={{textAlign:"center"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "-"}</Col>
         </Row>
         <br/>

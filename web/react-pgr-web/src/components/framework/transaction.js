@@ -107,15 +107,14 @@ class Transaction extends Component {
         delete formData[key];
     }
 
-    // Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
-      let res={"ResposneInfo":null,"Bill":[{"id":"3","payeeName":"M Sambasivudu","payeeAddress":null,"payeeEmail":null,"isActive":true,"isCancelled":false,"billDetails":[{"id":"3","tenantId":"default","bill":"3","businessService":"Property Tax","billNumber":"3","billDate":1502090587494,"consumerCode":"1016000001","consumerType":"PRIVATE","billDescription":"Property Tax Consumer Code: 1016000001","displayMessage":"Property Tax Consumer Code: 1016000001","minimumAmount":4.00,"totalAmount":3649.00,"collectionModesNotAllowed":[""],"callBackForApportioning":false,"partPaymentAllowed":true,"billAccountDetails":[{"id":"25","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1443637800000-1459448999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"26","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1443637800000-1459448999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"27","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1443637800000-1459448999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"28","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1459449000000-1475260199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"29","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1459449000000-1475260199000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"30","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1459449000000-1475260199000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"31","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1475260200000-1490984999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"32","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1475260200000-1490984999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"33","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1475260200000-1490984999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"34","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1490985000000-1506796199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"35","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1490985000000-1506796199000","crAmountToBePaid":1126.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"36","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1490985000000-1506796199000","crAmountToBePaid":24.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"}]}],"tenantId":"default","auditDetail":null}]}
+    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
       self.props.handleChange({target:{value:res.Bill}},"Receipt[0].Bill",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].tenantId",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.instrumentType.tenantId",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bankAccount.tenantId",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
-  
+
 
       var resultList = {
         resultHeader: self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header,
@@ -166,10 +165,10 @@ class Transaction extends Component {
       });
 
       self.props.setFlag(1);
-    // }, function(err) {
-    //   self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    //   self.props.setLoadingStatus('hide');
-    // })
+    }, function(err) {
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+      self.props.setLoadingStatus('hide');
+    })
   }
 
   getVal = (path) => {
@@ -339,12 +338,92 @@ class Transaction extends Component {
     this.props.setRoute(_url);
   }
 
+  makeAjaxCall = (formData, url) => {
+    let self = this;
+    delete formData.ResponseInfo;
+    //return console.log(formData);
+    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+      self.props.setLoadingStatus('hide');
+      self.initData();
+      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
+      setTimeout(function() {
+        if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+          if(self.props.actionName == "update") {
+            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+          } else {
+            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+          }
+          self.props.setRoute(hash);
+        }
+      }, 1500);
+    }, function(err) {
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, err.message);
+    })
+  }
+
+  create=(e) => {
+    let self = this, _url;
+    e.preventDefault();
+    self.props.setLoadingStatus('loading');
+    var formData = {...this.props.formData};
+    if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
+      if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
+
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
+        }
+      } else
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
+    }
+
+    if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
+      var match = _url.match(/\{.*\}/)[0];
+      var jPath = match.replace(/\{|}/g,"");
+      _url = _url.replace(match, _.get(formData, jPath));
+    }
+
+    //Check if documents, upload and get fileStoreId
+    if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
+      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+      let _docs = [];
+      let counter = documents.length, breakOut = 0;
+      for(let i=0; i<documents.length; i++) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
+          if(breakOut == 1) return;
+          if(err) {
+            breakOut = 1;
+            self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err, false, true);
+          } else {
+            _docs.push({
+              ...documents[i],
+              fileStoreId: res.files[0].fileStoreId
+            })
+            counter--;
+            if(counter == 0 && breakOut == 0) {
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+              self.makeAjaxCall(formData, _url);
+            }
+          }
+        })
+      }
+    } else {
+      self.makeAjaxCall(formData, _url);
+    }
+
+  }
+
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
     // showResult=true;
 
+    console.log(isFormValid);
 
 
     console.log(formData);
@@ -357,7 +436,7 @@ class Transaction extends Component {
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit"}} ui="google"/>
+            <UiButton item={{"label": "Search", "uiType":"submit","isDisabled": isFormValid ? false : true}} ui="google"/>
             <br/>
           </div>
           {/*showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>*/}
@@ -385,7 +464,8 @@ const mapStateToProps = state => ({
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
-  flag: state.report.flag
+  flag: state.report.flag,
+  isFormValid: state.frameworkForm.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -431,3 +511,7 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
+
+
+/*let res=
+{"ResposneInfo":null,"Bill":[{"id":"3","payeeName":"M Sambasivudu","payeeAddress":null,"payeeEmail":null,"isActive":true,"isCancelled":false,"billDetails":[{"id":"3","tenantId":"default","bill":"3","businessService":"Property Tax","billNumber":"3","billDate":1502090587494,"consumerCode":"1016000001","consumerType":"PRIVATE","billDescription":"Property Tax Consumer Code: 1016000001","displayMessage":"Property Tax Consumer Code: 1016000001","minimumAmount":4.00,"totalAmount":3649.00,"collectionModesNotAllowed":[""],"callBackForApportioning":false,"partPaymentAllowed":true,"billAccountDetails":[{"id":"25","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1443637800000-1459448999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"26","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1443637800000-1459448999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"27","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1443637800000-1459448999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"28","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1459449000000-1475260199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"29","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1459449000000-1475260199000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"30","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1459449000000-1475260199000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"31","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1475260200000-1490984999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"32","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1475260200000-1490984999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"33","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1475260200000-1490984999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"34","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1490985000000-1506796199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"35","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1490985000000-1506796199000","crAmountToBePaid":1126.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"36","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1490985000000-1506796199000","crAmountToBePaid":24.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"}]}],"tenantId":"default","auditDetail":null}]}*/

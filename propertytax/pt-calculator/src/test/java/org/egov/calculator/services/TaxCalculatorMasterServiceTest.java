@@ -62,8 +62,8 @@ public class TaxCalculatorMasterServiceTest {
         calculationFactor.setFactorCode("propertytax");
         calculationFactor.setFactorType(CalculationFactorTypeEnum.AGE);
         calculationFactor.setFactorValue(1234.12);
-        calculationFactor.setFromDate("10/06/2007  00:00:00");
-        calculationFactor.setToDate("25/06/2017  00:00:00");
+        calculationFactor.setFromDate("10/06/2007 00:00:00");
+        calculationFactor.setToDate("25/06/2017 00:00:00");
         long createdTime = new Date().getTime();
 
         AuditDetails auditDetails = new AuditDetails();
@@ -143,7 +143,7 @@ public class TaxCalculatorMasterServiceTest {
 
         String tenantId = "default";
         String factorType = "age";
-        String validDate = "16-06-2007";
+        String validDate = "16/06/2007";
         String code = "propertytax";
         RequestInfo requestInfo = getRequestInfoObject();
 

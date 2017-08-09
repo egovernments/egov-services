@@ -21,7 +21,7 @@
       "Bill": [
         {
           "id": "8",
-          "payeeName": "Hanuman",
+          "payeeName": "Batman",
           "paidBy": "Vishal Mahuli",
           "payeeAddress": null,
           "payeeEmail": "vishal@gmail.com",
@@ -78,7 +78,7 @@
           "name": "Cheque",
           "tenantId": "default"
         },
-        "transactionType": "Debit",
+        "branchName": "Bangalore",
         "payee": "Vishal",
         "bankAccount": {
           "id": "1",

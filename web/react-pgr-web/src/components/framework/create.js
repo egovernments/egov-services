@@ -456,7 +456,7 @@ class Report extends Component {
           if(_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length) {
             for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].children.length; j++) {
               for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
-                if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
+                if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
                   _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
                   /*if(!reset) {
 

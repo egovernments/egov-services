@@ -157,36 +157,6 @@ class Report extends Component {
     let endPoint="";
     let self = this;
 
-    // if (hash[2]=="wc") {
-    //     if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-    //       endPoint = `${hash[2]}/${hash[2]}.json`;
-    //     } else {
-    //       endPoint = `${hash[2]}/master/${hash[3]}.json`;
-    //     }
-    //   $.ajax({
-    //   url: baseUrl+endPoint+"?timestamp="+new Date().getTime(),
-    //   // dataType: 'application/javascript',
-    //   success: function(results)
-    //   {
-    //     self.displayUI(results);
-    //   },
-    //   error: function (results) {
-    //     try {
-    //       if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-    //         specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-    //       } else {
-    //         specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-    //       }
-    //     } catch(e) {
-    //
-    //     }
-    //     self.displayUI(specifications);
-    //
-    //
-    //   }})
-    // }
-    //
-    // else {
       try {
         if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
           specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
@@ -199,27 +169,17 @@ class Report extends Component {
 
       self.displayUI(specifications);
 
-    // }
-
   }
 
   componentDidMount() {
       this.initData();
   }
 
-  componentWillReceiveProps(nextProps)
-  {
+  componentWillReceiveProps(nextProps) {
     if (this.state.pathname!=nextProps.history.location.pathname) {
       this.initData();
     }
   }
-
-  // componentDidUpdate(nextProps,prevProps)
-  // {
-  //   if (this.props.history.location.pathname!=nextProps.history.location.pathname) {
-  //     this.initData();
-  //   }
-  // }
 
   autoComHandler = (autoObject, path) => {
     let self = this;
@@ -381,8 +341,10 @@ class Report extends Component {
         }
       }
     } else {
+      let flag = 0;
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+          flag = 1;
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
           if(!reset) {
             for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
@@ -404,6 +366,25 @@ class Report extends Component {
             addRequiredFields(_requiredFields);
           }
           break;
+        }
+      }
+
+      if(flag == 0) {
+        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+          if(_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length) {
+            for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].children.length; j++) {
+              for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
+                if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
+                  /*if(!reset) {
+
+                  } else {
+
+                  }*/
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -442,8 +423,10 @@ class Report extends Component {
         }
       }
     } else {
+      let flag = 0;
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+          flag = 1;
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? true : false;
           if(!reset) {
             for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
@@ -465,6 +448,25 @@ class Report extends Component {
             delRequiredFields(_requiredFields);
           }
           break;
+        }
+      }
+
+      if(flag == 0) {
+        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+          if(_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length) {
+            for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].children.length; j++) {
+              for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
+                if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
+                  /*if(!reset) {
+
+                  } else {
+
+                  }*/
+                }
+              }
+            }
+          }
         }
       }
     }

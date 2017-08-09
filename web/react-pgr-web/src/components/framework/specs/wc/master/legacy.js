@@ -16,7 +16,7 @@ var meterReading = {
      "label": "Reading 1",
      "pattern": "",
      "type": "number",
-     "isRequired": false,
+     "isRequired": true,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
@@ -27,7 +27,7 @@ var meterReading = {
      "label": "Reading1 Date",
      "pattern": "",
      "type": "datePicker",
-     "isRequired": false,
+     "isRequired": true,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
@@ -84,6 +84,7 @@ var meterReading = {
 
 
 
+
 var dat = {
   "wc.create": {
     "numCols": 12 / 3,
@@ -100,18 +101,21 @@ var dat = {
         "name": "applicationParticular", //Follow Title case pattern
         "children": [],
         "multiple": false,
-        "fields": [{
-            "name": "PrimaryConnection",
-            "jsonPath": "connection.primaryConnection",
-            "label": "",
-            "pattern": "",
-            "type": "radio",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-			"values": [{"label":"primary connection", "value":true}]
-          },
+        "fields": [
+            {
+              "name": "applicationType",
+              "jsonPath": "Connection.applicationType",
+              "label": "",
+              "pattern": "",
+              "type": "radio",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+          			"values": [{"label":"Primary Connection", "value":"NEWCONNECTION"},{"label":"Additional Connection", "value":"ADDITIONCONNECTION"}],
+          			"defaultValue":true,
+
+            },
           {
             "name": "With Property",
             "jsonPath": "Connection.withProperty",
@@ -146,11 +150,11 @@ var dat = {
         "multiple": false,
         "fields": [{
             "name": "AssessmentNumber",
-            "jsonPath": "connection.property.propertyIdentifier",
+            "jsonPath": "Connection.property.propertyIdentifier",
             "label": "wc.create.groups.applicantDetails.propertyIdentifier",
             "pattern": "",
             "type": "textSearch",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
@@ -280,8 +284,8 @@ var dat = {
             "patternErrMsg": ""
           },
 		  {
-            "name": "connectionDate",
-            "jsonPath": "Connection.property.connectionDate",
+            "name": "executionDate",
+            "jsonPath": "Connection.executionDate",
             "label": "wc.create.groups.applicantDetails.connectionDate",
             "pattern": "",
             "type": "datePicker",
@@ -302,7 +306,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.propertyType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
             "depedants": [{
@@ -344,7 +348,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.categoryType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -357,7 +361,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -370,39 +374,12 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.hscPipeSizeType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
 			"defaultValue": [],
 			"url":""
-          },
-
-          {
-            "name": "applicationType",
-            "jsonPath": "Connection.applicationType",
-            "label": "wc.create.groups.connectionDetails.applicationType",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "isHidden": true,
-            "defaultValue": "NEWCONNECTION",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "connectionStatus",
-            "jsonPath": "Connection.connectionStatus",
-            "label": "wc.create.groups.connectionDetails.applicationType",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "isHidden": true,
-            "defaultValue": "INPROGRESS",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
           },
           {
             "name": "billingType",
@@ -410,7 +387,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.billingType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getbillingtypes?|$..key|$..object",
             "requiredErrMsg": "",
@@ -435,7 +412,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.connectionType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
@@ -462,7 +439,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.sourceType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
             "requiredErrMsg": "",
@@ -564,7 +541,7 @@ var dat = {
                     "label": "Meter Make",
                     "pattern": "",
                     "type": "text",
-                    "isRequired": false,
+                    "isRequired": true,
                     "isDisabled": false,
                     "requiredErrMsg": "",
                     "patternErrMsg": ""
@@ -575,7 +552,7 @@ var dat = {
                       "label": "Meter SlNo",
                       "pattern": "",
                       "type": "text",
-                      "isRequired": false,
+                      "isRequired": true,
                       "isDisabled": false,
                       "requiredErrMsg": "",
                       "patternErrMsg": ""
@@ -586,7 +563,7 @@ var dat = {
                     "label": "Meter Cost",
                     "pattern": "",
                     "type": "text",
-                    "isRequired": false,
+                    "isRequired": true,
                     "isDisabled": false,
                     "requiredErrMsg": "",
                     "patternErrMsg": ""
@@ -597,7 +574,7 @@ var dat = {
                     "label": "Initial Meter Reading",
                     "pattern": "",
                     "type": "text",
-                    "isRequired": false,
+                    "isRequired": true,
                     "isDisabled": false,
                     "requiredErrMsg": "",
                     "patternErrMsg": ""
@@ -608,7 +585,7 @@ var dat = {
         "name": "Donation",
         "fields": [{
             "name": "SpecialDonationCharges",
-            "jsonPath": "Connection.toDate",
+            "jsonPath": "Connection.donationCharge",
             "label": "Special Donation Charges",
             "pattern": "",
             "type": "number",

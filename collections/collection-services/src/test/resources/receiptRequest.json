@@ -79,11 +79,6 @@
           "tenantId": "default"
         },
         "branchName": "Bangalore",
-        "payee": "Vishal",
-        "bankAccount": {
-          "id": "1",
-          "tenantId": "default"
-        },
         "bank": {
           "id": "1",
           "tenantId": "default"

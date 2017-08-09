@@ -48,9 +48,9 @@ public class InstrumentRepository {
 		return instrumentId;
 	}
 	
-	public Long getAccountCodeId(RequestInfo requestinfo,
+	public String getAccountCodeId(RequestInfo requestinfo,
 			Instrument instrument, String tenantId){
-		String accountCodeId = null;
+		String glcode = null;
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getInstrumentServiceHost();
 		String baseUri = applicationProperties.getSearchAccountCodes();
@@ -67,11 +67,11 @@ public class InstrumentRepository {
 			response = restTemplate.postForObject(builder.toString(),
 					requestInfoWrapper, Object.class);
 			
-			accountCodeId = JsonPath.read(response, "$.instrumentAccountCodes[0].accountCode.id");
+			glcode = JsonPath.read(response, "$.instrumentAccountCodes[0].accountCode.id");
 		LOGGER.info("Response from instrument service: " + response.toString());
 		
 		
-		return Long.valueOf(accountCodeId);
+		return glcode;
 	}
 
 }

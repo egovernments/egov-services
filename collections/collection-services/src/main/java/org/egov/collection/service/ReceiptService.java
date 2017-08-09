@@ -471,9 +471,9 @@ public class ReceiptService {
 	private void configureDebitAmountHead(ReceiptReq receiptReq){
 		LOGGER.info("Fetching glcode for instrument type: "+
 						receiptReq.getReceipt().get(0).getInstrument().getInstrumentType().getName());
-		Long accountCodeId = null;
+		String glcode = null;
 		try{
-			accountCodeId = instrumentRepository.getAccountCodeId(receiptReq.getRequestInfo(), 
+			glcode = instrumentRepository.getAccountCodeId(receiptReq.getRequestInfo(), 
 					receiptReq.getReceipt().get(0).getInstrument(), receiptReq.getReceipt().get(0).getTenantId());
 		}catch(Exception e){
 			e.printStackTrace();
@@ -481,7 +481,7 @@ public class ReceiptService {
 					CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_MSG, CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_DESC);
 			
 		}
-		LOGGER.info("Account code id obtained is: "+accountCodeId);
+		LOGGER.info("glcode obtained is: "+glcode);
 		
 
 	}

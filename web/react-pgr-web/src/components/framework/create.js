@@ -363,8 +363,10 @@ class Report extends Component {
               //Check if required is true, if yes remove from required fields
               if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
                 let ind = _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
-                _requiredFields.splice(ind, 1);
-                delRequiredFields(_requiredFields);
+                if(ind > -1) { 
+                  _requiredFields.splice(ind, 1);
+                  delRequiredFields(_requiredFields);
+                }
                 removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
               }
             } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
@@ -382,6 +384,25 @@ class Report extends Component {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
+          if(!reset) {
+            for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                let ind = _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                if(ind > -1) _requiredFields.splice(ind, 1);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            }
+            delRequiredFields(_requiredFields);
+            setFormData(_formData);  
+          } else {
+            for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired && _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath) == -1) {
+                _requiredFields.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            }
+            addRequiredFields(_requiredFields);
+          }
           break;
         }
       }
@@ -410,8 +431,10 @@ class Report extends Component {
               }
             } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
                 let ind = _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
-                _requiredFields.splice(ind, 1);
-                delRequiredFields(_requiredFields);
+                if(ind > -1) {
+                  _requiredFields.splice(ind, 1);
+                  delRequiredFields(_requiredFields);
+                }
                 removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
             }
             break;
@@ -422,6 +445,25 @@ class Report extends Component {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? true : false;
+          if(!reset) {
+            for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired && _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath) == -1) {
+                _requiredFields.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            }
+            addRequiredFields(_requiredFields);
+            setFormData(_formData);
+          } else {
+            for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                let ind = _requiredFields.indexOf(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                if(ind > -1) _requiredFields.splice(ind, 1);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            }
+            delRequiredFields(_requiredFields);
+          }
           break;
         }
       }

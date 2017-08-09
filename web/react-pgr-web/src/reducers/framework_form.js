@@ -130,12 +130,11 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
   }
 
   for(let key in fieldErrors) {
-    if(fieldErrors[key]) {
+    if(fieldErrors[key] && key != property) {
         isFormValid = false;
         break;
     }
   }
-
 
   return {
     isFormValid,

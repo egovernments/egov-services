@@ -210,6 +210,12 @@ var localationData = {
   "wc.search.meterWaterRates.title": " Search Meter Water Rate",
   "wc.update.meterWaterRates.title": " Update Meter Water Rate",
   "wc.view.meterWaterRates.title": " View Meter Water Rate",
+  "wc.create.businessCategoryType.title" :"Create Business Category",
+  "wc.update.businessCategoryType.title" :"Update Business Category",
+  "wc.view.businessCategoryType.title" :"View Business Category",
+  "wc.search.businessCategoryType.title" :"Search Business Category",
+  "wc.create.group.fields.businessName": "Business Category Name",
+  "wc.create.group.fields.businessCode": "Business Category Code",
 
 
 
@@ -300,6 +306,15 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.buildingCost": "Building Cost",
   "pt.create.groups.propertyAddress.fields.landCost": "Land Cost",
   "pt.create.groups.propertyAddress.fields.assessableArea": "Assessable Area",
+  
+  //Add Demand
+  "pt.create.groups.addDemand.fields.installment": "Installment",
+  "pt.create.groups.addDemand.fields.propertytax": "Property tax",
+  "pt.create.groups.addDemand.fields.educationCess": "Education Cess",
+  "pt.create.groups.addDemand.fields.employmentGuaranteeCess": "Employment Guarantee Cess",
+  "pt.create.groups.addDemand.fields.treetax": "Tree Tax",
+  "pt.create.groups.addDemand.fields.totalPropertyTax": "Total Property Tax",
+  "pt.create.groups.addDemand.fields.collection": "Collection",
   
   //employee Object
   "employee.Employee.fields.code": "Code",

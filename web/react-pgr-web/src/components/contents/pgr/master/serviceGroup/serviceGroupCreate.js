@@ -174,7 +174,8 @@ class ServiceGroupCreate extends Component {
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createServiceGroup.name? createServiceGroup.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
-                                        onChange={(e) => handleChange(e, "name", true, '')}
+                                      maxLength="100"
+                                      onChange={(e) => handleChange(e, "name", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Should contain only alphabets, space and special characters')}
                                       id="name"
                                   />
                               </Col>
@@ -184,7 +185,8 @@ class ServiceGroupCreate extends Component {
                                       floatingLabelText={translate("core.lbl.code")+"*"}
                                       value={createServiceGroup.code? createServiceGroup.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
-                                      onChange={(e) => handleChange(e, "code", true, '')}
+                                      maxLength="20"
+                                      onChange={(e) => handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Should contain only upper case alphabets and numbers')}
                                       id="code"
                                       disabled={this.state.id ? true : false }
                                   />
@@ -195,7 +197,8 @@ class ServiceGroupCreate extends Component {
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createServiceGroup.description? createServiceGroup.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
-                                      onChange={(e) => handleChange(e, "description", false, '')}
+                                      maxLength="250"
+                                      onChange={(e) => handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Should contain only alphabets, space and special characters')}
                                       multiLine={true}
                                       id="description"
                                   />
@@ -275,14 +278,14 @@ const mapDispatchToProps = dispatch => ({
    })
   },
 
-  handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
+  handleChange: (e, property, isRequired, pattern, errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern,
+      errorMsg
     });
   },
   setLoadingStatus: (loadingStatus) => {

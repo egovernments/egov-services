@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,14 +65,22 @@ public class VoucherService {
         VoucherResponse voucherRes = new VoucherResponse();
 
         final List<String> cookies = headers.get("cookie");
-        log.debug("cookie::" + cookies);
+        log.debug("cookies::" + cookies);
+
+        final List<MediaType> mediaTypes = new ArrayList<MediaType>();
+        mediaTypes.add(MediaType.ALL);
+
+        final String cookie = cookies.stream().collect(Collectors.joining(";"));
+        log.debug("Cookie for voucher request header :: " + cookie);
 
         final HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.set(HttpHeaders.COOKIE, cookie);
+        requestHeaders.setPragma("no-cache");
+        requestHeaders.setConnection("keep-alive");
+        requestHeaders.setCacheControl("no-cache");
+        requestHeaders.setAccept(mediaTypes);
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-        final List<MediaType> acceptableMediaTypes = new LinkedList<>();
-        acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
-        requestHeaders.setAccept(acceptableMediaTypes);
-        requestHeaders.set(HttpHeaders.COOKIE, cookies.stream().collect(Collectors.joining(";")));
+        requestHeaders.setAccessControlAllowOrigin(headers.getOrigin());
 
         log.debug("Request Headers for Voucher Request :: " + requestHeaders);
 

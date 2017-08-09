@@ -338,11 +338,14 @@ class Transaction extends Component {
     this.props.setRoute(_url);
   }
 
-  makeAjaxCall = (formData, url) => {
-    let self = this;
-    delete formData.ResponseInfo;
-    //return console.log(formData);
-    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+
+
+  create=(e) => {
+    let self=this;
+    e.preventDefault();
+    self.props.setLoadingStatus('loading');
+    var formData = {...this.props.formData.Receipt};
+    Api.commonApiPost("/collection-services/receipts/v1/_create", "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
       self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
@@ -362,64 +365,9 @@ class Transaction extends Component {
     })
   }
 
-  create=(e) => {
-    let self = this, _url;
-    e.preventDefault();
-    self.props.setLoadingStatus('loading');
-    var formData = {...this.props.formData};
-    if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
-      if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
-        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
-
-      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
-        for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
-          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
-        }
-      } else
-        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
-    }
-
-    if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
-      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
-      var match = _url.match(/\{.*\}/)[0];
-      var jPath = match.replace(/\{|}/g,"");
-      _url = _url.replace(match, _.get(formData, jPath));
-    }
-
-    //Check if documents, upload and get fileStoreId
-    if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
-      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
-      let _docs = [];
-      let counter = documents.length, breakOut = 0;
-      for(let i=0; i<documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
-          if(breakOut == 1) return;
-          if(err) {
-            breakOut = 1;
-            self.props.setLoadingStatus('hide');
-            self.props.toggleSnackbarAndSetText(true, err, false, true);
-          } else {
-            _docs.push({
-              ...documents[i],
-              fileStoreId: res.files[0].fileStoreId
-            })
-            counter--;
-            if(counter == 0 && breakOut == 0) {
-              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-              self.makeAjaxCall(formData, _url);
-            }
-          }
-        })
-      }
-    } else {
-      self.makeAjaxCall(formData, _url);
-    }
-
-  }
-
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid} = this.props;
-    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
+    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,create} = this;
     let {showResult, resultList} = this.state;
     // showResult=true;
 
@@ -449,7 +397,7 @@ class Transaction extends Component {
                   {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
                   <div style={{"textAlign": "center"}}>
                     <br/>
-                  {showResult &&  <UiButton item={{"label": "Pay", "uiType":"button"}} ui="google"/>}
+                  {showResult &&  <UiButton handler={create} item={{"label": "Pay", "uiType":"button"}} ui="google"/>}
                     <br/>
                   </div>
       </div>

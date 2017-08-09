@@ -14,6 +14,7 @@ import org.egov.egf.instrument.domain.service.InstrumentService;
 import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentMapper;
+import org.egov.egf.instrument.web.requests.InstrumentDepositRequest;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.instrument.web.requests.InstrumentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,6 +131,31 @@ public class InstrumentController {
 
 		return response;
 
+	}
+	
+	@PostMapping("/_deposit")
+	@ResponseStatus(HttpStatus.CREATED)
+	public InstrumentResponse depositInstrument(@RequestBody InstrumentDepositRequest instrumentDepositRequest, BindingResult errors) {
+
+		InstrumentMapper mapper = new InstrumentMapper();
+		InstrumentResponse instrumentResponse = new InstrumentResponse();
+		instrumentResponse.setResponseInfo(getResponseInfo(instrumentDepositRequest.getRequestInfo()));
+		List<Instrument> instruments = new ArrayList<>();
+		List<InstrumentContract> instrumentContracts = new ArrayList<>();
+		InstrumentContract contract;
+
+		instrumentDepositRequest.getRequestInfo().setAction(ACTION_UPDATE);
+
+		instruments = instrumentService.deposit(instrumentDepositRequest, errors, instrumentDepositRequest.getRequestInfo());
+
+		for (Instrument i : instruments) {
+			contract = mapper.toContract(i);
+			instrumentContracts.add(contract);
+		}
+
+		instrumentResponse.setInstruments(instrumentContracts);
+
+		return instrumentResponse;
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {

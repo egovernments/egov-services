@@ -199,10 +199,10 @@ class Login extends Component {
                   var list = JSON.parse(res);
                   if(list.length == 0) {
                     for(var i=0; i<actions.length; i++) {
-                      if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
-                        actions.splice(i, 1);
-                        break;
-                      }
+                      // if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
+                      //   actions.splice(i, 1);
+                      //   break;
+                      // }
                     }
                   }
                   localStorage.setItem("actions", JSON.stringify(actions));

@@ -1,0 +1,18 @@
+{
+    "responseInfo": {
+        "resMsgId": null,
+        "status": "400",
+        "apiId": null,
+        "ver": null,
+        "ts": null,
+        "key": null
+    },
+    "error": {
+        "code": 400,
+        "message": "[regnUnit.name] : Required Query Parameter Missing ",
+        "description": "Error While Binding Results",
+        "fields": [
+            "regnUnit.name"
+        ]
+    }
+}

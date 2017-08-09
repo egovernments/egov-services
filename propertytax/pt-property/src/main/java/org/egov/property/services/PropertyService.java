@@ -75,6 +75,16 @@ public interface PropertyService {
 	public TitleTransferResponse updateTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception;
 	
 	/**
+	 * Save property history and update property
+	 * 
+	 * @param titleTransferRequest
+	 * @throws Exception
+	 */
+	public PropertyRequest savePropertyHistoryandUpdateProperty(TitleTransferRequest titleTransferRequest)
+			throws Exception;
+
+	
+	/**
 	 * This Api will generate the special based on the given special notice request
 	 * @param specialNoticeRequest
 	 * @return {@link SpecialNoticeResponse}

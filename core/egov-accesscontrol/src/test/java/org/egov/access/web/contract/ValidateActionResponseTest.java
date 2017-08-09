@@ -9,14 +9,14 @@ import static org.junit.Assert.assertEquals;
 
 public class ValidateActionResponseTest {
 
-    @Test
-    public void testThatValidateActionResponseContractContainsInfoAboutResponseInfoAndActionValidation() {
-        ResponseInfo responseInfo = ResponseInfo.builder().build();
-        ActionValidationContract actionValidation = ActionValidationContract.builder().allowed("TRUE").build();
-        ValidateActionResponse validateActionResponse = ValidateActionResponse.builder().
-                responseInfo(responseInfo).actionValidation(actionValidation).build();
+	@Test
+	public void testThatValidateActionResponseContractContainsInfoAboutResponseInfoAndActionValidation() {
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+		ActionValidationContract actionValidation = ActionValidationContract.builder().allowed("TRUE").build();
+		ValidateActionResponse validateActionResponse = ValidateActionResponse.builder().responseInfo(responseInfo)
+				.actionValidation(actionValidation).build();
 
-        assertEquals(responseInfo, validateActionResponse.getResponseInfo());
-        assertEquals(actionValidation, validateActionResponse.getActionValidation());
-    }
+		assertEquals(responseInfo, validateActionResponse.getResponseInfo());
+		assertEquals(actionValidation, validateActionResponse.getActionValidation());
+	}
 }

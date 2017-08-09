@@ -9,9 +9,9 @@ import lombok.NonNull;
 @Builder
 @AllArgsConstructor
 public class ValidateActionContract {
-    @NonNull
-    private TenantRoleContract tenantRole;
+	@NonNull
+	private TenantRoleContract tenantRole;
 
-    @NonNull
-    private String actionUrl;
+	@NonNull
+	private String actionUrl;
 }

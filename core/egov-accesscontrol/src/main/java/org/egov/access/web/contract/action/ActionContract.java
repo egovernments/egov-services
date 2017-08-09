@@ -9,53 +9,43 @@ import java.util.Date;
 import java.util.List;
 
 @Getter
-@Setter
-@ToString
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActionContract {
 
-    private Long id;
-    private String name;
-    private String url;
-    private String queryParams;
-    private String parentModule;
-    private String displayName;
-    private boolean enabled;
-    private Integer orderNumber;
-    private String serviceCode;
+	private Long id;
+	private String name;
+	private String url;
+	private String queryParams;
+	private String parentModule;
+	private String displayName;
+	private boolean enabled;
+	private Integer orderNumber;
+	private String serviceCode;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
+	private Long createdBy;
 
-    private Long createdBy;
+	private Date lastModifiedDate;
 
-    private Date lastModifiedDate;
+	private Long lastModifiedBy;
 
-    private Long lastModifiedBy;
+	public List<ActionContract> getActions(List<Action> actions) {
+		List<ActionContract> actionsContractList = new ArrayList<ActionContract>();
+		for (Action action : actions) {
+			ActionContract actionContract = ActionContract.builder().name(action.getName()).id(action.getId())
+					.createdBy(action.getCreatedBy()).createdDate(action.getCreatedDate())
+					.lastModifiedBy(action.getLastModifiedBy()).lastModifiedDate(action.getLastModifiedDate())
+					.url(action.getUrl()).queryParams(action.getQueryParams()).orderNumber(action.getOrderNumber())
+					.parentModule(action.getParentModule()).serviceCode(action.getServiceCode())
+					.displayName(action.getDisplayName()).build();
+			actionsContractList.add(actionContract);
+		}
 
-    public List<ActionContract> getActions(List<Action> actions) {
-        List<ActionContract> actionsContractList = new ArrayList<ActionContract>();
-        for(Action action:actions) {
-            ActionContract actionContract = ActionContract.builder().name(action.getName())
-                    .id(action.getId())
-                    .createdBy(action.getCreatedBy())
-                    .createdDate(action.getCreatedDate())
-                    .lastModifiedBy(action.getLastModifiedBy())
-                    .lastModifiedDate(action.getLastModifiedDate())
-                    .url(action.getUrl())
-                    .queryParams(action.getQueryParams())
-                    .orderNumber(action.getOrderNumber())
-                    .parentModule(action.getParentModule())
-                    .serviceCode(action.getServiceCode())
-                    .displayName(action.getDisplayName()).build();
-            actionsContractList.add(actionContract);
-        }
-
-        return actionsContractList;
-    }
+		return actionsContractList;
+	}
 
 }

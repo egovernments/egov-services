@@ -297,9 +297,9 @@ var dat = {
 							"name": "AadhaarNumber",
 							"jsonPath": "properties[0].owners[0].aadhaarNumber",
 							"label": "pt.create.groups.propertyAddress.fields.aadhaarNumber",
-							"pattern": "",
+							"pattern": "^\\d{12}$",
 							"type": "aadhar",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
@@ -572,11 +572,7 @@ var dat = {
 							"defaultValue": false,
 							"showHideFields": [{
 								   "ifValue": true,
-								   "hide": [{
-									"name": "",
-									"isGroup": true,
-									"isField": false
-								   }],
+								   "hide": [],
 								   "show": [{
 									"name": "DoorNo2",
 									"isGroup": false,
@@ -1069,8 +1065,8 @@ var dat = {
 						},
 						{
 							"name": "Add Room",
-							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].unitType",
-							"label": "pt.create.groups.propertyAddress.fields.unitType",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].addRoom",
+							"label": "pt.create.groups.propertyAddress.fields.addRoom",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -1081,13 +1077,9 @@ var dat = {
 							"defaultValue":[{key:"YES", value:"Yes"},{key:"NO", value:"No"}],
 							"showHideFields": [{
 								   "ifValue": "YES",
-								   "hide": [{
-									"name": "FloorDetails",
-									"isGroup": true,
-									"isField": false
-								   }],
+								   "hide": [],
 								   "show": [{
-									"name": "VacantLand",
+									"name": "Room",
 									"isGroup": true,
 									"isField": false
 								   }]
@@ -1173,11 +1165,7 @@ var dat = {
 									"isGroup": false,
 									"isField": true
 								   }],
-								   "show": [{
-									"name": "",
-									"isGroup": true,
-									"isField": false
-								   }]
+								   "show": []
 							  }]
 						},
 						{

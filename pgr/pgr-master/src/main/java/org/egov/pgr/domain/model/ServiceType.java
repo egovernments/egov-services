@@ -34,6 +34,7 @@ public class ServiceType {
     private Long lastModifiedBy;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
+    private List<AttributeDefinition> attributes;
 
 
     public org.egov.pgr.persistence.dto.ServiceType toDto(){

@@ -33,7 +33,7 @@ public class UserService {
 
 	public UserRequest getUser(Long id, RequestInfo requestInfo) {
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-				.requestInfo(requestInfo).id(Arrays.asList(id)).build();
+				.requestInfo(requestInfo).id(Arrays.asList(id)).pageSize(1).build();
 		UserResponse userResponse = null;
 		try {
 			URI url = new URI(propertiesManager.getEgovUserServiceHost()

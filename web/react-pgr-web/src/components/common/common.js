@@ -282,11 +282,12 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.layoutApprovalAuthority":"Layout Approval Authority",
   "pt.create.groups.propertyAddress.fields.layoutPermitNumber":"Layout Permit Number",
   "pt.create.groups.propertyAddress.fields.layoutPermitDate":"layoutPermitDate",
-  "pt.create.groups.propertyAddress.fields.upicNumber":"Upic Number",
+  "pt.create.groups.propertyAddress.fields.upicNumber":"Old Upic Number",
   "pt.create.groups.propertyAddress.fields.northBoundedBy": "North",
   "pt.create.groups.propertyAddress.fields.southBoundedBy": "South",
   "pt.create.groups.propertyAddress.fields.eastBoundedBy":"East",
   "pt.create.groups.propertyAddress.fields.westBoundedBy":"West",
+  "pt.create.groups.propertyAddress.fields.addRoom": "Add Room",
 
   //employee Object
   "employee.Employee.fields.code": "Code",
@@ -542,7 +543,7 @@ export function validate_fileupload(files, formats){
     //file length validation
     if(filename.length <= 30){
       //console.log('file name length validation success');
-      if(formats.indexOf(fileext) >= 0){
+      if(formats.indexOf(fileext) >= 0 || !formats || formats.length == 0){
         //console.log('file formats validation success');
         if(filesize <= filelimit){
           //console.log('file size validation success');

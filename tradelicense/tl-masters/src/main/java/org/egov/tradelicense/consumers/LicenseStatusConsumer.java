@@ -116,9 +116,4 @@ public class LicenseStatusConsumer {
 		}
 		latch.countDown();
 	}
-
-	@Bean
-	public LicenseStatusConsumer getReceiver() {
-		return this;
-	}
 }

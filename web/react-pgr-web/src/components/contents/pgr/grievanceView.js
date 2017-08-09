@@ -550,8 +550,8 @@ class grievanceView extends Component{
               </Row> : ''}
               <Row>
                 <Col xs={12} sm={12} md={12} lg={12}>
-                  <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} onChange={(event, newValue) => {
-                    handleChange(newValue, "systemApprovalComments", true, "") }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
+                  <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500" onChange={(event, newValue) => {
+                    handleChange(newValue, "systemApprovalComments", true, /^.[^]{0,500}$/) }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
                 </Col>
               </Row>
               { localStorage.getItem('type') === 'EMPLOYEE' ?

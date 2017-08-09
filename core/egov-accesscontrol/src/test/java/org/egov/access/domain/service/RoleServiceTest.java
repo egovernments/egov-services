@@ -38,7 +38,7 @@ public class RoleServiceTest {
 
 	@Mock
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Mock
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplat;
 

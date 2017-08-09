@@ -12,9 +12,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class TenantRoleContract {
-    @NonNull
-    private String tenantId;
+	@NonNull
+	private String tenantId;
 
-    @NonNull
-    private List<RoleContract> roles;
+	@NonNull
+	private List<RoleContract> roles;
 }

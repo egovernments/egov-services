@@ -115,9 +115,4 @@ public class PenaltyRateConsumer {
 		}
 		latch.countDown();
 	}
-
-	@Bean
-	public PenaltyRateConsumer getReceiver() {
-		return this;
-	}
 }

@@ -24,14 +24,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;	
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ActionController.class)
@@ -106,7 +105,7 @@ public class ActionControllerTest {
 				.andExpect(content().json(new Resources().getFileContents("actionResponse.json")));
 
 	}
-	
+
 	@Test
 	public void testShouldNotCreateActionIfNoActions() throws Exception {
 
@@ -121,12 +120,43 @@ public class ActionControllerTest {
 
 		mockMvc.perform(post("/v1/actions/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("actionRequestWithoutActions.json")))
-		        .andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionResponseWithoutActions.json")));
 
 	}
-	
+
+	@Test
+	public void testShouldNotCreateActionWithWrongRequestInfo() throws Exception {
+
+		when(actionService.createAction(any(ActionRequest.class))).thenReturn(null);
+
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+
+		mockMvc.perform(post("/v1/actions/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("actionCreateRequestWithWrongRequestInfo.json")))
+				.andExpect(status().isBadRequest());
+
+	}
+
+	@Test
+	public void testShouldNotUpdateActionWithWrongRequestInfo() throws Exception {
+
+		when(actionService.updateAction(any(ActionRequest.class))).thenReturn(null);
+
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+
+		mockMvc.perform(post("/v1/actions/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("actionCreateRequestWithWrongRequestInfo.json")))
+				.andExpect(status().isBadRequest());
+
+	}
+
 	@Test
 	public void testShouldNotUpdateAction() throws Exception {
 
@@ -140,22 +170,22 @@ public class ActionControllerTest {
 				.thenReturn(responseInfo);
 
 		mockMvc.perform(post("/v1/actions/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionUpdateRequest.json"))).andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.content(new Resources().getFileContents("actionUpdateRequest.json")))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionUpdateResponse.json")));
 
 	}
-	
+
 	@Test
 	public void testShouldUpdateAction() throws Exception {
 
 		List<Action> actions = new ArrayList<Action>();
 
 		Action action1 = new Action();
-		
+
 		Action action2 = new Action();
-		
-    	action1.setId(1l);
+
+		action1.setId(1l);
 		action1.setName("test1");
 		action1.setUrl("/test");
 		action1.setDisplayName("Create  Test");
@@ -163,7 +193,7 @@ public class ActionControllerTest {
 		action1.setOrderNumber(1);
 		action1.setCreatedBy(1l);
 		action1.setLastModifiedBy(1l);
-		
+
 		action2.setId(2l);
 		action2.setName("test2");
 		action2.setUrl("/test/test2");
@@ -172,31 +202,30 @@ public class ActionControllerTest {
 		action2.setOrderNumber(2);
 		action2.setCreatedBy(1l);
 		action2.setLastModifiedBy(1l);
-		
+
 		actions.add(action1);
 		actions.add(action2);
 
 		when(actionService.updateAction(any(ActionRequest.class))).thenReturn(actions);
-		
+
 		when(actionService.checkActionNameExit(any(String.class))).thenReturn(true);
-		
+
 		ResponseInfo responseInfo = ResponseInfo.builder().build();
 
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 				.thenReturn(responseInfo);
-		
+
 		responseInfo.setApiId("org.egov.accesscontrol");
 		responseInfo.setTs("Thu Mar 09 18:30:00 UTC 2017");
 		responseInfo.setResMsgId("uief87324");
-		
-     	mockMvc.perform(post("/v1/actions/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionUpdateRequest.json")))
-		        .andExpect(status().isOk())
+
+		mockMvc.perform(post("/v1/actions/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("actionUpdateRequest.json"))).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionUpdateSuccessResponse.json")));
 
 	}
-	
+
 	@Test
 	public void testShouldNotUpdateActionIfNoName() throws Exception {
 
@@ -210,120 +239,103 @@ public class ActionControllerTest {
 				.thenReturn(responseInfo);
 
 		mockMvc.perform(post("/v1/actions/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionUpdateRequestWithoutName.json"))).andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.content(new Resources().getFileContents("actionUpdateRequestWithoutName.json")))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionUpdateResponseWithoutName.json")));
 
 	}
+
 	@Test
 	public void testShouldGetModuleList() throws Exception {
 
-		
 		when(actionService.getAllActions(any(ActionRequest.class))).thenReturn(getModuleList());
 
 		ResponseInfo responseInfo = ResponseInfo.builder().build();
-		
+
 		responseInfo.setApiId("org.egov.accesscontrol");
 		responseInfo.setTs("Thu Mar 09 18:30:00 UTC 2017");
 		responseInfo.setMsgId("20170310130900");
 		responseInfo.setResMsgId("uief87324");
 		responseInfo.setVer("1.0");
-		
-		
 
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 				.thenReturn(responseInfo);
 
 		mockMvc.perform(post("/v1/actions/_get").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionListRequest.json")))
-		        .andExpect(status().isOk());
-				
-				
+				.content(new Resources().getFileContents("actionListRequest.json"))).andExpect(status().isOk());
 
 	}
 
-	
 	@Test
 	public void testShouldNotGetModuleListWithoutTenant() throws Exception {
 
-		
 		when(actionService.getAllActions(any(ActionRequest.class))).thenReturn(getModuleList());
 
 		ResponseInfo responseInfo = ResponseInfo.builder().build();
-
 
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 				.thenReturn(responseInfo);
 
 		mockMvc.perform(post("/v1/actions/_get").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("actionListRequestWithoutTenant.json")))
-		        .andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionListResponseWithoutTenant.json")));
 
 	}
-	
-	
+
 	@Test
 	public void testShouldNotGetModuleListWithoutRoleCode() throws Exception {
 
-		
 		when(actionService.getAllActions(any(ActionRequest.class))).thenReturn(getModuleList());
 
 		ResponseInfo responseInfo = ResponseInfo.builder().build();
-
 
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 				.thenReturn(responseInfo);
 
 		mockMvc.perform(post("/v1/actions/_get").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("actionListRequestWithoutRoleCode.json")))
-		        .andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionListResponseWithoutRoleCode.json")));
 
 	}
-	
-	
-	private List<Action> getModuleList(){
-		
+
+	private List<Action> getModuleList() {
+
 		List<Action> actionList = new ArrayList<Action>();
-		
-		Module module = new Module(); 
-		
+
+		Module module = new Module();
+
 		module.setId(74l);
 		module.setName("ess");
 		module.setCode("ESS");
 		module.setDisplayName("Employee Self Service");
 		module.setEnabled(false);
-		
+
 		Action action1 = new Action();
-		
+
 		action1.setId(268l);
-		
+
 		action1.setName("ESS Leave Application");
 		action1.setUrl("/app/hr/leavemaster/apply-leave.html");
 		action1.setDisplayName("Apply Leave");
 		action1.setEnabled(false);
 		action1.setServiceCode("ESS");
-		
-		Action action2=new Action();
-		
+
+		Action action2 = new Action();
+
 		action2.setId(267l);
 		action2.setName("View ESS Employee");
 		action2.setUrl("/app/hr/employee/create.html");
 		action2.setDisplayName("My Details");
 		action2.setEnabled(false);
 		action2.setServiceCode("ESS");
-		
+
 		actionList.add(action1);
 		actionList.add(action2);
-		
-		
+
 		module.setActionList(actionList);
-		
-		
-		
+
 		return actionList;
 	}
 }

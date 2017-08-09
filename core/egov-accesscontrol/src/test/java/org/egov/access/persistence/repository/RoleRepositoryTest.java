@@ -67,7 +67,7 @@ public class RoleRepositoryTest {
 		List<Role> roleList = new ArrayList<Role>();
 
 		Role role = Role.builder().id(1L).name("Citizen").code("citizencode").description("citizendescription").build();
-		
+
 		roleList.add(role);
 		roleRequest.setRoles(roleList);
 
@@ -76,6 +76,26 @@ public class RoleRepositoryTest {
 		assertThat(roles.size()).isEqualTo(1);
 		assertThat(roles.get(0).getCode().equals("citizencode"));
 		assertThat(roles.get(0).getDescription().equals("citizendescription"));
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearRole.sql", "/sql/insertRoleData.sql" })
+	public void testCheckRoleNameDuplicationValidationExist() {
+
+		boolean exist = roleRepository.checkRoleNameDuplicationValidationErrors("SUPERUSER");
+
+		assertThat(exist == true);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearRole.sql", "/sql/insertRoleData.sql" })
+	public void testCheckRoleNameDuplicationValidationErrors() {
+
+		boolean exist = roleRepository.checkRoleNameDuplicationValidationErrors("Super User");
+
+		assertThat(exist == false);
+
 	}
 
 	private List<Role> getRoles() {

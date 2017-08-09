@@ -12,38 +12,37 @@ import org.egov.access.web.contract.role.RoleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class RoleService {
 
-    private BaseRepository repository;
-    
-   	private RoleRepository roleRepository;
+	private BaseRepository repository;
 
-    @Autowired
-    public RoleService(BaseRepository repository,RoleRepository roleRepository) {
-        this.repository = repository;
-        this.roleRepository = roleRepository;
-    }
+	private RoleRepository roleRepository;
 
-    public List<Role> getRoles(RoleSearchCriteria roleSearchCriteria) {
-        RoleFinderQueryBuilder queryBuilder = new RoleFinderQueryBuilder(roleSearchCriteria);
-        return (List<Role>) (List<?>) repository.run(queryBuilder, new RoleRowMapper());
-    }
-    
-    public List<Role> createRole(RoleRequest roleRequest){
-    	
-    	return roleRepository.createRole(roleRequest);
-    }
-    
-    public List<Role> updateRole(RoleRequest roleRequest){
-    	
-    	return roleRepository.updateRole(roleRequest);
-    }
-    
-    public boolean checkRoleNameDuplicationValidationErrors(String roleName){
-    	
-    	return roleRepository.checkRoleNameDuplicationValidationErrors(roleName);
-    }
-    
+	@Autowired
+	public RoleService(BaseRepository repository, RoleRepository roleRepository) {
+		this.repository = repository;
+		this.roleRepository = roleRepository;
+	}
+
+	public List<Role> getRoles(RoleSearchCriteria roleSearchCriteria) {
+		RoleFinderQueryBuilder queryBuilder = new RoleFinderQueryBuilder(roleSearchCriteria);
+		return (List<Role>) (List<?>) repository.run(queryBuilder, new RoleRowMapper());
+	}
+
+	public List<Role> createRole(RoleRequest roleRequest) {
+
+		return roleRepository.createRole(roleRequest);
+	}
+
+	public List<Role> updateRole(RoleRequest roleRequest) {
+
+		return roleRepository.updateRole(roleRequest);
+	}
+
+	public boolean checkRoleNameDuplicationValidationErrors(String roleName) {
+
+		return roleRepository.checkRoleNameDuplicationValidationErrors(roleName);
+	}
+
 }

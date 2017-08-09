@@ -94,6 +94,9 @@ public class UtilityHelper {
 	public AuditDetails getUpdateMasterAuditDetails(AuditDetails auditDetails, RequestInfo requestInfo) {
 
 		Long updatedTime = new Date().getTime();
+		if(auditDetails == null){
+			auditDetails = new AuditDetails();
+		}
 		auditDetails.setLastModifiedTime(updatedTime);
 		UserInfo userInfo = requestInfo.getUserInfo();
 

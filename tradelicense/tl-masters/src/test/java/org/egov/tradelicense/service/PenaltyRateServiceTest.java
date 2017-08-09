@@ -18,6 +18,7 @@ import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.PenaltyRateConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.exception.InvalidRangeException;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
 import org.egov.tradelicense.persistence.repository.PenaltyRateRepository;
 import org.junit.Before;
@@ -52,10 +53,10 @@ public class PenaltyRateServiceTest {
 
 	@Autowired
 	PenaltyRateRepository penaltyRateRepository;
-	
+
 	@Autowired
 	PenaltyRateConsumer penaltyRateConsumer;
-	
+
 	@Autowired
 	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
@@ -68,6 +69,8 @@ public class PenaltyRateServiceTest {
 	public String applicationType = "New";
 	public Long fromRange = -9999l;
 	public Long toRange = 10l;
+	public Long InvalidFromRange = 50l;
+	public Long InvalidToRange = 100l;
 	public Double rate = 50d;
 	public Long updatedFromRange = 50l;
 	public Long updatedToRange = 100l;
@@ -80,7 +83,7 @@ public class PenaltyRateServiceTest {
 			ContainerTestUtils.waitForAssignment(messageListenerContainer, 0);
 		}
 	}
-	
+
 	/**
 	 * Description : test method to create PenaltyRate
 	 */
@@ -118,13 +121,72 @@ public class PenaltyRateServiceTest {
 				assertTrue(false);
 			}
 
-			penaltyRateId = penaltyRateRepository.craeatePenaltyRate(tenantId,
-					penaltyRateResponse.getPenaltyRates().get(0));
+			penaltyRateConsumer.getLatch().await();
+			if (penaltyRateConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
+				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+				penaltyRateResponse = penaltyRateService.getPenaltyRateMaster(requestInfo, tenantId, null,
+						applicationType, pageSize, offset);
 
-			assertTrue(true);
+				if (penaltyRateResponse.getPenaltyRates().size() == 0) {
+					assertTrue(false);
+				} else {
+					penaltyRateId = penaltyRateResponse.getPenaltyRates().get(0).getId();
+					assertTrue(true);
+				}
+			}
 
 		} catch (Exception e) {
 			assertTrue(false);
+		}
+
+	}
+
+	/**
+	 * Description : test method to check invalid range of PenaltyRate
+	 */
+	@Test
+	public void testAcreatePenaltyRateInvalidSequence() {
+		RequestInfo requestInfo = getRequestInfoObject();
+
+		List<PenaltyRate> penaltyRates = new ArrayList<>();
+
+		PenaltyRate penaltyRate = new PenaltyRate();
+		penaltyRate.setTenantId(tenantId);
+		penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(applicationType));
+		penaltyRate.setFromRange(InvalidFromRange);
+		penaltyRate.setToRange(InvalidToRange);
+		penaltyRate.setRate(rate);
+		long createdTime = new Date().getTime();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
+		auditDetails.setCreatedTime(createdTime);
+		auditDetails.setLastModifiedTime(createdTime);
+
+		penaltyRate.setAuditDetails(auditDetails);
+		penaltyRates.add(penaltyRate);
+
+		PenaltyRateRequest penaltyRateRequest = new PenaltyRateRequest();
+		penaltyRateRequest.setPenaltyRates(penaltyRates);
+		penaltyRateRequest.setRequestInfo(requestInfo);
+
+		try {
+			PenaltyRateResponse penaltyRateResponse = penaltyRateService.createPenaltyRateMaster(tenantId,
+					penaltyRateRequest);
+			if (penaltyRateResponse.getPenaltyRates().size() == 0) {
+				assertTrue(false);
+			}
+
+		} catch (Exception e) {
+			if (e.getClass().isInstance(new InvalidRangeException())) {
+				assertTrue(true);
+			} else {
+				assertTrue(false);
+			}
 		}
 
 	}
@@ -191,7 +253,12 @@ public class PenaltyRateServiceTest {
 		penaltyRateRequest.setRequestInfo(requestInfo);
 
 		try {
+
+			penaltyRateConsumer.resetCountDown();
+
 			PenaltyRateResponse penaltyRateResponse = penaltyRateService.updatePenaltyRateMaster(penaltyRateRequest);
+
+			penaltyRateConsumer.getLatch().await();
 
 			if (penaltyRateResponse.getPenaltyRates().size() == 0) {
 				assertTrue(false);

@@ -270,9 +270,11 @@ paths:
           schema:
             $ref: '#/definitions/SpecialNoticeResponse'
         '400':
-          description: Title Tranfer failed
+          description: Notice Generation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Property
             
   
 

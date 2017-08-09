@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/pipesize/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "PipeSizes[0].code",
 		"objectName": "pipeSize",
 		"groups": [
 			{

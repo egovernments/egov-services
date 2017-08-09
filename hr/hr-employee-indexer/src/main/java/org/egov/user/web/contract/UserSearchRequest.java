@@ -49,10 +49,10 @@ public class UserSearchRequest {
 	private String tenantId;
 
 	@JsonProperty("pageSize")
-	private int pageSize = 20;
+	private Integer pageSize = 20;
 
 	@JsonProperty("pageNumber")
-	private int pageNumber = 0;
+	private Integer pageNumber = 0;
 
 	@JsonProperty("sort")
 	private List<String> sort = Collections.singletonList("name");

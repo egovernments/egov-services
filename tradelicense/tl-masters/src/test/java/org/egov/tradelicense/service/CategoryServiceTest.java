@@ -24,7 +24,6 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.CategoryConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.CategoryService;
-import org.egov.tradelicense.persistence.repository.CategoryRepository;
 import org.egov.tradelicense.persistence.repository.UOMRepository;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -58,9 +57,6 @@ public class CategoryServiceTest {
 
 	@Autowired
 	UOMRepository uomRepository;
-
-	@Autowired
-	CategoryRepository categoryRepository;
 
 	@Autowired
 	CategoryConsumer categoryConsumer;
@@ -304,13 +300,13 @@ public class CategoryServiceTest {
 			categoryRequest.setRequestInfo(requestInfo);
 
 			categoryConsumer.resetCountDown();
-
 			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+
+			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
 
-			categoryConsumer.getLatch().await();
 			if (categoryConsumer.getLatch().getCount() != 0) {
 				assertTrue(false);
 			} else {
@@ -454,8 +450,10 @@ public class CategoryServiceTest {
 		categoryRequest.setRequestInfo(requestInfo);
 
 		try {
+			categoryConsumer.resetCountDown();
 			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest);
 
+			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
@@ -494,7 +492,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
-					updatedName, null, active, null, parentId, pageSize, offset);
+					updatedName, null, null, null, null, pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 
@@ -536,8 +534,9 @@ public class CategoryServiceTest {
 		categoryRequest.setRequestInfo(requestInfo);
 
 		try {
+			categoryConsumer.resetCountDown();
 			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest);
-
+			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
@@ -618,9 +617,11 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
+			categoryConsumer.resetCountDown();
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
 					new Integer[] { categoryId.intValue() }, updatedName, updatedCode, active, type, parentId, pageSize,
 					offset);
+			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 

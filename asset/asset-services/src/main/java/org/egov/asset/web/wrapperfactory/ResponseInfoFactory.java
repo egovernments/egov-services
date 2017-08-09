@@ -44,27 +44,21 @@ import java.util.Date;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ResponseInfoFactory {
 
-	private static final Logger logger = LoggerFactory.getLogger(ResponseInfoFactory.class);
-
-	public ResponseInfo createResponseInfoFromRequestHeaders(final RequestInfo requestInfo) {
-		final ResponseInfo responseInfo = new ResponseInfo();
-		try {
-			responseInfo.setApiId(requestInfo.getApiId());
-			responseInfo.setMsgId(requestInfo.getMsgId());
-			// responseInfo.setResMsgId("");
-			// responseInfo.setStatus(status);
-			responseInfo.setTs(new Date().toString());
-			responseInfo.setVer("v1");
-		} catch (final Exception ex) {
-			logger.info("ResponseInfoFactory createResponseInfoFromRequestHeaders:", ex);
-		}
-		return responseInfo;
-	}
+    public ResponseInfo createResponseInfoFromRequestHeaders(final RequestInfo requestInfo) {
+        final ResponseInfo responseInfo = new ResponseInfo();
+        if (requestInfo != null) {
+            responseInfo.setApiId(requestInfo.getApiId());
+            responseInfo.setMsgId(requestInfo.getMsgId());
+            // responseInfo.setResMsgId("");
+            // responseInfo.setStatus(status);
+            responseInfo.setTs(new Date().toString());
+            responseInfo.setVer("v1");
+        }
+        return responseInfo;
+    }
 }

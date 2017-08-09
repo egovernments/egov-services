@@ -18,7 +18,6 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.LicenseStatusConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.services.LicenseStatusService;
-import org.egov.tradelicense.persistence.repository.LicenseStatusRepository;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
@@ -50,19 +49,16 @@ public class LicenseStatusServiceTest {
 	LicenseStatusService licenseStatusService;
 
 	@Autowired
-	LicenseStatusRepository licenseStatusRepository;
-	
-	@Autowired
 	LicenseStatusConsumer licenseStatusConsumer;
-	
-	@Autowired
-	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
 	@ClassRule
 	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, "licensestatus-create-validated",
 			"licensestatus-update-validated");
 
-	public static Long LicenseId = 1l;
+	@Autowired
+	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+
+	public static Long licenseId = 1l;
 	public String tenantId = "default";
 	public String name = "Shubham";
 	public String code = "babu";
@@ -70,7 +66,6 @@ public class LicenseStatusServiceTest {
 	public String CodeToUpdate = "nitin";
 	public String active = "True";
 
-	
 	@Before
 	public void setUp() throws Exception {
 		// wait until the partitions are assigned
@@ -79,14 +74,13 @@ public class LicenseStatusServiceTest {
 			ContainerTestUtils.waitForAssignment(messageListenerContainer, 0);
 		}
 	}
-	
+
 	/**
 	 * Description : Test method for createLicenceStatus() method
 	 */
 	@Test
 	public void testAcreateLicenseStatus() {
 		RequestInfo requestInfo = getRequestInfoObject();
-
 		List<LicenseStatus> licenseStatuslst = new ArrayList<LicenseStatus>();
 
 		LicenseStatus licenseStatus = new LicenseStatus();
@@ -116,9 +110,22 @@ public class LicenseStatusServiceTest {
 				assertTrue(false);
 			}
 
-			licenseStatusRepository.createLicenseStatus(licenseStatusResponse.getLicenseStatuses().get(0));
-			assertTrue(true);
+			licenseStatusConsumer.getLatch().await();
+			if (licenseStatusConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
+				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+				licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo, tenantId, null, name,
+						code, active, pageSize, offset);
 
+				if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
+					assertTrue(false);
+				} else {
+					licenseId = licenseStatusResponse.getLicenseStatuses().get(0).getId();
+					assertTrue(true);
+				}
+			}
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -140,7 +147,8 @@ public class LicenseStatusServiceTest {
 
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
-					tenantId, new Integer[] { LicenseId.intValue() }, name, code, active, pageSize, offset);
+					tenantId, new Integer[] { licenseId.intValue() }, name, code, active, pageSize, offset);
+
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0)
 				assertTrue(false);
 
@@ -185,6 +193,7 @@ public class LicenseStatusServiceTest {
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService
 					.createLicenseStatusMaster(licenseStatusRequest);
+
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
 			}
@@ -210,7 +219,7 @@ public class LicenseStatusServiceTest {
 		List<LicenseStatus> LicenseStatuses = new ArrayList<LicenseStatus>();
 
 		LicenseStatus licenseStatus = new LicenseStatus();
-		licenseStatus.setId(LicenseId);
+		licenseStatus.setId(licenseId);
 		licenseStatus.setTenantId(tenantId);
 		licenseStatus.setName(NameToupdate);
 		licenseStatus.setCode(code);
@@ -231,16 +240,17 @@ public class LicenseStatusServiceTest {
 		licenseStatusRequest.setRequestInfo(requestInfo);
 
 		try {
+
+			licenseStatusConsumer.resetCountDown();
+
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService
 					.updateLicenseStatusMaster(licenseStatusRequest);
 
+			licenseStatusConsumer.getLatch().await();
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
 			}
-
-			licenseStatusRepository.updateLicenseStatus(licenseStatusResponse.getLicenseStatuses().get(0));
 			assertTrue(true);
-
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {
 				assertTrue(true);
@@ -267,12 +277,18 @@ public class LicenseStatusServiceTest {
 
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
-					tenantId, new Integer[] { LicenseId.intValue() }, NameToupdate, code, active, pageSize, offset);
+					tenantId, new Integer[] { licenseId.intValue() }, NameToupdate, code, active, pageSize, offset);
+
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
 			}
 
-			assertTrue(true);
+			licenseStatusConsumer.getLatch().await();
+			if (licenseStatusConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
+				assertTrue(true);
+			}
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -289,7 +305,7 @@ public class LicenseStatusServiceTest {
 		List<LicenseStatus> licenseStatuses = new ArrayList<LicenseStatus>();
 
 		LicenseStatus licenseStatus = new LicenseStatus();
-		licenseStatus.setId(LicenseId);
+		licenseStatus.setId(licenseId);
 		licenseStatus.setTenantId(tenantId);
 		licenseStatus.setName(NameToupdate);
 		licenseStatus.setCode(CodeToUpdate);
@@ -310,15 +326,16 @@ public class LicenseStatusServiceTest {
 		LicenseStatusRequest.setRequestInfo(requestInfo);
 
 		try {
+
+			licenseStatusConsumer.resetCountDown();
+
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService
 					.updateLicenseStatusMaster(LicenseStatusRequest);
 
+			licenseStatusConsumer.getLatch().await();
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
 			}
-
-			licenseStatusRepository.updateLicenseStatus(licenseStatusResponse.getLicenseStatuses().get(0));
-			assertTrue(true);
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -335,7 +352,7 @@ public class LicenseStatusServiceTest {
 		List<LicenseStatus> LicenseStatuses = new ArrayList<LicenseStatus>();
 
 		LicenseStatus licenseStatus = new LicenseStatus();
-		licenseStatus.setId(LicenseId);
+		licenseStatus.setId(licenseId + 1);
 		licenseStatus.setTenantId(tenantId);
 		licenseStatus.setName(NameToupdate);
 		licenseStatus.setCode(CodeToUpdate);
@@ -364,7 +381,7 @@ public class LicenseStatusServiceTest {
 			}
 
 		} catch (Exception e) {
-			if (e.getClass().isInstance(new DuplicateIdException())) {
+			if (e instanceof DuplicateIdException) {
 				assertTrue(true);
 			} else {
 				assertTrue(false);
@@ -388,10 +405,11 @@ public class LicenseStatusServiceTest {
 
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
-					tenantId, new Integer[] { LicenseId.intValue() }, NameToupdate, CodeToUpdate, active, pageSize,
+					tenantId, new Integer[] { licenseId.intValue() }, NameToupdate, CodeToUpdate, active, pageSize,
 					offset);
-			if (licenseStatusResponse.getLicenseStatuses().size() == 0)
+			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 

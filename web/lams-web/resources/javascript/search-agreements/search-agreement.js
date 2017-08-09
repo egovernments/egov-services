@@ -27,7 +27,7 @@ class AgreementSearch extends React.Component {
         electionwards: [],
         modify: false,
         users: [],
-        hideCollectTaxOption: false
+        hideCollectTaxOption: true
   }
   this.handleChange = this.handleChange.bind(this);
   this.search = this.search.bind(this);
@@ -112,9 +112,20 @@ class AgreementSearch extends React.Component {
         var assetCategories = [];
     }
 
-    var res = commonApiPost("hr-employee", "employees", "_loggedinemployee", {tenantId});
-    var bool = false;
-    if(res && res.responseJSON && res.responseJSON.Employee && res.responseJSON.Employee[0]) {
+    var res = commonApiPost("asset-services", "assetCategories", "_search", {tenantId});
+    var bool = true;
+    console.log(res.getResponseHeader("userInfo"));
+    if(res && res.getResponseHeader("userInfo") && res.getResponseHeader("userInfo").roles) {
+      var roles = res.getResponseHeader("userInfo").roles;
+      console.log(roles);
+      for(var i=0; i<roles.length; i++) {
+        if(roles[i].name == "Collection Operator") {
+          bool = false;
+          break;
+        }
+      }
+    }
+    /*if(res && res.responseJSON && res.responseJSON.Employee && res.responseJSON.Employee[0]) {
       var res2 = commonApiPost("hr-employee", "employees/" + res.responseJSON.Employee[0].id, "_search", {tenantId});
       if(res2 && res2.responseJSON && res2.responseJSON.Employee && res2.responseJSON.Employee.user && res2.responseJSON.Employee.user.roles) {
         for(var i=0; i<res2.responseJSON.Employee.user.roles.length; i++) {
@@ -124,7 +135,7 @@ class AgreementSearch extends React.Component {
           }
         }
       }
-    }
+    }*/
 
     this.setState({
       assetCategories,

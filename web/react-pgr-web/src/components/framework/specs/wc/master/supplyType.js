@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/supplytype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "SupplyTypes[0].code",
 		"objectName": "SupplyType",
 		"groups": [
 			{

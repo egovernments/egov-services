@@ -13,6 +13,7 @@ import org.egov.mr.model.MarriageDocumentType;
 import org.egov.mr.model.enums.ApplicationType;
 import org.egov.mr.model.enums.DocumentProof;
 import org.egov.mr.repository.MarriageDocumentTypeRepository;
+import org.egov.mr.repository.rowmapper.MarriageDocumentTypeRowMapper;
 import org.egov.mr.service.MarriageDocumentTypeService;
 import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
@@ -20,13 +21,17 @@ import org.egov.mr.web.contract.MarriageDocTypeResponse;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
 import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.ResponseInfo;
+import org.egov.mr.web.errorhandler.Error;
 import org.egov.mr.web.errorhandler.ErrorHandler;
+import org.egov.mr.web.errorhandler.ErrorResponse;
+import org.egov.mr.web.errorhandler.FieldError;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
+import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,6 +44,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ch.qos.logback.core.joran.conditional.ThenAction;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MarriageDocumentTypeController.class)
@@ -86,6 +93,8 @@ public class MarriageDocumentTypeControllerTest {
 		responseInfo.setStatus(HttpStatus.OK.toString());
 
 		marriageDocTypeResponse.setResponseInfo(responseInfo);
+		when(errorHandler.handleBindingErrorsForSearch(Matchers.any(RequestInfo.class), Matchers.any(), Matchers.any()))
+				.thenReturn(new ResponseEntity(marriageDocumentTypes, HttpStatus.OK));
 
 		when(marriageDocumentTypeService.createAsync(Matchers.any(MarriageDocTypeRequest.class)))
 				.thenReturn(new ResponseEntity(marriageDocTypeResponse, HttpStatus.OK));
@@ -140,6 +149,22 @@ public class MarriageDocumentTypeControllerTest {
 		}
 	}
 
+
+	/**
+	 * 
+	 * @UPDATE_Response
+	 */
+	private List<MarriageDocumentType> getMarriageDocumentTypesForUpdate() {
+		List<MarriageDocumentType> mdts = new ArrayList<>();
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("1")).name("ADDRESSPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REGISTRATION).isActive(true).isIndividual(true).isRequired(true)
+				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("2")).name("ADDRESSPROOF").tenantId("ap.kurnool")
+				.applicationType(ApplicationType.REISSUE).isActive(true).isIndividual(true).isRequired(true)
+				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+		return mdts;
+	}
+
 	/**
 	 * 
 	 * @SEARCH_Response
@@ -171,21 +196,6 @@ public class MarriageDocumentTypeControllerTest {
 	 * @CREATE_Response
 	 */
 	private List<MarriageDocumentType> getMarriageDocumentTypesForCreate() {
-		List<MarriageDocumentType> mdts = new ArrayList<>();
-		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("1")).name("ADDRESSPROOF").tenantId("ap.kurnool")
-				.applicationType(ApplicationType.REGISTRATION).isActive(true).isIndividual(true).isRequired(true)
-				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
-		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("2")).name("ADDRESSPROOF").tenantId("ap.kurnool")
-				.applicationType(ApplicationType.REISSUE).isActive(true).isIndividual(true).isRequired(true)
-				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
-		return mdts;
-	}
-
-	/**
-	 * 
-	 * @UPDATE_Response
-	 */
-	private List<MarriageDocumentType> getMarriageDocumentTypesForUpdate() {
 		List<MarriageDocumentType> mdts = new ArrayList<>();
 		mdts.add(MarriageDocumentType.builder().id(Long.valueOf("1")).name("ADDRESSPROOF").tenantId("ap.kurnool")
 				.applicationType(ApplicationType.REGISTRATION).isActive(true).isIndividual(true).isRequired(true)

@@ -17,7 +17,7 @@ var dat = {
 							"label": "wc.create.groups.fields.usageTypeName",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/propertytype-usagetype/_search?&active=true|$..usageType|$..usageType",
+							"url": "/pt-property/property/usages/_search?|$..name|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",

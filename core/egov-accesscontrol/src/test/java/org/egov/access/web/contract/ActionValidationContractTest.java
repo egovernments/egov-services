@@ -7,10 +7,10 @@ import static org.junit.Assert.assertEquals;
 
 public class ActionValidationContractTest {
 
-    @Test
-    public void testThatActionValidationContractContainsInfoAboutActionAllow() {
-        ActionValidationContract actionValidation = ActionValidationContract.builder().allowed("TRUE").build();
+	@Test
+	public void testThatActionValidationContractContainsInfoAboutActionAllow() {
+		ActionValidationContract actionValidation = ActionValidationContract.builder().allowed("TRUE").build();
 
-        assertEquals("TRUE", actionValidation.getAllowed());
-    }
+		assertEquals("TRUE", actionValidation.getAllowed());
+	}
 }

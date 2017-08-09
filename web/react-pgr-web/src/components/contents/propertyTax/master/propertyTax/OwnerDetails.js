@@ -96,7 +96,7 @@ constructor(props) {
 	this.state = {
 		gaurdianRelation: [{code:-1, name:'None'}, {code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
 		gender:[{code:-1, name:'None'},{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
-		ownerType:[{code:-1, name:'None'},{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}]
+		ownerType:[{code:-1, name:'None'},{code:'PRIVATE', name:'Private'}, {code:'PUBLIC', name:'Public'}, {code:'COMPANY', name:"Company"},{code:'ORGANIZATION', name:"Organization"}]
 	}
 }
 
@@ -142,7 +142,7 @@ constructor(props) {
     return (
       <Card className="uiCard">
         <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Owner Details</div>} style={styles.reducePadding} />
-        <CardText style={styles.reducePadding}>
+        <CardText >
        
               <Grid fluid>
                 <Row>
@@ -152,11 +152,11 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField
                             hintText="434345456545"
-                            floatingLabelText="Aadhaar No *"
+                            floatingLabelText="Aadhaar No "
                             errorText={fieldErrors.owner ? (fieldErrors.owner.aadhaarNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.aadhaarNumber}</span>: "") : ""}
                             value={ownerDetails.owner ? ownerDetails.owner.aadhaarNumber:""}
                             onChange={(e) => {
-								handleChangeOwner(e,"owner", "aadhaarNumber", true, /^\d{12}$/g);
+								handleChangeOwner(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
                                // handleChangeNextOne(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
                               }
                             }
@@ -244,6 +244,23 @@ constructor(props) {
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
                         </Col>
+						 <Col xs={12} md={3} sm={6}>
+                          <TextField  className="fullWidth"
+                            hintText="BTKPM5492G"
+                            floatingLabelText="Pan Number"
+                            errorText={fieldErrors.owner ? (fieldErrors.owner.pan? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.pan}</span>:""): ""}
+                            value={ownerDetails.owner ? ownerDetails.owner.pan:""}
+                            onChange={(e) => {
+                                handleChangeNextOne(e, "owner", "pan", false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/);
+                              }
+                            }
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                            underlineStyle={styles.underlineStyle}
+                            underlineFocusStyle={styles.underlineFocusStyle}
+                            maxLength={10}
+                            floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                          />
+                        </Col>
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
                             floatingLabelText="Guardian Relation *"
@@ -287,9 +304,9 @@ constructor(props) {
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
                         </Col>
-                        <Col xs={12} md={3} sm={6}>
+                        {false && <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
-                            floatingLabelText="Owner type"
+                            floatingLabelText="Owner type "
                             errorText={fieldErrors.owner ?(fieldErrors.owner.ownerType? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.ownerType}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.ownerType:""}
                             onChange={(event, index, value) => {
@@ -299,7 +316,7 @@ constructor(props) {
                                     value: value
                                   }
                                 };
-                                handleChangeNextOne(e, "owner" ,"ownerType", false, "");
+                                handleChangeOwner(e, "owner" ,"ownerType", false, "");
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -309,7 +326,7 @@ constructor(props) {
                             >
 							{renderOption(this.state.ownerType)}
                           </SelectField>
-                        </Col>
+                        </Col>}
 
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
@@ -354,7 +371,8 @@ constructor(props) {
                             />
                         </RadioButtonGroup>
                         </Col>
-                        <Col xs={12} md={3} sm={3} style={styles.textRight}>
+						<div className="clearfix"></div>
+                        <Col xs={12} md={3} sm={3} style={styles.textRight} className="pull-right">
                           <br/>
                           { (editIndex == -1 || editIndex == undefined ) &&
                             <RaisedButton type="button" label="Add" disabled={!isOwnerValid} primary={true} onClick={()=> {
@@ -372,6 +390,7 @@ constructor(props) {
                             }/>
                           }
                         </Col>
+						<div className="clearfix"></div>
                       </Row>
                       {ownerDetails.owners &&
                         <div>  <br/>

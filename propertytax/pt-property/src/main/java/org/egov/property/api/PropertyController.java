@@ -103,26 +103,6 @@ public class PropertyController {
 			@RequestParam(value = "demandTo", required = false) Integer demandTo,
 			@RequestParam(value = "propertyId", required = false) String propertyId,
 			@RequestParam(value = "applicationNo", required = false) String applicationNo) throws Exception {
-		if (pageSize == null)
-			pageSize = -1;
-
-		if (pageNumber == null)
-			pageNumber = -1;
-
-		if (revenueZone == null)
-			revenueZone = -1;
-
-		if (revenueWard == null)
-			revenueWard = -1;
-
-		if (locality == null)
-			locality = -1;
-
-		if (demandFrom == null)
-			demandFrom = -1;
-
-		if (demandTo == null)
-			demandTo = -1;
 
 		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNumber, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,

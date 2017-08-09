@@ -43,7 +43,7 @@ public class ActionServiceTest {
 
 	@Mock
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Mock
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplat;
 
@@ -105,6 +105,26 @@ public class ActionServiceTest {
 	}
 
 	@Test
+	public void testCheckActionNameExit() {
+
+		when(actionRepository.checkActionNameExit("test")).thenReturn(false);
+
+		Boolean exist = actionService.checkActionNameExit("test");
+
+		assertThat(exist == false);
+	}
+
+	@Test
+	public void testCheckCombinationOfUrlAndqueryparamsExist() {
+
+		when(actionRepository.checkCombinationOfUrlAndqueryparamsExist("/test", "tenant")).thenReturn(false);
+
+		Boolean exist = actionService.checkCombinationOfUrlAndqueryparamsExist("/test", "tenant");
+
+		assertThat(exist == false);
+	}
+
+	@Test
 	public void testShouldUpdateActions() {
 
 		ActionRequest actionRequest = new ActionRequest();
@@ -139,10 +159,9 @@ public class ActionServiceTest {
 
 	private List<Action> getActionList() {
 
-
 		List<Action> actionList = new ArrayList<Action>();
 
-	    Action action1 = new Action();
+		Action action1 = new Action();
 
 		action1.setId(268l);
 

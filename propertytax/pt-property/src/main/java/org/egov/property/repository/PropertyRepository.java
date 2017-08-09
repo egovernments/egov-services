@@ -32,6 +32,7 @@ import org.egov.models.Unit;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
 import org.egov.models.VacantLandDetail;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.model.PropertyLocationRowMapper;
 import org.egov.property.repository.builder.AddressBuilder;
 import org.egov.property.repository.builder.BoundaryBuilder;
@@ -53,7 +54,6 @@ import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -85,7 +85,7 @@ public class PropertyRepository {
 	JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	private static final Logger logger = LoggerFactory.getLogger(PropertyRepository.class);
 
@@ -541,9 +541,9 @@ public class PropertyRepository {
 		List<User> users = new ArrayList<>();
 		owners.forEach(owner -> {
 			StringBuffer userSearchUrl = new StringBuffer();
-			userSearchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-			userSearchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-			userSearchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
+			userSearchUrl.append(propertiesManager.getUserHostname());
+			userSearchUrl.append(propertiesManager.getUserBasepath());
+			userSearchUrl.append(propertiesManager.getUserSearchpath());
 			Map<String, Object> userSearchRequestInfo = new HashMap<>();
 			List<Long> userIds = new ArrayList<Long>();
 			userIds.add(owner.getOwner());
@@ -1221,7 +1221,8 @@ public class PropertyRepository {
 		Object[] addressArgs = { address.getTenantId(), address.getLatitude(), address.getLongitude(),
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(), address.getAuditDetails().getCreatedBy(),
-				address.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, property.getId(), address.getId() };
+				address.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, property.getId(),
+				address.getId() };
 
 		jdbcTemplate.update(AddressBuilder.INSERT_ADDRESSHISTORY_QUERY, addressArgs);
 

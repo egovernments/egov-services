@@ -46,7 +46,7 @@ import org.egov.models.Unit;
 import org.egov.models.User;
 import org.egov.models.VacantLandDetail;
 import org.egov.models.WorkFlowDetails;
-import org.egov.property.consumer.Producer;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
 import org.egov.property.exception.PropertyTaxPendingException;
@@ -58,10 +58,10 @@ import org.egov.property.repository.PropertyRepository;
 import org.egov.property.repository.WorkFlowRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.egov.property.utility.UpicNoGeneration;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -81,10 +81,10 @@ public class PropertyServiceImpl implements PropertyService {
 	PropertyValidator propertyValidator;
 
 	@Autowired
-	Producer producer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
@@ -116,14 +116,14 @@ public class PropertyServiceImpl implements PropertyService {
 			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
-		
+
 			PropertyRequest updatedPropertyRequest = new PropertyRequest();
 			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
 			List<Property> updatedPropertyList = new ArrayList<Property>();
 			updatedPropertyList.add(property);
 			updatedPropertyRequest.setProperties(updatedPropertyList);
-			
-			producer.send(environment.getProperty("egov.propertytax.property.create.validate.user"), updatedPropertyRequest);
+
+			kafkaTemplate.send(propertiesManager.getCreateValidatedProperty(), updatedPropertyRequest);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
@@ -143,7 +143,7 @@ public class PropertyServiceImpl implements PropertyService {
 			List<Property> updatedPropertyList = new ArrayList<Property>();
 			updatedPropertyList.add(property);
 			updatedPropertyRequest.setProperties(updatedPropertyList);
-			producer.send(environment.getProperty("egov.propertytax.property.update.validate.user"), updatedPropertyRequest);
+			kafkaTemplate.send(propertiesManager.getUpdateValidatedProperty(), updatedPropertyRequest);
 		}
 
 		ResponseInfo responseInfo = responseInfoFactory
@@ -164,15 +164,15 @@ public class PropertyServiceImpl implements PropertyService {
 	public String generateAcknowledegeMentNumber(String tenantId, RequestInfo requestInfo) {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.hostname"));
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.createpath"));
+		idGenerationUrl.append(propertiesManager.getIdHostName());
+		idGenerationUrl.append(propertiesManager.getIdCreatepath());
 
 		// generating acknowledgement number for all properties
 		String acknowledegeMentNumber = null;
 		List<IdRequest> idRequests = new ArrayList<>();
 		IdRequest idrequest = new IdRequest();
-		idrequest.setFormat(environment.getProperty("id.format"));
-		idrequest.setIdName(environment.getProperty("id.idName"));
+		idrequest.setFormat(propertiesManager.getIdFormat());
+		idrequest.setIdName(propertiesManager.getIdName());
 		idrequest.setTenantId(tenantId);
 		IdGenerationRequest idGeneration = new IdGenerationRequest();
 		idRequests.add(idrequest);
@@ -183,11 +183,11 @@ public class PropertyServiceImpl implements PropertyService {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
 			logger.info("PropertyServiceImpl idGenerationUrl : " + idGenerationUrl.toString()
-			+ " \n IdGenerationRequest  : " + idGeneration);
+					+ " \n IdGenerationRequest  : " + idGeneration);
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 			logger.info("PropertyServiceImpl IdGenerationResponse : " + response);
 		} catch (Exception ex) {
-			throw new ValidationUrlNotFoundException(environment.getProperty("invalid.id.service.url"),
+			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidIdServiceUrl(),
 					idGenerationUrl.toString(), requestInfo);
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
@@ -198,8 +198,7 @@ public class PropertyServiceImpl implements PropertyService {
 			Error error = errorResponse.getErrors().get(0);
 			throw new IdGenerationException(error.getMessage(), error.getDescription(), requestInfo);
 		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString()
-					.equalsIgnoreCase(environment.getProperty("success"))) {
+			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase(propertiesManager.getSuccess())) {
 				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
 					acknowledegeMentNumber = idResponse.getIdResponses().get(0).getId();
 			}
@@ -245,7 +244,7 @@ public class PropertyServiceImpl implements PropertyService {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo)
-					throws Exception {
+			throws Exception {
 
 		List<Property> updatedPropety = null;
 
@@ -419,32 +418,31 @@ public class PropertyServiceImpl implements PropertyService {
 		TitleTransferResponse titleTransferResponse = null;
 
 		if (isPropertyUnderWorkflow) {
-			throw new PropertyUnderWorkflowException(environment.getProperty("invalid.property.status"),
+			throw new PropertyUnderWorkflowException(propertiesManager.getInvalidPropertyStatus(),
 					titleTransferRequest.getRequestInfo());
 
 		} else {
 			Boolean isValidated = validateTitleTransfer(titleTransferRequest);
 
 			if (!isValidated) {
-				throw new PropertyUnderWorkflowException(environment.getProperty("invalid.title.transfer"),
-						titleTransferRequest.getRequestInfo());
+				throw new PropertyUnderWorkflowException(propertiesManager.getInvalidTitleTransfer(),
+					titleTransferRequest.getRequestInfo());
 
-			} else {
+		} else {
 
 				String acknowldgeMentNumber = generateAcknowledegeMentNumber(
 						titleTransferRequest.getTitleTransfer().getTenantId(), titleTransferRequest.getRequestInfo());
 
 				titleTransferRequest.getTitleTransfer().setApplicationNo(acknowldgeMentNumber);
 
-				producer.send(environment.getProperty("egov.propertytax.property.titletransfer.create"),
-						titleTransferRequest);
+				kafkaTemplate.send(propertiesManager.getCreateTitleTransferUserValidator(), titleTransferRequest);
 				propertyRepository.updateIsPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
 
 				titleTransferResponse = new TitleTransferResponse();
 				titleTransferResponse.setResponseInfo(responseInfoFactory
 						.createResponseInfoFromRequestInfo(titleTransferRequest.getRequestInfo(), true));
 				titleTransferResponse.setTitleTransfer(titleTransferRequest.getTitleTransfer());
-			}
+	//		}
 		}
 		return titleTransferResponse;
 	}
@@ -453,7 +451,7 @@ public class PropertyServiceImpl implements PropertyService {
 	public TitleTransferResponse updateTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception {
 
 		validateTitleTransferWorkflowDeatails(titleTransferRequest, titleTransferRequest.getRequestInfo());
-		producer.send(environment.getProperty("egov.propertytax.property.titletransfer.update"), titleTransferRequest);
+		kafkaTemplate.send(propertiesManager.getUpdateTitleTransferUserValidator(), titleTransferRequest);
 		TitleTransferResponse titleTransferResponse = null;
 		titleTransferResponse = new TitleTransferResponse();
 		titleTransferResponse.setResponseInfo(
@@ -475,21 +473,19 @@ public class PropertyServiceImpl implements PropertyService {
 
 		WorkFlowDetails workflowDetails = titleTransferRequest.getTitleTransfer().getWorkFlowDetails();
 		if (workflowDetails.getAction() == null) {
-			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.action.message"), requestInfo);
+			throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowActionNotfound(), requestInfo);
 
 		} else if (workflowDetails.getAssignee() == null) {
-			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.assignee.message"), requestInfo);
+			throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowAssigneeNotfound(), requestInfo);
 
 		} else if (workflowDetails.getDepartment() == null) {
-			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.department.message"),
-					requestInfo);
+			throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowDepartmentNotfound(), requestInfo);
 
 		} else if (workflowDetails.getDesignation() == null) {
-			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.designation.message"),
-					requestInfo);
+			throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowDesignationNotfound(), requestInfo);
 
 		} else if (workflowDetails.getStatus() == null) {
-			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.status.message"), requestInfo);
+			throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowStatusNotfound(), requestInfo);
 
 		}
 	}
@@ -518,7 +514,7 @@ public class PropertyServiceImpl implements PropertyService {
 					collectedAmount += demandDetail.getCollectionAmount().doubleValue();
 				}
 				if (totalTax != collectedAmount) {
-					throw new PropertyTaxPendingException(environment.getProperty("invalid.titletransfer.tax.message"),
+					throw new PropertyTaxPendingException(propertiesManager.getInvalidTaxMessage(),
 							titleTransferRequest.getRequestInfo());
 				}
 			}
@@ -579,12 +575,11 @@ public class PropertyServiceImpl implements PropertyService {
 		notice.setApplicationNo(property.getPropertyDetail().getApplicationNo());
 		notice.setApplicationDate(property.getAssessmentDate());
 		notice.setNoticeNumber(noticeNumber);
-		notice.setNoticeDate(
-				new SimpleDateFormat(environment.getProperty("egov.property.simple.dateformat")).format(new Date()));
+		notice.setNoticeDate(new SimpleDateFormat(propertiesManager.getSimpleDateFormat()).format(new Date()));
 
 		StringBuffer taxPeriodSearchUrl = new StringBuffer();
-		taxPeriodSearchUrl.append(environment.getProperty("egov.services.pt_calculator.hostname"));
-		taxPeriodSearchUrl.append(environment.getProperty("egov.services.pt_calculator.taxperiods.search"));
+		taxPeriodSearchUrl.append(propertiesManager.getCalculatorHostName());
+		taxPeriodSearchUrl.append(propertiesManager.getCalculatorTaxperiodsSearch());
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(taxPeriodSearchUrl.toString())
 				.queryParam("tenantId", tenantId).queryParam("validDate", notice.getNoticeDate());
 
@@ -606,9 +601,9 @@ public class PropertyServiceImpl implements PropertyService {
 		calculationList = mapper.readValue(
 				propertyRespone.getProperties().get(0).getPropertyDetail().getTaxCalculations(), typeReference);
 
-		SimpleDateFormat sdf = new SimpleDateFormat(environment.getProperty("egov.property.simple.dateformat"));
+		SimpleDateFormat sdf = new SimpleDateFormat(propertiesManager.getSimpleDateFormat());
 
-		SimpleDateFormat sdff = new SimpleDateFormat(environment.getProperty("egov.property.date.and.timeformat"));
+		SimpleDateFormat sdff = new SimpleDateFormat(propertiesManager.getDateAndTimeFormat());
 		List<TaxCalculation> currentYearTax = new ArrayList<>();
 		Double totalTax = 0.0d;
 
@@ -731,9 +726,9 @@ public class PropertyServiceImpl implements PropertyService {
 		String ulbCode = "";
 
 		StringBuilder tenantCodeUrl = new StringBuilder();
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.hostname"));
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.basepath"));
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.searchpath"));
+		tenantCodeUrl.append(propertiesManager.getTenantHostName());
+		tenantCodeUrl.append(propertiesManager.getTenantBasepath());
+		tenantCodeUrl.append(propertiesManager.getTenantSearchpath());
 
 		String url = tenantCodeUrl.toString();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("code", tenantId);
@@ -768,13 +763,13 @@ public class PropertyServiceImpl implements PropertyService {
 
 		String noticeNumber = "";
 		StringBuffer idGenerationUrl = new StringBuffer();
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.hostname"));
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.createpath"));
+		idGenerationUrl.append(propertiesManager.getIdHostName());
+		idGenerationUrl.append(propertiesManager.getIdCreatepath());
 
 		List<IdRequest> idRequests = new ArrayList<>();
 		IdRequest idrequest = new IdRequest();
-		idrequest.setFormat(environment.getProperty("ulb.format"));
-		idrequest.setIdName(environment.getProperty("ulb.name"));
+		idrequest.setFormat(propertiesManager.getUlbFormat());
+		idrequest.setIdName(propertiesManager.getUlbName());
 		idrequest.setTenantId(tenantId);
 		IdGenerationRequest idGeneration = new IdGenerationRequest();
 		idRequests.add(idrequest);
@@ -782,7 +777,7 @@ public class PropertyServiceImpl implements PropertyService {
 		idGeneration.setRequestInfo(requestInfo);
 		RestTemplate restTemplate = new RestTemplate();
 		logger.info("PropertyServiceImpl calling the idgenearion service url = " + idGenerationUrl.toString()
-		+ " Request = " + idGeneration.toString());
+				+ " Request = " + idGeneration.toString());
 		String response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 
 		logger.info("PropertyServiceImpl After the calling  idgenearion  response = " + response);
@@ -839,7 +834,7 @@ public class PropertyServiceImpl implements PropertyService {
 	public PropertyRequest savePropertyHistoryandUpdateProperty(TitleTransferRequest titleTransferRequest)
 			throws Exception {
 		Property property = persisterService.getPropertyUsingUpicNo(titleTransferRequest);
-		persisterService.addPropertyHistory(titleTransferRequest,property);
+		persisterService.addPropertyHistory(titleTransferRequest, property);
 		Property updatedProperty = persisterService.updateTitleTransferProperty(titleTransferRequest, property);
 		PropertyRequest propertyRequest = new PropertyRequest();
 		propertyRequest.setRequestInfo(titleTransferRequest.getRequestInfo());

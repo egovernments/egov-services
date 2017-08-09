@@ -16,6 +16,7 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.Unit;
 import org.egov.models.WorkFlowDetails;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.InvalidCodeException;
 import org.egov.property.exception.InvalidFloorException;
 import org.egov.property.exception.InvalidPropertyBoundaryException;
@@ -25,7 +26,6 @@ import org.egov.property.repository.BoundaryRepository;
 import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 public class PropertyValidator {
 
 	@Autowired
-	private Environment env;
+	private PropertiesManager propertiesManager;
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
@@ -83,9 +83,9 @@ public class PropertyValidator {
 
 		PropertyLocation propertyLocation = property.getBoundary();
 		Long id;
-		if (field.equalsIgnoreCase(env.getProperty("revenue.boundary"))) {
+		if (field.equalsIgnoreCase(propertiesManager.getRevenueBoundary())) {
 			id = propertyLocation.getRevenueBoundary().getId();
-		} else if (field.equalsIgnoreCase(env.getProperty("location.boundary"))) {
+		} else if (field.equalsIgnoreCase(propertiesManager.getLocationBoundary())) {
 			id = propertyLocation.getLocationBoundary().getId();
 		} else {
 			id = propertyLocation.getAdminBoundary().getId();
@@ -107,25 +107,25 @@ public class PropertyValidator {
 		String acknowledgementNo = property.getPropertyDetail().getApplicationNo();
 
 		if (acknowledgementNo == null) {
-			throw new AttributeNotFoundException(env.getProperty("acknowledgement.message"), requestInfo);
+			throw new AttributeNotFoundException(propertiesManager.getAcknowledgementNotfound(), requestInfo);
 
 		} else {
 			WorkFlowDetails workflowDetails = property.getPropertyDetail().getWorkFlowDetails();
 
 			if (workflowDetails.getAction() == null) {
-				throw new InvalidUpdatePropertyException(env.getProperty("workflow.action.message"), requestInfo);
+				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowActionNotfound(), requestInfo);
 
 			} else if (workflowDetails.getAssignee() == null) {
-				throw new InvalidUpdatePropertyException(env.getProperty("workflow.assignee.message"), requestInfo);
+				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowAssigneeNotfound(), requestInfo);
 
 			} else if (workflowDetails.getDepartment() == null) {
-				throw new InvalidUpdatePropertyException(env.getProperty("workflow.department.message"), requestInfo);
+				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowDepartmentNotfound(), requestInfo);
 
 			} else if (workflowDetails.getDesignation() == null) {
-				throw new InvalidUpdatePropertyException(env.getProperty("workflow.designation.message"), requestInfo);
+				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowDesignationNotfound(), requestInfo);
 
 			} else if (workflowDetails.getStatus() == null) {
-				throw new InvalidUpdatePropertyException(env.getProperty("workflow.status.message"), requestInfo);
+				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowStatusNotfound(), requestInfo);
 
 			}
 		}
@@ -175,7 +175,7 @@ public class PropertyValidator {
 					property.getPropertyDetail().getPropertyType(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
 
 			if (!isExists) {
-				throw new InvalidCodeException(env.getProperty("invalid.input.propertytype"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyTypeCode(), requestInfo);
 			}
 		}
 
@@ -187,7 +187,7 @@ public class PropertyValidator {
 				if (property.getBoundary() != null && property.getBoundary().getRevenueBoundary() != null) {
 					boundary = property.getBoundary().getRevenueBoundary().getId().toString().trim();
 				} else {
-					throw new InvalidCodeException(env.getProperty("invalid.input.boundary"), requestInfo);
+					throw new InvalidCodeException(propertiesManager.getInvalidInputBoundary(), requestInfo);
 				}
 
 				String propertyType = null;
@@ -195,7 +195,7 @@ public class PropertyValidator {
 				if (property.getPropertyDetail() != null) {
 					propertyType = property.getPropertyDetail().getPropertyType();
 				} else {
-					throw new InvalidCodeException(env.getProperty("invalid.input.propertytype"), requestInfo);
+					throw new InvalidCodeException(propertiesManager.getInvalidPropertyTypeCode(), requestInfo);
 				}
 				String validOccupancyDate = null;
 				for (Unit unit : floor.getUnits()) {
@@ -225,7 +225,7 @@ public class PropertyValidator {
 							ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, null);
 
 					if (!isDocumentTypeRecordExists) {
-						throw new InvalidCodeException(env.getProperty("invalid.input.documenttype"), requestInfo);
+						throw new InvalidCodeException(propertiesManager.getInvalidDocumentTypeCode(), requestInfo);
 					}
 				}
 			}
@@ -236,7 +236,7 @@ public class PropertyValidator {
 					property.getPropertyDetail().getDepartment(), ConstantUtility.DEPARTMENT_TABLE_NAME, null);
 
 			if (!isDepartmentRecordExists)
-				throw new InvalidCodeException(env.getProperty("invalid.input.department"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidDepartmentCode(), requestInfo);
 		}
 
 		if (property.getPropertyDetail().getFloorType() != null) {
@@ -244,7 +244,7 @@ public class PropertyValidator {
 					property.getPropertyDetail().getFloorType(), ConstantUtility.FLOOR_TYPE_TABLE_NAME, null);
 
 			if (!isFloorTypeExists)
-				throw new InvalidCodeException(env.getProperty("invalid.input.floortype"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidFloorTypeCode(), requestInfo);
 		}
 
 		if (property.getPropertyDetail().getRoofType() != null) {
@@ -252,7 +252,7 @@ public class PropertyValidator {
 					property.getPropertyDetail().getRoofType(), ConstantUtility.ROOF_TYPE_TABLE_NAME, null);
 
 			if (!isRoofTypeExists)
-				throw new InvalidCodeException(env.getProperty("invalid.input.rooftype"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidRoofTypeCode(), requestInfo);
 		}
 
 		if (property.getPropertyDetail().getWoodType() != null) {
@@ -260,7 +260,7 @@ public class PropertyValidator {
 					property.getPropertyDetail().getWoodType(), ConstantUtility.WOOD_TYPE_TABLE_NAME, null);
 
 			if (!isWoodTypeExists)
-				throw new InvalidCodeException(env.getProperty("invalid.input.woodtype"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidRoofTypeCode(), requestInfo);
 		}
 
 		if (property.getPropertyDetail().getWallType() != null) {
@@ -268,18 +268,18 @@ public class PropertyValidator {
 					property.getPropertyDetail().getWallType(), ConstantUtility.WALL_TYPE_TABLE_NAME, null);
 
 			if (!isWallTypeExists)
-				throw new InvalidCodeException(env.getProperty("invalid.input.walltype"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidWallTypeCode(), requestInfo);
 		}
 
 		if (property.getPropertyDetail().getPropertyType()
-				.equalsIgnoreCase(env.getProperty("egov.property.type.vacantLand"))) {
+				.equalsIgnoreCase(propertiesManager.getVacantLand())) {
 			if (property.getVacantLand() == null)
-				throw new InvalidVacantLandException(env.getProperty("invalid.property.vacantland"), requestInfo);
+				throw new InvalidVacantLandException(propertiesManager.getInvalidPropertyVacantland(), requestInfo);
 
 		} else if (property.getPropertyDetail().getFloors() == null
 				|| property.getPropertyDetail().getFloors().size() <= 0) {
 
-			throw new InvalidFloorException(env.getProperty("invalid.property.floor"), requestInfo);
+			throw new InvalidFloorException(propertiesManager.getInvalidPropertyFloor(), requestInfo);
 		}
 	}
 
@@ -297,7 +297,7 @@ public class PropertyValidator {
 			Boolean usageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getUsage(),
 					ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
 			if (!usageExists) {
-				throw new InvalidCodeException(env.getProperty("invalid.input.usage"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
 			}
 		}
 
@@ -306,7 +306,7 @@ public class PropertyValidator {
 					unit.getOccupancyType(), ConstantUtility.OCCUPANCY_TABLE_NAME, null);
 
 			if (!occupancyTypeExists) {
-				throw new InvalidCodeException(env.getProperty("invalid.input.occupancy"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyOccupancyCode(), requestInfo);
 			}
 		}
 
@@ -315,7 +315,7 @@ public class PropertyValidator {
 					ConstantUtility.DEPRECIATION_TABLE_NAME, null);
 
 			if (!ageExists) {
-				throw new InvalidCodeException(env.getProperty("invalid.input.age"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
 			}
 		}
 
@@ -324,7 +324,7 @@ public class PropertyValidator {
 					ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, null);
 
 			if (!structureExists) {
-				throw new InvalidCodeException(env.getProperty("invalid.input.structure"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyStructureCode(), requestInfo);
 			}
 		}
 
@@ -334,45 +334,45 @@ public class PropertyValidator {
 		if (unit.getUsage() != null) {
 			calculatorRepository.isGuidanceExists(tenantId, unit, requestInfoWrapper, boundary);
 		} else {
-			throw new InvalidCodeException(env.getProperty("invalid.input.usage"), requestInfo);
+			throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
 		}
 		if (validOccupancyDate != null)
 
 		{
 			if (unit.getOccupancyType() != null) {
 				calculatorRepository.isFactorExists(tenantId, unit.getOccupancyType(), requestInfoWrapper,
-						validOccupancyDate, env.getProperty("egov.property.factor.occupancy"));
+						validOccupancyDate, propertiesManager.getPropertyFactorOccupancy());
 			} else {
-				throw new InvalidCodeException(env.getProperty("invalid.input.occupancy"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyOccupancyCode(), requestInfo);
 			}
 
 			if (unit.getUsage() != null) {
 				calculatorRepository.isFactorExists(tenantId, unit.getUsage(), requestInfoWrapper, validOccupancyDate,
-						env.getProperty("egov.property.factor.usage"));
+						propertiesManager.getPropertyFactorUsage());
 			} else {
-				throw new InvalidCodeException(env.getProperty("invalid.input.usage"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
 			}
 
 			if (unit.getStructure() != null) {
 				calculatorRepository.isFactorExists(tenantId, unit.getStructure(), requestInfoWrapper,
-						validOccupancyDate, env.getProperty("egov.property.factor.structure"));
+						validOccupancyDate, propertiesManager.getPropertyFactorStructure());
 			} else {
-				throw new InvalidCodeException(env.getProperty("invalid.input.structure"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyStructureCode(), requestInfo);
 			}
 			if (unit.getAge() != null) {
 				calculatorRepository.isFactorExists(tenantId, unit.getAge(), requestInfoWrapper, validOccupancyDate,
-						env.getProperty("egov.property.factor.age"));
+						propertiesManager.getPropertyFactorAge());
 			} else {
-				throw new InvalidCodeException(env.getProperty("invalid.input.age"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
 			}
 			if (propertyType != null) {
 				calculatorRepository.isFactorExists(tenantId, propertyType, requestInfoWrapper, validOccupancyDate,
-						env.getProperty("egov.property.factor.propertytype"));
+						propertiesManager.getPropertyFactorPropertytype());
 			} else {
-				throw new InvalidCodeException(env.getProperty("invalid.input.propertytype"), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyTypeCode(), requestInfo);
 			}
 		} else {
-			throw new InvalidCodeException(env.getProperty("invalid.input.occupancydate"), requestInfo);
+			throw new InvalidCodeException(propertiesManager.getInvalidInputOccupancydate(), requestInfo);
 		}
 
 	}

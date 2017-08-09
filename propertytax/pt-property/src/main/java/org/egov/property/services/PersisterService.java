@@ -17,11 +17,10 @@ import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.Unit;
 import org.egov.models.User;
-import org.egov.property.consumer.Producer;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -36,7 +35,7 @@ import org.springframework.web.client.RestTemplate;
 public class PersisterService {
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
@@ -46,9 +45,6 @@ public class PersisterService {
 
 	@Autowired
 	RestTemplate restTemplate;
-
-	@Autowired
-	Producer producer;
 
 	@Autowired
 	PropertyServiceImpl propertyServiceImpl;
@@ -101,8 +97,7 @@ public class PersisterService {
 			propertyRepository.saveAddress(property, propertyId);
 			propertyDetail.setAuditDetails(auditDetails);
 			Long propertyDetailsId = propertyRepository.savePropertyDetails(property, propertyId);
-			if (!property.getPropertyDetail().getPropertyType()
-					.equalsIgnoreCase(environment.getProperty("vacantLand"))) {
+			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
 				for (Floor floor : property.getPropertyDetail().getFloors()) {
 					floor.setAuditDetails(auditDetails);
 					Long floorId = propertyRepository.saveFloor(floor, propertyDetailsId);
@@ -115,7 +110,7 @@ public class PersisterService {
 						}
 						unit.setAuditDetails(auditDetails);
 						Long unitId = propertyRepository.saveUnit(unit, floorId);
-						if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+						if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
 								&& unit.getUnits() != null) {
 
 							for (Unit room : unit.getUnits()) {
@@ -203,8 +198,7 @@ public class PersisterService {
 				propertyRepository.updateVacantLandDetail(property.getVacantLand(), property.getVacantLand().getId(),
 						property.getId());
 			}
-			if (!property.getPropertyDetail().getPropertyType()
-					.equalsIgnoreCase(environment.getProperty("vacantLand"))) {
+			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
 				for (Floor floor : property.getPropertyDetail().getFloors()) {
 					floor.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
 					floor.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
@@ -219,7 +213,7 @@ public class PersisterService {
 							unit.setIsStructured(true);
 						}
 						propertyRepository.updateUnit(unit);
-						if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+						if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
 								&& unit.getUnits() != null) {
 							for (Unit room : unit.getUnits()) {
 								propertyRepository.updateRoom(room);
@@ -282,13 +276,13 @@ public class PersisterService {
 			owner.setAuditDetails(auditDetails);
 			propertyRepository.saveTitleTransferUser(owner, titleTransferId);
 		}
-		if(titleTransferRequest.getTitleTransfer().getDocuments() != null) {
+		if (titleTransferRequest.getTitleTransfer().getDocuments() != null) {
 			for (Document document : titleTransferRequest.getTitleTransfer().getDocuments()) {
 				document.setAuditDetails(auditDetails);
 				propertyRepository.saveTitleTransferDocument(document, titleTransferId);
 			}
 		}
-		if(titleTransferRequest.getTitleTransfer().getCorrespondenceAddress() !=null) {
+		if (titleTransferRequest.getTitleTransfer().getCorrespondenceAddress() != null) {
 			titleTransferRequest.getTitleTransfer().getCorrespondenceAddress().setAuditDetails(auditDetails);
 			propertyRepository.saveTitleTransferAddress(titleTransferRequest.getTitleTransfer(), titleTransferId);
 		}
@@ -314,7 +308,7 @@ public class PersisterService {
 				property = propertyResponse.getProperties().get(0);
 			}
 		} catch (Exception e) {
-			throw new PropertySearchException(environment.getProperty("invalid.input"), requestInfo);
+			throw new PropertySearchException(propertiesManager.getInvalidInput(), requestInfo);
 		}
 		return property;
 	}
@@ -330,7 +324,8 @@ public class PersisterService {
 
 		AuditDetails auditDetails = getAuditDetail(titleTransferRequest.getRequestInfo());
 		titleTransferRequest.getTitleTransfer().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-		titleTransferRequest.getTitleTransfer().getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+		titleTransferRequest.getTitleTransfer().getAuditDetails()
+				.setLastModifiedTime(auditDetails.getLastModifiedTime());
 		propertyRepository.updateTitleTransfer(titleTransferRequest.getTitleTransfer());
 	}
 
@@ -352,15 +347,16 @@ public class PersisterService {
 		updateTitleTransfer(titleTransferRequest);
 		property.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
 		property.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-		propertyRepository.updateTitleTransferProperty(property);		
-		if(titleTransfer.getCorrespondenceAddress() != null) {
-			titleTransfer.getCorrespondenceAddress().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
+		propertyRepository.updateTitleTransferProperty(property);
+		if (titleTransfer.getCorrespondenceAddress() != null) {
 			titleTransfer.getCorrespondenceAddress().getAuditDetails()
-			.setLastModifiedTime(auditDetails.getLastModifiedTime());
+					.setLastModifiedBy(auditDetails.getLastModifiedBy());
+			titleTransfer.getCorrespondenceAddress().getAuditDetails()
+					.setLastModifiedTime(auditDetails.getLastModifiedTime());
 			propertyRepository.updateAddress(titleTransfer.getCorrespondenceAddress(), property.getAddress().getId(),
 					propertyId);
 		}
-		
+
 		property.getPropertyDetail().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
 		property.getPropertyDetail().getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
 		propertyRepository.updateTitleTransferPropertyDetail(property.getPropertyDetail());
@@ -375,7 +371,7 @@ public class PersisterService {
 
 		}
 
-		//property.setAuditDetails(auditDetails);
+		// property.setAuditDetails(auditDetails);
 
 		return property;
 	}
@@ -387,7 +383,7 @@ public class PersisterService {
 	 * @throws SQLException
 	 */
 
-	public void addPropertyHistory(TitleTransferRequest titleTransferRequest,Property property) throws Exception {
+	public void addPropertyHistory(TitleTransferRequest titleTransferRequest, Property property) throws Exception {
 		savePropertyHistory(property);
 	}
 
@@ -400,22 +396,22 @@ public class PersisterService {
 	private Property savePropertyHistory(Property property) throws Exception {
 		Long propertyId = property.getId();
 		propertyRepository.savePropertyHistory(property);
-		if(property.getAddress() !=null){
-			propertyRepository.saveAddressHistory(property);	
+		if (property.getAddress() != null) {
+			propertyRepository.saveAddressHistory(property);
 		}
-		if(property.getPropertyDetail()!=null){
+		if (property.getPropertyDetail() != null) {
 			propertyRepository.savePropertyDetailsHistory(property);
 		}
 		Long propertyDetailsId = property.getPropertyDetail().getId();
 
-		if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(environment.getProperty("vacantLand"))) {
+		if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
 			for (Floor floor : property.getPropertyDetail().getFloors()) {
 				propertyRepository.saveFloorHistory(floor, propertyDetailsId);
 				Long floorId = floor.getId();
 				for (Unit unit : floor.getUnits()) {
 					propertyRepository.saveUnitHistory(unit, floorId);
 					Long unitId = unit.getId();
-					if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+					if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
 							&& unit.getUnits() != null) {
 						for (Unit room : unit.getUnits()) {
 							propertyRepository.saveRoomHistory(room, floorId, unitId);
@@ -434,9 +430,9 @@ public class PersisterService {
 			propertyRepository.saveVacantLandDetailHistory(property, propertyId);
 		}
 
-		if(property.getBoundary() !=null){
+		if (property.getBoundary() != null) {
 			propertyRepository.saveBoundaryHistory(property, propertyId);
-		}		
+		}
 		for (User owner : property.getOwners()) {
 			propertyRepository.saveUserHistory(owner, propertyId);
 		}

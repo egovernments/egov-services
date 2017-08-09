@@ -1,6 +1,6 @@
 package org.egov.tradelicense.domain.service;
 
-import org.egov.tradelicense.web.requests.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tradelicense.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.web.requests.TradeLicenseResponse;
 

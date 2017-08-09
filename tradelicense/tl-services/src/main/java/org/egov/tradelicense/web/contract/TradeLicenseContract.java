@@ -1,4 +1,4 @@
-package org.egov.tradelicense.domain.model;
+package org.egov.tradelicense.web.contract;
 
 import java.util.List;
 
@@ -9,6 +9,9 @@ import javax.validation.constraints.Size;
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
+import org.egov.tradelicense.domain.model.AuditDetails;
+import org.egov.tradelicense.domain.model.LicenseFeeDetail;
+import org.egov.tradelicense.domain.model.SupportDocument;
 import org.hibernate.validator.constraints.Email;
 import org.joda.time.LocalDate;
 
@@ -21,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TradeLicense {
+public class TradeLicenseContract {
 
 	private Long id;
 

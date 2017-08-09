@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.egov.pgr.domain.model.ServiceTypeConfiguration;
 import org.egov.pgr.domain.model.ServiceTypeConfigurationSearchCriteria;
 import org.egov.pgr.domain.service.ServiceTypeConfigurationService;
+import org.egov.pgr.web.contract.RequestInfoBody;
 import org.egov.pgr.web.contract.ServiceTypeConfigurationRequest;
 import org.egov.pgr.web.contract.ServiceTypeConfigurationResponse;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ public class ServiceTypeConfigurationController {
     }
     
     @PostMapping("/v1/_search")
-    public List<org.egov.pgr.web.contract.ServiceTypeConfiguration> search(@RequestBody ServiceTypeConfigurationSearchCriteria serviceTypeSearchCriteria){
+    public List<org.egov.pgr.web.contract.ServiceTypeConfiguration> search(@RequestBody RequestInfoBody requestInfoBody, ServiceTypeConfigurationSearchCriteria serviceTypeSearchCriteria){
         List<ServiceTypeConfiguration> serviceTypeConfigurations = serviceTypeConfigurationService.search(serviceTypeSearchCriteria);
 
         return serviceTypeConfigurations.stream()

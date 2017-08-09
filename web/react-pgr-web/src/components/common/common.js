@@ -307,6 +307,15 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.landCost": "Land Cost",
   "pt.create.groups.propertyAddress.fields.assessableArea": "Assessable Area",
   
+  //Add Demand
+  "pt.create.groups.addDemand.fields.installment": "Installment",
+  "pt.create.groups.addDemand.fields.propertytax": "Property tax",
+  "pt.create.groups.addDemand.fields.educationCess": "Education Cess",
+  "pt.create.groups.addDemand.fields.employmentGuaranteeCess": "Employment Guarantee Cess",
+  "pt.create.groups.addDemand.fields.treetax": "Tree Tax",
+  "pt.create.groups.addDemand.fields.totalPropertyTax": "Total Property Tax",
+  "pt.create.groups.addDemand.fields.collection": "Collection",
+  
   //employee Object
   "employee.Employee.fields.code": "Code",
 		"employee.Employee.fields.dateOfAppointment": "Date Of Appointment",

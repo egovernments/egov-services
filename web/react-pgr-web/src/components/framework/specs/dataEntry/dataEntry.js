@@ -1144,7 +1144,7 @@ var dat = {
 						},
 						{
 							"name": "ConstructionStartDate",
-							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].constCompletionDate",
+							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].constructionStartDate",
 							"label": "pt.create.groups.propertyAddress.fields.constructionStartDate",
 							"pattern": "",
 							"type": "datePicker",

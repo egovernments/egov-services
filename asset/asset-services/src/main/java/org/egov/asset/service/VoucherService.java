@@ -84,6 +84,8 @@ public class VoucherService {
 
         log.debug("Request Headers for Voucher Request :: " + requestHeaders);
 
+        voucherRequest.getRequestInfo().setTs(null);
+
         final HttpEntity requestEntity = new HttpEntity(voucherRequest, requestHeaders);
         log.debug("Request Entity ::" + requestEntity);
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -97,9 +99,8 @@ public class VoucherService {
             voucherRes = mapper.readValue(response.toString(), VoucherResponse.class);
             return voucherRes.getVouchers().get(0).getId();
         } catch (final IOException e) {
-            log.debug("Voucher response Deserialization Issue :: " + e.getMessage());
+            throw new RuntimeException("Voucher response Deserialization Issue :: " + e.getMessage());
         }
-        return null;
     }
 
     public VoucherRequest createVoucherRequest(final Object entity, final Long fundId, final Long depratmentId,

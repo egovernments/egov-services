@@ -24,6 +24,7 @@ import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.VoucherType;
 import org.egov.common.contract.request.RequestInfo;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -88,15 +89,15 @@ public class VoucherService {
 
         final HttpEntity requestEntity = new HttpEntity(voucherRequest, requestHeaders);
         log.debug("Request Entity ::" + requestEntity);
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+        ResponseEntity<JSONObject> response = new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
         try {
-            response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST, requestEntity, String.class);
+            response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST, requestEntity, JSONObject.class);
             log.debug("VoucherResponse :: " + response.getBody());
         } catch (final HttpClientErrorException e) {
             throw new RuntimeException("Voucher can not be created because :: " + err.getMessage());
         }
         try {
-            voucherRes = mapper.readValue(response.getBody(), VoucherResponse.class);
+            voucherRes = mapper.readValue(response.toString(), VoucherResponse.class);
             final Long voucherId = voucherRes.getVouchers().get(0).getId();
             log.debug("Voucher Id is :: " + voucherId);
             return voucherId;

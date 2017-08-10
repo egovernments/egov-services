@@ -161,6 +161,8 @@ public class TaxRatesRepository {
 			taxRate.setToValue(getDouble(row.get("tovalue")));
 			taxRate.setRatePercentage(getDouble(row.get("ratepercentage")));
 			taxRate.setTaxFlatValue(getDouble(row.get("taxflatvalue")));
+			taxRate.setUsage(getString(row.get("usage")));
+			taxRate.setPropertyType(getString(row.get("propertyType")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));

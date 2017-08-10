@@ -47,8 +47,12 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
+import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
-import org.egov.egf.voucher.domain.model.Ledger;
+import org.egov.egf.master.web.contract.FundsourceContract;
+import org.egov.egf.master.web.contract.SchemeContract;
+import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -65,45 +69,74 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id", "type", "name", "description", "voucherNumber", "voucherDate", "fund", "status",
-		"originalVoucherNumber", "refVoucherNumber", "moduleName", "ledgers", "vouchermis" })
+@JsonPropertyOrder({ "id", "type", "name", "description", "voucherNumber", "voucherDate", "originalVoucherNumber",
+		"refVoucherNumber", "moduleName", "billNumber", "status", "fund", "function", "fundsource", "scheme",
+		"subScheme", "functionary", "division", "department", "sourcePath", "budgetCheckRequired",
+		"budgetAppropriationNo", "ledgers" })
+
 public class VoucherContract extends AuditableContract {
 
-	@Length(max = 32)
+	@Length(max = 256)
 	private String id;
 
-	@Length(max = 16)
+	@Length(max = 50)
 	private String type;
 
-	@Length(max = 16)
+	@Length(max = 50)
 	private String name;
 
 	@Length(max = 256)
 	private String description;
 
-	@Length(max = 32)
+	@Length(max = 50)
 	private String voucherNumber;
 
 	@NotNull
 	private Date voucherDate;
 
-	private FundContract fund;
+	@Length(max = 50)
+	private String originalVoucherNumber;
+
+	@Length(max = 50)
+	private String refVoucherNumber;
+
+	@Length(max = 50)
+	private String moduleName;
+
+	@Length(max = 50)
+	private String billNumber;
 
 	private FinancialStatusContract status;
 
-	private String originalVoucherContractNumber;
+	private FundContract fund;
 
-	private String refVoucherContractNumber;
+	private FunctionContract function;
 
-	private String moduleName;
+	private FundsourceContract fundsource;
 
-	private Set<Ledger> ledgers;
+	private SchemeContract scheme;
 
-	private VouchermisContract vouchermis;
+	private SubSchemeContract subScheme;
+
+	private FunctionaryContract functionary;
+
+	private Boundary division;
+
+	private Department department;
+
+	@Length(max = 256)
+	private String sourcePath;
+
+	private Boolean budgetCheckRequired = true;
+
+	@Length(max = 50)
+	private String budgetAppropriationNo;
+
+	private Set<LedgerContract> ledgers;
 
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;
-		for (final Ledger detail : ledgers)
+		for (final LedgerContract detail : ledgers)
 			amount = amount.add(detail.getDebitAmount());
 		return amount;
 	}

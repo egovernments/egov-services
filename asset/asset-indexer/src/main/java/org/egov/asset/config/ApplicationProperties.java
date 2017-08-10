@@ -106,4 +106,17 @@ public class ApplicationProperties {
 
 	@Value("${egov.services.tenant.search.path}")
 	private String tenantServiceSearchPath;
+
+	@Value("${kafka.topics.save.depreciation}")
+	private String saveDepreciationTopic;
+
+	@Value("${kafka.topics.save.currentvalue}")
+	private String saveCurrentvalueTopic;
+	
+	@Value("${egov.services.depreciaition.indexer.url}")
+	private String depreciaitionIndexUrl;
+	
+	@Value("${egov.services.currentvalue.indexer.url}")
+	private String currentValueIndexUrl;
+			
 }

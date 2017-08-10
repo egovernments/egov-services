@@ -148,6 +148,7 @@ class Login extends Component {
        setLoadingStatus("hide");
      },function(err) {
         self.props.toggleSnackbarAndSetText(true, err.message);
+        setLoadingStatus("hide");
      });
    }
 

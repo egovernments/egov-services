@@ -9,7 +9,6 @@ import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.joda.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +26,7 @@ public class TradeLicenseEntity {
 
 	private String tenantId;
 
-	private ApplicationType applicationType;
+	private String applicationType;
 
 	private String applicationNumber;
 
@@ -35,7 +34,7 @@ public class TradeLicenseEntity {
 
 	private String oldLicenseNumber;
 
-	private LocalDate applicationDate;
+	private String applicationDate;
 
 	private String adhaarNumber;
 
@@ -57,11 +56,11 @@ public class TradeLicenseEntity {
 
 	private String tradeAddress;
 
-	private OwnerShipType ownerShipType;
+	private String ownerShipType;
 
 	private String tradeTitle;
 
-	private BusinessNature tradeType;
+	private String tradeType;
 
 	private Long categoryId;
 
@@ -69,13 +68,13 @@ public class TradeLicenseEntity {
 
 	private Long uomId;
 
-	private Double uomValue;
+	private Double quantity;
 
 	private String remarks;
 
-	private LocalDate tradeCommencementDate;
+	private String tradeCommencementDate;
 
-	private LocalDate agrementDate;
+	private String agrementDate;
 
 	private String agrementNo;
 
@@ -83,23 +82,31 @@ public class TradeLicenseEntity {
 
 	private Boolean active = true;
 
-	private LocalDate expiryDate;
+	private String expiryDate;
 
 	private List<LicenseFeeDetail> feeDetails;
 
 	private List<SupportDocument> supportDocuments;
 
-	private AuditDetails auditDetails;
+	private String createdBy;
+
+	private String lastModifiedBy;
+
+	private Long createdTime;
+
+	private Long lastModifiedTime;
 
 	public TradeLicense toDomain() {
 
 		TradeLicense tradeLicense = new TradeLicense();
 
+		AuditDetails auditDetails = new AuditDetails();
+
 		tradeLicense.setId(this.id);
 
 		tradeLicense.setTenantId(this.tenantId);
 
-		tradeLicense.setApplicationType(this.applicationType);
+		tradeLicense.setApplicationType(ApplicationType.valueOf(this.applicationType));
 
 		tradeLicense.setApplicationNumber(this.applicationNumber);
 
@@ -129,11 +136,11 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setTradeAddress(this.tradeAddress);
 
-		tradeLicense.setOwnerShipType(this.ownerShipType);
+		tradeLicense.setOwnerShipType(OwnerShipType.valueOf(this.ownerShipType));
 
 		tradeLicense.setTradeTitle(this.tradeTitle);
 
-		tradeLicense.setTradeType(this.tradeType);
+		tradeLicense.setTradeType(BusinessNature.valueOf(this.tradeType));
 
 		tradeLicense.setCategoryId(this.categoryId);
 
@@ -141,7 +148,7 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setUomId(this.uomId);
 
-		tradeLicense.setUomValue(this.uomValue);
+		tradeLicense.setQuantity(this.quantity);
 
 		tradeLicense.setRemarks(this.remarks);
 
@@ -161,18 +168,25 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setSupportDocuments(this.supportDocuments);
 
-		tradeLicense.setAuditDetails(this.auditDetails);
+		auditDetails.setCreatedBy(this.createdBy);
+		auditDetails.setCreatedTime(this.createdTime);
+		auditDetails.setLastModifiedBy(this.lastModifiedBy);
+		auditDetails.setLastModifiedTime(this.lastModifiedTime);
+
+		tradeLicense.setAuditDetails(auditDetails);
 
 		return tradeLicense;
 	}
 
 	public TradeLicenseEntity toEntity(TradeLicense tradeLicense) {
 
+		AuditDetails auditDetails = tradeLicense.getAuditDetails();
+
 		this.id = tradeLicense.getId();
 
 		this.tenantId = tradeLicense.getTenantId();
 
-		this.applicationType = tradeLicense.getApplicationType();
+		this.applicationType = tradeLicense.getApplicationType().toString();
 
 		this.applicationNumber = tradeLicense.getApplicationNumber();
 
@@ -202,11 +216,11 @@ public class TradeLicenseEntity {
 
 		this.tradeAddress = tradeLicense.getTradeAddress();
 
-		this.ownerShipType = tradeLicense.getOwnerShipType();
+		this.ownerShipType = tradeLicense.getOwnerShipType().toString();
 
 		this.tradeTitle = tradeLicense.getTradeTitle();
 
-		this.tradeType = tradeLicense.getTradeType();
+		this.tradeType = tradeLicense.getTradeType().toString();
 
 		this.categoryId = tradeLicense.getCategoryId();
 
@@ -214,7 +228,7 @@ public class TradeLicenseEntity {
 
 		this.uomId = tradeLicense.getUomId();
 
-		this.uomValue = tradeLicense.getUomValue();
+		this.quantity = tradeLicense.getQuantity();
 
 		this.remarks = tradeLicense.getRemarks();
 
@@ -234,8 +248,14 @@ public class TradeLicenseEntity {
 
 		this.supportDocuments = tradeLicense.getSupportDocuments();
 
-		this.auditDetails = tradeLicense.getAuditDetails();
-		
+		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
+
+		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
+
+		this.createdTime = (auditDetails == null) ? null : auditDetails.getCreatedTime();
+
+		this.lastModifiedTime = (auditDetails == null) ? null : auditDetails.getLastModifiedTime();
+
 		return this;
 	}
 

@@ -21,14 +21,13 @@ public class TradeLicenseQueueRepository {
 	public void add(Map<String, Object> topicMap) {
 		for (Map.Entry<String, Object> entry : topicMap.entrySet()) {
 
-			key = entry.getKey().split("_")[0];
+			key = entry.getKey();
 
-			if (key.equalsIgnoreCase("create")) {
-				topicKey = "tradelicense-validated";
-				break;
+			if (key.equalsIgnoreCase(propertiesManager.getCreateLegacyTradeValidated())) {
+				tradeLicenseProducer.sendMessage(propertiesManager.getCreateLegacyTradeValidated(), "", topicMap);
 			}
 		}
-		tradeLicenseProducer.sendMessage(propertiesManager.getCreateLegacyTradeValidated(), topicKey, topicMap);
+		
 	}
 
 }

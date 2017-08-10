@@ -275,6 +275,7 @@ public class PropertiesManager {
 	
 	private String workflowBusinessKey;
 	
+	private String invalidParentMsg;
 	
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -746,5 +747,9 @@ public class PropertiesManager {
 		
 	public String getWorkflowBusinessKey() {
 		return environment.getProperty("businessKey");
-	}		
+	}
+	
+	public String getInvalidParentMsg(){
+		return environment.getProperty("invalid.property.parent.code");
+	}
 }

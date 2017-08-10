@@ -34,13 +34,13 @@ ReportDefinitions:
     isMandatory: true
   - name: status
     label: reports.collection.status
-    type: string
+    type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
     isMandatory: true
     source: collection
   - name: collectedby
     label: reports.collection.collectedby
-    type: string
+    type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..name
     source: collection
     isMandatory: true
@@ -116,7 +116,7 @@ ReportDefinitions:
     pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
   - name: department
     label: reports.collection.department
-    type: string
+    type: singlevaluelist
     source: collection 
   - name: paymentmode
     label: reports.collection.paymentmode
@@ -124,7 +124,7 @@ ReportDefinitions:
     pattern: 'list://CARD:CARD,CASH:CASH,ONLINE:ONLINE' 
   - name: businessservice
     label: reports.collection.businessservice
-    type: string
+    type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name  
   query: SELECT RECEIPT_DATE,RECEIPT_NUMBER,DEPARTMENT_NAME,SERVICE_NAME,INSTRUMENT_TYPE,SOURCE,CASH_AMOUNT,sum(CHEQUEDD_AMOUNT) AS CHEQUEDD_AMOUNT ,BANK_AMOUNT, ONLINE_AMOUNT,CARD_AMOUNT,STATUS_DESCRIPTION from 
          (SELECT EGCL_RECEIPTHEADER.RECEIPTDATE AS RECEIPT_DATE, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPARTMENT_NAME, EG_DEPARTMENT.NAME AS SERVICE_NAME, 
@@ -189,12 +189,12 @@ ReportDefinitions:
     source: collection
   - name: status
     label: reports.collection.status
-    type: string
+    type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
     source: collection
   - name: collectedby
     label: reports.collection.collectedby
-    type: string
+    type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..name
     source: collection
   query: SELECT row_number() over (order by CH.RECEIPTNUMBER) as serialnumber, CH.RECEIPTNUMBER AS RECEIPT_NUMBER, ED.NAME AS DEPT_NAME, IH.transactionnumber AS CHEQUE_NUMBER, BK.name AS BANK, 
@@ -268,17 +268,17 @@ ReportDefinitions:
     source: collection
   - name: status
     label: reports.collection.status
-    type: string
+    type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
     source: collection
   - name: paymentmode
     label: reports.collection.paymentmode
-    type: string
+    type: singlevaluelist
     pattern: 'list://CASH:CASH,ONLINE:ONLINE,CHEQUE:CHEQUE,DD:DD'
     source: collection
   - name: revenuehead
     label: reports.collection.revenuehead
-    type: string
+    type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_getChartOfAccounts|$..glcode|$..name
     source: collection
   

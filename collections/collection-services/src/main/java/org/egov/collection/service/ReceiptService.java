@@ -250,7 +250,7 @@ public class ReceiptService {
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){
-				e.printStackTrace();
+				LOGGER.error("Exception while creating instrument: ", e);
 				throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 						CollectionServiceConstants.INSTRUMENT_EXCEPTION_MSG, CollectionServiceConstants.INSTRUMENT_EXCEPTION_DESC);
 			}
@@ -404,7 +404,7 @@ public class ReceiptService {
 					.getBusinessDetails(Arrays.asList(businessDetailsCode),
 							tenantId, requestInfo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception while fetching buisnessDetails: ", e);
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 
@@ -445,7 +445,7 @@ public class ReceiptService {
 		try {
 			pushUpdateReceiptDetailsToQueque(workflowDetailsRequest);
 		} catch (Exception e) {
-			LOGGER.error("Couldn't update stateId and status" + e);
+			LOGGER.error("Couldn't update stateId and status: ", e);
 			return null;
 		}
 		return workflowDetailsRequest;
@@ -487,7 +487,7 @@ public class ReceiptService {
 			glcode = instrumentRepository.getAccountCodeId(receiptReq.getRequestInfo(), 
 					receiptReq.getReceipt().get(0).getInstrument(), receiptReq.getReceipt().get(0).getTenantId());
 		}catch(Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception while fetching glcode from instrument service: ", e);
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_MSG, CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_DESC);
 			
@@ -543,7 +543,7 @@ public class ReceiptService {
 		try{
 			workflowService.start(workflowDetails);
 		}catch(Exception e){
-			LOGGER.error("Starting workflow failed: "+e.getCause());
+			LOGGER.error("Starting workflow failed: ", e);
 		}
 		
 		

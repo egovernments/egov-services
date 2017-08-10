@@ -102,6 +102,7 @@ public class DemandConroller {
 			egDemand = demandRepository.findOne(demandSearchCriteria.getDemandId());
 			System.out.println("before calling todomain ::::   "+demandSearchCriteria.getDemandId());
 			Demand demand = egDemand.toDomain();
+			demand.setTenantId(egDemand.getTenantId());
 			for(EgDemandDetails egdemandDetails: egDemand.getEgDemandDetails()){
 				System.out.println("inside the loop");
 				demandDetail = egdemandDetails.toDomain();

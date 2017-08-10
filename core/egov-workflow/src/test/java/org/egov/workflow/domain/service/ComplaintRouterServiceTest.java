@@ -48,7 +48,7 @@ public class ComplaintRouterServiceTest {
         when(complaintTypeRepository.fetchComplaintTypeByCode("C001", "tenantId")).thenReturn(complaintType);
         when(complaintRouterRepository.findByComplaintTypeAndBoundary(complaintType.getId(), 1L)).thenReturn(router);
         when(complaintRouterRepository.findByOnlyComplaintType(1L)).thenReturn(router);
-        when(complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION")).thenReturn(router);
+        when(complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION" ,"default")).thenReturn(router);
         when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L, "tenantId")).thenReturn(getPositionHierarchies());
         when(positionRepository.getById(10L, "tenantId")).thenReturn(getPositions());
     }
@@ -108,7 +108,12 @@ public class ComplaintRouterServiceTest {
 
     @Test
     public void test_should_return_assignee_with_city_administrator() {
+        final ComplaintRouter complaintRouter = new ComplaintRouter();
+        complaintRouter.setBoundary(10L);
+        complaintRouter.setPosition(10L);
+        complaintRouter.setComplaintType(1L);
         when(complaintRouterRepository.findByOnlyComplaintType(1L)).thenReturn(null);
+        when(complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION","tenantId")).thenReturn(complaintRouter);
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");

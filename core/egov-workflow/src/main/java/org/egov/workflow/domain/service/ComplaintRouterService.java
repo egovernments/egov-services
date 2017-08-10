@@ -134,7 +134,7 @@ public class ComplaintRouterService {
                 final ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode, tenantId);
                 complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                 if (null == complaintRouter)
-                    complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");
+                    complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION", tenantId);
             }
             if (complaintRouter != null)
                 positionResponse = positionRepository.getById(complaintRouter.getPosition(), tenantId);

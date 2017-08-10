@@ -359,7 +359,7 @@ class routerGeneration extends Component {
    const viewTable = function() {
    	  if(isSearchClicked)
    		return (
-	        <Card>
+	        <Card style={styles.marginStyle}>
 	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
 	          <CardText>
 		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -389,7 +389,7 @@ class routerGeneration extends Component {
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.grievance.category") + " *"} errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadGrievanceType(val);
@@ -399,7 +399,7 @@ class routerGeneration extends Component {
 			                            ))}
                      </SelectField>
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                     <SelectField
                       fullWidth={true}
                       floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
@@ -419,7 +419,7 @@ class routerGeneration extends Component {
 			                       ))}
                     </SelectField>
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype") + " *"} errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
@@ -429,7 +429,7 @@ class routerGeneration extends Component {
 			                            ))}
                      </SelectField>
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                     <SelectField
                       fullWidth={true}
                       floatingLabelText={translate("pgr.lbl.boundary") + " *"}
@@ -451,7 +451,7 @@ class routerGeneration extends Component {
                    </Col>
                    </Row>
                    <Row>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                     	<AutoComplete
                         hintText=""
                         floatingLabelText={translate("pgr.lbl.position") + " *"}
@@ -463,14 +463,19 @@ class routerGeneration extends Component {
                         onKeyUp={handleAutoCompleteKeyUp}
                         errorText={fieldErrors.position || ""} value={routerCreateSet.position}
                         searchText={searchTextPos}
+                        ref="position"
                         onNewRequest={(chosenRequest, index) => {
-                          searchTextPos = chosenRequest.name;
-	                        var e = {
-	                          target: {
-	                            value: chosenRequest.id
-	                          }
-	                        };
-	                        handleChange(e, "position", true, "");
+                          if(index === -1){
+                            this.refs['position'].setState({searchText:''});
+                          }else{
+                            searchTextPos = chosenRequest.name;
+  	                        var e = {
+  	                          target: {
+  	                            value: chosenRequest.id
+  	                          }
+  	                        };
+  	                        handleChange(e, "position", true, "");
+                          }
 	                       }}
 	                      />
                    </Col>

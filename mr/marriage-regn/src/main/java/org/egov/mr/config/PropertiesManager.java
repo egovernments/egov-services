@@ -59,6 +59,9 @@ import lombok.Setter;
 @Getter
 public class PropertiesManager {
 
+	@Value("${kafka.topics.create.reissueCertificate}")
+	private String createReissueCertificateTopicName;
+	
 	@Value("${kafka.topics.update.reissueappl}")
 	private String updateReissueMarriageRegnTopicName;
 

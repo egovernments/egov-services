@@ -380,8 +380,6 @@ class createRouter extends Component {
         updateonly
   	} = this.state;
 
-    console.log(readonly, updateonly);
-
   	const showBtn = function() {
   		if(!readonly) {
 
@@ -453,14 +451,19 @@ class createRouter extends Component {
                           searchText={searchTextCom}
                           value={routerCreateSet.complaintType || ""}
                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
+                          ref="complaintType"
                           onNewRequest={(chosenRequest, index) => {
-                            searchTextCom = chosenRequest.serviceName
-                            var e = {
-                              target: {
-                                value: chosenRequest.id
-                              }
-                            };
-                            handleChange(e, "complaintType", true, "");
+                            if(index === -1){
+                              this.refs['complaintType'].setState({searchText:''});
+                            }else{
+                              searchTextCom = chosenRequest.serviceName;
+                              var e = {
+                                target: {
+                                  value: chosenRequest.id
+                                }
+                              };
+                              handleChange(e, "complaintType", true, "");
+                            }
                            }}
                           />
                      </Col>
@@ -493,14 +496,19 @@ class createRouter extends Component {
                           value={routerCreateSet.boundary || ""}
                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundary")}}
                           searchText={searchTextBoun}
+                          ref="boundary"
                           onNewRequest={(chosenRequest, index) => {
-                            searchTextBoun = chosenRequest.name;
-                            var e = {
-                              target: {
-                                value: chosenRequest.id
-                              }
-                            };
-                            handleChange(e, "boundary", true, "");
+                            if(index === -1){
+                              this.refs['boundary'].setState({searchText:''});
+                            }else{
+                              searchTextBoun = chosenRequest.name;
+                              var e = {
+                                target: {
+                                  value: chosenRequest.id
+                                }
+                              };
+                              handleChange(e, "boundary", true, "");
+                            }
                            }}
                           />
                      </Col>
@@ -516,15 +524,20 @@ class createRouter extends Component {
                           value={routerCreateSet.position || ""}
                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
                           searchText={searchTextPos}
+                          ref="position"
                           onNewRequest={(chosenRequest, index) => {
-                            searchTextPos = chosenRequest.name;
-                            var e = {
-                              target: {
-                                value: chosenRequest.id
-                              }
-                            };
-                            handleChange(e, "position", true, "");
-                           }}
+                            if(index === -1){
+                              this.refs['position'].setState({searchText:''});
+                            }else{
+                              searchTextPos = chosenRequest.name;
+                              var e = {
+                                target: {
+                                  value: chosenRequest.id
+                                }
+                              };
+                              handleChange(e, "position", true, "");
+                            }}
+                            }
                           />
                      </Col>
                     </Row>

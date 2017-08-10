@@ -298,13 +298,18 @@ class SearchEscalation extends Component {
                                   dataSourceConfig={this.state.serviceDataSourceConfig}
                                   onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "grievanceType")}}
                                   value={searchEscalation.serviceType ? searchEscalation.serviceType : ""}
+                                  ref="serviceType"
                                   onNewRequest={(chosenRequest, index) => {
-          	                        var e = {
-          	                          target: {
-          	                            value: chosenRequest
-          	                          }
-          	                        };
-          	                        handleChange(e, "serviceType", false, "");
+                                    if(index === -1){
+                                      this.refs['serviceType'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest
+                                        }
+                                      };
+                                      handleChange(e, "serviceType", false, "");
+                                    }
           	                       }}
                                 />
                           </Col>
@@ -319,13 +324,18 @@ class SearchEscalation extends Component {
                                   dataSourceConfig={this.state.designationDataSourceConfig}
                                   onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "designation")}}
                                   value={searchEscalation.designation ? searchEscalation.designation : ""}
+                                  ref="designation"
                                   onNewRequest={(chosenRequest, index) => {
-          	                        var e = {
-          	                          target: {
-          	                            value: chosenRequest
-          	                          }
-          	                        };
-          	                        handleChange(e, "designation", false, "");
+                                    if(index === -1){
+                                      this.refs['designation'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest
+                                        }
+                                      };
+                                      handleChange(e, "designation", false, "");
+                                    }
           	                       }}
                                 />
                           </Col>

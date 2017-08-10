@@ -384,8 +384,9 @@ class DefineEscalationTime extends Component {
                             floatingLabelText={translate("pgr.noof.hours")}
                             value={defineEscalationTime.noOfHours ? defineEscalationTime.noOfHours : ""}
                             errorText={fieldErrors.noOfHours ? fieldErrors.noOfHours : ""}
+                            maxLength={4}
                             onChange={(e) => {
-                              handleChange(e, "noOfHours", true, /^\d+$/)
+                              handleChange(e, "noOfHours", true, /^\d{0,4}$/g, 'Please use only numbers')
                             }}
                             id="noOfHours"
                         />
@@ -438,13 +439,18 @@ class DefineEscalationTime extends Component {
                                   onKeyUp={handleAutoCompleteKeyUp}
                                   errorText={fieldErrors.grievanceType ? fieldErrors.grievanceType : "" }
                                   value={defineEscalationTime.grievanceType ? defineEscalationTime.grievanceType : ""}
+                                  ref="grievanceType"
                                   onNewRequest={(chosenRequest, index) => {
-          	                        var e = {
-          	                          target: {
-          	                            value: chosenRequest
-          	                          }
-          	                        };
-          	                        handleChange(e, "grievanceType", true, "");
+                                    if(index === -1){
+                                      this.refs['grievanceType'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+            	                          target: {
+            	                            value: chosenRequest
+            	                          }
+            	                        };
+            	                        handleChange(e, "grievanceType", true, "");
+                                    }
           	                       }}
                                 />
                           </Col>
@@ -510,20 +516,20 @@ const mapDispatchToProps = dispatch => ({
           required: ["designation", "noOfHours"]
         },
         pattern: {
-          current: ["noOfHours"],
-          required: [ "noOfHours"]
+          current: [],
+          required: []
         }
       }
     });
   },
 
-  handleChange: (e, property, isRequired, pattern) => {
+  handleChange: (e, property, isRequired, pattern, errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern, errorMsg
     });
   },
 

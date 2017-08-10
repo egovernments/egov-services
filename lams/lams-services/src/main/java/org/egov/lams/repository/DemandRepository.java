@@ -100,9 +100,16 @@ public class DemandRepository {
 	public List<DemandReason> getLegacyDemandReason(AgreementRequest agreementRequest) {
 
 		List<DemandReason> demandReasons = new ArrayList<>();
+		Agreement agreement = agreementRequest.getAgreement();
 		String taxReason = null;
 		taxReason = propertiesManager.getTaxReasonRent();
 		Calendar cal = Calendar.getInstance();
+		if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER))
+			cal.add(Calendar.MONTH, 3);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR))
+			cal.add(Calendar.MONTH, 6);
+		else
+			cal.add(Calendar.YEAR, 1);
 		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
 		Date date = cal.getTime();
 		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));

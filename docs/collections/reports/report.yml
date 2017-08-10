@@ -35,13 +35,13 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: string
-    pattern: http://localhost:8095/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
     isMandatory: true
     source: collection
   - name: collectedby
     label: reports.collection.collectedby
     type: string
-    pattern: http://localhost:8095/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..name
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..name
     source: collection
     isMandatory: true
   query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, 
@@ -113,7 +113,7 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: string
-    pattern: http://localhost:8095/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
   - name: department
     label: reports.collection.department
     type: string
@@ -125,7 +125,7 @@ ReportDefinitions:
   - name: businessservice
     label: reports.collection.businessservice
     type: string
-    pattern: http://localhost:8095/collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name  
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name  
   query: SELECT RECEIPT_DATE,RECEIPT_NUMBER,DEPARTMENT_NAME,SERVICE_NAME,INSTRUMENT_TYPE,SOURCE,CASH_AMOUNT,sum(CHEQUEDD_AMOUNT) AS CHEQUEDD_AMOUNT ,BANK_AMOUNT, ONLINE_AMOUNT,CARD_AMOUNT,STATUS_DESCRIPTION from 
          (SELECT EGCL_RECEIPTHEADER.RECEIPTDATE AS RECEIPT_DATE, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPARTMENT_NAME, EG_DEPARTMENT.NAME AS SERVICE_NAME, 
          (CASE WHEN EGF_INSTRUMENTTYPE.NAME ='cash' THEN 'cash' WHEN EGF_INSTRUMENTTYPE.NAME='bankchallan' THEN 'bankchallan' WHEN  EGF_INSTRUMENTTYPE.NAME='card' THEN 'card' WHEN EGF_INSTRUMENTTYPE.NAME='online' 
@@ -190,12 +190,12 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: string
-    pattern: http://localhost:8095/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
     source: collection
   - name: collectedby
     label: reports.collection.collectedby
     type: string
-    pattern: http://localhost:8095/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..name
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..name
     source: collection
   query: SELECT row_number() over (order by CH.RECEIPTNUMBER) as serialnumber, CH.RECEIPTNUMBER AS RECEIPT_NUMBER, ED.NAME AS DEPT_NAME, IH.transactionnumber AS CHEQUE_NUMBER, BK.name AS BANK, 
          IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,
@@ -204,8 +204,8 @@ ReportDefinitions:
          CH.RECEIPTDATE < $toDate AND us.username =$collectedby AND CH.tenantid=$tenantid ORDER BY RECEIPT_NUMBER
   
   
-- reportName: CollectionSummary
-  summary: Collection Summary Report
+- reportName: CollectionSummaryAccountHeadWise 
+  summary: Collection Summary Account Head wise Report
   version: 1.0.0
   sourceColumns:
   - name: serialnumber
@@ -269,7 +269,7 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: string
-    pattern: http://localhost:8095/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
     source: collection
   - name: paymentmode
     label: reports.collection.paymentmode
@@ -279,7 +279,7 @@ ReportDefinitions:
   - name: revenuehead
     label: reports.collection.revenuehead
     type: string
-    pattern: http://egov-micro-dev.egovernments.org/collection-services/receipts/_getChartOfAccounts|$..glcode|$..name
+    pattern: http://collection-services:8080/collection-services/receipts/_getChartOfAccounts|$..glcode|$..name
     source: collection
   
   query: SELECT SOURCE,glCode,sum(cashCount) AS cashCount ,sum(cashAmount) AS cashAmount,sum(chequeddCount) AS chequeddCount,sum(chequeddAmount) AS chequeddAmount, sum(onlineCount) AS onlineCount, 

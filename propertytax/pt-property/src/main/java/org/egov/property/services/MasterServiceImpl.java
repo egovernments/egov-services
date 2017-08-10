@@ -590,13 +590,16 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
-			if (usageMaster.getParent() != null || !usageMaster.getParent().isEmpty()) {
-				Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
-						usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+			if (usageMaster.getParent() != null) {
+				if (!usageMaster.getParent().isEmpty()) {
+					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
+							usageMaster.getTenantId(), usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME,
+							null);
 
-				if (!isParentCodeExists)
-					throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
-							usageMasterRequest.getRequestInfo());
+					if (!isParentCodeExists)
+						throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+								usageMasterRequest.getRequestInfo());
+				}
 			}
 
 			try {
@@ -608,7 +611,6 @@ public class MasterServiceImpl implements Masterservice {
 			} catch (Exception e) {
 				throw new InvalidInputException(usageMasterRequest.getRequestInfo());
 			}
-
 		}
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 
@@ -634,13 +636,16 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
-			if (usageMaster.getParent() != null || !usageMaster.getParent().isEmpty()) {
-				Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
-						usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+			if (usageMaster.getParent() != null) {
+				if (!usageMaster.getParent().isEmpty()) {
+					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
+							usageMaster.getTenantId(), usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME,
+							null);
 
-				if (!isParentCodeExists)
-					throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
-							usageMasterRequest.getRequestInfo());
+					if (!isParentCodeExists)
+						throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+								usageMasterRequest.getRequestInfo());
+				}
 			}
 
 			try {

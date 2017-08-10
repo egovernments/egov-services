@@ -29,11 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +60,7 @@ public class VoucherService {
                 + "?tenantId=" + tenantId;
         log.debug("Voucher API Request URL :: " + createVoucherUrl);
         log.debug("VoucherRequest :: " + voucherRequest);
-        final Error err = new Error();
+        new Error();
         VoucherResponse voucherRes = new VoucherResponse();
 
         final List<String> cookies = headers.get("cookie");
@@ -89,15 +87,13 @@ public class VoucherService {
 
         final HttpEntity requestEntity = new HttpEntity(voucherRequest, requestHeaders);
         log.debug("Request Entity ::" + requestEntity);
-        ResponseEntity<JSONObject> response = new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
+        final ResponseEntity<JSONObject> response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST,
+                requestEntity, JSONObject.class);
+        log.debug("Response From Voucher API :: " + response);
+        final JSONObject voucherResponse = response.getBody();
+        log.debug("VoucherResponse :: " + voucherResponse);
         try {
-            response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST, requestEntity, JSONObject.class);
-            log.debug("VoucherResponse :: " + response.getBody());
-        } catch (final HttpClientErrorException e) {
-            throw new RuntimeException("Voucher can not be created because :: " + err.getMessage());
-        }
-        try {
-            voucherRes = mapper.readValue(response.toString(), VoucherResponse.class);
+            voucherRes = mapper.readValue(voucherResponse.toString(), VoucherResponse.class);
             final Long voucherId = voucherRes.getVouchers().get(0).getId();
             log.debug("Voucher Id is :: " + voucherId);
             return voucherId;

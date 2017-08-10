@@ -145,7 +145,7 @@ class CreateReceivingCenter extends Component {
         <div className="createReceivingCenter">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create / Update Receiving Center < /div>} />
+                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.props.match.params.id ? 'Update Receiving Center' : 'Create Receiving Center'}< /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
@@ -185,6 +185,17 @@ class CreateReceivingCenter extends Component {
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText={translate("pgr.lbl.order.no")+"*"}
+                                      value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
+                                      errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
+                                      maxLength="10"
+                                      onChange={(e) => handleChange(e, "orderno", true, /^\d{0,10}$/g, 'Please use only numbers')}
+                                      id="orderno"
+                                  />
+                              </Col>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.setTopMargin}
@@ -217,18 +228,6 @@ class CreateReceivingCenter extends Component {
                                     id="iscrnrequired"
                                   />
                               </Col>
-                              <Col xs={12} sm={4} md={3} lg={3}>
-                                  <TextField
-                                      fullWidth={true}
-                                      floatingLabelText={translate("pgr.lbl.order.no")+"*"}
-                                      value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
-                                      errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
-                                      maxLength="10"
-                                      onChange={(e) => handleChange(e, "orderno", true, /^\d{0,10}$/g, 'Please use only numbers')}
-                                      id="orderno"
-                                  />
-                              </Col>
-
                           </Row>
                       </Grid>
                   </CardText>

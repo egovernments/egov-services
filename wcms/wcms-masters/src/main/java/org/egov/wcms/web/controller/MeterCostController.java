@@ -47,7 +47,6 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.MeterCostCriteria;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.service.MeterCostService;
 import org.egov.wcms.util.ValidatorUtils;
@@ -132,19 +131,12 @@ public class MeterCostController {
 			final BindingResult modelAttributeBindingResult,
 			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			final BindingResult requestBodyBindingResult) {
-
-		MeterCostCriteria meterCostCriteria = MeterCostCriteria.builder().ids(meterCostGetRequest.getIds())
-				.code(meterCostGetRequest.getCode()).name(meterCostGetRequest.getName())
-				.pipeSizeId(meterCostGetRequest.getPipeSizeId()).tenantId(meterCostGetRequest.getTenantId())
-				.sortby(meterCostGetRequest.getSortBy()).sortOrder(meterCostGetRequest.getSortOrder())
-				.active(meterCostGetRequest.getActive()).build();
-
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (modelAttributeBindingResult.hasErrors())
 			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 		if (requestBodyBindingResult.hasErrors())
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		List<MeterCost> meterCosts = meterCostService.getMeterCostByCriteria(meterCostCriteria);
+		List<MeterCost> meterCosts = meterCostService.getMeterCostByCriteria(meterCostGetRequest);
 		return getSuccessResponse(meterCosts, null, requestInfo);
 
 	}

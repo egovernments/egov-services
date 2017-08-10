@@ -45,7 +45,8 @@ export default class UiLabel extends Component {
   }
 
   componentDidUpdate() {
-    this.setVal();
+    if(!this.state.value)
+      this.setVal();
   }
 
  	renderLabel = (item) => {

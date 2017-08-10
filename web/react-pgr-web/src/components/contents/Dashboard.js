@@ -423,7 +423,7 @@ class Dashboard extends Component {
 				<CardText>
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
-                      <div>
+                      <div className="col-md-12">
                           <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
                             <thead>
                               <tr>

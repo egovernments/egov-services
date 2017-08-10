@@ -38,40 +38,45 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.commons.model.enums;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.User;
-import org.egov.commons.model.AuthenticatedUser;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import java.util.ArrayList;
 import java.util.List;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-public class BusinessCategoryRequest {
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+public enum BusinessType {
+    BILLBASED("BILLBASED"), MISCELLANEOUS("MISCELLANEOUS");
 
-	@JsonProperty("BusinessCategory")
-	private List<BusinessCategory> businessCategory;
+    private String value;
 
-	public AuthenticatedUser toDomain() {
-		User userInfo = requestInfo.getUserInfo();
-		return AuthenticatedUser.builder().id(userInfo.getId()).anonymousUser(false).emailId(userInfo.getEmailId())
-				.mobileNumber(userInfo.getMobileNumber()).name(userInfo.getName()).build();
+    BusinessType(String value) {
+        this.value = value;
+    }
 
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return this.name();
+    }
+
+    @JsonCreator
+    public static List<String> getAllObjectValues() {
+        List<String> allObjectValues = new ArrayList<>();
+        for (BusinessType obj : BusinessType.values()) {
+            allObjectValues.add(obj.value);
+        }
+        return allObjectValues;
+    }
+
+    @JsonCreator
+    public static BusinessType fromValue(String passedValue) {
+        for (BusinessType obj : BusinessType.values()) {
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+                return obj;
+            }
+        }
+        return null;
+    }
 }

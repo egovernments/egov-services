@@ -1,6 +1,9 @@
 package org.egov.commons.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.egov.common.contract.request.User;
 
 @NoArgsConstructor
 @Getter
@@ -37,14 +41,14 @@ public class BusinessCategory {
 	@NotNull
 	private Long createdBy;
 
-	private Date createdDate;
+	private Long createdDate;
 
 	@NotNull
 	private Long lastModifiedBy;
 
-	private Date lastModifiedDate;
+	private Long lastModifiedDate;
 
-	public BusinessCategory(org.egov.commons.web.contract.BusinessCategory category,AuthenticatedUser user) {
+	public BusinessCategory(org.egov.commons.web.contract.BusinessCategory category,User user) {
 
 		id = category.getId();
 		name = category.getName();
@@ -56,9 +60,16 @@ public class BusinessCategory {
 
 	}
 
-	public org.egov.commons.web.contract.BusinessCategory toDomain() {
+
+    public org.egov.commons.web.contract.BusinessCategory toDomain() {
 		return org.egov.commons.web.contract.BusinessCategory.builder().id(id).name(name).code(code).active(isactive)
 				.tenantId(tenantId).build();
 
 	}
+
+    public List<BusinessCategory> getDomainList(List<org.egov.commons.web.contract.BusinessCategory> categoryContractList,User user) {
+        return categoryContractList.stream().map(businessCategory -> new BusinessCategory(businessCategory,user))
+                .collect(Collectors.toList());
+    }
+
 }

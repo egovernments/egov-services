@@ -24,7 +24,7 @@ public class BusinessDetailsGetRequest {
 	@NotNull
 	private String tenantId;
 
-	private List<Long> ids;
+	private List<Long> id;
 
     @JsonProperty("businessDetailsCodes")
 	private List<String> businessDetailsCodes;

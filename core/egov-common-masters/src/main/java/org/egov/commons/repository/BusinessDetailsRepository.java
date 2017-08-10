@@ -4,22 +4,14 @@ import static java.util.Comparator.comparingLong;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.egov.commons.model.BusinessAccountDetails;
-import org.egov.commons.model.BusinessAccountSubLedgerDetails;
-import org.egov.commons.model.BusinessDetails;
-import org.egov.commons.model.BusinessDetailsCommonModel;
-import org.egov.commons.model.BusinessDetailsCriteria;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.commons.model.*;
 import org.egov.commons.repository.builder.BusinessDetailsQueryBuilder;
 import org.egov.commons.repository.rowmapper.BusinessAccountDetailsRowMapper;
 import org.egov.commons.repository.rowmapper.BusinessAccountSubledgerDetailsRowMapper;
@@ -27,18 +19,20 @@ import org.egov.commons.repository.rowmapper.BusinessDetailsCombinedRowMapper;
 import org.egov.commons.repository.rowmapper.BusinessDetailsRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Slf4j
 public class BusinessDetailsRepository {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 	@Autowired
 	BusinessAccountDetailsRowMapper businessAccountDetailsRowMapper;
 
-	@Autowired
-	BusinessDetailsCombinedRowMapper businessDetailsCombinedRowMapper;
+    @Autowired
+    BusinessDetailsCombinedRowMapper businessDetailsCombinedRowMapper;
 
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -51,27 +45,9 @@ public class BusinessDetailsRepository {
 
 	@Autowired
 	BusinessDetailsQueryBuilder businessDetailsQueryBuilder;
+
 	public static final String SEQUENCEFORSUBLEDGER = "SEQ_EG_BUSINESS_SUBLEDGERINFO";
 	public static final String TENANT = "tenantId";
-	public static final String INSERT_BUSINESS_DETAILS = "Insert into eg_businessdetails"
-			+ " (id,name,isEnabled,code,businessType,businessUrl,voucherCutOffDate,"
-			+ "ordernumber,voucherCreation,isVoucherApproved,fund,department,"
-			+ "fundSource,functionary,businessCategory,function,callBackForApportioning,tenantId,"
-			+ "createdBy,createdDate,lastModifiedBy,lastModifiedDate)" + " values (?,?,?,?,?,?,"
-			+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-	public static final String UPDATE_BUSINESS_DETAILS = "Update eg_businessdetails"
-			+ " set name=?,isEnabled=?,code=?,businessType=?,businessUrl=?,voucherCutOffDate=?,"
-			+ "ordernumber=?,voucherCreation=?,isVoucherApproved=?,fund=?,department=?,"
-			+ "fundSource=?,functionary=?,businessCategory=?,function=?,callBackForApportioning=?,"
-			+ "tenantId=?,lastModifiedBy=?,lastModifiedDate=? where id=?";
-
-	public static final String UPDATE_BUSINESS_ACCOUNT_DETAILS = "Update eg_business_accountdetails"
-			+ " set businessDetails=?,chartOfAccount=?,amount=?,tenantId=?" + " where id=?";
-
-	public static final String UPDATE_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS = "Update eg_business_subledgerinfo"
-			+ " set amount=?,businessAccountDetail=?,accountDetailKey=?,accountDetailType=?,"
-			+ " tenantId=? where id=?";
 
 	public static final String GET_BUSINESS_ACCOUNTDETAILS_BY_BUSINESSDETAILS = "Select * from"
 			+ " eg_business_accountdetails where businessDetails=? and" + " tenantId=?";
@@ -82,12 +58,6 @@ public class BusinessDetailsRepository {
 	public static final String DELETE_BUSINESS_ACCOUNT_DETAILS = "Delete from eg_business_accountdetails"
 			+ " where id IN (:id) and tenantId=:tenantId";
 
-	public static final String INSERT_BUSINESS_ACCOUNT_DETAILS = "Insert into eg_business_accountdetails"
-			+ " (id,businessDetails,chartOfAccount,amount,tenantId)" + " values (?,?,?,?,?)";
-
-	public static final String INSERT_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS = "insert into eg_business_subledgerinfo"
-			+ " (id,amount,businessAccountDetail,accountDetailKey,accountDetailType,tenantId)"
-			+ " values (?,?,?,?,?,?)";
 
 	public static final String GET_BUSINESS_ACCOUNT_DETAILS_BY_ID_AND_TENANTID = "Select * from eg_business_"
 			+ "accountdetails where id =? and tenantId=?";
@@ -105,52 +75,47 @@ public class BusinessDetailsRepository {
 	private static final String GET_BUSINESSDETAILS_BY_CODE_AND_TENANTID_AND_ID = "Select * from eg_businessdetails"
 			+ " where code=? and tenantId=? and id != ?";
 
-	public void createBusinessDetails(BusinessDetails modelDetails,
-			List<BusinessAccountDetails> listModelAccountDetails,
-			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger) {
-		Long detailsId = generateSequence("SEQ_EG_BUSINESSDETAILS");
-		Object[] obj = new Object[] { detailsId, modelDetails.getName(), modelDetails.getIsEnabled(),
-				modelDetails.getCode(), modelDetails.getBusinessType(), modelDetails.getBusinessUrl(),
-				modelDetails.getVoucherCutoffDate(), modelDetails.getOrdernumber(), modelDetails.getVoucherCreation(),
-				modelDetails.getIsVoucherApproved(), modelDetails.getFund(), modelDetails.getDepartment(),
-				modelDetails.getFundSource(), modelDetails.getFunctionary(), modelDetails.getBusinessCategory().getId(),
-				modelDetails.getFunction(), modelDetails.getCallBackForApportioning(), modelDetails.getTenantId(),
-				modelDetails.getCreatedBy(), new Date(new java.util.Date().getTime()), modelDetails.getLastModifiedBy(),
-				new Date(new java.util.Date().getTime()) };
-		jdbcTemplate.update(INSERT_BUSINESS_DETAILS, obj);
-		List<Object[]> batchArgs = new ArrayList<>();
-		List<Long> listOfAccountDetailsId = new ArrayList<>();
-		for (BusinessAccountDetails accountDetails : listModelAccountDetails) {
-			Long accountDetailsId = generateSequence("SEQ_EG_BUSINESS_ACCOUNTDETAILS");
-			Object[] businessRecord = { accountDetailsId, detailsId, accountDetails.getChartOfAccount(),
-					accountDetails.getAmount(), accountDetails.getTenantId() };
-			listOfAccountDetailsId.add(accountDetailsId);
-			batchArgs.add(businessRecord);
-		}
-		jdbcTemplate.batchUpdate(INSERT_BUSINESS_ACCOUNT_DETAILS, batchArgs);
-		List<BusinessAccountDetails> accountDetailsFromDB = new ArrayList<>();
-		for (Long accountId : listOfAccountDetailsId) {
-			final List<Object> preparedStatementValues = new ArrayList<>();
-			preparedStatementValues.add(accountId);
-			preparedStatementValues.add(modelDetails.getTenantId());
-			List<BusinessAccountDetails> accountDetails = jdbcTemplate.query(
-					GET_BUSINESS_ACCOUNT_DETAILS_BY_ID_AND_TENANTID, preparedStatementValues.toArray(),
-					businessAccountDetailsRowMapper);
-			accountDetailsFromDB.add(accountDetails.get(0));
-		}
-		List<Object[]> batch = new ArrayList<>();
-		for (BusinessAccountSubLedgerDetails subledger : listModelAccountSubledger) {
-			for (BusinessAccountDetails accountDetails : accountDetailsFromDB) {
-				if (subledger.getBusinessAccountDetail().getChartOfAccount()
-						.equals(accountDetails.getChartOfAccount())) {
-					Object[] subledgerRecord = { generateSequence(SEQUENCEFORSUBLEDGER), subledger.getAmount(),
-							accountDetails.getId(), subledger.getAccountDetailKey(), subledger.getAccountDetailType(),
-							subledger.getTenantId() };
-					batch.add(subledgerRecord);
-				}
-			}
-		}
-		jdbcTemplate.batchUpdate(INSERT_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, batch);
+	public void createBusinessDetails(List<BusinessDetails> businessDetails) {
+
+        log.info("Create Business Details Repository::" + businessDetails);
+        final String businessDetailsInsertQuery = businessDetailsQueryBuilder.insertBusinessDetailsQuery();
+        final String accountDetailsInsertQuery = businessDetailsQueryBuilder.insertBusinessAccountDetailsQuery();
+        final String accountSubLedgerDetailsInsertQuery = businessDetailsQueryBuilder.insertAccountSubLedgerDetails();
+
+        List<Map<String, Object>> businessDetailsBatchValues = new ArrayList<>(businessDetails.size());
+        List<Map<String, Object>> accountDetailsBatchValues = new ArrayList<>(businessDetails.size());
+
+        int accountDetailsSize = 0;
+        for (BusinessDetails businessdetail : businessDetails) {
+            Long businessDetailsSequence = generateSequence("seq_eg_businessdetails");
+            businessDetailsBatchValues.add(new MapSqlParameterSource("id", businessDetailsSequence).addValue("name", businessdetail.getName()).addValue("enabled", businessdetail.getIsEnabled())
+                    .addValue("code", businessdetail.getCode()).addValue("businesstype", businessdetail.getBusinessType()).addValue("businessurl", businessdetail.getBusinessUrl())
+                    .addValue("vouchercutoffdate", businessdetail.getVoucherCutoffDate()).addValue("ordernumber", businessdetail.getOrdernumber())
+                    .addValue("vouchercreation", businessdetail.getVoucherCreation()).addValue("isVoucherApproved", businessdetail.getIsVoucherApproved())
+                    .addValue("fund", businessdetail.getFund()).addValue("department", businessdetail.getDepartment()).addValue("fundSource", businessdetail.getFundSource())
+                    .addValue("functionary", businessdetail.getFunctionary()).addValue("businessCategory", businessdetail.getBusinessCategory()).addValue("function", businessdetail.getFunction())
+                    .addValue("callBackForApportioning", businessdetail.getCallBackForApportioning()).addValue("tenantId", businessdetail.getTenantId())
+                    .addValue("createdBy", businessdetail.getCreatedBy()).addValue("createdDate", new Date().getTime())
+                    .addValue("lastModifiedBy", businessdetail.getCreatedBy()).addValue("lastModifiedDate", new Date().getTime())
+                    .getValues());
+
+            for(BusinessAccountDetails businessAccountDetails : businessdetail.getAccountDetails()) {
+                accountDetailsBatchValues.add(new MapSqlParameterSource().addValue("businessDetails", businessDetailsSequence)
+                        .addValue("chartOfAccount", businessAccountDetails.getChartOfAccount()).addValue("amount", businessAccountDetails.getAmount())
+                        .addValue("tenantId", businessAccountDetails.getTenantId()).getValues());
+                accountDetailsSize++;
+                //TO DO : When subledger is enabled on UI FIX IT
+                /*for(BusinessAccountSubLedgerDetails subLedgerDetails : businessAccountDetails.getSubledgerDetails()) {
+                    accountSubLedgerDetailsBatchValues.add(new MapSqlParameterSource("amount", subLedgerDetails.getAmount())
+                            .addValue("businessAccountDetail", accountdetailsId).addValue("accountDetailKey", subLedgerDetails.getAccountDetailKey())
+                            .addValue("accountDetailType",subLedgerDetails.getAccountDetailKey()).addValue("tenantId",subLedgerDetails.getTenantId())
+                            .getValues());
+                }*/
+            }
+        }
+
+        namedParameterJdbcTemplate.batchUpdate(businessDetailsInsertQuery, businessDetailsBatchValues.toArray(new Map[businessDetails.size()]));
+        namedParameterJdbcTemplate.batchUpdate(accountDetailsInsertQuery, accountDetailsBatchValues.toArray(new Map[accountDetailsSize]));
 
 	}
 
@@ -158,62 +123,36 @@ public class BusinessDetailsRepository {
 		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
 	}
 
-	public void updateBusinessDetails(BusinessDetails modelDetails,
-			List<BusinessAccountDetails> listModelAccountDetails,
-			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger) {
-		Object[] obj = new Object[] { modelDetails.getName(), modelDetails.getIsEnabled(), modelDetails.getCode(),
-				modelDetails.getBusinessType(), modelDetails.getBusinessUrl(), modelDetails.getVoucherCutoffDate(),
-				modelDetails.getOrdernumber(), modelDetails.getVoucherCreation(), modelDetails.getIsVoucherApproved(),
-				modelDetails.getFund(), modelDetails.getDepartment(), modelDetails.getFundSource(),
-				modelDetails.getFunctionary(), modelDetails.getBusinessCategory().getId(), modelDetails.getFunction(),
-				modelDetails.getCallBackForApportioning(), modelDetails.getTenantId(), modelDetails.getLastModifiedBy(),
-				new Date(new java.util.Date().getTime()), modelDetails.getId() };
-		jdbcTemplate.update(UPDATE_BUSINESS_DETAILS, obj);
-		final List<Object> preparedStatementValue = new ArrayList<>();
-		preparedStatementValue.add(modelDetails.getId());
-		preparedStatementValue.add(modelDetails.getTenantId());
-		List<BusinessAccountDetails> accountDetailsFromDB = jdbcTemplate.query(
-				GET_BUSINESS_ACCOUNTDETAILS_BY_BUSINESSDETAILS, preparedStatementValue.toArray(),
-				businessAccountDetailsRowMapper);
-		HashMap<Long, Long> mapOfInsertedIdsInModelAndInDB = new HashMap<>();
-		for (BusinessAccountDetails accountdetail : listModelAccountDetails) {
-			if (needsInsert(accountdetail, accountDetailsFromDB)) {
-				Long accountDetailIdFromDB = generateSequence("SEQ_EG_BUSINESS_ACCOUNTDETAILS");
-				mapOfInsertedIdsInModelAndInDB.put(accountdetail.getId(), accountDetailIdFromDB);
-				Object[] object = new Object[] { accountDetailIdFromDB, accountdetail.getBusinessDetails().getId(),
-						accountdetail.getChartOfAccount(), accountdetail.getAmount(), accountdetail.getTenantId() };
-				jdbcTemplate.update(INSERT_BUSINESS_ACCOUNT_DETAILS, object);
-			} else if (needsUpdate(accountdetail, accountDetailsFromDB))
-				updateAccountDetails(accountdetail);
-		}
-		List<BusinessAccountDetails> deletedAccountDetails = deleteAccountDetailsFromDBIfNotPresentInInput(
-				listModelAccountDetails, accountDetailsFromDB);
-		List<Long> deleteAccountDetailsId = deletedAccountDetails.stream().map(accountdetail -> accountdetail.getId())
-				.collect(Collectors.toList());
-		if (!deleteAccountDetailsId.isEmpty())
-			deleteAccountDetails(deleteAccountDetailsId, modelDetails.getTenantId());
-		List<Long> accountDetailsIds = listModelAccountDetails.stream()
-				.map(modelAccountDetail -> modelAccountDetail.getId()).collect(Collectors.toList());
-		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("id", accountDetailsIds);
-		namedParameters.put(TENANT, listModelAccountDetails.get(0).getTenantId());
+	public void updateBusinessDetails(List<BusinessDetails> businessDetails) {
 
-		List<BusinessAccountSubLedgerDetails> subledgerfromDB = namedParameterJdbcTemplate.query(
-				GET_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, namedParameters, businessAccountSubledgerDetailsRowMapper);
-		for (BusinessAccountSubLedgerDetails subledgerModel : listModelAccountSubledger) {
-			if (subledgerNeedsInsert(subledgerModel, subledgerfromDB))
-				insertSubledgerDetails(subledgerModel, mapOfInsertedIdsInModelAndInDB);
-			else if (subledgerNeedsUpdate(subledgerModel, subledgerfromDB))
-				updateSubledgerDetails(subledgerModel);
-		}
-		List<BusinessAccountSubLedgerDetails> accountSubledgerToBeDeleted = deleteSubledgerDetailsFromDBIfNotPresentInInput(
-				subledgerfromDB, listModelAccountSubledger);
-		List<Long> deleteSubledgerDetailsIds = accountSubledgerToBeDeleted.stream().map(subledger -> subledger.getId())
-				.collect(Collectors.toList());
-		if (!deleteSubledgerDetailsIds.isEmpty())
-			deleteSubledgerDetails(deleteSubledgerDetailsIds, modelDetails.getTenantId());
+        log.info("Update Business Details Repository::" + businessDetails);
+        final String businessDetailsInsertQuery = businessDetailsQueryBuilder.updateBusinessDetailsQuery();
+        final String accountDetailsInsertQuery = businessDetailsQueryBuilder.updateBusinessAccountDetailsQuery();
 
-	}
+        List<Map<String, Object>> businessDetailsBatchValues = new ArrayList<>(businessDetails.size());
+        List<Map<String, Object>> accountDetailsBatchValues = new ArrayList<>(businessDetails.size());
+
+        int accountDetailsSize = 0;
+        for (BusinessDetails businessdetail : businessDetails) {
+            businessDetailsBatchValues.add(new MapSqlParameterSource("id", businessdetail.getId()).addValue("name", businessdetail.getName()).addValue("enabled", businessdetail.getIsEnabled())
+                    .addValue("code", businessdetail.getCode()).addValue("businesstype", businessdetail.getBusinessType()).addValue("businessurl", businessdetail.getBusinessUrl())
+                    .addValue("vouchercutoffdate", businessdetail.getVoucherCutoffDate()).addValue("ordernumber", businessdetail.getOrdernumber())
+                    .addValue("vouchercreation", businessdetail.getVoucherCreation()).addValue("isVoucherApproved", businessdetail.getIsVoucherApproved())
+                    .addValue("fund", businessdetail.getFund()).addValue("department", businessdetail.getDepartment()).addValue("fundSource", businessdetail.getFundSource())
+                    .addValue("functionary", businessdetail.getFunctionary()).addValue("businessCategory", businessdetail.getBusinessCategory()).addValue("function", businessdetail.getFunction())
+                    .addValue("callBackForApportioning", businessdetail.getCallBackForApportioning()).addValue("tenantId", businessdetail.getTenantId())
+                    .addValue("lastModifiedBy", businessdetail.getCreatedBy()).addValue("lastModifiedDate", new Date().getTime())
+                    .getValues());
+            for(BusinessAccountDetails businessAccountDetails : businessdetail.getAccountDetails()) {
+                accountDetailsBatchValues.add(new MapSqlParameterSource().addValue("id", businessAccountDetails.getId()).addValue("businessDetails", businessAccountDetails.getId())
+                        .addValue("chartOfAccount", businessAccountDetails.getChartOfAccount()).addValue("amount", businessAccountDetails.getAmount())
+                        .addValue("tenantId", businessAccountDetails.getTenantId()).getValues());
+                accountDetailsSize++;
+            }
+        }
+        namedParameterJdbcTemplate.batchUpdate(businessDetailsInsertQuery, businessDetailsBatchValues.toArray(new Map[businessDetails.size()]));
+        namedParameterJdbcTemplate.batchUpdate(accountDetailsInsertQuery, accountDetailsBatchValues.toArray(new Map[accountDetailsSize]));
+    }
 
 	private void deleteSubledgerDetails(List<Long> deleteSubledgerDetailsIds, String tenantId) {
 		Map<String, Object> namedParameters = new HashMap<>();
@@ -245,7 +184,7 @@ public class BusinessDetailsRepository {
 		Object obj[] = new Object[] { subledgerModel.getAmount(), subledgerModel.getBusinessAccountDetail().getId(),
 				subledgerModel.getAccountDetailKey(), subledgerModel.getAccountDetailType(),
 				subledgerModel.getTenantId(), subledgerModel.getId() };
-		jdbcTemplate.update(UPDATE_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, obj);
+	//	jdbcTemplate.update(UPDATE_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, obj);
 	}
 
 	private boolean subledgerNeedsUpdate(BusinessAccountSubLedgerDetails subledgerModel,
@@ -269,7 +208,7 @@ public class BusinessDetailsRepository {
 					Object obj[] = new Object[] { generateSequence(SEQUENCEFORSUBLEDGER), subledgerModel.getAmount(),
 							businessDetailsId, subledgerModel.getAccountDetailKey(),
 							subledgerModel.getAccountDetailType(), subledgerModel.getTenantId() };
-					jdbcTemplate.update(INSERT_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, obj);
+					//jdbcTemplate.update(INSERT_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, obj);
 
 				}
 			}
@@ -280,7 +219,7 @@ public class BusinessDetailsRepository {
 			Object obj[] = new Object[] { generateSequence("SEQ_EG_BUSINESS_SUBLEDGERINFO"), subledgerModel.getAmount(),
 					businessDetailsId, subledgerModel.getAccountDetailKey(), subledgerModel.getAccountDetailType(),
 					subledgerModel.getTenantId() };
-			jdbcTemplate.update(INSERT_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, obj);
+		//	jdbcTemplate.update(INSERT_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, obj);
 		}
 	}
 
@@ -322,9 +261,9 @@ public class BusinessDetailsRepository {
 	}
 
 	private void updateAccountDetails(BusinessAccountDetails accountdetail) {
-		Object[] object = new Object[] { accountdetail.getBusinessDetails().getId(), accountdetail.getChartOfAccount(),
+		Object[] object = new Object[] { accountdetail.getBusinessDetails(), accountdetail.getChartOfAccount(),
 				accountdetail.getAmount(), accountdetail.getTenantId(), accountdetail.getId() };
-		jdbcTemplate.update(UPDATE_BUSINESS_ACCOUNT_DETAILS, object);
+		//jdbcTemplate.update(UPDATE_BUSINESS_ACCOUNT_DETAILS, object);
 	}
 
 	private boolean needsUpdate(BusinessAccountDetails accountdetail,

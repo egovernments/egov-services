@@ -19,6 +19,7 @@ public class BusinessCategoryQueryBuilder {
 	private static final String BASE_QUERY = "select id,name,code,active,tenantId,createdBy,"
 			+ "createdDate,lastModifiedBy,lastModifiedDate FROM eg_businesscategory";
 
+
 	@SuppressWarnings("rawtypes")
 	public String getQuery(BusinessCategoryCriteria criteria, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
@@ -28,6 +29,17 @@ public class BusinessCategoryQueryBuilder {
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
+
+    public String insertBusinessCategoryQuery() {
+       return "INSERT INTO eg_businesscategory"
+                +"(id,name,code,active,tenantId,createdBy,createdDate,lastModifiedBy,lastModifiedDate)"
+                +" VALUES(nextval('seq_eg_businesscategory'),:name,:code,:active,:tenantId,:createdBy,:createdDate,:lastModifiedBy,:lastModifiedDate)";
+    }
+
+    public String updateBusinessCategoryQuery() {
+        return "Update eg_businesscategory set name=:name,code=:code,active=:active,tenantId=:tenantId,lastModifiedBy=:lastModifiedBy,lastModifiedDate=:lastModifiedDate"
+                + " where id=:id";
+    }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,

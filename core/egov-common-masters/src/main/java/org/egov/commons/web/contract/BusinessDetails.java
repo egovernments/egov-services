@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class BusinessDetailsRequestInfo {
+public class BusinessDetails {
 
 	private Long id;
 
@@ -44,8 +44,7 @@ public class BusinessDetailsRequestInfo {
 	
 	private Boolean callBackForApportioning;
 
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "UTC")
-	private Date voucherCutoffDate;
+	private Long voucherCutoffDate;
 
 	private Integer ordernumber;
 
@@ -57,6 +56,5 @@ public class BusinessDetailsRequestInfo {
 
 	private List<BusinessAccountDetails> accountDetails;
 
-	private List<BusinessAccountSubLedger> subledgerDetails;
 
 }

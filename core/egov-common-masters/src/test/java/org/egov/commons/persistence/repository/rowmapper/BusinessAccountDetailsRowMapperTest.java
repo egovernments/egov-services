@@ -39,9 +39,8 @@ public class BusinessAccountDetailsRowMapperTest {
 	}
 
 	private BusinessAccountDetails getExpectedBusinessAccountDetails() {
-		BusinessDetails businessDetails = BusinessDetails.builder().id(1L).build();
 		return BusinessAccountDetails.builder().id(1L).amount(1000.0).chartOfAccount(56L).tenantId("default")
-				.businessDetails(businessDetails).build();
+				.businessDetails(1L).build();
 	}
 
 }

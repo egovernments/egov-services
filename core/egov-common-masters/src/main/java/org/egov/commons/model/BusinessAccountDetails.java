@@ -1,6 +1,7 @@
 package org.egov.commons.model;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.egov.common.contract.request.User;
 
 @Builder
 @AllArgsConstructor
@@ -24,7 +26,7 @@ public class BusinessAccountDetails {
 	private Long id;
 
 	@NotNull
-	private BusinessDetails businessDetails;
+	private Long businessDetails;
 
 	@NotNull
 	private Long chartOfAccount;
@@ -43,17 +45,28 @@ public class BusinessAccountDetails {
 		chartOfAccount = details.getChartOfAccounts();
 		amount = details.getAmount();
 		tenantId = modelDetails.getTenantId();
-		if (!isUpdate)
+	/*	if (!isUpdate)
 			businessDetails = modelDetails;
 		else
-			businessDetails = getBusinessDetailsForUpdate(modelDetails);
+			businessDetails = getBusinessDetailsForUpdate(modelDetails);*/
 	}
 
-	public BusinessAccountDetails toDomainModel() {
-		BusinessDetails details = BusinessDetails.builder().id(businessDetails.getId()).build();
+    public BusinessAccountDetails(org.egov.commons.web.contract.BusinessAccountDetails businessAccountDetails) {
+        businessDetails = businessAccountDetails.getBusinessDetails();
+        chartOfAccount = businessAccountDetails.getChartOfAccounts();
+        amount = businessAccountDetails.getAmount();
+        tenantId = businessAccountDetails.getTenantId();
+    }
+
+    public BusinessAccountDetails toDomainModel() {
 		return BusinessAccountDetails.builder().id(id).amount(amount).chartOfAccount(chartOfAccount).tenantId(tenantId)
-				.businessDetails(details).build();
+				.businessDetails(businessDetails).build();
 	}
+
+    public List<BusinessAccountDetails> getAccountDetails(List<org.egov.commons.web.contract.BusinessAccountDetails> contractAccountDetails) {
+        return contractAccountDetails.stream().map(businessAccountDetails -> new BusinessAccountDetails(businessAccountDetails))
+                .collect(Collectors.toList());
+    }
 
 	private BusinessDetails getBusinessDetailsForUpdate(BusinessDetails modelDetails) {
 

@@ -63,8 +63,7 @@ public class BusinessCategoryController {
             if(!errResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errResponses, HttpStatus.BAD_REQUEST);
 		BusinessCategoryRequest categoryRequest = businessCategoryService.createAsync(businessCategoryRequest);
-		return getSuccessResponse(businessCategoryRequest.getRequestInfo(),
-				Collections.singletonList(categoryRequest.getBusinessCategoryInfo()));
+		return getSuccessResponse(businessCategoryRequest.getRequestInfo(),categoryRequest.getBusinessCategory());
 
 	}
 
@@ -81,8 +80,7 @@ public class BusinessCategoryController {
          if(!errResponses.isEmpty())
          return new ResponseEntity<List<ErrorResponse>>(errResponses, HttpStatus.BAD_REQUEST);
          BusinessCategoryRequest categoryRequest =  businessCategoryService.updateAsync(businessCategoryRequest);
-		return getSuccessResponse(businessCategoryRequest.getRequestInfo(),
-				Collections.singletonList(categoryRequest.getBusinessCategoryInfo()));
+		return getSuccessResponse(businessCategoryRequest.getRequestInfo(),categoryRequest.getBusinessCategory());
 
 	}
 
@@ -95,7 +93,7 @@ public class BusinessCategoryController {
 			final BindingResult requestBodyBindingResult) {
 
 		BusinessCategoryCriteria criteria = BusinessCategoryCriteria.builder().active(categoryGetRequest.getActive())
-				.businessCategoryName(categoryGetRequest.getName()).ids(categoryGetRequest.getIds())
+				.businessCategoryName(categoryGetRequest.getName()).ids(categoryGetRequest.getId())
 				.sortBy(categoryGetRequest.getSortBy()).sortOrder(categoryGetRequest.getSortOrder())
 				.tenantId(categoryGetRequest.getTenantId()).build();
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -173,37 +171,42 @@ public class BusinessCategoryController {
 
 	private void addCodeValidationErrors(BusinessCategoryRequest businessCategoryRequest,
 			List<ErrorField> errorFields,Boolean isUpdate) {
-		final BusinessCategory category = businessCategoryRequest.getBusinessCategoryInfo();
-		if (category.getCode() == null || category.getCode().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_CODE_MANDATORY_CODE)
-					.message(CollectionConstants.CATEGORY_CODE_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.CATEGORY_CODE_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else if (!businessCategoryService.getBusinessCategoryByCodeAndTenantId(category.getCode(),
-				category.getTenantId(),category.getId(),isUpdate)) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_CODE_UNIQUE_CODE)
-					.message(CollectionConstants.CATEGORY_CODE_UNIQUE_ERROR_MESSAGE)
-					.field(CollectionConstants.CATEGORY_CODE_UNIQUE_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+		final List<BusinessCategory> categoryList = businessCategoryRequest.getBusinessCategory();
+        for(BusinessCategory category : categoryList) {
+            if (category.getCode() == null || category.getCode().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_CODE_MANDATORY_CODE)
+                        .message(CollectionConstants.CATEGORY_CODE_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.CATEGORY_CODE_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (!businessCategoryService.getBusinessCategoryByCodeAndTenantId(category.getCode(),
+                    category.getTenantId(), category.getId(), isUpdate)) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_CODE_UNIQUE_CODE)
+                        .message(CollectionConstants.CATEGORY_CODE_UNIQUE_ERROR_MESSAGE)
+                        .field(CollectionConstants.CATEGORY_CODE_UNIQUE_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else
+                return;
+        }
 	}
 
 	private void addTenantIdValidationErrors(final BusinessCategoryRequest businessCategoryRequest,
 			final List<ErrorField> errorFields) {
-		final BusinessCategory category = businessCategoryRequest.getBusinessCategoryInfo();
-		if (category.getTenantId() == null || category.getTenantId().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.TENANT_MANDATORY_CODE)
-					.message(CollectionConstants.TENANT_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.TENANT_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+		final List<BusinessCategory> categoryList = businessCategoryRequest.getBusinessCategory();
+        for(BusinessCategory category : categoryList) {
+            if (category.getTenantId() == null || category.getTenantId().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.TENANT_MANDATORY_CODE)
+                        .message(CollectionConstants.TENANT_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.TENANT_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else
+                return;
+        }
 	}
 
 	private void addNameValidationErrors(final BusinessCategoryRequest businessCategoryRequest,
 			final List<ErrorField> errorFields,Boolean isUpdate) {
-		final BusinessCategory category = businessCategoryRequest.getBusinessCategoryInfo();
+		final List<BusinessCategory> categoryList = businessCategoryRequest.getBusinessCategory();
+        for(BusinessCategory category : categoryList)
 		if (category.getName() == null || category.getName().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_NAME_MANDATORY_CODE)
 					.message(CollectionConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)

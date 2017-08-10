@@ -31,6 +31,48 @@ public class BusinessDetailsQueryBuilder {
 			+ " eg_business_accountdetails bad ON bd.id=bad.businessdetails"
 			+ " FULL JOIN eg_business_subledgerinfo basd ON bad.id=basd.businessaccountdetail";
 
+
+    public String insertBusinessDetailsQuery() {
+        return "Insert into eg_businessdetails"
+                + " (id,name,isEnabled,code,businessType,businessUrl,voucherCutOffDate,"
+                + "ordernumber,voucherCreation,isVoucherApproved,fund,department,"
+                + "fundSource,functionary,businessCategory,function,callBackForApportioning,tenantId,"
+                + "createdBy,createdDate,lastModifiedBy,lastModifiedDate)" + " values (:id,:name,:enabled,:code,:businesstype,:businessurl,:vouchercutoffdate,"
+                + ":ordernumber,:vouchercreation,:isVoucherApproved,:fund,:department,:fundSource,:functionary,:businessCategory,:function,:callBackForApportioning,"
+                + ":tenantId,:createdBy,:createdDate,:lastModifiedBy,:lastModifiedDate)";
+    }
+
+    public String updateBusinessDetailsQuery() {
+        return "Update eg_businessdetails"
+                + " set name=:name,isEnabled=:enabled,code=:code,businessType=:businesstype,businessUrl=:businessurl,voucherCutOffDate=:vouchercutoffdate,"
+                + "ordernumber=:ordernumber,voucherCreation=:vouchercreation,isVoucherApproved=:isVoucherApproved,fund=:fund,department=:department,"
+                + "fundSource=:fundSource,functionary=:functionary,businessCategory=:businessCategory,function=:function,callBackForApportioning=:callBackForApportioning,"
+                + "tenantId=:tenantId,lastModifiedBy=:lastModifiedBy,lastModifiedDate=:lastModifiedDate where id=:id";
+    }
+
+    public String insertBusinessAccountDetailsQuery() {
+        return "Insert into eg_business_accountdetails"
+                + " (id,businessDetails,chartOfAccount,amount,tenantId)" + " values (nextval('seq_eg_business_accountdetails'),:businessDetails,:chartOfAccount,:amount,:tenantId)";
+    }
+
+    public String updateBusinessAccountDetailsQuery() {
+        return "Update eg_business_accountdetails"
+                + " set businessDetails=:businessDetails,chartOfAccount=:chartOfAccount,amount=:amount,tenantId=:tenantId" + " where id=:id";
+    }
+
+    public String insertAccountSubLedgerDetails() {
+        return "insert into eg_business_subledgerinfo"
+                + " (id,amount,businessAccountDetail,accountDetailKey,accountDetailType,tenantId)"
+                + " values (nextval('seq_eg_business_subledgerinfo'),:amount,:businessAccountDetail,:accountDetailKey,:accountDetailType,:tenantId)";
+    }
+
+    public String UpdateAccountSubLedgerDetails() {
+        return "Update eg_business_subledgerinfo"
+                + " set amount=?,businessAccountDetail=?,accountDetailKey=?,accountDetailType=?,"
+                + " tenantId=? where id=?";
+    }
+
+
 	@SuppressWarnings("rawtypes")
 	public String getQuery(BusinessDetailsCriteria detailsCriteria, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);

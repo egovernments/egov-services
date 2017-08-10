@@ -222,6 +222,7 @@
 										<exclude>org.egov.egf.instrument.web.contract.*</exclude>
 										<exclude>org.egov.egf.instrument.persistence.entity.*</exclude>
 										<exclude>org.egov.egf.instrument.domain.model.*</exclude>
+										<exclude>org.egov.egf.instrument.web.requests.*</exclude>
 										<exclude>org.egov.egf.instrument.domain.repository.InstrumentTypeESRepository</exclude>
 										<exclude>org.egov.egf.instrument.domain.repository.InstrumentAccountCodeESRepository</exclude>
 										<exclude>org.egov.egf.instrument.domain.repository.InstrumentESRepository</exclude>

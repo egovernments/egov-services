@@ -24,6 +24,11 @@ public class ValueDefinitionRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    public void save(ValueDefinition valueDefinition){
+        namedParameterJdbcTemplate.update(valueDefinitionQueryBuilder.getInsertQuery(),
+                getInsertMap(valueDefinition));
+    }
+
     public void setValueDefinition(ServiceType serviceType){
 
         serviceType.getAttributeDefinitions().stream()
@@ -39,8 +44,23 @@ public class ValueDefinitionRepository {
                 new BeanPropertyRowMapper<>(ValueDefinition.class));
     }
 
-    private HashMap<String, String> getValueDefinitionMap(String code, String tenantId, String attributeCode){
-        HashMap<String, String> parametersMap = new HashMap<>();
+    private HashMap getInsertMap(ValueDefinition valueDefinition){
+        HashMap<String, Object> parametersMap = new HashMap<>();
+
+        parametersMap.put("servicecode", valueDefinition.getServiceCode());
+        parametersMap.put("tenantid", valueDefinition.getTenantId());
+        parametersMap.put("active", valueDefinition.getActive());
+        parametersMap.put("key", valueDefinition.getKey());
+        parametersMap.put("name", valueDefinition.getName());
+        parametersMap.put("attributecode", valueDefinition.getAttributeCode());
+        parametersMap.put("createddate", valueDefinition.getCreatedDate());
+        parametersMap.put("createdby", valueDefinition.getCreatedBy());
+
+        return parametersMap;
+    }
+
+    private HashMap<String, Object> getValueDefinitionMap(String code, String tenantId, String attributeCode){
+        HashMap<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("servicecode", code);
         parametersMap.put("tenantid", tenantId);
         parametersMap.put("attributecode", attributeCode);

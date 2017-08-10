@@ -20,4 +20,12 @@ public class AttributeValueDefinition {
         this.name = valueDefinition.getName();
         this.active = valueDefinition.isActive();
     }
+
+    public ValueDefinition toDomain(){
+        return ValueDefinition.builder()
+                    .key(key)
+                    .name(name)
+                    .active(active)
+                    .build();
+    }
 }

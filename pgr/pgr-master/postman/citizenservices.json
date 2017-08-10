@@ -1,0 +1,270 @@
+{
+	"id": "cf5fa41b-46ef-9355-6984-719cdc959d79",
+	"name": "New Api's pgr master",
+	"description": "",
+	"order": [
+		"49d29670-c989-6ffa-5738-8a66019a017a",
+		"faedb6e0-e40c-1253-463b-fd048f3a5502",
+		"0ce21714-f47b-9ec6-48be-ecd35626d2d2",
+		"c156d153-d0c7-b8cb-765e-d4e339392abc",
+		"8e9506c1-e6e9-dfef-9a75-b8fcb8c8c60e",
+		"4abc57a2-9f3b-7ab2-7cfd-adddfeac05c4"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1501855766869,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "0ce21714-f47b-9ec6-48be-ecd35626d2d2",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/pgr-master/serviceGroup/v1/_search?tenantId=default&keyword=Deliverable_Service",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "keyword",
+					"value": "Deliverable_Service",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1502373991485,
+			"name": "Search Service Group ",
+			"description": "",
+			"collectionId": "cf5fa41b-46ef-9355-6984-719cdc959d79",
+			"responses": [],
+			"rawModeData": "  {\r\n       \"RequestInfo\": {\r\n         \"apiId\" : \"emp\",\r\n         \"ver\" : \"1.0\",\r\n         \"ts\" : \"10-03-2017 00:00:00\",\r\n         \"action\" : \"create\",\r\n         \"did\" : \"1\",\r\n         \"key\" : \"abcdkey\",\r\n         \"msgId\" : \"20170310130900\",\r\n         \"requesterId\" : \"rajesh\",\r\n         \"authToken\" : \"f5f518bd-18d5-4d51-b0bf-2930d44b87c3\"\r\n     }\r\n  }"
+		},
+		{
+			"id": "49d29670-c989-6ffa-5738-8a66019a017a",
+			"headers": "Content-Type: application/x-www-form-urlencoded\nAuthorization: Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://{{host}}:{{port}}/user/oauth/token",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [
+				{
+					"key": "username",
+					"value": "narasappa",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "demo",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "grant_type",
+					"value": "password",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "scope",
+					"value": "read",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "tenantId",
+					"value": "default",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1502373993643,
+			"name": "Get OAuth key (Login) ",
+			"description": "",
+			"collectionId": "cf5fa41b-46ef-9355-6984-719cdc959d79",
+			"responses": []
+		},
+		{
+			"id": "4abc57a2-9f3b-7ab2-7cfd-adddfeac05c4",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": " http://egov-micro-dev.egovernments.org/pgr-master/service/v2/_search?serviceCode=TL&tenantId=default&keywords=Deliverable_Service",
+			"queryParams": [
+				{
+					"key": "serviceCode",
+					"value": "TL",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "keywords",
+					"value": "Deliverable_Service",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1502373965731,
+			"name": "service type search",
+			"description": "",
+			"collectionId": "cf5fa41b-46ef-9355-6984-719cdc959d79",
+			"responses": [],
+			"rawModeData": "\t{\r\n\t   \t\"RequestInfo\": {\r\n\t       \"apiId\" : \"emp\",\r\n\t       \"ver\" : \"1.0\",\r\n\t       \"ts\" : \"10-03-2017 00:00:00\",\r\n\t       \"action\" : \"create\",\r\n\t       \"did\" : \"1\",\r\n\t       \"key\" : \"abcdkey\",\r\n\t       \"msgId\" : \"20170310130900\",\r\n\t       \"requesterId\" : \"rajesh\",\r\n\t       \"authToken\" : null\r\n\t   }\r\n\t}"
+		},
+		{
+			"id": "8e9506c1-e6e9-dfef-9a75-b8fcb8c8c60e",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/pgr-master/servicedefinition/v1/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1502373963276,
+			"name": "Create service definition",
+			"description": "",
+			"collectionId": "cf5fa41b-46ef-9355-6984-719cdc959d79",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10-08-2017 00:00:00\",\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"1\",\n    \"authToken\":\"62338caf-fbff-4f37-b71c-7532f0b0c5f0\"\n  },\n  \"serviceDefinition\": {\n    \"tenantId\" : \"default\",\n    \"code\" : \"TL\",\n    \"attributes\": [\n        {\n            \"variable\": true,\n            \"code\": \"LCNAME\",\n            \"serviceCode\": \"TL\",\n            \"dataType\": \"string\",\n            \"required\": true,\n            \"order\": 1,\n            \"dataTypeDescription\": null,\n            \"description\": \"core.tl.license..name\",\n            \"url\": null,\n            \"groupCode\": \"tlgroup\",\n            \"attribValues\": [\n            \t\t{\n                    \"key\": \"TLAPPROVED\",\n                    \"name\": \"core.tl.status.approved\",\n                    \"isActive\": true\n                \t},\n                \t{\n                    \"key\": \"TLSTATUSREJECTED\",\n                    \"name\": \"core.tl.status.rejected\",\n                    \"isActive\": true\n                \t}\n            \t]\n        }\n     ]\n  }\n}"
+		},
+		{
+			"id": "c156d153-d0c7-b8cb-765e-d4e339392abc",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/pgr-master/service/v2/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1502373998851,
+			"name": "Create Service Type",
+			"description": "",
+			"collectionId": "cf5fa41b-46ef-9355-6984-719cdc959d79",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10-08-2017 00:00:00\",\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"1\",\n    \"authToken\":\"f5f518bd-18d5-4d51-b0bf-2930d44b87c3\"\n  },\n  \"serviceType\": {\n    \"tenantId\" : \"default\",\n    \"serviceCode\" : \"TL\",\n    \"serviceName\": \"Trade License\",\n    \"description\": \"new service for trade license\",\n    \"metadata\": \"true\",\n    \"type\": \"realTime\",\n    \"category\": 95,\n    \"slaHours\": 24,\n    \"days\": true,\n    \"active\": true,\n    \"hasFinancialImpact\": true,\n    \"department\": null,\n    \"keywords\": [\n     \"Deliverable_Service\"\n    ],\n    \"config\": [\n     \"true\"\n    ]\n  }\n}\n"
+		},
+		{
+			"id": "faedb6e0-e40c-1253-463b-fd048f3a5502",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/pgr-master/serviceGroup/v1/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1502373996539,
+			"name": "Create Service Group ",
+			"description": "",
+			"collectionId": "cf5fa41b-46ef-9355-6984-719cdc959d79",
+			"responses": [],
+			"rawModeData": "{  \n   \"ServiceGroup\":{  \n      \"name\":\"Citizen Service Test\",\n      \"code\":\"CST\",\n      \"description\":\"Citizen Service Test\",\n      \"tenantId\":\"default\",\n      \"keyword\":\"Deliverable_Service\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"f5f518bd-18d5-4d51-b0bf-2930d44b87c3\"\n   }\n}"
+		}
+	]
+}

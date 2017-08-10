@@ -172,6 +172,12 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.servicetypes.create.key}")
 	private String createServiceTypeTopicKey;
 
+	@Value("${kafka.topics.servicedefinition.create.name}")
+	private String createServiceDefinitionName;
+
+	@Value("${kafka.topics.servicedefinition.create.key}")
+	private String createServiceDefinitionKey;
+
 	public String getUpdateEscalationTimeTypeName() {
 		return updateEscalationTimeTypeName;
 	}
@@ -324,5 +330,13 @@ public class ApplicationProperties {
 
 	public String getCreateServiceTypeTopicKey() {
 		return createServiceTypeTopicKey;
+	}
+
+	public String getCreateServiceDefinitionName() {
+		return createServiceDefinitionName;
+	}
+
+	public String getCreateServiceDefinitionKey() {
+		return createServiceDefinitionKey;
 	}
 }

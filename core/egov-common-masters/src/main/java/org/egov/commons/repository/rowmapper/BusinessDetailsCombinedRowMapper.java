@@ -42,9 +42,9 @@ public class BusinessDetailsCombinedRowMapper implements RowMapper<BusinessDetai
 		businessDetails.setOrdernumber((Integer)rs.getObject("bd_ordernumber"));
 		businessDetails.setTenantId(rs.getString("bd_tenant"));
 		businessDetails.setVoucherCreation((Boolean)rs.getObject("bd_vouc_creation"));
-		try {
+		/*try {
 			Date date = isEmpty(rs.getDate("bd_vou_cutoffdate")) ? null : sdf.parse(sdf.format(rs.getDate("bd_vou_cutoffdate")));
-			businessDetails.setVoucherCutoffDate(date.getTime());
+			//businessDetails.setVoucherCutoffDate(date.getTime());
 			date = isEmpty(rs.getDate("bd_createddate")) ? null : sdf.parse(sdf.format(rs.getDate("bd_createddate")));
 			businessDetails.setCreatedDate(date.getTime());
 			date = isEmpty(rs.getDate("bd_lastmodifieddate")) ? null : sdf.parse(sdf.format(rs.getDate("bd_lastmodifieddate")));
@@ -52,10 +52,10 @@ public class BusinessDetailsCombinedRowMapper implements RowMapper<BusinessDetai
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");
-		}
+		}*/
 	
-		businessDetails.setCreatedBy(rs.getLong("bd_createdby"));
-		businessDetails.setLastModifiedBy(rs.getLong("bd_lastmodifiedby"));
+		/*businessDetails.setCreatedBy(rs.getLong("bd_createdby"));
+		businessDetails.setLastModifiedBy(rs.getLong("bd_lastmodifiedby"));*/
 		
 		BusinessAccountDetails accountDetails=new BusinessAccountDetails();
 		accountDetails.setId((Long)rs.getObject("bad_id"));

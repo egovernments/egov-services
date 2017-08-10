@@ -112,6 +112,13 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
         searchQuery = searchQuery.replace(":selectfields", " * ");
 
         // implement jdbc specfic search
+        if (budgetReAppropriationSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", budgetReAppropriationSearchEntity.getTenantId());
+		}
         if (budgetReAppropriationSearchEntity.getId() != null) {
             if (params.length() > 0)
                 params.append(" and ");

@@ -8,7 +8,7 @@ var meterReading = {
    "label": "Meter Reading",
    "name": "MeterReading",
    "multiple": false,
-   "hide":true,
+   "hide":false,
    "children": [],
    "fields": [
     {

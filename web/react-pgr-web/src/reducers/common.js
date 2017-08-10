@@ -31,6 +31,11 @@ let menuConvention={
   "Grievance Redressal.Reports.Ageing By Department Report":"/report/AgeingByDepartment",
   "Grievance Redressal.Reports.Drill Down By Department Report":"/report/DrillDownByDepartment",
 
+  "Collection.Collection-Reports.CashCollection":"/report/CashCollection",
+  "Collection.Collection-Reports.ReceiptRegister":"/report/ReceiptRegister",
+  "Collection.Collection-Reports.CollectionSummaryAccountHead":"/report/ChequeCollection",
+  "Collection.Collection-Reports.ChequeCollection":"/report/CollectionSummary",
+
   "Grievance Redressal.Masters.Escalation Time.Create Escalation Time Type":"/pgr/defineEscalationTime",
   "Grievance Redressal.Masters.Escalation Time.Search Escalation Time":"/pgr/searchEscalationTime",
 

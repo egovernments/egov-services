@@ -1,5 +1,6 @@
 package org.egov.pgr.persistence.querybuilder;
 
+import org.egov.pgr.domain.model.ServiceType;
 import org.egov.pgr.domain.model.ServiceTypeSearchCriteria;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,19 @@ public class ServiceTypeQueryBuilder {
 
         if(!serviceTypeSearchCriteria.isServiceCodeEmpty())
             addWhereClauseWithAnd(query,"code","code");
+
+        return query.toString();
+    }
+    
+    public String getQuery(ServiceType serviceType){
+
+        StringBuilder query = new StringBuilder("SELECT * FROM egpgr_complainttype WHERE tenantid = :tenantid" );
+
+        if(!serviceType.isServiceCodeAbsent())
+            addWhereClauseWithAnd(query,"upper(code)","code");
+                
+        if(!serviceType.isServiceNameAbsent())
+        	addWhereClauseWithAnd(query, "upper(name)", "name");
 
         return query.toString();
     }

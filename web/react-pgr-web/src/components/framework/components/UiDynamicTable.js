@@ -33,40 +33,40 @@ class UiDynamicTable extends Component {
        super(props);
    	}
 
-		componentWillMount() {
-	    $('#dynamicTable').DataTable({
-	       dom: 'lBfrtip',
-	       buttons: [],
-	       bDestroy: true,
-	       language: {
-	           "emptyTable": "No Records"
-	       }
-	    });
-   	}
-
-   	componentWillUnmount() {
-    	$('#dynamicTable').DataTable().destroy(true);
-  	}
-
-  	componentWillUpdate() {
-  		let {flag} = this.props;
-	    if(flag == 1) {
-	      flag = 0;
-	      $('#dynamicTable').dataTable().fnDestroy();
-	    }
-	}
-
-	componentDidUpdate() {
-	    $('#dynamicTable').DataTable({
-	         dom: 'lBfrtip',
-	         buttons: [],
-	          ordering: false,
-	          bDestroy: true,
-	          language: {
-	             "emptyTable": "No Records"
-	          }
-	    });
-  	}
+	// 	componentWillMount() {
+	//     $('#dynamicTable').DataTable({
+	//        dom: 'lBfrtip',
+	//        buttons: [],
+	//        bDestroy: true,
+	//        language: {
+	//            "emptyTable": "No Records"
+	//        }
+	//     });
+  //  	}
+	//
+  //  	componentWillUnmount() {
+  //   	$('#dynamicTable').DataTable().destroy(true);
+  // 	}
+	//
+  // 	componentWillUpdate() {
+  // 		let {flag} = this.props;
+	//     if(flag == 1) {
+	//       flag = 0;
+	//       $('#dynamicTable').dataTable().fnDestroy();
+	//     }
+	// }
+	//
+	// componentDidUpdate() {
+	//     $('#dynamicTable').DataTable({
+	//          dom: 'lBfrtip',
+	//          buttons: [],
+	//           ordering: false,
+	//           bDestroy: true,
+	//           language: {
+	//              "emptyTable": "No Records"
+	//           }
+	//     });
+  // 	}
 
 	renderFields =(item)=> {
 			switch(item.type) {
@@ -202,7 +202,7 @@ class UiDynamicTable extends Component {
 
 		          </tbody>
 		        </Table>
-						<strong>{"Amount paid (Rs)"+" "+ getVal("Receipt[0].instrument.amount") || 0}</strong>
+						<strong>{"Amount paid (Rs)"+" "+ getVal("Receipt[0].instrument.amount")}</strong>
 		      </CardText>
 		      </Card>
   			)

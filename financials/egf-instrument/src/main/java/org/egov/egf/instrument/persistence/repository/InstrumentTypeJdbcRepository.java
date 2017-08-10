@@ -68,6 +68,13 @@ public class InstrumentTypeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (instrumentTypeSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", instrumentTypeSearchEntity.getTenantId());
+		}
 		if (instrumentTypeSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -101,7 +108,7 @@ public class InstrumentTypeJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("ids =:ids");
+			params.append("id in (:ids)");
 			paramValues.put("ids", instrumentTypeSearchEntity.getIds());
 		}
 

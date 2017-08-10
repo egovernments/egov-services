@@ -1,15 +1,20 @@
 package org.egov.pgr.domain.service;
 
 import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.ServiceTypeKeyword;
 import org.egov.pgr.domain.model.ServiceTypeSearchCriteria;
+import org.egov.pgr.domain.service.validator.serviceTypeCreateValidator.ServiceTypeCreateValidator;
 import org.egov.pgr.domain.service.validator.servicetypesearchvalidators.ServiceTypeSearchValidator;
 import org.egov.pgr.domain.service.validator.servicetypevalidators.ServiceTypeValidator;
+import org.egov.pgr.persistence.repository.AttributeDefinitionRepository;
+import org.egov.pgr.persistence.repository.ServiceTypeKeywordRepository;
 import org.egov.pgr.persistence.repository.ServiceTypeMessageQueueRepository;
 import org.egov.pgr.persistence.repository.ServiceTypeRepository;
 import org.egov.pgr.web.contract.ServiceTypeRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceTypeService {
@@ -19,27 +24,41 @@ public class ServiceTypeService {
 
     private ServiceTypeRepository serviceTypeRepository;
 
+    private ServiceTypeKeywordRepository serviceTypeKeywordRepository;
+
+    private AttributeDefinitionRepository attributeDefinitionRepository;
+
     private List<ServiceTypeValidator> validators;
 
     private List<ServiceTypeSearchValidator> searchValidators;
 
+    private List<ServiceTypeCreateValidator> createValidators;
+
     public ServiceTypeService(ServiceTypeMessageQueueRepository serviceTypeMessageQueueRepository,
                               ServiceTypeRepository serviceTypeRepository, List<ServiceTypeValidator> validators,
-                              List<ServiceTypeSearchValidator> searchValidators) {
+                              List<ServiceTypeSearchValidator> searchValidators,
+                              List<ServiceTypeCreateValidator> createValidators,
+                              ServiceTypeKeywordRepository serviceTypeKeywordRepository,
+                              AttributeDefinitionRepository attributeDefinitionRepository) {
         this.serviceTypeMessageQueueRepository = serviceTypeMessageQueueRepository;
         this.serviceTypeRepository = serviceTypeRepository;
         this.validators = validators;
         this.searchValidators = searchValidators;
+        this.createValidators=createValidators;
+        this.serviceTypeKeywordRepository = serviceTypeKeywordRepository;
+        this.attributeDefinitionRepository = attributeDefinitionRepository;
     }
 
 
     public void create(ServiceType serviceType, ServiceTypeRequest serviceTypeRequest){
-        validate(serviceType);
+    	createMandatoryFieldValidate(serviceType);
+    	createUniqueCombinationValidate(serviceType);
         serviceTypeMessageQueueRepository.save(serviceTypeRequest, CREATE);
     }
 
     public void persistServiceType(ServiceType serviceType){
         serviceTypeRepository.save(serviceType.toDto());
+        persistServiceTypeKeywords(serviceType);
     }
 
     public List<ServiceType> search(ServiceTypeSearchCriteria serviceTypeSearchCriteria){
@@ -47,12 +66,35 @@ public class ServiceTypeService {
         return serviceTypeRepository.search(serviceTypeSearchCriteria);
     }
 
+    private void persistServiceTypeKeywords(ServiceType serviceType){
+
+        List<ServiceTypeKeyword> serviceTypeKeywordList =  serviceType.getKeywords().stream()
+                                .map(keyword -> new ServiceTypeKeyword(serviceType.getServiceCode(),
+                                            serviceType.getTenantId(), keyword))
+                                .collect(Collectors.toList());
+
+        serviceTypeKeywordList.forEach(serviceTypeKeyword ->
+                serviceTypeKeywordRepository.save(serviceTypeKeyword.toDto(serviceType)));
+    }
+
     private void validate(ServiceType serviceType){
         validators.stream()
                 .filter(validator -> validator.canValidate(serviceType))
                 .forEach(v -> v.validate(serviceType));
     }
-
+    
+    private void createMandatoryFieldValidate(ServiceType serviceType){
+    	createValidators.stream()
+                .filter(validator -> validator.canValidate(serviceType))
+                .forEach(v -> v.checkMandatoryField(serviceType));
+    }
+    
+    private void createUniqueCombinationValidate(ServiceType serviceType){
+    	createValidators.stream()
+                .filter(validator -> validator.canValidate(serviceType))
+                .forEach(v -> v.validateUniqueCombinations(serviceType));
+    }
+    
     private void validateSearch(ServiceTypeSearchCriteria serviceTypeSearchCriteria){
         searchValidators.stream()
                 .filter(validator -> validator.canValidate(serviceTypeSearchCriteria))

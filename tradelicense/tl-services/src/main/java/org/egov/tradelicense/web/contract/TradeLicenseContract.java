@@ -6,14 +6,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.egov.tradelicense.domain.enums.ApplicationType;
-import org.egov.tradelicense.domain.enums.BusinessNature;
-import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.egov.tradelicense.domain.model.AuditDetails;
-import org.egov.tradelicense.domain.model.LicenseFeeDetail;
-import org.egov.tradelicense.domain.model.SupportDocument;
+import org.egov.tradelicense.web.contract.enums.ApplicationTypeContract;
+import org.egov.tradelicense.web.contract.enums.BusinessNatureContract;
+import org.egov.tradelicense.web.contract.enums.OwnerShipTypeContract;
 import org.hibernate.validator.constraints.Email;
-import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,7 +31,7 @@ public class TradeLicenseContract {
 	private String tenantId;
 
 	@NotNull
-	private ApplicationType applicationType;
+	private ApplicationTypeContract applicationType;
 
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
@@ -95,7 +92,7 @@ public class TradeLicenseContract {
 
 	@NotNull
 	@JsonProperty("ownerShipType")
-	private OwnerShipType ownerShipType;
+	private OwnerShipTypeContract ownerShipType;
 
 	@NotNull
 	@JsonProperty("tradeTitle")
@@ -104,7 +101,7 @@ public class TradeLicenseContract {
 
 	@NotNull
 	@JsonProperty("tradeType")
-	private BusinessNature tradeType;
+	private BusinessNatureContract tradeType;
 
 	@NotNull
 	@JsonProperty("categoryId")
@@ -145,10 +142,10 @@ public class TradeLicenseContract {
 	private String expiryDate;
 
 	@JsonProperty("feeDetails")
-	private List<LicenseFeeDetail> feeDetails;
+	private List<LicenseFeeDetailContract> feeDetails;
 
 	@JsonProperty("supportDocuments")
-	private List<SupportDocument> supportDocuments;
+	private List<SupportDocumentContract> supportDocuments;
 
 	@JsonProperty("status")
 	private Long status;

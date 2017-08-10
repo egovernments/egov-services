@@ -1,6 +1,8 @@
-package org.egov.tradelicense.domain.model;
+package org.egov.tradelicense.web.contract;
 
 import javax.validation.constraints.NotNull;
+
+import org.egov.tradelicense.domain.model.AuditDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupportDocument {
+public class LicenseFeeDetailContract {
 
 	@JsonProperty("id")
 	private Long id;
@@ -20,15 +22,15 @@ public class SupportDocument {
 	private Long licenseId;
 
 	@NotNull
-	@JsonProperty("documentTypeId")
-	private Long documentTypeId;
+	@JsonProperty("financialYear")
+	private String financialYear;
 
 	@NotNull
-	@JsonProperty("fileStoreId")
-	private Long fileStoreId;
+	@JsonProperty("amount")
+	private Double amount;
 
-	@JsonProperty("comments")
-	private String comments;
+	@JsonProperty("paid")
+	private Boolean paid = false;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

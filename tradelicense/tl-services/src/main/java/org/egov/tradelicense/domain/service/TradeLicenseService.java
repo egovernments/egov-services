@@ -11,11 +11,15 @@ import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.InvalidInputException;
+import org.egov.tradelicense.common.domain.model.RequestInfoWrapper;
+import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
+import org.egov.tradelicense.web.contract.TradeLicenseContract;
 import org.egov.tradelicense.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.web.requests.TradeLicenseResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,12 +74,28 @@ public class TradeLicenseService {
 	public List<TradeLicense> add(List<TradeLicense> tradeLicenses, RequestInfo requestInfo, BindingResult errors) {
 
 		validate(tradeLicenses, errors);
+
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		//validateTradeLicense(tradeLicenses, requestInfo);
+		// external end point validations
+		validateTradeLicense(tradeLicenses, requestInfo);
+		// setting the id for the license and support document and fee details
 		for (TradeLicense license : tradeLicenses) {
+
 			license.setId(tradeLicenseRepository.getNextSequence());
+			if (license.getSupportDocuments() != null && license.getSupportDocuments().size() > 0) {
+				for (SupportDocument supportDocument : license.getSupportDocuments()) {
+					supportDocument.setLicenseId(license.getId());
+					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
+				}
+			}
+			if (license.getFeeDetails() != null && license.getFeeDetails().size() > 0) {
+				for (LicenseFeeDetail feeDetail : license.getFeeDetails()) {
+					feeDetail.setLicenseId(license.getId());
+					feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
+				}
+			}
 		}
 
 		return tradeLicenses;
@@ -92,16 +112,19 @@ public class TradeLicenseService {
 
 	private void validateTradeLicense(List<TradeLicense> tradeLicenses, RequestInfo requestInfo) {
 
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
 		for (TradeLicense tradeLicense : tradeLicenses) {
-			validateTradeLocality(tradeLicense, requestInfo);
-			validateTradeLocationWard(tradeLicense, requestInfo);
-			validateTradeCategory(tradeLicense, requestInfo);
-			validateTradeSubCategory(tradeLicense, requestInfo);
-			validateTradeSupportingDocument(tradeLicense, requestInfo);
+			validateTradeLocality(tradeLicense, requestInfoWrapper);
+			validateTradeLocationWard(tradeLicense, requestInfoWrapper);
+			validateTradeCategory(tradeLicense, requestInfoWrapper);
+			validateTradeSubCategory(tradeLicense, requestInfoWrapper);
+			validateTradeSupportingDocument(tradeLicense, requestInfoWrapper);
 		}
 	}
 
-	private void validateTradeSupportingDocument(TradeLicense tradeLicense, RequestInfo requestInfo) {
+	private void validateTradeSupportingDocument(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
 		for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
@@ -117,7 +140,7 @@ public class TradeLicenseService {
 			DocumentTypeResponse documentTypeResponse = null;
 			try {
 
-				documentTypeResponse = restTemplate.postForObject(uri, requestInfo, DocumentTypeResponse.class);
+				documentTypeResponse = restTemplate.postForObject(uri, requestInfoWrapper, DocumentTypeResponse.class);
 
 			} catch (Exception e) {
 				log.error("Error while connecting to the document type end point");
@@ -128,7 +151,7 @@ public class TradeLicenseService {
 		}
 	}
 
-	private void validateTradeSubCategory(TradeLicense tradeLicense, RequestInfo requestInfo) {
+	private void validateTradeSubCategory(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
 		Long subCategoryId = tradeLicense.getSubCategoryId();
 
@@ -139,22 +162,23 @@ public class TradeLicenseService {
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
 				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("ids", Long.valueOf(subCategoryId))
+				.queryParam("type", "subCategory")
 				.build(true).encode().toUri();
 
 		CategoryResponse categoryResponse = null;
 		try {
 
-			categoryResponse = restTemplate.postForObject(uri, requestInfo, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(uri, requestInfoWrapper, CategoryResponse.class);
 
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			log.error("Error while connecting to the sub category end point");
 		}
 		if (categoryResponse == null || categoryResponse.getCategories().size() == 0) {
 			throw new InvalidInputException("Invalid sub category type ");
 		}
 	}
 
-	private void validateTradeCategory(TradeLicense tradeLicense, RequestInfo requestInfo) {
+	private void validateTradeCategory(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
 		Long categoryId = tradeLicense.getCategoryId();
 
@@ -164,23 +188,23 @@ public class TradeLicenseService {
 				.append(propertiesManager.getCategoryServiceSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
-				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("id", Long.valueOf(categoryId))
+				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("ids", Long.valueOf(categoryId))
 				.build(true).encode().toUri();
 
 		CategoryResponse categoryResponse = null;
 		try {
 
-			categoryResponse = restTemplate.postForObject(uri, requestInfo, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(uri, requestInfoWrapper, CategoryResponse.class);
 
 		} catch (Exception e) {
-			log.error("Error while connecting to the sub category end point");
+			log.error("Error while connecting to the category end point");
 		}
 		if (categoryResponse == null || categoryResponse.getCategories().size() == 0) {
 			throw new InvalidInputException("Invalid category type ");
 		}
 	}
 
-	private void validateTradeLocationWard(TradeLicense tradeLicense, RequestInfo requestInfo) {
+	private void validateTradeLocationWard(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
 		Integer revenueWardId = tradeLicense.getRevenueWardId();
 
@@ -190,25 +214,25 @@ public class TradeLicenseService {
 				.append(propertiesManager.getLocationServiceSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
-				.queryParam("boundaryTypeName", "WARD").queryParam("hierarchyTypeName", "REVENUE")
-				.queryParam("tenantId", tradeLicense.getTenantId()).build(true).encode().toUri();
+				.queryParam("boundaryIds", revenueWardId).queryParam("tenantId", tradeLicense.getTenantId()).build(true)
+				.encode().toUri();
 
 		Object locationObj = null;
 		try {
 
-			locationObj = restTemplate.postForObject(uri, requestInfo, Object.class);
+			locationObj = restTemplate.postForObject(uri, requestInfoWrapper, Object.class);
 
 		} catch (Exception e) {
 			log.error("Error while connecting to the location end point");
 		}
-		if(locationObj == null){
+		if (locationObj == null) {
 			throw new InvalidInputException("Invalid location ward ");
 		}
 	}
 
-	private void validateTradeLocality(TradeLicense tradeLicense, RequestInfo requestInfo) {
+	private void validateTradeLocality(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
-		Integer wardId = tradeLicense.getLocalityId();
+		Integer localityId = tradeLicense.getLocalityId();
 
 		StringBuffer supportingDocumentURI = new StringBuffer();
 		supportingDocumentURI.append(propertiesManager.getLocationServiceHostName())
@@ -216,18 +240,19 @@ public class TradeLicenseService {
 				.append(propertiesManager.getLocationServiceSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
-				.queryParam("boundaryTypeName", "LOCALITY").queryParam("hierarchyTypeName", "REVENUE")
-				.queryParam("tenantId", tradeLicense.getTenantId()).build(true).encode().toUri();
+				.queryParam("boundaryIds", localityId).queryParam("tenantId", tradeLicense.getTenantId()).build(true)
+				.encode().toUri();
 
 		Object locationObj = null;
+
 		try {
 
-			locationObj = restTemplate.postForObject(uri, requestInfo, Object.class);
+			locationObj = restTemplate.postForObject(uri, requestInfoWrapper, Object.class);
 
 		} catch (Exception e) {
 			log.error("Error while connecting to the location ward end point");
 		}
-		if(locationObj == null){
+		if (locationObj == null) {
 			throw new InvalidInputException("Invalid location ");
 		}
 	}
@@ -249,6 +274,51 @@ public class TradeLicenseService {
 		TradeLicenseResponse.setResponseInfo(responseInfo);
 
 		return TradeLicenseResponse;
+	}
+	
+	public TradeLicenseResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,
+			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
+			String licenseNumber,  String mobileNumber, String aadhaarNumber, String emailId,
+			String propertyAssesmentNo, Integer revenueWard, Integer locality, String ownerName, String tradeTitle,
+			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy,Integer status) {
+
+		List<TradeLicense> licenses = tradeLicenseRepository.search(tenantId, pageSize, pageNumber, sort, active, tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, revenueWard, locality, ownerName,
+				tradeTitle, tradeType, tradeCategory, tradeSubCategory, legacy, status);
+		
+		List<TradeLicenseContract> tradeLicenseContracts = new ArrayList<TradeLicenseContract>();
+		
+		ModelMapper model = new ModelMapper();
+		
+		for(TradeLicense license : licenses){
+			TradeLicenseContract tradeContract = new TradeLicenseContract();
+			model.map(license, tradeContract);
+			tradeLicenseContracts.add(tradeContract);
+		}
+		TradeLicenseResponse TradeLicenseResponse = new TradeLicenseResponse();
+		TradeLicenseResponse.setResponseInfo(createResponseInfoFromRequestInfo(requestInfo, true));
+		TradeLicenseResponse.setLicenses(tradeLicenseContracts);
+
+		return TradeLicenseResponse;
+	}
+	
+	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success)
+	{
+		ResponseInfo responseInfo = new ResponseInfo();
+		String apiId = requestInfo.getApiId();
+		responseInfo.setApiId(apiId);
+		String ver = requestInfo.getVer();
+		responseInfo.setVer(ver);
+		String ts = null;
+		if (requestInfo.getTs() != null)
+			ts = requestInfo.getTs().toString();
+		responseInfo.setTs(ts);
+		String resMsgId = "uief87324";
+		responseInfo.setResMsgId(resMsgId);
+		String msgId = requestInfo.getMsgId();
+		responseInfo.setMsgId(msgId);
+		String responseStatus = (success.booleanValue()) ? "SUCCESSFUL" : "FAILED";
+		responseInfo.setStatus(responseStatus);
+		return responseInfo;
 	}
 
 }

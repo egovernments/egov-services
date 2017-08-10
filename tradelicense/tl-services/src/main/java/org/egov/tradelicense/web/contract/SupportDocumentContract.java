@@ -1,6 +1,8 @@
-package org.egov.tradelicense.domain.model;
+package org.egov.tradelicense.web.contract;
 
 import javax.validation.constraints.NotNull;
+
+import org.egov.tradelicense.domain.model.AuditDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupportDocument {
+public class SupportDocumentContract {
 
 	@JsonProperty("id")
 	private Long id;

@@ -37,4 +37,10 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.tl-services.create.legacy.tradelicense.validated}")
 	private String createLegacyTradeValidated;
+	
+	@Value("${egov.services.tl-services.pageSize.default}")
+	private String pageSize;
+
+	@Value("${egov.services.tl-services.pageNumber.default}")
+	private String pageNumber;
 }

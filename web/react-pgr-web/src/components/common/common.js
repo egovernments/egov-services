@@ -223,7 +223,7 @@ var localationData = {
   "wc.create.SpecialDonationCharges":"Special Security Deposit Charges",
   "wc.create.receiptDate":"Receipt Date",
   "wc.create.receiptNumber":"Receipt Number",
-
+  "wc.create.numberOfFamily":"Number Of Family",
 
 
 

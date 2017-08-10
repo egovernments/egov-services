@@ -19,6 +19,7 @@ import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
+import org.egov.egf.instrument.web.requests.InstrumentDepositRequest;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -187,7 +188,7 @@ public class InstrumentServiceTest {
 
 		List<Instrument> instruments = getInstruments();
 
-		BankContract expextedResult = BankContract.builder().name("name").description("description").active(true)
+		BankContract expextedResult = BankContract.builder().code("code").description("description").active(true)
 				.id("1").build();
 
 		instruments.get(0).setBank(expextedResult);
@@ -334,6 +335,30 @@ public class InstrumentServiceTest {
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
 		assertEquals(expextedResult, actualResult.get(0).getSurrenderReason());
+	}
+	
+	@Test
+	public final void test_deposit() {
+		
+		List<Instrument> expextedResult = getInstruments();
+		
+		when(instrumentRepository.findById(any(Instrument.class))).thenReturn(getInstruments().get(0));
+		when(financialStatusContractRepository.findByModuleCode(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.deposit(getInstrumentDepositRequest(), errors, requestInfo);
+		
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	private FinancialStatusContract getFinancialStatusContract() {
+		return FinancialStatusContract.builder().code("Deposit").moduleType("Instrument").build();
+	}
+	
+	private InstrumentDepositRequest getInstrumentDepositRequest() {
+		InstrumentDepositRequest instrumentDepositRequest = new InstrumentDepositRequest();
+		instrumentDepositRequest.setInstrumentDepositId("instrumentDepositId");
+		return instrumentDepositRequest;
 	}
 
 	private List<Instrument> getInstruments() {

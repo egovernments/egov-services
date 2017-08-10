@@ -108,7 +108,7 @@ public class DemandRepository {
 			cal.add(Calendar.MONTH, 3);
 		else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR))
 			cal.add(Calendar.MONTH, 6);
-		else
+		else if(agreement.getPaymentCycle().equals(PaymentCycle.ANNUAL))
 			cal.add(Calendar.YEAR, 1);
 		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
 		Date date = cal.getTime();

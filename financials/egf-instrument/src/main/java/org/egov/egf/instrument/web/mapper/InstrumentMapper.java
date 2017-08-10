@@ -28,6 +28,7 @@ public class InstrumentMapper {
 		instrument.setBranchName(contract.getBranchName());
 		instrument.setDrawer(contract.getDrawer());
 		instrument.setFinancialStatus(contract.getFinancialStatus());
+		instrument.setRemittanceVoucherId(contract.getRemittanceVoucherId());
 
 		if (contract.getInstrumentType() != null)
 			instrument.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
@@ -75,6 +76,7 @@ public class InstrumentMapper {
 		contract.setBranchName(instrument.getBranchName());
 		contract.setDrawer(instrument.getDrawer());
 		contract.setFinancialStatus(instrument.getFinancialStatus());
+		contract.setRemittanceVoucherId(instrument.getRemittanceVoucherId());
 
 		if (instrument.getInstrumentType() != null)
 			contract.setInstrumentType(typeMapper.toContract(instrument.getInstrumentType()));
@@ -123,6 +125,7 @@ public class InstrumentMapper {
 		instrumentSearch.setBranchName(contract.getBranchName());
 		instrumentSearch.setDrawer(contract.getDrawer());
 		instrumentSearch.setFinancialStatus(contract.getFinancialStatus());
+		instrumentSearch.setRemittanceVoucherId(contract.getRemittanceVoucherId());
 
 		if (contract.getInstrumentType() != null)
 			instrumentSearch.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
@@ -172,6 +175,7 @@ public class InstrumentMapper {
 		contract.setBranchName(instrumentSearch.getBranchName());
 		contract.setDrawer(instrumentSearch.getDrawer());
 		contract.setFinancialStatus(instrumentSearch.getFinancialStatus());
+		contract.setRemittanceVoucherId(instrumentSearch.getRemittanceVoucherId());
 
 		if (instrumentSearch.getInstrumentType() != null)
 			contract.setInstrumentType(typeMapper.toContract(instrumentSearch.getInstrumentType()));

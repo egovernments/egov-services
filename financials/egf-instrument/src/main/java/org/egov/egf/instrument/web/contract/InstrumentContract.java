@@ -63,7 +63,7 @@ import java.util.List;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "transactionNumber", "transactionDate", "amount", "instrumentType", "bank", "branchName",
-		"bankAccount", "financialStatus", "transactionType", "payee", "drawer", "surrendarReason", "serialNo",
+		"bankAccount", "financialStatus", "remittanceVoucherId", "transactionType", "payee", "drawer", "surrendarReason", "serialNo",
 		"instrumentVouchers" })
 public class InstrumentContract extends AuditableContract {
 
@@ -126,6 +126,8 @@ public class InstrumentContract extends AuditableContract {
 	 * instrumentStatus gives the current status of the instrument.
 	 */
 	private FinancialStatusContract financialStatus;
+	
+	private String remittanceVoucherId;
 
 	/*
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt

@@ -101,7 +101,7 @@ public class SurrenderReasonJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("ids =:ids");
+			params.append("id in (:ids)");
 			paramValues.put("ids", surrenderReasonSearchEntity.getIds());
 		}
 

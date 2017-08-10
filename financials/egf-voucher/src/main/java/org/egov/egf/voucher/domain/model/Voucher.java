@@ -47,7 +47,14 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
+import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.contract.FundsourceContract;
+import org.egov.egf.master.web.contract.SchemeContract;
+import org.egov.egf.master.web.contract.SubSchemeContract;
+import org.egov.egf.voucher.web.contract.Boundary;
+import org.egov.egf.voucher.web.contract.Department;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -60,34 +67,67 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "vouchermis", "fund", "ledgers" }, callSuper = false)
+@EqualsAndHashCode(exclude = { "status", "fund", "function", "fundsource", "scheme", "subScheme", "functionary",
+		"division", "department", "ledgers" }, callSuper = false)
 public class Voucher extends Auditable {
 
-	@Length(max = 32)
+	@Length(max = 256)
 	private String id;
 
-	@Length(max = 16)
+	@Length(max = 50)
 	private String type;
 
-	@Length(max = 16)
+	@Length(max = 50)
 	private String name;
 
 	@Length(max = 256)
 	private String description;
 
-	@Length(max = 32)
+	@Length(max = 50)
 	private String voucherNumber;
 
 	@NotNull
 	private Date voucherDate;
 
-	private FundContract fund;
-	private FinancialStatusContract status;
+	@Length(max = 50)
 	private String originalVoucherNumber;
+
+	@Length(max = 50)
 	private String refVoucherNumber;
+
+	@Length(max = 50)
 	private String moduleName;
+
+	@Length(max = 50)
+	private String billNumber;
+
+	private FinancialStatusContract status;
+
+	private FundContract fund;
+
+	private FunctionContract function;
+
+	private FundsourceContract fundsource;
+
+	private SchemeContract scheme;
+
+	private SubSchemeContract subScheme;
+
+	private FunctionaryContract functionary;
+
+	private Boundary division;
+
+	private Department department;
+
+	@Length(max = 256)
+	private String sourcePath;
+
+	private Boolean budgetCheckRequired = true;
+
+	@Length(max = 50)
+	private String budgetAppropriationNo;
+
 	private Set<Ledger> ledgers;
-	private Vouchermis vouchermis;
 
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;

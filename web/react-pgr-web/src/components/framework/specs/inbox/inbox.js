@@ -370,7 +370,7 @@ var rooms = {
 }
 
 var dat = {
-	"inbox.view": {
+	"inbox.views": {
 		"numCols": 12/4,
 		"version": "v1",
 		"url": "pt-property/properties/_search?propertyId={id}",

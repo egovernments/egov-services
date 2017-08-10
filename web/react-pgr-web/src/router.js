@@ -87,6 +87,7 @@ import Create from './components/framework/create';
 import View from './components/framework/view';
 import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
+import Inbox from './components/framework/inbox';
 
 const base = "";
 
@@ -191,6 +192,7 @@ const Main = () => {
         {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
+		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
     </Switch>
   </main>

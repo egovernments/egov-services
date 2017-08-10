@@ -109,6 +109,13 @@ public class BudgetJdbcRepository extends JdbcRepository {
         searchQuery = searchQuery.replace(":selectfields", " * ");
 
         // implement jdbc specfic search
+        if (budgetSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", budgetSearchEntity.getTenantId());
+		}
         if (budgetSearchEntity.getId() != null) {
             if (params.length() > 0)
                 params.append(" and ");

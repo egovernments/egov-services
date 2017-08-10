@@ -126,7 +126,7 @@ public class ReceiptService {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
 		bill.setBillDetails(apportionPaidAmount(
-					receiptReq.getRequestInfo(), bill, receiptReq.getTenantId()));
+					receiptReq.getRequestInfo(), bill, receipt.getTenantId()));
 		// return receiptRepository.pushToQueue(receiptReq); //async call
 		
 		LOGGER.info("Bill object after apportioning: "+bill.toString());
@@ -403,6 +403,7 @@ public class ReceiptService {
 					.getBusinessDetails(Arrays.asList(businessDetailsCode),
 							tenantId, requestInfo);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 

@@ -7,10 +7,9 @@ import org.egov.models.PropertyDetail;
 import org.egov.models.UserAuthResponseInfo;
 import org.egov.models.WorkFlowDetails;
 import org.egov.propertyWorkflow.PtWorkflowApplication;
+import org.egov.propertyWorkflow.config.PropertiesManager;
 import org.egov.propertyWorkflow.consumer.WorkFlowUtil;
-import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.RequestInfo;
-import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -18,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -38,7 +36,7 @@ public class ProcessWorkflowServiceTest {
 	WorkFlowUtil workFlowUtil;
 
 	@Autowired
-	Environment env;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -142,19 +140,19 @@ public class ProcessWorkflowServiceTest {
 	private String getAuthToken() throws Exception {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("Authorization", env.getProperty("authkey"));
+		headers.add("Authorization", propertiesManager.getAuthKey());
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add("username", env.getProperty("oauth.username"));
-		map.add("password", env.getProperty("password"));
-		map.add("grant_type", env.getProperty("grant_type"));
-		map.add("scope", env.getProperty("scope"));
+		map.add("username", propertiesManager.getOauthName());
+		map.add("password", propertiesManager.getPassword());
+		map.add("grant_type", propertiesManager.getGrantType());
+		map.add("scope", propertiesManager.getScope());
 		map.add("tenantId", "default");
 
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(map,
 				headers);
 
-		UserAuthResponseInfo userAuthResponseInfo = restTemplate.postForObject(env.getProperty("user.auth"),
+		UserAuthResponseInfo userAuthResponseInfo = restTemplate.postForObject(propertiesManager.getUserAuth(),
 				requestEntity, UserAuthResponseInfo.class);
 
 		if (userAuthResponseInfo != null) {

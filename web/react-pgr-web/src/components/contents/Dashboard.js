@@ -83,7 +83,7 @@ class Dashboard extends Component {
           Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:"deliverable"},{})
       ])
       .then((responses)=>{
-        
+
         //if any error occurs
         if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
           current.setState({
@@ -423,7 +423,7 @@ class Dashboard extends Component {
 				<CardText>
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
-                      <div>
+                      <div className="col-md-12">
                           <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
                             <thead>
                               <tr>
@@ -532,7 +532,7 @@ const ServiceMenu = ({service, onClick}) =>{
     return(
       <Col md={3} sm={4} xs={12}>
         <div className="service-menu-item">
-            <RaisedButton fullWidth={true} label={service.serviceName} secondary={true} onClick={onClick} />
+            <RaisedButton fullWidth={true} label={service.serviceName} primary={true} onClick={onClick} />
         </div>
       </Col>
     )

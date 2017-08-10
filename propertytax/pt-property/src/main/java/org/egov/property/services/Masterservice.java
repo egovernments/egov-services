@@ -346,7 +346,7 @@ public interface Masterservice {
 	 */
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet) throws Exception;
+			Integer offSet, String parent) throws Exception;
 
 	/**
 	 * Description : This method for creating usageMaster

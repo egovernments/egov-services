@@ -214,26 +214,6 @@ public class InstrumentService {
 		return instrumentRepository.update(instrument);
 	}
 
-	public List<Instrument> deposit(List<Instrument> instruments,
-			BindingResult errors, RequestInfo requestInfo) {
-		try {
-			instruments = fetchRelated(instruments);
-			validate(instruments, ACTION_CREATE, errors);
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
-		} catch (CustomBindException e) {
-			throw new CustomBindException(errors);
-		}
-		FinancialStatusContract financialStatusContract = new FinancialStatusContract();
-		financialStatusContract.setCode("Deposited");
-		financialStatusContract.setModuleType("Instrument");
-		for(Instrument i:instruments){
-			i.setFinancialStatus(financialStatusContractRepository.findByModuleCode(financialStatusContract));
-		}
-		return instrumentRepository.update(instruments, requestInfo);
-	}
-
 	public List<Instrument> deposit(
 			InstrumentDepositRequest instrumentDepositRequest,
 			BindingResult errors, RequestInfo requestInfo) {

@@ -340,7 +340,7 @@ class DefineEscalationTime extends Component {
                 <td>{val.noOfHours}</td>
                 <td>
 
-                <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.update")} primary={true} onClick={() => {
+                <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} primary={true} onClick={() => {
                     editObject(i);
                     current.setState({editIndex:i})
                 }}/>
@@ -384,8 +384,9 @@ class DefineEscalationTime extends Component {
                             floatingLabelText={translate("pgr.noof.hours")}
                             value={defineEscalationTime.noOfHours ? defineEscalationTime.noOfHours : ""}
                             errorText={fieldErrors.noOfHours ? fieldErrors.noOfHours : ""}
+                            maxLength={4}
                             onChange={(e) => {
-                              handleChange(e, "noOfHours", true, /^\d+$/)
+                              handleChange(e, "noOfHours", true, /^\d{0,4}$/g, 'Please use only numbers')
                             }}
                             id="noOfHours"
                         />
@@ -422,7 +423,7 @@ class DefineEscalationTime extends Component {
       return(<div className="defineEscalationTime">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation Time < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create / Update  Escalation Time < /div>} />
               <CardText>
                   <Grid>
                       <Row>
@@ -438,13 +439,18 @@ class DefineEscalationTime extends Component {
                                   onKeyUp={handleAutoCompleteKeyUp}
                                   errorText={fieldErrors.grievanceType ? fieldErrors.grievanceType : "" }
                                   value={defineEscalationTime.grievanceType ? defineEscalationTime.grievanceType : ""}
+                                  ref="grievanceType"
                                   onNewRequest={(chosenRequest, index) => {
-          	                        var e = {
-          	                          target: {
-          	                            value: chosenRequest
-          	                          }
-          	                        };
-          	                        handleChange(e, "grievanceType", true, "");
+                                    if(index === -1){
+                                      this.refs['grievanceType'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+            	                          target: {
+            	                            value: chosenRequest
+            	                          }
+            	                        };
+            	                        handleChange(e, "grievanceType", true, "");
+                                    }
           	                       }}
                                 />
                           </Col>
@@ -456,7 +462,7 @@ class DefineEscalationTime extends Component {
               <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.grievanceType ? false : true} label={translate("core.lbl.search")} primary={true}/>
           </div>
           {this.state.noData &&
-            <Card style = {{textAlign:"center"}}>
+            <Card className="text-center" style = {styles.marginStyle}>
               <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} >{translate("pgr.lbl.escdetail")}</strong>}/>
               <CardText>
 
@@ -510,20 +516,20 @@ const mapDispatchToProps = dispatch => ({
           required: ["designation", "noOfHours"]
         },
         pattern: {
-          current: ["noOfHours"],
-          required: [ "noOfHours"]
+          current: [],
+          required: []
         }
       }
     });
   },
 
-  handleChange: (e, property, isRequired, pattern) => {
+  handleChange: (e, property, isRequired, pattern, errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern, errorMsg
     });
   },
 

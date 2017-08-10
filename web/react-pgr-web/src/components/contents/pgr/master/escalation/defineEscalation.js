@@ -593,13 +593,18 @@ componentWillUpdate() {
                                   dataSource={this.state.positionSource}
                                   dataSourceConfig={this.state.dataSourceConfig}
                                   value={defineEscalation.fromPosition ? defineEscalation.fromPosition : ""}
+                                  ref="fromPosition"
                                   onNewRequest={(chosenRequest, index) => {
-          	                        var e = {
-          	                          target: {
-          	                            value: chosenRequest.id
-          	                          }
-          	                        };
-          	                        handleChange(e, "fromPosition", true, "");
+                                    if(index === -1){
+                                      this.refs['fromPosition'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest.id
+                                        }
+                                      };
+                                      handleChange(e, "fromPosition", true, "");
+                                    }
           	                       }}
                                 />
                           </Col>

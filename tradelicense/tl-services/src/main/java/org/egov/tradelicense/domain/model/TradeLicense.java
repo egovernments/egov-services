@@ -3,12 +3,13 @@ package org.egov.tradelicense.domain.model;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
-import org.joda.time.LocalDate;
+import org.hibernate.validator.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,123 +20,136 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TradeLicense   {
+public class TradeLicense {
 
-  private Long id = null;
+	private Long id;
 
-  @JsonProperty("tenantId")
-  @NotNull
-  @Size(min = 4, max = 128)
-  private String tenantId = null;
+	@JsonProperty("tenantId")
+	@NotNull
+	@Size(min = 4, max = 128)
+	private String tenantId;
 
-  @NotNull
-  private ApplicationType applicationType = null;
+	@NotNull
+	private ApplicationType applicationType;
 
-  @JsonProperty("applicationNumber")
-  private String applicationNumber = null;
+	@JsonProperty("applicationNumber")
+	private String applicationNumber;
 
-  @JsonProperty("licenseNumber")
-  private String licenseNumber = null;
+	@JsonProperty("licenseNumber")
+	private String licenseNumber;
 
-  @JsonProperty("oldLicenseNumber")
-  private String oldLicenseNumber = null;
+	@JsonProperty("oldLicenseNumber")
+	private String oldLicenseNumber;
 
-  @JsonProperty("applicationDate")
-  private LocalDate applicationDate = null;
+	@JsonProperty("applicationDate")
+	private String applicationDate;
 
-  @JsonProperty("adhaarNumber")
-  private String adhaarNumber = null;
-  
-  @NotNull
-  @JsonProperty("mobileNumber")
-  private String mobileNumber = null;
- 
-  @NotNull
-  @JsonProperty("ownerName")
-  private String ownerName = null;
+	@JsonProperty("adhaarNumber")
+	@Pattern(regexp = "[0-9]{12}")
+	@Size(min = 12, max = 12)
+	private String adhaarNumber;
 
-  @NotNull
-  @JsonProperty("fatherSpouseName")
-  private String fatherSpouseName = null;
+	@NotNull
+	@JsonProperty("mobileNumber")
+	private String mobileNumber;
 
-  @NotNull
-  @JsonProperty("emailId")
-  private String emailId = null;
+	@NotNull
+	@Size(min = 4, max = 32)
+	@JsonProperty("ownerName")
+	private String ownerName;
 
-  @NotNull
-  @JsonProperty("ownerAddress")
-  private String ownerAddress = null;
+	@NotNull
+	@Size(min = 4, max = 32)
+	@JsonProperty("fatherSpouseName")
+	private String fatherSpouseName;
 
-  @JsonProperty("propertyAssesmentNo")
-  private String propertyAssesmentNo = null;
+	@NotNull
+	@Email
+	@JsonProperty("emailId")
+	private String emailId;
 
-  @NotNull
-  @JsonProperty("localityId")
-  private Integer localityId = null;
+	@NotNull
+	@Size(max = 256)
+	@JsonProperty("ownerAddress")
+	private String ownerAddress;
 
-  @NotNull
-  @JsonProperty("wardId")
-  private Integer wardId = null;
+	@JsonProperty("propertyAssesmentNo")
+	private String propertyAssesmentNo;
 
-  @NotNull
-  @JsonProperty("tradeAddress")
-  private String tradeAddress = null;
+	@NotNull
+	@JsonProperty("localityId")
+	private Integer localityId;
 
-  @NotNull
-  @JsonProperty("ownerShipType")
-  private OwnerShipType ownerShipType = null;
+	@NotNull
+	@JsonProperty("revenueWardId")
+	private Integer revenueWardId;
 
-  @NotNull
-  @JsonProperty("tradeTitle")
-  private String tradeTitle = null;
+	@NotNull
+	@JsonProperty("tradeAddress")
+	@Size(max = 256)
+	private String tradeAddress;
 
-  @NotNull
-  @JsonProperty("tradeType")
-  private BusinessNature tradeType = null;
+	@NotNull
+	@JsonProperty("ownerShipType")
+	private OwnerShipType ownerShipType;
 
-  
-  @JsonProperty("categoryId")
-  private Long categoryId = null;
+	@NotNull
+	@JsonProperty("tradeTitle")
+	@Size(max = 33)
+	private String tradeTitle;
 
-  @JsonProperty("subCategoryId")
-  private Long subCategoryId = null;
+	@NotNull
+	@JsonProperty("tradeType")
+	private BusinessNature tradeType;
 
-  @JsonProperty("uomId")
-  private Long uomId = null;
+	@NotNull
+	@JsonProperty("categoryId")
+	private Long categoryId;
 
-  @JsonProperty("uomValue")
-  private Double uomValue = null;
+	@NotNull
+	@JsonProperty("subCategoryId")
+	private Long subCategoryId;
 
-  @JsonProperty("remarks")
-  private String remarks = null;
+	@NotNull
+	@JsonProperty("uomId")
+	private Long uomId;
 
-  @JsonProperty("tradeCommencementDate")
-  private LocalDate tradeCommencementDate = null;
+	@NotNull
+	@JsonProperty("quantity")
+	private Double quantity;
 
-  @JsonProperty("agrementDate")
-  private LocalDate agrementDate = null;
+	@JsonProperty("remarks")
+	private String remarks;
 
-  @JsonProperty("agrementNo")
-  private String agrementNo = null;
+	@NotNull
+	@JsonProperty("tradeCommencementDate")
+	private String tradeCommencementDate;
 
-  @JsonProperty("isLegacy")
-  private Boolean isLegacy = false;
+	@JsonProperty("agreementDate")
+	private String agreementDate;
 
-  @JsonProperty("active")
-  private Boolean active = true;
+	@JsonProperty("agreementNo")
+	private String agreementNo;
 
-  @JsonProperty("expiryDate")
-  private LocalDate expiryDate = null;
+	@JsonProperty("isLegacy")
+	private Boolean isLegacy = false;
 
-  @JsonProperty("feeDetails")
-  private List<LicenseFeeDetail> feeDetails = null;
+	@JsonProperty("active")
+	private Boolean active = true;
 
-  @JsonProperty("supportDocuments")
-  private List<SupportDocument> supportDocuments = null;
+	@JsonProperty("expiryDate")
+	private String expiryDate;
 
-  @JsonProperty("auditDetails")
-  private AuditDetails auditDetails = null;
+	@JsonProperty("feeDetails")
+	private List<LicenseFeeDetail> feeDetails;
 
+	@JsonProperty("supportDocuments")
+	private List<SupportDocument> supportDocuments;
+
+	@JsonProperty("status")
+	private Long status;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
 
 }
-

@@ -1,3 +1,43 @@
+
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ * accountability and the service delivery of the government  organizations.
+ *
+ *  Copyright (C) 2016  eGovernments Foundation
+ *
+ *  The updated version of eGov suite of products as by eGovernments Foundation
+ *  is available at http://www.egovernments.org
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see http://www.gnu.org/licenses/ or
+ *  http://www.gnu.org/licenses/gpl.html .
+ *
+ *  In addition to the terms of the GPL license to be adhered to in using this
+ *  program, the following additional terms are to be complied with:
+ *
+ *      1) All versions of this program, verbatim or modified must carry this
+ *         Legal Notice.
+ *
+ *      2) Any misrepresentation of the origin of the material is prohibited. It
+ *         is required that all modified versions of this material be marked in
+ *         reasonable ways as different from the original version.
+ *
+ *      3) This license does not grant any rights to any user of the program
+ *         with regards to rights under trademark law for use of the trade names
+ *         or trademarks of eGovernments Foundation.
+ *
+ *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.wcms.repository;
 
 import static org.junit.Assert.assertTrue;
@@ -16,10 +56,10 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.MeterCostCriteria;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.repository.builder.MeterCostQueryBuilder;
 import org.egov.wcms.repository.rowmapper.MeterCostRowMapper;
+import org.egov.wcms.web.contract.MeterCostGetRequest;
 import org.egov.wcms.web.contract.MeterCostReq;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,7 +132,7 @@ public class MeterCostRepositoryTest {
 	@Test
 	public void test_should_search_meterCost_from_DB() {
 		List<Object> preparedStatementValues = new ArrayList<>();
-		when(meterCostQueryBuilder.getQuery(getMeterCostCriteria(), preparedStatementValues))
+		when(meterCostQueryBuilder.getQuery(getMeterCostGetRequest(), preparedStatementValues))
 				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
 						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
 						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
@@ -101,7 +141,8 @@ public class MeterCostRepositoryTest {
 						+ "wmc.active = ? AND  wmc.id IN (1, 2)  ORDER BY code desc");
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(MeterCostRowMapper.class)))
 				.thenReturn(getListOfMeterCosts());
-		assertTrue(getListOfMeterCosts().equals(meterCostRepository.searchMeterCostByCriteria(getMeterCostCriteria())));
+		assertTrue(
+				getListOfMeterCosts().equals(meterCostRepository.searchMeterCostByCriteria(getMeterCostGetRequest())));
 	}
 
 	@Test
@@ -184,8 +225,8 @@ public class MeterCostRepositoryTest {
 		return Arrays.asList(meterCost1, meterCost2);
 	}
 
-	private MeterCostCriteria getMeterCostCriteria() {
-		return MeterCostCriteria.builder().active(true).ids(Arrays.asList(1L, 2L)).tenantId("default").sortby("code")
+	private MeterCostGetRequest getMeterCostGetRequest() {
+		return MeterCostGetRequest.builder().active(true).ids(Arrays.asList(1L, 2L)).tenantId("default").sortBy("code")
 				.sortOrder("desc").build();
 	}
 

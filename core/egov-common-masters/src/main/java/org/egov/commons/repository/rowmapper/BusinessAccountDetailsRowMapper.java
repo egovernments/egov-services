@@ -13,15 +13,12 @@ public class BusinessAccountDetailsRowMapper implements RowMapper<BusinessAccoun
 	@Override
 	public BusinessAccountDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		BusinessDetails businessDetails = new BusinessDetails();
-		businessDetails.setId((Long) rs.getObject("businessDetails"));
-
 		BusinessAccountDetails accountDetails = new BusinessAccountDetails();
 		accountDetails.setId(rs.getLong("id"));
 		accountDetails.setAmount(rs.getDouble("amount"));
 		accountDetails.setChartOfAccount(rs.getLong("chartOfAccount"));
 		accountDetails.setTenantId(rs.getString("tenantId"));
-		accountDetails.setBusinessDetails(businessDetails);
+		accountDetails.setBusinessDetails((Long) rs.getObject("businessDetails"));
 		return accountDetails;
 	}
 

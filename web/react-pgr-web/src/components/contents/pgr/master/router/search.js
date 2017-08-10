@@ -296,13 +296,19 @@ class searchRouter extends Component {
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "serviceid")}}
                         value={routerSearchSet.serviceid}
+                        ref="serviceid"
                         onNewRequest={(chosenRequest, index) => {
-                          var e = {
-                            target: {
-                              value: chosenRequest.id
-                            }
-                          };
-                          handleChange(e, "serviceid", true, "");
+                          if(index === -1){
+                            this.refs['serviceid'].setState({searchText:''});
+                          }else{
+                            var e = {
+                              target: {
+                                value: chosenRequest.id
+                              }
+                            };
+                            handleChange(e, "serviceid", true, "");
+                          }
+
                          }}
                         />
                    </Col>
@@ -327,13 +333,19 @@ class searchRouter extends Component {
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundaryid")}}
                         value={routerSearchSet.boundaryid}
+                        ref="boundaryid"
                         onNewRequest={(chosenRequest, index) => {
-                          var e = {
-                            target: {
-                              value: chosenRequest.id
-                            }
-                          };
-                          handleChange(e, "boundaryid", true, "");
+                          if(index === -1){
+                            this.refs['boundaryid'].setState({searchText:''});
+                          }else{
+                            var e = {
+                              target: {
+                                value: chosenRequest.id
+                              }
+                            };
+                            handleChange(e, "boundaryid", true, "");
+                          }
+
                          }}
                         />
                    </Col>

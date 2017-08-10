@@ -55,11 +55,10 @@ public class BusinessDetailsRowMapperTest {
 	}
 
 	private BusinessDetails getExpectedBusinessDetails() {
-		BusinessCategory category = BusinessCategory.builder().id(1L).build();
 		return BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true).businessType("C")
 				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
 				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
-				.tenantId("default").callBackForApportioning(true).businessCategory(category).createdBy(1L).lastModifiedBy(1L).build();
+				.tenantId("default").callBackForApportioning(true).businessCategory(1L).createdBy(1L).lastModifiedBy(1L).build();
 	}
 
 }

@@ -105,9 +105,6 @@ public class ApplicationProperties {
     @Value("${egov.services.egf_service.voucher.createpath}")
     private String egfServiceVoucherCreatePath;
 
-    @Value("${egov.municipality.host}")
-    private String municipalityHostName;
-
     @Value("${egov.services.asset.batchsize}")
     private String batchSize;
 

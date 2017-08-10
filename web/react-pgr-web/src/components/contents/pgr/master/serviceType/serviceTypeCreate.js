@@ -413,7 +413,7 @@ class ServiceTypeCreate extends Component {
                           floatingLabelText={translate('core.lbl.code')}
                           value={createServiceType.attribute ? createServiceType.attribute.code : ""}
                           errorText={fieldErrors.attribute ? fieldErrors.attribute.code : ""}
-                            onChange={(e) => handleChangeNextOne(e,"attribute" ,"code", false, "")}
+                          onChange={(e) => handleChangeNextOne(e,"attribute" ,"code", false, "")}
                           id="attributesName"
                       />
                   </Col>
@@ -571,23 +571,25 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate('core.lbl.code') +" *"}
-                                      value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
-                                      errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
-                                        onChange={(e) => handleChange(e, "serviceCode", true, '')}
-                                      id="serviceCode"
-                                      disabled={this.state.id ? true : false }
+                                      floatingLabelText={translate("core.lbl.add.name")+" *"}
+                                      value={createServiceType.serviceName? createServiceType.serviceName : ""}
+                                      errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
+                                      maxLength="100"
+                                      onChange={(e) => handleChange(e, "serviceName", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Please use only alphabets, space and special characters')}
+                                      id="serviceName"
+
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate("core.lbl.add.name")+" *"}
-                                      value={createServiceType.serviceName? createServiceType.serviceName : ""}
-                                      errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
-                                      onChange={(e) => handleChange(e, "serviceName", true, '')}
-                                      id="serviceName"
-
+                                      floatingLabelText={translate('core.lbl.code') +" *"}
+                                      value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
+                                      errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
+                                      maxLength="20"
+                                      onChange={(e) => handleChange(e, "serviceCode", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
+                                      id="serviceCode"
+                                      disabled={this.state.id ? true : false }
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
@@ -596,7 +598,8 @@ class ServiceTypeCreate extends Component {
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createServiceType.description? createServiceType.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
-                                      onChange={(e) => handleChange(e, "description", false, '')}
+                                      maxLength="250"
+                                      onChange={(e) => handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Please use only alphabets, space and special characters')}
                                       multiLine={true}
                                       id="description"
                                   />
@@ -607,7 +610,8 @@ class ServiceTypeCreate extends Component {
                                       floatingLabelText="SLA Hours *"
                                       value={createServiceType.slaHours? createServiceType.slaHours : ""}
                                       errorText={fieldErrors.slaHours ? fieldErrors.slaHours : ""}
-                                      onChange={(e) => handleChange(e, "slaHours", true, '')}
+                                      maxLength="4"
+                                      onChange={(e) => handleChange(e, "slaHours", true, /^\d{0,4}$/g, 'Please use only numbers')}
                                       multiLine={true}
                                       id="slaHours"
                                   />
@@ -775,14 +779,14 @@ const mapDispatchToProps = dispatch => ({
       })
     },
 
-  handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
+  handleChange: (e, property, isRequired, pattern,errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern,
+      errorMsg
     });
   },
   isEditIndex: (index) => {
@@ -793,8 +797,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   addNestedFormData: (formArray, formData) => {
-    console.log(formArray);
-    console.log(formData);
     dispatch({
       type: "PUSH_ONE",
       formArray,

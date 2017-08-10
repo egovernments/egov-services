@@ -42,9 +42,9 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
-import org.egov.wcms.model.MeterCostCriteria;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.repository.MeterCostRepository;
+import org.egov.wcms.web.contract.MeterCostGetRequest;
 import org.egov.wcms.web.contract.MeterCostReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,13 +85,13 @@ public class MeterCostService {
 
 	}
 
-	public List<MeterCost> getMeterCostByCriteria(MeterCostCriteria meterCostCriteria) {
-		return meterCostRepository.searchMeterCostByCriteria(meterCostCriteria);
+	public List<MeterCost> getMeterCostByCriteria(MeterCostGetRequest meterCostGetRequest) {
+		return meterCostRepository.searchMeterCostByCriteria(meterCostGetRequest);
 	}
 
 	public boolean checkMeterMakeAlreadyExists(MeterCost meterCost) {
 		return meterCostRepository.checkMeterMakeAlreadyExistsInDB(meterCost);
-		
+
 	}
 
 }

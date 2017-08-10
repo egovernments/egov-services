@@ -18,7 +18,7 @@ public class TimeStampUtil {
 		if (date == null) {
 			return null;
 		} else {
-			DateTimeFormatter[] formatter = new DateTimeFormatter[] { DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+			DateTimeFormatter[] formatter = new DateTimeFormatter[] { DateTimeFormatter.ofPattern("dd/MM/yyyy"),DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"),
 					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"), DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S") };
 			for (int i = 0; i < formatter.length; i++) {
 				try {

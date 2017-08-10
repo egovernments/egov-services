@@ -6,20 +6,21 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.BusinessDetailsCriteria;
+import org.egov.commons.model.enums.BusinessType;
 import org.egov.commons.service.BusinessCategoryService;
 import org.egov.commons.service.BusinessDetailsService;
 import org.egov.commons.util.CollectionConstants;
 import org.egov.commons.web.contract.BusinessDetailsGetRequest;
 import org.egov.commons.web.contract.BusinessDetailsRequest;
-import org.egov.commons.web.contract.BusinessDetailsRequestInfo;
+import org.egov.commons.web.contract.BusinessDetails;
 import org.egov.commons.web.contract.BusinessDetailsResponse;
 import org.egov.commons.web.contract.RequestInfoWrap;
 import org.egov.commons.web.contract.factory.ResponseInfoFact;
-import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.Error;
 import org.egov.commons.web.errorhandlers.ErrorResponse;
 import org.egov.commons.web.errorhandlers.RequestErrorHandler;
@@ -31,7 +32,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,7 +69,7 @@ public class BusinessDetailsController {
 			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 		BusinessDetailsRequest detailsRequest=  businessDetailsService.createDetailsAsync(businessDetailsRequest);
 			
-		return getSuccessResponse(businessDetailsRequest.getRequestInfo(),Collections.singletonList(detailsRequest.getBusinessDetails()));
+		return getSuccessResponse(businessDetailsRequest.getRequestInfo(),detailsRequest.getBusinessDetails());
 	}
 
 	@PostMapping(value = "/_update")
@@ -86,7 +86,7 @@ public class BusinessDetailsController {
 			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 		BusinessDetailsRequest detailsRequest = businessDetailsService
 				.updateDetailsAsync(businessDetailsRequest);
-		return getSuccessResponse(businessDetailsRequest.getRequestInfo(), Collections.singletonList(detailsRequest.getBusinessDetails()));
+		return getSuccessResponse(businessDetailsRequest.getRequestInfo(), detailsRequest.getBusinessDetails());
 	}
 
 	@PostMapping(value = "/_search")
@@ -99,7 +99,7 @@ public class BusinessDetailsController {
 
 		BusinessDetailsCriteria detailsCriteria = BusinessDetailsCriteria.builder()
 				.active(detailsGetRequest.getActive()).businessCategoryCode(detailsGetRequest.getBusinessCategoryCode())
-				.businessDetailsCodes(detailsGetRequest.getBusinessDetailsCodes()).ids(detailsGetRequest.getIds())
+				.businessDetailsCodes(detailsGetRequest.getBusinessDetailsCodes()).ids(detailsGetRequest.getId())
 				.sortBy(detailsGetRequest.getSortBy()).sortOrder(detailsGetRequest.getSortOrder())
 				.tenantId(detailsGetRequest.getTenantId()).build();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -108,7 +108,7 @@ public class BusinessDetailsController {
 
 		if (requestBodyBindingResult.hasErrors())
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		List<BusinessDetailsRequestInfo> detailsRequestInfo = new ArrayList<>();
+		List<BusinessDetails> detailsRequestInfo = new ArrayList<>();
 		try {
 			detailsRequestInfo = businessDetailsService.getForCriteria(detailsCriteria).toDomainContract();
 
@@ -120,7 +120,7 @@ public class BusinessDetailsController {
 	}
 
 	private ResponseEntity<?> getSuccessResponse(RequestInfo requestInfo,
-			List<BusinessDetailsRequestInfo> detailsRequestInfo) {
+			List<BusinessDetails> detailsRequestInfo) {
 		BusinessDetailsResponse response = new BusinessDetailsResponse();
 		response.setBusinessDetails(detailsRequestInfo);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -161,98 +161,117 @@ public class BusinessDetailsController {
 
 	private void addCategoryValidationErrors(BusinessDetailsRequest businessDetailsRequest,
 			List<ErrorField> errorFields) {
-		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		if (detailsInfo.getBusinessCategory() == null) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_CATEGORY_MANDATORY_CODE)
-					.message(CollectionConstants.DETAILS_CATEGORY_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.DETAILS_CATEGORY_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+		final List<BusinessDetails> detailsInfoList = businessDetailsRequest.getBusinessDetails();
+        for(BusinessDetails businessDetail : detailsInfoList) {
+            if (businessDetail.getBusinessCategory() == null) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_CATEGORY_MANDATORY_CODE)
+                        .message(CollectionConstants.DETAILS_CATEGORY_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.DETAILS_CATEGORY_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else
+                return;
+        }
 	}
 
 	private void addFundValidationErrors(BusinessDetailsRequest businessDetailsRequest, List<ErrorField> errorFields) {
-		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		if (detailsInfo.getFund() == null || detailsInfo.getFund().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_FUND_MANDATORY_CODE)
-					.message(CollectionConstants.DETAILS_FUND_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.DETAILS_FUND_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+		final List<BusinessDetails> detailsInfoList = businessDetailsRequest.getBusinessDetails();
+        for(BusinessDetails businessDetail : detailsInfoList) {
+            if (StringUtils.isBlank(businessDetail.getFund())) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_FUND_MANDATORY_CODE)
+                        .message(CollectionConstants.DETAILS_FUND_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.DETAILS_FUND_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else
+                return;
+        }
 	}
 
 	private void addFunctionValidationErrors(BusinessDetailsRequest businessDetailsRequest,
 			List<ErrorField> errorFields) {
-		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		if (detailsInfo.getFunction() == null || detailsInfo.getFunction().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_FUNCTION_MANDATORY_CODE)
-					.message(CollectionConstants.DETAILS_FUNCTION_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.DETAILS_FUNCTION_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+        final List<BusinessDetails> detailsInfoList = businessDetailsRequest.getBusinessDetails();
+        for(BusinessDetails businessDetail : detailsInfoList) {
+            if (StringUtils.isBlank(businessDetail.getFunction())) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_FUNCTION_MANDATORY_CODE)
+                        .message(CollectionConstants.DETAILS_FUNCTION_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.DETAILS_FUNCTION_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else
+                return;
+        }
 	}
 
 	private void addBusinessTypeValidationErrors(BusinessDetailsRequest businessDetailsRequest,
 			List<ErrorField> errorFields) {
-		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		if (detailsInfo.getBusinessType() == null || detailsInfo.getBusinessType().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_TYPE_MANDATORY_CODE)
-					.message(CollectionConstants.DETAILS_TYPE_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.DETAILS_TYPE_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+        final List<BusinessDetails> detailsInfoList = businessDetailsRequest.getBusinessDetails();
+        for(BusinessDetails businessDetail : detailsInfoList) {
+            if (StringUtils.isBlank(businessDetail.getBusinessType())) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_TYPE_MANDATORY_CODE)
+                        .message(CollectionConstants.DETAILS_TYPE_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.DETAILS_TYPE_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }  else if(!BusinessType.getAllObjectValues().contains(businessDetail.getBusinessType())) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_VALID_BUSINESS_TYPE_CODE)
+                        .message(CollectionConstants.DETAILS_VALID_BUSINESS_TYPE_FIELD_NAME)
+                        .field(CollectionConstants.DETAILS_VALID_BUSINESS_TYPE_CODE_MESSAGE).build();
+                errorFields.add(errorField);
+            }  else
+                return;
+        }
 
 	}
 
 	private void addTenantIdValidationErrors(final BusinessDetailsRequest businessDetailsRequest,
 			final List<ErrorField> errorFields) {
-		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		if (detailsInfo.getTenantId() == null || detailsInfo.getTenantId().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.TENANT_MANDATORY_CODE)
-					.message(CollectionConstants.TENANT_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.TENANT_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+        final List<BusinessDetails> detailsInfoList = businessDetailsRequest.getBusinessDetails();
+        for(BusinessDetails businessDetail : detailsInfoList) {
+            if (StringUtils.isBlank(businessDetail.getTenantId())) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.TENANT_MANDATORY_CODE)
+                        .message(CollectionConstants.TENANT_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.TENANT_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else
+                return;
+        }
 	}
 
 	private void addNameValidationErrors(final BusinessDetailsRequest businessDetailsRequest,
 			final List<ErrorField> errorFields,Boolean isUpdate) {
-		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		if (detailsInfo.getName() == null || detailsInfo.getName().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_NAME_MANDATORY_CODE)
-					.message(CollectionConstants.DETAILS_NAME_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.DETAILS_NAME_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else if (!businessDetailsService.getBusinessDetailsByNameAndTenantId(detailsInfo.getName(),
-				detailsInfo.getTenantId(),detailsInfo.getId(),isUpdate)) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_NAME_UNIQUE_CODE)
-					.message(CollectionConstants.DETAILS_NAME_UNIQUE_ERROR_MESSAGE)
-					.field(CollectionConstants.DETAILS_NAME_UNIQUE_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+        final List<BusinessDetails> detailsInfoList = businessDetailsRequest.getBusinessDetails();
+        for(BusinessDetails businessDetail : detailsInfoList) {
+            if (StringUtils.isBlank(businessDetail.getName())) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_NAME_MANDATORY_CODE)
+                        .message(CollectionConstants.DETAILS_NAME_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.DETAILS_NAME_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (!businessDetailsService.getBusinessDetailsByNameAndTenantId(businessDetail.getName(),
+                    businessDetail.getTenantId(), businessDetail.getId(), isUpdate)) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_NAME_UNIQUE_CODE)
+                        .message(CollectionConstants.DETAILS_NAME_UNIQUE_ERROR_MESSAGE)
+                        .field(CollectionConstants.DETAILS_NAME_UNIQUE_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else
+                return;
+        }
 	}
 
 	private void addCodeValidationErrors(final BusinessDetailsRequest businessDetailsRequest,
 			List<ErrorField> errorFields,Boolean isUpdate) {
-		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		if (detailsInfo.getCode() == null || detailsInfo.getCode().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_CODE_MANDATORY_CODE)
-					.message(CollectionConstants.DETAILS_CODE_MANADATORY_ERROR_MESSAGE)
-					.field(CollectionConstants.DETAILS_CODE_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else if (!businessDetailsService.getBusinessDetailsByCodeAndTenantId(detailsInfo.getCode(),
-				detailsInfo.getTenantId(),detailsInfo.getId(),isUpdate)) {
-			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_CODE_UNIQUE_CODE)
-					.message(CollectionConstants.DETAILS_CODE_UNIQUE_ERROR_MESSAGE)
-					.field(CollectionConstants.DETAILS_CODE_UNIQUE_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+        final List<BusinessDetails> detailsInfoList = businessDetailsRequest.getBusinessDetails();
+        for(BusinessDetails businessDetail : detailsInfoList) {
+            if (StringUtils.isBlank(businessDetail.getCode())) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_CODE_MANDATORY_CODE)
+                        .message(CollectionConstants.DETAILS_CODE_MANADATORY_ERROR_MESSAGE)
+                        .field(CollectionConstants.DETAILS_CODE_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (!businessDetailsService.getBusinessDetailsByCodeAndTenantId(businessDetail.getCode(),
+                    businessDetail.getTenantId(), businessDetail.getId(), isUpdate)) {
+                final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_CODE_UNIQUE_CODE)
+                        .message(CollectionConstants.DETAILS_CODE_UNIQUE_ERROR_MESSAGE)
+                        .field(CollectionConstants.DETAILS_CODE_UNIQUE_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else
+                return;
+        }
 	}
 
 	private ErrorResponse populateErrors(final BindingResult errors) {

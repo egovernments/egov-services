@@ -26,13 +26,13 @@ public class BusinessCategoryRowMapper implements RowMapper<BusinessCategory> {
 		businessCategory.setCreatedBy(rs.getLong("createdBy"));
 
 		businessCategory.setLastModifiedBy(rs.getLong("lastModifiedBy"));
-		businessCategory.setLastModifiedDate(rs.getTimestamp("lastModifiedDate"));
+		businessCategory.setLastModifiedDate(rs.getLong("lastModifiedDate"));
 		try {
 			Date date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
-			businessCategory.setCreatedDate(date);
+			businessCategory.setCreatedDate(date.getTime());
 			date = isEmpty(rs.getDate("lastModifiedDate")) ? null
 					: sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
-			businessCategory.setLastModifiedDate(date);
+			businessCategory.setLastModifiedDate(date.getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

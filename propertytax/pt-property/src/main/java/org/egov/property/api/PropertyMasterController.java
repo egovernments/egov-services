@@ -496,11 +496,12 @@ public class PropertyMasterController {
 			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
 			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
 			@RequestParam(required = false) Boolean isResidential, @RequestParam(required = false) Integer orderNumber,
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet)
+			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet,
+			@RequestParam(required = false) String parent)
 			throws Exception {
 
 		return masterService.getUsageMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, active,
-				isResidential, orderNumber, pageSize, offSet);
+				isResidential, orderNumber, pageSize, offSet, parent);
 
 	}
 

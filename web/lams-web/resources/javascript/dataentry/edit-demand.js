@@ -174,96 +174,99 @@ class EditDemand extends React.Component {
 
           var k=0;
           for (var variable in agreementDetail["legacyDemands"][0]["demandDetails"]) {
-              tempDemands[k]=agreementDetail["legacyDemands"][0]["demandDetails"][k];
+              if (agreementDetail["legacyDemands"][0]["demandDetails"][k].taxReason.toLowerCase()=="rent") {
+                tempDemands[k]=agreementDetail["legacyDemands"][0]["demandDetails"][k];
+              }
+
               k++;
           }
 
-           switch (agreementDetail["paymentCycle"]) {
-             case "MONTH":
+          //  switch (agreementDetail["paymentCycle"]) {
+          //    case "MONTH":
+           //
+           //
+          //        // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+          //        var i=0;
+          //       //  console.log(date);
+          //       //  console.log(endDate);
+          //        while (date <= endDate)
+          //        {
+          //            // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+          //            // resultList.push(stringDate);
+          //            demands[i]=tempDemands[i];
+          //           //  {
+          //            //
+          //           //        "taxAmount" : null,
+          //           //        "collectionAmount" : null,
+          //           //        "rebateAmount" : null,
+          //           //        "taxReason" : null,
+          //           //        "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
+          //           //        "glCode" : null,
+          //           //        "isActualDemand" : null,
+          //           //        tenantId
+          //           //  }
+           //
+          //           date.setMonth(date.getMonth() + 1);
+          //           i++;
+          //       }
+          //      break;
+           //
+          //    case "QUARTER":
+          //    // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+           //
+          //    var i=0;
+          //   //  console.log(date);
+          //   //  console.log(endDate);
+          //    while (date <= endDate)
+          //    {
+          //        // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+          //        // resultList.push(stringDate);
+           //
+          //         demands[i]=tempDemands[i];
+           //
+           //
+          //       date.setMonth(date.getMonth() + 3);
+          //       i++;
+          //     }
+          //      break;
+          //    case "HALFYEAR":
+          //    // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+           //
+          //    var i=0;
+          //   //  console.log(date);
+          //   //  console.log(endDate);
+          //    while (date <= endDate)
+          //    {
+          //        // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+          //        // resultList.push(stringDate);
+           //
+          //       demands[i]=tempDemands[i];
+           //
+          //       date.setMonth(date.getMonth() + 6);
+          //       i++;
+          //     }
+          //      break;
+          //    default:
+          //    // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+           //
+          //    var i=0;
+          //   //  console.log(date);
+          //   //  console.log(endDate);
+          //    while (date <= endDate)
+          //    {
+          //        // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+          //        // resultList.push(stringDate);
+          //       demands[i]=tempDemands[i];
+           //
+          //       date.setMonth(date.getMonth() + 12);
+          //       i++;
+          //     }
+          //    break;
+           //
+          //     }
 
 
-                 // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
-                 var i=0;
-                //  console.log(date);
-                //  console.log(endDate);
-                 while (date <= endDate)
-                 {
-                     // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
-                     // resultList.push(stringDate);
-                     demands[i]=tempDemands[i];
-                    //  {
-                     //
-                    //        "taxAmount" : null,
-                    //        "collectionAmount" : null,
-                    //        "rebateAmount" : null,
-                    //        "taxReason" : null,
-                    //        "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
-                    //        "glCode" : null,
-                    //        "isActualDemand" : null,
-                    //        tenantId
-                    //  }
-
-                    date.setMonth(date.getMonth() + 1);
-                    i++;
-                }
-               break;
-
-             case "QUARTER":
-             // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
-
-             var i=0;
-            //  console.log(date);
-            //  console.log(endDate);
-             while (date <= endDate)
-             {
-                 // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
-                 // resultList.push(stringDate);
-
-                  demands[i]=tempDemands[i];
-
-
-                date.setMonth(date.getMonth() + 3);
-                i++;
-              }
-               break;
-             case "HALFYEAR":
-             // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
-
-             var i=0;
-            //  console.log(date);
-            //  console.log(endDate);
-             while (date <= endDate)
-             {
-                 // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
-                 // resultList.push(stringDate);
-
-                demands[i]=tempDemands[i];
-
-                date.setMonth(date.getMonth() + 6);
-                i++;
-              }
-               break;
-             default:
-             // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
-
-             var i=0;
-            //  console.log(date);
-            //  console.log(endDate);
-             while (date <= endDate)
-             {
-                 // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
-                 // resultList.push(stringDate);
-                demands[i]=tempDemands[i];
-
-                date.setMonth(date.getMonth() + 12);
-                i++;
-              }
-             break;
-
-      }
-
-
-
+          demands=tempDemands;
 
 
 

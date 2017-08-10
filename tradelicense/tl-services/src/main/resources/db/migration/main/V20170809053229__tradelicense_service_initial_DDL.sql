@@ -10,7 +10,7 @@ CREATE TABLE egtl_license (
     licenseNumber character varying(128) NOT NULL,
     applicationDate timestamp without time zone NOT NULL,
     adhaarNumber character(12),
-    mobileNumber integer(10) NOT NULL,
+    mobileNumber character varying(10) NOT NULL,
     ownerName character varying(32) NOT NULL,
     fatherSpouseName character varying(32) NOT NULL,
     emailId character varying(128) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE egtl_license (
     subCategoryId bigint NOT NULL,
     uomId bigint NOT NULL,
     quantity numeric NOT NULL,
-    remarks character varying(256) NOT NULL,
+    remarks character varying(256),
     tradeCommencementDate timestamp without time zone NOT NULL,
     agreementDate timestamp without time zone ,
     agreementNo character varying(128),
@@ -50,15 +50,7 @@ ALTER TABLE ONLY egtl_license
 ALTER TABLE ONLY egtl_license
     ADD CONSTRAINT unq_tl_licenseno UNIQUE (licenseNumber);
 ALTER TABLE ONLY egtl_license
-    ADD CONSTRAINT unq_tl_ollicenseno UNIQUE (oldLicenseNumber);
-ALTER TABLE ONLY egtl_license
-    ADD CONSTRAINT unq_tl_agrmtno UNIQUE (agrementNo);    
-ALTER TABLE ONLY egtl_license
-    ADD CONSTRAINT fk_egtl_license_categoryId FOREIGN KEY (categoryId) REFERENCES egtl_mstr_category(id);
-ALTER TABLE ONLY egtl_license
-    ADD CONSTRAINT fk_egtl_license_subCategoryId FOREIGN KEY (subCategoryId) REFERENCES egtl_mstr_category(id);    
-ALTER TABLE ONLY egtl_license
-    ADD CONSTRAINT fk_egtl_license_uomId FOREIGN KEY (uomId) REFERENCES egtl_mstr_uom(id);        
+    ADD CONSTRAINT unq_tl_agrmtno UNIQUE (agreementNo);         
 
     
 -------------------END-------------------
@@ -109,7 +101,5 @@ ALTER TABLE ONLY egtl_support_document
     ADD CONSTRAINT pk_egtl_support_document PRIMARY KEY (id);
 ALTER TABLE ONLY egtl_support_document
     ADD CONSTRAINT fk_egtl_support_document_licenseId FOREIGN KEY (licenseId) REFERENCES egtl_license(id);
-ALTER TABLE ONLY egtl_support_document
-    ADD CONSTRAINT fk_egtl_support_document_docTypeId FOREIGN KEY (documentTypeId) REFERENCES egtl_mstr_document_type(id);
 
 -------------------END-------------------

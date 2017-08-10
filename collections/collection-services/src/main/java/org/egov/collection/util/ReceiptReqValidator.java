@@ -109,6 +109,7 @@ public class ReceiptReqValidator {
 			}
 		}
 	}catch(Exception e){
+		e.printStackTrace();
 		final ErrorField errorField = ErrorField.builder().code(HttpStatus.BAD_REQUEST.toString())
 				.message(CollectionServiceConstants.INVALID_RECEIPT_REQUEST)
 				.field(CollectionServiceConstants.INVALID_RECEIPT_REQUEST).build();

@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @Builder
@@ -19,4 +21,8 @@ public class BusinessAccountDetails {
 	private Long chartOfAccounts;
 
 	private Double amount;
+
+    private String tenantId;
+
+    private List<BusinessAccountSubLedger> subledgerDetails;
 }

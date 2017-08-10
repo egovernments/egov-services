@@ -1,6 +1,11 @@
+
 package org.egov.commons.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.commons.model.BusinessAccountDetails;
+import org.egov.commons.model.BusinessAccountSubLedgerDetails;
+import org.egov.commons.model.BusinessDetails;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,12 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.commons.model.BusinessAccountDetails;
-import org.egov.commons.model.BusinessAccountSubLedgerDetails;
-import org.egov.commons.model.BusinessCategory;
-import org.egov.commons.model.BusinessDetails;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class BusinessDetailsCombinedRowMapper implements RowMapper<BusinessDetails>{
@@ -44,11 +44,11 @@ public class BusinessDetailsCombinedRowMapper implements RowMapper<BusinessDetai
 		businessDetails.setVoucherCreation((Boolean)rs.getObject("bd_vouc_creation"));
 		try {
 			Date date = isEmpty(rs.getDate("bd_vou_cutoffdate")) ? null : sdf.parse(sdf.format(rs.getDate("bd_vou_cutoffdate")));
-			businessDetails.setVoucherCutoffDate(date);
+			businessDetails.setVoucherCutoffDate(date.getTime());
 			date = isEmpty(rs.getDate("bd_createddate")) ? null : sdf.parse(sdf.format(rs.getDate("bd_createddate")));
-			businessDetails.setCreatedDate(date);
+			businessDetails.setCreatedDate(date.getTime());
 			date = isEmpty(rs.getDate("bd_lastmodifieddate")) ? null : sdf.parse(sdf.format(rs.getDate("bd_lastmodifieddate")));
-			businessDetails.setLastModifiedDate(date);
+			businessDetails.setLastModifiedDate(date.getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");
@@ -56,17 +56,13 @@ public class BusinessDetailsCombinedRowMapper implements RowMapper<BusinessDetai
 	
 		businessDetails.setCreatedBy(rs.getLong("bd_createdby"));
 		businessDetails.setLastModifiedBy(rs.getLong("bd_lastmodifiedby"));
-		BusinessCategory businessCategory =new BusinessCategory();
-		businessCategory.setId(rs.getLong("bd_category"));
 		
 		BusinessAccountDetails accountDetails=new BusinessAccountDetails();
 		accountDetails.setId((Long)rs.getObject("bad_id"));
 		accountDetails.setAmount((Double)rs.getObject("bad_amount"));
 		accountDetails.setChartOfAccount(rs.getLong("bad_chartofacc"));
 		accountDetails.setTenantId(rs.getString("bad_tenant"));
-		BusinessDetails businessDetail=new BusinessDetails() ;
-		businessDetail.setId(rs.getLong("bd_id"));
-		accountDetails.setBusinessDetails(businessDetail);
+		accountDetails.setBusinessDetails(rs.getLong("bd_id"));
 		
 		
 		BusinessAccountSubLedgerDetails subledger=new BusinessAccountSubLedgerDetails();
@@ -83,10 +79,11 @@ public class BusinessDetailsCombinedRowMapper implements RowMapper<BusinessDetai
 		accountDetails.setSubledgerDetails(subledgered);
 		List<BusinessAccountDetails> details=new ArrayList<>();
 		details.add(accountDetails);
-	    businessDetails.setBusinessCategory(businessCategory);
+	    businessDetails.setBusinessCategory(rs.getLong("bd_category"));
 	    businessDetails.setAccountDetails(details);
 		
         return businessDetails;
 	}
 
 }
+

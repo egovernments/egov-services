@@ -144,6 +144,12 @@ public class MastersQueueRepository {
     @Value("${kafka.topics.egf.masters.financialconfiguration.completed.key}")
     private String financialConfigurationCompletedKey;
 
+    @Value("${kafka.topics.egf.masters.recovery.validated.key}")
+    private String recoveryValidatedKey;
+
+    @Value("${kafka.topics.egf.masters.recovery.completed.key}")
+    private String recoveryCompletedKey;
+
     private String key;
     private String topicKey;
 
@@ -235,6 +241,10 @@ public class MastersQueueRepository {
             }
             if (key.equalsIgnoreCase("financialConfiguration")) {
                 topicKey = financialConfigurationValidatedKey;
+                break;
+            }
+            if (key.equalsIgnoreCase("recovery")) {
+                topicKey = recoveryValidatedKey;
                 break;
             }
         }
@@ -330,6 +340,10 @@ public class MastersQueueRepository {
             }
             if (key.equalsIgnoreCase("financialConfiguration")) {
                 topicKey = financialConfigurationCompletedKey;
+                break;
+            }
+            if (key.equalsIgnoreCase("recovery")) {
+                topicKey = recoveryCompletedKey;
                 break;
             }
         }

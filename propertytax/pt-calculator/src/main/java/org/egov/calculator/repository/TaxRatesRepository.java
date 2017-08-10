@@ -40,91 +40,102 @@ public class TaxRatesRepository {
 	 */
 	public Long createTaxRates(String tenantId, TaxRates taxRates) {
 
-		String taxRatesInsert = TaxRatesBuilder.INSERT_TAXRATES_QUERY;
+            String taxRatesInsert = TaxRatesBuilder.INSERT_TAXRATES_QUERY;
 
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(taxRatesInsert, new String[] { "id" });
-				ps.setString(1, taxRates.getTenantId());
-				ps.setString(2, taxRates.getTaxHead());
-				ps.setString(3, taxRates.getDependentTaxHead());
-				ps.setTimestamp(4, TimeStampUtil.getTimeStamp(taxRates.getFromDate()));
-				ps.setTimestamp(5, TimeStampUtil.getTimeStamp(taxRates.getToDate()));
-				ps.setDouble(6, taxRates.getFromValue());
-				ps.setDouble(7, taxRates.getToValue());
-				ps.setDouble(8, taxRates.getRatePercentage());
-				ps.setDouble(9, taxRates.getTaxFlatValue());
-				ps.setString(10, taxRates.getAuditDetails().getCreatedBy());
-				ps.setString(11, taxRates.getAuditDetails().getLastModifiedBy());
-				ps.setLong(12, taxRates.getAuditDetails().getCreatedTime());
-				ps.setLong(13, taxRates.getAuditDetails().getLastModifiedTime());
-				return ps;
-			}
-		};
-		final KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, holder);
-		return Long.valueOf(holder.getKey().intValue());
-	}
+            final PreparedStatementCreator psc = new PreparedStatementCreator() {
+                    @Override
+                    public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+                            final PreparedStatement ps = connection.prepareStatement(taxRatesInsert, new String[] { "id" });
+                            ps.setString(1, taxRates.getTenantId());
+                            ps.setString(2, taxRates.getTaxHead());
+                            ps.setString(3, taxRates.getDependentTaxHead());
+                            ps.setTimestamp(4, TimeStampUtil.getTimeStamp(taxRates.getFromDate()));
+                            ps.setTimestamp(5, TimeStampUtil.getTimeStamp(taxRates.getToDate()));
+                            ps.setDouble(6, taxRates.getFromValue());
+                            ps.setDouble(7, taxRates.getToValue());
+                            ps.setDouble(8, taxRates.getRatePercentage());
+                            ps.setDouble(9, taxRates.getTaxFlatValue());
+                            ps.setString(10, taxRates.getUsage());
+                            ps.setString(11, taxRates.getPropertyType());
+                            ps.setString(12, taxRates.getAuditDetails().getCreatedBy());
+                            ps.setString(13, taxRates.getAuditDetails().getLastModifiedBy());
+                            ps.setLong(14, taxRates.getAuditDetails().getCreatedTime());
+                            ps.setLong(15, taxRates.getAuditDetails().getLastModifiedTime());
+                            return ps;
+                    }
+            };
+            final KeyHolder holder = new GeneratedKeyHolder();
+            try {
+            jdbcTemplate.update(psc, holder);
+            }
+            catch (Exception e) {
+                    System.out.println(e.getMessage());
+            }
+            return Long.valueOf(holder.getKey().intValue());
+    }
 
-	/**
-	 * Description: This method updates Taxrates
-	 * 
-	 * @param tenantId
-	 * @param taxRatesRequest
-	 * @return taxRatesResponse
-	 * @throws Exception
-	 */
-	public void updateTaxRates(String tenantId, TaxRates taxRates) {
+    /**
+     * Description: This method updates Taxrates
+     * 
+     * @param tenantId
+     * @param taxRatesRequest
+     * @return taxRatesResponse
+     * @throws Exception
+     */
+    public void updateTaxRates(String tenantId, TaxRates taxRates) {
 
-		String taxRatesUpdate = TaxRatesBuilder.UPDATE_TAXRATES_QUERY;
+            String taxRatesUpdate = TaxRatesBuilder.UPDATE_TAXRATES_QUERY;
 
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(taxRatesUpdate);
-				ps.setString(1, taxRates.getTenantId());
-				ps.setString(2, taxRates.getTaxHead());
-				ps.setString(3, taxRates.getDependentTaxHead());
-				ps.setTimestamp(4, TimeStampUtil.getTimeStamp(taxRates.getFromDate()));
-				ps.setTimestamp(5, TimeStampUtil.getTimeStamp(taxRates.getToDate()));
-				ps.setDouble(6, taxRates.getFromValue());
-				ps.setDouble(7, taxRates.getToValue());
-				ps.setDouble(8, taxRates.getRatePercentage());
-				ps.setDouble(9, taxRates.getTaxFlatValue());
-				ps.setString(10, taxRates.getAuditDetails().getLastModifiedBy());
-				ps.setLong(11, taxRates.getAuditDetails().getLastModifiedTime());
-				ps.setLong(12, taxRates.getId());
-				return ps;
-			}
-		};
-		jdbcTemplate.update(psc);
-	}
+            final PreparedStatementCreator psc = new PreparedStatementCreator() {
+                    @Override
+                    public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+                            final PreparedStatement ps = connection.prepareStatement(taxRatesUpdate);
+                            ps.setString(1, taxRates.getTenantId());
+                            ps.setString(2, taxRates.getTaxHead());
+                            ps.setString(3, taxRates.getDependentTaxHead());
+                            ps.setTimestamp(4, TimeStampUtil.getTimeStamp(taxRates.getFromDate()));
+                            ps.setTimestamp(5, TimeStampUtil.getTimeStamp(taxRates.getToDate()));
+                            ps.setDouble(6, taxRates.getFromValue());
+                            ps.setDouble(7, taxRates.getToValue());
+                            ps.setDouble(8, taxRates.getRatePercentage());
+                            ps.setDouble(9, taxRates.getTaxFlatValue());
+                            ps.setString(10, taxRates.getUsage());
+                            ps.setString(11, taxRates.getPropertyType());
+                            ps.setString(12, taxRates.getAuditDetails().getLastModifiedBy());
+                            ps.setLong(13, taxRates.getAuditDetails().getLastModifiedTime());
+                            ps.setLong(14, taxRates.getId());
+                            return ps;
+                    }
+            };
+            jdbcTemplate.update(psc);
+    }
 
-	/**
-	 * Description : This method for getting taxRate details
-	 * 
-	 * @param tenantId
-	 * @param taxHead
-	 * @param validDate
-	 * @param validARVAmount
-	 * @param parentTaxHead
-	 * @param requestInfo
-	 * @return TaxRatesResponse
-	 * @throws Exception
-	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<TaxRates> searchTaxRates(String tenantId, String taxHead, String validDate, Double validARVAmount,
-			String parentTaxHead) {
+    /**
+     * Description : This method for getting taxRate details
+     * 
+     * @param tenantId
+     * @param taxHead
+     * @param validDate
+     * @param validARVAmount
+     * @param parentTaxHead
+     * @param requestInfo
+     * @return TaxRatesResponse
+     * @throws Exception
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public List<TaxRates> searchTaxRates(String tenantId, String taxHead, String validDate, Double validARVAmount,
+                    String parentTaxHead,String usage,String propertyType) {
 
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String taxRatesSelect = TaxRatesBuilder.getTaxRatesSearchQuery(tenantId, taxHead, validDate, validARVAmount,
-				parentTaxHead, preparedStatementValues);
-		List<TaxRates> listOfTaxRates = new ArrayList();
-		listOfTaxRates = geTaxRates(taxRatesSelect, preparedStatementValues);
+            List<Object> preparedStatementValues = new ArrayList<Object>();
+            String taxRatesSelect = TaxRatesBuilder.getTaxRatesSearchQuery(tenantId, taxHead, validDate, validARVAmount,
+                            parentTaxHead,usage,propertyType,preparedStatementValues);
+            List<TaxRates> listOfTaxRates = new ArrayList();
+            listOfTaxRates = geTaxRates(taxRatesSelect, preparedStatementValues);
 
-		return listOfTaxRates;
-	}
+            return listOfTaxRates;
+    }
+
+
 
 	/**
 	 * This method will execute the given query & will build the TaxRates object
@@ -150,6 +161,8 @@ public class TaxRatesRepository {
 			taxRate.setToValue(getDouble(row.get("tovalue")));
 			taxRate.setRatePercentage(getDouble(row.get("ratepercentage")));
 			taxRate.setTaxFlatValue(getDouble(row.get("taxflatvalue")));
+			taxRate.setUsage(getString(row.get("usage")));
+			taxRate.setPropertyType(getString(row.get("propertyType")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));

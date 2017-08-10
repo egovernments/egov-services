@@ -13,14 +13,13 @@ import org.egov.common.contract.request.User;
 import org.egov.commons.model.BusinessAccountDetails;
 import org.egov.commons.model.BusinessAccountSubLedgerDetails;
 import org.egov.commons.model.BusinessCategory;
-import org.egov.commons.model.BusinessDetails;
 import org.egov.commons.model.BusinessDetailsCommonModel;
 import org.egov.commons.model.BusinessDetailsCriteria;
 import org.egov.commons.repository.BusinessDetailsRepository;
 import org.egov.commons.service.BusinessDetailsService;
 import org.egov.commons.web.contract.BusinessAccountSubLedger;
 import org.egov.commons.web.contract.BusinessDetailsRequest;
-import org.egov.commons.web.contract.BusinessDetailsRequestInfo;
+import org.egov.commons.web.contract.BusinessDetails;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,10 +47,8 @@ public class BusinessDetailsServiceTest {
 
 	@Test
 	public void test_should_create_businessDetails() {
-		businessDetailsService.createBusinessDetails(getModelDetails(), getListOfModelAccountDetails(),
-				getListOfModelAccountSubledger());
-		verify(businessDetailsRepository).createBusinessDetails(getModelDetails(), getListOfModelAccountDetails(),
-				getListOfModelAccountSubledger());
+		businessDetailsService.createBusinessDetails(getModelDetails());
+		verify(businessDetailsRepository).createBusinessDetails(getModelDetails());
 	}
 
 	@Test
@@ -62,10 +59,8 @@ public class BusinessDetailsServiceTest {
 
 	@Test
 	public void test_should_update_businessDetails() {
-		businessDetailsService.updateBusinessDetails(getModelDetailsForUpdate(),
-				getListOfModelAccountDetailsForUpdate(), getListOfModelAccountSubledgerForUpdate());
-		verify(businessDetailsRepository).updateBusinessDetails(getModelDetailsForUpdate(),
-				getListOfModelAccountDetailsForUpdate(), getListOfModelAccountSubledgerForUpdate());
+		businessDetailsService.updateBusinessDetails(getModelDetails());
+		verify(businessDetailsRepository).updateBusinessDetails(getModelDetails());
 	}
 
 	@Test
@@ -158,13 +153,13 @@ public class BusinessDetailsServiceTest {
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
 				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		BusinessDetailsRequestInfo detailsRequestInfo = BusinessDetailsRequestInfo.builder().id(1L).code("TLM")
+		BusinessDetails detailsRequestInfo = BusinessDetails.builder().id(1L).code("TLM")
 				.name("Trade Licence Mutation").active(true).businessCategory(1L).businessType("C")
 				.callBackForApportioning(true).businessUrl("/receipts/receipt-create.action").voucherCreation(true)
 				.isVoucherApproved(true).ordernumber(2).fund("12").function("123").fundSource("234").functionary("456")
 				.department("56").tenantId("default").accountDetails(getListOfModelAccountDetailsContractForUpdate())
-				.subledgerDetails(getListOfModelAccountSubledgerContractForUpdate()).build();
-		return BusinessDetailsRequest.builder().requestInfo(requestInfo).businessDetails(detailsRequestInfo).build();
+        .build();
+		return BusinessDetailsRequest.builder().requestInfo(requestInfo).businessDetails(Arrays.asList(detailsRequestInfo)).build();
 	}
 
 	private List<BusinessAccountSubLedger> getListOfModelAccountSubledgerContractForUpdate() {
@@ -193,13 +188,13 @@ public class BusinessDetailsServiceTest {
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
 				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		BusinessDetailsRequestInfo detailsRequestInfo = BusinessDetailsRequestInfo.builder().id(1L).code("TL")
+		BusinessDetails detailsRequestInfo = BusinessDetails.builder().id(1L).code("TL")
 				.name("Trade Licence").active(true).businessCategory(1L).businessType("C")
 				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
 				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
 				.tenantId("default").callBackForApportioning(true).accountDetails(getListOfAccountDetails())
-				.subledgerDetails(getListOfAccountSubledger()).build();
-		return BusinessDetailsRequest.builder().requestInfo(requestInfo).businessDetails(detailsRequestInfo).build();
+				.build();
+		return BusinessDetailsRequest.builder().requestInfo(requestInfo).businessDetails(Arrays.asList(detailsRequestInfo)).build();
 	}
 
 	private List<BusinessAccountSubLedger> getListOfAccountSubledger() {
@@ -222,27 +217,24 @@ public class BusinessDetailsServiceTest {
 
 
 	private BusinessDetailsCommonModel getBusinessDetailCommonModel() {
-		BusinessCategory category = BusinessCategory.builder().id(1L).build();
-		BusinessDetails details1 = BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true)
+		org.egov.commons.model.BusinessDetails details1 = org.egov.commons.model.BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true)
 				.businessType("C").businessUrl("/receipts/receipt-create.action").voucherCreation(true)
 				.isVoucherApproved(true).ordernumber(2).fund("12").function("123").fundSource("234").functionary("456")
-				.department("56").tenantId("default").businessCategory(category).build();
-		BusinessDetails details2 = BusinessDetails.builder().id(2L).code("PT").name("Property Tax").isEnabled(true)
+				.department("56").tenantId("default").businessCategory(1L).build();
+		org.egov.commons.model.BusinessDetails details2 = org.egov.commons.model.BusinessDetails.builder().id(2L).code("PT").name("Property Tax").isEnabled(true)
 				.businessType("C").businessUrl("/receipts/receipt-create.action").voucherCreation(true)
 				.isVoucherApproved(true).ordernumber(2).fund("12").function("123").fundSource("234").functionary("456")
-				.department("56").tenantId("default").businessCategory(category).build();
-		BusinessDetails details = BusinessDetails.builder().id(1L).build();
-		BusinessDetails details12 = BusinessDetails.builder().id(2L).build();
+				.department("56").tenantId("default").businessCategory(1L).build();
 
-		List<BusinessDetails> listBusinessDetails = Arrays.asList(details1, details2);
+		List<org.egov.commons.model.BusinessDetails> listBusinessDetails = Arrays.asList(details1, details2);
 		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).chartOfAccount(56L).amount(1000.0)
-				.tenantId("default").businessDetails(details).build();
+				.tenantId("default").businessDetails(1l).build();
 		BusinessAccountDetails account2 = BusinessAccountDetails.builder().id(2L).chartOfAccount(57L).amount(2000.0)
-				.tenantId("default").businessDetails(details).build();
+				.tenantId("default").businessDetails(1L).build();
 		BusinessAccountDetails account3 = BusinessAccountDetails.builder().id(3L).chartOfAccount(56L).amount(1000.0)
-				.tenantId("default").businessDetails(details12).build();
+				.tenantId("default").businessDetails(1L).build();
 		BusinessAccountDetails account4 = BusinessAccountDetails.builder().id(4L).chartOfAccount(57L).amount(2000.0)
-				.tenantId("default").businessDetails(details12).build();
+				.tenantId("default").businessDetails(1L).build();
 
 		List<BusinessAccountDetails> listAccountDetails = Arrays.asList(account1, account2, account3, account4);
 
@@ -295,37 +287,43 @@ public class BusinessDetailsServiceTest {
 	}
 
 	private List<BusinessAccountDetails> getListOfModelAccountDetailsForUpdate() {
-		BusinessDetails details = BusinessDetails.builder().id(1L).build();
 		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).amount(5000.00).chartOfAccount(56L)
-				.tenantId("default").businessDetails(details).build();
+				.tenantId("default").businessDetails(1L).build();
 		BusinessAccountDetails account2 = BusinessAccountDetails.builder().id(5L).amount(3000.00).chartOfAccount(58L)
-				.tenantId("default").businessDetails(details).build();
+				.tenantId("default").businessDetails(1L).build();
 		BusinessAccountDetails account3 = BusinessAccountDetails.builder().id(6L).amount(4000.00).chartOfAccount(59L)
-				.tenantId("default").businessDetails(details).build();
+				.tenantId("default").businessDetails(1L).build();
 
 		return Arrays.asList(account1, account2, account3);
 	}
 
-	private BusinessDetails getModelDetailsForUpdate() {
-		return BusinessDetails.builder().id(1L).code("TLM").name("Trade Licence Mutation").isEnabled(true)
-				.businessCategory(getBusinessCategoryModel()).businessType("C")
+	private org.egov.commons.model.BusinessDetails getModelDetailsForUpdate() {
+		return org.egov.commons.model.BusinessDetails.builder().id(1L).code("TLM").name("Trade Licence Mutation").isEnabled(true)
+				.businessCategory(1L).businessType("C")
 				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
 				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
 				.tenantId("default").build();
 	}
 
-	private BusinessDetails getModelDetails() {
-		return BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true)
-				.businessCategory(getBusinessCategoryModel()).businessType("C")
+	private List<org.egov.commons.model.BusinessDetails> getModelDetails() {
+		org.egov.commons.model.BusinessDetails businessDetails1 = org.egov.commons.model.BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true)
+				.businessCategory(1L).businessType("BILLBASED")
 				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
 				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
 				.tenantId("default").build();
+
+        org.egov.commons.model.BusinessDetails businessDetails2 = org.egov.commons.model.BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true)
+                .businessCategory(2L).businessType("BILLBASED")
+                .businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
+                .ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
+                .tenantId("default").build();
+        return Arrays.asList(businessDetails1, businessDetails2);
 
 	}
 
 	private BusinessAccountDetails getAccountAssociatedWithSubledger() {
 		return BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L).tenantId("default")
-				.businessDetails(getModelDetails()).build();
+				.businessDetails(1L).build();
 
 	}
 
@@ -337,9 +335,9 @@ public class BusinessDetailsServiceTest {
 
 	private List<BusinessAccountDetails> getListOfModelAccountDetails() {
 		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L)
-				.tenantId("default").businessDetails(getModelDetails()).build();
+				.tenantId("default").businessDetails(1L).build();
 		BusinessAccountDetails account2 = BusinessAccountDetails.builder().id(2L).amount(2000.00).chartOfAccount(57L)
-				.tenantId("default").businessDetails(getModelDetails()).build();
+				.tenantId("default").businessDetails(1L).build();
 		return Arrays.asList(account1, account2);
 	}
 

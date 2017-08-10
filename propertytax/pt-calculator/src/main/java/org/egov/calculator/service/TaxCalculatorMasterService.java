@@ -128,7 +128,7 @@ public interface TaxCalculatorMasterService {
 	 * @throws Exception
 	 */
 	public TaxRatesResponse getTaxRate(RequestInfo requestInfo, String tenantId, String taxHead, String validDate,
-			Double validARVAmount, String parentTaxHead) throws Exception;
+			Double validARVAmount, String parentTaxHead,String usage,String propretyType) throws Exception;
 
 	/**
 	 * This will create the tax period

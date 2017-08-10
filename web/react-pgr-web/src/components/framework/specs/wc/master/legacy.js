@@ -8,6 +8,7 @@ var meterReading = {
    "label": "Meter Reading",
    "name": "MeterReading",
    "multiple": false,
+   "hide":true,
    "children": [],
    "fields": [
     {
@@ -451,7 +452,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.supplyType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
             "requiredErrMsg": "",
@@ -463,7 +464,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.waterTreatment",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
             "requiredErrMsg": "",
@@ -476,7 +477,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.fields.sumpCapacity",
             "pattern": "",
             "type": "number",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -581,7 +582,7 @@ var dat = {
                   }]
               },
 	  {
-        "label": "Donation",
+        "label": "wc.create.donation.subtitle",
         "name": "Donation",
         "fields": [{
             "name": "SpecialDonationCharges",
@@ -593,7 +594,30 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }]
+          },
+          {
+                "name": "receiptNumber",
+                "jsonPath": "Connection.receiptNumber",
+                "label": "wc.create.receiptNumber",
+                "pattern": "",
+                "type": "number",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+            },
+            {
+             "name": "receiptDate",
+             "jsonPath": "Connection.receiptDate",
+             "label": "wc.create.receiptDate",
+             "pattern": "",
+             "type": "datePicker",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",//Remove required messages
+             "patternErrMsg": ""
+            },
+        ]
       },
 	   {
         "label": "wc.create.groups.fileDetails.title",

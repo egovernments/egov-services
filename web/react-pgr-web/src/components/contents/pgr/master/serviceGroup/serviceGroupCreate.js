@@ -175,7 +175,7 @@ class ServiceGroupCreate extends Component {
                                       value={createServiceGroup.name? createServiceGroup.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                       maxLength="100"
-                                      onChange={(e) => handleChange(e, "name", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Should contain only alphabets, space and special characters')}
+                                      onChange={(e) => handleChange(e, "name", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Please use only alphabets, space and special characters')}
                                       id="name"
                                   />
                               </Col>
@@ -186,7 +186,7 @@ class ServiceGroupCreate extends Component {
                                       value={createServiceGroup.code? createServiceGroup.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
                                       maxLength="20"
-                                      onChange={(e) => handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Should contain only upper case alphabets and numbers')}
+                                      onChange={(e) => handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
                                       id="code"
                                       disabled={this.state.id ? true : false }
                                   />
@@ -198,7 +198,7 @@ class ServiceGroupCreate extends Component {
                                       value={createServiceGroup.description? createServiceGroup.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
                                       maxLength="250"
-                                      onChange={(e) => handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Should contain only alphabets, space and special characters')}
+                                      onChange={(e) => handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Please use only alphabets, space and special characters')}
                                       multiLine={true}
                                       id="description"
                                   />

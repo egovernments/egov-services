@@ -74,8 +74,8 @@ public class BusinessCategoryService {
 		return businessCategoryRequest;
 	}
 
-	public void create(BusinessCategory category) {
-		businessCategoryRepository.create(category);
+	public void create(List<BusinessCategory> businessCategories) {
+		businessCategoryRepository.create(businessCategories);
 
 	}
 
@@ -84,8 +84,8 @@ public class BusinessCategoryService {
 		return businessCategoryRequest;
 	}
 
-	public void update(BusinessCategory category) {
-		businessCategoryRepository.update(category);
+	public void update(List<BusinessCategory> businessCategories) {
+		businessCategoryRepository.update(businessCategories);
 	}
 
 	public List<BusinessCategory> getForCriteria(BusinessCategoryCriteria criteria) {

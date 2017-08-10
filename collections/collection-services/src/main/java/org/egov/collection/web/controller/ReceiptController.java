@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
@@ -189,6 +190,18 @@ public class ReceiptController {
 			error.setCode(Integer.valueOf(e.getCode().toString()));
 			error.setMessage(e.getCustomMessage());
 			error.setDescription(e.getDescription());
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			errorResponse.setResponseInfo(responseInfo);
+
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
+		}catch(ValidationException e){
+			LOGGER.info("Exception Message: "+e.getMessage());
+			Error error = new Error();
+			final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(receiptRequest.getRequestInfo(), true);
+			error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
+			error.setMessage(e.getMessage());
+			error.setDescription("Validation Exception");
 			ErrorResponse errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
 			errorResponse.setResponseInfo(responseInfo);

@@ -442,7 +442,7 @@ class grievanceSearch extends Component {
 	              		<Grid>
 	                		<Row>
 	                			<Col xs={12} md={3}>
-	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.srn")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
+	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.crnformat")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
                         </Col>
 	                			<Col xs={12} md={3}>
 	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, val) => {

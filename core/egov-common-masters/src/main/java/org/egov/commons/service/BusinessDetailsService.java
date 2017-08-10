@@ -40,11 +40,8 @@ public class BusinessDetailsService {
 }
 	
 	
-	public void createBusinessDetails(BusinessDetails modelDetails,
-			List<org.egov.commons.model.BusinessAccountDetails> listModelAccountDetails,
-			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger) {
-		 businessDetailsRepository.createBusinessDetails(modelDetails, listModelAccountDetails,
-				listModelAccountSubledger);
+	public void createBusinessDetails(List<BusinessDetails> businessDetails) {
+		 businessDetailsRepository.createBusinessDetails(businessDetails);
 	}
 	
 	
@@ -54,11 +51,8 @@ public class BusinessDetailsService {
 		return businessDetailsRequest;
 }
 
-	public void updateBusinessDetails(BusinessDetails modelDetails,
-			List<org.egov.commons.model.BusinessAccountDetails> listModelAccountDetails,
-			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger) {
-		 businessDetailsRepository.updateBusinessDetails(modelDetails, listModelAccountDetails,
-				listModelAccountSubledger);
+	public void updateBusinessDetails(List<BusinessDetails> businessDetails) {
+		 businessDetailsRepository.updateBusinessDetails(businessDetails);
 	}
 
 	public BusinessDetailsCommonModel getForCriteria(BusinessDetailsCriteria detailsCriteria) {

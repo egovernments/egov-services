@@ -34,4 +34,7 @@ public class PropertiesManager {
 
 	@Value("${egov.services.egov-location.searchpath}")
 	private String locationServiceSearchPath;
+	
+	@Value("${egov.services.tl-services.create.legacy.tradelicense.validated}")
+	private String createLegacyTradeValidated;
 }

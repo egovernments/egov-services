@@ -96,8 +96,10 @@ public class VoucherService {
             throw new RuntimeException("Voucher can not be created because :: " + err.getMessage());
         }
         try {
-            voucherRes = mapper.readValue(response.toString(), VoucherResponse.class);
-            return voucherRes.getVouchers().get(0).getId();
+            voucherRes = mapper.readValue(response.getBody(), VoucherResponse.class);
+            final Long voucherId = voucherRes.getVouchers().get(0).getId();
+            log.debug("Voucher Id is :: " + voucherId);
+            return voucherId;
         } catch (final IOException e) {
             throw new RuntimeException("Voucher response Deserialization Issue :: " + e.getMessage());
         }

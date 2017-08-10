@@ -19,7 +19,7 @@
                 "isActive": null,
                 "isCancelled": null,
                 "paidBy": "abc",
-                "BillDetail": [
+                "billDetails": [
                     {
                         "id": "1",
                         "bill": null,
@@ -47,7 +47,7 @@
                         "amountPaid": null,
                         "cancellationRemarks": "receipt number data entered is not proper",
                         "status": "CANCELLED",
-                        "BillAccountDetail": [
+                        "billAccountDetails": [
                             {
                                 "glcode": "456",
                                 "order": null,

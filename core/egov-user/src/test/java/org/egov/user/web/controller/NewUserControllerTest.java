@@ -20,6 +20,8 @@ import org.egov.user.model.enums.Gender;
 import org.egov.user.model.enums.Type;
 import org.egov.user.service.NewUserService;
 import org.egov.user.utils.FileUtil;
+import org.egov.user.web.contract.factory.ResponseFactory;
+import org.egov.user.web.validator.NewUserValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,12 @@ public class NewUserControllerTest {
 	
 	@MockBean
 	private NewUserService newUserService;
+	
+	@MockBean
+	private NewUserValidator userValidator;
+	
+	@MockBean
+	private ResponseFactory responseFactory;
 	
 	@Test
 	@WithMockUser
@@ -93,6 +101,22 @@ public class NewUserControllerTest {
 				.content(getFileContents("newUserRequest.json"))).andExpect(status().isCreated())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("newUserResponse.json")));
+	
+	}
+	
+	@Test
+	@WithMockUser
+	public void test_Should_Create_User_Exception() throws IOException, Exception {
+		List<User> users=new ArrayList<User>();
+		users.add(getUser());
+		UserRes userRes =new UserRes();
+		userRes.setResponseInfo(new ResponseInfo());
+		userRes.setUsers(users);
+		
+		when(newUserService.createAsync(any(UserReq.class))).thenReturn(userRes);
+		
+		mockMvc.perform(post("/v110/_create").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("newUserRequestForExeption.json"))).andExpect(status().isBadRequest());
 	
 	}
 

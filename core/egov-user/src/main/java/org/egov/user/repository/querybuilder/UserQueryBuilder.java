@@ -131,7 +131,7 @@ public class UserQueryBuilder {
 	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final UserSearchCriteria userSearchCriteria) {
 		if(userSearchCriteria.getSort() != null && !userSearchCriteria.getSort().isEmpty())
-			selectQuery.append(" ORDER BY ");
+			selectQuery.append(" ORDER BY "+getOrderByQuery(userSearchCriteria.getSort()));
 		else 
 			selectQuery.append(" ORDER BY usr.name ASC");
 
@@ -150,7 +150,7 @@ public class UserQueryBuilder {
 															// pageNo * pageSize
 	}
 	
-	private String getOrderByQuery(Set<Long> idList) {
+	private String getOrderByQuery(Set<String> idList) {
 
 		StringBuilder query = new StringBuilder();
 		if (!idList.isEmpty()) {

@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.user.model.Address;
+import org.egov.user.model.TenantRole;
 import org.egov.user.model.User;
 import org.egov.user.model.UserDetails;
 import org.egov.user.model.UserReq;
@@ -98,6 +99,38 @@ public class NewUserServiceTest {
 		UserReq userReq = new UserReq();
 		userReq.setUsers(users);
 
+		when(userRepository.search(Matchers.any(UserSearchCriteria.class))).thenReturn(users);
+
+		when(passwordEncoder.encode(Matchers.any(String.class))).thenReturn("demo");
+
+		doNothing().when(userIdPopuater).populateAddressAndUserTenantId(any(List.class), any(List.class));
+
+		assertTrue(userRes.equals(newUserService.updateAsync(userReq)));
+	}
+	
+	@Test
+	public void testUpdateAsyncWithNoAddress(){
+		List<User> users = new ArrayList<User>();
+		List<Address> address = new ArrayList<>();
+		Address add = getAddress();
+		address.add(add);
+		UserDetails uDetails = new UserDetails();
+		uDetails.setAddresses(address);
+
+		users.add(getUser());
+		users.get(0).setUserDetails(uDetails);
+		UserRes userRes = new UserRes();
+		userRes.setUsers(users);
+		List<TenantRole> tenantRoles=new ArrayList<>();
+		TenantRole role=new TenantRole();
+		role.setId(12l);
+		role.setTenantId("default");
+		role.setUserId(12l);
+		tenantRoles.add(role);
+		users.get(0).setAdditionalroles(tenantRoles);
+		UserReq userReq = new UserReq();
+		userReq.setUsers(users);
+		
 		when(userRepository.search(Matchers.any(UserSearchCriteria.class))).thenReturn(users);
 
 		when(passwordEncoder.encode(Matchers.any(String.class))).thenReturn("demo");

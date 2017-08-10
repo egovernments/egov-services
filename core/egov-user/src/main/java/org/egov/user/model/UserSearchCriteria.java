@@ -30,7 +30,7 @@ public class UserSearchCriteria {
 	private Boolean includeDetails;
 	private Integer pageSize;
 	private Integer pageNumber;
-	private List<String> sort;	
+	private Set<String> sort;	
 	
 
 }

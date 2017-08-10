@@ -13,8 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class RecoverySearch extends Recovery {
 	
-	private Date fromDate;
-	
 	private Integer pageSize;
 	
 	private Integer offset;

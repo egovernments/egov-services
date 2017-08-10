@@ -124,7 +124,7 @@ public class RecoveryEntity extends AuditableEntity {
         this.name = recovery.getName();
         this.accountNumber = recovery.getAccountNumber();
         this.active = recovery.getActive();
-        if(recovery.getChartOfAccount() != null)
+        if(recovery.getChartOfAccount() != null && recovery.getChartOfAccount().getGlcode() != null)
             this.chartOfAccountId = recovery.getChartOfAccount().getGlcode();
         this.flat = recovery.getFlat();
         this.ifscCode = recovery.getIfscCode();

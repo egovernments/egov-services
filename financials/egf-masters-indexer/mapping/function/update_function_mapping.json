@@ -18,9 +18,6 @@
         "level": {
             "type": "long"
         },
-        "isParent": {
-            "type": "boolean"
-        },
         "active": {
             "type": "boolean"
         },

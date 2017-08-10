@@ -72,14 +72,12 @@ public class RecoveryESRepository extends ESRepository {
     }
 
     private SearchRequestBuilder getSearchRequest(RecoverySearchContract criteria) {
-
+        List<String> orderByList = new ArrayList<>();
         if (criteria.getSortBy() != null && !criteria.getSortBy().isEmpty()) {
             validateSortByOrder(criteria.getSortBy());
             validateEntityFieldName(criteria.getSortBy(), RecoveryEntity.class);
-        }
-        List<String> orderByList = new ArrayList<>();
-        if(criteria.getSortBy() != null && !criteria.getSortBy().isEmpty())
             orderByList = elasticSearchQueryFactory.prepareOrderBys(criteria.getSortBy());
+        }
 
         final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchRecovery(criteria);
 

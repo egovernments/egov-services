@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +62,9 @@ public class ServiceType {
     }
 
     private List<org.egov.pgr.domain.model.AttributeDefinition> mapToDomainAttributes(){
+    	if(null == attributeDefinitions)
+    		return Collections.EMPTY_LIST;
+    	
         return attributeDefinitions.stream()
                 .map(AttributeDefinition::toDomain)
                 .collect(Collectors.toList());

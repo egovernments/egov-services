@@ -415,17 +415,17 @@ constructor(props) {
                               {ownerDetails.owners && ownerDetails.owners.map(function(i, index){
                                 if(i){
                                   return (<tr key={index}>
-                                    <td>{index}</td>
-                                    <td>{i.aadhaarNumber}</td>
-                                    <td>{i.mobileNumber}</td>
-                                    <td>{i.name}</td>
-                                    <td>{i.gender}</td>
-                                    <td>{i.emailId}</td>
-                                    <td>{i.gaurdianRelation}</td>
-                                    <td>{i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False"}</td>
-                                    <td>{i.fatherOrHusbandName}</td>
-                                    <td>{i.ownerType}</td>
-                                    <td>{i.ownerShipPercentage}</td>
+                                    <td>{index+1}</td>
+                                    <td>{i.aadhaarNumber || 'NA'}</td>
+                                    <td>{i.mobileNumber || 'NA'}</td>
+                                    <td>{i.name || 'NA'}</td>
+                                    <td>{i.gender || 'NA'}</td>
+                                    <td>{i.emailId || 'NA'}</td>
+                                    <td>{i.gaurdianRelation || 'NA'}</td>
+                                    <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False") || 'NA'}</td>
+                                    <td>{i.fatherOrHusbandName || 'NA'}</td>
+                                    <td>{i.ownerType || 'NA'}</td>
+                                    <td>{i.ownerShipPercentage || 'NA'}</td>
                                     <td>
 										<i className="material-icons" style={styles.iconFont} onClick={ () => {
 											editObject("owner",i, true);

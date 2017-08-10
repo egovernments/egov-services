@@ -28,7 +28,8 @@ import FloorDetails from './propertyTax/FloorDetails';
 import DocumentUpload from './propertyTax/DocumentUpload';
 import Workflow from './propertyTax/Workflow';
 import VacantLand from './propertyTax/vacantLand';
-
+import PropertyFactors from './propertyTax/PropertyFactors';
+import UpicNumber from './propertyTax/UpicNumber';
 
 
 var flag = 0;
@@ -373,12 +374,11 @@ dataEntryTax = () => {
 			"properties": [{
 				"occupancyDate":"02/12/2016",
 				"tenantId": "default",
-				"oldUpicNumber": null,
+				"oldUpicNumber": dataEntry.oldUpicNumber,
 				"vltUpicNumber": null,
 				"creationReason": dataEntry.reasonForCreation || null,
 				"address": {
 					"tenantId": "default",
-					 "latitude": null,
 					"longitude": null,
 					"addressNumber": dataEntry.doorNo || null,
 					"addressLine1": dataEntry.locality || null,
@@ -549,12 +549,7 @@ dataEntryTax = () => {
 				setLoadingStatus('hide');
 				toggleSnackbarAndSetText(true, err.message);
 			  })
-		  }
-		  
-	 
-			  
-		
-		
+		  }	
 	}	  
 		  
 	
@@ -625,31 +620,29 @@ createActivate = () => {
 
 	  return(
 		  <div className="dataEntry">
-				<h3 style={{padding:15}}>Create New Property</h3>
+			  <h3 style={{padding:15}}>Create DataEntry</h3>
 			  <form onSubmit={(e) => {search(e)}}>
+			  	  <UpicNumber/>
 				  <OwnerDetails />
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
-				
-				  {(getNameByCode(this.state.propertytypes, dataEntry.propertyType) == "Vacant Land") ? <VacantLand/> :
-					<div>
-						<Amenities />                  
-						<ConstructionTypes/>				  
-						<FloorDetails/>
-					</div>}
-				  <DocumentUpload />
-				  			   
+					<PropertyFactors/>
+				  {(getNameByCode(this.state.propertytypes, dataEntry.propertyType) == "Vacant Land") ?                  
+						<div>
+							<VacantLand/> 
+						</div>:
+						<div>                 
+							<FloorDetails/>
+						</div>}
+						
 				  <div style={{textAlign:'center'}} >
-				
 						<br/>
-						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  primary={true} onClick={()=> {
+						<RaisedButton type="button" label="Create" disabled={this.createActivate()}  primary={true} onClick={()=> {
 							dataEntryTax();
 							}
 						}/>
 						<div className="clearfix"></div>
-				
 				  </div>
-			
 			  </form>
 		  </div>
       )
@@ -672,7 +665,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
+          required: ['reasonForCreation','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'sequenceNo']
         },
         pattern: {
           current: [],
@@ -682,7 +675,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
         },
         pattern: {
           current: [],
@@ -692,7 +685,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
         },
         pattern: {
           current: [],

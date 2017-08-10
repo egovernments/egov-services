@@ -7,7 +7,6 @@ var rooms = {
   {
    "label": "Room",
    "name": "Room",
-   "multiple": true,
 	"hide":true,
    "children": [],
    "fields": [
@@ -369,10 +368,10 @@ var rooms = {
 }
 
 var dat = {
-	"dataEntry.create": {
+	"inbox.view": {
 		"numCols": 12/4,
 		"version": "v1",
-		"url": "pt-property/properties/_create",
+		"url": "pt-property/properties/_search?propertyId={id}",
 		"useTimestamp": true,
 		"objectName": "properties",
 		"level": 0,
@@ -383,7 +382,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "UpicNumber",
-							"jsonPath": "UpicNumber",
+							"jsonPath": "properties[0].upicNumber",
 							"label": "pt.create.groups.propertyAddress.fields.upicNumber",
 							"pattern": "",
 							"type": "text",
@@ -398,7 +397,6 @@ var dat = {
 				"label": "Owner Details",
 				"name": "OwnerDetails",
 				"jsonPath": "properties[0].owners",
-				"multiple":true,
 				"fields": [
 						{
 							"name": "AadhaarNumber",
@@ -1130,7 +1128,6 @@ var dat = {
 				"label": "Floor Details",
 				"name": "FloorDetails",
 				"jsonPath": "properties[0].propertyDetail.floors",
-				"multiple":true,
 				"children":[rooms],
 				"fields": [
 						{

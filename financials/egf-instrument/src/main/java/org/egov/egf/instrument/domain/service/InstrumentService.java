@@ -231,6 +231,7 @@ public class InstrumentService {
 		FinancialStatusContract financialStatusContract1 = new FinancialStatusContract();
 		financialStatusContract1 = financialStatusContractRepository.findByModuleCode(financialStatusContract);
 		instrument.setFinancialStatus(financialStatusContract1);
+		instrument.setRemittanceVoucherId(instrumentDepositRequest.getRemittanceVoucherId());
 		List<Instrument> instrumentsToUpdate = new ArrayList<>();
 		instrumentsToUpdate.add(instrument);
 		return instrumentRepository.update(instrumentsToUpdate, requestInfo);

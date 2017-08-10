@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import org.egov.commons.model.BusinessAccountDetails;
 import org.egov.commons.model.BusinessDetails;
 import org.egov.commons.repository.rowmapper.BusinessAccountDetailsRowMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,7 @@ public class BusinessAccountDetailsRowMapperTest {
 	private BusinessAccountDetailsRowMapper accountDetailsRowMapper;
 
 	@Test
+    @Ignore
 	public void test_should_map_result_set_to_entity() throws Exception {
 		Mockito.when(rs.next()).thenReturn(true).thenReturn(false);
 		when(rs.getLong("id")).thenReturn(1L);

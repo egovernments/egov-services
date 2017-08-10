@@ -9,7 +9,7 @@
                "payeeEmail":null,
                "isActive":true,
                "isCancelled":false,
-               "BillDetail":[
+               "billDetails":[
                   {
                      "id":"47",
                      "tenantId":"default",
@@ -28,7 +28,7 @@
                      ],
                      "callBackForApportioning":false,
                      "partPaymentAllowed":false,
-                     "BillAccountDetail":[
+                     "billAccountDetails":[
                         {
                            "id":"639",
                            "tenantId":"default",
@@ -103,35 +103,32 @@
                "paidBy":"murali"
             }
          ],
-         "tenantId":"default",
          "instrument":{
             "instrumentType":{
                "tenantId":"default",
-               "name":"Cash"
+               "name":"Cheque"
             },
-            "bankAccount":{
-               "tenantId":"default"
-            },
+            "branchName":"Bangalore",
             "bank":{
                "tenantId":"default"
             },
             "amount":100
-         }
+         },
+        "tenantId":"default"
       }
    ],
-  "RequestInfo": {
-    "apiId": "emp",
-    "ver": "1.0",
-    "ts": "10-03-2017 00:00:00",
-    "action": "create",
-    "did": "1",
-    "key": "abcdkey",
-    "msgId": "20170310130900",
-    "requesterId": "rajesh",
-    "correlationId": "",
-    "authToken": "5579d505-53b6-4c0b-9db9-e112d0e20ed2",
-    "userInfo": {
-      "id": "73"
-    }
-  }
+   "RequestInfo":{
+      "apiId":"org.egov.pt",
+      "ver":"1.0",
+      "ts":1502289700911,
+      "action":"asd",
+      "did":"4354648646",
+      "key":"xyz",
+      "msgId":"654654",
+      "requesterId":"61",
+      "authToken":"d97a0589-473b-44ad-889f-bc99fcd41e5e",
+      "userInfo": {
+    	"id": "73"
+      }
+   }
 }

@@ -9,7 +9,6 @@ ReportDefinitions:
     type: number
     source: collection
     showColumn: false
-    testfield: true
   - name: RECEIPT_NUMBER
     label: reports.collection.receiptno
     type: number

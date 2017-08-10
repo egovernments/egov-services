@@ -100,7 +100,7 @@ const Main = () => {
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
-        <Route exact path={base+'/services/apply/:serviceCode'} component={VisibleNewServiceRequest}/>
+        <Route exact path={base+'/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>

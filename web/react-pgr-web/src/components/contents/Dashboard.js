@@ -24,6 +24,8 @@ require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
+const CITIZEN_SERVICES_KEYWORD = "Deliverable_Service";
+
 const styles = {
   headline: {
     fontSize: 24,
@@ -80,10 +82,9 @@ class Dashboard extends Component {
     if(currentUser.type=="CITIZEN") {
       Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
-          Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:"deliverable"},{})
+          Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:CITIZEN_SERVICES_KEYWORD},{})
       ])
       .then((responses)=>{
-
         //if any error occurs
         if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
           current.setState({
@@ -128,6 +129,8 @@ class Dashboard extends Component {
           hasData:true
         });
 
+      }).catch(function(err){
+         console.log('error', err);
       });
 
     } else {
@@ -337,9 +340,9 @@ class Dashboard extends Component {
               onChange={this.handleChange}
               value={this.state.slideIndex}
             >
-              <Tab label="My Request" value={0}/>
-              <Tab label="Services" value={1} />
-              <Tab label="Create Grievance" value={2} onClick={()=>{
+              <Tab label={translate("csv.lbl.myrequest")} value={0}/>
+              <Tab label={translate("csv.lbl.services")} value={1} />
+              <Tab label={translate("pgr.title.create.grievence")} value={2} onClick={()=>{
                   this.props.history.push("/pgr/createGrievance")
                 }} />
             </Tabs>
@@ -352,8 +355,8 @@ class Dashboard extends Component {
                     <Row>
 						<Col xs={12} md={12}>
 							<TextField
-								hintText="Search"
-								floatingLabelText="Search"
+								hintText={translate("core.lbl.search")}
+								floatingLabelText={translate("core.lbl.search")}
 								fullWidth={true}
 								onChange={(e, value) =>this.localHandleChange(value)}
 							/>
@@ -402,8 +405,8 @@ class Dashboard extends Component {
                   <Grid>
                     <Row>
                       <TextField
-        								hintText="Search"
-        								floatingLabelText="Search"
+        								hintText={translate("core.lbl.search")}
+        								floatingLabelText={translate("core.lbl.search")}
         								fullWidth={true}
                         onChange={(e, value) => this.filterCitizenServices(value)}
         							/>
@@ -411,7 +414,7 @@ class Dashboard extends Component {
                     <Row>
                       {services && services.map((service, index) => {
                          return <ServiceMenu key={index} service={service} onClick={()=>{
-                             this.props.setRoute(`/services/apply/${service.serviceCode}`);
+                             this.props.setRoute(`/services/apply/${service.serviceCode}/${service.serviceName}`);
                            }}></ServiceMenu>;
                       })}
                     </Row>

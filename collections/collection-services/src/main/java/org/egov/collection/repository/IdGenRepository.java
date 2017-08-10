@@ -72,6 +72,9 @@ public class IdGenRepository {
 		idRequestWrapper.setIdGenRequestInfo(idGenReq);
 		idRequestWrapper.setIdRequests(idRequests);
 		Object response = null;
+		
+		LOGGER.info("Request for idgen rcptno: " + idRequestWrapper.toString());
+
 
 		try {
 			response = restTemplate.postForObject(builder.toString(),
@@ -127,6 +130,8 @@ public class IdGenRepository {
         idRequestWrapper.setIdGenRequestInfo(idGenReq);
         idRequestWrapper.setIdRequests(idRequests);
         Object response = null;
+        
+		LOGGER.info("Request for idgen transactionId: " + idRequestWrapper.toString());
 
         try {
             response = restTemplate.postForObject(builder.toString(),

@@ -218,11 +218,12 @@ var localationData = {
   "wc.search.businessCategoryType.title" :"Search Business Category",
   "wc.create.group.fields.businessName": "Business Category Name",
   "wc.create.group.fields.businessCode": "Business Category Code",
+  "wc.create.groups.fields.businessType":"Service Type",
 
   "wc.create.SpecialDonationCharges":"Special Security Deposit Charges",
   "wc.create.receiptDate":"Receipt Date",
   "wc.create.receiptNumber":"Receipt Number",
-
+  "wc.create.numberOfFamily":"Number Of Family",
 
 
 

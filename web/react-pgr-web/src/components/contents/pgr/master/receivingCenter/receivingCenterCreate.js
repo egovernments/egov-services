@@ -145,7 +145,7 @@ class CreateReceivingCenter extends Component {
         <div className="createReceivingCenter">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create / Update Receiving Center < /div>} />
+                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.props.match.params.id ? 'Update Receiving Center' : 'Create Receiving Center'}< /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>

@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class InstrumentTypeSearch extends InstrumentType {
 	private String ids;
 	private String sortBy;

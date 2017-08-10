@@ -409,7 +409,7 @@ public class ReceiptService {
 					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 
 		}
-		if(businessDetailsResponse.getBusinessDetails().isEmpty()){
+		if(null == businessDetailsResponse.getBusinessDetails() || businessDetailsResponse.getBusinessDetails().isEmpty()){
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 		}

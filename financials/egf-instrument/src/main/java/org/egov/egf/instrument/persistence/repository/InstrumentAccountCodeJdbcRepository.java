@@ -71,6 +71,13 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (instrumentAccountCodeSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", instrumentAccountCodeSearchEntity.getTenantId());
+		}
 		if (instrumentAccountCodeSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

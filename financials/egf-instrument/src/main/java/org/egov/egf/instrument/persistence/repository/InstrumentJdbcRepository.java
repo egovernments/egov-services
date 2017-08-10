@@ -68,6 +68,13 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (instrumentSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", instrumentSearchEntity.getTenantId());
+		}
 		if (instrumentSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageDocument;
 import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.ReissueCertAppl;
@@ -57,9 +58,14 @@ public class MarriageCertRepository {
 			+ " location=?, lastmodifiedby=?, lastmodifiedtime=?"
 			+ " WHERE tenantid=? and reissuecertificateid=?;";
 	
-	public static final String GET_APPLICATION_NO_QUERY = "SELECT applicationnumber FROM egmr_marriage_certificate"
+	public final String GET_APPLICATION_NO_QUERY = "SELECT applicationnumber FROM egmr_marriage_certificate"
 			+ " WHERE tenantid = ?";
-
+	public final String create_Certificate_Query="INSERT INTO egmr_marriage_certificate(certificateno, certificatedate,"
+			+ " certificatetype, regnnumber, bridegroomphoto, bridephoto, husbandname, husbandaddress, wifename,"
+			+ " wifeaddress, marriagedate, marriagevenueaddress, regndate, regnserialno, regnvolumeno, certificateplace,"
+			+ " templateversion, applicationnumber, tenantid)"
+			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	
 	@Autowired
 	private CertificateNumberService certificateNumberService;
 
@@ -230,5 +236,42 @@ public class MarriageCertRepository {
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void createCert(ReissueCertAppl reissueApp){
+		
+		try {
+			jdbcTemplate.update(create_Certificate_Query, new PreparedStatementSetter(){
+
+				MarriageCertificate marriageCertificate=reissueApp.getCertificate();
+				@Override
+				public void setValues(PreparedStatement ps) throws SQLException {
+					ps.setString(1,marriageCertificate.getCertificateNo());
+					ps.setLong(2,marriageCertificate.getCertificateDate());
+					ps.setString(3,marriageCertificate.getCertificateType().toString());
+					ps.setString(4,marriageCertificate.getRegnNumber());
+					ps.setString(5,marriageCertificate.getBridegroomPhoto());
+					ps.setString(6,marriageCertificate.getBridePhoto());
+					ps.setString(7,marriageCertificate.getHusbandName());
+					ps.setString(8,marriageCertificate.getHusbandAddress());
+					ps.setString(9,marriageCertificate.getWifeName());
+					ps.setString(10,marriageCertificate.getWifeAddress());
+					ps.setLong	(11,marriageCertificate.getMarriageDate());
+					ps.setString(12,marriageCertificate.getMarriageVenueAddress());
+					ps.setLong	(13,marriageCertificate.getRegnDate());
+					ps.setString(14,marriageCertificate.getRegnSerialNo());
+					ps.setString(15,marriageCertificate.getRegnVolumeNo());
+					ps.setString(16,marriageCertificate.getCertificatePlace());
+					ps.setString(17,marriageCertificate.getTemplateVersion());
+					ps.setString(18,marriageCertificate.getApplicationNumber());
+					ps.setString(19,marriageCertificate.getTenantId());
+					
+				}
+				
+			});
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

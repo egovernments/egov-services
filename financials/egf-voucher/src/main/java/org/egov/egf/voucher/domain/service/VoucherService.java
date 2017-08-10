@@ -8,12 +8,27 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
+import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.contract.FundsourceContract;
+import org.egov.egf.master.web.contract.SchemeContract;
+import org.egov.egf.master.web.contract.SubSchemeContract;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
+import org.egov.egf.master.web.repository.FunctionContractRepository;
+import org.egov.egf.master.web.repository.FunctionaryContractRepository;
 import org.egov.egf.master.web.repository.FundContractRepository;
+import org.egov.egf.master.web.repository.FundsourceContractRepository;
+import org.egov.egf.master.web.repository.SchemeContractRepository;
+import org.egov.egf.master.web.repository.SubSchemeContractRepository;
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.domain.model.VoucherSearch;
 import org.egov.egf.voucher.domain.repository.VoucherRepository;
+import org.egov.egf.voucher.web.contract.Boundary;
+import org.egov.egf.voucher.web.contract.DepartmentResponse;
+import org.egov.egf.voucher.web.repository.BoundaryRepository;
+import org.egov.egf.voucher.web.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +51,31 @@ public class VoucherService {
 	private FinancialStatusContractRepository financialStatusContractRepository;
 
 	@Autowired
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
+	@Autowired
 	private FundContractRepository fundContractRepository;
+
+	@Autowired
+	private FunctionContractRepository funnctionContractRepository;
+
+	@Autowired
+	private FundsourceContractRepository fundsourceContractRepository;
+
+	@Autowired
+	private SchemeContractRepository schemeContractRepository;
+
+	@Autowired
+	private SubSchemeContractRepository subSchemeContractRepository;
+
+	@Autowired
+	private FunctionaryContractRepository functionaryContractRepository;
+
+	@Autowired
+	private BoundaryRepository boundaryRepository;
+
+	@Autowired
+	private DepartmentRepository departmentRepository;
 
 	@Transactional
 	public List<Voucher> create(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
@@ -111,6 +150,7 @@ public class VoucherService {
 		} catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
+
 		return errors;
 
 	}
@@ -127,6 +167,7 @@ public class VoucherService {
 					}
 					voucher.setFund(fund);
 				}
+
 				if (voucher.getStatus() != null) {
 					FinancialStatusContract status = financialStatusContractRepository.findById(voucher.getStatus());
 					if (status == null) {
@@ -134,6 +175,66 @@ public class VoucherService {
 					}
 					voucher.setStatus(status);
 				}
+
+				if (voucher.getFunction() != null) {
+					FunctionContract function = funnctionContractRepository.findById(voucher.getFunction());
+					if (function == null) {
+						throw new InvalidDataException("function", "function.invalid", " Invalid function");
+					}
+					voucher.setFunction(function);
+				}
+
+				if (voucher.getFundsource() != null) {
+					FundsourceContract fundsource = fundsourceContractRepository.findById(voucher.getFundsource());
+					if (fundsource == null) {
+						throw new InvalidDataException("fundsource", "fundsource.invalid", " Invalid fundsource");
+					}
+					voucher.setFundsource(fundsource);
+				}
+
+				if (voucher.getScheme() != null) {
+					SchemeContract scheme = schemeContractRepository.findById(voucher.getScheme());
+					if (scheme == null) {
+						throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
+					}
+					voucher.setScheme(scheme);
+				}
+
+				if (voucher.getSubScheme() != null) {
+					SubSchemeContract subScheme = subSchemeContractRepository.findById(voucher.getSubScheme());
+					if (subScheme == null) {
+						throw new InvalidDataException("subScheme", "subScheme.invalid", " Invalid subScheme");
+					}
+					voucher.setSubScheme(subScheme);
+				}
+
+				if (voucher.getFunctionary() != null) {
+					FunctionaryContract functionary = functionaryContractRepository.findById(voucher.getFunctionary());
+					if (functionary == null) {
+						throw new InvalidDataException("functionary", "functionary.invalid", " Invalid functionary");
+					}
+					voucher.setFunctionary(functionary);
+				}
+
+				if (voucher.getDivision() != null) {
+					Boundary devision = boundaryRepository.getBoundaryById(voucher.getDivision().getId(),
+							voucher.getDivision().getTenantId());
+					if (devision == null) {
+						throw new InvalidDataException("division", "division.invalid", " Invalid division");
+					}
+					voucher.setDivision(devision);
+				}
+
+				if (voucher.getDepartment() != null) {
+					DepartmentResponse department = departmentRepository
+							.getDepartmentById(voucher.getDepartment().getId(), voucher.getDepartment().getTenantId());
+					if (department == null || department.getDepartment() == null
+							|| department.getDepartment().isEmpty()) {
+						throw new InvalidDataException("department", "department.invalid", " Invalid department");
+					}
+					voucher.setDepartment(department.getDepartment().get(0));
+				}
+
 			}
 
 		return vouchers;

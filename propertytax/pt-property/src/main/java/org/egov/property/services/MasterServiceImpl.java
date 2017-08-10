@@ -43,7 +43,9 @@ import org.egov.models.WallTypeResponse;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.DuplicateIdException;
+import org.egov.property.exception.InvalidCodeException;
 import org.egov.property.exception.InvalidInputException;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.model.ExcludeFileds;
@@ -71,6 +73,9 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Autowired
 	private PropertyMasterRepository propertyMasterRepository;
+
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	@Override
 	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
@@ -585,6 +590,15 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
+			if (usageMaster.getParent() != null || !usageMaster.getParent().isEmpty()) {
+				Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
+						usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+
+				if (!isParentCodeExists)
+					throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+							usageMasterRequest.getRequestInfo());
+			}
+
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(usageMaster);
@@ -619,6 +633,15 @@ public class MasterServiceImpl implements Masterservice {
 
 			if (isExists)
 				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
+
+			if (usageMaster.getParent() != null || !usageMaster.getParent().isEmpty()) {
+				Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
+						usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+
+				if (!isParentCodeExists)
+					throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+							usageMasterRequest.getRequestInfo());
+			}
 
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();

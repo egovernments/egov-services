@@ -3,6 +3,8 @@ package org.egov.collection.repository;
 import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import java.util.List;
 @Service
 public class BusinessDetailsRepository {
 
+	public static final Logger LOGGER = LoggerFactory.getLogger(BusinessDetailsRepository.class);
+	
     @Autowired
     public RestTemplate restTemplate;
 
@@ -31,6 +35,9 @@ public class BusinessDetailsRepository {
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
         String businessDetailsCodes = String.join(",", businessCodes);
+        LOGGER.info("URI: "+url);
+        LOGGER.info("tenantd: "+tenantId);
+        LOGGER.info("buisness: "+businessDetailsCodes);
         return restTemplate.postForObject(url, requestInfoWrapper,
                     BusinessDetailsResponse.class,tenantId,businessDetailsCodes);
     }

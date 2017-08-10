@@ -67,7 +67,7 @@ public class InstrumentRepository {
 			response = restTemplate.postForObject(builder.toString(),
 					requestInfoWrapper, Object.class);
 			
-			glcode = JsonPath.read(response, "$.instrumentAccountCodes[0].accountCode.id");
+			glcode = JsonPath.read(response, "$.instrumentAccountCodes[0].accountCode.glcode");
 		LOGGER.info("Response from instrument service: " + response.toString());
 		
 		

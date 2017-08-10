@@ -138,7 +138,7 @@ public class ReceiptService {
 		LOGGER.info("Bill object after debit head config: "+bill.toString());
 		
 		receipt = create(bill, receiptReq.getRequestInfo(),
-				receiptReq.getTenantId(), receipt.getInstrument()); // sync call
+				receipt.getTenantId(), receipt.getInstrument()); // sync call
 		if(null != receipt.getBill()){
 			LOGGER.info("Pushing receipt to kafka queue");
 			receiptReq.setReceipt(Arrays.asList(receipt));
@@ -250,6 +250,7 @@ public class ReceiptService {
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){
+				e.printStackTrace();
 				throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 						CollectionServiceConstants.INSTRUMENT_EXCEPTION_MSG, CollectionServiceConstants.INSTRUMENT_EXCEPTION_DESC);
 			}

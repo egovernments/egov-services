@@ -18,9 +18,9 @@ public class ServiceTypeRequest {
 
     public org.egov.pgr.domain.model.ServiceType toDomain(){
         return org.egov.pgr.domain.model.ServiceType.builder()
-                .serviceCode(serviceType.getServiceCode())
+                .serviceCode(serviceType.getServiceCode() != null ? serviceType.getServiceCode().trim() : null)
                 .id(serviceType.getId())
-                .serviceName(serviceType.getServiceName())
+                .serviceName(serviceType.getServiceName() != null ? serviceType.getServiceName().trim() : null)
                 .description(serviceType.getDescription())
                 .department(serviceType.getDepartment())
                 .metadata(serviceType.isMetadata())

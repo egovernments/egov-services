@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import Api from '../../../api/api';
 import jp from "jsonpath";
+import {translate} from '../../common/common';
 
 export default class UiLabel extends Component {
 	constructor(props) {
@@ -54,7 +55,7 @@ export default class UiLabel extends Component {
       <div>
    			<Row>
             {!item.hasOwnProperty("isLabel")?<Col style={{textAlign:"center"}} xs={12}>
-              <label><span style={{"fontWeight":"bold"}}>{item.label}</span></label>
+              <label><span style={{"fontWeight":"bold"}}>{translate(item.label)}</span></label>
             </Col>:""}
             <Col style={{textAlign:"center"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "-"}</Col>
         </Row>

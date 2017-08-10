@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
+
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.Date;
 import java.util.List;
 
@@ -40,8 +43,8 @@ public class ServiceType {
     public org.egov.pgr.persistence.dto.ServiceType toDto(){
         return org.egov.pgr.persistence.dto.ServiceType.builder()
                 .id(id)
-                .name(serviceName)
-                .code(serviceCode)
+                .name(serviceName.trim())
+                .code(serviceCode.trim())
                 .description(description)
                 .department(department)
                 .metadata(metadata)
@@ -58,5 +61,17 @@ public class ServiceType {
                 .lastModifiedDate(lastModifiedDate)
                 .lastModifiedBy(lastModifiedBy)
                 .build();
+    }
+    
+    public boolean isTenantIdAbsent(){
+        return isEmpty(tenantId) || tenantId == null;
+    }
+    
+    public boolean isServiceCodeAbsent(){
+        return isEmpty(serviceCode) || serviceCode == null;
+    }
+    
+    public boolean isServiceNameAbsent(){
+        return isEmpty(serviceName) || serviceName == null;
     }
 }

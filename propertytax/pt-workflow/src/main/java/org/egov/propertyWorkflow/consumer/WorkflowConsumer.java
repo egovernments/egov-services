@@ -81,7 +81,9 @@ public class WorkflowConsumer {
 				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
 						propertiesManager.getBusinessKey(), propertiesManager.getType(),
 						propertiesManager.getComment());
+				logger.info("WorkflowConsumer  listen() after processing workflow ---------- ");
 				property.getPropertyDetail().setStateId(processInstance.getId());
+				logger.info("WorkflowConsumer  listen() propertyRequest after workflow ---->>  " + propertyRequest);
 				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
 			}
 

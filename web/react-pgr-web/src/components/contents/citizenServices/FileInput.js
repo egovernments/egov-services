@@ -52,6 +52,9 @@ class FileInput extends Component{
         files = e.target.files;
       }
 
+      if(!files)
+         return;
+
       //validate file input
       let validationResult = validate_fileupload(files, []);
       if(typeof validationResult === "string" || !validationResult){
@@ -126,6 +129,7 @@ class FileInput extends Component{
                 <div>
                    <IconButton className="list-remove-button" onTouchTap={(e) => {
                        this.removeFile(this.props.code, file.name, this.props.isRequired);
+                       this.refs[this.props.code].value=null;
                      }}>
                      <ActionDelete />
                    </IconButton>

@@ -1,7 +1,9 @@
 package org.egov.tradelicense.persistence.entity;
 
+import java.sql.Timestamp;
 import java.util.List;
 
+import org.egov.tradelicense.common.util.TimeStampUtil;
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
@@ -32,9 +34,7 @@ public class TradeLicenseEntity {
 
 	private String licenseNumber;
 
-	private String oldLicenseNumber;
-
-	private String applicationDate;
+	private Timestamp applicationDate;
 
 	private String adhaarNumber;
 
@@ -52,7 +52,7 @@ public class TradeLicenseEntity {
 
 	private Integer localityId;
 
-	private Integer wardId;
+	private Integer revenueWardId;
 
 	private String tradeAddress;
 
@@ -72,21 +72,21 @@ public class TradeLicenseEntity {
 
 	private String remarks;
 
-	private String tradeCommencementDate;
+	private Timestamp tradeCommencementDate;
 
-	private String agrementDate;
+	private Timestamp agreementDate;
 
-	private String agrementNo;
+	private String agreementNo;
 
 	private Boolean isLegacy = false;
 
 	private Boolean active = true;
 
-	private String expiryDate;
+	private Timestamp expiryDate;
 
-	private List<LicenseFeeDetail> feeDetails;
+	private static List<LicenseFeeDetail> feeDetails;
 
-	private List<SupportDocument> supportDocuments;
+	private static List<SupportDocument> supportDocuments;
 
 	private String createdBy;
 
@@ -112,9 +112,7 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setLicenseNumber(this.licenseNumber);
 
-		tradeLicense.setOldLicenseNumber(this.oldLicenseNumber);
-
-		tradeLicense.setApplicationDate(this.applicationDate);
+		tradeLicense.setApplicationDate(TimeStampUtil.getDateFromTimeStamp(this.applicationDate));
 
 		tradeLicense.setAdhaarNumber(this.adhaarNumber);
 
@@ -132,7 +130,7 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setLocalityId(this.localityId);
 
-		tradeLicense.setWardId(this.wardId);
+		tradeLicense.setRevenueWardId(this.revenueWardId);
 
 		tradeLicense.setTradeAddress(this.tradeAddress);
 
@@ -152,17 +150,17 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setRemarks(this.remarks);
 
-		tradeLicense.setTradeCommencementDate(this.tradeCommencementDate);
+		tradeLicense.setTradeCommencementDate(TimeStampUtil.getDateFromTimeStamp(this.tradeCommencementDate));
 
-		tradeLicense.setAgrementDate(this.agrementDate);
+		tradeLicense.setAgreementDate(TimeStampUtil.getDateFromTimeStamp(this.agreementDate));
 
-		tradeLicense.setAgrementNo(this.agrementNo);
+		tradeLicense.setAgreementNo(this.agreementNo);
 
 		tradeLicense.setIsLegacy(this.isLegacy);
 
 		tradeLicense.setActive(this.active);
 
-		tradeLicense.setExpiryDate(this.expiryDate);
+		tradeLicense.setExpiryDate(TimeStampUtil.getDateFromTimeStamp(this.expiryDate));
 
 		tradeLicense.setFeeDetails(this.feeDetails);
 
@@ -192,9 +190,7 @@ public class TradeLicenseEntity {
 
 		this.licenseNumber = tradeLicense.getLicenseNumber();
 
-		this.oldLicenseNumber = tradeLicense.getOldLicenseNumber();
-
-		this.applicationDate = tradeLicense.getApplicationDate();
+		this.applicationDate = TimeStampUtil.getTimeStamp(tradeLicense.getApplicationDate());
 
 		this.adhaarNumber = tradeLicense.getAdhaarNumber();
 
@@ -212,7 +208,7 @@ public class TradeLicenseEntity {
 
 		this.localityId = tradeLicense.getLocalityId();
 
-		this.wardId = tradeLicense.getWardId();
+		this.revenueWardId = tradeLicense.getRevenueWardId();
 
 		this.tradeAddress = tradeLicense.getTradeAddress();
 
@@ -232,17 +228,17 @@ public class TradeLicenseEntity {
 
 		this.remarks = tradeLicense.getRemarks();
 
-		this.tradeCommencementDate = tradeLicense.getTradeCommencementDate();
+		this.tradeCommencementDate = TimeStampUtil.getTimeStamp(tradeLicense.getTradeCommencementDate());
 
-		this.agrementDate = tradeLicense.getAgrementDate();
+		this.agreementDate = TimeStampUtil.getTimeStamp(tradeLicense.getAgreementDate());
 
-		this.agrementNo = tradeLicense.getAgrementNo();
+		this.agreementNo = tradeLicense.getAgreementNo();
 
 		this.isLegacy = tradeLicense.getIsLegacy();
 
 		this.active = tradeLicense.getActive();
 
-		this.expiryDate = tradeLicense.getExpiryDate();
+		this.expiryDate = TimeStampUtil.getTimeStamp(tradeLicense.getExpiryDate());
 
 		this.feeDetails = tradeLicense.getFeeDetails();
 

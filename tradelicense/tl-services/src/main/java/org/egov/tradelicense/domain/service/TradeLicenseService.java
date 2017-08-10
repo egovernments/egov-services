@@ -73,7 +73,7 @@ public class TradeLicenseService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		validateTradeLicense(tradeLicenses, requestInfo);
+		//validateTradeLicense(tradeLicenses, requestInfo);
 		for (TradeLicense license : tradeLicenses) {
 			license.setId(tradeLicenseRepository.getNextSequence());
 		}
@@ -182,7 +182,7 @@ public class TradeLicenseService {
 
 	private void validateTradeLocationWard(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
-		Integer wardId = tradeLicense.getWardId();
+		Integer revenueWardId = tradeLicense.getRevenueWardId();
 
 		StringBuffer supportingDocumentURI = new StringBuffer();
 		supportingDocumentURI.append(propertiesManager.getLocationServiceHostName())
@@ -208,7 +208,7 @@ public class TradeLicenseService {
 
 	private void validateTradeLocality(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
-		Integer wardId = tradeLicense.getWardId();
+		Integer wardId = tradeLicense.getLocalityId();
 
 		StringBuffer supportingDocumentURI = new StringBuffer();
 		supportingDocumentURI.append(propertiesManager.getLocationServiceHostName())

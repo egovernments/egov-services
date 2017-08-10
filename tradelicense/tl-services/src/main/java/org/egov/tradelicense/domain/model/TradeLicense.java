@@ -81,8 +81,8 @@ public class TradeLicense {
 	private Integer localityId;
 
 	@NotNull
-	@JsonProperty("wardId")
-	private Integer wardId;
+	@JsonProperty("revenueWardId")
+	private Integer revenueWardId;
 
 	@NotNull
 	@JsonProperty("tradeAddress")
@@ -125,11 +125,11 @@ public class TradeLicense {
 	@JsonProperty("tradeCommencementDate")
 	private String tradeCommencementDate;
 
-	@JsonProperty("agrementDate")
-	private String agrementDate;
+	@JsonProperty("agreementDate")
+	private String agreementDate;
 
-	@JsonProperty("agrementNo")
-	private String agrementNo;
+	@JsonProperty("agreementNo")
+	private String agreementNo;
 
 	@JsonProperty("isLegacy")
 	private Boolean isLegacy = false;

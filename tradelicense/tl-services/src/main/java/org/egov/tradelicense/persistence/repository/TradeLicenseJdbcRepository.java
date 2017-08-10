@@ -18,6 +18,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 	public TradeLicenseEntity create(TradeLicenseEntity entity) {
 		super.create(entity);
+		
 		return entity;
 	}
 }

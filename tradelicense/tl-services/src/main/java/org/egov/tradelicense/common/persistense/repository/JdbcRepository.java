@@ -73,13 +73,7 @@ public abstract class JdbcRepository {
 			fields.add(f.getName());
 		}
 
-		for (Field f : AuditDetails.class.getDeclaredFields()) {
-
-			if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
-				continue;
-			}
-			fields.add(f.getName());
-		}
+		
 		return fields;
 	}
 

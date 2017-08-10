@@ -26,7 +26,7 @@ CREATE TABLE egtl_license (
     subCategoryId bigint NOT NULL,
     uomId bigint NOT NULL,
     quantity numeric NOT NULL,
-    remarks character varying(256) NOT NULL,
+    remarks character varying(256),
     tradeCommencementDate timestamp without time zone NOT NULL,
     agreementDate timestamp without time zone ,
     agreementNo character varying(128),

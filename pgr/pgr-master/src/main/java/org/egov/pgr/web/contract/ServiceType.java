@@ -55,9 +55,6 @@ public class ServiceType {
         this.attributes = mapAttributes(attributeDefinitions);
     }
 
-    public ServiceType(ServiceType serviceType) {
-    }
-
     private List<AttributeDefinition> mapAttributes(
             List<org.egov.pgr.domain.model.AttributeDefinition> attributes){
         if (null == attributes) {
@@ -67,6 +64,5 @@ public class ServiceType {
         return attributes.stream()
                 .map(AttributeDefinition::new)
                 .collect(Collectors.toList());
-
     }
 }

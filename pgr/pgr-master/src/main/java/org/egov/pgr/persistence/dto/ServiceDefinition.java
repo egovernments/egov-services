@@ -1,19 +1,16 @@
 package org.egov.pgr.persistence.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Date;
 
 @Builder
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ServiceTypeKeyword {
+public class ServiceDefinition {
 
-    private String servicecode;
+    private String code;
     private String tenantId;
-    private String keyword;
     private Long createdBy;
     private Date createdDate;
     private Long lastModifiedBy;

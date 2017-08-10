@@ -7,10 +7,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceTypeKeywordQueryBuilder {
 
-    public String keywordsSearchQuery(ServiceTypeSearchCriteria serviceTypeSearchCriteria) {
-
+    public String keywordsSearchQuery() {
         StringBuilder query = new StringBuilder("SELECT * FROM servicetype_keyword WHERE tenantid = :tenantid AND servicecode = :code AND keyword in (:keywords)");
 
         return query.toString();
+    }
+
+    public String getInsertQuery(){
+        return "INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate, createdby, lastmodifieddate, lastmodifiedby)"
+                + " VALUES (NEXTVAL('seq_servicetype_keyword'), :servicecode, :keyword, :tenantid, :createddate, :createdby, :lastmodifieddate, :lastmodifiedby)";
     }
 }

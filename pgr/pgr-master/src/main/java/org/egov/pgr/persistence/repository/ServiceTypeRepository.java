@@ -101,7 +101,7 @@ public class ServiceTypeRepository {
 
 
     private List<String> fetchKeywords(ServiceType serviceType, List<String> keywords) {
-        List<ServiceTypeKeyword> keywordList = namedParameterJdbcTemplate.query(serviceTypeKeywordQueryBuilder.keywordsSearchQuery(null),
+        List<ServiceTypeKeyword> keywordList = namedParameterJdbcTemplate.query(serviceTypeKeywordQueryBuilder.keywordsSearchQuery(),
                 getKeywordsSearchMap(serviceType, keywords), new BeanPropertyRowMapper<>(ServiceTypeKeyword.class));
 
         return keywordList.stream()
@@ -137,7 +137,7 @@ public class ServiceTypeRepository {
     }
 
     private HashMap<String, String> getSearchNamedQuery(ServiceTypeSearchCriteria serviceTypeSearchCriteria) {
-        HashMap<String, String> parametersMap = new HashMap<String, String>();
+        HashMap<String, String> parametersMap = new HashMap<>();
         parametersMap.put("code", serviceTypeSearchCriteria.getServiceCode());
         parametersMap.put("tenantid", serviceTypeSearchCriteria.getTenantId());
 

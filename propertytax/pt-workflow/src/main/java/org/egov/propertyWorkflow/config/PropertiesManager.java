@@ -179,15 +179,15 @@ public class PropertiesManager {
 	}
 
 	public String getCreateWorkflow() {
-		return environment.getProperty("egov.propertytax.property.create.workflow");
+		return environment.getProperty("egov.propertytax.property.create.workflow.started");
 	}
 
 	public String getUpdateWorkflow() {
-		return environment.getProperty("egov.propertytax.property.update.workflow");
+		return environment.getProperty("egov.propertytax.property.update.workflow.started");
 	}
 
 	public String getApproveWorkflow() {
-		return environment.getProperty("egov.propertytax.property.approve.workflow");
+		return environment.getProperty("egov.propertytax.property.update.workflow.approved");
 	}
 
 	public String getBusinessKey() {

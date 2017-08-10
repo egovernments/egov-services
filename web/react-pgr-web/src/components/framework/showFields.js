@@ -21,6 +21,7 @@ import UiLabel from './components/UiLabel'
 import UiRadioButton from './components/UiRadioButton'
 import UiTextSearch from './components/UiTextSearch'
 import UiDocumentList from './components/UiDocumentList'
+import UiAutoComplete from './components/UiAutoComplete'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 
 export default class ShowFields extends Component {
@@ -73,7 +74,7 @@ export default class ShowFields extends Component {
                       </Row>}
                     </Grid>
                     <div style={{"marginLeft": "15px", "marginRight": "15px"}}>
-                      { 
+                      {
                         group.children &&
                         group.children.length ?
                         group.children.map(function(child) {
@@ -103,6 +104,9 @@ export default class ShowFields extends Component {
   		case 'multiValueList':
       return <UiSingleFileUpload ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
+      case 'autoCompelete':
+        return <UiAutoComplete ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+    			break;
   		case 'number':
   			return <UiNumberField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;

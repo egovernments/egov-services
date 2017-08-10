@@ -231,7 +231,7 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Reason for Creation *"
-                                                  errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.reasonForCreation}</span> : ""}
+                                                  errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.reasonForCreation}</span> : ""}
                                                   value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ""}
                                                   onChange={(event, index, value) => {
 													    (value == -1) ? value = '' : '';
@@ -276,7 +276,7 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Property Type *"
-                                                  errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertyType}</span> : ""}
+                                                  errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertyType}</span> : ""}
                                                   value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ""}
                                                   onChange={(event, index, value) => {
 													    (value == -1) ? value = '' : '';
@@ -323,7 +323,7 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Property Sub-type"
-                                                  errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertySubType}</span> : ""}
+                                                  errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertySubType}</span> : ""}
                                                   value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ""}
                                                   onChange={(event, index, value) => {
 													    (value == -1) ? value = '' : '';
@@ -361,7 +361,7 @@ handleDepartment = (e) => {
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														>
+														><MenuItem value={-1} primaryText="None"/>
 															  {renderOption(this.state.usages)}
 
 														</SelectField>
@@ -384,7 +384,7 @@ handleDepartment = (e) => {
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														>
+														><MenuItem value={-1} primaryText="None"/>
 															{renderOption(this.state.usages)}
 														</SelectField>
 													</Col>
@@ -393,7 +393,7 @@ handleDepartment = (e) => {
 											&& <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Department"
-                                                  errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.department}</span> : ""}
+                                                  errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.department}</span> : ""}
                                                   value={assessmentDetails.department ? assessmentDetails.department : ""}
                                                   onChange={(event, index, value) => {
 													    (value == -1) ? value = '' : '';

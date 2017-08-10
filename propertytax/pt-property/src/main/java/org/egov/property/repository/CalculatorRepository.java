@@ -6,13 +6,13 @@ import org.egov.models.CalculationFactorResponse;
 import org.egov.models.GuidanceValueResponse;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.Unit;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.InvalidFactorValueException;
 import org.egov.property.exception.InvalidGuidanceValueException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -24,7 +24,7 @@ public class CalculatorRepository {
 	private static final Logger logger = LoggerFactory.getLogger(BoundaryRepository.class);
 
 	@Autowired
-	Environment env;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -37,8 +37,8 @@ public class CalculatorRepository {
 		String validDate = unit.getOccupancyDate();
 
 		StringBuilder CalculatorURI = new StringBuilder();
-		CalculatorURI.append(env.getProperty("egov.services.pt_calculator.hostname"))
-				.append(env.getProperty("egov.services.pt_calculator.guidancesearchpath"));
+		CalculatorURI.append(propertiesManager.getCalculatorHostName())
+				.append(propertiesManager.getCalculatorGuidanceSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(CalculatorURI.toString()).queryParam("tenantId", tenantId)
 				.queryParam("boundary", boundary).queryParam("structure", structure).queryParam("usage", usage)
@@ -54,12 +54,12 @@ public class CalculatorRepository {
 					&& guidanceValueResponse.getGuidanceValues().size() != 0) {
 				return true;
 			} else {
-				throw new InvalidGuidanceValueException(env.getProperty("invalid.property.guidancevalue"),
-						env.getProperty("invalid.property.guidancevalue.message"), requestInfoWrapper.getRequestInfo());
+				throw new InvalidGuidanceValueException(propertiesManager.getInvalidGuidanceVal(),
+						propertiesManager.getInvalidGuidanceValMsg(), requestInfoWrapper.getRequestInfo());
 			}
 
 		} catch (HttpClientErrorException ex) {
-			throw new ValidationUrlNotFoundException(env.getProperty("invalid.property.guidancesearch.validation.url"),
+			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidGuidanceSearchValidationUrl(),
 					uri.toString(), requestInfoWrapper.getRequestInfo());
 		}
 
@@ -69,8 +69,8 @@ public class CalculatorRepository {
 			String factorType) {
 
 		StringBuilder CalculatorFactorURI = new StringBuilder();
-		CalculatorFactorURI.append(env.getProperty("egov.services.pt_calculator.hostname"))
-				.append(env.getProperty("egov.services.pt_calculator.factorsearchpath"));
+		CalculatorFactorURI.append(propertiesManager.getCalculatorHostName())
+				.append(propertiesManager.getCalculatorFactorSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(CalculatorFactorURI.toString()).queryParam("tenantId", tenantId)
 				.queryParam("code", code).queryParam("validDate", validDate).queryParam("factorType", factorType)
@@ -86,12 +86,12 @@ public class CalculatorRepository {
 					&& factorValueResponse.getCalculationFactors().size() != 0) {
 				return true;
 			} else {
-				throw new InvalidFactorValueException(env.getProperty("invalid.property.factorvalue"),
-						env.getProperty("invalid.property.factorvalue.message"), requestInfoWrapper.getRequestInfo());
+				throw new InvalidFactorValueException(propertiesManager.getInvalidFactorValue(),
+						propertiesManager.getInvalidFactorValueMsg(), requestInfoWrapper.getRequestInfo());
 			}
 
 		} catch (HttpClientErrorException ex) {
-			throw new ValidationUrlNotFoundException(env.getProperty("invalid.property.factorsearch.validation.url"),
+			throw new ValidationUrlNotFoundException(propertiesManager.getFactorsearchValidationUrl(),
 					uri.toString(), requestInfoWrapper.getRequestInfo());
 		}
 	}

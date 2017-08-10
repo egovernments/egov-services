@@ -410,11 +410,19 @@ calcAssessableArea = (e, type) => {
 	
 			handleChangeNextOne(f, "floor","assessableArea", false, "");
 			
-		} else if(type == 'carpet' && floorDetails.floor.hasOwnProperty('exemptedArea')){
-		
-			f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
+		} else if(type == 'carpet'){
 			
-			handleChangeNextOne(f, "floor","assessableArea", false, "");
+			if(floorDetails.floor.hasOwnProperty('exemptedArea')) {
+				f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
+			
+				handleChangeNextOne(f, "floor","assessableArea", false, "");
+			} else {
+				f.target.value = parseFloat(e.target.value);
+			
+				handleChangeNextOne(f, "floor","assessableArea", false, "");
+			}
+		
+			
 			
 		} 			
 	}	
@@ -528,7 +536,6 @@ calcAssessableArea = (e, type) => {
 														</SelectField>
 													</Col>
 													{(floorDetails.floor ? (floorDetails.floor.unitType == 'FLAT' ? true: false ): false) &&
-														<span>
 															<Col xs={12} md={3} sm={6}>
 																 <SelectField  className="fullWidth selectOption"
 																	floatingLabelText="Is Room in Flat?"
@@ -565,7 +572,10 @@ calcAssessableArea = (e, type) => {
 																  {renderOption(_this.state.roomInFlat)}																								
 																</SelectField>
 															</Col>	
-															{(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true: false ): false) && 
+															
+												
+													}
+													{(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true: false ): false) && 
 																<Col xs={12} md={3} sm={6}>			
 																	<TextField  className="fullWidth"
 																	  hintText="201"
@@ -580,10 +590,6 @@ calcAssessableArea = (e, type) => {
 																	  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 																</Col>
 															}
-															
-														</span>	  
-														
-													}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText="Unit Number *"

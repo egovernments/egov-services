@@ -11,34 +11,38 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaxRates {
-	
-	private Long id;
 
-	@NotNull
-	@Size(min=4,max=128)
-	private String	tenantId;
+    private Long id;
 
-	@NotNull
-	private String	taxHead;	
+    @NotNull
+    @Size(min = 4, max = 128)
+    private String tenantId;
 
-	private String	dependentTaxHead;	
+    @NotNull
+    private String taxHead;
 
-	@NotNull
-	private String	fromDate;
-	
-	@NotNull
-	private String	toDate;
-	
-	@NotNull
-	private Double	fromValue;
+    private String dependentTaxHead;
 
-	@NotNull
-	private Double	toValue;	
+    @NotNull
+    private String fromDate;
 
-	private Double	ratePercentage;
+    @NotNull
+    private String toDate;
 
-	private Double	taxFlatValue;
-	
-	private AuditDetails auditDetails;
+    @NotNull
+    private Double fromValue;
+
+    @NotNull
+    private Double toValue;
+
+    private Double ratePercentage;
+
+    private Double taxFlatValue;
+
+    private String propertyType;
+
+    private String usage;
+
+    private AuditDetails auditDetails;
 
 }

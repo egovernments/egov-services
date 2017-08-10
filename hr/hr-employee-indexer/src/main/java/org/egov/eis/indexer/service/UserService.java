@@ -1,12 +1,7 @@
 package org.egov.eis.indexer.service;
 
-import org.egov.boundary.persistence.entity.Boundary;
-import org.egov.boundary.persistence.entity.BoundaryType;
-import org.egov.boundary.web.contract.BoundaryResponse;
-import org.egov.boundary.web.contract.BoundaryTypeResponse;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.indexer.config.PropertiesManager;
-import org.egov.eis.model.User;
+import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.user.web.contract.UserRequest;
 import org.egov.user.web.contract.UserResponse;
 import org.egov.user.web.contract.UserSearchRequest;
@@ -18,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class UserService {
@@ -31,9 +25,12 @@ public class UserService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-	public UserRequest getUser(Long id, RequestInfo requestInfo) {
-		UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-				.requestInfo(requestInfo).id(Arrays.asList(id)).pageSize(1).build();
+	public UserRequest getUser(Long id, EmployeeRequest employeeRequest) {
+		UserSearchRequest userSearchRequest = new UserSearchRequest();
+		userSearchRequest.setRequestInfo(employeeRequest.getRequestInfo());
+		userSearchRequest.setId(Arrays.asList(id));
+		userSearchRequest.setPageSize(1);
+		userSearchRequest.setTenantId(employeeRequest.getEmployee().getTenantId());
 		UserResponse userResponse = null;
 		try {
 			URI url = new URI(propertiesManager.getEgovUserServiceHost()

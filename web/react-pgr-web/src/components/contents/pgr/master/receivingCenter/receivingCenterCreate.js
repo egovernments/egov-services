@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -16,7 +14,6 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-var flag = 0;
 const styles = {
   headerStyle : {
     fontSize : 19
@@ -24,29 +21,8 @@ const styles = {
   marginStyle:{
     margin: '15px'
   },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
+  setTopMargin: {
+    marginTop: 34
   }
 };
 
@@ -173,43 +149,45 @@ class CreateReceivingCenter extends Component {
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createReceivingCenter.name? createReceivingCenter.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
-                                      onChange={(e) => handleChange(e, "name", true, '')}
+                                      maxLength="100"
+                                      onChange={(e) => handleChange(e, "name", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Please use only alphabets, space and special characters')}
                                       id="name"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.code")+"*"}
                                       value={createReceivingCenter.code? createReceivingCenter.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
-                                      onChange={(e) => handleChange(e, "code", true, '')}
+                                      maxLength="20"
+                                      onChange={(e) => handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
                                       id="code"
                                       disabled={this.state.id ? true : false }
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createReceivingCenter.description? createReceivingCenter.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
-                                      onChange={(e) => handleChange(e, "description", false, '')}
+                                      maxLength="250"
+                                      onChange={(e) => handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Please use only alphabets, space and special characters')}
                                       multiLine={true}
                                       id="description"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
-                              {console.log(createReceivingCenter.active)}
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
-                                    style={styles.checkbox}
+                                    style={styles.setTopMargin}
                                     checked = {createReceivingCenter.active || false}
                                     onCheck = {(e, i, v) => { console.log(createReceivingCenter.active, i);
 
@@ -223,11 +201,10 @@ class CreateReceivingCenter extends Component {
                                     id="active"
                                   />
                               </Col>
-                              <div className="clearfix"></div>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
                                     label={translate("pgr.lbl.crn")}
-                                    style={styles.checkbox}
+                                    style={styles.setTopMargin}
                                     checked ={createReceivingCenter.iscrnrequired}
                                     onCheck = {(e, i, v) => {
                                       var e = {
@@ -240,14 +217,14 @@ class CreateReceivingCenter extends Component {
                                     id="iscrnrequired"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
-                                      type="number"
                                       floatingLabelText={translate("pgr.lbl.order.no")+"*"}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
-                                      onChange={(e) => handleChange(e, "orderno", true, /^[0-9]+$/)}
+                                      maxLength="10"
+                                      onChange={(e) => handleChange(e, "orderno", true, /^\d{0,10}$/g, 'Please use only numbers')}
                                       id="orderno"
                                   />
                               </Col>
@@ -328,14 +305,13 @@ const mapDispatchToProps = dispatch => ({
    })
   },
 
-  handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
+  handleChange: (e, property, isRequired, pattern, errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern, errorMsg
     });
   },
 

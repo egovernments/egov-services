@@ -56,6 +56,7 @@ public class WcmsConstants {
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
+    public static final String INVALID_METER_COST_REQUEST_MESSAGE = "MeterCost Request is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
     public static final String INVALID_DONATION_REQUEST_MESSAGE = "Donation Request is invalid";
@@ -362,6 +363,25 @@ public class WcmsConstants {
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE__EQUALFIELD_NAME = "minPipeSize,maxPipeSize";
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE__EQUAL_ERROR_MESSAGE = "Minimum PipeSize should not be same as maximum PipeSize";
     
+    public static final String PIPESIZE_MANDATORY_CODE = "wcms.0069";
+	public static final String PIPESIZE_MANDATORY_FIELD_NAME = "pipeSizeId";
+	public static final String PIPESIZE_MANDATORY_ERROR_MESSAGE = "PipeSizeId Is Required";
+
+	public static final String METERMAKE_MANDATORY_CODE = "wcms.0070";
+	public static final String METERMAKE_MANDATORY_FIELD_NAME = "meterMake";
+	public static final String METERMAKE_MANDATORY_ERROR_MESSAGE = "MeterMake Is Required";
+
+	public static final String AMOUNT_MANDATORY_CODE = "wcms.0071";
+	public static final String AMOUNT_MANDATORY_FIELD_NAME = "amount";
+	public static final String AMOUNT_MANDATORY_ERROR_MESSAGE = "Amount is required";
+
+	public static final String CODETENANTID_UNIQUE_CODE = "wcms.0072";
+	public static final String CODETENANTID_UNIQUE_FIELD_NAME = "code,tenantId";
+	public static final String CODETENANTID_UNIQUE_ERROR_MESSAGE = "Entered Code and tenantId combination already exists";
+
+	public static final String NAMETENANTID_UNIQUE_CODE = "wcms.0073";
+	public static final String NAMETENANTID_UNIQUE_FIELD_NAME = "metermake,tenantId";
+	public static final String NAMETENANTID_UNIQUE_ERROR_MESSAGE = "Entered MeterMake and tenantId combination already exists";
 
     
     public static final String ZONE = "Zone";

@@ -22,7 +22,7 @@ info:
     APIs for Trade License module. This modules handles creation of new Trade License, changes to existing Trade License (Detail Updates, renewal, closure, title transfer etc.), search of required Trade License and Trade License Fee calculation, demand generation, notices to enable ULBs to cmpletely manage the Trade Licenses within their jurisdiction.
   contact:
     name: Phani Kiran Gutha ( phani)
-    email : phani.kiran@walkingtree.tech
+    email : contacts@egovernments.org
 schemes:
   - https
 basePath: '/v1'
@@ -40,7 +40,7 @@ paths:
           
           Maximum result size is restricted based on the maxlength of TradeLicense as defined in TradeLicenseResponse model.
           
-          Each TradeLicense in the Reponse will contain SupportDocuments and FeeDetails only for Legacy Trade License
+          Each TradeLicense in the Reponse will contain SupportDocuments. Legacy Trade License will have FeeDetails along with Support Documents
           
           Search results will be sorted by the sortProperty Provided in the parameters
       parameters:
@@ -74,15 +74,6 @@ paths:
           in: query
           required: false
           description: The unique  license number no for a Trade license.
-          type: string
-          minLength: 4
-          maxLength: 128
-          exclusiveMinimum: true
-          exclusiveMaximum: false
-        - name: oldLicenseNumber
-          in: query
-          required: false
-          description: The unique old license number no for a Trade license.
           type: string
           minLength: 4
           maxLength: 128
@@ -123,7 +114,7 @@ paths:
           format: int64
         - name: locality
           in: query
-          description: Unique identifier of the RevenueWard where the Trade is located.
+          description: Unique identifier of the Location where the Trade is located.
           required: false
           type: integer
           format: int64
@@ -144,7 +135,7 @@ paths:
           maxLength: 33
         - name: tradeType
           in: query
-          description: set "PERMENANT"  in cases where only PERMENANT BusinessNature Trade License are needed and "TEMPORARY" will be set when TEMPORARY businessNature Trade License  are needed and no value will be set when all Trade License are needed.
+          description: Possible values wil be from BusinessNature Enum.
           required: false
           type: string
         - name: tradeCategory
@@ -157,6 +148,14 @@ paths:
           description: Unique identifier of the Sub Category of the trade
           required: false
           type: integer
+        - name: legacy
+          in: query
+          type: string
+          description: True to get only legacy trade lices, False to get the Non legacy trade license, Empty will get all the trade license including Legacy and Non Legacy
+        - name: status
+          in : query
+          type: integer
+          description: Unqique identifier of the Trade License Status
       responses:
         200:
           description: Trade License(s) Retrived Successfully
@@ -173,14 +172,14 @@ paths:
     post:
       summary: Create new Trade Licenses.
       description: |
-          To create new TradeLicense in the system. API supports bulk creation with max limit as defined in the TradeLicenseRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one TradeLicense, please pass array with one TradeLicense object. 
+          To create new Trade License in the system. API supports bulk creation with max limit as defined in the Trade License Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Trade License, please pass array with one Trade License object. 
           Following Conditions are applied -
             1. When isLegacy is True then oldLicenseNumber is treated as mandatory
             2. PropertyAssesmentNumber is not mandatory, If entered then validate. Invalid number fails trade license creation
-            3. Adhaar Number is not mandatory, If entered it will validated, Invalid number fails trade license creation
-            4. feeDetails will be considered for creation only when legacy is TRUE, In case of Not adding FeeDetails since 2012-2013 to current year, Creation of Trade License Fails.
-            5. supportDocuments for a given Trade License will created. In case of not attaching the Mandatory Supported Documents creation of Trade License Fails.
-            6. localityId, wardId, categoryId, subCategoryId, uomId are Validated for existance, On Non existance of any of these entered values in the respective tables, Creation of TradeLicense will fail.
+            3. Adhaar Number is not mandatory, If entered it will validated with Adhaar system, Invalid number fails trade license creation
+            4. feeDetails will be considered for creation only when legacy is TRUE,  FeeDetails from last five years  to current year
+            5. supportDocuments for a given Trade License will created. In case of not attaching the Mandatory Supported Documents creation of Trade License Fails. 
+            6. localityId, wardId, categoryId, subCategoryId, uomId are Validated for existance, On Non existance of any of these entered values in the system, creation of TradeLicense will Fail
           
       parameters:
         - name: TradeLicenseRequest
@@ -233,23 +232,18 @@ definitions:
         $ref : 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml#/definitions/ApplicationType'
       applicationNumber:
         type: string
-        description: Unique identfiication number of the Trade License Appilcaiton . This is a unique in system. This is mandatory but always be generated on Trade License create Request processing.
+        description: Unique identfiication number of the Trade License Appilcaiton . This is a unique in system. This is mandatory but always be generated on Trade License create Request processing. Not Valid for Legacy Trade License
         maxLength: 128
         minLength: 6  
       licenseNumber:
         type: string
-        description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval.
+        description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
         maxLength: 128
         minLength: 6
-      oldLicenseNumber:
-        type: string
-        description: Old license number of the Trade License. ULBs have the existing Trade License in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
-        maxLength: 128
-        minLength: 4
       applicationDate:
         type: string
         format: date
-        description: date on which applicaiton has been generated for new Trade License
+        description: date on which applicaiton has been generated for new Trade License in DD-MM-YY format
       adhaarNumber:
         type: string
         description : Adhaar Number of trade owner
@@ -288,7 +282,7 @@ definitions:
         type: integer
         format: int64
         description: Locality Id of the Property in which Trade is established or running
-      wardId:
+      revenueWardId:
         type: integer
         format: int64
         description: Ward Id of the Property in which Trade is established or running
@@ -302,7 +296,7 @@ definitions:
         type: string
         description: Title of the Trade
         pattern: '[a-zA-Z0-9\s\.,]'
-        maxLength: 33
+        maxLength: 32
       tradeType:
         $ref : 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml#/definitions/BusinessNature'
       categoryId:
@@ -310,14 +304,14 @@ definitions:
         format: int64
         description: Unique identifier of the Trade Category
       subCategoryId:
-        type: integer
+        type: integer 
         format: int64
         description: Unique identifier of the Trade SubCategory
       uomId:
         type: integer
         format: int64
         description: Unique indentifier of the Unit of Measure
-      uomValue:
+      quantity:
         type: number
         format: double
         description: The numeric value for the given UOM, based on which the license fees is calculated.
@@ -328,19 +322,19 @@ definitions:
       tradeCommencementDate:
         type: string
         format: date
-        description:  Commencement Date of the trade
-      agrementDate:
+        description:  Commencement Date of the trade in DD-MM-YY format
+      agreementDate:
         type: string
         format: date
-        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running
-      agrementNo:
+        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running in DD-MM-YY format
+      agreementNo:
         type: string
         maxLength: 128
         description: Document of Registered lease agreement between the property owner and trade owner
       isLegacy:
         type: boolean
         default: false
-        description: True to be set to mark this Trade License as Legacy one, In this case oldLicenseNumber will be mandatory, False to be set to mark this Trade License as non legacy
+        description: True to be set to mark this Trade License as Legacy one, In this case oldLiceNumber will be entered into LicenseNumber and is , False to be set to mark this Trade License as non legacy
       active:
         type: boolean
         default: true
@@ -348,7 +342,7 @@ definitions:
       expiryDate:
         type: string
         format: date
-        description: Expiry Date of the Trade License
+        description: Expiry Date of the Trade License in DD-MM-YY format
       feeDetails:
         type: array
         description: List of Fee Details for Trade License,  Required only for Legacy Trade License
@@ -359,6 +353,10 @@ definitions:
         description: List of Support Documents for Trade License
         items:
           $ref: '#/definitions/SupportDocument'
+      status:
+        type: integer
+        format: int64
+        description: Unique identifier of the Trade license Status
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -370,7 +368,7 @@ definitions:
     - emailId
     - ownerAddress
     - localityId
-    - wardId
+    - revenueWardId
     - tradeAddress
     - ownerShipType
     - tradeTitle
@@ -378,13 +376,15 @@ definitions:
     - categoryId
     - subCategoryId
     - uomId
-    - uomValue
+    - quantity
     - tradeCommencementDate
   OwnerShipType:
     type: string
     enum:
-      - STATE_GOVERNMENT
+      - STATE_GOVERNMENT_OWNED
       - RENTED
+      - CENTRAL_GOVERNMENT_OWNED
+      - ULB
   TradeLicenseRequest:
       description: Contract class to receive request. Array of TradeLicense items are used in case of create, whereas single TradeLicense item is used for update
       properties:
@@ -431,6 +431,7 @@ definitions:
       paid:
         type: boolean
         default: false
+        description: True will set if the fee Amount is pad, False will be set when fee amount is not paid.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

@@ -62,7 +62,7 @@ import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.egov.wcms.web.contract.MeterCostRequest;
+import org.egov.wcms.web.contract.MeterCostReq;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -72,6 +72,8 @@ import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.egov.wcms.web.contract.TreatmentPlantRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -85,6 +87,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class WaterMasterConsumer {
+	public static final Logger logger =LoggerFactory.getLogger(WaterMasterConsumer.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -147,7 +150,9 @@ public class WaterMasterConsumer {
             "${kafka.topics.sourcetype.update.name}", "${kafka.topics.supplytype.create.name}",
             "${kafka.topics.supplytype.update.name}", "${kafka.topics.storagereservoir.create.name}",
             "${kafka.topics.storagereservoir.update.name}", "${kafka.topics.treatmentplant.create.name}",
-            "${kafka.topics.treatmentplant.update.name}" ,"${kafka.topics.meterwaterrates.create.name}","${kafka.topics.meterwaterrates.update.name}"})
+            "${kafka.topics.treatmentplant.update.name}" ,"${kafka.topics.meterwaterrates.create.name}",
+            "${kafka.topics.meterwaterrates.update.name}","${kafka.topics.metercost.create.name}",
+            "${kafka.topics.metercost.update.name}"})
 
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
@@ -192,8 +197,16 @@ public class WaterMasterConsumer {
             else if (applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName().equals(topic))
                 docTypeApplTypeService
                         .update(objectMapper.convertValue(consumerRecord, DocumentTypeApplicationTypeReq.class));
+            else if (applicationProperties.getCreateMeterCostTopicName().equals(topic)){
+            	logger.info("Consuming MeterCostCreate Request");
+                meterCostService.createMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
+            }
+            else if(applicationProperties.getUpdateMeterCostTopicName().equals(topic)){
+            	logger.info("Consuming MeterCostUpdate Request");
+            	meterCostService.updateMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
+            }
             else if (applicationProperties.getCreateMeterCostTopicName().equals(topic))
-                meterCostService.create(objectMapper.convertValue(consumerRecord, MeterCostRequest.class));
+                meterCostService.create(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
             else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.create(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getUpdateSourceTypeTopicName().equals(topic))

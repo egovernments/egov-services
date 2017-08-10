@@ -1,0 +1,34 @@
+{
+  "Movement": 
+	   [
+		   	{
+		      "employeeId": 1,
+		      "typeOfMovement": "PROMOTION",
+		      "currentAssignment": 1,
+		      "transferType": "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB",
+		      "promotionBasis": {
+		        "id": 1
+		      },
+		      "remarks": "Transfer",
+		      "reason": {
+		      	"id": 1
+		      },
+		      "effectiveFrom": "23/06/2017",
+		      "enquiryPassedDate": "23/06/2017",
+		      "transferedLocation": "ap.adoni",
+		      "departmentAssigned": 1,
+		      "designationAssigned": 1,
+		      "positionAssigned": 1,
+		      "fundAssigned": 1,
+		      "functionAssigned": 1,
+		      "workflowDetails": {
+		      	"assignee": 1
+		      },
+		      "tenantId": "ap.kurnool",
+		      "createdBy": 1,
+		      "createdDate": "23/06/2017",
+		      "lastModifiedBy": 1,
+		      "lastModifiedDate": "23/06/2017"
+		    }
+	   ]
+}

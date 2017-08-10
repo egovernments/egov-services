@@ -52,10 +52,11 @@ public class InstrumentJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/instrument/clearInstrument.sql" })
 	public void test_create() {
 
-		InstrumentEntity instrument = InstrumentEntity.builder().id("1").amount(BigDecimal.ONE).bankAccountId("1")
-				.bankId("1").branchName("branchName").drawer("drawer").financialStatusId("1").instrumentTypeId("1")
-				.payee("payee").serialNo("serialNo").surrenderReasonId("1").transactionNumber("transactionNumber")
-				.transactionDate(new Date()).transactionType("Credit").build();
+		InstrumentEntity instrument = InstrumentEntity.builder().id("1").amount(BigDecimal.ONE)
+				.bankAccountId("accountNumber").bankId("code").branchName("branchName").drawer("drawer")
+				.financialStatusId("1").instrumentTypeId("name").payee("payee").serialNo("serialNo")
+				.surrenderReasonId("1").transactionNumber("transactionNumber").transactionDate(new Date())
+				.transactionType("Credit").build();
 		instrument.setTenantId("default");
 		InstrumentEntity actualResult = instrumentJdbcRepository.create(instrument);
 
@@ -115,12 +116,12 @@ public class InstrumentJdbcRepositoryTest {
 		Pagination<Instrument> page = (Pagination<Instrument>) instrumentJdbcRepository.search(getInstrumentSearch());
 
 		assertThat(page.getPagedData().get(0).getAmount()).isEqualTo("1.00");
-		assertThat(page.getPagedData().get(0).getBank().getId()).isEqualTo("1");
-		assertThat(page.getPagedData().get(0).getBankAccount().getId()).isEqualTo("1");
+		assertThat(page.getPagedData().get(0).getBank().getCode()).isEqualTo("code");
+		assertThat(page.getPagedData().get(0).getBankAccount().getAccountNumber()).isEqualTo("accountNumber");
 		assertThat(page.getPagedData().get(0).getBranchName()).isEqualTo("branchName");
 		assertThat(page.getPagedData().get(0).getDrawer()).isEqualTo("drawer");
 		assertThat(page.getPagedData().get(0).getFinancialStatus().getId()).isEqualTo("1");
-		assertThat(page.getPagedData().get(0).getInstrumentType().getId()).isEqualTo("1");
+		assertThat(page.getPagedData().get(0).getInstrumentType().getName()).isEqualTo("name");
 		assertThat(page.getPagedData().get(0).getPayee()).isEqualTo("payee");
 		assertThat(page.getPagedData().get(0).getSerialNo()).isEqualTo("serialNo");
 		assertThat(page.getPagedData().get(0).getSurrenderReason().getId()).isEqualTo("1");
@@ -146,12 +147,12 @@ public class InstrumentJdbcRepositoryTest {
 		InstrumentEntity result = instrumentJdbcRepository.findById(instrumentEntity);
 
 		assertThat(result.getAmount()).isEqualTo("1.00");
-		assertThat(result.getBankId()).isEqualTo("1");
-		assertThat(result.getBankAccountId()).isEqualTo("1");
+		assertThat(result.getBankId()).isEqualTo("code");
+		assertThat(result.getBankAccountId()).isEqualTo("accountNumber");
 		assertThat(result.getBranchName()).isEqualTo("branchName");
 		assertThat(result.getDrawer()).isEqualTo("drawer");
 		assertThat(result.getFinancialStatusId()).isEqualTo("1");
-		assertThat(result.getInstrumentTypeId()).isEqualTo("1");
+		assertThat(result.getInstrumentTypeId()).isEqualTo("name");
 		assertThat(result.getPayee()).isEqualTo("payee");
 		assertThat(result.getSerialNo()).isEqualTo("serialNo");
 		assertThat(result.getSurrenderReasonId()).isEqualTo("1");
@@ -192,12 +193,12 @@ public class InstrumentJdbcRepositoryTest {
 		Pagination<Instrument> page = (Pagination<Instrument>) instrumentJdbcRepository.search(getInstrumentSearch());
 
 		assertThat(page.getPagedData().get(0).getAmount()).isEqualTo("1.00");
-		assertThat(page.getPagedData().get(0).getBank().getId()).isEqualTo("1");
-		assertThat(page.getPagedData().get(0).getBankAccount().getId()).isEqualTo("1");
+		assertThat(page.getPagedData().get(0).getBank().getCode()).isEqualTo("code");
+		assertThat(page.getPagedData().get(0).getBankAccount().getAccountNumber()).isEqualTo("accountNumber");
 		assertThat(page.getPagedData().get(0).getBranchName()).isEqualTo("branchName");
 		assertThat(page.getPagedData().get(0).getDrawer()).isEqualTo("drawer");
 		assertThat(page.getPagedData().get(0).getFinancialStatus().getId()).isEqualTo("1");
-		assertThat(page.getPagedData().get(0).getInstrumentType().getId()).isEqualTo("1");
+		assertThat(page.getPagedData().get(0).getInstrumentType().getName()).isEqualTo("name");
 		assertThat(page.getPagedData().get(0).getPayee()).isEqualTo("payee");
 		assertThat(page.getPagedData().get(0).getSerialNo()).isEqualTo("serialNo");
 		assertThat(page.getPagedData().get(0).getSurrenderReason().getId()).isEqualTo("1");
@@ -265,12 +266,12 @@ public class InstrumentJdbcRepositoryTest {
 	private InstrumentSearch getInstrumentSearch() {
 		InstrumentSearch instrumentSearch = new InstrumentSearch();
 		instrumentSearch.setAmount(BigDecimal.ONE);
-		instrumentSearch.setBank(BankContract.builder().id("1").build());
-		instrumentSearch.setBankAccount(BankAccountContract.builder().id("1").build());
+		instrumentSearch.setBank(BankContract.builder().code("code").build());
+		instrumentSearch.setBankAccount(BankAccountContract.builder().accountNumber("accountNumber").build());
 		instrumentSearch.setBranchName("branchName");
 		instrumentSearch.setDrawer("drawer");
 		instrumentSearch.setFinancialStatus(FinancialStatusContract.builder().id("1").build());
-		instrumentSearch.setInstrumentType(InstrumentType.builder().id("1").build());
+		instrumentSearch.setInstrumentType(InstrumentType.builder().name("name").build());
 		instrumentSearch.setPayee("payee");
 		instrumentSearch.setSerialNo("serialNo");
 		instrumentSearch.setSurrenderReason(SurrenderReason.builder().id("1").build());

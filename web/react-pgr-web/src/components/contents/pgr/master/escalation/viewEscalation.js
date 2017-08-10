@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton, Table ,ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -32,30 +31,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -161,7 +136,7 @@ class ViewEscalation extends Component {
       });
 
     }
-	
+
 		componentWillUpdate() {
 	  $('#searchTable').dataTable().fnDestroy();
 	}
@@ -188,7 +163,7 @@ class ViewEscalation extends Component {
 
       let{setLoadingStatus, toggleSnackbarAndSetText} = this.props;
       setLoadingStatus('loading');
-    
+
       e.preventDefault();
 
        let self = this;
@@ -197,7 +172,7 @@ class ViewEscalation extends Component {
 		  fromPosition: this.props.viewEscalation.position,
 		  serviceCode: this.props.viewEscalation.grievanceType
 	  };
-	  
+
 
        Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetFrom).then(function(response) {
 		   setLoadingStatus('hide');
@@ -207,18 +182,18 @@ class ViewEscalation extends Component {
 						isSearchClicked: true
 					  });
 
-      
+
         }, function(err) {
 			setLoadingStatus('hide');
             toggleSnackbarAndSetText(true, err.message)
         });
-   
+
   }
 
     render() {
-		
+
 		let self = this;
-		
+
 		console.log(this.state.searchResult);
 
       let {
@@ -383,7 +358,7 @@ const mapDispatchToProps = dispatch => ({
    setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-	
+
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
     },

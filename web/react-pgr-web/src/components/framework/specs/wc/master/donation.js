@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/donation/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "Donations[0].id",
 		"useTimestamp": true,
 		"objectName": "Donation",
 		"groups": [
@@ -16,7 +17,7 @@ var dat = {
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -30,7 +31,7 @@ var dat = {
 								"type": "singleValueList",
 								"isRequired": true,
 								"isDisabled": false,
-								"url": "/wcms/masters/categorytype/_search?|$..name|$..name",
+								"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
 								"requiredErrMsg": "",
 								"patternErrMsg": ""
 					},
@@ -42,7 +43,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": true,
 						"isDisabled": false,
-						"url": "/pt-property/property/usages/_search?|$..name|$..name",
+						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -54,7 +55,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": true,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -66,7 +67,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": true,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -136,7 +137,7 @@ var dat = {
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -150,7 +151,7 @@ var dat = {
 								"type": "singleValueList",
 								"isRequired": false,
 								"isDisabled": false,
-								"url": "/wcms/masters/categorytype/_search?|$..name|$..name",
+								"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
 								"requiredErrMsg": "",
 								"patternErrMsg": ""
 					},
@@ -162,7 +163,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/pt-property/property/usages/_search?|$..name|$..name",
+						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					}
@@ -314,7 +315,7 @@ var dat = {
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -328,7 +329,7 @@ var dat = {
 								"type": "singleValueList",
 								"isRequired": false,
 								"isDisabled": false,
-								"url": "/wcms/masters/categorytype/_search?|$..name|$..name",
+								"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
 								"requiredErrMsg": "",
 								"patternErrMsg": ""
 					},
@@ -340,7 +341,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/pt-property/property/usages/_search?|$..name|$..name",
+						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -352,7 +353,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
 						"requiredErrMsg": "",
 						"defaultValue":"Donation.minPipeSize",
 						"patternErrMsg": ""
@@ -365,7 +366,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},

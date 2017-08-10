@@ -34,18 +34,31 @@ export default (state = defaultState, action) => {
             }
 
         case "DEL_REQUIRED_FIELDS":
-            var _isFormValid = reValidate(state.form, state.fieldErrors, action.requiredFields);
+            var _rFields = [...state.requiredFields];
+            var newRFields = [];
+            _rFields.map(function(val, i) {
+                if(action.requiredFields.indexOf(val) == -1) {
+                    newRFields.push(val);
+                }
+            })
+            var _isFormValid = reValidate(state.form, state.fieldErrors, newRFields);
             return {
                 ...state,
-                requiredFields: action.requiredFields,
+                requiredFields: newRFields,
                 isFormValid: _isFormValid
             }
 
         case "ADD_REQUIRED_FIELDS":
-            var _isFormValid = reValidate(state.form, state.fieldErrors, action.requiredFields);
+            var _rFields = [...state.requiredFields];
+            for(var i=0; i<action.requiredFields.length; i++) {
+                if(_rFields.indexOf(action.requiredFields[i]) == -1) {
+                    _rFields.push(action.requiredFields[i]);
+                }
+            }
+            var _isFormValid = reValidate(state.form, state.fieldErrors, _rFields);
             return {
                 ...state,
-                requiredFields: action.requiredFields,
+                requiredFields: _rFields,
                 isFormValid: _isFormValid
             }
 
@@ -130,13 +143,12 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
   }
 
   for(let key in fieldErrors) {
-    if(fieldErrors[key]) {
+    if(fieldErrors[key] && key != property) {
         isFormValid = false;
         break;
     }
   }
-
-
+  
   return {
     isFormValid,
     errorText

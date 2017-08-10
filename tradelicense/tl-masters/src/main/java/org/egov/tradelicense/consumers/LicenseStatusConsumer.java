@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.LicenseStatusRequest;
+import org.egov.tl.commons.web.requests.LicenseStatusRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.LicenseStatusService;
 import org.springframework.beans.factory.annotation.Autowired;

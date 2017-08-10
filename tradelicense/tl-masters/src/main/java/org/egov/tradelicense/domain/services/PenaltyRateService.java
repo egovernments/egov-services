@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.services;
 
-import org.egov.models.PenaltyRateRequest;
-import org.egov.models.PenaltyRateResponse;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.PenaltyRateRequest;
+import org.egov.tl.commons.web.requests.PenaltyRateResponse;
 
 /**
  * Service class for PenaltyRate master

@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.FeeMatrix;
-import org.egov.models.FeeMatrixDetail;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.FeeMatrix;
+import org.egov.tl.commons.web.contract.FeeMatrixDetail;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.validator.FeeMatrixValidator;
 import org.egov.tradelicense.persistence.repository.builder.FeeMatrixQueryBuilder;

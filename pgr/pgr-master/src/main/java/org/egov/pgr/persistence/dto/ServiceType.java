@@ -61,7 +61,7 @@ public class ServiceType {
 
     private List<org.egov.pgr.domain.model.AttributeDefinition> mapToDomainAttributes(){
         return attributeDefinitions.stream()
-                .map(a -> a.toDomain())
+                .map(AttributeDefinition::toDomain)
                 .collect(Collectors.toList());
     }
 }

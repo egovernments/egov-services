@@ -1,10 +1,10 @@
 package org.egov.tradelicense.domain.services.validator;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.Category;
-import org.egov.models.CategoryDetail;
-import org.egov.models.CategoryRequest;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.exception.DuplicateNameException;
@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CategoryValidator {
 
 	@Autowired
@@ -130,7 +133,7 @@ public class CategoryValidator {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count == 0) {
@@ -161,7 +164,7 @@ public class CategoryValidator {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count == 0) {
@@ -188,7 +191,7 @@ public class CategoryValidator {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count > 0) {

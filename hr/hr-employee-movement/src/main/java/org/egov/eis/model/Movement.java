@@ -93,7 +93,7 @@ public class Movement {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date enquiryPassedDate;
 
-    private Long transferedLocation;
+    private String transferedLocation;
 
     @NotNull
     private Long departmentAssigned;

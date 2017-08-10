@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.services;
 
-import org.egov.models.FeeMatrixRequest;
-import org.egov.models.FeeMatrixResponse;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.FeeMatrixRequest;
+import org.egov.tl.commons.web.requests.FeeMatrixResponse;
 
 /**
  * Service class for FeeMatrix master

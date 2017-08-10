@@ -41,7 +41,7 @@ public class TenantService {
             return null;
         }
 
-        return tenantResponse.getTenant();
+        return tenantResponse.getTenant().get(0);
     }
 
     private HttpEntity<RequestInfoWrapper> getRequestInfoAsHttpEntity(RequestInfoWrapper requestInfoWrapper) {

@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.enums.FeeTypeEnum;
-import org.egov.enums.RateTypeEnum;
-import org.egov.models.AuditDetails;
-import org.egov.models.Category;
-import org.egov.models.CategoryDetail;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
+import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.CategoryQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

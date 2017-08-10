@@ -19,6 +19,12 @@ const styles = {
   },
   marginStyle:{
     margin: '15px 0'
+  },
+  customColumnStyle : {
+    overflow: 'inherit',
+    height:'auto',
+    wordWrap: 'break-word',
+    whiteSpace: 'normal'
   }
 };
 
@@ -37,7 +43,7 @@ class viewsrn extends Component{
     if(this.props.srn.files != undefined){
       return this.props.srn.files.map((files, index) => {
         return (
-          <Col xs={12} sm={4} md={3} lg={3} key={index}>
+          <Col xs={6} sm={4} md={4} lg={4} key={index}>
             <RaisedButton
               href={files.url}
               download
@@ -71,103 +77,105 @@ class viewsrn extends Component{
            <CardText style={{padding:'8px 16px 0'}}>
              <List>
                <Row>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.add.name')}
-                     secondaryText={this.props.srn.firstName}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.firstName}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.mobilenumber')}
-                     secondaryText={this.props.srn.phone ? this.props.srn.phone : 'N/A'}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.phone ? this.props.srn.phone : 'N/A'}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.email.compulsory')}
-                     secondaryText={this.props.srn.email ? this.props.srn.email : 'N/A'}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.email ? this.props.srn.email : 'N/A'}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.address')}
-                     secondaryText={this.props.srn.systemRequesterAddress ? this.props.srn.systemRequesterAddress : 'N/A'}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.systemRequesterAddress ? this.props.srn.systemRequesterAddress : 'N/A'}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.enter.aadharcard.number')}
-                     secondaryText="N/A"
+                     secondaryText={<p style={styles.customColumnStyle}>N/A</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.description')}
-                     secondaryText={this.props.srn.description}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.description}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('pgr.lbl.grievance.type')}
-                     secondaryText={this.props.srn.serviceName}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.serviceName}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.department')}
-                     secondaryText={this.props.srn.departmentName}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.departmentName}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('pgr.lbl.registered.date')}
-                     secondaryText={this.props.srn.requestedDatetime}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.requestedDatetime}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('pgr.lbl.nextescalation.date')}
-                     secondaryText={this.props.srn.expectedDatetime}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.expectedDatetime}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('pgr.lbl.filedvia')}
-                     secondaryText={this.props.srn.systemReceivingMode}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.systemReceivingMode}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('pgr.lbl.receivingcenter')}
-                     secondaryText={this.props.srn.receivingCenterName ? this.props.srn.receivingCenterName :'N/A'}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.receivingCenterName ? this.props.srn.receivingCenterName :'N/A'}</p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.location')}
-                     secondaryText={this.state.address ? this.state.address :
-                     this.props.srn.childLocationName ? this.props.srn.childLocationName + " - " + this.props.srn.locationName : this.props.srn.locationName
-                     }
+                     secondaryText={<p style={styles.customColumnStyle}>
+                       {this.state.address ? this.state.address :
+                       this.props.srn.childLocationName ? this.props.srn.childLocationName + " - " + this.props.srn.locationName : this.props.srn.locationName
+                       }
+                     </p>}
                    />
                  </Col>
-                 <Col xs={6} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.landmark')}
-                     secondaryText={this.props.srn.address ? this.props.srn.address : 'N/A'}
+                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.address ? this.props.srn.address : 'N/A'}</p>}
                    />
                  </Col>
                  {this.props.srn.systemExternalCRN ?
-                   <Col xs={6} sm={4} md={3} lg={3}>
+                   <Col xs={12} sm={6} md={4} lg={3}>
                      <ListItem
                        primaryText={translate('pgr.lbl.externalcrn')}
-                       secondaryText={this.props.srn.systemExternalCRN}
+                       secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.systemExternalCRN}</p>}
                      />
                    </Col>
                  : ''}
                </Row>
                <Row>
-                 <Col xs={12} sm={4} md={3} lg={3}>
+                 <Col xs={12} sm={12} md={12} lg={12}>
                    <ListItem
                      primaryText={translate('pgr.lbl.files')}
                    />

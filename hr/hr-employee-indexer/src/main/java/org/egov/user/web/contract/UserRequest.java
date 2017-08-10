@@ -90,7 +90,7 @@ public class UserRequest {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     private Date lastModifiedDate;
 
-    @JsonFormat(pattern = "MM/dd/YYYY")
+    @JsonFormat(pattern = "YYYY-MM-dd")
     private Date dob;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")

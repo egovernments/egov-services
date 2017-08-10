@@ -4,9 +4,9 @@ import java.net.URI;
 
 import org.egov.models.DemandResponse;
 import org.egov.models.RequestInfoWrapper;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DemandRepository {
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	/**
 	 * Description :This method will get all demands based on upic number and
@@ -45,8 +45,8 @@ public class DemandRepository {
 		RestTemplate restTemplate = new RestTemplate();
 		DemandResponse resonse = null;
 		StringBuffer demandUrl = new StringBuffer();
-		demandUrl.append(environment.getProperty("egov.services.billing_service.hostname"));
-		demandUrl.append(environment.getProperty("egov.services.billing_service.searchdemand"));
+		demandUrl.append(propertiesManager.getBillingServiceHostname());
+		demandUrl.append(propertiesManager.getBillingServiceSearchdemand());
 		URI uri = UriComponentsBuilder.fromUriString(demandUrl.toString()).queryParam("tenantId", tenantId)
 				.queryParam("consumerCode", upicNo).build(true).encode().toUri();
 
@@ -60,7 +60,7 @@ public class DemandRepository {
 			}
 			return resonse;
 		} catch (HttpClientErrorException exception) {
-			throw new ValidationUrlNotFoundException(environment.getProperty("invalid.titletransfer.demand.validation"),
+			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidDemandValidation(),
 					exception.getMessage(), requestInfo.getRequestInfo());
 		}
 	}

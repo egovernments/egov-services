@@ -192,7 +192,7 @@ public class InstrumentServiceTest {
 
 		instruments.get(0).setBank(expextedResult);
 
-		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(expextedResult);
+		when(bankContractRepository.findByCode(any(BankContract.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
@@ -209,7 +209,8 @@ public class InstrumentServiceTest {
 
 		instruments.get(0).setBankAccount(expextedResult);
 
-		when(bankAccountContractRepository.findById(any(BankAccountContract.class))).thenReturn(expextedResult);
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class)))
+				.thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
@@ -272,12 +273,12 @@ public class InstrumentServiceTest {
 
 		List<Instrument> instruments = getInstruments();
 
-		BankContract expextedResult = BankContract.builder().name("name").description("description").active(true)
+		BankContract expextedResult = BankContract.builder().code("code").description("description").active(true)
 				.id("1").build();
 
 		instruments.get(0).setBank(expextedResult);
 
-		when(bankContractRepository.findById(null)).thenReturn(expextedResult);
+		when(bankContractRepository.findByCode(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
@@ -294,7 +295,7 @@ public class InstrumentServiceTest {
 
 		instruments.get(0).setBankAccount(expextedResult);
 
-		when(bankAccountContractRepository.findById(null)).thenReturn(expextedResult);
+		when(bankAccountContractRepository.findByAccountNumber(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 

@@ -7,6 +7,9 @@ import Login from './components/contents/Login';
 import Dashboard from './components/contents/Dashboard';
 import ProfileEdit from './components/contents/settings/profileEdit';
 
+//CITIZEN SERVICES
+import VisibleNewServiceRequest from './components/contents/citizenServices/VisibleNewServiceRequest';
+
 //PGR
 import grievanceCreate from './components/contents/pgr/grievanceCreate';
 import grievanceView from './components/contents/pgr/grievanceView';
@@ -95,6 +98,7 @@ const Main = () => {
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
+        <Route exact path={base+'/services/apply/:serviceCode'} component={VisibleNewServiceRequest}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>

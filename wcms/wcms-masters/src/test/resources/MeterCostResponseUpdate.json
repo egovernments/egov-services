@@ -1,0 +1,33 @@
+{
+    "ResponseInfo": {
+        "apiId": "org.egov.wcms",
+        "ver": "1.0",
+        "resMsgId": "uief87324",
+        "msgId": "654654",
+        "status": "200"
+    },
+    "MeterCost": [
+        {
+            "id": 1,
+            "code": "MeterCost123",
+            "pipeSizeId": 1,
+            "meterMake": "meterMakeUpdated1",
+            "amount": 3000.0,
+            "active": true,
+            "createdBy": 1,
+            "lastModifiedBy": 1,
+            "tenantId": "default"
+        },
+        {
+            "id": 2,
+            "code": "MeterCost234",
+            "pipeSizeId": 2,
+            "meterMake": "meterMakeUpdated2",
+            "amount": 4000.0,
+            "active": true,
+            "createdBy": 1,
+            "lastModifiedBy": 1,
+            "tenantId": "default"
+        }
+    ]
+}

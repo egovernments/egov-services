@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.InstrumentRequest;
+import org.egov.collection.model.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,32 @@ public class InstrumentRepository {
 		LOGGER.info("Response from instrument service: " + response.toString());
 
 		return instrumentId;
+	}
+	
+	public String getAccountCodeId(RequestInfo requestinfo,
+			Instrument instrument, String tenantId){
+		String glcode = null;
+		StringBuilder builder = new StringBuilder();
+		String hostname = applicationProperties.getInstrumentServiceHost();
+		String baseUri = applicationProperties.getSearchAccountCodes();
+		String searchCriteria = "?tenantId="+tenantId+"&name="+instrument.getInstrumentType().getName();
+		builder.append(hostname).append(baseUri).append(searchCriteria);
+		
+		Object response = null;
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestinfo);
+
+		LOGGER.info("URI account code id search: " + builder.toString());
+		LOGGER.info("Request account code id search: " + requestinfo);
+		
+			response = restTemplate.postForObject(builder.toString(),
+					requestInfoWrapper, Object.class);
+			
+			glcode = JsonPath.read(response, "$.instrumentAccountCodes[0].accountCode.id");
+		LOGGER.info("Response from instrument service: " + response.toString());
+		
+		
+		return glcode;
 	}
 
 }

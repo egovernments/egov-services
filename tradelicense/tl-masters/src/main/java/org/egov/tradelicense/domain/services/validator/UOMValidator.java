@@ -1,9 +1,9 @@
 package org.egov.tradelicense.domain.services.validator;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.RequestInfo;
-import org.egov.models.UOM;
-import org.egov.models.UOMRequest;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.UOM;
+import org.egov.tl.commons.web.requests.UOMRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;

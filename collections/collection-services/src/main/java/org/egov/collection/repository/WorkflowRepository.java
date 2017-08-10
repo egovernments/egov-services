@@ -67,13 +67,11 @@ public class WorkflowRepository {
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getHremployeeServiceHost();
 		String baseUri = applicationProperties.getGetPosition();
-		String uriAppend = applicationProperties.getGetPositionUriAppend();
-		String searchCriteria="?tenantId="+positionSearchCriteriaWrapper.getPositionSearchCriteria().getTenantId();
+		String searchCriteria="?tenantId="+positionSearchCriteriaWrapper.getPositionSearchCriteria().getTenantId()+
+				"&id="+positionSearchCriteriaWrapper.getPositionSearchCriteria().getEmployeeId();
 		
 		builder.append(hostname)
 			   .append(baseUri)
-			   .append(positionSearchCriteriaWrapper.getPositionSearchCriteria().getEmployeeId())
-			   .append(uriAppend)
 			   .append(searchCriteria);
 				
 				

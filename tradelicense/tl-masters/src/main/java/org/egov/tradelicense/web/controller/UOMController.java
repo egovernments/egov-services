@@ -2,9 +2,9 @@ package org.egov.tradelicense.web.controller;
 
 import javax.validation.Valid;
 
-import org.egov.models.RequestInfoWrapper;
-import org.egov.models.UOMRequest;
-import org.egov.models.UOMResponse;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.requests.UOMRequest;
+import org.egov.tl.commons.web.requests.UOMResponse;
 import org.egov.tradelicense.domain.services.UOMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

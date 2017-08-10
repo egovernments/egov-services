@@ -1,0 +1,93 @@
+{
+	"variables": [],
+	"info": {
+		"name": "DocumentType",
+		"_postman_id": "645a4881-e062-0fc1-176e-32954c6f5985",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "DocumentType Update",
+			"request": {
+				"url": "http://localhost:8080/tl-masters/v1/documenttype/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"2c099ea9-9919-47a2-b173-8b498aa07923\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"documentTypes\": [\r\n  {\r\n  \t\"id\":\"1\",\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"prasad\",\r\n  \"mandatory\":\"true\",\r\n  \"enabled\":\"true\",\r\n  \"applicationType\":\"NEW\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": null,\r\n               \"lastModifiedBy\": null,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DocumentType create",
+			"request": {
+				"url": "http://localhost:8080/tl-masters/v1/documenttype/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"2c099ea9-9919-47a2-b173-8b498aa07923\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"documentTypes\": [\r\n  {\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"pavan\",\r\n  \"mandatory\":\"true\",\r\n  \"enabled\":\"true\",\r\n  \"applicationType\":\"NEW\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": null,\r\n               \"lastModifiedBy\": null,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DocumentType Search",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/tl-masters/v1/documenttype/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tl-masters",
+						"v1",
+						"documenttype",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"2c099ea9-9919-47a2-b173-8b498aa07923\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

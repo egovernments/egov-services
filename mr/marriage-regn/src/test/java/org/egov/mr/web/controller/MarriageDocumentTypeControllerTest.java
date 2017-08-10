@@ -113,7 +113,34 @@ public class MarriageDocumentTypeControllerTest {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public void testCreateWithBindingError() {
+		Error error = new Error();
+		error.setCode(400);
+		error.setDescription("Error While Binding Results");
+		error.setMessage("[marriageDocTypes[0].name] : Required Query Parameter Missing ");
+		ResponseInfo responseInfo = ResponseInfo.builder().status("400").build();
+		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
+
+		when(errorHandler.handleBindingErrorsForCreate(Matchers.any(), Matchers.any()))
+				.thenReturn(new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST));
+
+		try {
+			mockMvc.perform(post("/marriageRegns/documents/_create")
+					.content(getFileContents("MarriageDocumentTypeUpdateRequestForBE.json"))
+					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(400))
+					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+					.andExpect(content().json(getFileContents("MarriageDocumentTypeUpdateResponseForBE.json")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	/**
+	 * 
+	 * 
 	 * @Test_Search
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -149,6 +176,79 @@ public class MarriageDocumentTypeControllerTest {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public void testSearchWithBindingError() {
+		Error error = new Error();
+		error.setCode(400);
+		error.setDescription("Error While Binding Results");
+		error.setMessage("[isActive] : Required Query Parameter Missing ");
+		ResponseInfo responseInfo = ResponseInfo.builder().status("400").resMsgId("search with from and to values")
+				.apiId("mr-services").build();
+		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
+
+		when(errorHandler.handleBindingErrorsForSearch(Matchers.any(), Matchers.any(), Matchers.any()))
+				.thenReturn(new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST));
+
+		try {
+			mockMvc.perform(post("/marriageRegns/documents/_search").param("tenantId", "ap.kurnool")
+					.content(getFileContents("MarriageDocumentTypeUpdateRequestForBE.json"))
+					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(400))
+					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+					.andExpect(content().json(getFileContents("MarriageDocumentTypeSearchResponseForBE.json")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public void testForUpdate() {
+		List<MarriageDocumentType> marriageDocumentTypes = getMarriageDocumentTypesForUpdate();
+		MarriageDocTypeResponse marriageDocTypeResponse = new MarriageDocTypeResponse();
+		marriageDocTypeResponse.setMarriageDocTypes(marriageDocumentTypes);
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		marriageDocTypeResponse.setResponseInfo(responseInfo);
+		when(marriageDocumentTypeService.updateAsync(Matchers.any(MarriageDocTypeRequest.class)))
+				.thenReturn(new ResponseEntity(marriageDocTypeResponse, HttpStatus.OK));
+		try {
+			mockMvc.perform(post("/marriageRegns/documents/_update")
+					.content(getFileContents("MarriageDocumentTypeUpdateRequest.json"))
+					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
+					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+					.andExpect(content().json(getFileContents("MarriageDocumentTypeUpdateResponse.json")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public void testForUpdateWithBindingError() {
+		Error error = new Error();
+		error.setCode(400);
+		error.setDescription("Error While Binding Results");
+		error.setMessage("[marriageDocTypes[0].name] : Required Query Parameter Missing ");
+		ResponseInfo responseInfo = ResponseInfo.builder().status("400").build();
+		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
+
+		when(errorHandler.handleBindingErrorsForCreate(Matchers.any(), Matchers.any()))
+				.thenReturn(new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST));
+
+		try {
+			mockMvc.perform(post("/marriageRegns/documents/_update")
+					.content(getFileContents("MarriageDocumentTypeUpdateRequestForBE.json"))
+					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(400))
+					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+					.andExpect(content().json(getFileContents("MarriageDocumentTypeUpdateResponseForBE.json")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * 

@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.PenaltyRateRequest;
+import org.egov.tl.commons.web.requests.PenaltyRateRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
 import org.springframework.beans.factory.annotation.Autowired;

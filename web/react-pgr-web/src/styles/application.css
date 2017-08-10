@@ -703,8 +703,6 @@ table td {
 	margin:15px;
 }
 
-
-
 .menuStyle{
 
 
@@ -765,3 +763,78 @@ table thead th {
  .searchButton button{
 	 background-color:#607d8b !important;
  }
+
+
+ /*  Bootstrap Clearfix */
+ .row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.service-menu-item{
+ 	margin-top:10px;
+ 	text-align: center;
+ 	margin-bottom: 10px;
+}
+
+.application-title{
+ 	text-align: center;
+ 	font-weight: 400;
+ 	font-family: Roboto;
+ 	font-size: 28px;
+ 	color: #8d8d8d;
+ 	padding-bottom: 10px;
+}
+
+.check-list-item label{
+ 	color: rgb(95, 92, 98) !important;
+}
+
+.file-input-container{
+ 	 padding: 5px 5px 10px 5px;
+   background: #fcfcfc;
+   border: dashed 2px #bcbcbc;
+}
+
+.file-input-container.error{
+	border:dashed 2px rgb(244, 67, 54);
+}
+
+.errorMsg{
+	color:rgb(244, 67, 54) !important;
+}
+
+.file-header .name{
+	margin-bottom: 10px;
+	color:rgb(95, 92, 98);
+}
+
+.documents{
+ 	margin-bottom: 16px;
+}
+
+.file-browser{
+	padding: 15px 15px 0 15px;
+}
+
+.file-header{
+	padding-left:16px;
+	padding-right: 16px;
+}
+
+.file-header span{
+	vertical-align: top;
+	padding-left: 5px;
+	color:#9E9E9E;
+}
+
+.list-remove-button{
+	top: -12px;
+  bottom: 12px;
+	right:12px;
+}

@@ -128,5 +128,11 @@ public class CollectionServiceConstants {
     public static final String KAFKA_PUSH_EXCEPTION_MSG="Data couldn't be pushed on the kafka queue";
     public static final String KAFKA_PUSH_EXCEPTION_DESC="ISE while pushing to the queue, check if the kafka server is running";
     
+    public static final String POSITION_EXCEPTION_MSG="Positions couldn't be fetched";
+    public static final String POSITION_EXCEPTION_DESC="ISE while fetching positions for asignee and initator, hr-employees failed to return values";
+    
+    public static final String ACCOUNT_CODE_EXCEPTION_MSG="glcode couldn't be fetched";
+    public static final String ACCOUNT_CODE_EXCEPTION_DESC="ISE while fetching glcode for instrument type, instrument service failed to return values";
+    
 
 }

@@ -1,6 +1,6 @@
 package org.egov.tradelicense;
 
-import org.egov.models.ResponseInfoFactory;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

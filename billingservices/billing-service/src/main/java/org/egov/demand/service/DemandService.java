@@ -61,6 +61,7 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
@@ -70,6 +71,7 @@ import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.DemandUpdateMisResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -259,7 +261,7 @@ public class DemandService {
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED),
 				existingDemands);
 	}
-
+	
 	public DemandResponse updateAsync(DemandRequest demandRequest) {
 
 		log.debug("the demand service : " + demandRequest);
@@ -349,6 +351,19 @@ public class DemandService {
 
 	public void update(DemandRequest demandRequest) {
 		demandRepository.update(demandRequest);
+	}
+	
+	//Demand update consumer code (update mis)
+	public DemandResponse updateMISAsync(DemandUpdateMisRequest demandRequest) {
+
+		kafkaTemplate.send(applicationProperties.getUpdateMISTopicName(), demandRequest);
+
+		return new DemandResponse(responseInfoFactory.getResponseInfo(new RequestInfo(), HttpStatus.CREATED), null);
+	}
+	
+	//update mis update method calling from kafka
+	public void updateMIS(DemandUpdateMisRequest demandRequest){
+		demandRepository.updateMIS(demandRequest);
 	}
 	
 	private AuditDetail getAuditDetail(RequestInfo requestInfo) {

@@ -4,7 +4,6 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -23,29 +22,8 @@ const styles = {
   marginStyle:{
     margin: '15px'
   },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    margin: 37
+  setTopMargin: {
+    marginTop: 34
   }
 };
 
@@ -179,35 +157,38 @@ class receivingModeCreate extends Component {
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
-                    <Col xs={12} md={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
                         floatingLabelText={translate("core.lbl.add.name")+"*"}
                         id="name"
                         errorText={fieldErrors.name ? fieldErrors.name : ""}
                         value={receivingmodeSet.name ? receivingmodeSet.name : "" }
-                        onChange={(e) => {handleChange(e, "name", true, /^[^-\s][a-zA-Z ]*$/)}}/>
+                        maxLength="100"
+                        onChange={(e) => {handleChange(e, "name", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Please use only alphabets, space and special characters')}}/>
                     </Col>
-                    <Col xs={12} md={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
                         floatingLabelText={translate("core.lbl.code")+"*"}
                         id="code"
                         errorText={fieldErrors.code ? fieldErrors.code : ""}
                         value={receivingmodeSet.code ? receivingmodeSet.code : ""}
-                        onChange={(e) => {handleChange(e, "code", true, /^[a-zA-Z]+$/)}}
+                        maxLength="20"
+                        onChange={(e) => {handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}}
                         disabled={this.state.id ? true : false }/>
                     </Col>
-                    <Col xs={12} md={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
-                        floatingLabelText={translate("core.lbl.description")+"*"}
+                        floatingLabelText={translate("core.lbl.description")}
                         id="description"
                         errorText={fieldErrors.description ? fieldErrors.description : ""}
                         value={receivingmodeSet.description ? receivingmodeSet.description : ""}
-                        onChange={(e) => {handleChange(e, "description", true, /^[^-\s][a-zA-Z0-9_\s-]+$/)}}/>
+                        maxLength="250"
+                        onChange={(e) => {handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Please use only alphabets, space and special characters')}}/>
                     </Col>
-                    <Col xs={12} md={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField
                           multiple="true"
                           errorText={fieldErrors.channels ? fieldErrors.channels : ""}
@@ -234,9 +215,8 @@ class receivingModeCreate extends Component {
                               />
                      </SelectField>
                    </Col>
-                    <div className="clearfix"></div>
-                    <Col xs={12} md={3}>
-                    <Checkbox label={translate("pgr.lbl.active")} id="active" style={styles.checkbox}
+                    <Col xs={12} sm={4} md={3} lg={3}>
+                    <Checkbox label={translate("pgr.lbl.active")} id="active" style={styles.setTopMargin}
                       checked ={receivingmodeSet.active ? true : false}
                       onCheck={(e,isInputChecked) => {
                        var e={
@@ -286,11 +266,11 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
     validationData: {
       required: {
         current: [],
-        required: ["name","code","description","channels"]
+        required: ["name","code","channels"]
       },
       pattern: {
          current: [],
-         required: ["name","code","description"]
+         required: []
        }
       }
     });
@@ -310,8 +290,8 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["name","code","description","channels"],
-          required:["name","code","description","channels"]
+          current: ["name","code","channels"],
+          required:["name","code","channels"]
         },
         pattern: {
           current: [],
@@ -327,12 +307,12 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
      object
    })
   },
-   handleChange: (e, property, isRequired, pattern) => {
+   handleChange: (e, property, isRequired, pattern,errorMsg) => {
      dispatch({
        type: "HANDLE_CHANGE",
        property,
        value: e.target.value,
-       isRequired, pattern
+       isRequired, pattern, errorMsg
      });
    },
    setLoadingStatus: (loadingStatus) => {

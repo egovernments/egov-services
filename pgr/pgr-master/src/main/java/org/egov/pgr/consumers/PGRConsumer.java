@@ -140,7 +140,7 @@ public class PGRConsumer {
 			} else if (record.topic().equals(applicationProperties.getUpdateReceivingModeTopicName())) {
 				LOGGER.info("Consuming update ReceivingModeType request");
 				receivingModeTypeService.update(objectMapper.readValue(record.value(), ReceivingModeTypeReq.class));
-			} else if (record.topic().equals(applicationProperties.getCreateServiceTypeTopicName())) {
+			} else if (record.topic().equals(applicationProperties.getCreateGrievanceTypeTopicName())) {
 				LOGGER.info("Consuming create GrievanceType request");
 				grievanceTypeService.create(objectMapper.readValue(record.value(), ServiceRequest.class));
 			} else if (record.topic().equals(applicationProperties.getUpdateServiceGroupTopicName())) {

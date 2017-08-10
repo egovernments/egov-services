@@ -40,6 +40,7 @@
 
 package org.egov.collection.service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +58,7 @@ import org.egov.collection.model.PositionSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.TransactionType;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
@@ -71,6 +73,7 @@ import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
 import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.ChartOfAccount;
+import org.egov.collection.web.contract.Purpose;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.WorkflowDetailsRequest;
@@ -125,7 +128,15 @@ public class ReceiptService {
 		bill.setBillDetails(apportionPaidAmount(
 					receiptReq.getRequestInfo(), bill, receiptReq.getTenantId()));
 		// return receiptRepository.pushToQueue(receiptReq); //async call
-
+		
+		LOGGER.info("Bill object after apportioning: "+bill.toString());
+		
+		List<BillDetail> billDetails = configureDebitAmountHead(receiptReq);
+		bill.getBillDetails().clear();
+		bill.setBillDetails(billDetails);
+		
+		LOGGER.info("Bill object after debit head config: "+bill.toString());
+		
 		receipt = create(bill, receiptReq.getRequestInfo(),
 				receiptReq.getTenantId(), receipt.getInstrument()); // sync call
 		if(null != receipt.getBill()){
@@ -235,6 +246,7 @@ public class ReceiptService {
 				String instrumentId = null;
 				Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
 			try{
+				instrument.setTransactionType(TransactionType.Debit);
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){
@@ -358,7 +370,6 @@ public class ReceiptService {
 				parameterMap.put("cramount",
 						billAccountDetails.getCreditAmount());
 				parameterMap.put("ordernumber", billAccountDetails.getOrder());
-				parameterMap.put("receiptheader", receiptHeaderId);
 				parameterMap.put("actualcramounttobepaid",
 						billAccountDetails.getCrAmountToBePaid());
 				parameterMap.put("description",
@@ -370,6 +381,7 @@ public class ReceiptService {
 						.toString());
 				parameterMap.put("tenantid", tenantId);
 				parameterMap.put("receiptheader", receiptHeaderId);
+
 
 				parametersReceiptDetails[parametersReceiptDetailsCount] = parameterMap;
 				parametersReceiptDetailsCount++;
@@ -464,13 +476,50 @@ public class ReceiptService {
 		   LOGGER.info("WorkflowDetailsRequest :"+workFlowDetailsRequest);
 			receiptRepository.pushUpdateDetailsToQueque(workFlowDetailsRequest);
 			}
+	
+	private List<BillDetail> configureDebitAmountHead(ReceiptReq receiptReq){
+		LOGGER.info("Fetching glcode for instrument type: "+
+						receiptReq.getReceipt().get(0).getInstrument().getInstrumentType().getName());
+		String glcode = null;
+		try{
+			glcode = instrumentRepository.getAccountCodeId(receiptReq.getRequestInfo(), 
+					receiptReq.getReceipt().get(0).getInstrument(), receiptReq.getReceipt().get(0).getTenantId());
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_MSG, CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_DESC);
+			
+		}
+		LOGGER.info("glcode obtained is: "+glcode);
+	  	BigDecimal drAmount = BigDecimal.ZERO;
+	  	List<BillDetail> billDetailsList = new ArrayList<>();
+		for(BillDetail billDetails: receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails()){
+			  for(BillAccountDetail billAccountDetails: billDetails.getBillAccountDetails()){
+				  drAmount = drAmount.add(billAccountDetails.getCreditAmount());
+			  }
+			  LOGGER.info("Dramount for debit head: "+drAmount);
+
+			  BillAccountDetail billAccountDetail = new BillAccountDetail();
+			  billAccountDetail.setGlcode(glcode);
+			  billAccountDetail.setDebitAmount(drAmount);
+			  billAccountDetail.setCreditAmount(BigDecimal.ZERO);
+			  billAccountDetail.setPurpose(Purpose.OTHERS);
+				
+			  billDetails.getBillAccountDetails().add(billAccountDetail);
+			  
+			  billDetailsList.add(billDetails);
+				
+		}
+		
+		return billDetailsList;
+	}
 
 	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
 		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
 		
 		WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
 		
-		workflowDetails.setReceiptHeaderId(receiptHeaderId);
+		workflowDetails.setReceiptHeaderId(receiptHeaderId);	
 		workflowDetails.setTenantId(tenantId);
 		workflowDetails.setState("NEW");
 		workflowDetails.setAction("Create");
@@ -485,10 +534,11 @@ public class ReceiptService {
 		positionSearchCriteriaWrapper.setPositionSearchCriteria(positionSearchCriteria);
 		positionSearchCriteriaWrapper.setRequestInfo(requestInfo);
 		
+	/*	workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));	
+		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper)); */
+		
 		
 		try{
-	//		workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));	
-	//		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper));
 			workflowService.start(workflowDetails);
 		}catch(Exception e){
 			LOGGER.error("Starting workflow failed: "+e.getCause());

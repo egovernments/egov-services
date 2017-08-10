@@ -1,25 +1,19 @@
 
 package org.egov.property.consumer;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.utility.UpicNoGeneration;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,51 +35,13 @@ public class TaxCalculatorConsumer {
 	RestTemplate restTemplate;
 
 	@Autowired
-	Environment environment;
-
-	@Autowired
-	Producer producer;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	UpicNoGeneration upicGeneration;
 
-	/**
-	 * This method for getting consumer configuration bean
-	 */
-	@Bean
-	public Map<String, Object> consumerConfig() {
-		Map<String, Object> consumerProperties = new HashMap<String, Object>();
-		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-				environment.getProperty("auto.offset.reset.config"));
-		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				environment.getProperty("kafka.config.bootstrap_server_config"));
-		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "boundary");
-		return consumerProperties;
-	}
-
-	/**
-	 * This method will return the consumer factory bean based on consumer
-	 * configuration
-	 */
-	@Bean
-	public ConsumerFactory<String, Object> consumerFactory() {
-		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(Object.class));
-
-	}
-
-	/**
-	 * This bean will return kafka listner object based on consumer factory
-	 */
-
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
-		factory.setConsumerFactory(consumerFactory());
-		return factory;
-	}
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	/**
 	 * receive method
@@ -94,18 +50,18 @@ public class TaxCalculatorConsumer {
 	 *            This method is listened whenever property is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.tax.calculaion')}",
-			"#{environment.getProperty('egov.propertytax.property.update.tax.calculaion')}" })
-	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
-		log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
+	@KafkaListener(topics = { "#{propertiesManager.getCreateValidatedUser()}",
+			"#{propertiesManager.getUpdateValidatedUser()}"})
+	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
+			throws Exception {
+		log.info("consumer topic value is: " + topic + " consumer value is" + consumerRecord);
 		ObjectMapper objectMapper = new ObjectMapper();
-		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord.value(), PropertyRequest.class);
+		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
 		Property property = propertyRequest.getProperties().get(0);
 		CalculationRequest calculationRequest = new CalculationRequest();
 		calculationRequest.setRequestInfo(propertyRequest.getRequestInfo());
 		calculationRequest.setProperty(property);
-		String url = environment.getProperty("egov.services.pt_calculator.hostname")
-				+ environment.getProperty("egov.services.pt_calculator.calculatorpath");
+		String url = propertiesManager.getCalculatorHostName() + propertiesManager.getCalculatorPath();
 		log.info("Calculator url is:" + url + "CalculationRequest is:" + calculationRequest);
 		CalculationResponse calculationResponse = restTemplate.postForObject(url, calculationRequest,
 				CalculationResponse.class);
@@ -113,19 +69,15 @@ public class TaxCalculatorConsumer {
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
 		propertyRequest.getProperties().get(0).getPropertyDetail().setTaxCalculations(taxCalculations);
-		if (!property.getChannel().toString().equalsIgnoreCase(environment.getProperty("egov.property.channel.type"))) {
+		if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
 
-			if (consumerRecord.topic()
-					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.tax.calculaion"))) {
+			if (topic.equalsIgnoreCase(propertiesManager.getCreateValidatedUser())) {
 
-				producer.send(environment.getProperty("egov.propertytax.create.tax.calculated"),
-						propertyRequest);
+				kafkaTemplate.send(propertiesManager.getCreateTaxCalculated(), propertyRequest);
 
-			} else if (consumerRecord.topic()
-					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.tax.calculaion"))) {
+			} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateValidatedUser())) {
 
-				producer.send(environment.getProperty("egov.propertytax.update.tax.calculated"),
-						propertyRequest);
+				kafkaTemplate.send(propertiesManager.getUpdateTaxCalculated(), propertyRequest);
 
 			}
 
@@ -135,8 +87,7 @@ public class TaxCalculatorConsumer {
 
 			String upicNo = upicGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
 			propertyRequest.getProperties().get(0).setUpicNumber(upicNo);
-			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
-					propertyRequest);
+			kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
 		}
 
 	}

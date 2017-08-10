@@ -117,7 +117,10 @@ class DefineEscalation extends Component {
            buttons: [
                      'excel', 'pdf', 'print'
             ],
-            ordering: false,
+            "columnDefs": [
+              { "orderable": false, "targets": 5 }
+            ],
+            //ordering: false,
             bDestroy: true,
       });
     }
@@ -172,8 +175,13 @@ componentWillUpdate() {
 
          $('#searchTable').DataTable({
          dom: 'lBfrtip',
-         buttons: [],
+         buttons: [
+                   'excel', 'pdf', 'print'
+          ],
           bDestroy: true,
+          "columnDefs": [
+            { "orderable": false, "targets": 5 }
+          ],
           language: {
              "emptyTable": "No Records"
           }
@@ -564,7 +572,7 @@ componentWillUpdate() {
 						<th>{translate('core.lbl.department')}</th>
 						<th>{translate('pgr.lbl.designation')}</th>
 						<th>{translate('pgr.lbl.toposition')}</th>
-						<th></th>
+						<th>{translate('pgr.lbl.actions')}</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -616,7 +624,7 @@ componentWillUpdate() {
               <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false: true} label={translate('core.lbl.search')} />
           </div>
           {this.state.noData &&
-            <Card style = {{textAlign:"center"}}>
+            <Card className="text-center" style={styles.marginStyle}>
               <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
               <CardText>
                   <RaisedButton primary={true} style={{margin:'10px 0'}} label={translate('pgr.lbl.addesc')} onClick={() => {

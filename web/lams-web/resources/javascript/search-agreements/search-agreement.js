@@ -114,10 +114,16 @@ class AgreementSearch extends React.Component {
 
     var res = commonApiPost("asset-services", "assetCategories", "_search", {tenantId});
     var bool = true;
-    console.log(res.getResponseHeader("userInfo"));
+    console.log(typeof res.getResponseHeader("userInfo"));
+    try {
+      var _roles = JSON.stringify(res.getResponseHeader("userInfo"));
+      console.log(_roles);
+    } catch(e) {
+      console.log(e);
+    }
+
     if(res && res.getResponseHeader("userInfo") && res.getResponseHeader("userInfo").roles) {
       var roles = res.getResponseHeader("userInfo").roles;
-      console.log(roles);
       for(var i=0; i<roles.length; i++) {
         if(roles[i].name == "Collection Operator") {
           bool = false;

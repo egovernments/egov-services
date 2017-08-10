@@ -320,13 +320,18 @@ class BulkEscalationGeneration extends Component {
                                   dataSourceConfig={this.state.dataSourceConfig}
                                   onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "fromPosition")}}
                                   value={bulkEscalationGeneration.fromPosition ? bulkEscalationGeneration.fromPosition : ""}
+                                  ref="fromPosition"
                                   onNewRequest={(chosenRequest, index) => {
-          	                        var e = {
-          	                          target: {
-          	                            value: chosenRequest.id
-          	                          }
-          	                        };
-          	                        handleChange(e, "fromPosition", true, "");
+                                    if(index === -1){
+                                      this.refs['fromPosition'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest.id
+                                        }
+                                      };
+                                      handleChange(e, "fromPosition", true, "");
+                                    }
           	                       }}
                                 />
                           </Col>
@@ -368,13 +373,18 @@ class BulkEscalationGeneration extends Component {
                                   dataSourceConfig={this.state.dataSourceConfig}
                                   onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "toPosition")}}
                                   value={bulkEscalationGeneration.toPosition ? bulkEscalationGeneration.toPosition : ""}
+                                  ref="toPosition"
                                   onNewRequest={(chosenRequest, index) => {
-                                    var e = {
-                                      target: {
-                                        value: chosenRequest.id
-                                      }
-                                    };
-                                    handleChange(e, "toPosition", true, "");
+                                    if(index === -1){
+                                      this.refs['toPosition'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest.id
+                                        }
+                                      };
+                                      handleChange(e, "toPosition", true, "");
+                                    }
                                    }}
                                 />
                           </Col>

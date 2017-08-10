@@ -74,13 +74,7 @@ export default class Fields extends Component{
             <Col xs={12} sm={4} md={3} lg={3}>
               <DatePicker fullWidth={true} ref={obj.code} floatingLabelText={description} value={(this.props.value && date && time) ? new Date(date.split('-')[2], date.split('-')[1]-1, date.split('-')[0], time.split(':')[0], time.split(':')[1], time.split(':')[2]) : ''}
               formatDate={(date)=>{
-                let dateObj = new Date(date);
-                let year = dateObj.getFullYear();
-                let month = dateObj.getMonth()+1;
-                let dt = dateObj.getDate();
-                dt =  dt < 10 ? '0' + dt : dt;
-                month = month < 10 ? '0' + month : month;
-                return dt + '-' + month + '-' + year;
+                return this.props.value;
               }}
               onChange={(nothing,date) => {
                 let dateObj = new Date(date);

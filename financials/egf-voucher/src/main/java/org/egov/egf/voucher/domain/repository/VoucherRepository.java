@@ -15,16 +15,13 @@ import org.egov.egf.voucher.domain.model.Ledger;
 import org.egov.egf.voucher.domain.model.LedgerDetail;
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.domain.model.VoucherSearch;
-import org.egov.egf.voucher.domain.model.Vouchermis;
 import org.egov.egf.voucher.persistence.entity.LedgerDetailEntity;
 import org.egov.egf.voucher.persistence.entity.LedgerEntity;
 import org.egov.egf.voucher.persistence.entity.VoucherEntity;
-import org.egov.egf.voucher.persistence.entity.VouchermisEntity;
 import org.egov.egf.voucher.persistence.queue.repository.VoucherQueueRepository;
 import org.egov.egf.voucher.persistence.repository.LedgerDetailJdbcRepository;
 import org.egov.egf.voucher.persistence.repository.LedgerJdbcRepository;
 import org.egov.egf.voucher.persistence.repository.VoucherJdbcRepository;
-import org.egov.egf.voucher.persistence.repository.VouchermisJdbcRepository;
 import org.egov.egf.voucher.web.contract.VoucherContract;
 import org.egov.egf.voucher.web.requests.VoucherRequest;
 import org.modelmapper.ModelMapper;
@@ -46,9 +43,8 @@ public class VoucherRepository {
 	// private VoucherESRepository voucherESRepository;
 
 	@Autowired
-	private VouchermisJdbcRepository vouchermisJdbcRepository;
-	@Autowired
 	private LedgerJdbcRepository ledgerJdbcRepository;
+
 	@Autowired
 	private LedgerDetailJdbcRepository ledgerDetailJdbcRepository;
 
@@ -191,12 +187,6 @@ public class VoucherRepository {
 	public Voucher save(Voucher voucher) {
 
 		Voucher savedVoucher = voucherJdbcRepository.create(new VoucherEntity().toEntity(voucher)).toDomain();
-
-		VouchermisEntity misEntity = new VouchermisEntity().toEntity(voucher.getVouchermis());
-		misEntity.setVoucherId(savedVoucher.getId());
-
-		Vouchermis savedMis = vouchermisJdbcRepository.create(misEntity).toDomain();
-		savedVoucher.setVouchermis(savedMis);
 
 		Set<Ledger> savedLedgers = new LinkedHashSet<>();
 		Ledger savedLedger = null;

@@ -8,10 +8,10 @@ import java.util.Map;
 import org.egov.models.RequestInfo;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
+import org.egov.property.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,7 +28,7 @@ public class SearchPropertyBuilder {
 	JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -63,9 +63,9 @@ public class SearchPropertyBuilder {
 		userSearchRequestInfo.put("RequestInfo", requestInfo);
 
 		StringBuffer userSearchUrl = new StringBuffer();
-		userSearchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-		userSearchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-		userSearchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
+		userSearchUrl.append(propertiesManager.getUserHostname());
+		userSearchUrl.append(propertiesManager.getUserBasepath());
+		userSearchUrl.append(propertiesManager.getUserSearchpath());
 
 		UserResponseInfo userResponse = null;
 
@@ -75,7 +75,7 @@ public class SearchPropertyBuilder {
 			logger.info("SearchpropertyBuilder userSearchRequestInfo:: " + userSearchRequestInfo);
 			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
-			logger.info("SearchpropertyBuilder userResponse ::" +userResponse);
+			logger.info("SearchpropertyBuilder userResponse ::" + userResponse);
 		}
 		String Ids = "";
 
@@ -172,10 +172,10 @@ public class SearchPropertyBuilder {
 		//
 
 		if (pageNumber == null || pageNumber == 0)
-			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
+			pageNumber = Integer.valueOf(propertiesManager.getDefaultPageNumber().trim());
 
 		if (pageSize == null)
-			pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
 
 		int offset = 0;
 		int limit = pageNumber * pageSize;
@@ -244,10 +244,10 @@ public class SearchPropertyBuilder {
 		searchQuery.append(" ORDER BY upicnumber");
 
 		if (pageNumber == null || pageNumber == 0)
-			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
+			pageNumber = Integer.valueOf(propertiesManager.getDefaultPageNumber().trim());
 
 		if (pageSize == null)
-			pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
 
 		int offset = 0;
 		int limit = pageNumber * pageSize;

@@ -1,5 +1,15 @@
 package org.egov.tradelicense.common.domain.exception;
 
-public class InvalidInputException {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class InvalidInputException extends RuntimeException {
+
+	private static final long serialVersionUID = 8861914629969408745L;
+
+	private String customMsg;
 }

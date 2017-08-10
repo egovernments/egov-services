@@ -25,7 +25,22 @@ class NewServiceRequest extends Component{
 
     constructor(){
       super();
+      this.prepareAndSubmitRequest = this.prepareAndSubmitRequest.bind(this);
+      this.state={
+        ack:"",
+        openDialog:false
+      }
+
     }
+
+    handleOpen = () => {
+      this.setState({openDialog: true});
+    };
+
+    handleRefresh = () => {
+      this.setState({openDialog: false});
+      window.location.reload()
+    };
 
     isGroupExists = (groupCode, groupsArray) => {
       return groupsArray.find((group) => group.code === groupCode);
@@ -79,8 +94,9 @@ class NewServiceRequest extends Component{
                       (field.roles.length == 0 > -1 && field.actions.indexOf(STATUS_NEW) > -1) ||
                       (field.roles.indexOf(userType) > -1 && field.actions.length ==0));*/
 
+      //TODO Remove number condition on tomorrow (10/08/2017)
       let formFields = response.attributes.filter((field) => field.variable
-            && field.code != "CHECKLIST" && field.code !="DOCUMENTS");
+            && field.code != "CHECKLIST" && field.code !="DOCUMENTS" && field.dataType!="number");
 
       let formSections = [{fields : formFields}];
       let requiredFields = formFields.filter((field)=> field.required);
@@ -146,7 +162,6 @@ class NewServiceRequest extends Component{
     componentWillMount(){
 
       //console.log('service code', this.props.match.params.serviceCode);
-
       /*let response=JSON.parse(`{ "responseInfo": null, "tenantId": "default", "serviceCode": "NOC", "attributes": [ { "variable": true, "code": "NOCNAME", "dataType": "string", "required": true, "dataTypeDescription": null, "description": "core.noc.name", "url": null, "groupCode": "group1", "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCAGE", "dataType": "double", "required": true, "dataTypeDescription": null, "description": "core.noc.age", "url": null, "groupCode": "group1", "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCFEES", "dataType": "integer", "required": false, "dataTypeDescription": null, "description": "core.noc.fees", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCDATE", "dataType": "date", "required": false, "dataTypeDescription": null, "description": "core.noc.date", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCENDDATE", "dataType": "datetime", "required": true, "dataTypeDescription": null, "description": "core.noc.enddate", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCSTATUS", "dataType": "singlevaluelist", "required": true, "dataTypeDescription": null, "description": "core.noc.status", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [ { "key": "NOCSTATUSAPPROVED", "name": "core.noc.status.approved", "isActive": true }, { "key": "NOCSTATUSREJECTED", "name": "core.noc.status.rejected", "isActive": true } ] }, { "variable": true, "code": "NOCSLIMIT", "dataType": "multivaluelist", "required": false, "dataTypeDescription": null, "description": "core.noc.limit", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [ { "key": "NOCLIMITONE", "name": "core.noc.limit.one", "isActive": true }, { "key": "NOCLIMITTWO", "name": "core.noc.limit.two", "isActive": true }, { "key": "NOCLIMITTHREE", "name": "core.noc.limit.three", "isActive": true }, { "key": "NOCLIMITFOUR", "name": "core.noc.limit.four", "isActive": false } ] }, { "variable": true, "code": "NOCFILE", "dataType": "file", "required": true, "dataTypeDescription": null, "description": "core.noc.file", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] }, { "variable": true, "code": "NOCMULTIFILE", "dataType": "multifile", "required": false, "dataTypeDescription": null, "description": "core.noc.multifile", "url": null, "groupCode": null, "roles": [], "actions": [], "constraints": null, "attribValues": [] } ] }`);
       /*response['serviceName']="NOC Certificate";
       this.fieldGrouping(response);*/
@@ -154,28 +169,41 @@ class NewServiceRequest extends Component{
       this.setState({pageTitle:""});
       this.props.setLoadingStatus('loading');
 
-      var currentThis=this;
+      var _this=this;
       Api.commonApiPost("/pgr-master/service/v2/_search",{serviceCode : this.props.match.params.serviceCode, keywords:"deliverable"}).then(function(response)
       {
-        currentThis.props.setLoadingStatus('hide');
-        currentThis.fieldGrouping(response[0]);
+        _this.props.setLoadingStatus('hide');
+        _this.fieldGrouping(response[0]);
       },function(err) {
-        currentThis.props.setLoadingStatus('hide');
+        _this.props.setLoadingStatus('hide');
       });
 
     }
 
-    //TODO cover multivaluelist attribValues functionality
+    getAttribValuesFromFields = (form)=>{
+      let attribValues=[];
+      attribValues.push({key:"systemStatus", name:STATUS_NEW});
+      Object.keys(this.props.form).map((key)=>{
+        var name=this.props.form[key];
+        if(name instanceof Array){
+           name.map((value)=>{
+             attribValues.push({key, name:value});
+           });
+        }
+        else
+          attribValues.push({key, name});
+      });
+      return attribValues;
+    }
+
     prepareAndSubmitRequest = () =>{
 
         let userType=localStorage.getItem('type');
         let serviceRequest={};
-        let attribValues = [];
-        let fileAttribValues=[]; //store filestoreId by code
         this.props.setLoadingStatus('loading');
-
+        let _this=this;
         serviceRequest['serviceCode'] = this.props.match.params.serviceCode;
-        attribValues.push({key:"status", name:STATUS_NEW}); //populating Register status
+        serviceRequest["attribValues"]=this.getAttribValuesFromFields(this.props.form);
 
         if(userType === 'CITIZEN'){
           var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
@@ -184,58 +212,84 @@ class NewServiceRequest extends Component{
           userRequest['tenantId']=tenantId;
           serviceRequest['tenantId'] = tenantId;
 
-          let ApiRequests=[];
-          //for getting citizen services
-          ApiRequests.push(Api.commonApiPost("/user/v1/_search",{},userRequest));
+          //for getting citizen profile details to get name, mobile, email
+          Api.commonApiPost("/user/v1/_search",{},userRequest).then(function(userResponse){
 
-          if(this.props.files && this.props.files.length > 0){
-            console.log('files is there');
-            let formData = new FormData();
-            formData.append("tenantId", tenantId);
-            formData.append("module", FILES_MODULE_TAG);
-            this.props.files.map((field)=>{
-                var fileAttribValue={key:field.code, name:""};
-                field.files.map((file)=>{
-                  fileAttribValues.push(fileAttribValue);
-                  formData.append("file", file);
-                });
-            });
+            if(!userResponse)
+               return;
 
-            console.log('fileAttribValues', fileAttribValues);
+            let user=userResponse.user[0];
+            serviceRequest['firstName'] = user.name;
+            serviceRequest['phone'] = user.mobileNumber ;
+            serviceRequest['email'] = user.emailId || "";
 
-          }
-          else{
-            console.log('files is not there');
-          }
+            if(_this.props.files && _this.props.files.length > 0){
+               _this.uploadFilesAndRaiseRequest(serviceRequest, _this.props.files, tenantId);
+            }
+            else{
+              console.log('files is not there');
+              _this.raiseRequest(serviceRequest);
+            }
+          }, function(err) {
+            _this.props.setLoadingStatus('hide');
 
-          Promise.all([
-              Api.commonApiPost("/user/v1/_search",{},userRequest),
-              Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:"deliverable"},{})
-          ])
-          .then((responses)=>{
-             console.log('responses', responses);
-             let user=responses[0].user[0];
-             serviceRequest['firstName'] = user.name;
-             serviceRequest['phone'] = user.mobileNumber ;
-             serviceRequest['email'] = user.emailId || "";
-             serviceRequest['attribValues']=attribValues;
-
-
-             console.log('serviceRequest', serviceRequest);
-
-
-          }).catch((err) => {
-            this.props.setLoadingStatus('hide');
           });
         }
-
     }
 
+    uploadFilesAndRaiseRequest=(serviceRequest, files, tenantId)=>{
+      let fileAttribValues=[]; //store filestoreId by code
+      var _this=this;
+      let formData = new FormData();
+      formData.append("tenantId", tenantId);
+      formData.append("module", FILES_MODULE_TAG);
+      files.map((field)=>{
+          var fileAttribValue={key:field.code, name:""};
+          field.files.map((file)=>{
+            fileAttribValues.push(fileAttribValue);
+            formData.append("file", file);
+          });
+      });
 
+      Api.commonApiPost("/filestore/v1/files",{},formData).then(function(fileResponse){
+        fileResponse.files.map((file, index)=>{
+          fileAttribValues[index]={...fileAttribValues[index], name:file.fileStoreId};
+        });
+        serviceRequest["attribValues"]=[...serviceRequest.attribValues, ...fileAttribValues];
+        _this.raiseRequest(serviceRequest);
+      }, function(err){
+        _this.props.setLoadingStatus('hide');
+      });
+    }
+
+    raiseRequest=(serviceRequest)=>{
+      var _this=this;
+      console.log('raising request...', serviceRequest);
+
+      Api.commonApiPost("/pgr/seva/v1/_create",{},{serviceRequest}).then(function(response){
+        _this.props.setLoadingStatus("hide");
+        console.log('request submited succesfully', response);
+        var srn = response.serviceRequests[0].serviceRequestId;
+        var ack = `Your application is received and is under process. ${translate('pgr.lbl.srn')} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
+        _this.setState({ack, openDialog:true});
+      }, function(err) {
+        _this.props.setLoadingStatus('hide');
+        _this.props.toggleDailogAndSetText(true, "Oops something went wrong, please try again!");
+      });
+
+    }
 
     render(){
 
        const formSections=this.renderFormSection();
+
+       const actions = [
+          <FlatButton
+            label={translate('core.lbl.ok')}
+            primary={true}
+            onTouchTap={this.handleRefresh}
+          />
+        ];
 
        return(
          <Grid fluid={true}>
@@ -244,9 +298,16 @@ class NewServiceRequest extends Component{
            <br/>
            <Row>
              <Col xs={12} className="text-center">
-               <RaisedButton label="Submit" fullWidth={false} primary={true} disabled={!this.props.isFormValid} />
+               <RaisedButton label="Submit" fullWidth={false} onClick={this.prepareAndSubmitRequest} primary={true} disabled={!this.props.isFormValid} />
              </Col>
            </Row>
+           <Dialog
+             actions={actions}
+             modal={false}
+             open={this.state.openDialog}
+             onRequestClose={this.handleRefresh}>
+             {this.state.ack}
+           </Dialog>
          </Grid>
        )
     }

@@ -863,7 +863,7 @@ $.validator.addMethod('alloName', function(value) {
 }, 'Please enter a valid name.');
 
 $.validator.addMethod('alphaNumer', function(value) {
-  return /^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+|[0-9])[0-9a-zA-Z]*$/i.test(value);
+  return value ? /^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+|[0-9])[0-9a-zA-Z]*$/i.test(value) : true;
 }, 'Please enter only Alpha/Numeric Value');
 
 

@@ -26,7 +26,6 @@ export default (state = defaultState, action) => {
             }
 
         case "SET_REQUIRED_FIELDS":
-            console.log(action.requiredFields);
             return {
               ...state,
               requiredFields: action.requiredFields,
@@ -42,7 +41,7 @@ export default (state = defaultState, action) => {
                     newRFields.push(val);
                 }
             })
-            var _isFormValid = reValidate(state.form, state.fieldErrors, _rFields);
+            var _isFormValid = reValidate(state.form, state.fieldErrors, newRFields);
             return {
                 ...state,
                 requiredFields: newRFields,

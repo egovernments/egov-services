@@ -10,8 +10,8 @@ import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.InvalidIDFormatException;
 import org.egov.models.ResponseInfo;
+import org.egov.property.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,7 +29,7 @@ import org.springframework.web.context.request.WebRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	@Autowired
-	private Environment environment;
+	private PropertiesManager propertiesManager;
 
 	/**
 	 * Description : Null pointer exception handler
@@ -43,12 +43,12 @@ public class GlobalExceptionHandler {
 	public ErrorRes nullPointerException(NullPointerException ex) {
 		ex.printStackTrace();
 		Map<String, String> errors = new HashMap<String, String>();
-		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(),  propertiesManager.getInvalidInput(), null,
 				errors);
 		List<Error> errorList = new ArrayList<Error>();
 		errorList.add(error);
 		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(environment.getProperty("failed"));
+		responseInfo.setStatus(propertiesManager.getFailed());
 		return new ErrorRes(responseInfo, errorList);
 	}
 
@@ -67,12 +67,12 @@ public class GlobalExceptionHandler {
 			errors.put(error.getField(), error.getDefaultMessage());
 		}
 
-		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
 				errors);
 		List<Error> errorList = new ArrayList<Error>();
 		errorList.add(error);
 		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(environment.getProperty("failed"));
+		responseInfo.setStatus(propertiesManager.getFailed());
 		return new ErrorRes(responseInfo, errorList);
 	}
 
@@ -88,14 +88,14 @@ public class GlobalExceptionHandler {
 
 	public ErrorRes unknownException(Exception ex, WebRequest req) {
 		if (ex instanceof InvalidInputException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
 					null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
@@ -108,10 +108,10 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidPropertyBoundaryException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidPropertyBoundaryException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof ValidationUrlNotFoundException) {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
@@ -122,10 +122,10 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((ValidationUrlNotFoundException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((ValidationUrlNotFoundException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidIDFormatException) {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ((InvalidIDFormatException) ex).getCustomMsg(),
@@ -135,7 +135,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidIDFormatException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidIDFormatException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
@@ -147,7 +147,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((IdGenerationException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((IdGenerationException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
@@ -161,34 +161,34 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidUpdatePropertyException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidUpdatePropertyException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		}
 
 		else if (ex instanceof PropertySearchException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
 					null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((PropertySearchException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((PropertySearchException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((PropertySearchException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 
 		} else if (ex instanceof DuplicateIdException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("duplicate.code"), null,
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateCode(), null,
 					null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((DuplicateIdException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((DuplicateIdException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
@@ -200,7 +200,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((PropertyUnderWorkflowException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((PropertyUnderWorkflowException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
@@ -212,80 +212,80 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidCodeException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidCodeException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidFloorException) {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					environment.getProperty("invalid.property.floor"), ((InvalidFloorException) ex).getMsgDetails(),
+					propertiesManager.getInvalidPropertyFloor(), ((InvalidFloorException) ex).getMsgDetails(),
 					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidFloorException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidFloorException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidFloorException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidVacantLandException) {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					environment.getProperty("invalid.property.vacantland"),
+					propertiesManager.getInvalidPropertyVacantland(),
 					((InvalidVacantLandException) ex).getMsgDetails(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidVacantLandException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidVacantLandException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidVacantLandException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidGuidanceValueException) {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					environment.getProperty("invalid.property.guidancevalue"),
+					propertiesManager.getInvalidGuidanceVal(),
 					((InvalidGuidanceValueException) ex).getMsgDetails(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidGuidanceValueException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidGuidanceValueException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidGuidanceValueException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidFactorValueException) {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					environment.getProperty("invalid.property.factorvalue"),
+					propertiesManager.getInvalidFactorValue(),
 					((InvalidFactorValueException) ex).getMsgDetails(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidFactorValueException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidFactorValueException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidFactorValueException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		}
 		else if (ex instanceof PropertyTaxPendingException) {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					environment.getProperty("invalid.titletransfer.tax.message"),
+					propertiesManager.getInvalidTaxMessage(),
 					((PropertyTaxPendingException) ex).getMessage(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((PropertyTaxPendingException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((PropertyTaxPendingException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((PropertyTaxPendingException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		}
 
@@ -293,7 +293,7 @@ public class GlobalExceptionHandler {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,
 					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setStatus(environment.getProperty("failed"));
+			responseInfo.setStatus(propertiesManager.getFailed());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);

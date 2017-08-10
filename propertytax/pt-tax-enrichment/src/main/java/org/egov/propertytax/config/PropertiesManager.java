@@ -60,6 +60,10 @@ public class PropertiesManager {
 	private String createPropertyTaxCalculated;
 
 	private String createPropertyWorkflow;
+	
+	private String demandBusinessService;
+	
+	private String dateFormat;
 
 	public String getServerContextPath() {
 		return environment.getProperty("server.contextPath");
@@ -135,5 +139,13 @@ public class PropertiesManager {
 
 	public String getCreatePropertyWorkflow() {
 		return environment.getProperty("egov.propertytax.create.workflow.started");
+	}
+	
+	public String getDemandBusinessService(){
+		return environment.getProperty("businessService");
+	}
+	
+	public String getDateFormat(){
+		return environment.getProperty("dd/MM/yyyy hh:mm:ss");
 	}
 }

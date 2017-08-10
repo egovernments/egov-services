@@ -101,6 +101,8 @@ class FormSection extends Component{
         const fields=this.renderFields(this.props.fields);
         const files=this.renderFiles(this.props.fields);
 
+        const obj={code:"test", required:true, description:"Test DateTime"};
+
         return(
           <Card style={styles.cardStyle}>
             {this.getTitle(this.props.name, this.props.constraint)}

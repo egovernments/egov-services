@@ -57,8 +57,8 @@ public class VoucherService {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
-        final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
-                + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
+        final String createVoucherUrl = headers.getOrigin() + applicationProperties.getEgfServiceVoucherCreatePath()
+                + "?tenantId=" + tenantId;
         log.debug("Voucher API Request URL :: " + createVoucherUrl);
         log.debug("VoucherRequest :: " + voucherRequest);
         final Error err = new Error();

@@ -43,7 +43,9 @@ import org.egov.models.WallTypeResponse;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.DuplicateIdException;
+import org.egov.property.exception.InvalidCodeException;
 import org.egov.property.exception.InvalidInputException;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.model.ExcludeFileds;
@@ -71,6 +73,9 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Autowired
 	private PropertyMasterRepository propertyMasterRepository;
+
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	@Override
 	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
@@ -585,6 +590,15 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
+			if (usageMaster.getParent() != null || !usageMaster.getParent().isEmpty()) {
+				Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
+						usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+
+				if (!isParentCodeExists)
+					throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+							usageMasterRequest.getRequestInfo());
+			}
+
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(usageMaster);
@@ -620,6 +634,15 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
+			if (usageMaster.getParent() != null || !usageMaster.getParent().isEmpty()) {
+				Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
+						usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+
+				if (!isParentCodeExists)
+					throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+							usageMasterRequest.getRequestInfo());
+			}
+
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(usageMaster);
@@ -644,13 +667,13 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet) throws Exception {
+			Integer offSet, String parent) throws Exception {
 
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 
 		try {
 			List<UsageMaster> usageList = propertyMasterRepository.searchUsage(tenantId, ids, name, code, nameLocal,
-					active, isResidential, orderNumber, pageSize, offSet);
+					active, isResidential, orderNumber, pageSize, offSet, parent);
 			usageMasterResponse.setUsageMasters(usageList);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			usageMasterResponse.setResponseInfo(responseInfo);
@@ -913,8 +936,8 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Override
 	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset, Integer year)
-			throws Exception {
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset,
+			Integer year) throws Exception {
 
 		List<Depreciation> depreciations = propertyMasterRepository.searchDepreciations(tenantId, ids, fromYear, toYear,
 				code, nameLocal, pageSize, offset, year);
@@ -1022,7 +1045,7 @@ public class MasterServiceImpl implements Masterservice {
 	public DocumentTypeResponse createDocumentTypeMaster(String tenantId, DocumentTypeRequest documentTypeRequest)
 			throws Exception {
 		for (DocumentType documentType : documentTypeRequest.getDocumentType()) {
-			AuditDetails auditDetails=getAuditDetail(documentTypeRequest.getRequestInfo());
+			AuditDetails auditDetails = getAuditDetail(documentTypeRequest.getRequestInfo());
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordWithTenantIdAndNameExits(
 					documentType.getTenantId(), documentType.getCode(), documentType.getApplication().toString(),
 					ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, null);

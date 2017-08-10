@@ -84,6 +84,9 @@ let menuConvention={
   "Water Charge.WCMS Masters.MeterWaterRates.ModifyMeterWaterRatesApi":"/search/wc/meterWaterRates/update",
   "Water Charge.WCMS Masters.MeterWaterRates.CreatMeterWaterRatesApi":"/create/wc/meterWaterRates",
 
+  "Collection.Collection-Masters.Business Detail.CreateBusinessDetailMaster":"/create/collection/businessDetails",
+  "Collection.Collection-Masters.Business Detail.ModifyBusinessDetailMaster":"/search/collection/businessDetails/update",
+  "Collection.Collection-Masters.Business Detail.ViewBusinessDetailMaster":"/search/collection/businessCategory/view",
   "Collection.Collection-Masters.Business Category.CreateBusinessCategoryMaster":"/create/collection/businessCategory",
   "Collection.Collection-Masters.Business Category.ModifyBusinessCategoryMaster":"/search/collection/businessCategory/update",
   "Collection.Collection-Masters.Business Category.ViewBusinessCategoryMaster":"/search/collection/businessCategory/view",

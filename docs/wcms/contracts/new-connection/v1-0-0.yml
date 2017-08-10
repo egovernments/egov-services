@@ -580,6 +580,13 @@ definitions:
           - ACTIVE
           - INACTIVE
           - INPROGRESS
+      manualReceiptDate:
+        type: integer
+        format: long
+        description: receipt date of special donation charges for legacy connection.
+      manualReceiptNumber:
+        type: string
+        description: receipt number of specia donation charges for legacy connection.
       sumpCapacity: 
         type: number
         description: Capacity of the sump.

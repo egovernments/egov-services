@@ -9,7 +9,6 @@ import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.joda.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,7 +34,7 @@ public class TradeLicenseEntity {
 
 	private String oldLicenseNumber;
 
-	private LocalDate applicationDate;
+	private String applicationDate;
 
 	private String adhaarNumber;
 
@@ -69,13 +68,13 @@ public class TradeLicenseEntity {
 
 	private Long uomId;
 
-	private Double uomValue;
+	private Double quantity;
 
 	private String remarks;
 
-	private LocalDate tradeCommencementDate;
+	private String tradeCommencementDate;
 
-	private LocalDate agrementDate;
+	private String agrementDate;
 
 	private String agrementNo;
 
@@ -83,7 +82,7 @@ public class TradeLicenseEntity {
 
 	private Boolean active = true;
 
-	private LocalDate expiryDate;
+	private String expiryDate;
 
 	private List<LicenseFeeDetail> feeDetails;
 
@@ -141,7 +140,7 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setUomId(this.uomId);
 
-		tradeLicense.setUomValue(this.uomValue);
+		tradeLicense.setQuantity(this.quantity);
 
 		tradeLicense.setRemarks(this.remarks);
 
@@ -214,7 +213,7 @@ public class TradeLicenseEntity {
 
 		this.uomId = tradeLicense.getUomId();
 
-		this.uomValue = tradeLicense.getUomValue();
+		this.quantity = tradeLicense.getQuantity();
 
 		this.remarks = tradeLicense.getRemarks();
 
@@ -235,7 +234,7 @@ public class TradeLicenseEntity {
 		this.supportDocuments = tradeLicense.getSupportDocuments();
 
 		this.auditDetails = tradeLicense.getAuditDetails();
-		
+
 		return this;
 	}
 

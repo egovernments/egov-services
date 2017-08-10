@@ -6,8 +6,11 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
+import org.egov.tradelicense.common.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
@@ -23,6 +26,8 @@ import org.springframework.validation.SmartValidator;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * CategoryService implementation class
  * 
@@ -31,6 +36,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class TradeLicenseService {
 
 	@Autowired
@@ -67,7 +73,7 @@ public class TradeLicenseService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		//validateTradeLicense(tradeLicenses, requestInfo);
+		validateTradeLicense(tradeLicenses, requestInfo);
 		for (TradeLicense license : tradeLicenses) {
 			license.setId(tradeLicenseRepository.getNextSequence());
 		}
@@ -106,14 +112,18 @@ public class TradeLicenseService {
 
 			URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
 					.queryParam("tenantId", tradeLicense.getTenantId())
-					.queryParam("id", Long.valueOf(supportDocument.getDocumentTypeId())).build(true).encode().toUri();
+					.queryParam("ids", Long.valueOf(supportDocument.getDocumentTypeId())).build(true).encode().toUri();
 
+			DocumentTypeResponse documentTypeResponse = null;
 			try {
 
-				Object obj = restTemplate.postForObject(uri, requestInfo, Object.class);
+				documentTypeResponse = restTemplate.postForObject(uri, requestInfo, DocumentTypeResponse.class);
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Error while connecting to the document type end point");
+			}
+			if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes().size() == 0) {
+				throw new InvalidInputException("Invalid document type ");
 			}
 		}
 	}
@@ -128,14 +138,19 @@ public class TradeLicenseService {
 				.append(propertiesManager.getCategoryServiceSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
-				.queryParam("id", Long.valueOf(subCategoryId)).build(true).encode().toUri();
+				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("ids", Long.valueOf(subCategoryId))
+				.build(true).encode().toUri();
 
+		CategoryResponse categoryResponse = null;
 		try {
 
-			Object obj = restTemplate.postForObject(uri, requestInfo, Object.class);
+			categoryResponse = restTemplate.postForObject(uri, requestInfo, CategoryResponse.class);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error while connecting to the category end point");
+		}
+		if (categoryResponse == null || categoryResponse.getCategories().size() == 0) {
+			throw new InvalidInputException("Invalid sub category type ");
 		}
 	}
 
@@ -149,14 +164,19 @@ public class TradeLicenseService {
 				.append(propertiesManager.getCategoryServiceSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
-				.queryParam("id", Long.valueOf(categoryId)).build(true).encode().toUri();
+				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("id", Long.valueOf(categoryId))
+				.build(true).encode().toUri();
 
+		CategoryResponse categoryResponse = null;
 		try {
 
-			Object obj = restTemplate.postForObject(uri, requestInfo, Object.class);
+			categoryResponse = restTemplate.postForObject(uri, requestInfo, CategoryResponse.class);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error while connecting to the sub category end point");
+		}
+		if (categoryResponse == null || categoryResponse.getCategories().size() == 0) {
+			throw new InvalidInputException("Invalid category type ");
 		}
 	}
 
@@ -170,14 +190,19 @@ public class TradeLicenseService {
 				.append(propertiesManager.getLocationServiceSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
-				.queryParam("id", Integer.valueOf(wardId)).build(true).encode().toUri();
+				.queryParam("boundaryTypeName", "WARD").queryParam("hierarchyTypeName", "REVENUE")
+				.queryParam("tenantId", tradeLicense.getTenantId()).build(true).encode().toUri();
 
+		Object locationObj = null;
 		try {
 
-			Object obj = restTemplate.postForObject(uri, requestInfo, Object.class);
+			locationObj = restTemplate.postForObject(uri, requestInfo, Object.class);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error while connecting to the location end point");
+		}
+		if(locationObj == null){
+			throw new InvalidInputException("Invalid location ward ");
 		}
 	}
 
@@ -191,14 +216,19 @@ public class TradeLicenseService {
 				.append(propertiesManager.getLocationServiceSearchPath());
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
-				.queryParam("id", Integer.valueOf(wardId)).build(true).encode().toUri();
+				.queryParam("boundaryTypeName", "LOCALITY").queryParam("hierarchyTypeName", "REVENUE")
+				.queryParam("tenantId", tradeLicense.getTenantId()).build(true).encode().toUri();
 
+		Object locationObj = null;
 		try {
 
-			Object obj = restTemplate.postForObject(uri, requestInfo, Object.class);
+			locationObj = restTemplate.postForObject(uri, requestInfo, Object.class);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error while connecting to the location ward end point");
+		}
+		if(locationObj == null){
+			throw new InvalidInputException("Invalid location ");
 		}
 	}
 

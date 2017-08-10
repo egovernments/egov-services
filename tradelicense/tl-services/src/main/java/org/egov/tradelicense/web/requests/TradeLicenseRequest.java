@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TradeLicenseRequest {
 
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo = new RequestInfo();
 
 	@JsonProperty("licesnses")

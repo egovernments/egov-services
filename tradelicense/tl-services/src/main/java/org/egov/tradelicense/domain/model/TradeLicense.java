@@ -10,7 +10,6 @@ import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.hibernate.validator.constraints.Email;
-import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -43,7 +42,7 @@ public class TradeLicense {
 	private String oldLicenseNumber;
 
 	@JsonProperty("applicationDate")
-	private LocalDate applicationDate;
+	private String applicationDate;
 
 	@JsonProperty("adhaarNumber")
 	@Pattern(regexp = "[0-9]{12}")
@@ -103,26 +102,31 @@ public class TradeLicense {
 	@JsonProperty("tradeType")
 	private BusinessNature tradeType;
 
+	@NotNull
 	@JsonProperty("categoryId")
 	private Long categoryId;
 
+	@NotNull
 	@JsonProperty("subCategoryId")
 	private Long subCategoryId;
 
+	@NotNull
 	@JsonProperty("uomId")
 	private Long uomId;
 
-	@JsonProperty("uomValue")
-	private Double uomValue;
+	@NotNull
+	@JsonProperty("quantity")
+	private Double quantity;
 
 	@JsonProperty("remarks")
 	private String remarks;
 
+	@NotNull
 	@JsonProperty("tradeCommencementDate")
-	private LocalDate tradeCommencementDate;
+	private String tradeCommencementDate;
 
 	@JsonProperty("agrementDate")
-	private LocalDate agrementDate;
+	private String agrementDate;
 
 	@JsonProperty("agrementNo")
 	private String agrementNo;
@@ -134,13 +138,16 @@ public class TradeLicense {
 	private Boolean active = true;
 
 	@JsonProperty("expiryDate")
-	private LocalDate expiryDate;
+	private String expiryDate;
 
 	@JsonProperty("feeDetails")
 	private List<LicenseFeeDetail> feeDetails;
 
 	@JsonProperty("supportDocuments")
 	private List<SupportDocument> supportDocuments;
+
+	@JsonProperty("status")
+	private Long status;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

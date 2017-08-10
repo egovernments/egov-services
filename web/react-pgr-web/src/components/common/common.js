@@ -560,7 +560,21 @@ var localationData = {
   "tl.update.groups.licensevalidity.natureofbusiness": "Nature Of Business",
   "tl.update.groups.licensevalidity.licensecategory": "License Category",
   "tl.update.groups.licensedocumenttype.basedonfinancialyear": "Based on Financial Year",
-  "wc.create.groups.applicationParticular.title":"Application Particular"
+  "wc.create.groups.applicationParticular.title":"Application Particular",
+
+  "collection.search.categorytype.title":"Serach Receipt",
+  "collection.create.serviceType":"Service Type",
+  "collection.create.fromDate":"From Date",
+  "collection.create.toDate":"To Date",
+  "collection.create.receiptNumber":"Receipt Number",
+  "collection.create.collectedBy":"Collected By",
+  "collection.create.status":"Status",
+  "collection.create.modeOfPayment":"Mode Of Payment",
+  "collection.search.receiptDate":"Receipt Number",
+  "collection.search.billNumber":"Bill Number",
+  "collection.search.billDescription":"Bill Description",
+  "collection.search.paidBy":"Paid By",
+  "collection.search.amount":"Amount"
 }
 
 export function translate(locale_text){

@@ -61,7 +61,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "serviceType",
-							"jsonPath": "serviceType",
+							"jsonPath": "businessCode",
 							"label": "collection.create.serviceType",
 							"pattern": "",
 							"type": "singleValueList",
@@ -69,7 +69,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"url":"/collection-services/receipts/_getDistinctBusinessDetails|$..code|$..name"
+							"url":"collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name"
 						},
 						{
 							"name": "fromDate",
@@ -95,7 +95,7 @@ var dat = {
 						},
 						{
 							"name": "receiptNumber",
-							"jsonPath": "receiptNumber",
+							"jsonPath": "receiptNumbers",
 							"label": "collection.create.receiptNumber",
 							"pattern": "",
 							"type": "text",
@@ -114,7 +114,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"url":"/collection-services/receipts/_getDistinctCollectedBy|$..id|$..name"
+							"url":"collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..id|$..name"
 						},
 						{
 							"name": "status",
@@ -126,12 +126,12 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"url":"",
+							"url":"collection-services/receipts/_status?tenantId=default|$.status.*|$.status.*",
 							"defaultValue":[]
 						},
 						{
 		        "name": "modeOfPayment",
-		        "jsonPath": "modeOfPayment",
+		        "jsonPath": "paymentType",
 		        "label": "collection.create.modeOfPayment",
 		        "pattern": "",
 		        "type": "singleValueList",
@@ -140,10 +140,7 @@ var dat = {
 		        "url": "",
 		        "requiredErrMsg": "",
 		        "patternErrMsg": "",
-		        "defaultValue": [{
-		            "key": "",
-		            "value": null
-		          },
+		        "defaultValue": [
 		          {
 		            "key": "Cash",
 		            "value": "Cash"
@@ -175,11 +172,11 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "collection.create.code"},{label: "collection.search.result.categoryType"}, {label: "collection.search.result.description"}, {label: "collection.search.result.active"}],
-			"values": ["code","name", "description", "active"],
-			"resultPath": "CategoryTypes",
+			"header": [{label: "collection.create.receiptNumber"},{label: "collection.search.receiptDate"}, {label: "collection.create.serviceType"}, {label: "collection.search.billNumber"},{label: "collection.search.billDescription"},{label: "collection.search.paidBy"},{label: "collection.search.amount"},{label: "collection.create.modeOfPayment"},{label:"collection.create.status"}],
+			"values": ["Bill[0].billDetails[0].receiptNumber","Bill[0].billDetails[0].receiptDate", "Bill[0].billDetails[0].businessService", "Bill[0].billDetails[0].billNumber","Bill[0].billDetails[0].billDescription","Bill[0].paidBy","Bill[0].billDetails[0].amountPaid","Bill[0].billDetails[0].collectionType","Bill[0].billDetails[0].status"],
+			"resultPath": "Receipt",
 			"rowClickUrlUpdate": "/update/collection/categoryType/{id}",
-			"rowClickUrlView": "/view/collection/categoryType/{id}"
+			"rowClickUrlView": "/view/collection/receipt/{id}"
 			}
 	}
   // ,

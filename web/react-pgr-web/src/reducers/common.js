@@ -97,6 +97,7 @@ let menuConvention={
   "Collection.Collection-Masters.Business Category.ModifyBusinessCategoryMaster":"/search/collection/businessCategory/update",
   "Collection.Collection-Masters.Business Category.ViewBusinessCategoryMaster":"/search/collection/businessCategory/view",
   "Collection.Collection-Transactions.CreateReceipt":"/transaction/collection/collection",
+  "Collection.Collection-Transactions.SearchReceipt":"/search/collection/receipt/view",
 
   "Trade License.Trade License Masters.License Category.CreateLicenseCategory":"/create/tl/CreateLicenseCategory",
   "Trade License.Trade License Masters.License Category.ViewLicenseCategory":"/search/tl/CreateLicenseCategory/view",

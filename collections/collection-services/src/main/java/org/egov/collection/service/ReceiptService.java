@@ -410,6 +410,7 @@ public class ReceiptService {
 
 		}
 		if(null == businessDetailsResponse.getBusinessDetails() || businessDetailsResponse.getBusinessDetails().isEmpty()){
+			LOGGER.info("Buisness "+businessDetailsResponse.toString());
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 		}

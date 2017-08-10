@@ -36,8 +36,8 @@ public class BusinessDetailsRepository {
         requestInfoWrapper.setRequestInfo(requestInfo);
         String businessDetailsCodes = String.join(",", businessCodes);
         LOGGER.info("URI: "+url);
-        LOGGER.info("tenantd: "+tenantId);
-        LOGGER.info("buisness: "+businessDetailsCodes);
+        LOGGER.info("tenantid: "+tenantId);
+        LOGGER.info("businessDetailsCodes: "+businessDetailsCodes);
         return restTemplate.postForObject(url, requestInfoWrapper,
                     BusinessDetailsResponse.class,tenantId,businessDetailsCodes);
     }

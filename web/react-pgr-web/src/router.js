@@ -87,6 +87,7 @@ import Create from './components/framework/create';
 import View from './components/framework/view';
 import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
+import Inbox from './components/framework/inbox';
 
 const base = "";
 
@@ -99,7 +100,7 @@ const Main = () => {
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
-        <Route exact path={base+'/services/apply/:serviceCode'} component={VisibleNewServiceRequest}/>
+        <Route exact path={base+'/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>
@@ -191,6 +192,7 @@ const Main = () => {
         {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
+		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
     </Switch>
   </main>

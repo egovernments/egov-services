@@ -125,6 +125,8 @@ public class Instrument extends Auditable {
 	 * instrumentStatus gives the current status of the instrument.
 	 */
 	private FinancialStatusContract financialStatus;
+	
+	private String remittanceVoucherId;
 
 	/*
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt

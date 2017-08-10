@@ -22,6 +22,8 @@ public class AttributeDefinition {
     private String description;
     private String url;
     private String groupCode;
+    private int order;
+    private String serviceCode;
     private List<AttributeValueDefinition> attribValues;
 
     public AttributeDefinition(org.egov.pgr.domain.model.AttributeDefinition attributeDefinition) {
@@ -33,7 +35,31 @@ public class AttributeDefinition {
         this.description = attributeDefinition.getDescription();
         this.url = attributeDefinition.getUrl();
         this.groupCode = attributeDefinition.getGroupCode();
+        this.order = attributeDefinition.getOrder();
         this.attribValues = mapAttributeValues(attributeDefinition.getValueDefinitions());
+    }
+
+    public org.egov.pgr.domain.model.AttributeDefinition toDomain(String tenantId){
+        return org.egov.pgr.domain.model.AttributeDefinition.builder()
+                    .readOnly(variable)
+                    .description(description)
+                    .dataTypeDescription(dataTypeDescription)
+                    .dataType(dataType)
+                    .code(code)
+                    .groupCode(groupCode)
+                    .required(required)
+                    .order(order)
+                    .url(url)
+                    .serviceCode(serviceCode)
+                    .tenantId(tenantId)
+                    .valueDefinitions(mapAttribValuesToDomainValues())
+                    .build();
+    }
+
+    private List<ValueDefinition> mapAttribValuesToDomainValues(){
+        return attribValues.stream()
+                    .map(AttributeValueDefinition::toDomain)
+                    .collect(Collectors.toList());
     }
 
     private List<AttributeValueDefinition> mapAttributeValues(List<ValueDefinition> values) {

@@ -10,6 +10,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -62,7 +63,7 @@ public class ServiceType {
                 .lastModifiedBy(lastModifiedBy)
                 .build();
     }
-    
+
     public boolean isTenantIdAbsent(){
         return isEmpty(tenantId) || tenantId == null;
     }
@@ -74,4 +75,10 @@ public class ServiceType {
     public boolean isServiceNameAbsent(){
         return isEmpty(serviceName) || serviceName == null;
     }
+
+//    private List<org.egov.pgr.persistence.dto.AttributeDefinition> mapToDtoAttribute(){
+//        return attributes.stream()
+//                .map(AttributeDefinition::toDto)
+//                .collect(Collectors.toList());
+//    }
 }

@@ -250,13 +250,14 @@ public class InstrumentJdbcRepositoryTest {
 		instrumentSearch.setBranchName("branchName");
 		instrumentSearch.setDrawer("drawer");
 		instrumentSearch.setFinancialStatus(FinancialStatusContract.builder().id("1").build());
+		instrumentSearch.setRemittanceVoucherId("1");
 		instrumentSearch.setInstrumentType(InstrumentType.builder().id("1").build());
 		instrumentSearch.setPayee("payee");
 		instrumentSearch.setSerialNo("serialNo");
 		instrumentSearch.setSurrenderReason(SurrenderReason.builder().id("1").build());
 		instrumentSearch.setTransactionNumber("transactionNumber");
 		instrumentSearch.setTransactionType(TransactionType.Credit);
-		instrumentSearch.setTenantId("tenantId");
+		instrumentSearch.setTenantId("default");
 		instrumentSearch.setPageSize(500);
 		instrumentSearch.setOffset(0);
 		instrumentSearch.setSortBy("id desc");
@@ -265,19 +266,22 @@ public class InstrumentJdbcRepositoryTest {
 
 	private InstrumentSearch getInstrumentSearch() {
 		InstrumentSearch instrumentSearch = new InstrumentSearch();
+		instrumentSearch.setId("1");
+		instrumentSearch.setIds("1");
 		instrumentSearch.setAmount(BigDecimal.ONE);
 		instrumentSearch.setBank(BankContract.builder().code("code").build());
 		instrumentSearch.setBankAccount(BankAccountContract.builder().accountNumber("accountNumber").build());
 		instrumentSearch.setBranchName("branchName");
 		instrumentSearch.setDrawer("drawer");
 		instrumentSearch.setFinancialStatus(FinancialStatusContract.builder().id("1").build());
+		instrumentSearch.setRemittanceVoucherId("1");
 		instrumentSearch.setInstrumentType(InstrumentType.builder().name("name").build());
 		instrumentSearch.setPayee("payee");
 		instrumentSearch.setSerialNo("serialNo");
 		instrumentSearch.setSurrenderReason(SurrenderReason.builder().id("1").build());
 		instrumentSearch.setTransactionNumber("transactionNumber");
 		instrumentSearch.setTransactionType(TransactionType.Credit);
-		instrumentSearch.setTenantId("tenantId");
+		instrumentSearch.setTenantId("default");
 		instrumentSearch.setPageSize(500);
 		instrumentSearch.setOffset(0);
 		instrumentSearch.setSortBy("id desc");

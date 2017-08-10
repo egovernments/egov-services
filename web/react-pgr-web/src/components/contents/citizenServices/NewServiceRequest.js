@@ -20,6 +20,7 @@ import FormSection from './FormSection';
 
 const STATUS_NEW = "DSNEW";
 const FILES_MODULE_TAG = "citizenservices";
+const CITIZEN_SERVICES_KEYWORD = "Deliverable_Service";
 
 class NewServiceRequest extends Component{
 
@@ -94,9 +95,8 @@ class NewServiceRequest extends Component{
                       (field.roles.length == 0 > -1 && field.actions.indexOf(STATUS_NEW) > -1) ||
                       (field.roles.indexOf(userType) > -1 && field.actions.length ==0));*/
 
-      //TODO Remove number condition on tomorrow (10/08/2017)
       let formFields = response.attributes.filter((field) => field.variable
-            && field.code != "CHECKLIST" && field.code !="DOCUMENTS" && field.dataType!="number");
+          && field.code != "CHECKLIST" && field.code !="DOCUMENTS");
 
       let formSections = [{fields : formFields}];
       let requiredFields = formFields.filter((field)=> field.required);
@@ -104,7 +104,6 @@ class NewServiceRequest extends Component{
       this.props.initForm(requiredFields);
 
       this.setState({
-          pageTitle:response.serviceName,
           formSections
       });
 
@@ -166,11 +165,11 @@ class NewServiceRequest extends Component{
       /*response['serviceName']="NOC Certificate";
       this.fieldGrouping(response);*/
 
-      this.setState({pageTitle:""});
+      this.setState({pageTitle:this.props.match.params.serviceName});
       this.props.setLoadingStatus('loading');
 
       var _this=this;
-      Api.commonApiPost("/pgr-master/service/v2/_search",{serviceCode : this.props.match.params.serviceCode, keywords:"deliverable"}).then(function(response)
+      Api.commonApiPost("/pgr-master/service/v2/_search",{serviceCode : this.props.match.params.serviceCode, keywords:CITIZEN_SERVICES_KEYWORD}).then(function(response)
       {
         _this.props.setLoadingStatus('hide');
         _this.fieldGrouping(response[0]);
@@ -265,16 +264,15 @@ class NewServiceRequest extends Component{
     raiseRequest=(serviceRequest)=>{
       var _this=this;
       console.log('raising request...', serviceRequest);
-
       Api.commonApiPost("/pgr/seva/v1/_create",{},{serviceRequest}).then(function(response){
         _this.props.setLoadingStatus("hide");
         console.log('request submited succesfully', response);
         var srn = response.serviceRequests[0].serviceRequestId;
-        var ack = `Your application is received and is under process. ${translate('pgr.lbl.srn')} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
+        var ack = `${translate('csv.lbl.underprocess')}. ${translate('pgr.lbl.srn')} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
         _this.setState({ack, openDialog:true});
       }, function(err) {
         _this.props.setLoadingStatus('hide');
-        _this.props.toggleDailogAndSetText(true, "Oops something went wrong, please try again!");
+        _this.props.toggleDailogAndSetText(true, err.message);
       });
 
     }
@@ -298,7 +296,7 @@ class NewServiceRequest extends Component{
            <br/>
            <Row>
              <Col xs={12} className="text-center">
-               <RaisedButton label="Submit" fullWidth={false} onClick={this.prepareAndSubmitRequest} primary={true} disabled={!this.props.isFormValid} />
+               <RaisedButton label={translate("core.lbl.submit")} fullWidth={false} onClick={this.prepareAndSubmitRequest} primary={true} disabled={!this.props.isFormValid} />
              </Col>
            </Row>
            <Dialog

@@ -76,9 +76,6 @@ class FormSection extends Component{
           const renderSections = [fields.map((field, index)=>{
             if(field.code != CHECKLIST_CODE && field.code != DOCUMENTS_CODE){
               if(field.dataType != "file" && field.dataType != "multifile"){
-                field.dataType = field.dataType.toLowerCase() == "number"? "integer" : field.dataType.toLowerCase();
-
-                field.attributes = field.attributes || [];
                 return <Fields key={index} obj={field} value={this.props.values[field.code] || ""} error={this.props.errors[field.code] || ""} handler={this.props.handler}></Fields>;
               }
             }

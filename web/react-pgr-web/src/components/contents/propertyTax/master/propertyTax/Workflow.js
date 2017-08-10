@@ -238,7 +238,7 @@ class Workflow extends Component {
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Department Name *"
-                                                  errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.workflowDepartment}</span>: ""}
+                                                  errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';  
@@ -260,7 +260,7 @@ class Workflow extends Component {
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Designation Name *"
-                                                  errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.workflowDesignation}</span>: ""}
+                                                  errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
 													  (value == -1) ? value = '' : '';
@@ -282,7 +282,7 @@ class Workflow extends Component {
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Approver Name *"
-                                                  errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.approver}</span>: ""}
+                                                  errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
 													  (value == -1) ? value = '' : '';

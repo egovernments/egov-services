@@ -1,0 +1,33 @@
+{
+	"RequestInfo": {
+		"apiId": "emp",
+		"ver": "1.0",
+		"ts": "10032017",
+		"action": "create",
+		"did": "1",
+		"key": "abcdkey",
+		"msgId": "20170310130900",
+		"requesterId": "rajesh",
+		"authToken": "a7b9a4fe-431b-4517-a38e-8ac3436fb880"
+	},
+	"Apartments": [
+		{
+			"id": 1,
+			"tenantId": "default",
+			"name": "FACEBOOK",
+			"code": "1010",
+			"totalFloors": 19,
+			"sourceOfWater": "test",
+			"totalOpenSpace": 10.5,
+			"totalProperties": 145,
+			"residtinalProperties": 10,
+			"totalBuiltUpArea": 5555,
+			"auditDetails": {
+				"createdBy": null,
+				"lastModifiedBy": null,
+				"createdTime": null,
+				"lastModifiedTime": null
+			}
+		}
+	]
+}

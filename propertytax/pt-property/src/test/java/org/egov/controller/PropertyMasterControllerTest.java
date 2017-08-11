@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.enums.ApplicationEnum;
+import org.egov.models.Apartment;
+import org.egov.models.ApartmentRequest;
+import org.egov.models.ApartmentResponse;
 import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
@@ -81,10 +84,10 @@ public class PropertyMasterControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	PropertyService propertyService;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -130,7 +133,7 @@ public class PropertyMasterControllerTest {
 		FloorTypeResponse floorTypeResponse = new FloorTypeResponse();
 		List<FloorType> floorTypes = new ArrayList<>();
 		FloorType floorType = new FloorType();
-		floorType.setId((long)1);
+		floorType.setId((long) 1);
 		floorType.setTenantId("1234");
 		floorType.setName("Stone Flooring");
 		floorType.setCode("2566");
@@ -816,9 +819,9 @@ public class PropertyMasterControllerTest {
 		List<StructureClass> structureClasses = new ArrayList<>();
 		StructureClass structureClass = new StructureClass();
 		structureClass.setTenantId("default");
-     	structureClass.setName("kkl16");
-    	structureClass.setCode("1234");
-    	
+		structureClass.setName("kkl16");
+		structureClass.setCode("1234");
+
 		AuditDetails auditDetails = new AuditDetails();
 		structureClass.setAuditDetails(auditDetails);
 
@@ -1081,11 +1084,10 @@ public class PropertyMasterControllerTest {
 		wallType.setTenantId("default");
 		wallType.setName("kkl16");
 		wallType.setCode("1234");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		wallType.setAuditDetails(auditDetails);
-		
-		
+
 		wallTypes.add(wallType);
 
 		wallTypeResponse.setResponseInfo(new ResponseInfo());
@@ -1314,7 +1316,7 @@ public class PropertyMasterControllerTest {
 
 		assertTrue(true);
 	}
-	
+
 	@Test
 	public void createDocumentTypeMasterTest() {
 
@@ -1337,8 +1339,8 @@ public class PropertyMasterControllerTest {
 			when(masterService.createDocumentTypeMaster(anyString(), any(DocumentTypeRequest.class)))
 					.thenReturn(documentTypeResponse);
 			mockMvc.perform(post("/property/documenttypes/_create").param("tenantId", "tenantid")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("createDocumentTypeRequest.json"))).andExpect(status().isOk())
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("createDocumentTypeRequest.json")))
+					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("createDocumentTypeResponse.json")));
 		} catch (Exception e) {
@@ -1371,8 +1373,7 @@ public class PropertyMasterControllerTest {
 
 			when(masterService.updateDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documentTypeResponse);
-			mockMvc.perform(post("/property/documenttypes/_update")
-					.contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/property/documenttypes/_update").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("updateDocumentTypeRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("updateDocumentTypeResponse.json")));
@@ -1401,11 +1402,11 @@ public class PropertyMasterControllerTest {
 		documentTypes.add(documentType);
 		documentTypeResponse.setDocumentType(documentTypes);
 		try {
-			when(masterService.searchDocumentTypeMaster(any(RequestInfo.class), anyString(), anyString(), anyString(), anyString(), any(Integer.class), any(Integer.class)))
-							.thenReturn(documentTypeResponse);
+			when(masterService.searchDocumentTypeMaster(any(RequestInfo.class), anyString(), anyString(), anyString(),
+					anyString(), any(Integer.class), any(Integer.class))).thenReturn(documentTypeResponse);
 			mockMvc.perform(post("/property/documenttypes/_search").param("tenantId", "tenantid")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("searchDocumentTypeRequest.json"))).andExpect(status().isOk())
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDocumentTypeRequest.json")))
+					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("searchDocumentTypeResponse.json")));
 		} catch (Exception e) {
@@ -1414,7 +1415,7 @@ public class PropertyMasterControllerTest {
 
 		assertTrue(true);
 	}
-	
+
 	@Test
 	public void generateSpecialNoticeTest() {
 		SpecialNoticeResponse specialNoticeResponse = new SpecialNoticeResponse();
@@ -1441,4 +1442,124 @@ public class PropertyMasterControllerTest {
 		assertTrue(true);
 	}
 
+	@Test
+	public void createApartmentTest() {
+
+		List<Apartment> apartments = new ArrayList<>();
+
+		Apartment apartment = new Apartment();
+		apartment.setTenantId("default");
+		apartment.setCode("1010");
+		apartment.setName("GOOGLE-FB");
+		apartment.setTotalFloors(19l);
+		apartment.setSourceOfWater("test");
+		apartment.setTotalOpenSpace(10.5);
+		apartment.setTotalProperties(145l);
+		apartment.setResidtinalProperties(10l);
+		apartment.setTotalBuiltUpArea(5555d);
+		AuditDetails auditDetails = new AuditDetails();
+		apartment.setAuditDetails(auditDetails);
+
+		ApartmentResponse apartmentResponse = new ApartmentResponse();
+		apartments.add(apartment);
+		apartmentResponse.setResponseInfo(new ResponseInfo());
+		apartmentResponse.setApartments(apartments);
+
+		try {
+
+			when(masterService.createApartment(any(String.class), any(ApartmentRequest.class)))
+					.thenReturn(apartmentResponse);
+			mockMvc.perform(post("/property/apartment/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createApartmentcomplexRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createApartmentcomplexResponse.json")));
+
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+		}
+
+		assertTrue(Boolean.TRUE);
+	}
+
+	@Test
+	public void updateApartmentTest() {
+
+		List<Apartment> apartments = new ArrayList<>();
+
+		Apartment apartment = new Apartment();
+		apartment.setTenantId("default");
+		apartment.setName("FACEBOOK");
+		apartment.setCode("1010");
+		apartment.setTotalFloors(19l);
+		apartment.setSourceOfWater("test");
+		apartment.setTotalOpenSpace(10.5);
+		apartment.setTotalProperties(145l);
+		apartment.setResidtinalProperties(10l);
+		apartment.setTotalBuiltUpArea(5555d);
+
+		AuditDetails auditDetails = new AuditDetails();
+		apartment.setAuditDetails(auditDetails);
+		apartments.add(apartment);
+
+		ApartmentResponse apartmentResponse = new ApartmentResponse();
+		apartmentResponse.setResponseInfo(new ResponseInfo());
+		apartmentResponse.setApartments(apartments);
+
+		try {
+			when(masterService.updateApartment(any(ApartmentRequest.class))).thenReturn(apartmentResponse);
+			mockMvc.perform(post("/property/apartment/_update").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateApartmentcomplexRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateApartmentcomplexResponse.json")));
+
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+
+		assertTrue(Boolean.TRUE);
+
+	}
+
+	@Test
+	public void searchApartmentTest() {
+
+		List<Apartment> apartments = new ArrayList<>();
+
+		Apartment apartment = new Apartment();
+		apartment.setTenantId("default");
+		apartment.setCode("1010");
+		apartment.setName("FACEBOOK");
+
+		AuditDetails auditDetails = new AuditDetails();
+		apartment.setAuditDetails(auditDetails);
+		apartments.add(apartment);
+
+		ApartmentResponse apartmentResponse = new ApartmentResponse();
+		apartmentResponse.setResponseInfo(new ResponseInfo());
+		apartmentResponse.setApartments(apartments);
+
+		try {
+
+			when(masterService.searchApartment(any(RequestInfo.class), any(String.class), any(Integer[].class),
+					any(String.class), any(String.class), any(Boolean.class), any(Boolean.class), any(Boolean.class),
+					any(Integer.class), any(Integer.class))).thenReturn(apartmentResponse);
+			mockMvc.perform(post("/property/apartment/_search").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchApartmentcomplexRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchApartmentcomplexResponse.json")));
+
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+
+		assertTrue(Boolean.TRUE);
+	}
 }

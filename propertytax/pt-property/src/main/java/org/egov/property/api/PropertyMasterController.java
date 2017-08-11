@@ -1,6 +1,9 @@
 package org.egov.property.api;
 
 import javax.validation.Valid;
+
+import org.egov.models.ApartmentRequest;
+import org.egov.models.ApartmentResponse;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.DepreciationRequest;
@@ -271,7 +274,8 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "structureclasses/_update", method = RequestMethod.POST)
-	public StructureClassResponse updateStructureClassMaster(@Valid @RequestBody StructureClassRequest structureClassRequest) {
+	public StructureClassResponse updateStructureClassMaster(
+			@Valid @RequestBody StructureClassRequest structureClassRequest) {
 
 		return masterService.updateStructureClassMaster(structureClassRequest);
 
@@ -391,7 +395,8 @@ public class PropertyMasterController {
 	 */
 
 	@RequestMapping(path = "/occuapancies/_update", method = RequestMethod.POST)
-	public OccuapancyMasterResponse updateOccuapancyMaster(@Valid @RequestBody OccuapancyMasterRequest occuapancyRequest) {
+	public OccuapancyMasterResponse updateOccuapancyMaster(
+			@Valid @RequestBody OccuapancyMasterRequest occuapancyRequest) {
 
 		return masterService.updateOccuapancyMaster(occuapancyRequest);
 
@@ -529,7 +534,8 @@ public class PropertyMasterController {
 	 */
 
 	@RequestMapping(path = "/usages/_update", method = RequestMethod.POST)
-	public UsageMasterResponse updateUsageMaster(@Valid @RequestBody UsageMasterRequest usageMasterRequest) throws Exception {
+	public UsageMasterResponse updateUsageMaster(@Valid @RequestBody UsageMasterRequest usageMasterRequest)
+			throws Exception {
 
 		return masterService.updateUsageMaster(usageMasterRequest);
 	}
@@ -584,8 +590,7 @@ public class PropertyMasterController {
 			@RequestParam(required = false) Integer fromYear, @RequestParam(required = false) Integer toYear,
 			@RequestParam(required = false) String code, @RequestParam(required = false) String nameLocal,
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offset,
-			@RequestParam(required = false) Integer year)
-			throws Exception {
+			@RequestParam(required = false) Integer year) throws Exception {
 		return masterService.searchDepreciation(requestInfoWrapper.getRequestInfo(), tenantId, ids, fromYear, toYear,
 				code, nameLocal, pageSize, offset, year);
 	}
@@ -692,5 +697,60 @@ public class PropertyMasterController {
 
 		return masterService.searchDocumentTypeMaster(requestInfoWrapper.getRequestInfo(), tenantId, name, code,
 				application, pageSize, offSet);
+	}
+
+	/**
+	 * This will create Apartment
+	 * 
+	 * @param tenantId
+	 * @param apartmentRequest
+	 * @return ApartmentResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/apartment/_create", method = RequestMethod.POST)
+	public ApartmentResponse createApartment(@RequestParam(required = true) String tenantId,
+			@Valid @RequestBody ApartmentRequest apartmentRequest) throws Exception {
+
+		return masterService.createApartment(tenantId, apartmentRequest);
+	}
+
+	/**
+	 * This will update Apartment
+	 * 
+	 * @param apartmentRequest
+	 * @return ApartmentResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/apartment/_update", method = RequestMethod.POST)
+	public ApartmentResponse updateApartment(@Valid @RequestBody ApartmentRequest apartmentRequest) throws Exception {
+
+		return masterService.updateApartment(apartmentRequest);
+	}
+
+	/**
+	 * This will search for Apartment
+	 * 
+	 * @param requestInfoWrapper
+	 * @param tenantId
+	 * @param apartmentCode
+	 * @param apartmentName
+	 * @param liftFacility
+	 * @param powerBackUp
+	 * @param parkingFacility
+	 * @param pageSize
+	 * @param offSet
+	 * @return ApartmentResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/apartment/_search", method = RequestMethod.POST)
+	public ApartmentResponse searchApartment(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
+			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
+			@RequestParam(required = false) Boolean liftFacility, @RequestParam(required = false) Boolean powerBackUp,
+			@RequestParam(required = false) Boolean parkingFacility, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) Integer offSet) throws Exception {
+
+		return masterService.searchApartment(requestInfoWrapper.getRequestInfo(), tenantId, ids, name, code,
+				liftFacility, powerBackUp, parkingFacility, pageSize, offSet);
 	}
 }

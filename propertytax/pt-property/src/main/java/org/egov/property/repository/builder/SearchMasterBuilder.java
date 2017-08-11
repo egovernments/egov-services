@@ -137,4 +137,60 @@ public class SearchMasterBuilder {
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public static String apartmentSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
+			String code, Boolean liftFacility, Boolean powerBackUp, Boolean parkingFacility, Integer pageSize,
+			Integer offSet, List<Object> preparedStatementValues) {
+
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append("select * from " + tableName + " where ");
+		searchSql.append(" tenantId = ? ");
+		preparedStatementValues.add(tenantId);
+
+		if (ids != null && ids.length > 0) {
+
+			String searchIds = "";
+			int count = 1;
+			for (Integer id : ids) {
+
+				if (count < ids.length)
+					searchIds = searchIds + id + ",";
+				else
+					searchIds = searchIds + id;
+				count++;
+			}
+			searchSql.append(" AND id IN (" + searchIds + ") ");
+		}
+
+		if (code != null && !code.isEmpty()) {
+			searchSql.append(" AND code =? ");
+			preparedStatementValues.add(code);
+		}
+		JSONObject dataSearch = new JSONObject();
+
+		if (name != null || liftFacility != null || powerBackUp != null || parkingFacility != null)
+			searchSql.append(" AND data @> ?::jsonb");
+		if (name != null && !name.isEmpty())
+			dataSearch.put("name", name);
+		if (liftFacility != null)
+			dataSearch.put("liftFacility", liftFacility);
+		if (powerBackUp != null)
+			dataSearch.put("powerBackUp", powerBackUp);
+		if (parkingFacility != null)
+			dataSearch.put("parkingFacility", parkingFacility);
+		if (name != null || liftFacility != null || powerBackUp != null || parkingFacility != null)
+			preparedStatementValues.add(dataSearch.toJSONString());
+		if (pageSize == null)
+			pageSize = 30;
+		searchSql.append(" limit ? ");
+		preparedStatementValues.add(pageSize);
+		
+		if (offSet == null)
+			offSet = 0;
+		
+		searchSql.append(" offset ? ");
+		preparedStatementValues.add(offSet);
+
+		return searchSql.toString();
+	}
 }

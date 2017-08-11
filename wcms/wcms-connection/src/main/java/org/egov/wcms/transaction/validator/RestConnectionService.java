@@ -62,12 +62,12 @@ import org.egov.wcms.transaction.web.contract.FinYearRes;
 import org.egov.wcms.transaction.web.contract.IdGenErrorRes;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyCategoryResponseInfo;
+import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.PropertyUsageTypeResponseInfo;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.SupplyResponseInfo;
 import org.egov.wcms.transaction.web.contract.TreatmentPlantResponse;
-import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transaction.web.errorhandler.Error;
@@ -270,90 +270,27 @@ public class RestConnectionService {
         return propResp;
     }
 
-    public PropertyResponse getPropertyDetailsByName(WaterConnectionGetReq waterConnectionGetReq, RequestInfoWrapper wrapper) {
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?ownerName=")
-                .append(waterConnectionGetReq.getName())
-                .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
-        logger.info("URL to invoke for PropertyDetails By Name: " + url.toString());
-        PropertyResponse propResp = invokePropertyAPI(url.toString(), wrapper);
-        if (propResp != null && !propResp.getProperties().isEmpty()) { 
-        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
-        	logger.info("Retrieved UPIC Number : " + propResp.getProperties().get(0).getUpicNumber() + " from Property Module ");  
-        }
-        return propResp;
-    }
-
-    public PropertyResponse getPropertyDetailsByMobileNumber(WaterConnectionGetReq waterConnectionGetReq, RequestInfoWrapper wrapper) {
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?mobileNumber=")
-                .append(waterConnectionGetReq.getMobileNumber())
-                .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
-        logger.info("URL to invoke for PropertyDetails By Mobile Number: " + url.toString());
-        PropertyResponse propResp = invokePropertyAPI(url.toString(), wrapper);
-        if (propResp != null && !propResp.getProperties().isEmpty()){
-        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
-        	logger.info("Retrieved UPIC Number : " + propResp.getProperties().get(0).getUpicNumber() + " from Property Module ");
-        }
-        return propResp;
-    }
-
-    public PropertyResponse getPropertyDetailsByLocality(WaterConnectionGetReq waterConnectionGetReq, RequestInfoWrapper wrapper) {
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?locality=")
-                .append(waterConnectionGetReq.getLocality())
-                .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
-        logger.info("URL to invoke for PropertyDetails By Locality : " + url.toString());
-        PropertyResponse propResp = invokePropertyAPI(url.toString(), wrapper);
-        if (propResp != null && !propResp.getProperties().isEmpty()) {
-        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
-        	logger.info("Retrieved UPIC Number : " + propResp.getProperties().get(0).getUpicNumber() + " from Property Module ");
-        }
-        return propResp;
-    }
-
-    public PropertyResponse getPropertyDetailsByRevenueWard(WaterConnectionGetReq waterConnectionGetReq, RequestInfoWrapper wrapper) {
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?revenueWard=")
-                .append(waterConnectionGetReq.getRevenueWard())
-                .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
-        logger.info("URL to invoke for PropertyDetails By Revenue Ward : " + url.toString());
-        PropertyResponse propResp = invokePropertyAPI(url.toString(), wrapper);
-        if (propResp != null && !propResp.getProperties().isEmpty()){
-        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
-        	logger.info("Retrieved UPIC Number : " + propResp.getProperties().get(0).getUpicNumber() + " from Property Module ");
-        }
-        return propResp;
-    }
-
-    public PropertyResponse getPropertyDetailsByDoorNumber(WaterConnectionGetReq waterConnectionGetReq, RequestInfoWrapper wrapper) {
-        
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?houseNoBldgApt=")
-                .append(waterConnectionGetReq.getDoorNumber())
-                .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
-        logger.info("URL to invoke for PropertyDetails By Door Number : " + url.toString());
-        PropertyResponse propResp = invokePropertyAPI(url.toString(), wrapper);
-        if (propResp != null && !propResp.getProperties().isEmpty()) { 
-        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
-        	logger.info("Retrieved UPIC Number : " + propResp.getProperties().get(0).getUpicNumber() + " from Property Module ");
-        }
-        return propResp;
-    }
-    
+    public List<Long> getPropertyDetailsByParams(RequestInfoWrapper wrapper, String urlToInvoke) {
+		logger.info("URL to invoke for PropertyDetails : " + urlToInvoke);
+		List<Long> propertyIdentifierList = new ArrayList<>();
+		PropertyResponse propResp = invokePropertyAPI(urlToInvoke, wrapper);
+		if (propResp != null && !propResp.getProperties().isEmpty()) {
+			logger.info("Response obtained from Property Module : " + propResp);
+			for (PropertyInfo pInfo : propResp.getProperties()) {
+				logger.info("Retrieved UPIC Number : " + pInfo.getUpicNumber() + " from Property Module ");
+				propertyIdentifierList.add(Long.valueOf(pInfo.getUpicNumber()));
+			}
+		}
+		return propertyIdentifierList;
+	}
+    	    
 	private PropertyResponse invokePropertyAPI(String url, RequestInfoWrapper wrapper) {
-        try {
-            return new RestTemplate().postForObject(url.toString(), wrapper,
-                    PropertyResponse.class);
-        } catch (Exception e) {
-        	logger.error("Encountered an Exception :" + e);
-        	return null;
-        }
+		try {
+			return new RestTemplate().postForObject(url.toString(), wrapper, PropertyResponse.class);
+		} catch (Exception e) {
+			logger.error("Encountered an Exception :" + e);
+			return null;
+		}
 	}
 
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {

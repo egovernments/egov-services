@@ -12,6 +12,11 @@ export default class Fields extends Component{
     super(props);
     this.state={};
   }
+
+  pad = (n)=> {
+      return (n < 10) ? ("0" + n) : n;
+  }
+
   renderFields = (obj) =>{
     let des = translate(obj.description);
     let mandatory = (obj.required == true) ? " *" : ""
@@ -86,7 +91,7 @@ export default class Fields extends Component{
                 this.refs[obj.code+'timepicker'].openDialog();
               }}/>
               <TimePicker ref={obj.code+'timepicker'} format="24hr" style={{display: 'none'}} onChange={(nothing, time)=>{
-                this.props.handler(this.props.value+' '+time.getHours()+':'+time.getMinutes()+':00', obj.code, obj.required, '');
+                this.props.handler(this.props.value+' '+ this.pad(time.getHours()) +':'+ this.pad(time.getMinutes()) +':00', obj.code, obj.required, '');
               }}/>
             </Col>
           );

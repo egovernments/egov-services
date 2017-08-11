@@ -280,7 +280,7 @@ ReportDefinitions:
   - name: revenuehead
     label: reports.collection.revenuehead
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_getChartOfAccounts|$..glcode|$..name
+    pattern: http://collection-services:8080/collection-services/receipts/_getChartOfAccounts?tenantId=default|$..glcode|$..name
     source: collection
   
   query: SELECT SOURCE,glCode,sum(cashCount) AS cashCount ,sum(cashAmount) AS cashAmount,sum(chequeddCount) AS chequeddCount,sum(chequeddAmount) AS chequeddAmount, sum(onlineCount) AS onlineCount, 

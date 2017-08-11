@@ -61,7 +61,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationTypeDocTypeServiceTest {
+public class DocumentTypeApplicationServiceTest {
 
     @Mock
     private DocumentTypeApplicationTypeRepository documentApplicationTypeRepository;
@@ -71,6 +71,9 @@ public class ApplicationTypeDocTypeServiceTest {
 
     @Mock
     private ApplicationProperties applicationProperties;
+
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
 
     @InjectMocks
     private DocumentTypeApplicationTypeService docTypeAppTypeService;
@@ -87,19 +90,20 @@ public class ApplicationTypeDocTypeServiceTest {
 
     @Test
     public void testCreate() {
-
-        final DocumentTypeApplicationType applicationTypeDoc = getApplicationTypeDoc();
         final DocumentTypeApplicationTypeReq documentAppRequest = new DocumentTypeApplicationTypeReq();
-        documentAppRequest.setDocumentTypeApplicationType(applicationTypeDoc);
-        assertTrue(applicationTypeDoc.equals(docTypeAppTypeService.sendMessage("", "", documentAppRequest)));
+        final List<DocumentTypeApplicationType> applicationTypeDocList = new ArrayList<>();
+
+        applicationTypeDocList.add(getApplicationTypeDoc());
+        documentAppRequest.setDocumentTypeApplicationType(applicationTypeDocList);
+        assertTrue(applicationTypeDocList.equals(docTypeAppTypeService.createDocumentApplication("", "", documentAppRequest)));
     }
 
     @Test
     public void testPersist() {
-
-        final DocumentTypeApplicationType applicationTypeDoc = getApplicationTypeDoc();
+        final List<DocumentTypeApplicationType> applicationTypeDocList = new ArrayList<>();
+        applicationTypeDocList.add(getApplicationTypeDoc());
         final DocumentTypeApplicationTypeReq documentAppRequest = new DocumentTypeApplicationTypeReq();
-        documentAppRequest.setDocumentTypeApplicationType(applicationTypeDoc);
+        documentAppRequest.setDocumentTypeApplicationType(applicationTypeDocList);
         when(documentApplicationTypeRepository.persistCreateDocTypeApplicationType(any(DocumentTypeApplicationTypeReq.class)))
                 .thenReturn(documentAppRequest);
         assertTrue(documentAppRequest.equals(docTypeAppTypeService.create(documentAppRequest)));
@@ -109,6 +113,7 @@ public class ApplicationTypeDocTypeServiceTest {
 
         final DocumentTypeApplicationType appTypeDoc = new DocumentTypeApplicationType();
         appTypeDoc.setTenantId("default");
+        appTypeDoc.setCode("2");
         appTypeDoc.setApplicationType("property type");
         appTypeDoc.setDocumentTypeId(123);
         appTypeDoc.setActive(true);

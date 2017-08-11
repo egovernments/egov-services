@@ -51,6 +51,8 @@ import org.egov.wcms.web.contract.PipeSizeGetRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -68,29 +70,46 @@ public class PipeSizeRepository {
     @Autowired
     private PipeSizeRowMapper pipeSizeRowMapper;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public PipeSizeRequest persistCreatePipeSize(final PipeSizeRequest pipeSizeRequest) {
         log.info("PipeSizeRequest::" + pipeSizeRequest);
         final String pipeSizeInsert = PipeSizeQueryBuilder.insertPipeSizeQuery();
-        final PipeSize pipeSize = pipeSizeRequest.getPipeSize();
-        final Object[] obj = new Object[] { Long.valueOf(pipeSize.getCode()), pipeSize.getCode(),
-                pipeSize.getSizeInMilimeter(), pipeSize.getSizeInInch(), pipeSize.getDescription(),
-                pipeSize.getActive(), Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                pipeSize.getTenantId() };
-        jdbcTemplate.update(pipeSizeInsert, obj);
+        final List<PipeSize> pipeSizeList = pipeSizeRequest.getPipeSize();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(pipeSizeList.size());
+        for (final PipeSize pipeSize : pipeSizeList){
+            batchValues.add(
+                    new MapSqlParameterSource("id", Long.valueOf(pipeSize.getCode())).addValue("code", pipeSize.getCode())
+                            .addValue("sizeinmilimeter", pipeSize.getSizeInMilimeter())
+                            .addValue("sizeininch", pipeSize.getSizeInInch())
+                            .addValue("description", pipeSize.getDescription()).addValue("active", pipeSize.getActive())
+                            .addValue("createdby", Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifiedby", Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("createddate", new Date(new java.util.Date().getTime()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("tenantid", pipeSize.getTenantId())
+                            .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(pipeSizeInsert, batchValues.toArray(new Map[pipeSizeList.size()]));
         return pipeSizeRequest;
     }
 
     public PipeSizeRequest persistModifyPipeSize(final PipeSizeRequest pipeSizeRequest) {
         log.info("PipeSizeRequest::" + pipeSizeRequest);
         final String pipeSizeUpdate = PipeSizeQueryBuilder.updatePipeSizeQuery();
-        final PipeSize pipeSize = pipeSizeRequest.getPipeSize();
-        final Object[] obj = new Object[] { pipeSize.getSizeInMilimeter(), pipeSize.getSizeInInch(),
-                pipeSize.getDescription(), pipeSize.getActive(),
-                Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), pipeSize.getCode() };
-        jdbcTemplate.update(pipeSizeUpdate, obj);
+        final List<PipeSize> pipeSizeList = pipeSizeRequest.getPipeSize();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(pipeSizeList.size());
+        for (final PipeSize pipeSize : pipeSizeList)
+            batchValues.add(
+                    new MapSqlParameterSource("sizeinmilimeter", pipeSize.getSizeInMilimeter())
+                            .addValue("sizeininch", pipeSize.getSizeInInch())
+                            .addValue("description", pipeSize.getDescription()).addValue("active", pipeSize.getActive())
+                            .addValue("lastmodifiedby", Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("code", pipeSize.getCode())
+                            .getValues());
+        namedParameterJdbcTemplate.batchUpdate(pipeSizeUpdate, batchValues.toArray(new Map[pipeSizeList.size()]));
         return pipeSizeRequest;
 
     }

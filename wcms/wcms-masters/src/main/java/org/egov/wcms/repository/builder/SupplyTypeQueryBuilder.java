@@ -144,13 +144,13 @@ public class SupplyTypeQueryBuilder {
 
     public static String insertSupplyTypeQuery() {
         return "INSERT INTO egwtr_supply_type(id,code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(?,?,?,?,?,?,?,?,?,?)";
+                + "(:id,:code,:name,:description,:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updateSupplyTypeQuery() {
-        return "UPDATE egwtr_supply_type SET name = ?, description = ?,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? "
-                + "where code = ?";
+        return "UPDATE egwtr_supply_type SET name = :name , description = :description ,"
+                + "active = :active ,lastmodifiedby = :lastmodifiedby ,lastmodifieddate = :lastmodifieddate "
+                + "where code = :code ";
     }
 
     public static String selectSupplyTypeByNameAndCodeQuery() {

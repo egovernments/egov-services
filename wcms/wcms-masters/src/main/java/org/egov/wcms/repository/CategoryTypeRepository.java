@@ -39,8 +39,8 @@
  */
 package org.egov.wcms.repository;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +51,8 @@ import org.egov.wcms.web.contract.CategoryTypeGetRequest;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -68,28 +70,42 @@ public class CategoryTypeRepository {
     @Autowired
     private CategoryTypeRowMapper categoryRowMapper;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public CategoryTypeRequest persistCreateCategory(final CategoryTypeRequest categoryRequest) {
-        log.info("ConnectionCategoryRequest::" + categoryRequest);
+        log.info("CategoryRequest::" + categoryRequest);
         final String categoryInsert = CategoryTypeQueryBuilder.insertCategoryQuery();
-        final CategoryType category = categoryRequest.getCategoryType();
-        final Object[] obj = new Object[] { Long.valueOf(category.getCode()), category.getCode(), category.getName(),
-                category.getDescription(), category.getActive(),
-                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                category.getTenantId() };
-        jdbcTemplate.update(categoryInsert, obj);
+        final List<CategoryType> categoryList = categoryRequest.getCategoryType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(categoryList.size());
+        for (final CategoryType category : categoryList){
+            batchValues.add(new MapSqlParameterSource("id", Long.valueOf(category.getCode())).addValue("code", category.getCode())
+                    .addValue("name", category.getName()).addValue("description", category.getDescription())
+                    .addValue("active", category.getActive())
+                    .addValue("createdby", Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifiedby", Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("createddate", new Date(new java.util.Date().getTime()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                    .addValue("tenantid", category.getTenantId())
+                    .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(categoryInsert, batchValues.toArray(new Map[categoryList.size()]));
         return categoryRequest;
     }
 
     public CategoryTypeRequest persistModifyCategory(final CategoryTypeRequest categoryRequest) {
-        log.info("ConnectionCategoryRequest::" + categoryRequest);
+        log.info("CategoryRequest::" + categoryRequest);
         final String categoryUpdate = CategoryTypeQueryBuilder.updateCategoryQuery();
-        final CategoryType category = categoryRequest.getCategoryType();
-        final Object[] obj = new Object[] { category.getName(), category.getDescription(), category.getActive(),
-                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), category.getCode() };
-        jdbcTemplate.update(categoryUpdate, obj);
+        final List<CategoryType> categoryList = categoryRequest.getCategoryType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(categoryList.size());
+        for (final CategoryType category : categoryList){
+            batchValues.add(new MapSqlParameterSource("name", category.getName())
+                    .addValue("description", category.getDescription())
+                    .addValue("active", category.getActive())
+                    .addValue("lastmodifiedby", Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime())).addValue("code", category.getCode()).getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(categoryUpdate, batchValues.toArray(new Map[categoryList.size()]));
         return categoryRequest;
 
     }

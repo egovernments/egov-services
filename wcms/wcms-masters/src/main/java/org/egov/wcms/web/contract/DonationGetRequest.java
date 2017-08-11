@@ -61,48 +61,49 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class DonationGetRequest {
 
-	private List<Long> id;
+    private List<Long> id;
 
-	private String propertyType;
-	
-	private String propertyTypeId;
-	
-	private String categoryType;
-	
-	private Long categoryTypeId;
-	
-	private String usageType;
-	
-	private String usageTypeId;
-	
-	private Double minPipeSize;
-	
-	private Long minPipeSizeId;
-	
-	private Double maxPipeSize;
-	
-	private Long maxPipeSizeId;
-	
-	
-	private double donationAmount;
-	
-	private Date fromDate;
-	
-	private Date toDate;
-	
-	private Boolean active;
-	
-	@NotNull
-	private String tenantId;
-	
-	private String sortBy;
+    private String code;
 
-	private String sortOrder;
+    private String propertyType;
 
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
+    private String propertyTypeId;
 
-	private Short pageNumber;
+    private String categoryType;
+
+    private Long categoryTypeId;
+
+    private String usageType;
+
+    private String usageTypeId;
+
+    private Double minPipeSize;
+
+    private Long minPipeSizeId;
+
+    private Double maxPipeSize;
+
+    private Long maxPipeSizeId;
+
+    private double donationAmount;
+
+    private Date fromDate;
+
+    private Date toDate;
+
+    private Boolean active;
+
+    @NotNull
+    private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

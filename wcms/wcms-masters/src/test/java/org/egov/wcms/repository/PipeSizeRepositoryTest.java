@@ -66,6 +66,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -96,6 +97,9 @@ public class PipeSizeRepositoryTest {
 
     @InjectMocks
     private PipeSizeRepository pipeSizeRepository;
+    
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Test
     public void test_Should_Create_PipeSize() throws Exception {
@@ -104,15 +108,10 @@ public class PipeSizeRepositoryTest {
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final PipeSize pipeSize = new PipeSize();
-        pipeSize.setCode("10");
-        pipeSize.setActive(true);
-        // pipeSize.getAuditDeatils().setCreatedBy(1L);
-        pipeSize.setSizeInInch(1.2);
-        pipeSize.setSizeInMilimeter(10.1);
-
+        final List<PipeSize> pipeSizeList = new ArrayList<>();
+        pipeSizeList.add(getPipeSize());
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSize);
+        pipeSizeRequest.setPipeSize(pipeSizeList);
 
         assertNotNull(pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest));
 
@@ -122,15 +121,11 @@ public class PipeSizeRepositoryTest {
     public void test_throwException_Create_PipeSize() throws Exception {
         final PipeSizeRequest pipeSizeRequest = new PipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
-        final PipeSize pipeSize = new PipeSize();
-        pipeSize.setCode("10");
-        pipeSize.setActive(true);
-        // pipeSize.getAuditDeatils().setCreatedBy(1L);
-        pipeSize.setSizeInInch(1.2);
-        pipeSize.setSizeInMilimeter(10.1);
+        final List<PipeSize> pipeSizeList = new ArrayList<>();
+        pipeSizeList.add(getPipeSize());
 
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSize);
+        pipeSizeRequest.setPipeSize(pipeSizeList);
 
         assertNotNull(pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest));
 
@@ -143,15 +138,11 @@ public class PipeSizeRepositoryTest {
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final PipeSize pipeSize = new PipeSize();
-        pipeSize.setCode("10");
-        pipeSize.setActive(true);
-        // pipeSize.getAuditDeatils().setCreatedBy(1L);
-        pipeSize.setSizeInInch(1.2);
-        pipeSize.setSizeInMilimeter(10.1);
+        final List<PipeSize> pipeSizeList = new ArrayList<>();
+        pipeSizeList.add(getPipeSize());
 
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSize);
+        pipeSizeRequest.setPipeSize(pipeSizeList);
 
         assertNotNull(pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest));
 
@@ -161,15 +152,11 @@ public class PipeSizeRepositoryTest {
     public void test_throwException_Modify_PipeSize() throws Exception {
         final PipeSizeRequest pipeSizeRequest = new PipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
-        final PipeSize pipeSize = new PipeSize();
-        pipeSize.setCode("10");
-        pipeSize.setActive(true);
-        // pipeSize.getAuditDeatils().setCreatedBy(1L);
-        pipeSize.setSizeInInch(1.2);
-        pipeSize.setSizeInMilimeter(10.1);
+        final List<PipeSize> pipeSizeList = new ArrayList<>();
 
+        pipeSizeList.add(getPipeSize());
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSize);
+        pipeSizeRequest.setPipeSize(pipeSizeList);
 
         assertNotNull(pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest));
 
@@ -213,6 +200,15 @@ public class PipeSizeRepositoryTest {
 
         assertTrue(pipeSizes != null);
 
+    }
+
+    private PipeSize getPipeSize() {
+        final PipeSize pipeSize = new PipeSize();
+        pipeSize.setCode("10");
+        pipeSize.setActive(true);
+        pipeSize.setSizeInInch(1.2);
+        pipeSize.setSizeInMilimeter(10.1);
+        return pipeSize;
     }
 
 }

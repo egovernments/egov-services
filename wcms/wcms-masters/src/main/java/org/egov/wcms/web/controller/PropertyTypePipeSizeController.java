@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -63,7 +62,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,44 +101,41 @@ public class PropertyTypePipeSizeController {
         log.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
 
         final List<ErrorResponse> errorResponses = validatorUtils
-                .validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
+                .validatePropertyPipeSizeRequest(propertyPipeSizeRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyTypePipeSize propertyPipeSize = propertPipeSizeService.createPropertyPipeSize(
+        final List<PropertyTypePipeSize> propertyPipeSizes = propertPipeSizeService.createPropertyPipeSize(
                 applicationProperties.getCreatePropertyPipeSizeTopicName(), "propertypipesize-create",
                 propertyPipeSizeRequest);
-        final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
-        propertyPipeSizes.add(propertyPipeSize);
+
         return getSuccessResponse(propertyPipeSizes, "Created", propertyPipeSizeRequest.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/{propertyPipeSizeId}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypePipeSizeRequest propertyPipeSizeRequest,
-            final BindingResult errors, @PathVariable("propertyPipeSizeId") final Long propertyPipeSizeId) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
-        propertyPipeSizeRequest.getPropertyTypePipeSize().setId(propertyPipeSizeId);
 
         final List<ErrorResponse> errorResponses = validatorUtils
-                .validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
+                .validatePropertyPipeSizeRequest(propertyPipeSizeRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyTypePipeSize propertyPipeSize = propertPipeSizeService.createPropertyPipeSize(
+        final List<PropertyTypePipeSize> propertyPipeSizes = propertPipeSizeService.updatePropertyPipeSize(
                 applicationProperties.getUpdatePropertyPipeSizeTopicName(), "propertypipesize-update",
                 propertyPipeSizeRequest);
-        final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
-        propertyPipeSizes.add(propertyPipeSize);
+
         return getSuccessResponse(propertyPipeSizes, null, propertyPipeSizeRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(
             @ModelAttribute @Valid final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest,

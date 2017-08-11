@@ -75,6 +75,9 @@ public class PropertyTypePipeSizeServiceTest {
 
     @InjectMocks
     private PropertyTypePipeSizeService propertyPipeSizeService;
+    
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
 
     @SuppressWarnings("unchecked")
     @Test(expected = Exception.class)
@@ -90,18 +93,20 @@ public class PropertyTypePipeSizeServiceTest {
     @Test
     public void test_throwException_Push_To_Producer_PropertyPipeSize() {
 
-        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
+        final List<PropertyTypePipeSize> propertyPipeSizeList = new ArrayList<>();
+        propertyPipeSizeList.add(getPropertyPipeSize());
         final PropertyTypePipeSizeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeRequest();
-        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSize);
-        assertTrue(propertyPipeSize.equals(propertyPipeSizeService.createPropertyPipeSize("", "", propertyPipeSizeRequest)));
+        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSizeList);
+        assertTrue(propertyPipeSizeList.equals(propertyPipeSizeService.createPropertyPipeSize("", "", propertyPipeSizeRequest)));
     }
 
     @Test
     public void test_throwException_Create_PropertyPipeSize() {
 
-        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
+        final List<PropertyTypePipeSize> propertyPipeSizeList = new ArrayList<>();
+        propertyPipeSizeList.add(getPropertyPipeSize());
         final PropertyTypePipeSizeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeRequest();
-        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSize);
+        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSizeList);
         when(propertyPipeSizeRepository.persistCreatePropertyPipeSize(any(PropertyTypePipeSizeRequest.class)))
                 .thenReturn(propertyPipeSizeRequest);
         assertTrue(propertyPipeSizeRequest.equals(propertyPipeSizeService.create(propertyPipeSizeRequest)));

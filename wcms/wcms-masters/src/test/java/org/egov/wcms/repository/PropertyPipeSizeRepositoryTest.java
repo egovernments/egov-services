@@ -63,6 +63,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -87,6 +88,9 @@ public class PropertyPipeSizeRepositoryTest {
 
     @Mock
     private RestWaterExternalMasterService restExternalMasterService;
+    
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Test
     public void test_Should_Search_PropertyPipeSize() throws Exception {
@@ -128,8 +132,9 @@ public class PropertyPipeSizeRepositoryTest {
         user.setId(1l);
         requestInfo.setUserInfo(user);
         propertyPipeSizeRequest.setRequestInfo(requestInfo);
-        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
-        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSize);
+        final List<PropertyTypePipeSize> propertyPipeSizeList = new ArrayList<>();
+        propertyPipeSizeList.add(getPropertyPipeSize());
+        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSizeList);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(propertyPipeSizeRequest
@@ -145,8 +150,9 @@ public class PropertyPipeSizeRepositoryTest {
         user.setId(1l);
         requestInfo.setUserInfo(user);
         propertyPipeSizeRequest.setRequestInfo(requestInfo);
-        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
-        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSize);
+        final List<PropertyTypePipeSize> propertyPipeSizeList = new ArrayList<>();
+        propertyPipeSizeList.add(getPropertyPipeSize());
+        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSizeList);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(propertyPipeSizeRequest
@@ -156,6 +162,8 @@ public class PropertyPipeSizeRepositoryTest {
     private PropertyTypePipeSize getPropertyPipeSize() {
         final PropertyTypePipeSize propertyPipeSize = new PropertyTypePipeSize();
         propertyPipeSize.setTenantId("default");
+        propertyPipeSize.setId(2l);
+        propertyPipeSize.setCode("2");
         propertyPipeSize.setPipeSize(2d);
         propertyPipeSize.setPropertyTypeName("property type");
         propertyPipeSize.setActive(true);

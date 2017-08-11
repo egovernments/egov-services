@@ -77,6 +77,8 @@ public class PropertyUsageTypeServiceTest {
 
     @InjectMocks
     private PropertyUsageTypeService propUsageTypeService;
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
 
     @SuppressWarnings("unchecked")
     @Test(expected = Exception.class)
@@ -98,11 +100,11 @@ public class PropertyUsageTypeServiceTest {
 
     @Test
     public void test_Should_Create() {
-        final PropertyTypeUsageType propUsageType = getPropertyUsageType();
+   
         final List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
-        propertyUsageTypes.add(propUsageType);
+        propertyUsageTypes.add(getPropertyUsageType());
         final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
-        propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
+        propUsageTypeRequest.setPropertyTypeUsageType(propertyUsageTypes);
         final PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
         propUsageTypeResponse.setResponseInfo(null);
         propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);
@@ -114,11 +116,10 @@ public class PropertyUsageTypeServiceTest {
 
     @Test
     public void test_Should_Update() {
-        final PropertyTypeUsageType propUsageType = getPropertyUsageType();
         final List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
-        propertyUsageTypes.add(propUsageType);
+        propertyUsageTypes.add(getPropertyUsageType());
         final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
-        propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
+        propUsageTypeRequest.setPropertyTypeUsageType(propertyUsageTypes);
         final PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
         propUsageTypeResponse.setResponseInfo(null);
         propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);

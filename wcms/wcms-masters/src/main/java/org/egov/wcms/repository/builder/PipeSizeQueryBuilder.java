@@ -164,12 +164,12 @@ public class PipeSizeQueryBuilder {
 
     public static String insertPipeSizeQuery() {
         return "INSERT INTO egwtr_pipesize(id,code,sizeinmilimeter,sizeininch,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(?,?,?,?,?,?,?,?,?,?,?)";
+                + "(:id,:code,:sizeinmilimeter,:sizeininch,:description,:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updatePipeSizeQuery() {
-        return "UPDATE egwtr_pipesize SET sizeinmilimeter = ?,sizeininch = ?,description = ? ,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
+        return "UPDATE egwtr_pipesize SET sizeinmilimeter = :sizeinmilimeter,sizeininch = :sizeininch,description = :description ,"
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code ";
     }
 
     public static String selectPipeSizeInmmAndCodeQuery() {

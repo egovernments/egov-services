@@ -52,13 +52,13 @@ public class GuidanceValueRepostory {
 				ps.setString(5, guidanceValue.getUsage());
 				ps.setString(6, guidanceValue.getSubUsage());
 				ps.setString(7, guidanceValue.getOccupancy());
-				ps.setDouble(8, guidanceValue.getValue());
+				ps.setDouble(8, getDouble(guidanceValue.getValue()));
 				ps.setTimestamp(9, TimeStampUtil.getTimeStamp(guidanceValue.getFromDate()));
 				ps.setTimestamp(10, TimeStampUtil.getTimeStamp(guidanceValue.getToDate()));
 				ps.setString(11, guidanceValue.getAuditDetails().getCreatedBy());
 				ps.setString(12, guidanceValue.getAuditDetails().getLastModifiedBy());
-				ps.setLong(13, guidanceValue.getAuditDetails().getCreatedTime());
-				ps.setLong(14, guidanceValue.getAuditDetails().getLastModifiedTime());
+				ps.setLong(13, getLong(guidanceValue.getAuditDetails().getCreatedTime()));
+				ps.setLong(14, getLong(guidanceValue.getAuditDetails().getLastModifiedTime()));
 
 				return ps;
 			}
@@ -92,14 +92,14 @@ public class GuidanceValueRepostory {
 				ps.setString(5, guidanceValue.getUsage());
 				ps.setString(6, guidanceValue.getSubUsage());
 				ps.setString(7, guidanceValue.getOccupancy());
-				ps.setDouble(8, guidanceValue.getValue());
+				ps.setDouble(8, getDouble(guidanceValue.getValue()));
 				ps.setTimestamp(9, TimeStampUtil.getTimeStamp(guidanceValue.getFromDate()));
 				ps.setTimestamp(10, TimeStampUtil.getTimeStamp(guidanceValue.getToDate()));
 				ps.setString(11, guidanceValue.getAuditDetails().getCreatedBy());
 				ps.setString(12, guidanceValue.getAuditDetails().getLastModifiedBy());
-				ps.setLong(13, guidanceValue.getAuditDetails().getCreatedTime());
-				ps.setLong(14, guidanceValue.getAuditDetails().getLastModifiedTime());
-				ps.setLong(15, guidanceValue.getId());
+				ps.setLong(13, getLong(guidanceValue.getAuditDetails().getCreatedTime()));
+				ps.setLong(14, getLong(guidanceValue.getAuditDetails().getLastModifiedTime()));
+				ps.setLong(15, getLong(guidanceValue.getId()));
 
 				return ps;
 			}

@@ -466,6 +466,7 @@ public class ReceiptService {
 	public void updateReceipt(WorkflowDetailsRequest workflowDetails){
 		if(workflowDetails.getStatus().equals("Receipt Created")){
 			workflowDetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
+
 			receiptRepository.updateReceipt(workflowDetails);
 		}
 	}

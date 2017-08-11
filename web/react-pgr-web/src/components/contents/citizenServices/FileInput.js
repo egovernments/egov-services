@@ -155,10 +155,9 @@ class FileInput extends Component{
       return(
         <div className={"file-input-container "+ (this.props.error? "error":"")}>
           <List>
-
             <div>
               <div className="file-header">
-                <div className="name">{translate(this.props.name)} {this.props.isRequired ? "*":""} {this.props.error ? <span className="errorMsg">{this.props.error}</span> : null}</div>
+                <div className="name">{translate(this.props.name)} {this.props.isRequired ? "*":""} {this.props.error ? <span className="errorMsg"><br/>{this.props.error}</span> : null}</div>
                 {!this.props.files || this.props.files.length > 0 ? (
                   <div>
                     {files}
@@ -171,23 +170,6 @@ class FileInput extends Component{
                 )}
               </div>
             </div>
-
-               {/*!this.props.files || this.props.files.length > 0 ? (
-                    <div>
-                      <div className="file-header">
-                        <div className="name">{translate(this.props.name)} {this.props.isRequired ? "*":""}</div>
-                      </div>
-                      {files}
-                    </div>
-               ) : (
-                 <div>
-                   <div className="file-header">
-                     <div className="name">{translate(this.props.name)} {this.props.isRequired ? "*":""} {this.props.error ? <span className="errorMsg">{this.props.error}</span> : null}</div>
-                     <FileAttachment style={styles.iconStyle} />
-                     <span>No Attachments</span>
-                   </div>
-                 </div>
-               ) */}
 
            { !this.props.files || this.props.files.length == 0 || this.props.isMultipleFile ? (
               <div className="file-browser"><RaisedButton label="Browse Files" onTouchTap={this.openFileBrowser} /></div>

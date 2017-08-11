@@ -1,7 +1,10 @@
-Feature: LoginIntent
+Feature: Login Intent Feature
 
   @Intent
   Scenario: LoginIntentTest
-    Given user on login screen types on username value ramana
-    And user on login screen types on password value demo
-    And user on login screen clicks on signIn
+    And user on Login screen waits for kurnoolText to be visible
+    Given user on Login screen types on username value ramana
+    And user on Login screen types on password value demo
+    And user on Login screen clicks on signIn
+
+

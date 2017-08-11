@@ -19,9 +19,10 @@
             "waitFor":"presence"
         },
         {
-            "elementName":"",
-            "identifier":"name",
-            "value":""
+            "elementName":"kurnoolText",
+            "identifier":"xpath",
+            "value":"//*[text()='Kurnool'] ",
+            "waitFor":"visibility"
         }
     ]
 }

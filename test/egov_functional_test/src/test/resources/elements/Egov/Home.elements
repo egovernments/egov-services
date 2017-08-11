@@ -1,10 +1,46 @@
 {
     "elements":[
         {
-        "elementName":"Name",
-        "identifier":"id",
-        "value":"undefined-undefined-Name-52182",
-        "waitFor":"presence"
+        "elementName":"menu",
+        "identifier":"xpath",
+        "value":"//i[text() = 'menu']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"firstMenuItem",
+        "identifier":"css",
+        "value":".menuStyle",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"search",
+        "identifier":"css",
+        "value":"[id^=undefined-Search-undefined]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"profile",
+        "identifier":"xpath",
+        "value":"//i[text()='more_vert']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"logout",
+        "identifier":"xpath",
+        "value":"//div[text()='Sign Out']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"NewGrievance",
+        "identifier":"xpath",
+        "value":"//div[text()='New Grievances']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"applicationSearch",
+        "identifier":"css",
+        "value":"[id^='undefined-Search-Search']",
+        "waitFor":"visibility"
         }
     ]
 }

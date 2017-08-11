@@ -1,0 +1,16 @@
+{
+  "elements":[
+  {
+     "elementName":"submitButtonCommon",
+     "identifier":"xpath",
+     "value":"//span[text()='Submit']",
+     "waitFor":"visibility"
+  },
+  {
+     "elementName":"homeButtonCommon",
+     "identifier":"xpath",
+     "value":"//i[text()='home']",
+     "waitFor":"visibility"
+  }
+  ]
+}

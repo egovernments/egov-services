@@ -1,0 +1,10 @@
+{
+    "elements":[
+        {
+        "elementName":"applicationSearch",
+        "identifier":"css",
+        "value":"[id^='undefined-Search-Search']",
+        "waitFor":"visibility"
+        }
+    ]
+}

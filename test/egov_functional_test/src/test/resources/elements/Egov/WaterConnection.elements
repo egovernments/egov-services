@@ -1,0 +1,28 @@
+{
+    "elements":[
+        {
+            "elementName":"propertyType",
+            "identifier":"css",
+            "value":"[id^=undefined-undefined-PropertyType] div :nth-child(2)",
+            "waitFor":"visibility"
+        },
+        {
+            "elementName":"sumpCapacity",
+            "identifier":"css",
+            "value":"[id^=undefined-undefined-SumpCapacityLitres]",
+            "waitFor":"visibility"
+        },
+        {
+            "elementName":"noOfPersons",
+            "identifier":"css",
+            "value":"[id^=undefined-undefined-NoofPersons]",
+            "waitFor":"visibility"
+        },
+        {
+             "elementName":"propertyTypeDropdown",
+             "identifier":"xpath",
+             "value":"//*[text()='%s']",
+             "waitFor":"visibility"
+        }
+    ]
+}

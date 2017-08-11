@@ -27,7 +27,7 @@ public class AttributeDefinition {
     private List<AttributeValueDefinition> attribValues;
 
     public AttributeDefinition(org.egov.pgr.domain.model.AttributeDefinition attributeDefinition) {
-        this.variable = !attributeDefinition.isReadOnly();
+        this.variable = attributeDefinition.isReadOnly();
         this.code = attributeDefinition.getCode();
         this.dataType = attributeDefinition.getDataType();
         this.required = attributeDefinition.isRequired();

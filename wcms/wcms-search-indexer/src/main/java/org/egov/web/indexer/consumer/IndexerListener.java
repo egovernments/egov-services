@@ -7,7 +7,6 @@ import org.egov.web.indexer.contract.ConnectionIndex;
 import org.egov.web.indexer.contract.WaterConnectionReq;
 import org.egov.web.indexer.repository.ElasticSearchRepository;
 import org.egov.web.indexer.service.ConnectionAdaptorService;
-import org.egov.web.indexer.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -36,8 +35,7 @@ public class IndexerListener {
 
     @Autowired
     public IndexerListener(ElasticSearchRepository elasticSearchRepository,
-                           ObjectMapper objectMapper,
-                           DocumentService documentService) {
+                           ObjectMapper objectMapper) {
         this.elasticSearchRepository = elasticSearchRepository;
         this.objectMapper = objectMapper;
     }

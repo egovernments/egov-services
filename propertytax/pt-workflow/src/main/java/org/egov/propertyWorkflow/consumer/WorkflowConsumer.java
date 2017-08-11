@@ -63,7 +63,7 @@ public class WorkflowConsumer {
 	 * start workflow, update workflow
 	 */
 
-	@KafkaListener(topics = { "#{propertiesManager.getCreatePropertyDemand()}",
+	@KafkaListener(topics = { "#{propertiesManager.getTaxGenerated()}",
 			"#{propertiesManager.getUpdatePropertTaxCalculated()}" })
 	public void listen(ConsumerRecord<String, Object> record) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -71,7 +71,7 @@ public class WorkflowConsumer {
 		PropertyRequest propertyRequest = objectMapper.convertValue(record.value(), PropertyRequest.class);
 		logger.info("WorkflowConsumer  listen() propertyRequest ---->>  " + propertyRequest);
 
-		if (record.topic().equalsIgnoreCase(propertiesManager.getCreatePropertyDemand())) {
+		if (record.topic().equalsIgnoreCase(propertiesManager.getTaxGenerated())) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,

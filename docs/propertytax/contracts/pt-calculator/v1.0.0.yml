@@ -459,13 +459,13 @@ paths:
           format: date
         - name: fromDate
           in: query
-          description: All the periods which fromdate is greather than or equals to input fromDate. If fromDate is given then toDate also mandatory
+          description: If fromDate is given then toDate also mandatory. All the periods from where fromDate is fall in the period to till periods where toDate is fall in the period.
           required: true
           type: string
           format: date
         - name: toDate
           in: query
-          description: All the periods which toDate is greather than or equals to input toDate. If toDate is given then fromDate also mandatory
+          description: If fromDate is given then toDate also mandatory. All the periods from where fromDate is fall in the period to till periods where toDate is fall in the period.
           required: true
           type: string
           format: date

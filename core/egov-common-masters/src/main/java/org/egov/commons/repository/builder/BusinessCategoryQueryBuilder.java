@@ -16,8 +16,7 @@ import lombok.Getter;
 public class BusinessCategoryQueryBuilder {
 	private static final Logger logger = LoggerFactory.getLogger(BusinessCategoryQueryBuilder.class);
 
-	private static final String BASE_QUERY = "select id,name,code,active,tenantId,createdBy,"
-			+ "createdDate,lastModifiedBy,lastModifiedDate FROM eg_businesscategory";
+	private static final String BASE_QUERY = "select id,name,code,active,tenantId FROM eg_businesscategory";
 
 
 	@SuppressWarnings("rawtypes")

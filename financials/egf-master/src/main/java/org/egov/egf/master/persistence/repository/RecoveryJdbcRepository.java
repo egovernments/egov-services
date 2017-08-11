@@ -67,6 +67,13 @@ public class RecoveryJdbcRepository extends JdbcRepository {
         searchQuery = searchQuery.replace(":selectfields", " * ");
 
         // implement jdbc specfic search
+        if (recoverySearchEntity.getTenantId() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", recoverySearchEntity.getTenantId());
+        }
         if (recoverySearchEntity.getId() != null) {
             if (params.length() > 0) {
                 params.append(" and ");

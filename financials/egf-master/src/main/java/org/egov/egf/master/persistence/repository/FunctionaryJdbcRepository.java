@@ -67,6 +67,13 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (functionarySearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", functionarySearchEntity.getTenantId());
+                }
 		if (functionarySearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

@@ -17,10 +17,13 @@ import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.web.contract.TradeLicenseContract;
+import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
+import org.egov.tradelicense.web.requests.TlMasterRequestInfoWrapper;
 import org.egov.tradelicense.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.web.requests.TradeLicenseResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -45,6 +48,9 @@ public class TradeLicenseService {
 
 	@Autowired
 	RestTemplate restTemplate;
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	PropertiesManager propertiesManager;
@@ -116,6 +122,7 @@ public class TradeLicenseService {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
+			validateUniqueLicenseNumber(tradeLicense);
 			validateTradeLocality(tradeLicense, requestInfoWrapper);
 			validateTradeLocationWard(tradeLicense, requestInfoWrapper);
 			validateTradeCategory(tradeLicense, requestInfoWrapper);
@@ -124,11 +131,39 @@ public class TradeLicenseService {
 		}
 	}
 
+	private void validateUniqueLicenseNumber(TradeLicense tradeLicense) {
+		
+		String sql = getUniqueTenantLicenseQuery(tradeLicense);
+		Integer count = null;
+		try {
+			count = (Integer) jdbcTemplate.queryForObject(sql, Integer.class);
+		} catch (Exception e) {
+			log.error("error while executing the query :"+ sql + " , error message : " +  e.getMessage());
+		}
+
+		if (count != 0) {
+			throw new InvalidInputException("tradeLicense number already exists");
+		}
+	}
+
+	private String getUniqueTenantLicenseQuery(TradeLicense tradeLicense) {
+		
+		String tenantId = tradeLicense.getTenantId();
+				String licNumber = tradeLicense.getLicenseNumber();
+		
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
+		uniqueQuery.append(" where licenseNumber = '" + licNumber + "'");
+		uniqueQuery.append(" AND tenantId = '" + tenantId + "'");
+		
+		return uniqueQuery.toString();
+	}
+	
 	private void validateTradeSupportingDocument(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
 		for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
 			StringBuffer supportingDocumentURI = new StringBuffer();
+			TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 			supportingDocumentURI.append(propertiesManager.getTradeLicenseMasterServiceHostName())
 					.append(propertiesManager.getTradeLicenseMasterServiceBasePath())
 					.append(propertiesManager.getDocumentServiceSearchPath());
@@ -140,7 +175,8 @@ public class TradeLicenseService {
 			DocumentTypeResponse documentTypeResponse = null;
 			try {
 
-				documentTypeResponse = restTemplate.postForObject(uri, requestInfoWrapper, DocumentTypeResponse.class);
+				documentTypeResponse = restTemplate.postForObject(uri, tlMasterRequestInfoWrapper,
+						DocumentTypeResponse.class);
 
 			} catch (Exception e) {
 				log.error("Error while connecting to the document type end point");
@@ -154,7 +190,7 @@ public class TradeLicenseService {
 	private void validateTradeSubCategory(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
 		Long subCategoryId = tradeLicense.getSubCategoryId();
-
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		StringBuffer supportingDocumentURI = new StringBuffer();
 		supportingDocumentURI.append(propertiesManager.getTradeLicenseMasterServiceHostName())
 				.append(propertiesManager.getTradeLicenseMasterServiceBasePath())
@@ -162,13 +198,12 @@ public class TradeLicenseService {
 
 		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
 				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("ids", Long.valueOf(subCategoryId))
-				.queryParam("type", "subCategory")
-				.build(true).encode().toUri();
+				.queryParam("type", "subCategory").build(true).encode().toUri();
 
 		CategoryResponse categoryResponse = null;
 		try {
 
-			categoryResponse = restTemplate.postForObject(uri, requestInfoWrapper, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(uri, tlMasterRequestInfoWrapper, CategoryResponse.class);
 
 		} catch (Exception e) {
 			log.error("Error while connecting to the sub category end point");
@@ -181,7 +216,7 @@ public class TradeLicenseService {
 	private void validateTradeCategory(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
 		Long categoryId = tradeLicense.getCategoryId();
-
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		StringBuffer supportingDocumentURI = new StringBuffer();
 		supportingDocumentURI.append(propertiesManager.getTradeLicenseMasterServiceHostName())
 				.append(propertiesManager.getTradeLicenseMasterServiceBasePath())
@@ -194,7 +229,7 @@ public class TradeLicenseService {
 		CategoryResponse categoryResponse = null;
 		try {
 
-			categoryResponse = restTemplate.postForObject(uri, requestInfoWrapper, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(uri, tlMasterRequestInfoWrapper, CategoryResponse.class);
 
 		} catch (Exception e) {
 			log.error("Error while connecting to the category end point");
@@ -275,21 +310,23 @@ public class TradeLicenseService {
 
 		return TradeLicenseResponse;
 	}
-	
+
 	public TradeLicenseResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
-			String licenseNumber,  String mobileNumber, String aadhaarNumber, String emailId,
-			String propertyAssesmentNo, Integer revenueWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy,Integer status) {
+			String licenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
+			Integer revenueWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
+			Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
 
-		List<TradeLicense> licenses = tradeLicenseRepository.search(tenantId, pageSize, pageNumber, sort, active, tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, revenueWard, locality, ownerName,
-				tradeTitle, tradeType, tradeCategory, tradeSubCategory, legacy, status);
-		
+		List<TradeLicense> licenses = tradeLicenseRepository.search(tenantId, pageSize, pageNumber, sort, active,
+				tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId,
+				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+				tradeSubCategory, legacy, status);
+
 		List<TradeLicenseContract> tradeLicenseContracts = new ArrayList<TradeLicenseContract>();
-		
+
 		ModelMapper model = new ModelMapper();
-		
-		for(TradeLicense license : licenses){
+
+		for (TradeLicense license : licenses) {
 			TradeLicenseContract tradeContract = new TradeLicenseContract();
 			model.map(license, tradeContract);
 			tradeLicenseContracts.add(tradeContract);
@@ -300,9 +337,20 @@ public class TradeLicenseService {
 
 		return TradeLicenseResponse;
 	}
-	
-	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success)
-	{
+
+	public TlMasterRequestInfoWrapper getTlMasterRequestInfoWrapper(RequestInfoWrapper requestInfoWrapper) {
+
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = new TlMasterRequestInfoWrapper();
+		TlMasterRequestInfo tlMasterRequestInfo = new TlMasterRequestInfo();
+		ModelMapper mapper = new ModelMapper();
+		mapper.map(requestInfoWrapper.getRequestInfo(), tlMasterRequestInfo);
+		tlMasterRequestInfo.setTs(12345l);
+		tlMasterRequestInfoWrapper.setRequestInfo(tlMasterRequestInfo);
+
+		return tlMasterRequestInfoWrapper;
+	}
+
+	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		String apiId = requestInfo.getApiId();
 		responseInfo.setApiId(apiId);

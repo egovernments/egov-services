@@ -67,6 +67,13 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (chartOfAccountSearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", chartOfAccountSearchEntity.getTenantId());
+                }
 		if (chartOfAccountSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

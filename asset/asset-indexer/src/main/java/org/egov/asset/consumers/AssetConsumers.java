@@ -27,50 +27,48 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssetConsumers {
 
-	@Autowired
-	private AssetIndexService assetIndexService;
+    @Autowired
+    private AssetIndexService assetIndexService;
 
-	@Autowired
-	private RevaluationIndexService revaluationIndexService;
+    @Autowired
+    private RevaluationIndexService revaluationIndexService;
 
-	@Autowired
-	private DisposalIndexService disposalIndexService;
+    @Autowired
+    private DisposalIndexService disposalIndexService;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
-	
-	@Autowired
-	private DepreciationIndexService depreciationIndexService;
-	
-	@Autowired
-	private CurrentValueIndexService currentValueIndexService;
-	
-	
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@KafkaListener(topics = { "${kafka.topics.save.asset}", "${kafka.topics.save.depreciation}",
-			"${kafka.topics.save.currentvalue}", "${kafka.topics.update.asset}", "${kafka.topics.save.revaluation}",
-			"${kafka.topics.update.revaluation}", "${kafka.topics.save.disposal}", "${kafka.topics.update.disposal}" })
-	public void listen(final Map<String, Object> consumerRecord,
-			@Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
+    @Autowired
+    private DepreciationIndexService depreciationIndexService;
 
-		log.info("topic:" + topic + ":" + "value:" + consumerRecord + "thread:" + Thread.currentThread());
-		final ObjectMapper objectMapper = new ObjectMapper();
-		if (topic.equals(applicationProperties.getCreateAssetTopicName()))
-			assetIndexService.postAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
-		else if (topic.equals(applicationProperties.getUpdateAssetTopicName()))
-			assetIndexService.putAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
-		else if (topic.equals(applicationProperties.getCreateAssetRevaluationTopicName())
-				|| topic.equals(applicationProperties.getUpdateAssetRevaluationTopicName())) {
-			revaluationIndexService.postAssetRevaluation(
-					objectMapper.convertValue(consumerRecord, RevaluationRequest.class));
-		} else if (topic.equals(applicationProperties.getCreateAssetDisposalTopicName())
-				|| topic.equals(applicationProperties.getUpdateAssetDisposalTopicName())) {
-			disposalIndexService.postAssetDisposal(objectMapper.convertValue(consumerRecord, DisposalRequest.class));
-		}else if(topic.equals(applicationProperties.getSaveCurrentvalueTopic())){
-        	currentValueIndexService.indexCurrentValue(objectMapper.convertValue(consumerRecord, AssetCurrentValueRequest.class));
-        }else if(topic.equals(applicationProperties.getSaveDepreciationTopic())){
-        	depreciationIndexService.indexDepreciaiton(objectMapper.convertValue(consumerRecord, Depreciation.class));
-        }
+    @Autowired
+    private CurrentValueIndexService currentValueIndexService;
 
-	}
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @KafkaListener(topics = { "${kafka.topics.save.asset}", "${kafka.topics.save.depreciation}",
+            "${kafka.topics.save.currentvalue}", "${kafka.topics.update.asset}", "${kafka.topics.save.revaluation}",
+            "${kafka.topics.save.disposal}" })
+    public void listen(final Map<String, Object> consumerRecord,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
+
+        log.info("topic:" + topic + ":" + "value:" + consumerRecord + "thread:" + Thread.currentThread());
+        if (topic.equals(applicationProperties.getCreateAssetTopicName()))
+            assetIndexService.postAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
+        else if (topic.equals(applicationProperties.getUpdateAssetTopicName()))
+            assetIndexService.putAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
+        else if (topic.equals(applicationProperties.getCreateAssetRevaluationTopicName()))
+            revaluationIndexService
+                    .postAssetRevaluation(objectMapper.convertValue(consumerRecord, RevaluationRequest.class));
+        else if (topic.equals(applicationProperties.getCreateAssetDisposalTopicName()))
+            disposalIndexService.postAssetDisposal(objectMapper.convertValue(consumerRecord, DisposalRequest.class));
+        else if (topic.equals(applicationProperties.getSaveCurrentvalueTopic()))
+            currentValueIndexService
+                    .indexCurrentValue(objectMapper.convertValue(consumerRecord, AssetCurrentValueRequest.class));
+        else if (topic.equals(applicationProperties.getSaveDepreciationTopic()))
+            depreciationIndexService.indexDepreciaiton(objectMapper.convertValue(consumerRecord, Depreciation.class));
+
+    }
 }

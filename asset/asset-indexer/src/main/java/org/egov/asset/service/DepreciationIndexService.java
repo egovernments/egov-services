@@ -20,48 +20,49 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DepreciationIndexService {
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private RestTemplate restTemplate;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	public void indexDepreciaiton(Depreciation depreciation) {
+    @Autowired
+    private RestTemplate restTemplate;
 
-		ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper mapper;
 
-		StringBuilder bulkRequestBody = new StringBuilder();
-		String format = "{ \"index\" : { \"_id\" : \"%s\" } }%n";
+    public void indexDepreciaiton(final Depreciation depreciation) {
 
-		Long voucherRef = depreciation.getVoucherReference();
-		AuditDetails auditDetails = depreciation.getAuditDetails();
-		String tenantId = depreciation.getTenantId();
-		String financialYear = depreciation.getFinancialYear();
-		Long fromDate = depreciation.getFromDate();
-		Long toDate = depreciation.getToDate();
+        final StringBuilder bulkRequestBody = new StringBuilder();
+        final String format = "{ \"index\" : { \"_id\" : \"%s\" } }%n";
 
-		for (DepreciationDetail depreciationDetail : depreciation.getDepreciationDetails()) {
-			String actionMetaData = String.format(format, "" + depreciationDetail.getId());
-			bulkRequestBody.append(actionMetaData);
-			DepreciationIndex depreciationIndex = DepreciationIndex.toDepreciationIndex(depreciationDetail, voucherRef,
-					auditDetails, tenantId, financialYear, fromDate, toDate);
-			try {
-				bulkRequestBody.append(mapper.writeValueAsString(depreciationIndex));
-			} catch (JsonProcessingException e) {
-				log.info(e.toString());
-			}
-			bulkRequestBody.append("\n");
-		}
+        final Long voucherRef = depreciation.getVoucherReference();
+        final AuditDetails auditDetails = depreciation.getAuditDetails();
+        final String tenantId = depreciation.getTenantId();
+        final String financialYear = depreciation.getFinancialYear();
+        final Long fromDate = depreciation.getFromDate();
+        final Long toDate = depreciation.getToDate();
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(bulkRequestBody.toString(), headers);
-		String url = applicationProperties.getIndexerHost()+applicationProperties.getDepreciaitionIndexUrl();
-		try {
-			restTemplate.postForEntity( url, entity, String.class);
-		} catch (Exception e) {
-			// do something
-		}
-	}
+        for (final DepreciationDetail depreciationDetail : depreciation.getDepreciationDetails()) {
+            final String actionMetaData = String.format(format, "" + depreciationDetail.getId());
+            bulkRequestBody.append(actionMetaData);
+            final DepreciationIndex depreciationIndex = DepreciationIndex.toDepreciationIndex(depreciationDetail,
+                    voucherRef, auditDetails, tenantId, financialYear, fromDate, toDate);
+            try {
+                bulkRequestBody.append(mapper.writeValueAsString(depreciationIndex));
+            } catch (final JsonProcessingException e) {
+                log.info(e.toString());
+            }
+            bulkRequestBody.append("\n");
+        }
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        final HttpEntity<String> entity = new HttpEntity<>(bulkRequestBody.toString(), headers);
+        final String url = applicationProperties.getIndexerHost() + applicationProperties.getDepreciaitionIndexUrl();
+        try {
+            restTemplate.postForEntity(url, entity, String.class);
+        } catch (final Exception e) {
+            // do something
+        }
+    }
 }

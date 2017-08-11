@@ -19,35 +19,36 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CurrentValueIndexService {
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
-	public void indexCurrentValue(AssetCurrentValueRequest assetCurrentValueRequest) {
+    @Autowired
+    private ObjectMapper mapper;
 
-		ObjectMapper mapper = new ObjectMapper();
+    public void indexCurrentValue(final AssetCurrentValueRequest assetCurrentValueRequest) {
 
-		StringBuilder bulkRequestBody = new StringBuilder();
-		String format = "{ \"index\" : { \"_id\" : \"%s\" } }%n";
+        final StringBuilder bulkRequestBody = new StringBuilder();
+        final String format = "{ \"index\" : { \"_id\" : \"%s\" } }%n";
 
-		for (AssetCurrentValue assetCurrentValue : assetCurrentValueRequest.getAssetCurrentValues()) {
+        for (final AssetCurrentValue assetCurrentValue : assetCurrentValueRequest.getAssetCurrentValues()) {
 
-			String actionMetaData = String.format(format, "" + assetCurrentValue.getId());
-			bulkRequestBody.append(actionMetaData);
-			try {
-				bulkRequestBody.append(mapper.writeValueAsString(assetCurrentValue));
-			} catch (JsonProcessingException e) {
-				log.info(e.toString());
-			}
-			bulkRequestBody.append("\n");
-		}
+            final String actionMetaData = String.format(format, "" + assetCurrentValue.getId());
+            bulkRequestBody.append(actionMetaData);
+            try {
+                bulkRequestBody.append(mapper.writeValueAsString(assetCurrentValue));
+            } catch (final JsonProcessingException e) {
+                log.info(e.toString());
+            }
+            bulkRequestBody.append("\n");
+        }
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(bulkRequestBody.toString(), headers);
-		String url = applicationProperties.getIndexerHost() + applicationProperties.getCurrentValueIndexUrl();
-		restTemplate.postForEntity(url, entity, String.class);
-	}
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        final HttpEntity<String> entity = new HttpEntity<>(bulkRequestBody.toString(), headers);
+        final String url = applicationProperties.getIndexerHost() + applicationProperties.getCurrentValueIndexUrl();
+        restTemplate.postForEntity(url, entity, String.class);
+    }
 }

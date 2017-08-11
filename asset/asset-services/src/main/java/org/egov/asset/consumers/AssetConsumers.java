@@ -55,8 +55,7 @@ public class AssetConsumers {
 
     @KafkaListener(topics = { "${kafka.topics.save.assetcategory}", "${kafka.topics.update.assetcategory}",
             "${kafka.topics.save.asset}", "${kafka.topics.update.asset}", "${kafka.topics.save.revaluation}",
-            "${kafka.topics.update.revaluation}", "${kafka.topics.save.disposal}", "${kafka.topics.update.disposal}",
-            "${kafka.topics.save.depreciation}", "${kafka.topics.save.currentvalue}" })
+            "${kafka.topics.save.disposal}", "${kafka.topics.save.depreciation}", "${kafka.topics.save.currentvalue}" })
     public void listen(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
 

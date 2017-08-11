@@ -393,7 +393,7 @@ constructor(props) {
 						<div className="clearfix"></div>
                       </Row>
                       {ownerDetails.owners &&
-                        <div>  <br/>
+                        <div className="col-md-12 col-xs-12">  <br/>
                           <Table id="createPropertyTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                             <thead style={{backgroundColor:"#607b84",color:"white"}}>
                               <tr>

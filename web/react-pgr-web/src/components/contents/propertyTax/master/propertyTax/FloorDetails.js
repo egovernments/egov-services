@@ -1006,7 +1006,7 @@ calcAssessableArea = (e, type) => {
 													
 												</Row>
 												{ floorDetails.floors &&
-                                            <div> <br/>
+                                            <div className="col-md-12 col-xs-12"> <br/>
                                           <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                                           <thead style={{backgroundColor:"#607b84",color:"white"}}>
                                             <tr>

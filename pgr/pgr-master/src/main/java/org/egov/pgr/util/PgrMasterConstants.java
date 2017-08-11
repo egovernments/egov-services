@@ -65,7 +65,7 @@ public class PgrMasterConstants {
     public static final String INVALID_ESCALATIONHIERARCHY_REQUEST_MESSAGE = "Escalation Hierarchy is Invalid";
 
 
-    public static final String TENANTID_MANDATORY_CODE = "pgr.0001";
+    public static final String TENANTID_MANDATORY_CODE = "pgr.0011";
     public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
     public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
 
@@ -131,15 +131,15 @@ public class PgrMasterConstants {
     public static final String RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME = "code";
     public static final String RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingMode Code is required";
 
-    public static final String ATTRIBUTE_DETAILS_MANDATORY_CODE = "pgr.0013";
+    public static final String ATTRIBUTE_DETAILS_MANDATORY_CODE = "pgr.0023";
     public static final String ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME = "attributes";
     public static final String ATTRIBUTE_DETAILS_MANADATORY_ERROR_MESSAGE = "Attributes are mandatory if Metadata is True";
 
-    public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_CODE = "pgr.0014";
+    public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_CODE = "pgr.0024";
     public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME = "code";
     public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE = "Grievance Type Code already exists";
 
-    public static final String CATEGORY_ID_MANDATORY_CODE = "pgr.0015";
+    public static final String CATEGORY_ID_MANDATORY_CODE = "pgr.0025";
     public static final String CATEGORY_ID_MANDATORY_FIELD_NAME = "code";
     public static final String CATEGORY_ID_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
 
@@ -167,7 +167,7 @@ public class PgrMasterConstants {
     public static final String SERVICEGROUP_CODENAME_ERROR_MESSAGE = "Service Group Code or Name already exists";
     public static final String SERVICEGROUP_CODENAME_FIELD_NAME = "name";
 
-    public static final String GRIEVANCETYPE_NAME_UNIQUE_CODE = "pgr.0016";
+    public static final String GRIEVANCETYPE_NAME_UNIQUE_CODE = "pgr.0027";
     public static final String GRIEVANCETYPE_NAME_UNIQUE_FIELD_NAME = "serviceName";
     public static final String GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE = "Grievance Type Name already exists";
 

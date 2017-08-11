@@ -115,10 +115,12 @@ public class TaxPeriodRespository {
 	 * @param code
 	 * @return {@link TaxPeriod} List of taxPeriods
 	 */
-	public List<TaxPeriod> searchTaxPeriod(String tenantId, String validDate, String code) {
+	public List<TaxPeriod> searchTaxPeriod(String tenantId, String validDate, String code, String fromDate,
+			String toDate) {
 
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String searchQuery = TaxPeriodBuilder.getSearchQuery(tenantId, validDate, code, preparedStatementValues);
+		String searchQuery = TaxPeriodBuilder.getSearchQuery(tenantId, validDate, code, fromDate, toDate,
+				preparedStatementValues);
 
 		List<TaxPeriod> taxPeriods = null;
 		try {

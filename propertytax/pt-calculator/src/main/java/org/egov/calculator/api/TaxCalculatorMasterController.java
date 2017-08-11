@@ -229,18 +229,23 @@ public class TaxCalculatorMasterController {
     /**
      * Description : This will search the tax periods based on the given parameter
      * 
+     * @param requestInfo
      * @param tenantId
      * @param validDate
-     * @param requestInfo
-     * @return {@link TaxPeriodResponse}
+     * @param code
+     * @param fromDate
+     * @param toDate
+     * @return TaxPeriodResponse
      * @throws Exception
      */
     @RequestMapping(path = "/taxperiods/_search", method = RequestMethod.POST)
     public TaxPeriodResponse getTaxPeriod(@RequestBody RequestInfoWrapper requestInfo,
-            @RequestParam(required = true) String tenantId, @RequestParam(required = true) String validDate,
-            @RequestParam(required = false) String code) throws Exception {
+			@RequestParam(required = true) String tenantId, @RequestParam(required = false) String validDate,
+			@RequestParam(required = false) String code, @RequestParam(required = true) String fromDate,
+			@RequestParam(required = true) String toDate) throws Exception {
 
-        return taxCalculationMasterService.getTaxPeriod(requestInfo.getRequestInfo(), tenantId, validDate, code);
+		return taxCalculationMasterService.getTaxPeriod(requestInfo.getRequestInfo(), tenantId, validDate, code,
+				fromDate, toDate);
 
-    }
+	}
 }

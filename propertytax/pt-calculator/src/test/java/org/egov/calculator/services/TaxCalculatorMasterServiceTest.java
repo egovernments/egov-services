@@ -388,13 +388,14 @@ public class TaxCalculatorMasterServiceTest {
     public void searchTaxPeriod() {
 
         String tenantId = "1234";
-        String validDate = "03-02-2017";
         String code = "YEAR";
+        String fromDate = "02/02/2017";
+		String toDate = "05-02-2017";
 
         TaxPeriodResponse taxPeriodResponse = null;
         try {
-            taxPeriodResponse = taxCalculatorMasterService.getTaxPeriod(getRequestInfoObject(), tenantId, validDate,
-                    code);
+            taxPeriodResponse = taxCalculatorMasterService.getTaxPeriod(getRequestInfoObject(), tenantId, null,
+                    code, fromDate, toDate);
 
             if (taxPeriodResponse.getTaxPeriods().size() == 0) {
                 assertTrue(false);

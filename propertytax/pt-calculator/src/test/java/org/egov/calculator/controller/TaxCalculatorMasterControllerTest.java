@@ -387,11 +387,12 @@ public class TaxCalculatorMasterControllerTest {
 		taxPeriodResponse.setTaxPeriods(taxPeriods);
 
 		try {
-			when(taxCalculatorMasterService.getTaxPeriod(any(RequestInfo.class), anyString(), anyString(), anyString()))
-					.thenReturn(taxPeriodResponse);
+			when(taxCalculatorMasterService.getTaxPeriod(any(RequestInfo.class), anyString(), anyString(), anyString(),
+					anyString(), anyString())).thenReturn(taxPeriodResponse);
 
 			mockMvc.perform(post("/properties/taxes/taxperiods/_search").param("tenantId", "1234")
-					.param("validDate", "02/02/2017").param("code", "ganesha").contentType(MediaType.APPLICATION_JSON)
+					.param("validDate", "02/02/2017").param("code", "ganesha").param("fromDate", "01/02/2017")
+					.param("toDate", "01/03/2017").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchTaxPeriodRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("searchTaxPeriodResponse.json")));

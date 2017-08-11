@@ -83,7 +83,7 @@ class UiTable extends Component {
 		                      {
 		                      	item.map((item2, i2)=>{
 			                        return (
-			                          <td key={i2}>{item2 + ""}</td>
+			                          <td key={i2}>{item2?item2:""}</td>
 			                        )
 		                      })}
 		                    </tr>

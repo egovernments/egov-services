@@ -586,7 +586,7 @@ var localationData = {
   "collection.create.collectedBy":"Collected By",
   "collection.create.status":"Status",
   "collection.create.modeOfPayment":"Mode Of Payment",
-  "collection.search.receiptDate":"Receipt Number",
+  "collection.search.receiptDate":"Receipt Date",
   "collection.search.billNumber":"Bill Number",
   "collection.search.billDescription":"Bill Description",
   "collection.search.paidBy":"Paid By",

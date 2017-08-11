@@ -114,7 +114,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"url":"collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..id|$..name"
+							"url":"collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$.user.*.id|$.user.*.name"
 						},
 						{
 							"name": "status",

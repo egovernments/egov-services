@@ -1,0 +1,1 @@
+ALTER TABLE egasset_depreciation alter column depreciationrate drop not null,alter column valuebeforedepreciation drop not null;

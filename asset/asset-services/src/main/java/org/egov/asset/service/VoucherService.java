@@ -60,8 +60,6 @@ public class VoucherService {
                 + "?tenantId=" + tenantId;
         log.debug("Voucher API Request URL :: " + createVoucherUrl);
         log.debug("VoucherRequest :: " + voucherRequest);
-        new Error();
-        VoucherResponse voucherRes = new VoucherResponse();
 
         final List<String> cookies = headers.get("cookie");
         log.debug("cookies::" + cookies);
@@ -93,7 +91,7 @@ public class VoucherService {
         final JSONObject voucherResponse = response.getBody();
         log.debug("VoucherResponse :: " + voucherResponse);
         try {
-            voucherRes = mapper.readValue(voucherResponse.toString(), VoucherResponse.class);
+            final VoucherResponse voucherRes = mapper.readValue(voucherResponse.toString(), VoucherResponse.class);
             final Long voucherId = voucherRes.getVouchers().get(0).getId();
             log.debug("Voucher Id is :: " + voucherId);
             return voucherId;

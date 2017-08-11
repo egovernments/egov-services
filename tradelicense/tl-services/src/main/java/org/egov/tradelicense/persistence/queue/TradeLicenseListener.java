@@ -39,7 +39,7 @@ public class TradeLicenseListener {
 					mastersMap.get(propertiesManager.getCreateLegacyTradeValidated()), TradeLicenseRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (TradeLicenseContract tradeLicenseContract : request.getLicesnses()) {
+			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
 				tradeLicenseService.save(domain);
 			}

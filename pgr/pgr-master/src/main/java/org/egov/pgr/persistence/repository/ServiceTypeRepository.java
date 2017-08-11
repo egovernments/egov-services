@@ -72,6 +72,23 @@ public class ServiceTypeRepository {
 
         return Collections.EMPTY_LIST;
     }
+    
+    public List<org.egov.pgr.domain.model.ServiceType> getCodeTenantData(org.egov.pgr.domain.model.ServiceType serviceType) {
+    	org.egov.pgr.domain.model.ServiceType ss= org.egov.pgr.domain.model.ServiceType.builder().serviceCode(serviceType.getServiceCode())
+    												.tenantId(serviceType.getTenantId())
+    													.build();
+        List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.getQuery(ss),
+        		getDetailQuery(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
+        System.out.println(serviceTypeQueryBuilder.getQuery(serviceType));
+        if(!serviceTypeList.isEmpty())
+        {
+        	return serviceTypeList.stream()
+        	.map(ServiceType::toDomain)
+            .collect(Collectors.toList());
+        }
+
+        return Collections.EMPTY_LIST;
+    }
 
     private List<org.egov.pgr.domain.model.ServiceType> getServiceTypes(ServiceTypeSearchCriteria serviceTypeSearchCriteria, List<ServiceType> serviceTypeList) {
         return serviceTypeList.stream()
@@ -94,7 +111,7 @@ public class ServiceTypeRepository {
                         fetchKeywords(serviceType, serviceTypeSearchCriteria.getKeywords())));
     }
 
-    private List<ServiceType> getServiceList(String sql, HashMap<String, String> searchNamedQuery, BeanPropertyRowMapper<ServiceType> rowMapper) {
+    private List<ServiceType> getServiceList(String sql, HashMap<String, Object> searchNamedQuery, BeanPropertyRowMapper<ServiceType> rowMapper) {
         return namedParameterJdbcTemplate.query(sql,
                 searchNamedQuery, rowMapper);
     }
@@ -136,20 +153,27 @@ public class ServiceTypeRepository {
         return parametersMap;
     }
 
-    private HashMap<String, String> getSearchNamedQuery(ServiceTypeSearchCriteria serviceTypeSearchCriteria) {
-        HashMap<String, String> parametersMap = new HashMap<>();
+    private HashMap<String, Object> getSearchNamedQuery(ServiceTypeSearchCriteria serviceTypeSearchCriteria) {
+        HashMap<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("code", serviceTypeSearchCriteria.getServiceCode());
         parametersMap.put("tenantid", serviceTypeSearchCriteria.getTenantId());
 
         return parametersMap;
     }
     
-    private HashMap<String, String> getDetailNamedQuery(org.egov.pgr.domain.model.ServiceType serviceType) {
-        HashMap<String, String> parametersMap = new HashMap<String, String>();
+    private HashMap<String, Object> getDetailNamedQuery(org.egov.pgr.domain.model.ServiceType serviceType) {
+        HashMap<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("code", serviceType.getServiceCode().toUpperCase());
         parametersMap.put("tenantid", serviceType.getTenantId());
         parametersMap.put("name",serviceType.getServiceName().toUpperCase());
-
+        parametersMap.put("category", serviceType.getCategory());
+        return parametersMap;
+    }
+    
+    private HashMap<String, Object> getDetailQuery(org.egov.pgr.domain.model.ServiceType serviceType) {
+        HashMap<String, Object> parametersMap = new HashMap<String, Object>();
+        parametersMap.put("code", serviceType.getServiceCode().toUpperCase());
+        parametersMap.put("tenantid", serviceType.getTenantId());
         return parametersMap;
     }
 

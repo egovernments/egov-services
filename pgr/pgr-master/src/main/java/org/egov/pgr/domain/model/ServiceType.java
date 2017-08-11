@@ -53,7 +53,7 @@ public class ServiceType {
                 .keywords(keywords)
                 .category(category)
                 .slaHours(slaHours)
-                .tenantId(tenantId)
+                .tenantId(tenantId.trim())
                 .isday(isDay)
                 .isactive(active)
                 .hasfinancialimpact(hasFinancialImpact)
@@ -74,6 +74,10 @@ public class ServiceType {
     
     public boolean isServiceNameAbsent(){
         return isEmpty(serviceName) || serviceName == null;
+    }
+    
+    public boolean isCategoryAbsent(){
+        return isEmpty(category) || category == null;
     }
 
 //    private List<org.egov.pgr.persistence.dto.AttributeDefinition> mapToDtoAttribute(){

@@ -53,11 +53,23 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
 	@Override
 	public void validateUniqueCombinations(ServiceType serviceType) {
 
-		List<org.egov.pgr.domain.model.ServiceType> serviceTypeList = serviceTypeRepository.getData(serviceType);
+		List<org.egov.pgr.domain.model.ServiceType> serviceTypeList = serviceTypeRepository.getCodeTenantData(serviceType);
 		
 		if (!serviceTypeList.isEmpty()
 				&& (serviceTypeList.get(0).getServiceCode().equalsIgnoreCase(serviceType.getServiceCode())
-				|| serviceTypeList.get(0).getServiceName().equalsIgnoreCase(serviceType.getServiceName()))) {
+				&& serviceTypeList.get(0).getTenantId().equalsIgnoreCase(serviceType.getTenantId()))) {
+			HashMap<String, String> error = new HashMap<>();
+			error.put("code", "ServiceCodeVaalidator.1");
+			error.put("field", "serviceTypeConfiguration.serviceCode");
+			error.put("message", "serviceCode already exists");
+			throw new PGRMasterException(error);
+		}
+		
+		if (!serviceTypeList.isEmpty()
+				&& (serviceTypeList.get(0).getServiceCode().equalsIgnoreCase(serviceType.getServiceCode())
+				&& serviceTypeList.get(0).getCategory() == serviceType.getCategory()
+				&& (serviceTypeList.get(0).getServiceName().equalsIgnoreCase(serviceType.getServiceName()))
+				&& serviceTypeList.get(0).getTenantId().equalsIgnoreCase(serviceType.getTenantId()))) {
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "ServiceCodeVaalidator.1");
 			error.put("field", "serviceTypeConfiguration.serviceCode");

@@ -32,6 +32,9 @@ public class ServiceTypeQueryBuilder {
         if(!serviceType.isServiceNameAbsent())
         	addWhereClauseWithAnd(query, "upper(name)", "name");
 
+        if(!serviceType.isCategoryAbsent())
+        	addWhereClauseWithAnd(query, "category", "category");
+
         return query.toString();
     }
 

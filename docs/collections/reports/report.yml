@@ -112,16 +112,17 @@ ReportDefinitions:
     source: collection
   - name: status
     label: reports.collection.status
-    type: string
+    type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
   - name: department
     label: reports.collection.department
     type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name 
     source: collection 
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist
-    pattern: 'list://CARD:CARD,CASH:CASH,ONLINE:ONLINE' 
+    pattern: 'list://CASH:CASH,ONLINE:ONLINE,CHEQUE:CHEQUE,DD:DD' 
   - name: businessservice
     label: reports.collection.businessservice
     type: singlevaluelist

@@ -168,7 +168,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			}
 		
 			searchSql.append(" offset ? ");
-			preparedStatementValues.add((pageNumber));
+			preparedStatementValues.add(((pageNumber-1)*pageSize));
 			
 			
 				searchSql.append(" limit ? ");

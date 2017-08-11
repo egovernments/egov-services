@@ -5,5 +5,5 @@ package org.egov.tradelicense.web.contract.enums;
  */
 public enum BusinessNatureContract {
 
-	PERMENANT, TEMPORARY
+	PERMANENT, TEMPORARY
 }

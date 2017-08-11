@@ -48,7 +48,7 @@ ALTER TABLE ONLY egtl_license
 ALTER TABLE ONLY egtl_license
     ADD CONSTRAINT pk_egtl_license PRIMARY KEY (id);
 ALTER TABLE ONLY egtl_license
-    ADD CONSTRAINT unq_tl_licenseno UNIQUE (licenseNumber);
+    ADD CONSTRAINT unq_tl_licenseno UNIQUE (licenseNumber,tenantId);
 ALTER TABLE ONLY egtl_license
     ADD CONSTRAINT unq_tl_agrmtno UNIQUE (agreementNo);         
 

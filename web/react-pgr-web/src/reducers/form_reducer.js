@@ -459,7 +459,13 @@ export default(state = defaultState, action) => {
           var field=filesArray.find((field) => field.code == action.code);
           var files=[];
           if(field){
-            field.files=[...field.files, ...action.files];
+            action.files.map((file)=>{
+              var isExists=field.files.find((existingFile)=> existingFile.name === file.name
+                            && existingFile.size === file.size);
+              if(!isExists) //check file is not exists in the array
+                files.push(file);
+            });
+            field.files=[...field.files, ...files];
             files=[...field.files];
           }
           else{

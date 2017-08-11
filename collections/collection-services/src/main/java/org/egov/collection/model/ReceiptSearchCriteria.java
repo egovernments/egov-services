@@ -61,9 +61,9 @@ public class ReceiptSearchCriteria {
 
     private String consumerCode;
 
-    private String fromDate;
+    private Long fromDate;
 
-    private String toDate;
+    private Long toDate;
 
     private String collectedBy;
 

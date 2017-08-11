@@ -107,6 +107,9 @@ public class ReceiptController {
 			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			final BindingResult requestBodyBindingResult) {
 
+		LOGGER.info("Request: "+receiptGetRequest.toString());
+		LOGGER.info("RequestInfo: "+requestInfoWrapper.toString());
+		
 		ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
 				.businessCode(receiptGetRequest.getBusinessCode()).classification(receiptGetRequest.getClassification())
 				.collectedBy(receiptGetRequest.getCollectedBy()).consumerCode(receiptGetRequest.getConsumerCode())

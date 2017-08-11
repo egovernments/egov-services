@@ -2,19 +2,21 @@ package org.egov.collection.web.contract;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 @Setter
 @Getter
+@ToString
 public class ReceiptSearchGetRequest {
     private List<String> receiptNumbers;
 
     private String consumerCode;
 
-    private String fromDate;
+    private Long fromDate;
 
-    private String toDate;
+    private Long toDate;
 
     private String collectedBy;
 

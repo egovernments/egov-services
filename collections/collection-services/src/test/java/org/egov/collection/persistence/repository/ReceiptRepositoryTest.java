@@ -281,8 +281,8 @@ public class ReceiptRepositoryTest {
 
 	private ReceiptSearchCriteria getReceiptSearchCriteria() {
 		return ReceiptSearchCriteria.builder().collectedBy("1").tenantId("default").status("CREATED")
-				.sortBy("payeename").sortOrder("desc").fromDate("2016-02-02 00:00:00")
-				.toDate("2017-07-11 13:25:45.794050").build();
+				.sortBy("payeename").sortOrder("desc").fromDate(1502272932389L)
+				.toDate(1502280236077L).build();
 	}
 
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {

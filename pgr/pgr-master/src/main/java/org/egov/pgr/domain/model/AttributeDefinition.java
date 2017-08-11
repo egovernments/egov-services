@@ -40,7 +40,7 @@ public class AttributeDefinition {
                 .description(description)
                 .dataType(dataType)
                 .dataTypeDescription(dataTypeDescription)
-                .order(order)
+                .ordernum(order)
                 .groupCode(groupCode)
                 .serviceCode(serviceCode)
                 .url(url)

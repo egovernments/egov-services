@@ -134,7 +134,7 @@ class ShowForm extends Component {
   {
     e.preventDefault();
 
-      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams}=this.props;
+      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams,match}=this.props;
       let searchParams=[]
 
 
@@ -158,7 +158,7 @@ class ShowForm extends Component {
       setSearchParams(searchParams);
 
 
-      let response=Api.commonApiPost("pgr-master/report/_get",{},{tenantId:"default",reportName:metaData.reportDetails.reportName,searchParams}).then(function(response)
+      let response=Api.commonApiPost(match.params.moduleName+"/report/_get",{},{tenantId:"default",reportName:metaData.reportDetails.reportName,searchParams}).then(function(response)
       {
         // console.log(response)
         setReportResult(response)

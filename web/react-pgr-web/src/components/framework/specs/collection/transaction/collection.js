@@ -166,7 +166,7 @@ var dat = {
       "name": "createDocumentType",
       "fields": [{
           "name": "mobile",
-          "jsonPath": "mobile",
+          "jsonPath": "mobileNumber",
           "label": "Mobile",
           "pattern": "",
           "type": "number",

@@ -14,17 +14,13 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-
-
-const buttons = require('datatables.net-buttons-bs');
-
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
 const styles = {
@@ -79,7 +75,7 @@ class viewOrUpdateServiceType extends Component {
     componentWillMount() {
         $('#searchTable').DataTable({
              dom: 'lBfrtip',
-             buttons: [],
+             buttons: ['excel', 'pdf'],
               bDestroy: true,
               language: {
                  "emptyTable": "No Records"
@@ -103,8 +99,8 @@ class viewOrUpdateServiceType extends Component {
     componentDidUpdate() {
       if(this.state.modify)
         $('#searchTable').DataTable({
-             dom: 'lBfrtip',
-             buttons: [],
+             dom : '<"col-md-12"f>rt<"row"><"col-md-5"i><"col-md-4"B><"col-md-3 pull-right"l><"row"><"col-md-12"p>',
+             buttons: ['excel', 'pdf'],
               bDestroy: true,
               language: {
                  "emptyTable": "No Records"

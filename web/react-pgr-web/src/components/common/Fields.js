@@ -5,7 +5,6 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
-import MaterialDateTimePicker from 'material-datetime-picker';
 import {translate} from './common';
 
 export default class Fields extends Component{

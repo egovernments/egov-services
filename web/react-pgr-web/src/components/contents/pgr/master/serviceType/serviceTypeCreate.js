@@ -191,6 +191,7 @@ class ServiceTypeCreate extends Component {
               });
               current.props.setLoadingStatus('hide');
           }, function(err) {
+            console.log(err.message);
             current.props.toggleSnackbarAndSetText(true, err.message);
             current.props.setLoadingStatus('hide');
         	})

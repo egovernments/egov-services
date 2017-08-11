@@ -61,7 +61,6 @@ module.exports = {
             return response.data;
         }).catch(function(response) {
 
-			console.log(response);
             try {
                 if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
                     var _err = response.response.data[0].error.message || "";
@@ -88,7 +87,7 @@ module.exports = {
             } catch(e) {
                 if(e.message) {
                     throw new Error(e.message);
-                } else 
+                } else
                     throw new Error("Oops! Something isn't right. Please try again later.");
             }
         });

@@ -20,7 +20,8 @@ import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
-import org.egov.egf.instrument.web.requests.InstrumentDepositRequest;
+import org.egov.egf.instrument.web.contract.InstrumentContract;
+import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -351,7 +352,7 @@ public class InstrumentServiceTest {
 				.thenReturn(getFinancialStatusContract());
 		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<Instrument> actualResult = instrumentService.deposit(getInstrumentDepositRequest(), errors, requestInfo);
+		List<Instrument> actualResult = instrumentService.deposit(getInstrumentRequest(), errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 	}
@@ -366,7 +367,7 @@ public class InstrumentServiceTest {
 				.thenReturn(getFinancialStatusContract());
 		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<Instrument> actualResult = instrumentService.dishonor(getInstrumentDepositRequest(), errors, requestInfo);
+		List<Instrument> actualResult = instrumentService.dishonor(getInstrumentRequest(), errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 	}
@@ -375,9 +376,10 @@ public class InstrumentServiceTest {
 		return FinancialStatusContract.builder().code("Deposit").moduleType("Instrument").build();
 	}
 
-	private InstrumentDepositRequest getInstrumentDepositRequest() {
-		InstrumentDepositRequest instrumentDepositRequest = new InstrumentDepositRequest();
-		instrumentDepositRequest.setInstrumentDepositId("instrumentDepositId");
+	private InstrumentRequest getInstrumentRequest() {
+		InstrumentRequest instrumentDepositRequest = new InstrumentRequest();
+		instrumentDepositRequest.setInstruments(getInstrumentContracts());
+		instrumentDepositRequest.getInstruments().get(0).setId("instrumentDepositId");
 		return instrumentDepositRequest;
 	}
 
@@ -387,6 +389,14 @@ public class InstrumentServiceTest {
 		instrument.setTenantId("default");
 		instruments.add(instrument);
 		return instruments;
+	}
+	
+	private List<InstrumentContract> getInstrumentContracts() {
+		List<InstrumentContract> instrumentContracts = new ArrayList<InstrumentContract>();
+		InstrumentContract instrumentContract = InstrumentContract.builder().build();
+		instrumentContract.setTenantId("default");
+		instrumentContracts.add(instrumentContract);
+		return instrumentContracts;
 	}
 
 }

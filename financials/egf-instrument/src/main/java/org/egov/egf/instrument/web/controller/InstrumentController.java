@@ -14,7 +14,6 @@ import org.egov.egf.instrument.domain.service.InstrumentService;
 import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentMapper;
-import org.egov.egf.instrument.web.requests.InstrumentDepositRequest;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.instrument.web.requests.InstrumentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +134,7 @@ public class InstrumentController {
 	
 	@PostMapping("/_deposit")
 	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentResponse depositInstrument(@RequestBody InstrumentDepositRequest instrumentDepositRequest, BindingResult errors) {
+	public InstrumentResponse depositInstrument(@RequestBody InstrumentRequest instrumentDepositRequest, BindingResult errors) {
 
 		InstrumentMapper mapper = new InstrumentMapper();
 		InstrumentResponse instrumentResponse = new InstrumentResponse();
@@ -160,7 +159,7 @@ public class InstrumentController {
 	
 	@PostMapping("/_dishonor")
 	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentResponse dishonorInstrument(@RequestBody InstrumentDepositRequest instrumentDepositRequest, BindingResult errors) {
+	public InstrumentResponse dishonorInstrument(@RequestBody InstrumentRequest instrumentDepositRequest, BindingResult errors) {
 
 		InstrumentMapper mapper = new InstrumentMapper();
 		InstrumentResponse instrumentResponse = new InstrumentResponse();

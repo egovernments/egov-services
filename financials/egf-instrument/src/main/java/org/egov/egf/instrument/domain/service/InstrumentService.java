@@ -16,7 +16,7 @@ import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
-import org.egov.egf.instrument.web.requests.InstrumentDepositRequest;
+import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -217,11 +217,11 @@ public class InstrumentService {
 		return instrumentRepository.update(instrument);
 	}
 
-	public List<Instrument> deposit(InstrumentDepositRequest instrumentDepositRequest, BindingResult errors,
+	public List<Instrument> deposit(InstrumentRequest instrumentDepositRequest, BindingResult errors,
 			RequestInfo requestInfo) {
 		Instrument instrument = new Instrument();
-		instrument.setId(instrumentDepositRequest.getInstrumentDepositId());
-		instrument.setTenantId(instrumentDepositRequest.getTenantId());
+		instrument.setId(instrumentDepositRequest.getInstruments().get(0).getId());
+		instrument.setTenantId(instrumentDepositRequest.getInstruments().get(0).getTenantId());
 
 		FinancialStatusContract financialStatusContract = new FinancialStatusContract();
 		financialStatusContract.setCode("Deposited");
@@ -231,17 +231,17 @@ public class InstrumentService {
 		FinancialStatusContract financialStatusContract1 = new FinancialStatusContract();
 		financialStatusContract1 = financialStatusContractRepository.findByModuleCode(financialStatusContract);
 		instrument.setFinancialStatus(financialStatusContract1);
-		instrument.setRemittanceVoucherId(instrumentDepositRequest.getRemittanceVoucherId());
+		instrument.setRemittanceVoucherId(instrumentDepositRequest.getInstruments().get(0).getRemittanceVoucherId());
 		List<Instrument> instrumentsToUpdate = new ArrayList<>();
 		instrumentsToUpdate.add(instrument);
 		return instrumentRepository.update(instrumentsToUpdate, requestInfo);
 	}
 	
-	public List<Instrument> dishonor(InstrumentDepositRequest instrumentDepositRequest, BindingResult errors,
+	public List<Instrument> dishonor(InstrumentRequest instrumentDepositRequest, BindingResult errors,
 			RequestInfo requestInfo) {
 		Instrument instrument = new Instrument();
-		instrument.setId(instrumentDepositRequest.getInstrumentDepositId());
-		instrument.setTenantId(instrumentDepositRequest.getTenantId());
+		instrument.setId(instrumentDepositRequest.getInstruments().get(0).getId());
+		instrument.setTenantId(instrumentDepositRequest.getInstruments().get(0).getTenantId());
 
 		FinancialStatusContract financialStatusContract = new FinancialStatusContract();
 		financialStatusContract.setCode("Deposited");

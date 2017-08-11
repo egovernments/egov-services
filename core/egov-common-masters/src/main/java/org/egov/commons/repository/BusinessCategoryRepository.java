@@ -1,10 +1,5 @@
 package org.egov.commons.repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessCategory;
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.repository.builder.BusinessCategoryQueryBuilder;
@@ -13,17 +8,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 @Repository
 public class BusinessCategoryRepository {
     public static final Logger LOGGER = LoggerFactory.getLogger(BusinessCategoryRepository.class);
-
-	public static final String INSERT_SERVICECATEGORY_QUERY="INSERT INTO eg_businesscategory"
-			+"(id,name,code,active,tenantId,createdBy,createdDate,lastModifiedBy,lastModifiedDate)"
-			+" VALUES(?,?,?,?,?,?,?,?,?)";
-	
 
 	public static final String UPDATE_SERVICECATEGORY="Update eg_businesscategory"
 			+" set name=?,code=?,active=?,tenantId=?,lastModifiedBy=?,lastModifiedDate=?"
@@ -45,7 +42,10 @@ public class BusinessCategoryRepository {
 			+" where name=? and tenantId=? and id != ?";
     @Autowired 
     private JdbcTemplate jdbcTemplate;
-    
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     @Autowired
     private BusinessCategoryRowMapper businessCategoryRowMapper;
     
@@ -53,25 +53,42 @@ public class BusinessCategoryRepository {
     private BusinessCategoryQueryBuilder businessCategoryQueryBuilder;
 
 
-	public void create(BusinessCategory category) {
-		Object[] obj=new Object[]{generateSequence("seq_eg_businesscategory"),category.getName(),category.getCode()
-				,category.getIsactive(),category.getTenantId(),category.getCreatedBy()
-				,new Date(new java.util.Date().getTime()),
-				category.getLastModifiedBy(),new Date(new java.util.Date().getTime())};
-	   jdbcTemplate.update(INSERT_SERVICECATEGORY_QUERY,obj);
-	
-	}
+	public void create(List<BusinessCategory> businessCategoryList) {
+
+        LOGGER.info("Create Business Category Repository::" + businessCategoryList);
+        final String categoryInsertQuery = businessCategoryQueryBuilder.insertBusinessCategoryQuery();
+
+        List<Map<String, Object>> batchValues = new ArrayList<>(businessCategoryList.size());
+        for (BusinessCategory category : businessCategoryList) {
+            batchValues.add(new MapSqlParameterSource("name", category.getName()).addValue("code", category.getCode())
+                    .addValue("active", category.getIsactive()).addValue("tenantId", category.getTenantId())
+                    .addValue("createdBy", category.getCreatedBy())
+                    .addValue("createdDate", new Date().getTime())
+                    .addValue("lastModifiedBy", category.getLastModifiedBy())
+                    .addValue("lastModifiedDate", new Date().getTime()).getValues());
+        }
+
+        namedParameterJdbcTemplate.batchUpdate(categoryInsertQuery, batchValues.toArray(new Map[businessCategoryList.size()]));
+    }
 	
 	
 	public Long generateSequence(String sequenceName) {
 		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
 	}
 
-	public void update(BusinessCategory category) {
-        Object[] obj=new Object[]{category.getName(),category.getCode()
-						,category.getIsactive(),category.getTenantId(),category.getLastModifiedBy()
-						,new Date(new java.util.Date().getTime()),category.getId()};
-		 jdbcTemplate.update(UPDATE_SERVICECATEGORY,obj);
+	public void update(List<BusinessCategory> businessCategoryList) {
+        LOGGER.info("Create Business Category Repository::" + businessCategoryList);
+        final String categoryInsertQuery = businessCategoryQueryBuilder.updateBusinessCategoryQuery();
+
+        List<Map<String, Object>> batchValues = new ArrayList<>(businessCategoryList.size());
+        for (BusinessCategory category : businessCategoryList) {
+            batchValues.add(new MapSqlParameterSource("id", category.getId()).addValue("name", category.getName()).addValue("code", category.getCode())
+                    .addValue("active", category.getIsactive()).addValue("tenantId", category.getTenantId())
+                    .addValue("lastModifiedBy", category.getLastModifiedBy())
+                    .addValue("lastModifiedDate", new Date().getTime()).getValues());
+        }
+
+        namedParameterJdbcTemplate.batchUpdate(categoryInsertQuery, batchValues.toArray(new Map[businessCategoryList.size()]));
 
 	}
 

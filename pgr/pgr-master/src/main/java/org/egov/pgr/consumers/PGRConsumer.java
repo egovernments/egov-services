@@ -44,8 +44,11 @@ package org.egov.pgr.consumers;
 import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.annotation.InterfaceStability;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.domain.model.*;
 import org.egov.pgr.domain.model.OTPConfig;
+import org.egov.pgr.domain.service.ServiceDefinitionService;
 import org.egov.pgr.domain.service.ServiceTypeService;
 import org.egov.pgr.persistence.repository.ServiceTypeConfigurationRepository;
 import org.egov.pgr.service.EscalationHierarchyService;
@@ -106,6 +109,9 @@ public class PGRConsumer {
 
 	@Autowired
 	private ServiceTypeService serviceTypeService;
+
+	@Autowired
+	private ServiceDefinitionService serviceDefinitionService;
 	
    	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
@@ -116,7 +122,8 @@ public class PGRConsumer {
 			"${kafka.topics.escalationtimetype.update.name}", "${kafka.topics.otpconfig.update.name}", "${kafka.topics.otpconfig.create.name}",
 			"${kafka.topics.escalationhierarchy.update.name}", "${kafka.topics.escalationhierarchy.create.name}", "${kafka.topics.servicetypeconfiguration.create.name}",
 			"${kafka.topics.servicetypeconfiguration.update.name}","${kafka.topics.servicetypes.create.name}",
-			"${kafka.topics.servicetypes.create.key}" })
+			"${kafka.topics.servicetypes.create.key}", "${kafka.topics.servicedefinition.create.name}",
+			"${kafka.topics.servicedefinition.create.key"})
 
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("RECORD: " + record.toString());
@@ -181,6 +188,9 @@ public class PGRConsumer {
 			}
 			else if(record.topic().equals(applicationProperties.getCreateServiceTypeTopicName())) {
 				serviceTypeService.persistServiceType(objectMapper.readValue(record.value(), ServiceTypeRequest.class).toDomain());
+			}
+			else if(record.topic().equals(applicationProperties.getCreateServiceDefinitionName())){
+				serviceDefinitionService.persist(objectMapper.readValue(record.value(), ServiceDefinitionRequest.class).toDomain());
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

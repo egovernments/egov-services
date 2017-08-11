@@ -218,6 +218,23 @@ var localationData = {
   "wc.search.businessCategoryType.title" :"Search Business Category",
   "wc.create.group.fields.businessName": "Business Category Name",
   "wc.create.group.fields.businessCode": "Business Category Code",
+  "wc.create.groups.fields.businessType":"Service Type",
+  "wc.create.businessDetailsType.title": "Create Business Details",
+  "wc.update.businessDetailsType.title": "Update Business Details",
+  "wc.view.businessDetailsType.title": "View Business Details",
+  "wc.search.businessDetailsType.title": "Search Business Details",
+  "wc.create.groups.fields.businessCategory": "Service Category",
+  "wc.create.group.fields.businessCode":"Service Code",
+  "wc.create.group.fields.businessName": "Service Name",
+  "wc.create.group.fields.voucherOnReceiptCreation":"Create voucher on receipt creation",
+  "wc.Create.financialDetails.title":"Financial Details",
+  "wc.Create.accountDetails.title":"Account Details",
+  "wc.create.groups.fields.Fund":"Fund",
+  "wc.create.groups.fields.Funtion":"Function",
+  "wc.create.group.field.accountHead": "Account Head",
+  "wc.create.groups.fields.accountCode":"Account Code",
+  "wc.create.groups.fields.amount":"Amount",
+  "wc.create.groups.fields.classification":"Classification",
 
   "wc.create.SpecialDonationCharges":"Special Security Deposit Charges",
   "wc.create.receiptDate":"Receipt Date",
@@ -313,6 +330,13 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.buildingCost": "Building Cost",
   "pt.create.groups.propertyAddress.fields.landCost": "Land Cost",
   "pt.create.groups.propertyAddress.fields.assessableArea": "Assessable Area",
+
+  "pt.create.groups.propertyAddress.fields.totalArea": "Total Area",
+  "pt.create.groups.propertyAddress.fields.propertyAge": "Property Age",
+  "pt.create.groups.propertyAddress.fields.currentAssessmentDate": "Current Assessment Date",
+  "pt.create.groups.propertyAddress.fields.firstAssessmentDate": "First Assessment Date",
+  "pt.create.groups.propertyAddress.fields.revisedAssessmentDate": "Revised Assessment Date",
+  "pt.create.groups.propertyAddress.fields.lastAssessmentDate": "Last Assessment Date",
 
   //Add Demand
   "pt.create.groups.addDemand.fields.installment": "Installment",
@@ -552,7 +576,21 @@ var localationData = {
   "tl.update.groups.licensevalidity.natureofbusiness": "Nature Of Business",
   "tl.update.groups.licensevalidity.licensecategory": "License Category",
   "tl.update.groups.licensedocumenttype.basedonfinancialyear": "Based on Financial Year",
-  "wc.create.groups.applicationParticular.title":"Application Particular"
+  "wc.create.groups.applicationParticular.title":"Application Particular",
+
+  "collection.search.categorytype.title":"Serach Receipt",
+  "collection.create.serviceType":"Service Type",
+  "collection.create.fromDate":"From Date",
+  "collection.create.toDate":"To Date",
+  "collection.create.receiptNumber":"Receipt Number",
+  "collection.create.collectedBy":"Collected By",
+  "collection.create.status":"Status",
+  "collection.create.modeOfPayment":"Mode Of Payment",
+  "collection.search.receiptDate":"Receipt Number",
+  "collection.search.billNumber":"Bill Number",
+  "collection.search.billDescription":"Bill Description",
+  "collection.search.paidBy":"Paid By",
+  "collection.search.amount":"Amount"
 }
 
 export function translate(locale_text){

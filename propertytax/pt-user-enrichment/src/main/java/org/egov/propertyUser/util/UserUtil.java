@@ -29,6 +29,8 @@ public class UserUtil {
 
 	public User getUserId(User user, RequestInfo requestInfo) throws Exception {
 		StringBuffer createUrl = new StringBuffer();
+		//By default, active should be true.
+		user.setActive(true);
 		createUrl.append(propertiesManager.getUserHostName());
 		createUrl.append(propertiesManager.getUserBasepath());
 		createUrl.append(propertiesManager.getUserCreatepath());

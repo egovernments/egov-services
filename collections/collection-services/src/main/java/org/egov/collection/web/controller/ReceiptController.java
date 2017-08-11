@@ -107,6 +107,9 @@ public class ReceiptController {
 			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			final BindingResult requestBodyBindingResult) {
 
+		LOGGER.info("Request: "+receiptGetRequest.toString());
+		LOGGER.info("RequestInfo: "+requestInfoWrapper.toString());
+		
 		ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
 				.businessCode(receiptGetRequest.getBusinessCode()).classification(receiptGetRequest.getClassification())
 				.collectedBy(receiptGetRequest.getCollectedBy()).consumerCode(receiptGetRequest.getConsumerCode())
@@ -212,7 +215,7 @@ public class ReceiptController {
 		List<Receipt> receipts = new ArrayList<>();
 		receipts.add(receiptInfo);
 
-		return getSuccessResponse(receipts, receiptRequest.getRequestInfo());
+		return getSuccessResponse(receipts,  receiptRequest.getRequestInfo());
 	}
 
 	@PostMapping("/_update")

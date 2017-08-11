@@ -19,7 +19,7 @@
                 "isActive": null,
                 "isCancelled": null,
                 "paidBy": "abc",
-                "BillDetail": [
+                "billDetails": [
                     {
                         "id": "1",
                         "bill": null,
@@ -48,7 +48,7 @@
                         "amountPaid": null,
                         "cancellationRemarks": "payee name data entered is not proper",
                         "status": "CREATED",
-                        "BillAccountDetail": [
+                        "billAccountDetails": [
                             {
                                 "glcode": "456",
                                 "order": null,

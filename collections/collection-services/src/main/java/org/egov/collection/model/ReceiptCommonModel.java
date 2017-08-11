@@ -105,9 +105,10 @@ public class ReceiptCommonModel {
 					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(receiptHeader.getReceiptType())
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
 					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
-					.reasonForCancellation(receiptHeader.getReasonForCancellation()).
-					cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus()).
-					billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDate().getTime()).build();
+					.reasonForCancellation(receiptHeader.getReasonForCancellation())
+					.cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus())
+					.billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDate().getTime())
+				    .billDescription(receiptHeader.getReferenceDesc()).amountPaid(BigDecimal.valueOf(receiptHeader.getTotalAmount())).build();
 			if(null != receiptHeader.getMinimumAmount()){
 				billDetail.setMinimumAmount(BigDecimal.valueOf(receiptHeader.getMinimumAmount()));
 			}

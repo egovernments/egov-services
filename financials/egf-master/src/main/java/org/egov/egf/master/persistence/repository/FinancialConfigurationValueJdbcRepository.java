@@ -72,6 +72,13 @@ public class FinancialConfigurationValueJdbcRepository extends JdbcRepository {
         searchQuery = searchQuery.replace(":selectfields", " * ");
 
         // implement jdbc specfic search
+        if (financialConfigurationValueSearchEntity.getTenantId() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", financialConfigurationValueSearchEntity.getTenantId());
+        }
         if (financialConfigurationValueSearchEntity.getId() != null) {
             if (params.length() > 0) {
                 params.append(" and ");

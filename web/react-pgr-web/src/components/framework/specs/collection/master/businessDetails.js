@@ -13,11 +13,11 @@ var dat = {
 				"fields": [
           {
             "name": "CategoryType",
-            "jsonPath": "BusinessDetails.businessType",
-            "label": "wc.create.groups.fields.businessType",
+            "jsonPath": "BusinessDetails[0].businessCategory",
+            "label": "wc.create.groups.fields.businessCategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-common-masters/businessCategory/_search?&active=true|$..name|$..name",
+            "url": "/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -25,8 +25,8 @@ var dat = {
           },
             {
 							"name": "Code",
-							"jsonPath": "BusinessDetails.code",
-							"label": "wc.create.group.fields.serviceCode",
+							"jsonPath": "BusinessDetails[0].code",
+							"label": "wc.create.group.fields.businessCode",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
@@ -36,7 +36,7 @@ var dat = {
 						},
             {
 							"name": "Name",
-							"jsonPath": "BusinessDetails.name",
+							"jsonPath": "BusinessDetails[0].name",
 							"label": "wc.create.group.fields.businessName",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -47,7 +47,7 @@ var dat = {
 						},
             {
               "name": "Classification",
-              "jsonPath": "BusinessDetails.classification",
+              "jsonPath": "BusinessDetails[0].businessType",
               "label": "wc.create.groups.fields.classification",
               "pattern": "",
               "type": "singleValueList",
@@ -59,8 +59,8 @@ var dat = {
             },
 						{
 							"name": "Create voucher on receipt creation",
-							"jsonPath": "BusinessDetails.voucherCreation",
-							"label": "wc.create.voucherOnReceiptCreation",
+							"jsonPath": "BusinessDetails[0].voucherCreation",
+							"label": "wc.create.group.fields.voucherOnReceiptCreation",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -71,7 +71,7 @@ var dat = {
 						},
             {
 							"name": "Active",
-							"jsonPath": "BusinessDetails.active",
+							"jsonPath": "BusinessDetails[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -84,16 +84,16 @@ var dat = {
 				]
 			},
       {
-				"label": "Financial Details",
+				"label": "wc.Create.financialDetails.title",
 				"name": "Financial Details",
 				"fields": [
             {
               "name": "Fund",
-              "jsonPath": "BusinessDetails.Fund",
+              "jsonPath": "BusinessDetails[0].fund",
               "label": "wc.create.groups.fields.Fund",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egf-masters/funds/_search?|$..name|$..name",
+              "url": "/egf-masters/funds/_search?|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -101,11 +101,11 @@ var dat = {
             },
             {
               "name": "Funtion",
-              "jsonPath": "BusinessDetails.Funtion",
+              "jsonPath": "BusinessDetails[0].funtion",
               "label": "wc.create.groups.fields.Funtion",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egf-masters/functions/_search?|$..name|$..name",
+              "url": "/egf-masters/functions/_search?|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -114,26 +114,26 @@ var dat = {
 				]
 			},
       {
-				"label": "Account Details",
+				"label": "wc.Create.accountDetails.title",
 				"name": "AccountDetails",
 				"multiple":true,
-        "jsonPath":"BusinessDetails[0].serviceAccountDetails",
+        "jsonPath":"BusinessDetails[0].accountDetails",
 				"fields": [
-						{
-							"name": "AccountHead",
-							"jsonPath": "BusinessDetails[0].serviceAccountDetails[0].fromUnit",
-							"label": "wc.create.groups.fields.accountHead",
-							"pattern": "",
-							"type": "number",
-							"isRequired": true,
-							"isDisabled": false,
-							"url": "",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
+          {
+              "name": "AccountHead",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
+              "label": "wc.create.group.field.accountHead",
+              "pattern": "",
+              "type": "autoCompelete",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name"
+            },
 						{
 							"name": "AccountCode",
-							"jsonPath": "BusinessDetails[0].serviceAccountDetails[0].toUnit",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
 							"label": "wc.create.groups.fields.accountCode",
 							"pattern": "",
 							"type": "number",
@@ -144,7 +144,7 @@ var dat = {
 						},
 						{
 							"name": "Amount",
-							"jsonPath": "BusinessDetails[0].serviceAccountDetails[0].unitRate",
+							"jsonPath": "BusinessDetails[0].accountDetails[0].amount",
 							"label": "wc.create.groups.fields.amount",
 							"pattern": "",
 							"type": "number",
@@ -163,62 +163,72 @@ var dat = {
 		"url": "/egov-common-masters/businessDetails/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "BusinessDetailsInfo",
+		"objectName": "BusinessDetails",
 		"groups": [
 			{
 				"label": "wc.search.businessDetailsType.title",
 				"name": "businessDetailsType",
 				"fields": [
-          {
-            "name": "Name",
-            "jsonPath": "name",
-            "label": "wc.create.group.fields.businessName",
-            "pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "Length minimum is 3 and maximum is 100"
-          },
+					{
+						"name": "Code",
+						"jsonPath": "businessDetailsCodes",
+						"label": "wc.create.group.fields.businessCode",
+						"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "Length minimum is 3 and maximum is 100"
+					},
+					{
+						"name": "Active",
+						"jsonPath": "active",
+						"label": "wc.create.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 				]
 			}
 		],
 		"result": {
-			"header": [{label: "wc.search.result.businessName"}, {label: "wc.search.result.businessCode"}, {label: "wc.search.result.active"}],
+			"header": [{label: "wc.create.group.fields.businessName"}, {label: "wc.create.group.fields.businessCode"}, {label: "wc.search.result.active"}],
 			"values": ["name", "code", "active"],
-			"resultPath": "BusinessDetailsInfo",
+			"resultPath": "BusinessDetails",
 			"rowClickUrlUpdate": "/update/collection/businessDetails/{id}",
 			"rowClickUrlView": "/view/collection/businessDetails/{id}"
 			}
 	},
 	"collection.view": {
 		"numCols": 12/3,
-		"url":  "/egov-common-masters/businessDetails/_search?ids={id}",
+		"url":  "/egov-common-masters/businessDetails/_search?id={id}",
 		"tenantIdRequired": true,
-		// "idJsonPath": "BusinessDetails[0].id",
 		"useTimestamp": true,
-		"objectName": "BusinessDetailsInfo",
+		"objectName": "BusinessDetails",
 		"groups": [
 			{
-				"label": "wc.create.businessDetailsType.title",
+				"label": "wc.view.businessDetailsType.title",
 				"name": "businessDetailsType",
 				"fields": [
           {
             "name": "CategoryType",
-            "jsonPath": "BusinessDetailsInfo[0].businessCategory",
+            "jsonPath": "BusinessDetails[0].businessCategory",
             "label": "wc.create.groups.fields.businessType",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-common-masters/businessCategory/_search?&active=true|$..name|$..name",
+            "url": "/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
           },
             {
 							"name": "Code",
-							"jsonPath": "BusinessDetailsInfo[0].code",
-							"label": "wc.create.group.fields.serviceCode",
+							"jsonPath": "BusinessDetails[0].code",
+							"label": "wc.create.group.fields.businessCode",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
@@ -228,7 +238,7 @@ var dat = {
 						},
             {
 							"name": "Name",
-							"jsonPath": "BusinessDetailsInfo[0].name",
+							"jsonPath": "BusinessDetails[0].name",
 							"label": "wc.create.group.fields.businessName",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -239,11 +249,11 @@ var dat = {
 						},
             {
               "name": "Classification",
-              "jsonPath": "BusinessDetailsInfo[0].classification",
+              "jsonPath": "BusinessDetails[0].businessType",
               "label": "wc.create.groups.fields.classification",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egov-common-masters/businessCategory/_search?&active=true|$..name|$..name",
+              "url": "/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -251,8 +261,8 @@ var dat = {
             },
 						{
 							"name": "Create voucher on receipt creation",
-							"jsonPath": "BusinessDetailsInfo[0].voucherCreation",
-							"label": "wc.create.voucherOnReceiptCreation",
+							"jsonPath": "BusinessDetails[0].voucherCreation",
+							"label": "wc.create.group.fields.voucherOnReceiptCreation",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -263,7 +273,7 @@ var dat = {
 						},
             {
 							"name": "Active",
-							"jsonPath": "BusinessDetailsInfo[0].active",
+							"jsonPath": "BusinessDetails[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -276,16 +286,16 @@ var dat = {
 				]
 			},
       {
-				"label": "Financial Details",
+				"label": "wc.Create.financialDetails.title",
 				"name": "Financial Details",
 				"fields": [
             {
               "name": "Fund",
-              "jsonPath": "BusinessDetailsInfo[0].fund",
+              "jsonPath": "BusinessDetails[0].fund",
               "label": "wc.create.groups.fields.Fund",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egf-masters/funds/_search?|$..name|$..name",
+              "url": "/egf-masters/funds/_search?|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -293,39 +303,40 @@ var dat = {
             },
             {
               "name": "Funtion",
-              "jsonPath": "BusinessDetailsInfo[0].function",
+              "jsonPath": "BusinessDetails[0].function",
               "label": "wc.create.groups.fields.Function",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egf-masters/functions/_search?|$..name|$..name",
+              "url": "/egf-masters/functions/_search?|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+              "convertToString":true
             }
 				]
 			},
       {
-				"label": "Account Details",
+				"label": "wc.Create.accountDetails.title",
 				"name": "AccountDetails",
 				"multiple":true,
-        "jsonPath":"BusinessDetailsInfo[0].serviceAccountDetails",
+        "jsonPath":"BusinessDetails[0].accountDetails",
 				"fields": [
-						{
-							"name": "AccountHead",
-							"jsonPath": "BusinessDetailsInfo[0].serviceAccountDetails[0].fromUnit",
-							"label": "wc.create.groups.fields.accountHead",
-							"pattern": "",
-							"type": "number",
-							"isRequired": true,
-							"isDisabled": false,
-							"url": "",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
+          {
+              "name": "AccountHead",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
+              "label": "wc.create.group.field.accountHead",
+              "pattern": "",
+              "type": "autoCompelete",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name"
+            },
 						{
 							"name": "AccountCode",
-							"jsonPath": "BusinessDetailsInfo[0].serviceAccountDetails[0].toUnit",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
 							"label": "wc.create.groups.fields.accountCode",
 							"pattern": "",
 							"type": "number",
@@ -336,7 +347,7 @@ var dat = {
 						},
 						{
 							"name": "Amount",
-							"jsonPath": "BusinessDetails[0].serviceAccountDetails[0].unitRate",
+							"jsonPath": "BusinessDetails[0].accountDetails[0].amount",
 							"label": "wc.create.groups.fields.amount",
 							"pattern": "",
 							"type": "number",
@@ -353,23 +364,22 @@ var dat = {
 	"collection.update": {
 		"numCols": 12/3,
 		"url":  "/egov-common-masters/businessDetails[0].id/_search",
-    "searchUrl":  "/egov-common-masters/businessDetails/_search?ids={id}",
+    "searchUrl":  "/egov-common-masters/businessDetails/_search?id={id}",
 		"tenantIdRequired": true,
-		// "idJsonPath": "BusinessDetails[0].id",
 		"useTimestamp": true,
 		"objectName": "BusinessDetails",
 		"groups": [
 			{
-				"label": "wc.create.businessDetailsType.title",
+				"label": "wc.update.businessDetailsType.title",
 				"name": "businessDetailsType",
 				"fields": [
           {
             "name": "CategoryType",
-            "jsonPath": "BusinessDetails.businessType",
+            "jsonPath": "BusinessDetails[0].businessCategory",
             "label": "wc.create.groups.fields.businessType",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-common-masters/businessCategory/_search?&active=true|$..name|$..name",
+            "url": "/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -377,8 +387,8 @@ var dat = {
           },
             {
 							"name": "Code",
-							"jsonPath": "BusinessDetails.code",
-							"label": "wc.create.group.fields.serviceCode",
+							"jsonPath": "BusinessDetails[0].code",
+							"label": "wc.create.group.fields.businessCode",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
@@ -388,7 +398,7 @@ var dat = {
 						},
             {
 							"name": "Name",
-							"jsonPath": "BusinessDetails.name",
+							"jsonPath": "BusinessDetails[0].name",
 							"label": "wc.create.group.fields.businessName",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -399,7 +409,7 @@ var dat = {
 						},
             {
               "name": "Classification",
-              "jsonPath": "BusinessDetails.classification",
+              "jsonPath": "BusinessDetails[0].businessType",
               "label": "wc.create.groups.fields.classification",
               "pattern": "",
               "type": "singleValueList",
@@ -411,8 +421,8 @@ var dat = {
             },
 						{
 							"name": "Create voucher on receipt creation",
-							"jsonPath": "BusinessDetails.voucherCreation",
-							"label": "wc.create.voucherOnReceiptCreation",
+							"jsonPath": "BusinessDetails[0].voucherCreation",
+							"label": "wc.create.group.fields.voucherOnReceiptCreation",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -423,7 +433,7 @@ var dat = {
 						},
             {
 							"name": "Active",
-							"jsonPath": "BusinessDetails.active",
+							"jsonPath": "BusinessDetails[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -436,56 +446,58 @@ var dat = {
 				]
 			},
       {
-				"label": "Financial Details",
+				"label": "wc.Create.financialDetails.title",
 				"name": "Financial Details",
 				"fields": [
-            {
-              "name": "Fund",
-              "jsonPath": "BusinessDetails.Fund",
-              "label": "wc.create.groups.fields.Fund",
-              "pattern": "",
-              "type": "singleValueList",
-              "url": "/egf-masters/funds/_search?|$..name|$..name",
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-            {
-              "name": "Funtion",
-              "jsonPath": "BusinessDetails.Funtion",
-              "label": "wc.create.groups.fields.Funtion",
-              "pattern": "",
-              "type": "singleValueList",
-              "url": "/egf-masters/functions/_search?|$..name|$..name",
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            }
+          {
+            "name": "Fund",
+            "jsonPath": "BusinessDetails[0].fund",
+            "label": "wc.create.groups.fields.Fund",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egf-masters/funds/_search?|$..id|$..name",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "convertToString":true
+          },
+          {
+            "name": "Funtion",
+            "jsonPath": "BusinessDetails[0].function",
+            "label": "wc.create.groups.fields.Function",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egf-masters/functions/_search?|$..id|$..name",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "convertToString":true
+          }
 				]
 			},
       {
-				"label": "Account Details",
+				"label": "wc.Create.accountDetails.title",
 				"name": "AccountDetails",
 				"multiple":true,
-        "jsonPath":"BusinessDetails[0].serviceAccountDetails",
+        "jsonPath":"BusinessDetails[0].accountDetails",
 				"fields": [
-						{
-							"name": "AccountHead",
-							"jsonPath": "BusinessDetails[0].serviceAccountDetails[0].fromUnit",
-							"label": "wc.create.groups.fields.accountHead",
-							"pattern": "",
-							"type": "number",
-							"isRequired": true,
-							"isDisabled": false,
-							"url": "",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
+          {
+              "name": "AccountHead",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
+              "label": "wc.create.group.field.accountHead",
+              "pattern": "",
+              "type": "autoCompelete",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name"
+            },
 						{
 							"name": "AccountCode",
-							"jsonPath": "BusinessDetails[0].serviceAccountDetails[0].toUnit",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
 							"label": "wc.create.groups.fields.accountCode",
 							"pattern": "",
 							"type": "number",
@@ -496,7 +508,7 @@ var dat = {
 						},
 						{
 							"name": "Amount",
-							"jsonPath": "BusinessDetails[0].serviceAccountDetails[0].unitRate",
+							"jsonPath": "BusinessDetails[0].accountDetails[0].amount",
 							"label": "wc.create.groups.fields.amount",
 							"pattern": "",
 							"type": "number",

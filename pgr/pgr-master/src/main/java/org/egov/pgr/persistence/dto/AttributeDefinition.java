@@ -3,6 +3,7 @@ package org.egov.pgr.persistence.dto;
 import lombok.*;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,11 +21,17 @@ public class AttributeDefinition {
     private String dataType;
     private char required;
     private String dataTypeDescription;
-    private int order;
+    private Integer ordernum;
     private String description;
     private String code;
+    private String serviceCode;
     private String url;
     private String groupCode;
+    private String tenantId;
+    private Long createdBy;
+    private Date createdDate;
+    private Long lastModifiedBy;
+    private Date lastModifiedDate;
     private List<ValueDefinition> valueDefinitions;
 
     public org.egov.pgr.domain.model.AttributeDefinition toDomain() {
@@ -33,7 +40,7 @@ public class AttributeDefinition {
                 .dataType(dataType)
                 .required(isRequired())
                 .dataTypeDescription(dataTypeDescription)
-                .order(order)
+                .order(ordernum)
                 .description(description)
                 .url(url)
                 .groupCode(groupCode)
@@ -51,7 +58,7 @@ public class AttributeDefinition {
     }
 
     private boolean isReadOnly() {
-        return variable == NO;
+        return variable == YES;
     }
 
     private List mapToDomainValueDefinitions(){
@@ -63,6 +70,4 @@ public class AttributeDefinition {
                     .map(ValueDefinition::toDomain)
                     .collect(Collectors.toList());
     }
-
 }
-

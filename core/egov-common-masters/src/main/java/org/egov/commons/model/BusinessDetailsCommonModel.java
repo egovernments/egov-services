@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.commons.web.contract.BusinessAccountSubLedger;
-import org.egov.commons.web.contract.BusinessDetailsRequestInfo;
+import org.egov.commons.web.contract.BusinessDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,18 +19,18 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class BusinessDetailsCommonModel {
 
-	List<BusinessDetails> businessDetails;
+	List<org.egov.commons.model.BusinessDetails> businessDetails;
 
 	List<BusinessAccountDetails> businessAccountDetails;
 
 	List<BusinessAccountSubLedgerDetails> businessAccountSubledgerDetails;
 
-	public List<BusinessDetailsRequestInfo> toDomainContract() {
-		List<BusinessDetailsRequestInfo> listOfDetailsInfo = new ArrayList<>();
-		for (BusinessDetails details : businessDetails) {
-			BusinessDetailsRequestInfo detailsRequestInfo = BusinessDetailsRequestInfo.builder().id(details.getId())
+	public List<BusinessDetails> toDomainContract() {
+		List<BusinessDetails> listOfDetailsInfo = new ArrayList<>();
+		for (org.egov.commons.model.BusinessDetails details : businessDetails) {
+			BusinessDetails detailsRequestInfo = BusinessDetails.builder().id(details.getId())
 					.active(details.getIsEnabled()).code(details.getCode()).name(details.getName())
-					.businessCategory(details.getBusinessCategory().getId()).businessType(details.getBusinessType())
+					.businessCategory(details.getBusinessCategory()).businessType(details.getBusinessType())
 					.businessUrl(details.getBusinessUrl()).department(details.getDepartment())
 					.fundSource(details.getFundSource()).function(details.getFunction())
 					.functionary(details.getFunctionary()).fund(details.getFund())
@@ -41,13 +41,13 @@ public class BusinessDetailsCommonModel {
 			List<BusinessAccountDetails> requiredBusinessAccountDetails = new ArrayList<>();
 			List<org.egov.commons.web.contract.BusinessAccountDetails> contractAccountDetails = new ArrayList<>();
 			for (BusinessAccountDetails accountDetails : businessAccountDetails) {
-				if (accountDetails.getBusinessDetails().getId().equals(details.getId()))
+				if (accountDetails.getBusinessDetails().equals(details.getId()))
 					requiredBusinessAccountDetails.add(accountDetails);
 			}
 			for (BusinessAccountDetails requiredAccount : requiredBusinessAccountDetails) {
 				contractAccountDetails.add(org.egov.commons.web.contract.BusinessAccountDetails.builder()
 						.id(requiredAccount.getId()).amount(requiredAccount.getAmount())
-						.chartOfAccounts(requiredAccount.getChartOfAccount()).businessDetails(requiredAccount.getBusinessDetails().getId()).build());
+						.chartOfAccounts(requiredAccount.getChartOfAccount()).businessDetails(requiredAccount.getBusinessDetails()).build());
 
 			}
 			detailsRequestInfo.setAccountDetails(contractAccountDetails);
@@ -62,7 +62,6 @@ public class BusinessDetailsCommonModel {
 					}
 				}
 			}
-			detailsRequestInfo.setSubledgerDetails(contractAccountSubledger);
 			listOfDetailsInfo.add(detailsRequestInfo);
 		}
 		return listOfDetailsInfo;

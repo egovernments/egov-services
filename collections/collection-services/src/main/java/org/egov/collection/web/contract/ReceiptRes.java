@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.util.List;
 
+import org.egov.collection.model.Instrument;
 import org.egov.common.contract.response.ResponseInfo;
 
 @Setter
@@ -22,6 +23,9 @@ public class ReceiptRes   {
   
   @JsonProperty("Receipt")
   private List<Receipt> receipts;
+  
+  @JsonProperty("Instrument")
+  private Instrument instrument;
 
 
 }

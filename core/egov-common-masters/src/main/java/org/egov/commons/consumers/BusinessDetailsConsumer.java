@@ -1,19 +1,18 @@
 package org.egov.commons.consumers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.commons.model.AuthenticatedUser;
-import org.egov.commons.model.BusinessAccountSubLedgerDetails;
+import org.egov.commons.model.*;
 import org.egov.commons.model.BusinessDetails;
 import org.egov.commons.service.BusinessCategoryService;
 import org.egov.commons.service.BusinessDetailsService;
+import org.egov.commons.web.contract.*;
 import org.egov.commons.web.contract.BusinessAccountDetails;
-import org.egov.commons.web.contract.BusinessAccountSubLedger;
-import org.egov.commons.web.contract.BusinessDetailsRequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,35 +43,14 @@ public class BusinessDetailsConsumer {
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 		try {
-		
-	        BusinessDetailsRequestInfo detailsInfo=objectMapper.convertValue(consumerRecord.get("BusinessDetailsInfo"),BusinessDetailsRequestInfo.class);
-	        org.egov.commons.model.BusinessCategory modelCategory = businessCategoryService.getBusinessCategoryByIdAndTenantId
-	        		(detailsInfo.getBusinessCategory(), detailsInfo.getTenantId());
-	        BusinessDetails modelDetails = new BusinessDetails(detailsInfo, modelCategory,getUserInfo(objectMapper.convertValue
-	        		(consumerRecord.get("RequestInfo"),RequestInfo.class)));
-	    	List<BusinessAccountDetails> listContractAccountDetails = detailsInfo.getAccountDetails();
-			List<org.egov.commons.model.BusinessAccountDetails> listModelAccountDetails = new ArrayList<>();
-			List<BusinessAccountSubLedger> contractListOfSubledgers = detailsInfo.getSubledgerDetails();
-			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger = new ArrayList<>();
+            User user = objectMapper.convertValue(consumerRecord.get("RequestInfo"), RequestInfo.class).getUserInfo();
+            BusinessDetailsRequest businessDetailsRequest = objectMapper.convertValue(consumerRecord, BusinessDetailsRequest.class);
+            List<org.egov.commons.model.BusinessDetails> businessDetails = new BusinessDetails().getDomainList(businessDetailsRequest.getBusinessDetails(),user);
 			if (topic.equals("egov-common-business-details-create")) {
-				for (BusinessAccountDetails details : listContractAccountDetails) {
-					listModelAccountDetails
-							.add(new org.egov.commons.model.BusinessAccountDetails(details, modelDetails, false));
-				}
-				for (BusinessAccountSubLedger subledger : contractListOfSubledgers) {
-					listModelAccountSubledger.add(new BusinessAccountSubLedgerDetails(subledger,listModelAccountDetails, modelDetails, false));
-				}
-			businessDetailsService.createBusinessDetails(modelDetails,listModelAccountDetails,listModelAccountSubledger);
-			}
-			else if(topic.equals("egov-common-business-details-update")){
-				for (BusinessAccountDetails details : listContractAccountDetails) {
-					listModelAccountDetails.add(new org.egov.commons.model.BusinessAccountDetails(details, modelDetails, true));
-				}
-				for (BusinessAccountSubLedger subledger : contractListOfSubledgers) {
-					listModelAccountSubledger.add(new BusinessAccountSubLedgerDetails(subledger,listModelAccountDetails, modelDetails, true));
-				}
-				businessDetailsService.updateBusinessDetails(modelDetails, listModelAccountDetails, listModelAccountSubledger);
-			}
+			   businessDetailsService.createBusinessDetails(businessDetails);
+			} else
+                businessDetailsService.updateBusinessDetails(businessDetails);
+
 		} catch (Exception exception) {
 			log.debug("processMessage:" + exception);
 			throw exception;

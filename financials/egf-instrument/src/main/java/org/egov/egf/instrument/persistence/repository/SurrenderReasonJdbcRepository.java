@@ -69,6 +69,13 @@ public class SurrenderReasonJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (surrenderReasonSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", surrenderReasonSearchEntity.getTenantId());
+		}
 		if (surrenderReasonSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -94,7 +101,7 @@ public class SurrenderReasonJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("ids =:ids");
+			params.append("id in (:ids)");
 			paramValues.put("ids", surrenderReasonSearchEntity.getIds());
 		}
 

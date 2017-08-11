@@ -69,6 +69,10 @@ public class CollectionConstants {
 	public static final String DETAILS_CODE_UNIQUE_FIELD_NAME = "code";
 	public static final String DETAILS_CODE_UNIQUE_ERROR_MESSAGE = "Entered Details Code already exist";
 
+    public static final String DETAILS_VALID_BUSINESS_TYPE_CODE = "collection.0014";
+    public static final String DETAILS_VALID_BUSINESS_TYPE_FIELD_NAME = "businesstype";
+    public static final String DETAILS_VALID_BUSINESS_TYPE_CODE_MESSAGE = "Entered Business Type is not valid";
+
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);
 	}

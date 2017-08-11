@@ -76,7 +76,7 @@ public class GrievanceTypeRepository {
         final Object[] object = new Object[]{serviceRequest.getService().getServiceName(),
                 serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, serviceRequest.getService().getSlaHours(),
                 serviceRequest.getService().getTenantId(), serviceRequest.getService().getType(),
-                serviceRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()), serviceRequest.getService().getCategory(),days
+                serviceRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()), serviceRequest.getService().getCategory(), days
         };
         jdbcTemplate.update(complaintInsert, object);
 
@@ -196,7 +196,7 @@ public class GrievanceTypeRepository {
         return false;
     }
 
-    public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId ,final String serviceCode) {
+    public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId, final String serviceCode, String mode) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(serviceName.toUpperCase().trim());
         preparedStatementValues.add(tenantId);
@@ -204,10 +204,13 @@ public class GrievanceTypeRepository {
         final String query = GrievanceTypeQueryBuilder.checkServiceNameIfExists();
         final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
-        if (!serviceTypes.isEmpty()) {
+        if (!serviceTypes.isEmpty() && "update".equalsIgnoreCase(mode)) {
             String codeFromDB = (String) serviceTypes.get(0).get("code");
             if (!codeFromDB.equalsIgnoreCase(serviceCode))
                 return true;
+        }
+        if (!serviceTypes.isEmpty() && "create".equalsIgnoreCase(mode)) {
+            return true;
         }
         return false;
     }

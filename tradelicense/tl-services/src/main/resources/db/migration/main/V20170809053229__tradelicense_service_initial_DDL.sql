@@ -26,7 +26,7 @@ CREATE TABLE egtl_license (
     subCategoryId bigint NOT NULL,
     uomId bigint NOT NULL,
     quantity numeric NOT NULL,
-    remarks character varying(256) NOT NULL,
+    remarks character varying(256),
     tradeCommencementDate timestamp without time zone NOT NULL,
     agreementDate timestamp without time zone ,
     agreementNo character varying(128),
@@ -48,7 +48,7 @@ ALTER TABLE ONLY egtl_license
 ALTER TABLE ONLY egtl_license
     ADD CONSTRAINT pk_egtl_license PRIMARY KEY (id);
 ALTER TABLE ONLY egtl_license
-    ADD CONSTRAINT unq_tl_licenseno UNIQUE (licenseNumber);
+    ADD CONSTRAINT unq_tl_licenseno UNIQUE (licenseNumber,tenantId);
 ALTER TABLE ONLY egtl_license
     ADD CONSTRAINT unq_tl_agrmtno UNIQUE (agreementNo);         
 

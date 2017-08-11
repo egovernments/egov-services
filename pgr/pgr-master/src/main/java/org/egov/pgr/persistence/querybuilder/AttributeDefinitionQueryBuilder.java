@@ -11,4 +11,9 @@ public class AttributeDefinitionQueryBuilder {
 
         return query.toString();
     }
+
+    public String getInsertQuery(){
+        return "INSERT INTO attribute_definition (code, datatype, required, datatypedescription, ordernum, description, servicecode, tenantid, createddate, createdby, lastmodifieddate, lastmodifiedby)"
+                + " VALUES (:code, :datatype, :required, :datatypedescription, :ordernum, :description, :servicecode, :tenantid, :createddate, :createdby, :lastmodifieddate, :lastmodifiedby)";
+    }
 }

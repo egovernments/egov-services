@@ -1,5 +1,7 @@
 package org.egov.tradelicense.domain.model;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -17,9 +19,11 @@ public class SupportDocument {
 	@JsonProperty("licenseId")
 	private Long licenseId;
 
+	@NotNull
 	@JsonProperty("documentTypeId")
 	private Long documentTypeId;
 
+	@NotNull
 	@JsonProperty("fileStoreId")
 	private Long fileStoreId;
 

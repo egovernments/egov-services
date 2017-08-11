@@ -125,6 +125,7 @@ public class ReceiptService {
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
+		Instrument instrument = receipt.getInstrument();
 		bill.setBillDetails(apportionPaidAmount(
 					receiptReq.getRequestInfo(), bill, receipt.getTenantId()));
 		// return receiptRepository.pushToQueue(receiptReq); //async call
@@ -138,12 +139,13 @@ public class ReceiptService {
 		LOGGER.info("Bill object after debit head config: "+bill.toString());
 		
 		receipt = create(bill, receiptReq.getRequestInfo(),
-				receiptReq.getTenantId(), receipt.getInstrument()); // sync call
+				receipt.getTenantId(), receipt.getInstrument()); // sync call
 		if(null != receipt.getBill()){
 			LOGGER.info("Pushing receipt to kafka queue");
 			receiptReq.setReceipt(Arrays.asList(receipt));
 			receipt = receiptRepository.pushToQueue(receiptReq);
 		}
+		receipt.setInstrument(instrument);
 		return receipt;
 	}
 
@@ -250,6 +252,7 @@ public class ReceiptService {
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){
+				LOGGER.error("Exception while creating instrument: ", e);
 				throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 						CollectionServiceConstants.INSTRUMENT_EXCEPTION_MSG, CollectionServiceConstants.INSTRUMENT_EXCEPTION_DESC);
 			}
@@ -403,12 +406,13 @@ public class ReceiptService {
 					.getBusinessDetails(Arrays.asList(businessDetailsCode),
 							tenantId, requestInfo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception while fetching buisnessDetails: ", e);
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 
 		}
-		if(businessDetailsResponse.getBusinessDetails().isEmpty()){
+		if(null == businessDetailsResponse.getBusinessDetails() || businessDetailsResponse.getBusinessDetails().isEmpty()){
+			LOGGER.info("Buisness "+businessDetailsResponse.toString());
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 		}
@@ -444,7 +448,7 @@ public class ReceiptService {
 		try {
 			pushUpdateReceiptDetailsToQueque(workflowDetailsRequest);
 		} catch (Exception e) {
-			LOGGER.error("Couldn't update stateId and status" + e);
+			LOGGER.error("Couldn't update stateId and status: ", e);
 			return null;
 		}
 		return workflowDetailsRequest;
@@ -460,7 +464,11 @@ public class ReceiptService {
 	}
 
 	public void updateReceipt(WorkflowDetailsRequest workflowDetails){
-		receiptRepository.updateReceipt(workflowDetails);
+		if(workflowDetails.getStatus().equals("Receipt Created")){
+			workflowDetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
+
+			receiptRepository.updateReceipt(workflowDetails);
+		}
 	}
 
 	public List<BusinessDetailsRequestInfo> getBusinessDetails(
@@ -486,7 +494,7 @@ public class ReceiptService {
 			glcode = instrumentRepository.getAccountCodeId(receiptReq.getRequestInfo(), 
 					receiptReq.getReceipt().get(0).getInstrument(), receiptReq.getReceipt().get(0).getTenantId());
 		}catch(Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception while fetching glcode from instrument service: ", e);
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_MSG, CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_DESC);
 			
@@ -542,7 +550,7 @@ public class ReceiptService {
 		try{
 			workflowService.start(workflowDetails);
 		}catch(Exception e){
-			LOGGER.error("Starting workflow failed: "+e.getCause());
+			LOGGER.error("Starting workflow failed: ", e);
 		}
 		
 		

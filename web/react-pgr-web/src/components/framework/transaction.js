@@ -114,6 +114,8 @@ class Transaction extends Component {
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.instrumentType.tenantId",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bankAccount.tenantId",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
+      self.props.handleChange({target:{value:0}},"Receipt[0].instrument.amount",false,false);
+
 
 
       var resultList = {
@@ -176,161 +178,342 @@ class Transaction extends Component {
   }
 
 
-    hideField = (_mockData, hideObject, reset) => {
-      let {moduleName, actionName, setFormData} = this.props;
-      let _formData = {...this.props.formData};
-      if(hideObject.isField) {
-        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
-          for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
-            if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
-              _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? false : true;
-              if(!reset) {
-                _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
-                setFormData(_formData);
-              }
-
-              break;
-            }
-          }
-        }
-      } else {
-        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
-          if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
-            _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
-            break;
-          }
-        }
-      }
-
-      return _mockData;
-    }
-
-    showField = (_mockData, showObject, reset) => {
-      let {moduleName, actionName, setFormData} = this.props;
-      let _formData = {...this.props.formData};
-      if(showObject.isField) {
-        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
-          for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
-            if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
-              _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? true : false;
-              if(!reset) {
-                _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
-                setFormData(_formData);
-              }
-              break;
-            }
-          }
-        }
-      } else {
-        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
-          if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
-            _mockData[moduleName + "." + actionName].groups[i].hide = reset ? true : false;
-            break;
-          }
-        }
-      }
-
-      return _mockData;
-    }
-
-    checkIfHasShowHideFields = (jsonPath, val) => {
-      let _mockData = {...this.props.mockData};
-      let {moduleName, actionName, setMockData} = this.props;
+  hideField = (_mockData, hideObject, reset) => {
+    let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
+    let _formData = {...this.props.formData};
+    if(hideObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
-          if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
-            for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
-              if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
-                for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
-                  _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
-                }
+          if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? false : true;
+            if(!reset) {
+              _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+              setFormData(_formData);
+              //Check if required is true, if yes remove from required fields
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                delRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+              addRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
+            }
 
-                for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
-                  _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z]);
-                }
-              } else {
-                for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
-                  _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
-                }
+            break;
+          }
+        }
+      }
+    } else {
+      let flag = 0;
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+          flag = 1;
+          _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
+          if(!reset) {
+            var _rReq = [];
+            for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            }
+            delRequiredFields(_rReq);
+            setFormData(_formData);
+          } else {
+            var _rReq = [];
+            for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+            }
+            addRequiredFields(_rReq);
+          }
+          break;
+        }
+      }
 
-                for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
-                  _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
+      if(flag == 0) {
+        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+          if(_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length) {
+            for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].children.length; j++) {
+              for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
+                if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
+                  if(!reset) {
+                    var _rReq = [];
+                    for(let a=0; a<_mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].fields[a].jsonPath, '');
+                      if(_mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].fields[a].isRequired) {
+                        _rReq.push(_mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                        removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                      }
+                    }
+                    delRequiredFields(_rReq);
+                    setFormData(_formData);
+                  } else {
+                    var _rReq = [];
+                    for(let a=0; a<_mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      if(_mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].fields[a].isRequired)
+                        _rReq.push(_mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                    }
+                    addRequiredFields(_rReq);
+                  }
                 }
               }
             }
           }
         }
       }
-
-      setMockData(_mockData);
     }
 
-  handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
-      let {getVal}=this;
-      let {handleChange,mockData,setDropDownData}=this.props;
-      let hashLocation = window.location.hash;
-      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-      // console.log(obj);
-      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
-      this.checkIfHasShowHideFields(property, e.target.value);
-      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
-
-      _.forEach(depedants, function(value,key) {
-            if (value.type=="dropDown") {
-                let splitArray=value.pattern.split("?");
-                let context="";
-          			let id={};
-          			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
-          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
-          				context+=splitArray[0].split("/")[j]+"/";
-          			}
-
-          			let queryStringObject=splitArray[1].split("|")[0].split("&");
-          			for (var i = 0; i < queryStringObject.length; i++) {
-          				if (i) {
-                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
-                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
-                      } else {
-                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-                      }
-                    } else {
-                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
-                    }
-          				}
-          			}
-
-                Api.commonApiPost(context,id).then(function(response)
-                {
-                  let keys=jp.query(response,splitArray[1].split("|")[1]);
-                  let values=jp.query(response,splitArray[1].split("|")[2]);
-                  let dropDownData=[];
-                  for (var k = 0; k < keys.length; k++) {
-                      let obj={};
-                      obj["key"]=keys[k];
-                      obj["value"]=values[k];
-                      dropDownData.push(obj);
-                  }
-                  setDropDownData(value.jsonPath,dropDownData);
-                },function(err) {
-                    console.log(err);
-                });
-                // console.log(id);
-                // console.log(context);
-            }
-
-            else if (value.type=="textField") {
-              let object={
-                target:{
-                  value:eval(eval(value.pattern))
-                }
-              }
-              handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
-            }
-      });
+    return _mockData;
   }
 
-  rowClickHandler = (index) => {
+  showField = (_mockData, showObject, reset) => {
+    let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
+    let _formData = {...this.props.formData};
+    if(showObject.isField) {
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+          if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? true : false;
+            if(!reset) {
+              _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+              setFormData(_formData);
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                addRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
+              }
+            } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+              delRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
+              removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+            }
+            break;
+          }
+        }
+      }
+    } else {
+      let flag = 0;
+      for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+        if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
+          flag = 1;
+          _mockData[moduleName + "." + actionName].groups[i].hide = reset ? true : false;
+          if(!reset) {
+            var _rReq = [];
+            for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+            }
+
+            addRequiredFields(_rReq);
+            setFormData(_formData);
+          } else {
+            var _rReq = [];
+            for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+              if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              }
+            }
+            delRequiredFields(_rReq);
+          }
+          break;
+        }
+      }
+
+      if(flag == 0) {
+        for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+          if(_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length) {
+            for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].children.length; j++) {
+              for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
+                if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
+                  /*if(!reset) {
+
+                  } else {
+
+                  }*/
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  enField = (_mockData, enableStr, reset) => {
+    let {moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(enableStr == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + "." + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
+          if(!reset) {
+            _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+            setFormData(_formData);
+          }
+          break;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  disField = (_mockData, disableStr, reset) => {
+    let {moduleName, actionName, setFormData} = this.props;
+    let _formData = {...this.props.formData};
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(disableStr == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + "." + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
+          if(!reset) {
+            _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
+            setFormData(_formData);
+          }
+
+          break;
+        }
+      }
+    }
+
+    return _mockData;
+  }
+
+  checkIfHasEnDisFields = (jsonPath, val) => {
+    let _mockData = {...this.props.mockData};
+    let {moduleName, actionName, setMockData} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields.length) {
+          for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+            if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
+              }
+            } else {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].disable[y], true);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].enableDisableFields[k].enable[z], true);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    setMockData(_mockData);
+  }
+
+  checkIfHasShowHideFields = (jsonPath, val) => {
+    let _mockData = {...this.props.mockData};
+    let {moduleName, actionName, setMockData} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
+          for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z]);
+              }
+            } else {
+              for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
+              }
+
+              for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    setMockData(_mockData);
+  }
+
+
+    handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
+        let {getVal} = this;
+        let {handleChange,mockData,setDropDownData} = this.props;
+        let hashLocation = window.location.hash;
+        let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+        // console.log(obj);
+        let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+        this.checkIfHasShowHideFields(property, e.target.value);
+        this.checkIfHasEnDisFields(property, e.target.value);
+        handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+
+        _.forEach(depedants, function(value, key) {
+              if (value.type=="dropDown") {
+                  let splitArray=value.pattern.split("?");
+                  let context="";
+            			let id={};
+            			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+            			for (var j = 0; j < splitArray[0].split("/").length; j++) {
+            				context+=splitArray[0].split("/")[j]+"/";
+            			}
+
+            			let queryStringObject=splitArray[1].split("|")[0].split("&");
+            			for (var i = 0; i < queryStringObject.length; i++) {
+            				if (i) {
+                      if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                        if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                          id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                        } else {
+                          id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                        }
+                      } else {
+                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                      }
+            				}
+            			}
+
+                  Api.commonApiPost(context,id).then(function(response)
+                  {
+                    let keys=jp.query(response,splitArray[1].split("|")[1]);
+                    let values=jp.query(response,splitArray[1].split("|")[2]);
+                    let dropDownData=[];
+                    for (var k = 0; k < keys.length; k++) {
+                        let obj={};
+                        obj["key"]=keys[k];
+                        obj["value"]=values[k];
+                        dropDownData.push(obj);
+                    }
+                    setDropDownData(value.jsonPath,dropDownData);
+                  },function(err) {
+                      console.log(err);
+                  });
+                  // console.log(id);
+                  // console.log(context);
+              }
+
+              else if (value.type=="textField") {
+                let object={
+                  target:{
+                    value:eval(eval(value.pattern))
+                  }
+                }
+                handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
+              }
+        });
+    }
+
+    rowClickHandler = (index) => {
     var value = this.state.values[index];
     var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
     var key = _url.split("{")[1].split("}")[0];
@@ -344,8 +527,8 @@ class Transaction extends Component {
     let self=this;
     e.preventDefault();
     self.props.setLoadingStatus('loading');
-    var formData = {...this.props.formData.Receipt};
-    Api.commonApiPost("/collection-services/receipts/v1/_create", "", formData, "", true).then(function(response){
+    var formData = {...this.props.formData};
+    Api.commonApiPost("/collection-services/receipts/_create", "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
       self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
@@ -456,6 +639,15 @@ const mapDispatchToProps = dispatch => ({
   setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
   setFlag: (flag) => {
     dispatch({type:"SET_FLAG", flag})
+  },
+  delRequiredFields: (requiredFields) => {
+    dispatch({type: "DEL_REQUIRED_FIELDS", requiredFields})
+  },
+  addRequiredFields: (requiredFields) => {
+    dispatch({type: "ADD_REQUIRED_FIELDS", requiredFields})
+  },
+  removeFieldErrors: (key) => {
+    dispatch({type: "REMOVE_FROM_FIELD_ERRORS", key})
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);

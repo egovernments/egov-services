@@ -190,6 +190,8 @@ public class InstrumentAccountCodeJdbcRepositoryTest {
 
 	private InstrumentAccountCodeSearch getInstrumentAccountCodeSearch() {
 		InstrumentAccountCodeSearch instrumentAccountCodeSearch = new InstrumentAccountCodeSearch();
+		instrumentAccountCodeSearch.setId("1");
+		instrumentAccountCodeSearch.setIds("1");
 		instrumentAccountCodeSearch.setInstrumentType(InstrumentType.builder().name("name").build());
 		instrumentAccountCodeSearch.setAccountCode(ChartOfAccountContract.builder().glcode("glcode").build());
 		instrumentAccountCodeSearch.setPageSize(500);

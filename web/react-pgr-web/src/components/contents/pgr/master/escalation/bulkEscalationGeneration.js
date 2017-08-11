@@ -258,8 +258,6 @@ class BulkEscalationGeneration extends Component {
 
       let {isSearchClicked, searchResult} = this.state;
 
-      console.log(bulkEscalationGeneration);
-
       const renderBody = function() {
       	  if(searchResult && searchResult.length)
       		return searchResult.map(function(val, i) {
@@ -423,32 +421,14 @@ const mapDispatchToProps = dispatch => ({
     });
   },
 
-  setForm: (data) => {
-    dispatch({
-      type: "SET_FORM",
-      data,
-      isFormValid:true,
-      fieldErrors: {},
-      validationData: {
-        required: {
-          current: [],
-          required: []
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
-
-  handleChange: (e, property, isRequired, pattern) => {
+  handleChange: (e, property, isRequired, pattern, errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern,
+      errorMsg
     });
   },
 
@@ -456,7 +436,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "HANDLE_CHANGE",
       property: type,
-      value: e.target.value,
+      value: '',
       isRequired : true,
       pattern: ''
     });

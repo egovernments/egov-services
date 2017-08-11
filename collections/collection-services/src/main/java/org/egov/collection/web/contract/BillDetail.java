@@ -106,7 +106,7 @@ public class BillDetail {
 
 	private String status;
 
-	@JsonProperty("BillAccountDetail")
+	@JsonProperty("billAccountDetails")
 	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
 }

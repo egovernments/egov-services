@@ -720,7 +720,7 @@ definitions:
     BusinessNature: 
       type: string
       enum:
-        - PERMENANT
+        - PERMANENT
         - TEMPORARY
     CategoryDetail:
       type: object

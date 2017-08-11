@@ -7,7 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.tradelicense.domain.model.AuditDetails;
+import org.egov.tradelicense.common.util.TimeStampUtil;
+import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -48,7 +49,7 @@ public abstract class JdbcRepository {
 		}
 		insertFields.addAll(fetchFields(T));
 		uniqueFields.add("id");
-		uniqueFields.add("tenantId");
+		// uniqueFields.add("tenantId");
 		insertFields.removeAll(uniqueFields);
 		allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));
 		updateFields.addAll(insertFields);
@@ -73,13 +74,6 @@ public abstract class JdbcRepository {
 			fields.add(f.getName());
 		}
 
-		for (Field f : AuditDetails.class.getDeclaredFields()) {
-
-			if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
-				continue;
-			}
-			fields.add(f.getName());
-		}
 		return fields;
 	}
 
@@ -265,6 +259,104 @@ public abstract class JdbcRepository {
 		uQuery = uQuery.replace(":uniqueField", uniqueFieldNameAndParams.toString()).replace(":tableName", tableName)
 				.toString();
 		return uQuery;
+	}
+
+	public List<TradeLicenseEntity> executeSearchQuery(String query, List<Object> preparedStatementValues) {
+
+		List<TradeLicenseEntity> tradeLicenses = new ArrayList<TradeLicenseEntity>();
+		try {
+			List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+
+			for (Map<String, Object> row : rows) {
+
+				TradeLicenseEntity license = new TradeLicenseEntity();
+				license.setId(getLong(row.get("id")));
+				license.setTenantId(getString(row.get("tenantId")));
+				license.setApplicationType(getString(row.get("applicationType")));
+				license.setApplicationDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("applicationDate"))));
+				license.setApplicationNumber(getString(row.get("applicationNumber")));
+				license.setLicenseNumber(getString(row.get("licenseNumber")));
+				license.setAdhaarNumber(getString(row.get("adhaarNumber")));
+				license.setMobileNumber(getString(row.get("mobileNumber")));
+				license.setOwnerName(getString(row.get("ownerName")));
+				license.setFatherSpouseName(getString(row.get("fatherSpouseName")));
+				license.setEmailId(getString(row.get("emailId")));
+				license.setOwnerAddress(getString(row.get("ownerAddress")));
+				license.setPropertyAssesmentNo(getString(row.get("propertyAssesmentNo")));
+				license.setLocalityId(Integer.valueOf(getString((row.get("localityId")))));
+				license.setRevenueWardId(Integer.valueOf((getString(row.get("revenueWardId")))));
+				license.setTradeAddress(getString(row.get("tradeAddress")));
+				license.setOwnerShipType(getString(row.get("ownerShipType")));
+				license.setTradeTitle(getString(row.get("tradeTitle")));
+				license.setTradeType((getString(row.get("tradeType"))));
+				license.setCategoryId(getLong(row.get("categoryId")));
+				license.setSubCategoryId(getLong(row.get("subCategoryId")));
+				license.setUomId(getLong(row.get("uomId")));
+				license.setQuantity(getDouble(row.get("quantity")));
+				license.setRemarks(getString(row.get("remarks")));
+				license.setTradeCommencementDate(
+						TimeStampUtil.getTimeStampFromDB(getString(row.get("tradeCommencementDate"))));
+				license.setAgreementDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("agreementDate"))));
+				license.setAgreementNo(getString(row.get("agreementNo")));
+				license.setIsLegacy(getBoolean(row.get("isLegacy")));
+				license.setActive(getBoolean(row.get("active")));
+				license.setExpiryDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("expiryDate"))));
+				license.setCreatedBy(getString(row.get("createdBy")));
+				license.setLastModifiedBy(getString(row.get("lastModifiedBy")));
+				license.setLastModifiedTime(getLong(row.get("lastModifiedTime")));
+				license.setCreatedTime(getLong(row.get("createdTime")));
+
+				tradeLicenses.add(license);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tradeLicenses;
+	}
+
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
+	private String getString(Object object) {
+		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
+	private Long getLong(Object object) {
+		return object == null ? 0 : Long.parseLong(object.toString());
+	}
+
+	/**
+	 * This method will cast the given object to double
+	 * 
+	 * @param object
+	 *            that need to be cast to Double
+	 * @return {@link Double}
+	 */
+	@SuppressWarnings("unused")
+	private Double getDouble(Object object) {
+		return object == null ? 0.0 : Double.parseDouble(object.toString());
+	}
+
+	/**
+	 * This method will cast the given object to Boolean
+	 * 
+	 * @param object
+	 *            that need to be cast to Boolean
+	 * @return {@link boolean}
+	 */
+	private Boolean getBoolean(Object object) {
+		return object == null ? Boolean.FALSE : (Boolean) object;
 	}
 
 }

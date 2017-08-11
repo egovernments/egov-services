@@ -49,6 +49,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.transaction.config.ApplicationProperties;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.EstimationNotice;
+import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.web.contract.EstimationNoticeRes;
@@ -56,6 +57,7 @@ import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionRes;
+import org.egov.wcms.transaction.web.contract.WorkOrderRes;
 import org.egov.wcms.transaction.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.transaction.web.errorhandler.Error;
 import org.egov.wcms.transaction.web.errorhandler.ErrorHandler;
@@ -197,6 +199,8 @@ public class WaterConnectionController {
         // validate input params
         if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+        
+        logger.info("Request Received for Search Water Connection : " + waterConnectionGetReq);
 
         // Call service
         List<Connection> connectionList = null;
@@ -227,12 +231,39 @@ public class WaterConnectionController {
         // Call service
         EstimationNotice estimationNotice = new EstimationNotice(); 
         try {
-        	estimationNotice =   waterConnectionService.getEstimationNotice(waterConnectionGetReq);
+        	estimationNotice =   waterConnectionService.getEstimationNotice(applicationProperties.getEstimationNoticeTopicName(), 
+        			applicationProperties.getEstimationNoticeTopicKey(),waterConnectionGetReq);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
         return getSuccessResponseForEstimationNotice(estimationNotice, requestInfo);
+    }
+    
+    @PostMapping("/_getWorkOrder")
+    @ResponseBody
+    public ResponseEntity<?> getWorkOrder(@ModelAttribute @Valid final WaterConnectionGetReq waterConnectionGetReq,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        // validate input params
+        if (modelAttributeBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+
+        // Call service
+        WorkOrderFormat workOrder= new WorkOrderFormat(); 
+        try {
+        	workOrder =   waterConnectionService.getWorkOrder(applicationProperties.getWorkOrderTopicName(), applicationProperties.getWorkOrderTopicKey(), waterConnectionGetReq);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + waterConnectionGetReq, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+        return getSuccessResponseForWorkOrder(workOrder, requestInfo);
     }
 
     private ResponseEntity<?> getSuccessResponse(final List<Connection> connectionList,
@@ -258,5 +289,19 @@ public class WaterConnectionController {
         return new ResponseEntity<>(estimationNoticeRes, HttpStatus.OK);
 
     }
+    
+    private ResponseEntity<?> getSuccessResponseForWorkOrder(final WorkOrderFormat workOrder,
+            final RequestInfo requestInfo) {
+        final WorkOrderRes workOrderRes = new WorkOrderRes();
+        ;
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        workOrderRes.setResponseInfo(responseInfo);
+        workOrderRes.setWorkOrder(workOrder);
+        return new ResponseEntity<>(workOrderRes, HttpStatus.OK);
+
+    }
+    
+    
 
 }

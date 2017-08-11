@@ -42,7 +42,9 @@ package org.egov.wcms.transaction.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
@@ -51,11 +53,13 @@ import org.egov.wcms.transaction.model.EstimationCharge;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.Material;
 import org.egov.wcms.transaction.model.MeterReading;
-import org.egov.wcms.transaction.model.enums.BillingType;
+import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
+import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
+import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -63,6 +67,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -74,9 +79,15 @@ public class WaterConnectionRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate; 
 
     @Autowired
     private WaterConnectionQueryBuilder waterConnectionQueryBuilder;
+    
+    @Autowired
+    private RestConnectionService restConnectionService;
 
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
@@ -407,14 +418,67 @@ public class WaterConnectionRepository {
         return false;
     }
     
-    public Object[] getObjectForInsertEstimationNotice(EstimationNotice estimationNotice, long connectionId, String tenantId) {
-    	Long createdBy = 1L; 
-        final Object[] obj = new Object[] { connectionId, tenantId, estimationNotice.getDateOfLetter(), estimationNotice.getLetterNumber(),
-        		estimationNotice.getLetterTo(), estimationNotice.getLetterIntimationSubject(), estimationNotice.getApplicationNumber(), estimationNotice.getApplicationDate(),
-        		estimationNotice.getApplicantName(), estimationNotice.getServiceName(), estimationNotice.getWaterNo(), estimationNotice.getSlaDays(), estimationNotice.getChargeDescription1(),
-        		estimationNotice.getChargeDescription2(), createdBy, new Date(new java.util.Date().getTime()) };
-        return obj;
-    	
-    	
+    public boolean persistWorkOrderLog(WorkOrderFormat workOrder) { 
+    	String persistsWorkOrderLogQuery = WaterConnectionQueryBuilder.persistWorkOrderQuery();
+    	LOGGER.info("Persist Work Order Query : " + persistsWorkOrderLogQuery);
+        if(namedParameterJdbcTemplate.update(persistsWorkOrderLogQuery, getObjectForInsertWorkOrder(workOrder)) > 0) { 
+        	return true;
+        }
+        return false;
+    }
+    
+	public Map<String, Object> getObjectForInsertEstimationNotice(EstimationNotice estimationNotice, long connectionId,
+			String tenantId) {
+		Long createdBy = 1L;
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("waterConnectionId", connectionId);
+		parameters.put("tenantId", tenantId);
+		parameters.put("dateOfLetter", estimationNotice.getDateOfLetter());
+		parameters.put("letterNumber", estimationNotice.getLetterNumber());
+		parameters.put("letterTo", estimationNotice.getLetterTo());
+		parameters.put("letterIntimationSubject", estimationNotice.getLetterIntimationSubject());
+		parameters.put("applicationNumber", estimationNotice.getApplicationNumber());
+		parameters.put("applicationDate", estimationNotice.getApplicationDate());
+		parameters.put("applicantName", estimationNotice.getApplicantName());
+		parameters.put("serviceName", "New water tap connection");
+		parameters.put("waterNumber", estimationNotice.getApplicationNumber());
+		parameters.put("slaDays", estimationNotice.getSlaDays());
+		parameters.put("chargeDescription1", estimationNotice.getChargeDescription().get(0));
+		parameters.put("chargeDescription2", estimationNotice.getChargeDescription().get(1));
+		parameters.put("createdBy", createdBy);
+		parameters.put("createdDate", new Date(new java.util.Date().getTime()).getTime());
+		return parameters;
+	}
+    
+	public Map<String, Object> getObjectForInsertWorkOrder(WorkOrderFormat workOrder) {
+		Long createdBy = 1L;
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("waterConnectionId", workOrder.getConnectionId());
+		parameters.put("tenantId", workOrder.getTenantId());
+		parameters.put("workOrderNumber", workOrder.getWorkOrderNumber());
+		parameters.put("workOrderDate", workOrder.getWorkOrderDate());
+		parameters.put("waterTapOwnerName", workOrder.getWaterTapOwnerName());
+		parameters.put("ackNumber", workOrder.getAckNumber());
+		parameters.put("ackNumberDate", workOrder.getAckNumberDate());
+		parameters.put("hscNumber", workOrder.getHscNumber());
+		parameters.put("hscNumberDate", workOrder.getHscNumberDate());
+		parameters.put("serviceName", "New water tap connection");
+		// TODO 
+		parameters.put("plumberName", "To be added");
+		//
+		parameters.put("createdBy", createdBy);
+		parameters.put("createdDate", new Date(new java.util.Date().getTime()).getTime());
+		return parameters;
+	}
+    
+    public List<DocumentOwner> getDocumentForConnection(Connection connection) { 
+    	final List<Object> preparedStatementValues = new ArrayList<>();
+        final String fetchQuery = WaterConnectionQueryBuilder.getDocumentForConnection();
+        LOGGER.info("Get Document for Connection Query : " + fetchQuery);
+        preparedStatementValues.add(connection.getId()); 
+        preparedStatementValues.add(connection.getTenantId());
+        final List<DocumentOwner> documentList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
+                new ConnectionDocumentRowMapper());
+        return documentList;
     }
 }

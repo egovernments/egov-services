@@ -91,8 +91,8 @@ public class ReceiptQueryBuilderTest {
 		receiptCriteria.setBusinessCode("TL");
 		receiptCriteria.setCollectedBy("1");
 		receiptCriteria.setConsumerCode("CONSUMER123");
-		receiptCriteria.setFromDate("2016-12-22 00:00:00");
-		receiptCriteria.setToDate("2017-12-22 00:00:00");
+		receiptCriteria.setFromDate(1502272932389L);
+		receiptCriteria.setToDate(1502280236077L);
 		receiptCriteria.setStatus("CREATED");
 		receiptCriteria.setTenantId("default");
 		receiptCriteria.setSortBy("payeename");

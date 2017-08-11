@@ -50,7 +50,7 @@ public class PropertiesManager {
 
 	private String updatePropertTaxCalculated;
 
-	private String createPropertyDemand;
+	private String taxGenerated;
 
 	private String createWorkflow;
 
@@ -174,20 +174,20 @@ public class PropertiesManager {
 		return environment.getProperty("egov.propertytax.property.update.tax.calculated");
 	}
 
-	public String getCreatePropertyDemand() {
-		return environment.getProperty("egov.propertytax.generate.property.tax");
+	public String getTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.tax.generated");
 	}
 
 	public String getCreateWorkflow() {
-		return environment.getProperty("egov.propertytax.property.create.workflow");
+		return environment.getProperty("egov.propertytax.property.create.workflow.started");
 	}
 
 	public String getUpdateWorkflow() {
-		return environment.getProperty("egov.propertytax.property.update.workflow");
+		return environment.getProperty("egov.propertytax.property.update.workflow.started");
 	}
 
 	public String getApproveWorkflow() {
-		return environment.getProperty("egov.propertytax.property.approve.workflow");
+		return environment.getProperty("egov.propertytax.property.update.workflow.approved");
 	}
 
 	public String getBusinessKey() {

@@ -67,6 +67,13 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (accountEntitySearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", accountEntitySearchEntity.getTenantId());
+                }
 		if (accountEntitySearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

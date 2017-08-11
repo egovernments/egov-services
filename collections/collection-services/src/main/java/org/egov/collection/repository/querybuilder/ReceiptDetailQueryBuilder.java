@@ -40,7 +40,6 @@
 package org.egov.collection.repository.querybuilder;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import lombok.EqualsAndHashCode;
@@ -206,21 +205,17 @@ public class ReceiptDetailQueryBuilder {
 		}
 
 		if (searchCriteria.getFromDate() != null) {
-			java.util.Date fromDate = new SimpleDateFormat("dd-MM-yyyy")
-					.parse(searchCriteria.getFromDate());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.receiptDate >= ?");
-			preparedStatementValues.add(fromDate.getTime());
+			preparedStatementValues.add(searchCriteria.getFromDate());
 		}
 
 		if (searchCriteria.getToDate() != null) {
-			java.util.Date toDate = new SimpleDateFormat("dd-MM-yyyy")
-					.parse(searchCriteria.getToDate());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.receiptDate <= ?");
-			preparedStatementValues.add(toDate.getTime());
+			preparedStatementValues.add(searchCriteria.getToDate());
 		}
 
 		if (searchCriteria.getBusinessCode() != null) {

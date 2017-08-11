@@ -251,7 +251,7 @@ public class ReceiptRepository {
 					receiptReq);
 
 		} catch (Exception e) {
-			logger.error("Pushing to Queue FAILED! ", e.getMessage());
+			logger.error("Pushing to Queue FAILED! ", e);
 			return null;
 		}
 		return receiptInfo;
@@ -346,7 +346,7 @@ public class ReceiptRepository {
 					applicationProperties.getUpdateReceiptTopicKey(),
 					workFlowDetailsRequest);
 		} catch (Exception e) {
-			logger.error("Pushing To Queue Failed! ", e.getMessage());
+			logger.error("Pushing To Queue Failed! ", e);
 		}
 	}
 
@@ -377,7 +377,7 @@ public class ReceiptRepository {
 		try{
 			sequence = jdbcTemplate.queryForObject(queryString, Long.class);
 		}catch(Exception e){
-			logger.error("Next sequence number for receiptheader couldn't be fetched", e.getCause());
+			logger.error("Next sequence number for receiptheader couldn't be fetched", e);
 		}
 		return sequence;
 	}

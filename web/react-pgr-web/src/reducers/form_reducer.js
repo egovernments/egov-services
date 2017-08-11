@@ -33,7 +33,7 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
       validationData.required.current = _.remove(validationData.required.current, (item) => {
         return item !== name
       });
-      errorText = "This is field is required";
+      errorText = "This field is required";
     }
   }
   if (pattern.toString().trim().length > 0) {
@@ -99,7 +99,7 @@ console.log('Here', validatePropertyOwner);
       validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
         return item != name
       });
-      errorText = "This is field is required";
+      errorText = "This field is required";
     }
   }
   if (pattern.toString().length > 0) {
@@ -160,7 +160,7 @@ console.log('Here', validatePropertyFloor);
       validatePropertyFloor.required.current = _.remove(validatePropertyFloor.required.current, (item) => {
         return item != name
       });
-      errorText = "This is field is required";
+      errorText = "This field is required";
     }
   }
   if (pattern.toString().length > 0) {
@@ -320,7 +320,9 @@ export default(state = defaultState, action) => {
                   [action.object]:null
                 },
 				isOwnerValid: action.isSectionValid,
-				isFloorValid: action.isSectionValid
+				isFloorValid: action.isSectionValid,
+				validatePropertyOwner: action.validatePropertyOwner,
+				validatePropertyFloor: action.validatePropertyFloor,
               }
         break;
 

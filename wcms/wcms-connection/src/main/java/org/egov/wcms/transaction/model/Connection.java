@@ -160,6 +160,12 @@ public class Connection {
 
     @NotNull
     private long parentConnectionId;
+    
+    @NotNull
+    private long manualReceiptDate;
+    
+    @NotNull
+    private String manualReceiptNumber;
 
     @NotNull
     private List<DocumentOwner> documents;
@@ -197,5 +203,5 @@ public class Connection {
     private WorkflowDetails workflowDetails;
     
     private String createdDate; 
-
+    
 }

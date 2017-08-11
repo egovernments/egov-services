@@ -4,6 +4,8 @@ import org.egov.collection.web.contract.ChartOfAccount;
 import org.egov.collection.web.contract.ChartOfAccountsResponse;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import java.util.List;
 @Service
 public class ChartOfAccountsRepository {
 
+	public static final Logger LOGGER = LoggerFactory.getLogger(ChartOfAccountsRepository.class);
+
+	
     @Autowired
     private RestTemplate restTemplate;
 
@@ -29,6 +34,8 @@ public class ChartOfAccountsRepository {
     public List<ChartOfAccount> getChartOfAccounts(final List<String> chartOfAccountCodes,final String tenantId,final RequestInfo requestInfo) {
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
+        LOGGER.info("URI: "+url);
+        LOGGER.info("tenantid: "+tenantId);
         return restTemplate.postForObject(url, requestInfoWrapper,
                 ChartOfAccountsResponse.class,tenantId,chartOfAccountCodes.get(0).toString()).getChartOfAccounts();
     }

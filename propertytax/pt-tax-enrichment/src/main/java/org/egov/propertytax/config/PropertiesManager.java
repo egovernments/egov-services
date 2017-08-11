@@ -114,7 +114,7 @@ public class PropertiesManager {
 	}
 
 	public String getCreatePropertyTaxGenerated() {
-		return environment.getProperty("egov.propertytax.create.demand");
+		return environment.getProperty("egov.propertytax.property.tax.generated");
 	}
 
 	public String getBillingServiceHostName() {

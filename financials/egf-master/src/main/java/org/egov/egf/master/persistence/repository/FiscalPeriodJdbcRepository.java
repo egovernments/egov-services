@@ -67,6 +67,13 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (fiscalPeriodSearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", fiscalPeriodSearchEntity.getTenantId());
+                }
 		if (fiscalPeriodSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

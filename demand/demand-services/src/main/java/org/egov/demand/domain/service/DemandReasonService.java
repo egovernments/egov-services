@@ -29,6 +29,9 @@ public class DemandReasonService {
 
 	public EgDemandReason findByCodeInstModule(String demandReasonCode, String instDescription, String moduleName,
 			String tenantId) {
+
+		LOGGER.info("demand reason search params : " + demandReasonCode + " ," + instDescription + " ," + moduleName
+				+ " ," + tenantId);
 		return demandReasonRepository.findByCodeInstModule(demandReasonCode, instDescription, moduleName, tenantId);
 	}
 

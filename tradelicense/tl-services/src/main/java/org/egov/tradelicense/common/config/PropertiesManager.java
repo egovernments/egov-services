@@ -14,16 +14,16 @@ public class PropertiesManager {
 	@Value("${app.timezone}")
 	private String appTimeZone;
 	
-	@Value("${egov.services.tl-masters/v1.hostname}")
+	@Value("${egov.services.tl-masters_v1.hostname}")
 	private String tradeLicenseMasterServiceHostName;
 	
-	@Value("${egov.services.tl-masters/v1.basepath}")
+	@Value("${egov.services.tl-masters_v1.basepath}")
 	private String tradeLicenseMasterServiceBasePath;
 
-	@Value("${egov.services.tl-masters/v1.documenttype.searchpath}")
+	@Value("${egov.services.tl-masters_v1.documenttype.searchpath}")
 	private String documentServiceSearchPath;
 	
-	@Value("${egov.services.tl-masters/v1.category.searchpath}")
+	@Value("${egov.services.tl-masters_v1.category.searchpath}")
 	private String categoryServiceSearchPath;
 	
 	@Value("${egov.services.egov-location.hostname}")
@@ -37,4 +37,10 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.tl-services.create.legacy.tradelicense.validated}")
 	private String createLegacyTradeValidated;
+	
+	@Value("${egov.services.tl-services.pageSize.default}")
+	private String pageSize;
+
+	@Value("${egov.services.tl-services.pageNumber.default}")
+	private String pageNumber;
 }

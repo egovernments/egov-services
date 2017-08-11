@@ -60,6 +60,13 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 		}
 
 		// implement jdbc specfic search
+		if (financialYearSearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", financialYearSearchEntity.getTenantId());
+                }
 		if (financialYearSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

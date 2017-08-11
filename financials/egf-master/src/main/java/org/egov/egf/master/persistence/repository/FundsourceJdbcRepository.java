@@ -67,6 +67,13 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+	        if (fundsourceSearchEntity.getTenantId() != null) {
+	            if (params.length() > 0) {
+	                params.append(" and ");
+	            }
+	            params.append("tenantId =:tenantId");
+	            paramValues.put("tenantId", fundsourceSearchEntity.getTenantId());
+	        }
 		if (fundsourceSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

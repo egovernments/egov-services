@@ -665,7 +665,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'sequenceNo']
+          required: ['reasonForCreation','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'sequenceNo', 'oldUpicNumber']
         },
         pattern: {
           current: [],
@@ -754,7 +754,27 @@ const mapDispatchToProps = dispatch => ({
   resetObject: (object) => {
     dispatch({
       type: "RESET_OBJECT",
-      object
+      object,
+	    validatePropertyOwner: {
+        required: {
+          current: [],
+          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      },
+	   validatePropertyFloor: {
+        required: {
+          current: [],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
     })
   },
 

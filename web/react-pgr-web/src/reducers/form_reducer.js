@@ -320,7 +320,9 @@ export default(state = defaultState, action) => {
                   [action.object]:null
                 },
 				isOwnerValid: action.isSectionValid,
-				isFloorValid: action.isSectionValid
+				isFloorValid: action.isSectionValid,
+				validatePropertyOwner: action.validatePropertyOwner,
+				validatePropertyFloor: action.validatePropertyFloor,
               }
         break;
 

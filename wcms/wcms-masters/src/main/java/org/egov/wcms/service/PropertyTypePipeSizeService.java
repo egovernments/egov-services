@@ -65,6 +65,9 @@ public class PropertyTypePipeSizeService {
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
 
+    @Autowired
+    private CodeGeneratorService codeGeneratorService;
+
     public PropertyTypePipeSizeRequest create(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         return propertyPipeSizeRepository.persistCreatePropertyPipeSize(propertyPipeSizeRequest);
     }
@@ -73,9 +76,22 @@ public class PropertyTypePipeSizeService {
         return propertyPipeSizeRepository.persistUpdatePropertyPipeSize(propertyPipeSizeRequest);
     }
 
-    public PropertyTypePipeSize createPropertyPipeSize(final String topic, final String key,
+    public List<PropertyTypePipeSize> createPropertyPipeSize(final String topic, final String key,
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
+        for (final PropertyTypePipeSize propertyPipeSize : propertyPipeSizeRequest.getPropertyTypePipeSize()) {
+            propertyPipeSize.setCode(codeGeneratorService.generate(PropertyTypePipeSize.SEQ_PROPERTY_PIPESIZE));
+        }
 
+        try {
+            kafkaTemplate.send(topic, key, propertyPipeSizeRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
+        return propertyPipeSizeRequest.getPropertyTypePipeSize();
+    }
+
+    public List<PropertyTypePipeSize> updatePropertyPipeSize(final String topic, final String key,
+            final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         try {
             kafkaTemplate.send(topic, key, propertyPipeSizeRequest);
         } catch (final Exception ex) {
@@ -96,15 +112,15 @@ public class PropertyTypePipeSizeService {
 
     }
 
-    public Boolean getPropertyTypeByName(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
+    public Boolean getPropertyTypeByName(final PropertyTypePipeSize propertyTypePipeSize) {
         Boolean isValidProperty = Boolean.FALSE;
         final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
-                propertyPipeSizeRequest.getPropertyTypePipeSize().getPropertyTypeName(),
-                propertyPipeSizeRequest.getPropertyTypePipeSize().getTenantId());
+                propertyTypePipeSize.getPropertyTypeName(),
+                propertyTypePipeSize.getTenantId());
 
         if (propertyTypes.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
-            propertyPipeSizeRequest.getPropertyTypePipeSize().setPropertyTypeId(
+            propertyTypePipeSize.setPropertyTypeId(
                     propertyTypes.getPropertyTypes() != null && propertyTypes.getPropertyTypes().get(0) != null
                             ? propertyTypes.getPropertyTypes().get(0).getId() : "");
 
@@ -113,12 +129,12 @@ public class PropertyTypePipeSizeService {
 
     }
 
-    public boolean checkPropertyByPipeSize(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        getPropertyTypeByName(propertyPipeSizeRequest);
-        return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSizeRequest.getPropertyTypePipeSize().getId(),
-                propertyPipeSizeRequest.getPropertyTypePipeSize().getPropertyTypeId(),
-                propertyPipeSizeRequest.getPropertyTypePipeSize().getPipeSize(),
-                propertyPipeSizeRequest.getPropertyTypePipeSize().getTenantId());
+    public boolean checkPropertyByPipeSize(final PropertyTypePipeSize propertyPipeSize) {
+        getPropertyTypeByName(propertyPipeSize);
+        return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSize.getCode(),
+                propertyPipeSize.getPropertyTypeId(),
+                propertyPipeSize.getPipeSize(),
+                propertyPipeSize.getTenantId());
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {

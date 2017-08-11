@@ -54,6 +54,7 @@ public class PropertyUsageTypeRowMapper implements RowMapper<PropertyTypeUsageTy
 
 		final PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
 		propUsageType.setId(rs.getLong("id"));
+		propUsageType.setCode(rs.getString("code"));
 		propUsageType.setPropertyTypeId(rs.getString("propertytypeid"));
 		propUsageType.setUsageTypeId(rs.getString("usagetypeId"));
 		propUsageType.setActive(rs.getBoolean("active"));

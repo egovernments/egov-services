@@ -51,6 +51,8 @@ import org.egov.wcms.web.contract.SupplyTypeGetRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -65,26 +67,41 @@ public class SupplyTypeRepository {
     @Autowired
     private SupplyTypeRowMapper supplyTypeRowMapper;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public SupplyTypeRequest persistSupplyType(final SupplyTypeRequest supplyTypeRequest) {
         final String insertQuery = SupplyTypeQueryBuilder.insertSupplyTypeQuery();
-        final SupplyType supplyType = supplyTypeRequest.getSupplyType();
-        final Object[] obj = new Object[] { Long.valueOf(supplyType.getCode()), supplyType.getCode(), supplyType.getName(),
-                supplyType.getDescription(), supplyType.getActive(),
-                Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                supplyType.getTenantId() };
-        jdbcTemplate.update(insertQuery, obj);
+        final List<SupplyType> supplyTypeList = supplyTypeRequest.getSupplyType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(supplyTypeList.size());
+        for (final SupplyType supplyType : supplyTypeList)
+            batchValues.add(
+                    new MapSqlParameterSource("id", Long.valueOf(supplyType.getCode())).addValue("code", supplyType.getCode())
+                            .addValue("name", supplyType.getName())
+                            .addValue("description", supplyType.getDescription()).addValue("active", supplyType.getActive())
+                            .addValue("createdby", Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifiedby", Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("createddate", new Date(new java.util.Date().getTime()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("tenantid", supplyType.getTenantId())
+                            .getValues());
+        namedParameterJdbcTemplate.batchUpdate(insertQuery, batchValues.toArray(new Map[supplyTypeList.size()]));
         return supplyTypeRequest;
     }
 
     public SupplyTypeRequest upateSupplyType(final SupplyTypeRequest supplyTypeRequest) {
-        final String supplytypevalue = SupplyTypeQueryBuilder.updateSupplyTypeQuery();
-        final SupplyType supply = supplyTypeRequest.getSupplyType();
-        final Object[] obj = new Object[] { supply.getName(), supply.getDescription(), supply.getActive(),
-                Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), supply.getCode() };
-        jdbcTemplate.update(supplytypevalue, obj);
+        final String updateQuery = SupplyTypeQueryBuilder.updateSupplyTypeQuery();
+        final List<SupplyType> supplyTypeList = supplyTypeRequest.getSupplyType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(supplyTypeList.size());
+        for (final SupplyType supplyType : supplyTypeList)
+            batchValues.add(
+                    new MapSqlParameterSource("name", supplyType.getName())
+                            .addValue("description", supplyType.getDescription()).addValue("active", supplyType.getActive())
+                            .addValue("lastmodifiedby", Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("code", supplyType.getCode())
+                            .getValues());
+        namedParameterJdbcTemplate.batchUpdate(updateQuery, batchValues.toArray(new Map[supplyTypeList.size()]));
         return supplyTypeRequest;
 
     }

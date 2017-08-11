@@ -40,7 +40,6 @@
 
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -64,7 +63,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -104,40 +102,39 @@ public class PropertyTypeCategoryTypeController {
         log.info("propertyCategoryRequest::" + propertyCategoryRequest);
 
         final List<ErrorResponse> errorResponses = validatorUtils
-                .validatePropertyCategoryRequest(propertyCategoryRequest);
+                .validatePropertyCategoryRequest(propertyCategoryRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
+        final List<PropertyTypeCategoryType> propertyCategory = propertyCategoryService.createPropertyCategory(
                 applicationProperties.getCreatePropertyCategoryTopicName(), "property-category-create",
                 propertyCategoryRequest);
         return getSuccessResponse(propertyCategory, "Created", propertyCategoryRequest.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/{propertyCategoryId}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypeCategoryTypeReq propertyCategoryRequest,
-            final BindingResult errors, @PathVariable("propertyCategoryId") final Long propertyCategoryId) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("propertyCategoryRequest::" + propertyCategoryRequest);
-        propertyCategoryRequest.getPropertyTypeCategoryType().setId(propertyCategoryId);
 
         final List<ErrorResponse> errorResponses = validatorUtils
-                .validatePropertyCategoryRequest(propertyCategoryRequest);
+                .validatePropertyCategoryRequest(propertyCategoryRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
+        final List<PropertyTypeCategoryType> propertyCategory = propertyCategoryService.updatePropertyCategory(
                 applicationProperties.getUpdatePropertyCategoryTopicName(), "property-category-update",
                 propertyCategoryRequest);
         return getSuccessResponse(propertyCategory, null, propertyCategoryRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final PropertyCategoryGetRequest propertyCategoryGetRequest,
             final BindingResult modelAttributeBindingResult,
@@ -154,42 +151,28 @@ public class PropertyTypeCategoryTypeController {
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
         log.info("Request: " + propertyCategoryGetRequest);
-        PropertyTypeCategoryTypesRes propertyCategoryResponse = null;
+        List<PropertyTypeCategoryType> propertyCategory = null;
         try {
-            propertyCategoryResponse = propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest);
+            propertyCategory = propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest);
         } catch (final Exception exception) {
             log.error("Error while processing request " + propertyCategoryGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponseForList(propertyCategoryResponse, requestInfo);
-
+        return getSuccessResponse(propertyCategory, null, requestInfo);
     }
 
-    private ResponseEntity<?> getSuccessResponse(final PropertyTypeCategoryTypeReq propertyCategoryRequest,
-            final String mode, final RequestInfo requestInfo) {
+    private ResponseEntity<?> getSuccessResponse(final List<PropertyTypeCategoryType> propertyCategory, final String mode,
+            final RequestInfo requestInfo) {
         final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
-        final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
-        propertyCategories.add(propertyCategoryRequest.getPropertyTypeCategoryType());
+        propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategory);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());
         else
             responseInfo.setStatus(HttpStatus.OK.toString());
         propertyCategoryResponse.setResponseInfo(responseInfo);
-        propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);
-
         return new ResponseEntity<>(propertyCategoryResponse, HttpStatus.OK);
 
     }
-
-    private ResponseEntity<?> getSuccessResponseForList(final PropertyTypeCategoryTypesRes propertyCategoryResponse,
-            final RequestInfo requestInfo) {
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        propertyCategoryResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(propertyCategoryResponse, HttpStatus.OK);
-
-    }
-
 }

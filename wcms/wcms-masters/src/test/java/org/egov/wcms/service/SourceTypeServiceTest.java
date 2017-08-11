@@ -49,9 +49,11 @@ import java.util.List;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.SourceType;
+import org.egov.wcms.model.SupplyType;
 import org.egov.wcms.repository.SourceTypeRepository;
 import org.egov.wcms.web.contract.SourceTypeGetRequest;
 import org.egov.wcms.web.contract.SourceTypeRequest;
+import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -90,18 +92,21 @@ public class SourceTypeServiceTest {
     @Test
     public void test_throwException_Push_To_Producer_WaterSource() {
 
-        final SourceType waterSource = getWaterSourceType();
+        final List<SourceType> waterSourceList = new ArrayList<>();
+        waterSourceList.add(getWaterSourceType());
         final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
-        waterSourceRequest.setSourceType(waterSource);
-        assertTrue(waterSource.equals(waterSourceTypeService.createWaterSource("topic", "key", waterSourceRequest)));
+        waterSourceRequest.setSourceType(waterSourceList);
+        assertTrue(waterSourceList.equals(waterSourceTypeService.createWaterSource("topic", "key", waterSourceRequest)));
     }
+    
 
     @Test
     public void test_throwException_Create_WaterSource() {
 
-        final SourceType waterSourceType = getWaterSourceType();
+        final List<SourceType> waterSourceTypeList = new ArrayList<>();
+        waterSourceTypeList.add(getWaterSourceType());
         final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
-        waterSourceRequest.setSourceType(waterSourceType);
+        waterSourceRequest.setSourceType(waterSourceTypeList);
         when(waterSourceTypeRepository.persistCreateWaterSourceType(any(SourceTypeRequest.class)))
                 .thenReturn(waterSourceRequest);
         assertTrue(waterSourceRequest.equals(waterSourceTypeService.create(waterSourceRequest)));

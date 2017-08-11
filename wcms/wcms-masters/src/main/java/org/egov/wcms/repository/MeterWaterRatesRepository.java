@@ -105,7 +105,6 @@ public class MeterWaterRatesRepository {
             }
             if (sourcetypeId == null)
                 log.info("Invalid input.");
-            meterWaterRates.setBillingtype(BillingType.METERED.toString());
             final Object[] obj = new Object[] { Long.valueOf(meterWaterRates.getCode()), meterWaterRates.getCode(),
                     meterWaterRates.getBillingtype(), meterWaterRates.getUsageTypeId(),
                     sourcetypeId, pipesizeId, meterWaterRates.getFromDate(),

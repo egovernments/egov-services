@@ -72,9 +72,12 @@ public class CategoryTypeService {
         return categoryRepository.persistModifyCategory(categoryRequest);
     }
 
-    public CategoryType createCategory(final String topic, final String key,
+    public List<CategoryType> createCategory(final String topic, final String key,
             final CategoryTypeRequest categoryRequest) {
-        categoryRequest.getCategoryType().setCode(codeGeneratorService.generate(CategoryType.SEQ_CATEGORY));
+        for (final CategoryType categoryType : categoryRequest.getCategoryType()){
+            categoryType.setCode(codeGeneratorService.generate(CategoryType.SEQ_CATEGORY));
+        }
+        
         try {
             kafkaTemplate.send(topic, key, categoryRequest);
         } catch (final Exception ex) {
@@ -83,7 +86,7 @@ public class CategoryTypeService {
         return categoryRequest.getCategoryType();
     }
 
-    public CategoryType updateCategory(final String topic, final String key,
+    public List<CategoryType> updateCategory(final String topic, final String key,
             final CategoryTypeRequest categoryRequest) {
         try {
             kafkaTemplate.send(topic, key, categoryRequest);

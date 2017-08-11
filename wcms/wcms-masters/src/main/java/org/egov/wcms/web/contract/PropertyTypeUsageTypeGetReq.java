@@ -60,6 +60,7 @@ import lombok.ToString;
 public class PropertyTypeUsageTypeGetReq {
 
     private List<Long> id;
+    private String code;
     
     private String propertyType;
     

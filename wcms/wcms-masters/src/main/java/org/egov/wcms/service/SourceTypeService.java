@@ -43,7 +43,6 @@ import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.SourceType;
-
 import org.egov.wcms.repository.SourceTypeRepository;
 import org.egov.wcms.web.contract.SourceTypeGetRequest;
 import org.egov.wcms.web.contract.SourceTypeRequest;
@@ -73,27 +72,28 @@ public class SourceTypeService {
         return waterSourceTypeRepository.persistModifyWaterSourceType(waterSourceRequest);
     }
 
-    public SourceType createWaterSource(final String topic, final String key,
-            final SourceTypeRequest waterSourceRequest) {
-        waterSourceRequest.getSourceType().setCode(codeGeneratorService.generate(SourceType.SEQ_WATERSOURCE));
+    public List<SourceType> createWaterSource(final String topic, final String key,
+            final SourceTypeRequest sourcetypeRequest) {
+        for (final SourceType sourceType : sourcetypeRequest.getSourceType())
+            sourceType.setCode(codeGeneratorService.generate(SourceType.SEQ_WATERSOURCE));
 
         try {
-            kafkaTemplate.send(topic, key, waterSourceRequest);
+            kafkaTemplate.send(topic, key, sourcetypeRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return waterSourceRequest.getSourceType();
+        return sourcetypeRequest.getSourceType();
     }
 
-    public SourceType updateWaterSource(final String topic, final String key,
-            final SourceTypeRequest waterSourceRequest) {
+    public List<SourceType> updateWaterSource(final String topic, final String key,
+            final SourceTypeRequest sourcetypeRequest) {
 
         try {
-            kafkaTemplate.send(topic, key, waterSourceRequest);
+            kafkaTemplate.send(topic, key, sourcetypeRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return waterSourceRequest.getSourceType();
+        return sourcetypeRequest.getSourceType();
     }
 
     public boolean getWaterSourceByNameAndCode(final String code, final String name, final String tenantId) {

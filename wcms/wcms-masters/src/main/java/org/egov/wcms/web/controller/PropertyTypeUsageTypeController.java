@@ -40,7 +40,6 @@
 
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -64,7 +63,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,36 +101,33 @@ public class PropertyTypeUsageTypeController {
         }
         log.info("Property Usage Type Request::" + propUsageTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(propUsageTypeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(propUsageTypeRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyTypeUsageType propUsageType = propUsageTypeService.createPropertyUsageType(
+        final List<PropertyTypeUsageType> propUsageTypes = propUsageTypeService.createPropertyUsageType(
                 applicationProperties.getCreatePropertyUsageTopicName(), "propertyusage-create", propUsageTypeRequest);
-        final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
-        propUsageTypes.add(propUsageType);
+
         return getSuccessResponse(propUsageTypes, "Created", propUsageTypeRequest.getRequestInfo());
     }
 
-    @PostMapping(value = "/{propertyUsageId}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypeUsageTypeReq propUsageTypeRequest,
-            final BindingResult errors, @PathVariable("propertyUsageId") final Long propertyUsageId) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("Property Usage Type Request::" + propUsageTypeRequest);
-        propUsageTypeRequest.getPropertyTypeUsageType().setId(propertyUsageId);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(propUsageTypeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(propUsageTypeRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyTypeUsageType propUsageType = propUsageTypeService.createPropertyUsageType(
+        final List<PropertyTypeUsageType> propUsageTypes = propUsageTypeService.updatePropertyUsageType(
                 applicationProperties.getUpdatePropertyUsageTopicName(), "propertyusage-update", propUsageTypeRequest);
-        final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
-        propUsageTypes.add(propUsageType);
+
         return getSuccessResponse(propUsageTypes, null, propUsageTypeRequest.getRequestInfo());
     }
 

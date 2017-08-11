@@ -57,7 +57,6 @@ import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.util.FileUtils;
 import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.junit.Test;
@@ -102,7 +101,6 @@ public class PropertyTypeCategoryTypeControllerTest {
     public void test_Should_Search_PropertyCategory() throws Exception {
 
         final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
-        final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
         final RequestInfo requestInfo = new RequestInfo();
         final ResponseInfo responseInfo = new ResponseInfo();
         final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
@@ -115,7 +113,7 @@ public class PropertyTypeCategoryTypeControllerTest {
 
         final PropertyCategoryGetRequest propertyCategoryGetRequest = Mockito.mock(PropertyCategoryGetRequest.class);
 
-        when(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest)).thenReturn(propertyCategoryResponse);
+        when(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest)).thenReturn(propertyCategories);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
         mockMvc.perform(post("/propertytype-categorytype/_search")

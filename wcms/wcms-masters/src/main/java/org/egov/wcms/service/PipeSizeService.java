@@ -72,10 +72,12 @@ public class PipeSizeService {
         return pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest);
     }
 
-    public PipeSize createPipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
-        pipeSizeRequest.getPipeSize().setCode(codeGeneratorService.generate(PipeSize.SEQ_PIPESIZE));
-        final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
-        pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
+    public List<PipeSize> createPipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
+        for (final PipeSize pipeSize : pipeSizeRequest.getPipeSize()) {
+            pipeSize.setCode(codeGeneratorService.generate(PipeSize.SEQ_PIPESIZE));
+            final double pipeSizeininch = pipeSize.getSizeInMilimeter() * 0.039370;
+            pipeSize.setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
+        }
         try {
             kafkaTemplate.send(topic, key, pipeSizeRequest);
         } catch (final Exception ex) {
@@ -84,9 +86,11 @@ public class PipeSizeService {
         return pipeSizeRequest.getPipeSize();
     }
 
-    public PipeSize updatePipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
-        final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
-        pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
+    public List<PipeSize> updatePipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
+        for (final PipeSize pipeSize : pipeSizeRequest.getPipeSize()) {
+            final double pipeSizeininch = pipeSize.getSizeInMilimeter() * 0.039370;
+            pipeSize.setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
+        }
         try {
             kafkaTemplate.send(topic, key, pipeSizeRequest);
         } catch (final Exception ex) {

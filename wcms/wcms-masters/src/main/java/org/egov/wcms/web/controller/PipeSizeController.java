@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -102,41 +101,37 @@ public class PipeSizeController {
         }
         log.info("pipeSizeRequest::" + pipeSizeRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validatePipeSizeRequest(pipeSizeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validatePipeSizeRequest(pipeSizeRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PipeSize pipeSize = pipeSizeService.createPipeSize(applicationProperties.getCreatePipeSizetopicName(),
+        final List<PipeSize> pipeSizes = pipeSizeService.createPipeSize(applicationProperties.getCreatePipeSizetopicName(),
                 "pipesize-create", pipeSizeRequest);
-        final List<PipeSize> pipeSizes = new ArrayList<>();
-        pipeSizes.add(pipeSize);
+
         return getSuccessResponse(pipeSizes, "Created", pipeSizeRequest.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/{code}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PipeSizeRequest pipeSizeRequest,
-            final BindingResult errors, @PathVariable("code") final String code) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("pipeSizeRequest::" + pipeSizeRequest);
-        pipeSizeRequest.getPipeSize().setCode(code);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validatePipeSizeRequest(pipeSizeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validatePipeSizeRequest(pipeSizeRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PipeSize pipeSize = pipeSizeService.updatePipeSize(applicationProperties.getUpdatePipeSizeTopicName(),
+        final List<PipeSize> pipeSizes = pipeSizeService.updatePipeSize(applicationProperties.getUpdatePipeSizeTopicName(),
                 "pipesize-update", pipeSizeRequest);
-        final List<PipeSize> pipeSizes = new ArrayList<>();
-        pipeSizes.add(pipeSize);
         return getSuccessResponse(pipeSizes, null, pipeSizeRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final PipeSizeGetRequest pipeSizeGetRequest,
             final BindingResult modelAttributeBindingResult,

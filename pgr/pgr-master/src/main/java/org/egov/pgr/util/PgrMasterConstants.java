@@ -137,13 +137,13 @@ public class PgrMasterConstants {
 
     public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_CODE = "pgr.0014";
     public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME = "code";
-    public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE = "Complaint Type Code already exists";
+    public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE = "Grievance Type Code already exists";
 
     public static final String CATEGORY_ID_MANDATORY_CODE = "pgr.0015";
     public static final String CATEGORY_ID_MANDATORY_FIELD_NAME = "code";
     public static final String CATEGORY_ID_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
 
-    public static final String SLA_HOURS_MANDATORY_CODE = "pgr.0015";
+    public static final String SLA_HOURS_MANDATORY_CODE = "pgr.0020";
     public static final String SLA_HOURS_MANDATORY_FIELD_NAME = "slaHours";
     public static final String SLA_HOURS_MANDATORY_ERROR_MESSAGE = "SLA Hours is mandatory";
 
@@ -167,9 +167,9 @@ public class PgrMasterConstants {
     public static final String SERVICEGROUP_CODENAME_ERROR_MESSAGE = "Service Group Code or Name already exists";
     public static final String SERVICEGROUP_CODENAME_FIELD_NAME = "name";
 
-    public static final String GRIEVANCETYPE_NAME_UNIQUE_CODE = "pgr.00016";
+    public static final String GRIEVANCETYPE_NAME_UNIQUE_CODE = "pgr.0016";
     public static final String GRIEVANCETYPE_NAME_UNIQUE_FIELD_NAME = "serviceName";
-    public static final String GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE = "Complaint Type Name already exists";
+    public static final String GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE = "Grievance Type Name already exists";
 
     public static final String RECEIVINGMODE_NAME_UNIQUE_CODE = "pgr.0017";
     public static final String RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE = "Entered ReceivingMode Name Already Exist.";

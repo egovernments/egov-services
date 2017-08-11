@@ -47,8 +47,6 @@ import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.repository.DocumentTypeApplicationTypeRepository;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,30 +56,45 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DocumentTypeApplicationTypeService {
 
-    public static final Logger logger = LoggerFactory.getLogger(DocumentTypeApplicationTypeService.class);
-
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private DocumentTypeApplicationTypeRepository docTypeApplTypeRepository;
 
+    @Autowired
+    private CodeGeneratorService codeGeneratorService;
+
     public DocumentTypeApplicationTypeReq create(final DocumentTypeApplicationTypeReq docNameRequest) {
         return docTypeApplTypeRepository.persistCreateDocTypeApplicationType(docNameRequest);
     }
 
-    public DocumentTypeApplicationType sendMessage(final String topic, final String key,
-            final DocumentTypeApplicationTypeReq docNameRequest) {
+    public DocumentTypeApplicationTypeReq update(final DocumentTypeApplicationTypeReq documentTypeRequest) {
+        return docTypeApplTypeRepository.persistModifyDocTypeApplicationType(documentTypeRequest);
+    }
+
+    public List<DocumentTypeApplicationType> createDocumentApplication(final String topic, final String key,
+            final DocumentTypeApplicationTypeReq docmentApplicationRequest) {
+        for (final DocumentTypeApplicationType documentApplication : docmentApplicationRequest.getDocumentTypeApplicationType())
+            documentApplication
+                    .setCode(codeGeneratorService.generate(DocumentTypeApplicationType.SEQ_DOCUMENT_TYPE_APPLICATION_TYPE));
+        
         try {
-            kafkaTemplate.send(topic, key, docNameRequest);
+            kafkaTemplate.send(topic, key, docmentApplicationRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return docNameRequest.getDocumentTypeApplicationType();
+        return docmentApplicationRequest.getDocumentTypeApplicationType();
     }
 
-    public DocumentTypeApplicationTypeReq update(final DocumentTypeApplicationTypeReq documentTypeRequest) {
-        return docTypeApplTypeRepository.persistModifyDocTypeApplicationType(documentTypeRequest);
+    public List<DocumentTypeApplicationType> updateDocumentApplication(final String topic, final String key,
+            final DocumentTypeApplicationTypeReq docmentApplicationRequest) {
+        try {
+            kafkaTemplate.send(topic, key, docmentApplicationRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
+        return docmentApplicationRequest.getDocumentTypeApplicationType();
     }
 
     public List<DocumentTypeApplicationType> getDocumentAndApplicationTypes(
@@ -90,12 +103,12 @@ public class DocumentTypeApplicationTypeService {
 
     }
 
-    public boolean checkDocumentTypeApplicationTypeExist(final Long id, final String applicationType,
+    public boolean checkDocumentTypeApplicationTypeExist(final String code, final String applicationType,
             final String documentType, final String tenantid) {
-        return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(id, applicationType, documentType,
+        return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(code, applicationType, documentType,
                 tenantid);
     }
-    
+
     public boolean checkDocumentTypeExists(final String documentName, final String tenantId) {
         return docTypeApplTypeRepository.checkDocumentTypeExists(documentName, tenantId);
     }

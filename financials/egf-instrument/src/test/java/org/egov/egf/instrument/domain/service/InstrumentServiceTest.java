@@ -355,6 +355,21 @@ public class InstrumentServiceTest {
 
 		assertEquals(expextedResult, actualResult);
 	}
+	
+	@Test
+	public final void test_dishonor() {
+
+		List<Instrument> expextedResult = getInstruments();
+
+		when(instrumentRepository.findById(any(Instrument.class))).thenReturn(getInstruments().get(0));
+		when(financialStatusContractRepository.findByModuleCode(any(FinancialStatusContract.class)))
+				.thenReturn(getFinancialStatusContract());
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.dishonor(getInstrumentDepositRequest(), errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+	}
 
 	private FinancialStatusContract getFinancialStatusContract() {
 		return FinancialStatusContract.builder().code("Deposit").moduleType("Instrument").build();

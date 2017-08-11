@@ -140,6 +140,20 @@ public class InstrumentControllerTest {
 				.andExpect(content().json(resources.readResponse("instrument/instrument_deposit_valid_response.json")));
 	}
 	
+	@Test
+	public void test_dishonor_instrument() throws IOException, Exception {
+		List<Instrument> instruments = getInstrumentsForDeposit();
+		instruments.get(0).setId("726bb79942b24a75815fc11172cef45e");
+		when(instrumentService.dishonor(any(InstrumentDepositRequest.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(instruments);
+
+		mockMvc.perform(post("/instruments/_dishonor")
+				.content(resources.readRequest("instrument/instrument_deposit_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(resources.readResponse("instrument/instrument_deposit_valid_response.json")));
+	}
+	
 	private List<Instrument> getInstruments() {
 		List<Instrument> instruments = new ArrayList<Instrument>();
 		Instrument instrument = Instrument.builder().transactionNumber("transactionNumber").amount(BigDecimal.ONE)

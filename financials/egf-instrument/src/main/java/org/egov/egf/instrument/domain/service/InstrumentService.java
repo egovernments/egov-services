@@ -236,5 +236,24 @@ public class InstrumentService {
 		instrumentsToUpdate.add(instrument);
 		return instrumentRepository.update(instrumentsToUpdate, requestInfo);
 	}
+	
+	public List<Instrument> dishonor(InstrumentDepositRequest instrumentDepositRequest, BindingResult errors,
+			RequestInfo requestInfo) {
+		Instrument instrument = new Instrument();
+		instrument.setId(instrumentDepositRequest.getInstrumentDepositId());
+		instrument.setTenantId(instrumentDepositRequest.getTenantId());
+
+		FinancialStatusContract financialStatusContract = new FinancialStatusContract();
+		financialStatusContract.setCode("Deposited");
+		financialStatusContract.setModuleType("Instrument");
+
+		instrument = instrumentRepository.findById(instrument);
+		FinancialStatusContract financialStatusContract1 = new FinancialStatusContract();
+		financialStatusContract1 = financialStatusContractRepository.findByModuleCode(financialStatusContract);
+		instrument.setFinancialStatus(financialStatusContract1);
+		List<Instrument> instrumentsToUpdate = new ArrayList<>();
+		instrumentsToUpdate.add(instrument);
+		return instrumentRepository.update(instrumentsToUpdate, requestInfo);
+	}
 
 }

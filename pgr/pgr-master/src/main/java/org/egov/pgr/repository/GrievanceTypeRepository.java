@@ -215,6 +215,21 @@ public class GrievanceTypeRepository {
         return false;
     }
 
+    public boolean checkComplaintCodeNameIfExists(final String serviceName, final String tenantId, final String serviceCode, String mode) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(serviceName.toUpperCase().trim());
+        preparedStatementValues.add(serviceCode.toUpperCase().trim());
+        preparedStatementValues.add(tenantId);
+
+        final String query = GrievanceTypeQueryBuilder.checkServiceCodeNameIfExists();
+        final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!serviceTypes.isEmpty() && "create".equalsIgnoreCase(mode)) {
+            return true;
+        }
+        return false;
+    }
+
     public List<GrievanceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         String queryStr = grievanceTypeQueryBuilder.getQuery(serviceTypeGetRequest, preparedStatementValues);

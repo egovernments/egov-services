@@ -155,4 +155,9 @@ public class GrievanceTypeService {
         return grievanceRepository.checkComplaintNameIfExists(serviceName, tenantId, serviceCode, mode);
     }
 
+    public boolean checkComplaintCodeNameIfExists(final String serviceName, final String tenantId,
+                                              final String serviceCode, final String mode) {
+        return grievanceRepository.checkComplaintCodeNameIfExists(serviceName, tenantId, serviceCode, mode);
+    }
+
 }

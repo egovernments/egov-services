@@ -215,7 +215,7 @@ public class ReceiptController {
 		List<Receipt> receipts = new ArrayList<>();
 		receipts.add(receiptInfo);
 
-		return getSuccessResponse(receipts, receiptRequest.getRequestInfo());
+		return getSuccessResponse(receipts,  receiptRequest.getRequestInfo());
 	}
 
 	@PostMapping("/_update")

@@ -157,6 +157,31 @@ public class InstrumentController {
 
 		return instrumentResponse;
 	}
+	
+	@PostMapping("/_dishonor")
+	@ResponseStatus(HttpStatus.CREATED)
+	public InstrumentResponse dishonorInstrument(@RequestBody InstrumentDepositRequest instrumentDepositRequest, BindingResult errors) {
+
+		InstrumentMapper mapper = new InstrumentMapper();
+		InstrumentResponse instrumentResponse = new InstrumentResponse();
+		instrumentResponse.setResponseInfo(getResponseInfo(instrumentDepositRequest.getRequestInfo()));
+		List<Instrument> instruments = new ArrayList<>();
+		List<InstrumentContract> instrumentContracts = new ArrayList<>();
+		InstrumentContract contract;
+
+		instrumentDepositRequest.getRequestInfo().setAction(ACTION_UPDATE);
+
+		instruments = instrumentService.dishonor(instrumentDepositRequest, errors, instrumentDepositRequest.getRequestInfo());
+
+		for (Instrument i : instruments) {
+			contract = mapper.toContract(i);
+			instrumentContracts.add(contract);
+		}
+
+		instrumentResponse.setInstruments(instrumentContracts);
+
+		return instrumentResponse;
+	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())

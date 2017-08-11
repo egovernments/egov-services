@@ -393,7 +393,7 @@ constructor(props) {
 						<div className="clearfix"></div>
                       </Row>
                       {ownerDetails.owners &&
-                        <div>  <br/>
+                        <div className="col-md-12 col-xs-12">  <br/>
                           <Table id="createPropertyTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                             <thead style={{backgroundColor:"#607b84",color:"white"}}>
                               <tr>
@@ -534,9 +534,32 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "RESET_OBJECT",
       object,
-	  isSectionValid
+	  isSectionValid,
+	    validatePropertyOwner: {
+        required: {
+          current: [],
+          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      },
+	   validatePropertyFloor: {
+        required: {
+          current: [],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+	  
     })
   },
+  
+   
 
   updateObject: (objectName, object) => {
     dispatch({

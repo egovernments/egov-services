@@ -1,36 +1,25 @@
-# Example YAML to get you started quickly.
-# Be aware that YAML has indentation based scoping.
-# Code completion support is available so start typing for available options.
 swagger: '2.0'
-
-# This is your document metadata
 info:
   title: Asset API
-  description: EGovAsset Management aims to improve the efficiency of the Asset Management operations in the ULB.This document covers.
-   <h2><b>
-   </br>1. Create New Asset Category.
-   </br>2. Search for Asset Categories based on search parameter.
-   </br>3. Create New Asset for a Asset Category. 
-   </br>4. Search for Asset based on search parameter.
-   </br>5. Revalution of existing asset.
-   </br>6. Search for reevaluated asset.
-   </br>7. Sale/Dispose of an existing asset.
-   </br>8. Search for Sale/Disposed asset.
-   </br>9. Get current value of an asset.
-   </br>10.Get Configuration Values.
-   </b></h2>
+  description: >-
+    EGovAsset Management aims to improve the efficiency of the Asset Management
+    operations in the ULB.This document covers. <h2><b> </br>1. Create New Asset
+    Category. </br>2. Search for Asset Categories based on search parameter.
+    </br>3. Create New Asset for a Asset Category. </br>4. Search for Asset
+    based on search parameter. </br>5. Revalution of existing asset. </br>6.
+    Search for reevaluated asset. </br>7. Sale/Dispose of an existing asset.
+    </br>8. Search for Sale/Disposed asset. </br>9. Get current value of an
+    asset. </br>10.Get Configuration Values. </b></h2>
   contact:
-    name:  Ghanshyam rawat
+    name: Ghanshyam rawat
     email: ghanshyam.rawat@riflexions.com
-  version: "1.0.0"
-
-# Describe your paths here
+  version: 1.0.0
+basePath: /asset-services/
 paths:
-  # This is a path endpoint. Change it.
   /assets/_search:
     post:
       summary: Get list of Asset based on below parameter.
-      description: >
+      description: |
         Provides a list of asset for given different input params.
       parameters:
         - name: requestInfo
@@ -38,15 +27,18 @@ paths:
           description: Request header for the service request details.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - name: id
           in: query
-          description: Pass List of Unique Asset id then the API will returns list of asset. Maximum length of the input list is 100.
+          description: >-
+            Pass List of Unique Asset id then the API will returns list of
+            asset. Maximum length of the input list is 100.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
@@ -125,18 +117,21 @@ paths:
         - Asset
       responses:
         '200':
-          description: Successful response, returns list of Asset.
+          description: 'Successful response, returns list of Asset.'
           schema:
             $ref: '#/definitions/AssetResponse'
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-        
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/_create:
     post:
       summary: Create New Asset.
-      description: The asset master is the database of all the assets owned by the ULB. Each asset belongs to a category. The attributes of the asset category are inherited by the assets within that category..
+      description: >-
+        The asset master is the database of all the assets owned by the ULB.
+        Each asset belongs to a category. The attributes of the asset category
+        are inherited by the assets within that category..
       parameters:
         - name: Asset
           in: body
@@ -154,14 +149,17 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/_update:
     post:
       summary: Update existing Asset.
-      description: The asset master is the database of all the assets owned by the ULB. Each asset belongs to a category. The attributes of the asset category are inherited by the assets within that category. This API allow user to update the existing asset property.
+      description: >-
+        The asset master is the database of all the assets owned by the ULB.
+        Each asset belongs to a category. The attributes of the asset category
+        are inherited by the assets within that category. This API allow user to
+        update the existing asset property.
       parameters:
-      
         - name: Asset
           in: body
           description: Details for the new Asset.
@@ -178,8 +176,8 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-            
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assetCategories/_create:
     post:
       summary: Create AssetCategory
@@ -207,12 +205,12 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assetCategories/_search:
-     post:
+    post:
       summary: Get Asset Category List.
-      description: >
+      description: |
         Provides a list of asset Category for given different input params.
       parameters:
         - name: requestInfo
@@ -220,15 +218,18 @@ paths:
           description: Request Header for the service request details.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-       
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - name: id
           in: query
-          description: Pass List of Unique AssetsCategory id then the API will returns list of AssetsCategory. Maximum length of the input list is 100.
+          description: >-
+            Pass List of Unique AssetsCategory id then the API will returns list
+            of AssetsCategory. Maximum length of the input list is 100.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
@@ -240,16 +241,19 @@ paths:
           format: varchar
         - name: name
           in: query
-          description:  AssetCategory name.
+          description: AssetCategory name.
           required: false
           type: string
           format: varchar
         - name: assetCategoryType
           in: query
-          description: AssetCategory Type List[IMMOVABLE, LAND,MOVABLE].Based on input type api will return the asset category, if the list is null then api should return all type of asset category.
+          description: >-
+            AssetCategory Type List[IMMOVABLE, LAND,MOVABLE].Based on input type
+            api will return the asset category, if the list is null then api
+            should return all type of asset category.
           required: false
           type: array
-          items: 
+          items:
             type: string
           maxItems: 3
       tags:
@@ -262,12 +266,12 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-            
-  /assets/revaluations/_search:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /assets/revaluation/_search:
     post:
       summary: Get list of revaluated Asset based on search parameter(s).
-      description: >
+      description: |
         Provides a list of asset for given different input params.
       parameters:
         - name: requestInfo
@@ -275,7 +279,8 @@ paths:
           description: Request header for the service request details.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - name: tenantId
           in: query
           description: Unique id for ulb.
@@ -284,25 +289,31 @@ paths:
           format: varchar
         - name: id
           in: query
-          description: Pass List of Unique Revaluation id then the API will returns list of Revaluated asset. Maximum length of the input list is 100.
+          description: >-
+            Pass List of Unique Revaluation id then the API will returns list of
+            Revaluated asset. Maximum length of the input list is 100.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
         - name: assetId
           in: query
-          description: Pass List of Unique Asset id then the API will returns list of Revaluated asset. Maximum length of the input list is 100.
+          description: >-
+            Pass List of Unique Asset id then the API will returns list of
+            Revaluated asset. Maximum length of the input list is 100.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
         - name: fromDate
           in: query
-          description: Get revaluted asset from Date of revaluation. mandatory if todate is not null.
+          description: >-
+            Get revaluted asset from Date of revaluation. mandatory if todate is
+            not null.
           required: false
           type: integer
           format: int64
@@ -316,19 +327,23 @@ paths:
         - Revaluation
       responses:
         '200':
-          description: Successful response, returns list Revaluation Details of Revaluated Asset.
+          description: >-
+            Successful response, returns list Revaluation Details of Revaluated
+            Asset.
           schema:
             $ref: '#/definitions/RevaluationResponse'
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-        
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/revaluation/_create:
     post:
       summary: Reevaluate the asset.
-      description: |
-        1.Revaluate the asset, after revaluation asset value of the asset will be change, it can be increase or decrease. 
+      description: >
+        1.Revaluate the asset, after revaluation asset value of the asset will
+        be change, it can be increase or decrease. 
+
         2.Revaluation is applicable if the asset status is Capitalized.
       parameters:
         - name: Revaluation
@@ -347,14 +362,13 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/revaluation/_update:
     post:
       summary: Update existing Revaluated Asset.
       description: Update existing Revaluated Asset.
       parameters:
-          
         - name: Revaluation
           in: body
           description: Details for updating existing asset Revaluation.
@@ -371,16 +385,21 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/dispose/_create:
     post:
       summary: Asset Sale/Disposal.
-      description: |
-       1. Prior to disposal of an asset, asset will be depreciated.
-       2. On save and the amount should be calculated on a pro-rated basis (actual depreciation for the year).
-       3. Assets in Capitalized status can only be sold or disposed. 
-       4. Once an Asset disposal/sale is completed [Approved], system will mark the asset status as ‘Disposed’.
+      description: >
+        1. Prior to disposal of an asset, asset will be depreciated.
+
+        2. On save and the amount should be calculated on a pro-rated basis
+        (actual depreciation for the year).
+
+        3. Assets in Capitalized status can only be sold or disposed. 
+
+        4. Once an Asset disposal/sale is completed [Approved], system will mark
+        the asset status as ‘Disposed’.
       parameters:
         - name: Disposal
           in: body
@@ -398,12 +417,12 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/dispose/_search:
     post:
       summary: Get list of disposed details of Asset based on search parameter(s).
-      description: >
+      description: |
         Provides a list of asset for given different input params.
       parameters:
         - name: requestInfo
@@ -411,7 +430,8 @@ paths:
           description: Request header for the service request details.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - name: tenantId
           in: query
           description: Unique id for ulb.
@@ -420,25 +440,32 @@ paths:
           format: varchar
         - name: id
           in: query
-          description: Pass List of Unique Revaluation id then the API will returns list of disposed asset. Maximum length of the input list is 100.
+          description: >-
+            Pass List of Unique Revaluation id then the API will returns list of
+            disposed asset. Maximum length of the input list is 100.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
         - name: assetId
           in: query
-          description: Pass List of Unique Asset id then the API will returns list of dispose asset. Maximum length of the input list is 100. if id list is not null then api ignore assetid.
+          description: >-
+            Pass List of Unique Asset id then the API will returns list of
+            dispose asset. Maximum length of the input list is 100. if id list
+            is not null then api ignore assetid.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
         - name: fromDate
           in: query
-          description: Get dispose/Sold asset from Date of disposal/sale. it is mandatory if todate is not null.
+          description: >-
+            Get dispose/Sold asset from Date of disposal/sale. it is mandatory
+            if todate is not null.
           required: false
           type: integer
           format: int64
@@ -452,25 +479,41 @@ paths:
         - Disposal
       responses:
         '200':
-          description: Successful response, returns list Disposal/Sale Details of disposed/sold Asset.
+          description: >-
+            Successful response, returns list Disposal/Sale Details of
+            disposed/sold Asset.
           schema:
             $ref: '#/definitions/DisposalResponse'
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/depreciations/_create:
     post:
       summary: Asset Depreciation.
-      description: |
-       1. Depreciation is the process which decreases the value of the assets over a priod of time based on Depreciation rate.
-       2. Every asset has got its own life span and it gets depreciated every day based on the type of asset.
-       3. Assets in Capitalized status can only be depreciated. 
-       4. Asset which has the category Land should not be depreciated.
-       5. Asset which has the capitalised value as Rs.X/- should not be    depreciated- Keep this value as application configuration.
-       6. Only straight line method of depreciation is supported.
-       7.Depreciation should consider Revaluation value as per SLV(Straight Line Value) method.(ie the current value of the asset after improvements or revaluation has to be added with all the depreciations previously done on the asset and the depreciation percetage should be calculated from the added value and the depreciation has to be done on the current value.)
+      description: >
+        1. Depreciation is the process which decreases the value of the assets
+        over a priod of time based on Depreciation rate.
+
+        2. Every asset has got its own life span and it gets depreciated every
+        day based on the type of asset.
+
+        3. Assets in Capitalized status can only be depreciated. 
+
+        4. Asset which has the category Land should not be depreciated.
+
+        5. Asset which has the capitalised value as Rs.X/- should not be   
+        depreciated- Keep this value as application configuration.
+
+        6. Only straight line method of depreciation is supported.
+
+        7.Depreciation should consider Revaluation value as per SLV(Straight
+        Line Value) method.(ie the current value of the asset after improvements
+        or revaluation has to be added with all the depreciations previously
+        done on the asset and the depreciation percetage should be calculated
+        from the added value and the depreciation has to be done on the current
+        value.)
       parameters:
         - name: Depreciation
           in: body
@@ -488,12 +531,12 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/depreciations/_search:
     post:
       summary: Get list of  details depreciated Asset based on search parameter(s).
-      description: >
+      description: |
         Provides a list of depreciated asset for given different input params.
       parameters:
         - name: requestInfo
@@ -501,7 +544,8 @@ paths:
           description: Request header for the service request details.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - name: tenantId
           in: query
           description: Unique id for ulb.
@@ -510,31 +554,40 @@ paths:
           format: varchar
         - name: id
           in: query
-          description: Pass List of Unique depreciation id, API will returns list of depreciated asset details. Maximum length of the input list is 100.
+          description: >-
+            Pass List of Unique depreciation id, API will returns list of
+            depreciated asset details. Maximum length of the input list is 100.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
         - name: assetId
           in: query
-          description: Pass List of Unique Asset id, API will returns list of depreciated asset details. Maximum length of the input list is 100. if id list is not null then api ignore assetid.
+          description: >-
+            Pass List of Unique Asset id, API will returns list of depreciated
+            asset details. Maximum length of the input list is 100. if id list
+            is not null then api ignore assetid.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
         - name: fromDate
           in: query
-          description: Get depreciated asset details from Date of depreciation. it is mandatory if todate is not null.
+          description: >-
+            Get depreciated asset details from Date of depreciation. it is
+            mandatory if todate is not null.
           required: false
           type: integer
           format: int64
         - name: toDate
           in: query
-          description: Get depreciated asset details till Date of depreciation. it is mandatory if todate is not null.
+          description: >-
+            Get depreciated asset details till Date of depreciation. it is
+            mandatory if todate is not null.
           required: false
           type: integer
           format: int64
@@ -543,31 +596,33 @@ paths:
           description: Get depreciated asset details for specific financial year.
           required: false
           type: string
-          
       tags:
         - Depreciation
       responses:
         '200':
-          description: Success response, returns list Depreciation Details of Depreciated Asset.
+          description: >-
+            Success response, returns list Depreciation Details of Depreciated
+            Asset.
           schema:
             $ref: '#/definitions/DepreciationResponse'
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-                   
-  /assets/currentvalues/_search:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /assets/currentvalue/_search:
     post:
       summary: Get Current value of the asset.
-      description: >
-       provide asset id,that API will return asset current value.
+      description: |
+        provide asset id,that API will return asset current value.
       parameters:
         - name: requestInfo
           in: body
           description: Request header for the service request details.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - name: tenantId
           in: query
           description: Unique id for ulb.
@@ -576,27 +631,28 @@ paths:
           format: varchar
         - name: assetId
           in: query
-          description: pass asset id in query param, the api will return current value of the asset.
+          description: >-
+            pass asset id in query param, the api will return current value of
+            the asset.
           required: true
           type: integer
           format: int64
-         
       tags:
         - AssetCurrentValue
       responses:
         '200':
-          description: Successful response, Current value of the asset.
+          description: 'Successful response, Current value of the asset.'
           schema:
             $ref: '#/definitions/AssetCurrentValueResponse'
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
-  /assets/currentvalues/_create:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /assets/currentvalue/_create:
     post:
       summary: Asset Depreciation.
-      description: |
+      description: ''
       parameters:
         - name: AssetCurrentValue
           in: body
@@ -614,24 +670,25 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-        
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assetstatuses/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
-      summary: Get the list of statuses for each object defined in the system for entire Asset module.
+      summary: >-
+        Get the list of statuses for each object defined in the system for
+        entire Asset module.
       description: |
         Get the status list for a particular object/entity in the Asset module.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
           description: Commmon request info for getting status.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - name: objectName
           in: query
           description: Name of the object/entity for which status is searched for.
@@ -644,44 +701,45 @@ paths:
           required: false
           type: string
           maxLength: 20
-      # Expected responses for this operation:
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response.
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
             $ref: '#/definitions/AssetStatus'
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-      tags: 
-       - Set Up      
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Set Up
   /assetconfigurations/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
-      summary: Get the list of configuration(s) defined in the system for entire Asset module.
-      description: |
-       Get the list of configuration(s) defined in the system for entire Asset module.
-      # This is array of GET operation parameters:
+      summary: >-
+        Get the list of configuration(s) defined in the system for entire Asset
+        module.
+      description: >
+        Get the list of configuration(s) defined in the system for entire Asset
+        module.
       parameters:
         - name: requestInfo
           in: body
           description: Commmon request info for getting configuration.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - name: id
           in: query
-          description: Pass List of Unique Configuration id then the API will returns list of configurations defined for asset module. Maximum length of the input list is 100.
+          description: >-
+            Pass List of Unique Configuration id then the API will returns list
+            of configurations defined for asset module. Maximum length of the
+            input list is 100.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 100
@@ -696,22 +754,18 @@ paths:
           required: false
           type: string
           format: int64
-      # Expected responses for this operation:
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response.
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
             $ref: '#/definitions/AssetConfigurationResponse'
         '400':
           description: Invalid input.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-      tags: 
-       - Set Up      
-  
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Set Up
 definitions:
   Asset:
     description: Hold the asset specific information.
@@ -731,7 +785,10 @@ definitions:
         format: varchar
       code:
         type: string
-        description: Unique code for the asset. This will be auto generated. The format for the asset code will be given by the client in case of auto generation of asset code.
+        description: >-
+          Unique code for the asset. This will be auto generated. The format for
+          the asset code will be given by the client in case of auto generation
+          of asset code.
         format: varchar
       department:
         $ref: '#/definitions/Department'
@@ -750,7 +807,6 @@ definitions:
           - PURCHASE
           - TENDER
           - DONATION
-
       status:
         type: string
         description: asset status from assetstatus master for Object name "Asset Master".
@@ -758,11 +814,11 @@ definitions:
       grossValue:
         type: integer
         format: double
-        description: gross value of the asset, applicable only if the status is Capitalized 
+        description: 'gross value of the asset, applicable only if the status is Capitalized'
       accumulatedDepreciation:
         type: integer
         format: double
-        description: gross value of the asset, applicable only if the status is Capitalized 
+        description: 'gross value of the asset, applicable only if the status is Capitalized'
       description:
         type: string
         description: description of asset
@@ -798,26 +854,38 @@ definitions:
         type: integer
         format: int64
       enableYearWiseDepreciation:
-        description: Enable the year wise Depreciation for an asset. if the value is true then refer the Depreciation rate from yearWiseDepreciationRate object else refer to depreciationRate of asset.
+        description: >-
+          Enable the year wise Depreciation for an asset. if the value is true
+          then refer the Depreciation rate from yearWiseDepreciationRate object
+          else refer to depreciationRate of asset.
         type: boolean
         format: boolean
       assetAttributes:
         type: array
         items:
-         $ref: '#/definitions/Attributes'
+          $ref: '#/definitions/Attributes'
       depreciationRate:
         type: integer
         format: double
-        description: Asset level depreciation rate, if enableYearWiseDepreciation is false then check for depreciation rate from this field.
+        description: >-
+          Asset level depreciation rate, if enableYearWiseDepreciation is false
+          then check for depreciation rate from this field.
       yearWiseDepreciationRate:
         type: array
-        description: Multiple rows can be specified for each  asset category, but there should not be an overlap in the rates for the same financial year.It is required if enableYearWiseDepreciation is true, if enableYearWiseDepreciation if false then refer Depreciation from depreciationRate of asset.
+        description: >-
+          Multiple rows can be specified for each  asset category, but there
+          should not be an overlap in the rates for the same financial year.It
+          is required if enableYearWiseDepreciation is true, if
+          enableYearWiseDepreciation if false then refer Depreciation from
+          depreciationRate of asset.
         items:
           $ref: '#/definitions/YearWiseDepreciation'
-      
   Attributes:
     type: object
-    description: Additional information of the asset.Hold the data for dynamic custom field in JSON format. There key and value will be LABEL NAME and USER INPUT DATA respactively.
+    description: >-
+      Additional information of the asset.Hold the data for dynamic custom field
+      in JSON format. There key and value will be LABEL NAME and USER INPUT DATA
+      respactively.
     properties:
       key:
         type: string
@@ -829,9 +897,12 @@ definitions:
         format: varchar
       value:
         type: object
-        description: value of the field(if data type is text the value will be string, if data type is multivaluelist then value will be list, if datatype is table then value will be the key value pair where key is  column name and value is column value). 
+        description: >-
+          value of the field(if data type is text the value will be string, if
+          data type is multivaluelist then value will be list, if datatype is
+          table then value will be the key value pair where key is  column name
+          and value is column value).
         format: varchar
-        
   Department:
     type: object
     description: Department of the Asset.
@@ -848,7 +919,6 @@ definitions:
         type: string
         description: Department code.
         format: varchar
-        
   AssetCategory:
     type: object
     description: Categories defined under asset category type are shown in the drop down.
@@ -867,19 +937,23 @@ definitions:
         format: varchar
       code:
         type: string
-        description: Unique code for the asset category.  This will be auto generated or specified by the user based on implementation specific requirement.
+        description: >-
+          Unique code for the asset category.  This will be auto generated or
+          specified by the user based on implementation specific requirement.
         format: varchar
-      assetCategoryType:      
+      assetCategoryType:
         type: string
         description: Asset Category Type information.
         enum:
           - LAND
           - MOVABLE
           - IMMOVABLE
-      parent:      
+      parent:
         type: integer
         format: int64
-        description: Options will be the already created list of asset category in the master.
+        description: >-
+          Options will be the already created list of asset category in the
+          master.
       depreciationMethod:
         type: string
         description: Depreciation Method of asset for this asset category.
@@ -888,24 +962,34 @@ definitions:
           - Written down Value method
       isAssetAllow:
         type: boolean
-        description: if value is true then we can add asset directly in this particular category.
+        description: >-
+          if value is true then we can add asset directly in this particular
+          category.
         format: boolean
       assetAccount:
         type: integer
         format: int64
-        description: Options are from the  chart of account master for the account code purpose "Fixed Asset".
+        description: >-
+          Options are from the  chart of account master for the account code
+          purpose "Fixed Asset".
       accumulatedDepreciationAccount:
         type: integer
         format: int64
-        description: Options are from the  chart of account master for the account code purpose "Accumulated Depreciation".
+        description: >-
+          Options are from the  chart of account master for the account code
+          purpose "Accumulated Depreciation".
       revaluationReserveAccount:
         type: integer
         format: int64
-        description: Options are from the  chart of account master for the account code purpose "Revaluation Reserve Account".
+        description: >-
+          Options are from the  chart of account master for the account code
+          purpose "Revaluation Reserve Account".
       depreciationExpenseAccount:
         type: integer
         format: int64
-        description: Options are from the  chart of account master for the account code purpose "Depreciation Expense Account".
+        description: >-
+          Options are from the  chart of account master for the account code
+          purpose "Depreciation Expense Account".
       unitOfMeasurement:
         type: integer
         format: int64
@@ -917,7 +1001,9 @@ definitions:
       depreciationRate:
         type: integer
         format: double
-        description: Depreciation rate for a asset category. That will be always defined as percentage.
+        description: >-
+          Depreciation rate for a asset category. That will be always defined as
+          percentage.
       assetFieldsDefination:
         type: array
         items:
@@ -926,26 +1012,25 @@ definitions:
     required:
       - assetCategoryType
       - name
- 
- # Year wise depreciation is applicable, if enable year wise Depreciation is true.
   YearWiseDepreciation:
     description: Year wise depreciation details of asset
     type: object
     properties:
-    #depreciationRate will be float
       depreciationRate:
         type: integer
         format: double
-        description: Rate of Depreciation for asset , It will be a float value.
-      financialYear:      
+        description: 'Rate of Depreciation for asset , It will be a float value.'
+      financialYear:
         type: string
-        description: Required if depreciation rate is specified,Options are the list of financial years.
+        description: >-
+          Required if depreciation rate is specified,Options are the list of
+          financial years.
         format: varchar
-      assetId:      
+      assetId:
         type: integer
         format: int64
         description: id of the asset for which depreciation is required.
-      usefulLifeInYears:      
+      usefulLifeInYears:
         type: integer
         format: int64
         description: Calculated value based on the percentage.
@@ -953,8 +1038,6 @@ definitions:
       - depreciationRate
       - financialYear
       - assetId
-    
-        
   Location:
     description: Hold the asset location specific information.
     type: object
@@ -967,7 +1050,7 @@ definitions:
         type: integer
         format: int64
         description: Boundary zone id.
-      revenueWard:      
+      revenueWard:
         type: integer
         format: int64
         description: Boundary revenueward id.
@@ -979,18 +1062,17 @@ definitions:
         type: integer
         format: int64
         description: Boundary street id.
-      electionWard:      
+      electionWard:
         type: integer
         format: int64
         description: Boundary election ward id.
       doorNo:
         type: string
         description: Boundary door number.
-      pinCode:      
+      pinCode:
         type: integer
         format: int32
         description: pin code of the location.
-  
   Revaluation:
     description: Hold the asset Revaluation information.
     type: object
@@ -1010,7 +1092,7 @@ definitions:
         type: integer
         format: double
         description: Current gross value of the asset.
-      typeOfChange:      
+      typeOfChange:
         type: string
         description: Revaluation value amount INCREASED or DECREASED.
         enum:
@@ -1023,27 +1105,31 @@ definitions:
       valueAfterRevaluation:
         type: integer
         format: double
-        description: After revaluation value of the asset.  
+        description: After revaluation value of the asset.
       revaluationDate:
         type: integer
         format: int64
         description: Date of revaluation. ( past or current date).
       revaluatedBy:
         type: string
-        description:  Name of the person who has done the revaluation.
+        description: Name of the person who has done the revaluation.
         format: varchar
-      reasonForRevaluation:      
+      reasonForRevaluation:
         type: string
         description: Remarks.
         format: varchar
       voucherReference:
         type: integer
         format: int64
-        description: The voucher id that is getting created as part of revaluation of the asset.
+        description: >-
+          The voucher id that is getting created as part of revaluation of the
+          asset.
       fixedAssetsWrittenOffAccount:
         type: integer
         format: int64
-        description: The chartofaccount code that is used for accounting which is based on specific account code purpose "Fixed Assets Written Off".
+        description: >-
+          The chartofaccount code that is used for accounting which is based on
+          specific account code purpose "Fixed Assets Written Off".
       function:
         type: integer
         format: int64
@@ -1051,7 +1137,9 @@ definitions:
       fund:
         type: integer
         format: int64
-        description: Option based on the fund related with financials-Defaulted to Capital Fund.
+        description: >-
+          Option based on the fund related with financials-Defaulted to Capital
+          Fund.
       scheme:
         type: integer
         format: int64
@@ -1062,20 +1150,22 @@ definitions:
         description: Option based on the selected  scheme from master.
       comments:
         type: string
-        description: Comments, if any.
+        description: 'Comments, if any.'
         format: varchar
       auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
       status:
         type: string
-        description: Status of the revaluation process which is read from assetstatus master for Object name "Revaluation".
+        description: >-
+          Status of the revaluation process which is read from assetstatus
+          master for Object name "Revaluation".
         format: varchar
     required:
       - tenantId
       - assetId
       - typeOfChange
       - revaluationAmount
-          
   Disposal:
     description: Holds the Asset Sale/Disposal information.
     type: object
@@ -1107,44 +1197,62 @@ definitions:
       disposalDate:
         type: integer
         format: int64
-        description: Disposal date is the actual date on which the asset was sold or disposed. It can be any date other than future date.
+        description: >-
+          Disposal date is the actual date on which the asset was sold or
+          disposed. It can be any date other than future date.
       panCardNumber:
         type: string
-        description: PAN number of the buyer, Applicable If the value selected is sale.PAN number of the buyer, who is buying the asset.
+        description: >-
+          PAN number of the buyer, Applicable If the value selected is sale.PAN
+          number of the buyer, who is buying the asset.
         format: varchar
       aadharCardNumber:
         type: string
-        description: Aadhar number of the buyer, Applicable If the value selected is sale.Aadhar number of the buyer, who is buying the asset.
+        description: >-
+          Aadhar number of the buyer, Applicable If the value selected is
+          sale.Aadhar number of the buyer, who is buying the asset.
         format: varchar
       assetcurrentvalue:
         type: integer
         format: double
-        description: calculate the current value of the asset as gross value - accumulated depreciation +or- reevaulation value - depreciation value. Allow user to modify this value.
+        description: >-
+          calculate the current value of the asset as gross value - accumulated
+          depreciation +or- reevaulation value - depreciation value. Allow user
+          to modify this value.
       saleValue:
         type: integer
         format: double
         description: Enter the sale value of the Asset.
-      transactionType:      
+      transactionType:
         type: string
-        description: Transaction type sale or Dispose. If user is selling a asset then select the value as SALE, if user is disposing a asset then select the value as DISPOSAL.
+        description: >-
+          Transaction type sale or Dispose. If user is selling a asset then
+          select the value as SALE, if user is disposing a asset then select the
+          value as DISPOSAL.
         enum:
           - SALE
           - DISPOSAL
       profLossVoucherReference:
         type: integer
         format: int64
-        description: The voucher id that is getting created as part of SALE/DISPOSAL of the asset.
+        description: >-
+          The voucher id that is getting created as part of SALE/DISPOSAL of the
+          asset.
       assetSaleAccount:
         type: integer
         format: int64
-        description: Select the Asset Sale account code- populate it based on purpose code from financials detailed code master.
+        description: >-
+          Select the Asset Sale account code- populate it based on purpose code
+          from financials detailed code master.
       status:
         type: string
-        description: Status of the SALE/DISPOSAL process which is read from assetstatus master for Object name "Disposal".
+        description: >-
+          Status of the SALE/DISPOSAL process which is read from assetstatus
+          master for Object name "Disposal".
         format: varchar
       auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-          
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
   AttributeDefinition:
     description: Hold the Asset dynamic fields details as list of json object.
     type: object
@@ -1155,39 +1263,49 @@ definitions:
         format: varchar
       type:
         type: string
-        description: type of the custom field. Valid types are ('string'[text box],'text'[text area],'number'[text box allow numbers only],'datetime'[calender],'singlevaluelist'[drop down for single value selection],'multivaluelist'[drop down for multi value selection],'checkbox','radio','table')
+        description: >-
+          type of the custom field. Valid types are ('string'[text
+          box],'text'[text area],'number'[text box allow numbers
+          only],'datetime'[calender],'singlevaluelist'[drop down for single
+          value selection],'multivaluelist'[drop down for multi value
+          selection],'checkbox','radio','table')
         format: varchar
       isActive:
         type: boolean
-        description: if the value is true then the field will be shown in custom fields of asset
+        description: >-
+          if the value is true then the field will be shown in custom fields of
+          asset
         format: boolean
-      isMandatory:      
+      isMandatory:
         type: boolean
         description: value will be true if field is mandatory otherwise false.
         format: varchar
       values:
         type: string
-        description: comma seprated values we can pass if field type is selected as('singlevaluelist','multivaluelist','checkbox','radio').
+        description: >-
+          comma seprated values we can pass if field type is selected
+          as('singlevaluelist','multivaluelist','checkbox','radio').
         format: varchar
       localText:
         type: string
         description: .
-      regExFormate:      
+      regExFormate:
         type: string
         description: .
-      url:      
+      url:
         type: string
-        description: configure if field type are ('singlevaluelist','multivaluelist') and @values is null.
+        description: >-
+          configure if field type are ('singlevaluelist','multivaluelist') and
+          @values is null.
       order:
         type: string
         description: order of the table column.
       columns:
-         $ref: '#/definitions/AttributeDefinition'
+        $ref: '#/definitions/AttributeDefinition'
     required:
       - name
       - type
       - isActive
-  
   AssetCurrentValue:
     description: Hold the asset current value information.
     type: object
@@ -1203,7 +1321,9 @@ definitions:
       currentAmount:
         type: integer
         format: double
-        description: calculate the current value of the asset as gross value - accumulated depreciation +or- reevaulation value - Depreciation.
+        description: >-
+          calculate the current value of the asset as gross value - accumulated
+          depreciation +or- reevaulation value - Depreciation.
       assetTranType:
         type: string
         description: Asset Transaction type which will change the value of the asset.
@@ -1212,8 +1332,8 @@ definitions:
           - Depreciation
           - Revaluation
       auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'    
-  
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
   AssetStatus:
     type: object
     description: Hold the Asset Status information.
@@ -1234,11 +1354,11 @@ definitions:
           $ref: '#/definitions/StatusValue'
         description: List of status for each object name.
       auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
     required:
       - objectName
       - values
-  
   StatusValue:
     type: object
     description: Hold the status value of particular asset status object name.
@@ -1264,7 +1384,6 @@ definitions:
     required:
       - code
       - name
-  
   DepreciationCriteria:
     type: object
     description: Hold Asset Depreciation Request information.
@@ -1290,25 +1409,26 @@ definitions:
       assetIds:
         type: array
         format: int64
-        description: List of assetId, those user wanted to depreciate.
+        description: 'List of assetId, those user wanted to depreciate.'
       auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-        
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
   Depreciation:
     allOf:
-    - $ref: '#/definitions/DepreciationCriteria'
+      - $ref: '#/definitions/DepreciationCriteria'
     type: object
     description: Hold the Asset Depreciation information.
     properties:
       voucherReference:
         type: integer
         format: int64
-        description: The voucher id that is getting created as part of the asset Depreciation.
+        description: >-
+          The voucher id that is getting created as part of the asset
+          Depreciation.
       depreciationDetails:
         type: array
         items:
-         $ref: '#/definitions/DepreciationDetail'
-       
+          $ref: '#/definitions/DepreciationDetail'
   DepreciationDetail:
     type: object
     description: Hold the Asset Depreciation information.
@@ -1330,9 +1450,11 @@ definitions:
       depreciationRate:
         type: integer
         format: double
-        description: Rate of depreciation, against which depreciation of asset is done.
+        description: 'Rate of depreciation, against which depreciation of asset is done.'
       reasonForFail:
-        description: if the asset depreciation fails for a particular asset the reason will be defined here.
+        description: >-
+          if the asset depreciation fails for a particular asset the reason will
+          be defined here.
         type: string
         format: varchar
       valueBeforeDepreciation:
@@ -1347,147 +1469,147 @@ definitions:
         type: integer
         format: double
         description: Value of the asset after applying Depreciation.
-      
-      
-          
   AssetRequest:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Assets:
-          $ref: '#/definitions/Asset'
-    type: object      
+        $ref: '#/definitions/Asset'
+    type: object
     description: Hold the Asset Request information.
- 
   AssetResponse:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       Assets:
         type: array
         items:
           $ref: '#/definitions/Asset'
     type: object
     description: Hold the Asset Response information.
-    
   AssetCategoryRequest:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       AssetCategory:
-          $ref: '#/definitions/AssetCategory'
-    type: object 
+        $ref: '#/definitions/AssetCategory'
+    type: object
     description: Hold the Asset Category Request information.
-  
   AssetCategoryResponse:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       AssetCategory:
         type: array
         items:
           $ref: '#/definitions/AssetCategory'
     type: object
     description: Hold the Asset Category Response information.
-    
   RevaluationRequest:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Revaluation:
-          $ref: '#/definitions/Revaluation'
-    type: object      
+        $ref: '#/definitions/Revaluation'
+    type: object
     description: Hold the Asset Revaluation Request information.
- 
   RevaluationResponse:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       Revaluations:
         type: array
         items:
           $ref: '#/definitions/Revaluation'
     type: object
     description: Hold the Asset Revaluation Response information.
-    
   DisposalRequest:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Disposal:
-          $ref: '#/definitions/Disposal'
-    type: object      
+        $ref: '#/definitions/Disposal'
+    type: object
     description: Hold the Asset Disposal Request information.
- 
   DisposalResponse:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       Disposal:
         type: array
         items:
           $ref: '#/definitions/Disposal'
     type: object
     description: Hold the Asset Disposal Response information.
-  
   DepreciationRequest:
     properties:
       RequestInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Depreciation:
-          $ref: '#/definitions/DepreciationCriteria'
-    type: object      
+        $ref: '#/definitions/DepreciationCriteria'
+    type: object
     description: Hold the Asset Depreciation Request information.
- 
   DepreciationResponse:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       Depreciation:
         type: array
         items:
           $ref: '#/definitions/Depreciation'
     type: object
     description: Hold the Asset Depreciation Response information.
-    
   AssetCurrentValueRequest:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       AssetCurrentValue:
         type: array
         items:
           $ref: '#/definitions/AssetCurrentValue'
-    type: object  
+    type: object
     description: Hold the Asset Currentvalue Request information.
-    
   AssetCurrentValueResponse:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       AssetCurrentValue:
         type: array
         items:
           $ref: '#/definitions/AssetCurrentValue'
-    type: object  
+    type: object
     description: Hold the Asset Currentvalue response information.
-    
   AssetConfigurationResponse:
     properties:
       ResposneInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       AssetConfiguration:
         type: array
         items:
           $ref: '#/definitions/AssetConfigurationKeyValues'
-    type: object  
-    description: Hold the Asset Configuration response information.
-    
-  AssetConfigurationKeyValues:   
     type: object
-    description: This object will depict how the response object of configuration looks like. There will be a map of key value pairs where values will be a list. One key can have multiple values.
+    description: Hold the Asset Configuration response information.
+  AssetConfigurationKeyValues:
+    type: object
+    description: >-
+      This object will depict how the response object of configuration looks
+      like. There will be a map of key value pairs where values will be a list.
+      One key can have multiple values.
     properties:
-      configValues: 
+      configValues:
         type: array
         items:
           type: object
@@ -1498,5 +1620,3 @@ definitions:
               type: array
               items:
                 type: string
-    
-    

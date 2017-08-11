@@ -146,11 +146,11 @@ class UpicNumber extends Component {
 					<Row>
 						<Col xs={12} md={3} sm={6}>
 						  <TextField  className="fullWidth"
-							  floatingLabelText="Upic Number"
+							  floatingLabelText="Upic Number *"
 							  errorText={fieldErrors.oldUpicNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.oldUpicNumber}</span>: ""}
 							  value={upicNumber.oldUpicNumber ? upicNumber.oldUpicNumber : ""}
 							  onChange={(e) => {
-								handleChange(e, "oldUpicNumber", false, "")}}
+								handleChange(e, "oldUpicNumber", true, "")}}
 							  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 							  underlineStyle={styles.underlineStyle}
 							  underlineFocusStyle={styles.underlineFocusStyle}

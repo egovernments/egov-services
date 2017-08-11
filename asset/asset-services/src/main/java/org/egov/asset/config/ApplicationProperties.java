@@ -116,7 +116,16 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.save.currentvalue}")
     private String saveCurrentvalueTopic;
-
+    
+    @Value("${egov.services.asset.depreciaition.capitalizedvalue}")
+    private String depreciaitionCapitalizedValue;
+    
+    @Value("${egov.services.asset.depreciaition.minvalue}")
+    private String depreciaitionMinimumValue;
+    
+    @Value("${egov.services.asset.depreciaition.c.factor}")
+    private String depreciaitionFactorForC;
+    
     @Autowired
     private Environment environment;
 

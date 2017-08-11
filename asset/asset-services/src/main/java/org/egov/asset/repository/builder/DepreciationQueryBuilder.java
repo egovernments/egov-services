@@ -68,12 +68,13 @@ public class DepreciationQueryBuilder {
 						+ "ON asset.assetcategory=assetcategory.id left outer join egasset_yearwisedepreciation ywdep"
 						+ " ON asset.id=ywdep.assetid AND ywdep.financialyear='"
 						+ depreciationCriteria.getFinancialYear()
-						+ "' AND asset.status='"+Status.CAPITALIZED.toString()+"' AND "
-								+ "assetcategory.assetcategorytype!='"+AssetCategoryType.LAND.toString()+"'"
-						
-						+" WHERE asset.id NOT IN (SELECT assetid from egasset_depreciation where createdtime>="
+						+"' WHERE asset.id NOT IN (SELECT assetid from egasset_depreciation where createdtime>="
 						+ depreciationCriteria.getFromDate() + " AND createdtime<=" + depreciationCriteria.getToDate() 
-						+ ")" + assetIdString);
+						+ ")" + assetIdString
+						+ " AND asset.status='"+Status.CAPITALIZED.toString()+"' AND "
+						+ "assetcategory.assetcategorytype!='"+AssetCategoryType.LAND.toString()+"'");
+								
+		
 		return sql.toString();
 	}
 

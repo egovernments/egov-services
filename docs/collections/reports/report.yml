@@ -35,7 +35,7 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
     isMandatory: true
     source: collection
   - name: collectedby
@@ -113,7 +113,7 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
   - name: department
     label: reports.collection.department
     type: singlevaluelist
@@ -123,10 +123,7 @@ ReportDefinitions:
     label: reports.collection.paymentmode
     type: singlevaluelist
     pattern: 'list://CASH:CASH,ONLINE:ONLINE,CHEQUE:CHEQUE,DD:DD' 
-  - name: businessservice
-    label: reports.collection.businessservice
-    type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name  
+    
   query: SELECT RECEIPT_DATE,RECEIPT_NUMBER,DEPARTMENT_NAME,SERVICE_NAME,INSTRUMENT_TYPE,SOURCE,CASH_AMOUNT,sum(CHEQUEDD_AMOUNT) AS CHEQUEDD_AMOUNT ,BANK_AMOUNT, ONLINE_AMOUNT,CARD_AMOUNT,STATUS_DESCRIPTION from 
          (SELECT EGCL_RECEIPTHEADER.RECEIPTDATE AS RECEIPT_DATE, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPARTMENT_NAME, EG_DEPARTMENT.NAME AS SERVICE_NAME, 
          (CASE WHEN EGF_INSTRUMENTTYPE.NAME ='cash' THEN 'cash' WHEN EGF_INSTRUMENTTYPE.NAME='bankchallan' THEN 'bankchallan' WHEN  EGF_INSTRUMENTTYPE.NAME='card' THEN 'card' WHEN EGF_INSTRUMENTTYPE.NAME='online' 
@@ -138,7 +135,7 @@ ReportDefinitions:
          EGF_INSTRUMENT ON egcl_receiptinstrument.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENT.INSTRUMENTTYPEID = EGF_INSTRUMENTTYPE.ID 
          INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON EG_DEPARTMENT.code = EGCL_RECEIPTHEADER.DEPARTMENT INNER JOIN EG_BUSINESSDETAILS EGCL_SERVICEDETAILS ON EGCL_SERVICEDETAILS.code = EGCL_RECEIPTHEADER.businessdetails 
          WHERE EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate AND EGCL_RECEIPTHEADER.RECEIPTDATE < $toDate AND EGCL_RECEIPTHEADER.STATUS = $status AND EGCL_RECEIPTHEADER.DEPARTMENT = $department
-         AND EGF_INSTRUMENTTYPE.NAME= $paymentmode AND EGCL_SERVICEDETAILS.code = $businessservice AND EGCL_RECEIPTHEADER.tenantid = $tenantid ORDER BY EGCL_RECEIPTHEADER.RECEIPTDATE, 
+         AND EGF_INSTRUMENTTYPE.NAME= $paymentmode AND EGCL_RECEIPTHEADER.tenantid = $tenantid ORDER BY EGCL_RECEIPTHEADER.RECEIPTDATE, 
          EGCL_RECEIPTHEADER.RECEIPTNUMBER, EG_DEPARTMENT.NAME) AS RESULT GROUP BY RESULT.RECEIPT_DATE, RESULT.RECEIPT_NUMBER, RESULT.DEPARTMENT_NAME, RESULT.SERVICE_NAME, RESULT.INSTRUMENT_TYPE, RESULT.SOURCE, 
          RESULT.CASH_AMOUNT, RESULT.BANK_AMOUNT, RESULT.ONLINE_AMOUNT , RESULT.CARD_AMOUNT, RESULT.STATUS_DESCRIPTION ORDER BY RESULT.RECEIPT_NUMBER, RESULT.RECEIPT_DATE, RESULT.DEPARTMENT_NAME
   
@@ -191,7 +188,7 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
     source: collection
   - name: collectedby
     label: reports.collection.collectedby
@@ -270,17 +267,12 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
     source: collection
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist
     pattern: 'list://CASH:CASH,ONLINE:ONLINE,CHEQUE:CHEQUE,DD:DD'
-    source: collection
-  - name: revenuehead
-    label: reports.collection.revenuehead
-    type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_getChartOfAccounts?tenantId=default|$..glcode|$..name
     source: collection
   
   query: SELECT SOURCE,glCode,sum(cashCount) AS cashCount ,sum(cashAmount) AS cashAmount,sum(chequeddCount) AS chequeddCount,sum(chequeddAmount) AS chequeddAmount, sum(onlineCount) AS onlineCount, 

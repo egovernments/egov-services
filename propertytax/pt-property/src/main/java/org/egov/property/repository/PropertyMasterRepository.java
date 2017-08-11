@@ -391,9 +391,6 @@ public class PropertyMasterRepository {
 			propertyType.setNameLocal(propertyData.getNameLocal());
 			propertyType.setActive(propertyData.getActive());
 			propertyType.setOrderNumber(propertyData.getOrderNumber());
-
-
-
 		}
 		return propertyTypes;
 	}

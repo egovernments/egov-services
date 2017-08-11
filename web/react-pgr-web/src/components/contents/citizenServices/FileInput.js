@@ -13,7 +13,6 @@ import IconButton from 'material-ui/IconButton';
 import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import ActionQueryBuilder from 'material-ui/svg-icons/action/query-builder';
 import {blue500, yellow600} from 'material-ui/styles/colors';
-import _ from 'lodash';
 
 const styles={
   iconStyle:{
@@ -128,8 +127,8 @@ class FileInput extends Component{
               rightIcon={
                 <div>
                    <IconButton className="list-remove-button" onTouchTap={(e) => {
-                       this.removeFile(this.props.code, file.name, this.props.isRequired);
                        this.refs[this.props.code].value=null;
+                       this.removeFile(this.props.code, file.name, this.props.isRequired);
                      }}>
                      <ActionDelete />
                    </IconButton>
@@ -156,7 +155,24 @@ class FileInput extends Component{
       return(
         <div className={"file-input-container "+ (this.props.error? "error":"")}>
           <List>
-               {!this.props.files || this.props.files.length > 0 ? (
+
+            <div>
+              <div className="file-header">
+                <div className="name">{translate(this.props.name)} {this.props.isRequired ? "*":""} {this.props.error ? <span className="errorMsg">{this.props.error}</span> : null}</div>
+                {!this.props.files || this.props.files.length > 0 ? (
+                  <div>
+                    {files}
+                  </div>
+                ): (
+                  <div>
+                    <FileAttachment style={styles.iconStyle} />
+                    <span>No Attachments</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+               {/*!this.props.files || this.props.files.length > 0 ? (
                     <div>
                       <div className="file-header">
                         <div className="name">{translate(this.props.name)} {this.props.isRequired ? "*":""}</div>
@@ -171,7 +187,7 @@ class FileInput extends Component{
                      <span>No Attachments</span>
                    </div>
                  </div>
-               ) }
+               ) */}
 
            { !this.props.files || this.props.files.length == 0 || this.props.isMultipleFile ? (
               <div className="file-browser"><RaisedButton label="Browse Files" onTouchTap={this.openFileBrowser} /></div>

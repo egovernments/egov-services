@@ -230,6 +230,9 @@ public class GrievanceTypeQueryBuilder {
     	return " SELECT name,code from egpgr_complainttype WHERE trim(upper(name)) = ? and tenantid = ? ";
     }
 
+    public static String checkServiceCodeNameIfExists() {
+        return " SELECT name,code from egpgr_complainttype WHERE trim(upper(name)) = ? and trim(upper(code)) = ? and tenantid = ? ";
+    }
     public static String selectServiceNameAndCodeNotInQuery() {
         return " select code from egpgr_grievancetype where name = ? and tenantId = ? and code != ? ";
     }

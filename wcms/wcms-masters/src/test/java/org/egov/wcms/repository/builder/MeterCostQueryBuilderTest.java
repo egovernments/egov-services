@@ -1,5 +1,5 @@
-
 /*
+
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
  *
@@ -42,8 +42,9 @@ package org.egov.wcms.repository.builder;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.egov.wcms.web.contract.MeterCostGetRequest;
 import org.junit.Test;
@@ -54,13 +55,14 @@ public class MeterCostQueryBuilderTest {
 	public void no_input_test() {
 		MeterCostQueryBuilder meterCostQueryBuilder = new MeterCostQueryBuilder();
 		MeterCostGetRequest meterCostGetRequest = new MeterCostGetRequest();
+		Map<String, Object> preparedStatementValues = new HashMap<>();
 		assertEquals(
 				"Select wmc.id as wmc_id,wmc.code as wmc_code,"
 						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
 						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
 						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
 						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc ORDER BY wmc.metermake ASC",
-				meterCostQueryBuilder.getQuery(meterCostGetRequest, new ArrayList<>()));
+				meterCostQueryBuilder.getQuery(meterCostGetRequest, preparedStatementValues));
 	}
 
 	@Test
@@ -82,10 +84,10 @@ public class MeterCostQueryBuilderTest {
 						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
 						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
 						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
-						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc WHERE wmc.tenantId = ? AND "
-						+ "wmc.code = ? AND wmc.metermake = ? AND wmc.active = ? AND wmc.pipesizeid = ? AND"
-						+ " wmc.id IN (1, 2) ORDER BY wmc.code desc",
-				meterCostQueryBuilder.getQuery(meterCostGetRequest, new ArrayList<>()));
+						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc WHERE wmc.tenantId = :tenantId AND "
+						+ "wmc.code = :code AND wmc.metermake = :metermake AND wmc.active = :active AND wmc.pipesizeid = :pipesizeid AND"
+						+ " wmc.id IN (:ids) ORDER BY wmc.code desc",
+				meterCostQueryBuilder.getQuery(meterCostGetRequest, new HashMap<>()));
 
 	}
 }

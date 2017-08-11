@@ -14,19 +14,25 @@ class Report extends Component {
 
   initData()
   {
-    let {setMetaData,setFlag,showTable,setForm}=this.props;
+    let {setMetaData,setFlag,showTable,setForm,setReportResult,match}=this.props;
 
-    let response=Api.commonApiPost("pgr-master/report/metadata/_get",{},{tenantId:"default",reportName:this.props.match.params.reportName}).then(function(response)
-    {
+    console.log(this.props);
 
-      setFlag(1);
-      showTable(false);
-      setMetaData(response)
-      // setForm();
-    },function(err) {
-        // console.log(err);
-        alert("Try again later");
-    });
+    if (match.params.moduleName) {
+      let response=Api.commonApiPost(match.params.moduleName+"/report/metadata/_get",{},{tenantId:"default",reportName:this.props.match.params.reportName}).then(function(response)
+      {
+
+        setFlag(1);
+        showTable(false);
+        setReportResult({})
+        setMetaData(response)
+        // setForm();
+      },function(err) {
+          // console.log(err);
+          alert("Try again later");
+      });
+    }
+
   }
 
   // componentWillMount()
@@ -50,17 +56,12 @@ class Report extends Component {
 
 
   render() {
-    const viewTabel=()=>
-    {
-      return (
-          <ReportResult />
-        )
-    }
+    let {match}=this.props;
     return (
       <div className="Report">
-        <SearchForm />
+        <SearchForm match={match}/>
 
-        <ReportResult />
+        <ReportResult match={match}/>
       </div>
     );
   }
@@ -78,6 +79,10 @@ const mapDispatchToProps = dispatch => ({
   showTable:(state)=>
   {
     dispatch({type:"SHOW_TABLE",state});
+  },
+  setReportResult:(reportResult)=>
+  {
+    dispatch({type:"SHOW_TABLE",reportResult});
   },
   setForm: (required=[],pattern=[]) => {
     console.log(required);

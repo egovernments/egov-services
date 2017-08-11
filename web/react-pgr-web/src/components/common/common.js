@@ -590,7 +590,13 @@ var localationData = {
   "collection.search.billNumber":"Bill Number",
   "collection.search.billDescription":"Bill Description",
   "collection.search.paidBy":"Paid By",
-  "collection.search.amount":"Amount"
+  "collection.search.amount":"Amount",
+  "reports.collection.fromdate":"From Date",
+  "reports.collection.todate":"To Date",
+  "reports.collection.status":"Status",
+  "reports.collection.collectedby":"Collected By",
+  "reports.collection.paymentmode":"Payment Mode",
+  "reports.collection.revenuehead":"Revenue Head"
 }
 
 export function translate(locale_text){

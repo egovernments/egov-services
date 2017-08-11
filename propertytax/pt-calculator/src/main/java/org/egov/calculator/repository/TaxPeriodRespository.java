@@ -59,8 +59,8 @@ public class TaxPeriodRespository {
 				ps.setString(6, taxperiod.getFinancialYear());
 				ps.setString(7, taxperiod.getAuditDetails().getCreatedBy());
 				ps.setString(8, taxperiod.getAuditDetails().getLastModifiedBy());
-				ps.setLong(9, taxperiod.getAuditDetails().getCreatedTime());
-				ps.setLong(10, taxperiod.getAuditDetails().getLastModifiedTime());
+				ps.setLong(9, getLong(taxperiod.getAuditDetails().getCreatedTime()));
+				ps.setLong(10, getLong(taxperiod.getAuditDetails().getLastModifiedTime()));
 				return ps;
 			}
 
@@ -96,8 +96,8 @@ public class TaxPeriodRespository {
 				ps.setString(6, taxperiod.getFinancialYear());
 				ps.setString(7, taxperiod.getAuditDetails().getCreatedBy());
 				ps.setString(8, taxperiod.getAuditDetails().getLastModifiedBy());
-				ps.setLong(9, taxperiod.getAuditDetails().getCreatedTime());
-				ps.setLong(10, taxperiod.getAuditDetails().getLastModifiedTime());
+				ps.setLong(9, getLong(taxperiod.getAuditDetails().getCreatedTime()));
+				ps.setLong(10, getLong(taxperiod.getAuditDetails().getLastModifiedTime()));
 				ps.setString(11, tenantId);
 				return ps;
 			}

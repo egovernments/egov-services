@@ -199,7 +199,7 @@ public class CategoryRepository {
 	 * @return List<Category>
 	 */
 	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String active,
-			String type, Integer categoryId, Integer pageSize, Integer offSet) {
+			String type, String businessNature, Integer categoryId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
 
@@ -211,7 +211,7 @@ public class CategoryRepository {
 		}
 
 		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, type,
-				categoryId, pageSize, offSet, preparedStatementValues);
+				businessNature, categoryId, pageSize, offSet, preparedStatementValues);
 		List<Category> categories = getCategories(categorySearchQuery.toString(), preparedStatementValues);
 
 		return categories;

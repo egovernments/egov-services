@@ -98,10 +98,10 @@ public class AssetDepreciatorImpl implements AssetDepreciator {
 		
 		Double minValue = Double.parseDouble(applicationProperties.getDepreciaitionMinimumValue());
 		if (currVal.doubleValue() == Double.parseDouble(applicationProperties.getDepreciaitionCapitalizedValue())) {
-			return DepreciationDetail.builder().status(DepreciationStatus.FAIL)
+			return DepreciationDetail.builder().status(DepreciationStatus.FAIL).valueAfterDepreciation(currVal)
 					.reasonForFailure(ReasonForFailure.CAPITALISED_VALUE_IS_ALREADY_MINIMUM).build();
 		} else if (minValue != null && currVal.doubleValue() < minValue) {
-				return DepreciationDetail.builder().status(DepreciationStatus.FAIL)
+				return DepreciationDetail.builder().status(DepreciationStatus.FAIL).valueAfterDepreciation(currVal)
 						.reasonForFailure(ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_IN_YEAR_OF_PURCHASE).build();
 		}
 		c = currVal.subtract(aPlusB);

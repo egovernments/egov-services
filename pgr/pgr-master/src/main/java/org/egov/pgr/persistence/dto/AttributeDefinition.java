@@ -21,7 +21,7 @@ public class AttributeDefinition {
     private String dataType;
     private char required;
     private String dataTypeDescription;
-    private int ordernum;
+    private Integer ordernum;
     private String description;
     private String code;
     private String serviceCode;

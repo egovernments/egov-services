@@ -58,7 +58,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/receipts")
@@ -100,15 +103,17 @@ public class CommonReceiptController {
         if (bindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
 
-        List<String> statusList = new ArrayList<String>();
+        Map<String, String> statusMap = new HashMap<>();
         try {
-            statusList = receiptService.getReceiptStatus(tenantId);
+            List<String> statusList = receiptService.getReceiptStatus(tenantId);
+            statusMap = statusList.stream().distinct().collect(
+                    Collectors.toMap(s -> s, s -> s));
         } catch (final Exception exception) {
-            LOGGER.error("Error while processing request " + statusList, exception);
+            LOGGER.error("Error while processing request " + statusMap, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return  getStatusSuccessResponse(statusList, requestInfo);
+        return  getStatusSuccessResponse(statusMap, requestInfo);
     }
 
     @RequestMapping("/_getDistinctBusinessDetails")
@@ -164,12 +169,12 @@ public class CommonReceiptController {
         return new ResponseEntity<>(businessDetailsResponse, HttpStatus.OK);
     }
 
-    private ResponseEntity<?> getStatusSuccessResponse(List<String> statusList, RequestInfo requestInfo) {
+    private ResponseEntity<?> getStatusSuccessResponse(Map<String,String> statusMap, RequestInfo requestInfo) {
         LOGGER.info("Building success response.");
         StatusResponse statusResponse = new StatusResponse();
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        statusResponse.setStatus(statusList);
+        statusResponse.setStatus(statusMap);
         statusResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<>(statusResponse, HttpStatus.OK);
     }

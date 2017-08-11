@@ -580,7 +580,7 @@ class Transaction extends Component {
                   {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
                   <div style={{"textAlign": "center"}}>
                     <br/>
-                  {showResult &&  <UiButton handler={create} item={{"label": "Pay", "uiType":"button"}} ui="google"/>}
+                  {showResult &&  <UiButton handler={create} item={{"label": "Pay", "uiType":"button","isDisabled": isFormValid ? false : true}} ui="google"/>}
                     <br/>
                   </div>
       </div>

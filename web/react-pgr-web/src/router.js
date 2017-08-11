@@ -134,7 +134,7 @@ const Main = () => {
         <Route exact path={base+'/pgr/searchEscalationTime'} component={SearchEscalation}/>
         <Route exact path={base+'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base+'/pgr/createServiceType'} component={ServiceTypeCreate}/>
-        <Route exact path={base+'/report/:reportName'} component={Report}/>
+        <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
 
 
         <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>

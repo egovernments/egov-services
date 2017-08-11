@@ -36,54 +36,94 @@ export default class ShowFields extends Component {
     })
   }
 
-  renderGroups=(groups, noCols, uiFramework="google", jsonPath) => {
-    let {renderField}=this;
+  renderCard = (group, groupIndex, noCols, jsonPath, uiFramework, groups, isMultiple) => {
+    let self = this;
     let {addNewCard, removeCard} = this.props;
+    let {renderField}=this;
+    return (
+      <Card style={{"display": group.hide ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className="uiCard" key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+          {!isMultiple && <CardHeader title={group.label} showExpandableButton={true} actAsExpander={true}/>}
+          <CardText style={{padding:0}} expandable={true}>
+          <Grid>
+            <Row>
+              {group.fields.map((field, fieldIndex)=>{
+                  if(!field.isHidden) {
+                    return (
+                      <Col key={fieldIndex} xs={12} md={noCols}>
+                          {renderField(field, self.props.screen)}
+                      </Col>
+                    )
+                  }
+              })}
+            </Row>
+            {self.props.screen!= "view" && group.multiple && (!groups[groupIndex+1] || (groups[groupIndex+1] && groups[groupIndex+1].name != group.name)) && <Row>
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
+                <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath, group.name)}}>
+                  <span className="glyphicon glyphicon-plus"></span>
+                </FloatingActionButton>
+              </Col>
+            </Row>}
+            {self.props.screen!= "view" && group.multiple && (groups[groupIndex+1] && groups[groupIndex+1].name == group.name) && <Row>
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
+                <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex, group.name)}}>
+                  <span className="glyphicon glyphicon-minus"></span>
+                </FloatingActionButton>
+              </Col>
+            </Row>}
+          </Grid>
+          <div style={{"marginLeft": "15px", "marginRight": "15px"}}>
+            {
+              group.children &&
+              group.children.length ?
+              group.children.map(function(child) {
+                return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
+              }) : ""
+            }
+          </div>
+          </CardText>
+      </Card>
+    )
+  }
+
+  renderGroups=(groups, noCols, uiFramework="google", jsonPath) => {
     let self = this;
     switch (uiFramework) {
       case "google":
-        return groups.map((group, groupIndex)=>{
-          return (<Card style={{"display": group.hide ? "none" : "block"}} className="uiCard" key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
-                    <CardHeader title={group.label} showExpandableButton={true} actAsExpander={true}/>
-                    <CardText style={{padding:0}} expandable={true}>
-                    <Grid>
-                      <Row>
-                        {group.fields.map((field, fieldIndex)=>{
-                            if(!field.isHidden) {
-                              return (
-                                <Col key={fieldIndex} xs={12} md={noCols}>
-                                    {renderField(field, self.props.screen)}
-                                </Col>
-                              )
-                            }
-                        })}
-                      </Row>
-                      {self.props.screen!= "view" && group.multiple && (!groups[groupIndex+1] || (groups[groupIndex+1] && groups[groupIndex+1].name != group.name)) && <Row>
-                        <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                          <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath, group.name)}}>
-                            <span className="glyphicon glyphicon-plus"></span>
-                          </FloatingActionButton>
-                        </Col>
-                      </Row>}
-                      {self.props.screen!= "view" && group.multiple && (groups[groupIndex+1] && groups[groupIndex+1].name == group.name) && <Row>
-                        <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                          <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex, group.name)}}>
-                            <span className="glyphicon glyphicon-minus"></span>
-                          </FloatingActionButton>
-                        </Col>
-                      </Row>}
-                    </Grid>
-                    <div style={{"marginLeft": "15px", "marginRight": "15px"}}>
-                      {
-                        group.children &&
-                        group.children.length ?
-                        group.children.map(function(child) {
-                          return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
-                        }) : ""
-                      }
-                    </div>
-                    </CardText>
-                </Card>)
+        let listArr = {};
+        for(var i=0; i<groups.length; i++) {
+          if(groups[i].multiple) {
+            if(!listArr[groups[i].name]) listArr[groups[i].name] = {
+              objects: []
+            };
+            listArr[groups[i].name].objects.push({
+              object: groups[i],
+              index: i
+            });
+          } else {
+            listArr[groups[i].name] =  {
+              object: groups[i],
+              index: i
+            }
+          }
+        }
+
+        return Object.keys(listArr).map((key, groupIndex) => {
+          if(listArr[key].objects) {
+            return (
+              <Card className="uiCard" expanded={true}>
+                <CardHeader title={listArr[key].objects[0].object.label} showExpandableButton={true} actAsExpander={true}/>
+                  <CardText style={{padding:0}} expandable={true}>
+                    {
+                      listArr[key].objects.map((grp, grpIndex) => {
+                        return self.renderCard(grp.object, grp.index, noCols, jsonPath, uiFramework, groups, true);
+                      })
+                    }
+                  </CardText>
+              </Card>
+            );
+          } else {
+            return self.renderCard(listArr[key].object, listArr[key].index, noCols, jsonPath, uiFramework, groups);
+          }
         })
         break;
     }

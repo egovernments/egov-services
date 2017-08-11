@@ -51,16 +51,16 @@ public class TaxRatesRepository {
                             ps.setString(3, taxRates.getDependentTaxHead());
                             ps.setTimestamp(4, TimeStampUtil.getTimeStamp(taxRates.getFromDate()));
                             ps.setTimestamp(5, TimeStampUtil.getTimeStamp(taxRates.getToDate()));
-                            ps.setDouble(6, taxRates.getFromValue());
-                            ps.setDouble(7, taxRates.getToValue());
-                            ps.setDouble(8, taxRates.getRatePercentage());
-                            ps.setDouble(9, taxRates.getTaxFlatValue());
+                            ps.setDouble(6, getDouble(taxRates.getFromValue()));
+                            ps.setDouble(7, getDouble(taxRates.getToValue()));
+                            ps.setDouble(8, getDouble(taxRates.getRatePercentage()));
+                            ps.setDouble(9, getDouble(taxRates.getTaxFlatValue()));
                             ps.setString(10, taxRates.getUsage());
                             ps.setString(11, taxRates.getPropertyType());
                             ps.setString(12, taxRates.getAuditDetails().getCreatedBy());
                             ps.setString(13, taxRates.getAuditDetails().getLastModifiedBy());
-                            ps.setLong(14, taxRates.getAuditDetails().getCreatedTime());
-                            ps.setLong(15, taxRates.getAuditDetails().getLastModifiedTime());
+                            ps.setLong(14, getLong(taxRates.getAuditDetails().getCreatedTime()));
+                            ps.setLong(15, getLong(taxRates.getAuditDetails().getLastModifiedTime()));
                             return ps;
                     }
             };
@@ -95,15 +95,15 @@ public class TaxRatesRepository {
                             ps.setString(3, taxRates.getDependentTaxHead());
                             ps.setTimestamp(4, TimeStampUtil.getTimeStamp(taxRates.getFromDate()));
                             ps.setTimestamp(5, TimeStampUtil.getTimeStamp(taxRates.getToDate()));
-                            ps.setDouble(6, taxRates.getFromValue());
-                            ps.setDouble(7, taxRates.getToValue());
-                            ps.setDouble(8, taxRates.getRatePercentage());
-                            ps.setDouble(9, taxRates.getTaxFlatValue());
+                            ps.setDouble(6, getDouble(taxRates.getFromValue()));
+                            ps.setDouble(7, getDouble(taxRates.getToValue()));
+                            ps.setDouble(8, getDouble(taxRates.getRatePercentage()));
+                            ps.setDouble(9, getDouble(taxRates.getTaxFlatValue()));
                             ps.setString(10, taxRates.getUsage());
                             ps.setString(11, taxRates.getPropertyType());
                             ps.setString(12, taxRates.getAuditDetails().getLastModifiedBy());
-                            ps.setLong(13, taxRates.getAuditDetails().getLastModifiedTime());
-                            ps.setLong(14, taxRates.getId());
+                            ps.setLong(13, getLong(taxRates.getAuditDetails().getLastModifiedTime()));
+                            ps.setLong(14, getLong(taxRates.getId()));
                             return ps;
                     }
             };

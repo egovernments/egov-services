@@ -22,7 +22,7 @@ public class AttributeDefinition {
     private String description;
     private String url;
     private String groupCode;
-    private int order;
+    private Integer order;
     private String serviceCode;
     private List<AttributeValueDefinition> attribValues;
 

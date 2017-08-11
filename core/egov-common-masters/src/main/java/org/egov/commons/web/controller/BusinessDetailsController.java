@@ -5,6 +5,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.BusinessDetailsCriteria;
+import org.egov.commons.model.EnumData;
 import org.egov.commons.model.enums.BusinessType;
 import org.egov.commons.service.BusinessCategoryService;
 import org.egov.commons.service.BusinessDetailsService;
@@ -107,6 +108,19 @@ public class BusinessDetailsController {
 		}
 		return getSuccessResponse(requestInfo, detailsRequestInfo);
 	}
+
+    @RequestMapping(value = "/_getBusinessTypes")
+    public ResponseEntity<?> getBusinessTypes(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+                                                   final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
+
+        final List<EnumData> modelList = new ArrayList<>();
+        for (final BusinessType key : BusinessType.values())
+            modelList.add(new EnumData(key.name(), key));
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
 
 	private ResponseEntity<?> getSuccessResponse(RequestInfo requestInfo,
 			List<BusinessDetails> detailsRequestInfo) {
@@ -275,4 +289,16 @@ public class BusinessDetailsController {
 		errRes.setError(error);
 		return errRes;
 	}
+
+
+    private ResponseEntity<?> getSuccessResponse(final List<EnumData> modelList,
+                                                 final RequestInfo requestInfo) {
+        final EnumResponse response = new EnumResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        response.setResponseInfo(responseInfo);
+        response.setDataModelList(modelList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
 }

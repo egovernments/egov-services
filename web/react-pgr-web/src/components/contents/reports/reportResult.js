@@ -77,7 +77,7 @@ class ShowField extends Component {
   }
 
   drillDown=(e,i,i2,item,item1)=>{
-     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute} = this.props;
+     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute,match} = this.props;
      let object=reportResult.reportHeader[i2];
 
     //  console.log(object);
@@ -135,7 +135,7 @@ class ShowField extends Component {
         // console.log(queryString);
         // console.log(splitArray[0].split("=")[1]);
 
-        let response=Api.commonApiPost("pgr-master/report/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
+        let response=Api.commonApiPost(match.params.moduleName+"/report/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
         {
           // console.log(response)
           setReportResult(response)

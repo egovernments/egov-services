@@ -16,7 +16,7 @@ public class AttributeDefinition {
     private String dataType;
     private boolean required;
     private String dataTypeDescription;
-    private int order;
+    private Integer order;
     private String description;
     private String code;
     private String url;

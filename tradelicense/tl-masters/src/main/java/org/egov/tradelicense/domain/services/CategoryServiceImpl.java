@@ -134,28 +134,26 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String active, String type, Integer categoryId, Integer pageSize, Integer offSet) {
+			String code, String active, String type, String businessNature, Integer categoryId, Integer pageSize,
+			Integer offSet) {
 
 		CategoryResponse categoryResponse = new CategoryResponse();
 		try {
 
 			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
-					categoryId, pageSize, offSet);
+					businessNature, categoryId, pageSize, offSet);
 
-			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY") || (categoryId != null)) {
+			for (int i = 0; i < categories.size(); i++) {
 
-				for (int i = 0; i < categories.size(); i++) {
+				Category category = categories.get(i);
+				Long ParentId = category.getParentId();
 
-					Category category = categories.get(i);
-					Long ParentId = category.getParentId();
+				if (ParentId != null) {
 
-					if (ParentId != null) {
+					List<CategoryDetail> categoryDetails = categoryRepository
+							.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
 
-						List<CategoryDetail> categoryDetails = categoryRepository
-								.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
-
-						category.setDetails(categoryDetails);
-					}
+					category.setDetails(categoryDetails);
 				}
 			}
 

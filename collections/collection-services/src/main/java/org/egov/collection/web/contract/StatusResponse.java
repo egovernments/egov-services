@@ -45,7 +45,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Setter;
 import org.egov.common.contract.response.ResponseInfo;
 
-import java.util.List;
+import java.util.Map;
 
 @Setter
 public class StatusResponse {
@@ -56,5 +56,5 @@ public class StatusResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("status")
-    private List<String> status;
+    private Map<String,String> status;
 }

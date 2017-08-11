@@ -125,6 +125,7 @@ public class ReceiptService {
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
+		Instrument instrument = receipt.getInstrument();
 		bill.setBillDetails(apportionPaidAmount(
 					receiptReq.getRequestInfo(), bill, receipt.getTenantId()));
 		// return receiptRepository.pushToQueue(receiptReq); //async call
@@ -144,6 +145,7 @@ public class ReceiptService {
 			receiptReq.setReceipt(Arrays.asList(receipt));
 			receipt = receiptRepository.pushToQueue(receiptReq);
 		}
+		receipt.setInstrument(instrument);
 		return receipt;
 	}
 
@@ -462,7 +464,11 @@ public class ReceiptService {
 	}
 
 	public void updateReceipt(WorkflowDetailsRequest workflowDetails){
-		receiptRepository.updateReceipt(workflowDetails);
+		if(workflowDetails.getStatus().equals("Receipt Created")){
+			workflowDetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
+
+			receiptRepository.updateReceipt(workflowDetails);
+		}
 	}
 
 	public List<BusinessDetailsRequestInfo> getBusinessDetails(

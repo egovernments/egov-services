@@ -58,4 +58,7 @@ public class FactorQueryBuilder {
 		return searchSql.toString();
 	}
 
+	public static String getCreatedAuditDetails(String tableName, Long id) {
+		return "select createdby, createdtime from " + tableName + "  where id=" + id;
+	}
 }

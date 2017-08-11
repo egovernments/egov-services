@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.user.model.Address;
+import org.egov.user.model.Role;
 import org.egov.user.model.TenantRole;
 import org.egov.user.model.User;
 import org.egov.user.model.UserReq;
@@ -69,23 +70,31 @@ public class NewUserService {
 		List<User> dbUsers = userRepository.search(userSearchCriteria);
 		log.info("updateAsync dbUsers :" + dbUsers);
 		Map<Long, User> dbUsermap = dbUsers.stream().collect(Collectors.toMap(User::getId, Function.identity()));
-
 		List<Address> newAdresses = new ArrayList<>();
 		List<TenantRole> newTenantRole = new ArrayList<>();
 		if (users.size() == dbUsers.size()) {
 			for (User user : users) {
 				User dbUser = dbUsermap.get(user.getId());
-
 				List<TenantRole> tenantRoles = user.getAdditionalroles();
 				List<TenantRole> dbTenantRoles = dbUser.getAdditionalroles();
 				List<Address> addresses = user.getUserDetails().getAddresses();
 				List<Address> dbAddresses = dbUser.getUserDetails().getAddresses();
-
+				List<Role> roles=user.getPrimaryrole();// holds roles of user in request
+				List<Role> dbRoles=dbUser.getPrimaryrole();//holds roles present in db
+				
 				Map<Long, Address> dbAddressmap = dbAddresses.stream()
 						.collect(Collectors.toMap(Address::getId, Function.identity()));
 				Map<Long, TenantRole> dbTenantRolemap = dbTenantRoles.stream()
 						.collect(Collectors.toMap(TenantRole::getId, Function.identity()));
-
+				Map<Long, Role> dbRolemap = dbRoles.stream()
+						.collect(Collectors.toMap(Role::getId, Function.identity()));
+				for (Role role : roles) {
+					Role dbRole = dbRolemap.get(role.getOldRole());
+					if (dbRole != null)
+						role.setDbAction(DbAction.UPDATE);
+					else 
+						role.setDbAction(DbAction.INSERT);
+				}
 				for (Address address : addresses) {
 					Address dbAddress = dbAddressmap.get(address.getId());
 					if (dbAddress != null) {

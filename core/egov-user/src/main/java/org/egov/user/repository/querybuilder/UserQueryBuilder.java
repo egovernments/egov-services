@@ -47,8 +47,9 @@ public class UserQueryBuilder {
     public final String USER_TENANT_UPDATE_QUERY = "UPDATE eg_usertenantrole SET "
     		+ "tenantids=?, lastmodifiedby=?, lastmodifieddate=? WHERE id=?;";
     
-    public final String USERROLE_UPDATE_QUERY = "UPDATE eg_userrole SET roleid=?, roleidtenantid=?, "
-    		+ "lastmodifieddate=? WHERE userid=? and tenantid=?;";
+    public final String USERROLE_UPDATE_QUERY="UPDATE eg_userrole SET roleid=?, roleidtenantid=?,"
+    		+ " userid=?, tenantid=?, lastmodifieddate=?"
+    		+ " WHERE roleid=? AND userid=? AND tenantid=?;";
 	
 	private final String BASE_QUERY="select usr.id AS usr_id, usr.tenantid AS usr_tenantid, usr.title,"
 			+ " usr.salutation AS usr_salutation, usr.dob AS usr_dob, usr.locale AS usr_locale,"

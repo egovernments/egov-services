@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -203,16 +204,18 @@ public class NewUserRepository {
 
 	@Transactional
 	public void updateUser(UserReq userReq){
-		
 		RequestInfo requestInfo = userReq.getRequestInfo();
 		List<User> users = userReq.getUsers();
 		List<Address> updateAddressList = new ArrayList<>();
 		List<Address> insertAddressList = new ArrayList<>();
 		List<TenantRole> updateTenantRoleList = new ArrayList<>();
 		List<TenantRole> insertTenantRoleList = new ArrayList<>();
+		List<Role> updateRoleList = new ArrayList<>();
+		List<Role> insertRoleList = new ArrayList<>();
 		for(User user : users){
 			List<Address> addresses = user.getUserDetails().getAddresses();
 			System.out.println("updateUser addresses:"+addresses);
+			
 			if(addresses != null && addresses.size() > 0){
 				Map<DbAction, List<Address>> addMap = addresses.stream().collect(
 						Collectors.groupingBy(Address::getDbAction, Collectors.toList()));
@@ -235,6 +238,15 @@ public class NewUserRepository {
 				
 				if(tenantRolesMap.get(DbAction.UPDATE) != null)
 				updateTenantRoleList.addAll(tenantRolesMap.get(DbAction.UPDATE));
+			}
+			List<Role> userRoles = user.getPrimaryrole();
+			if(userRoles!=null && userRoles.size() > 0){
+				Map<DbAction,List<Role>> userRoleMap=userRoles.stream().collect(
+						Collectors.groupingBy(Role::getDbAction,Collectors.toList()));
+				if(userRoleMap.get(DbAction.INSERT) != null)
+					insertRoleList.addAll(userRoleMap.get(DbAction.INSERT));
+				if(userRoleMap.get(DbAction.UPDATE) != null)
+					updateRoleList.addAll(userRoleMap.get(DbAction.UPDATE));
 			}
 		}
 		jdbcTemplate.batchUpdate(userQueryBuilder.USER_UPDATE_QUERY, new BatchPreparedStatementSetter() {
@@ -286,6 +298,8 @@ public class NewUserRepository {
 		updateUserAddress(updateAddressList, requestInfo);
 		saveUserTenant(insertTenantRoleList, requestInfo);
 		updateUserTenant(updateTenantRoleList, requestInfo);
+		saveUserRole(insertRoleList, requestInfo);// saving new user roles
+		updateUserRole(updateRoleList, requestInfo);// updating existing user roles 
 	}
 	
 	public void updateUserAddress(List<Address> addresses, RequestInfo requestInfo) {
@@ -315,9 +329,11 @@ public class NewUserRepository {
 		});
 	}
 	
-	/*public void updateUserRole(List<Role> roles, RequestInfo requestInfo) {
+	//Updating user role
+	public void updateUserRole(List<Role> roles, RequestInfo requestInfo) {
 
-		jdbcTemplate.batchUpdate(userQueryBuilder.USER_ADDRESS_INSERT_QUERY, new BatchPreparedStatementSetter() {
+		log.info("NewUserRepository updateUserRole roles::::::: " + roles);
+		jdbcTemplate.batchUpdate(userQueryBuilder.USERROLE_UPDATE_QUERY, new BatchPreparedStatementSetter() {
 
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
@@ -327,6 +343,9 @@ public class NewUserRepository {
 				ps.setLong(3, role.getUserId());
 				ps.setString(4, role.getTenantId());
 				ps.setDate(5, new java.sql.Date(new Date().getTime()));
+				ps.setLong(6, role.getOldRole());
+				ps.setLong(7, role.getUserId());
+				ps.setString(8, role.getTenantId());
 			}
 
 			@Override
@@ -335,12 +354,11 @@ public class NewUserRepository {
 			}
 		});
 
-	}*/
-	
+	}
+
 	public void updateUserTenant(List<TenantRole> tenantRoles, RequestInfo requestInfo) {
 
 		jdbcTemplate.batchUpdate(userQueryBuilder.USER_TENANT_UPDATE_QUERY, new BatchPreparedStatementSetter() {
-			 
 
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {

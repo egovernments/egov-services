@@ -1,8 +1,9 @@
 package org.egov.user.model;
 
+import org.egov.user.model.enums.DbAction;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,6 +34,10 @@ public class Role {
 
 	@JsonProperty("description")
 	private String description = null;
+	
+	private Long oldRole;
+	
+	private DbAction dbAction;
 	
 	private AuditDetails auditDetails;
 

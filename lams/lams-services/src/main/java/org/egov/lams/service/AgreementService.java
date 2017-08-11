@@ -368,7 +368,8 @@ public class AgreementService {
 			Boolean isDemandDetailsExist = Boolean.FALSE;
 			for (DemandDetails existingDetail : demands.get(0).getDemandDetails()) {
 
-				if (existingDetail.getTaxPeriod().equalsIgnoreCase(demandReason.getTaxPeriod())) {
+				if (existingDetail.getTaxPeriod().equalsIgnoreCase(demandReason.getTaxPeriod())
+						&& existingDetail.getTaxReason().equalsIgnoreCase(demandReason.getName())) {
 					isDemandDetailsExist = Boolean.TRUE;
 				}
 			}

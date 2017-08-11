@@ -326,10 +326,6 @@ class EditDemand extends React.Component {
                       handleChangeAll(e, "taxAmount")
                     }}/>
 
-
-
-
-
                     </th>
                     <th>
                       Collection

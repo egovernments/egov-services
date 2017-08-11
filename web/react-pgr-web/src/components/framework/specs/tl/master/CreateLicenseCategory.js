@@ -1,7 +1,8 @@
 var dat = {
 	"tl.create": {
 		"numCols": 12/2,
-		"url": "/tl-masters/category/_create",
+		"url": "/tl-masters/v1/category/_create",
+		"useTimestamp": true,
 		"tenantIdRequired": true,
 		"objectName": "categories",
 		"groups": [
@@ -26,7 +27,7 @@ var dat = {
 							"label": "tl.create.groups.categorytype.code",
 							"pattern": "",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -49,7 +50,7 @@ var dat = {
 	},
 	"tl.search": {
 		"numCols": 12/1,
-		"url": "/tl-masters/category/_search",
+		"url": "/tl-masters/v1/category/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "categories",
@@ -64,8 +65,8 @@ var dat = {
 							"label": "tl.search.groups.categorytype.category",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/category/_search?|$..name|$..name",
-							"isRequired": false,
+              "url": "/tl-masters/v1/category/_search?|$..name|$..name",
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -83,7 +84,7 @@ var dat = {
 	},
 	"tl.view": {
 		"numCols": 12/2,
-		"url": "/tl-masters/category/_search?id={id}",
+		"url": "/tl-masters/v1/category/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "categories",
@@ -109,7 +110,7 @@ var dat = {
 						"label": "tl.view.groups.categorytype.code",
 						"pattern": "",
 						"type": "text",
-						"isRequired": true,
+						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -120,8 +121,8 @@ var dat = {
 	},
 	"tl.update": {
 		"numCols": 12/2,
-		"searchUrl": "/tl-masters/category/_search?id={id}",
-		"url": "/tl-masters/tl-tradelicense/category/Flammables/{CategoryType.code}/_update",
+		"searchUrl": "/tl-masters/v1/category/_search?id={id}",
+		"url": "/tl-masters/v1/tl-tradelicense/category/{categories.code}/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -148,7 +149,7 @@ var dat = {
 						"label": "tl.update.groups.categorytype.code",
 						"pattern": "",
 						"type": "text",
-						"isRequired": true,
+						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""

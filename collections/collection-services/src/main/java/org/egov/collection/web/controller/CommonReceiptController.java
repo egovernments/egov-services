@@ -40,6 +40,7 @@
 
 package org.egov.collection.web.controller;
 
+import org.egov.collection.model.EnumData;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.web.contract.*;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
@@ -54,14 +55,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/receipts")
@@ -103,17 +104,17 @@ public class CommonReceiptController {
         if (bindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
 
-        Map<String, String> statusMap = new HashMap<>();
+        final List<EnumData> modelList =  new ArrayList<>();
         try {
             List<String> statusList = receiptService.getReceiptStatus(tenantId);
-            statusMap = statusList.stream().distinct().collect(
-                    Collectors.toMap(s -> s, s -> s));
+            for (final String name : statusList)
+                modelList.add(new EnumData(name, name));
         } catch (final Exception exception) {
-            LOGGER.error("Error while processing request " + statusMap, exception);
+            LOGGER.error("Error while processing request " + modelList, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return  getStatusSuccessResponse(statusMap, requestInfo);
+        return getStatusSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
 
     @RequestMapping("/_getDistinctBusinessDetails")
@@ -169,14 +170,15 @@ public class CommonReceiptController {
         return new ResponseEntity<>(businessDetailsResponse, HttpStatus.OK);
     }
 
-    private ResponseEntity<?> getStatusSuccessResponse(Map<String,String> statusMap, RequestInfo requestInfo) {
-        LOGGER.info("Building success response.");
-        StatusResponse statusResponse = new StatusResponse();
+    private ResponseEntity<?> getStatusSuccessResponse(final List<EnumData> statusList,
+                                                 final RequestInfo requestInfo) {
+        final StatusResponse response = new StatusResponse();
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        statusResponse.setStatus(statusMap);
-        statusResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(statusResponse, HttpStatus.OK);
+        response.setResponseInfo(responseInfo);
+        response.setStatus(statusList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     private ResponseEntity<?> getSuccessResponse(List<User> users, RequestInfo requestInfo) {

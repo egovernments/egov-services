@@ -67,7 +67,7 @@ class Report extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(children[i].groups[j].jsonPath.replace("[", "\[").replace("]", "\]") + "\\[\\d{1}\\]", 'g');
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
           for(var k=1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + "[" + k + "]")));
@@ -91,7 +91,7 @@ class Report extends Component {
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
-        var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace("[", "\[").replace("]", "\]") + "\\[\\d{1}\\]", 'g');
+        var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
         for(var j=1; j < arr.length; j++) {
           i++;
           specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));

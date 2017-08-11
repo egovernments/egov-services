@@ -66,6 +66,8 @@ public class CustomControllerAdvice {
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
+		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
+		error.setMessage("Inavlid.Input");
 		error.setDescription(ex.getCustomMsg());
 		errRes.setError(error);
 		return errRes;

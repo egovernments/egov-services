@@ -47,7 +47,7 @@ var dat = {
 						},
             {
               "name": "Classification",
-              "jsonPath": "BusinessDetails[0].classification",
+              "jsonPath": "BusinessDetails[0].businessType",
               "label": "wc.create.groups.fields.classification",
               "pattern": "",
               "type": "singleValueList",
@@ -121,7 +121,7 @@ var dat = {
 				"fields": [
           {
               "name": "AccountHead",
-              "jsonPath": "BusinessDetails[0].accountDetails[0].chartofaccounts",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
               "label": "wc.create.group.field.accountHead",
               "pattern": "",
               "type": "autoCompelete",
@@ -133,7 +133,7 @@ var dat = {
             },
 						{
 							"name": "AccountCode",
-              "jsonPath": "BusinessDetails[0].accountDetails[0].chartofaccounts",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
 							"label": "wc.create.groups.fields.accountCode",
 							"pattern": "",
 							"type": "number",
@@ -169,17 +169,28 @@ var dat = {
 				"label": "wc.search.businessDetailsType.title",
 				"name": "businessDetailsType",
 				"fields": [
-          {
-            "name": "Name",
-            "jsonPath": "name",
-            "label": "wc.create.group.fields.businessName",
-            "pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "Length minimum is 3 and maximum is 100"
-          },
+					{
+						"name": "Code",
+						"jsonPath": "businessDetailsCodes",
+						"label": "wc.create.group.fields.businessCode",
+						"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "Length minimum is 3 and maximum is 100"
+					},
+					{
+						"name": "Active",
+						"jsonPath": "active",
+						"label": "wc.create.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 				]
 			}
 		],
@@ -238,7 +249,7 @@ var dat = {
 						},
             {
               "name": "Classification",
-              "jsonPath": "BusinessDetails[0].classification",
+              "jsonPath": "BusinessDetails[0].businessType",
               "label": "wc.create.groups.fields.classification",
               "pattern": "",
               "type": "singleValueList",
@@ -313,7 +324,7 @@ var dat = {
 				"fields": [
           {
               "name": "AccountHead",
-              "jsonPath": "BusinessDetails[0].accountDetails[0].chartofaccounts",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
               "label": "wc.create.group.field.accountHead",
               "pattern": "",
               "type": "autoCompelete",
@@ -325,7 +336,7 @@ var dat = {
             },
 						{
 							"name": "AccountCode",
-              "jsonPath": "BusinessDetails[0].accountDetails[0].chartofaccounts",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
 							"label": "wc.create.groups.fields.accountCode",
 							"pattern": "",
 							"type": "number",
@@ -398,7 +409,7 @@ var dat = {
 						},
             {
               "name": "Classification",
-              "jsonPath": "BusinessDetails[0].classification",
+              "jsonPath": "BusinessDetails[0].businessType",
               "label": "wc.create.groups.fields.classification",
               "pattern": "",
               "type": "singleValueList",
@@ -474,7 +485,7 @@ var dat = {
 				"fields": [
           {
               "name": "AccountHead",
-              "jsonPath": "BusinessDetails[0].accountDetails[0].chartofaccounts",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
               "label": "wc.create.group.field.accountHead",
               "pattern": "",
               "type": "autoCompelete",
@@ -486,7 +497,7 @@ var dat = {
             },
 						{
 							"name": "AccountCode",
-              "jsonPath": "BusinessDetails[0].accountDetails[0].chartofaccounts",
+              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
 							"label": "wc.create.groups.fields.accountCode",
 							"pattern": "",
 							"type": "number",

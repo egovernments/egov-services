@@ -56,22 +56,22 @@ public class AssetIndexRepository {
     }
 
     public Map<Long, Boundary> getlocationsById(final Asset asset) {
-
         final Location location = asset.getLocationDetails();
-        BoundaryResponse boundaryResponse = null;
         final List<Long> boundaryList = getBoundaryLists(location);
-        final Map<Long, Boundary> BoundaryMap = new HashMap<>();
+        final Map<Long, Boundary> boundaryMap = new HashMap<>();
 
         final String url = applicationProperties.getBoundaryServiceHostName()
                 + applicationProperties.getBoundaryServiceSearchPath() + "?tenantId=" + asset.getTenantId() + "&id=";
-        for (final Long id : boundaryList) {
-            URI uri;
+        for (final Long id : boundaryList)
             try {
-                uri = new URI(url + id);
-                log.info("Boundary URL is :: " + url + id + "the uri is " + uri);
-                boundaryResponse = restTemplate.getForObject(uri, BoundaryResponse.class);
-                final Boundary boundary = boundaryResponse.getBoundarys().get(0);
-                BoundaryMap.put(boundary.getId(), boundary);
+                final URI uri = new URI(url + id);
+                log.info("Boundary URL is :: " + uri);
+                final BoundaryResponse boundaryResponse = restTemplate.getForObject(uri, BoundaryResponse.class);
+                final List<Boundary> boundaries = boundaryResponse.getBoundarys();
+                if (boundaries != null && !boundaries.isEmpty()) {
+                    final Boundary boundary = boundaries.get(0);
+                    boundaryMap.put(boundary.getId(), boundary);
+                }
             } catch (final URISyntaxException uriSyntaxException) {
                 log.info("exception caught in asset for uri ::" + uriSyntaxException);
                 uriSyntaxException.printStackTrace();
@@ -79,8 +79,8 @@ public class AssetIndexRepository {
                 log.info("exception caught in asset repo boundary api call ::" + e);
                 e.printStackTrace();
             }
-        }
-        return BoundaryMap;
+        log.info("Boundary Map :: " + boundaryMap);
+        return boundaryMap;
 
     }
 

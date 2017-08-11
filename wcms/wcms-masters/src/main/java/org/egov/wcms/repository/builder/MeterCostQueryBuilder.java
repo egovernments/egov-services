@@ -41,6 +41,7 @@
 package org.egov.wcms.repository.builder;
 
 import java.util.List;
+import java.util.Map;
 
 import org.egov.wcms.web.contract.MeterCostGetRequest;
 import org.springframework.stereotype.Component;
@@ -58,7 +59,7 @@ public class MeterCostQueryBuilder {
 			+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc";
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(MeterCostGetRequest meterCostGetRequest, List<Object> preparedStatementValues) {
+	public String getQuery(MeterCostGetRequest meterCostGetRequest, Map<String, Object> preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 		addWhereClause(selectQuery, meterCostGetRequest, preparedStatementValues);
 		addOrderByClause(selectQuery, meterCostGetRequest);
@@ -67,39 +68,40 @@ public class MeterCostQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, MeterCostGetRequest meterCostGetRequest,
-			List<Object> preparedStatementValues) {
+			Map<String, Object> preparedStatementValues) {
 		if (meterCostGetRequest.getTenantId() == null)
 			return;
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 		if (meterCostGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" wmc.tenantId = ?");
-			preparedStatementValues.add(meterCostGetRequest.getTenantId());
+			selectQuery.append(" wmc.tenantId = :tenantId");
+			preparedStatementValues.put("tenantId", meterCostGetRequest.getTenantId());
 		}
 		if (meterCostGetRequest.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" wmc.code = ?");
-			preparedStatementValues.add(meterCostGetRequest.getCode());
+			selectQuery.append(" wmc.code = :code");
+			preparedStatementValues.put("code", meterCostGetRequest.getCode());
 		}
 		if (meterCostGetRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" wmc.metermake = ?");
-			preparedStatementValues.add(meterCostGetRequest.getName());
+			selectQuery.append(" wmc.metermake = :metermake");
+			preparedStatementValues.put("metermake", meterCostGetRequest.getName());
 		}
 		if (meterCostGetRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" wmc.active = ?");
-			preparedStatementValues.add(meterCostGetRequest.getActive());
+			selectQuery.append(" wmc.active = :active");
+			preparedStatementValues.put("active", meterCostGetRequest.getActive());
 		}
 		if (meterCostGetRequest.getPipeSizeId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" wmc.pipesizeid = ?");
-			preparedStatementValues.add(meterCostGetRequest.getPipeSizeId());
+			selectQuery.append(" wmc.pipesizeid = :pipesizeid");
+			preparedStatementValues.put("pipesizeid", meterCostGetRequest.getPipeSizeId());
 		}
 		if (meterCostGetRequest.getIds() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" wmc.id IN " + getIdQuery(meterCostGetRequest.getIds()));
+			selectQuery.append(" wmc.id IN (:ids)");
+			preparedStatementValues.put("ids", meterCostGetRequest.getIds());
 		}
 	}
 
@@ -117,32 +119,38 @@ public class MeterCostQueryBuilder {
 	}
 
 	private static String getIdQuery(List<Long> idList) {
-		StringBuilder query = new StringBuilder("(");
+		StringBuilder query = new StringBuilder();
 		if (idList.size() >= 1) {
 			query.append(idList.get(0).toString());
 			for (int i = 1; i < idList.size(); i++) {
 				query.append(", " + idList.get(i));
 			}
 		}
-		return query.append(")").toString();
+		return query.toString();
 	}
 
 	public String insertMeterCostQuery() {
 		return "INSERT INTO egwtr_metercost(id,code,pipesizeid,metermake,amount,active,createdby,lastmodifiedby,createddate,"
-				+ "lastmodifieddate,tenantid) values " + "(?,?,?,?,?,?,?,?,?,?,?)";
+				+ "lastmodifieddate,tenantid) values "
+				+ "(nextval('seq_egwtr_meter_cost'),:code,:pipesizeid,:metermake,:amount"
+				+ ",:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
 	}
 
 	public String updateMeterCostQuery() {
-		return "Update egwtr_metercost set pipesizeid=?, metermake=?, amount=?, active=?,"
-				+ " lastmodifiedby=?, lastmodifieddate=? where code = ? and tenantId = ?";
+		return "Update egwtr_metercost set pipesizeid=:pipesizeid, metermake=:metermake, amount=:amount, active=:active,"
+				+ " lastmodifiedby=:lastmodifiedby, lastmodifieddate=:lastmodifieddate where code = :code and tenantId = :tenantid";
 	}
 
 	public String selectMeterCostByNameAndTenantIdQuery() {
-		return "select code FROM egwtr_metercost where metermake = ? and tenantId = ?";
-
+		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		selectQuery.append(" where wmc.metermake = :name and wmc.tenantId = :tenantId");
+		return selectQuery.toString();
 	}
 
 	public String selectMeterCostByNameTenantIdAndCodeNotInQuery() {
-		return "select code from egwtr_metercost where metermake = ? and tenantId = ? and code != ? ";
+		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		selectQuery.append(" where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code");
+		return selectQuery.toString();
 	}
+
 }

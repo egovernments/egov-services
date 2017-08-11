@@ -56,7 +56,7 @@ public class PropertyTypeCategoryTypeQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT propcategory.id AS propcategory_id ,category.name as categoryName, propcategory.categorytypeid as categoryTypeId, propcategory.propertytypeid as propertyTypeId,"
+    private static final String BASE_QUERY = "SELECT propcategory.id AS propcategory_id ,propcategory.code as propcategory_code,category.name as categoryName, propcategory.categorytypeid as categoryTypeId, propcategory.propertytypeid as propertyTypeId,"
             + "propcategory.active as propcategory_active,"
             + " propcategory.tenantid as propcategory_tenantId from egwtr_property_category_type  propcategory"
             + " LEFT JOIN egwtr_category category ON propcategory.categorytypeid = category.id";
@@ -162,14 +162,14 @@ public class PropertyTypeCategoryTypeQueryBuilder {
     }
 
     public static String insertPropertyCategoryQuery() {
-        return "INSERT INTO egwtr_property_category_type(id,propertytypeid, categorytypeid, active, tenantid, "
-                + "createddate, createdby, lastmodifieddate, lastmodifiedby) "
-                + "values (nextval('seq_egwtr_property_category_type'),?,?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_property_category_type(id,code,propertytypeid, categorytypeid, active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) "
+                + "values (:id,:code,:propertytypeid, :categorytypeid, :active, "
+                + " :createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
-
+        
     public static String updatePropertyCategoryQuery() {
-        return "UPDATE egwtr_property_category_type SET propertytypeid = ?,categorytypeid = ?,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
+        return "UPDATE egwtr_property_category_type SET propertytypeid = :propertytypeid ,categorytypeid = :categorytypeid ,"
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code ";
     }
 
     public static String getCategoryId() {
@@ -182,11 +182,11 @@ public class PropertyTypeCategoryTypeQueryBuilder {
     
 
     public static String selectPropertyByCategoryQuery() {
-        return " select id FROM egwtr_property_category_type where propertytypeid = ? and categorytypeid = ? and tenantId = ?";
+        return " select code FROM egwtr_property_category_type where propertytypeid = ? and categorytypeid = ? and tenantId = ?";
     }
 
     public static String selectPropertyByCategoryNotInQuery() {
-        return " select id from egwtr_property_category_type where propertytypeid = ? and categorytypeid = ? and tenantId = ? and id != ? ";
+        return " select code from egwtr_property_category_type where propertytypeid = ? and categorytypeid = ? and tenantId = ? and code != ? ";
     }
 
 }

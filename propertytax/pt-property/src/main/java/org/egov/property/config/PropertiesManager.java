@@ -22,11 +22,11 @@ public class PropertiesManager {
 
 	@Autowired
 	Environment environment;
-	
-	//Inavlid input
+
+	// Inavlid input
 	private String invalidInput;
-	
-	//#property producer topics
+
+	// #property producer topics
 	private String createValidatedProperty;
 
 	private String updateValidatedProperty;
@@ -35,7 +35,7 @@ public class PropertiesManager {
 
 	private String updateTaxCalculated;
 
-	//#property consumer topics
+	// #property consumer topics
 	private String createValidatedUser;
 
 	private String updateValidatedUser;
@@ -46,17 +46,17 @@ public class PropertiesManager {
 
 	private String approveWorkflow;
 
-	//#TitleTransfer topics
+	// #TitleTransfer topics
 	private String createTitleTransferUserValidator;
 
 	private String updateTitleTransferUserValidator;
 
-	//#Kafka configuration
+	// #Kafka configuration
 	private String bootstrapServer;
 
 	private String autoOffsetReset;
 
-	//#database configuration
+	// #database configuration
 	private String dbUrl;
 
 	private String driverClassName;
@@ -64,15 +64,15 @@ public class PropertiesManager {
 	private String userName;
 
 	private String password;
-	
-	//#User search
+
+	// #User search
 	private String userHostname;
 
 	private String userBasepath;
 
 	private String userSearchpath;
 
-	//#application properties
+	// #application properties
 	private String isWriteDatesAsTimestamps;
 
 	private String attributeNotfound;
@@ -92,8 +92,8 @@ public class PropertiesManager {
 	private String workflowDesignationNotfound;
 
 	private String workflowStatusNotfound;
-	
-	//#application properties
+
+	// #application properties
 	private String idName;
 
 	private String idFormat;
@@ -106,7 +106,7 @@ public class PropertiesManager {
 
 	private String upicNumberFormat;
 
-	//####---Boundary properties
+	// ####---Boundary properties
 	private String invalidBoundaryValidationUrl;
 
 	private String invalidPropertyBoundary;
@@ -121,17 +121,17 @@ public class PropertiesManager {
 
 	private String locationBoundary;
 
-	//####---Pagination place holders ---###########
+	// ####---Pagination place holders ---###########
 	private String defaultPageSize;
 
 	private String defaultPageNumber;
 
 	private String defaultOffset;
 
-	//#Set context root
+	// #Set context root
 	private String serverContextpath;
-	
-	//#Unit
+
+	// #Unit
 	private String unitType;
 
 	private String recieveProperty;
@@ -146,22 +146,21 @@ public class PropertiesManager {
 
 	private String invalidTitleTransfer;
 
-	//#property chanel type
+	// #property chanel type
 	private String channelType;
 
-	//#tenantCode
+	// #tenantCode
 	private String tenantHostName;
 
 	private String tenantBasepath;
 
 	private String tenantSearchpath;
-	
+
 	private String duplicateCode;
-	
-	
+
 	private String generatePropertyTax;
-	
-	//###---Code Validation Proprties---#####
+
+	// ###---Code Validation Proprties---#####
 	private String invalidPropertyTypeCode;
 
 	private String invalidPropertyUsageCode;
@@ -171,11 +170,10 @@ public class PropertiesManager {
 	private String invalidPropertyAgeCode;
 
 	private String invalidPropertyStructureCode;
-	
-	private String vacantLand;
-	
 
-	//#workflow topics
+	private String vacantLand;
+
+	// #workflow topics
 	private String createPropertyTitletransferWorkflow;
 
 	private String approveTitletransfer;
@@ -183,10 +181,8 @@ public class PropertiesManager {
 	private String updatePropertyTitletransferWorkflow;
 
 	private String savePropertyTitletransfer;
-	
-	
 
-	//#code validation messages
+	// #code validation messages
 	private String invalidDocumentTypeCode;
 
 	private String invalidDepartmentCode;
@@ -199,89 +195,97 @@ public class PropertiesManager {
 
 	private String invalidWallTypeCode;
 
-	
-	
 	private String invalidPropertyFloor;
-	
+
 	private String invalidPropertyVacantland;
-	
-	
 
 	private String simpleDateFormat;
-	
+
 	private String dateAndTimeFormat;
-	
+
 	private String ulbName;
-	
+
 	private String ulbFormat;
-	
+
 	private String calculatorTaxperiodsSearch;
-	
+
 	private String defaultUlbName;
-	
+
 	private String defaultUlbImageUrl;
-	
-	//#guidance and factor validation messages
-	
+
+	// #guidance and factor validation messages
+
 	private String calculatorGuidanceSearchPath;
-	
+
 	private String invalidGuidanceSearchValidationUrl;
-	
+
 	private String invalidGuidanceVal;
-	
+
 	private String invalidGuidanceValueMsg;
-	
+
 	private String calculatorFactorSearchPath;
-	
+
 	private String factorsearchValidationUrl;
-	
+
 	private String invalidFactorValue;
-	
+
 	private String invalidFactorValueMsg;
-	
+
 	private String invalidInputBoundary;
-	
+
 	private String invalidInputOccupancydate;
-	
+
 	private String propertyFactorOccupancy;
-	
+
 	private String propertyFactorUsage;
-	
+
 	private String propertyFactorStructure;
-	
+
 	private String propertyFactorPropertytype;
-	
+
 	private String propertyFactorAge;
-	
+
 	private String billingServiceHostname;
-	
+
 	private String billingServiceSearchdemand;
-	
+
 	private String invalidTaxMessage;
-	
+
 	private String invalidDemandValidation;
-	
-	//# Workflow URL's
-	
+
+	// # Workflow URL's
+
 	private String workflowHostname;
-	
+
 	private String workflowBasepath;
-	
+
 	private String workflowStartPath;
-	
+
 	private String workflowUpdatepath;
-	
+
 	private String workflowValidation;
-	
+
 	private String workflowBusinessKey;
-	
+
 	private String invalidParentMsg;
-	
+
+	// #Apartment validation message
+
+	private String invalidFloorNo;
+
+	private String invalidUsage;
+
+	private String invalidOccupancytype;
+
+	private String invalidStructure;
+
+	private String invalidAge;
+
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
 	}
 
-	//#property producer topics
+	// #property producer topics
 	public String getCreateValidatedProperty() {
 		return environment.getProperty("egov.propertytax.property.create.validated");
 	}
@@ -298,7 +302,7 @@ public class PropertiesManager {
 		return environment.getProperty("egov.propertytax.property.update.tax.calculated");
 	}
 
-	//#property consumer topics
+	// #property consumer topics
 	public String getCreateValidatedUser() {
 		return environment.getProperty("egov.propertytax.property.create.user.validated");
 	}
@@ -319,7 +323,7 @@ public class PropertiesManager {
 		return environment.getProperty("egov.propertytax.property.update.workflow.approved");
 	}
 
-	//#TitleTransfer topics
+	// #TitleTransfer topics
 	public String getCreateTitleTransferUserValidator() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.create.validated");
 	}
@@ -327,8 +331,8 @@ public class PropertiesManager {
 	public String getUpdateTitleTransferUserValidator() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.update.validated");
 	}
-	
-	//#Kafka configuration
+
+	// #Kafka configuration
 	public String getBootstrapServer() {
 		return environment.getProperty("spring.kafka.bootstrap.servers");
 	}
@@ -336,8 +340,8 @@ public class PropertiesManager {
 	public String getAutoOffsetReset() {
 		return environment.getProperty("auto.offset.reset.config");
 	}
-	
-	//#database configuration
+
+	// #database configuration
 	public String getDbUrl() {
 		return environment.getProperty("spring.datasource.url");
 	}
@@ -354,7 +358,7 @@ public class PropertiesManager {
 		return environment.getProperty("spring.datasource.password");
 	}
 
-	//#User search
+	// #User search
 	public String getUserHostname() {
 		return environment.getProperty("egov.services.egov_user.hostname");
 	}
@@ -367,7 +371,7 @@ public class PropertiesManager {
 		return environment.getProperty("egov.services.egov_user.searchpath");
 	}
 
-	//#application properties
+	// #application properties
 	public String getIsWriteDatesAsTimestamps() {
 		return environment.getProperty("spring.jackson.serialization.write-dates-as-timestamps");
 	}
@@ -408,7 +412,7 @@ public class PropertiesManager {
 		return environment.getProperty("workflow.status.message");
 	}
 
-	//####---Idgeneration properties
+	// ####---Idgeneration properties
 	public String getIdName() {
 		return environment.getProperty("id.idName");
 	}
@@ -432,9 +436,8 @@ public class PropertiesManager {
 	public String getUpicNumberFormat() {
 		return environment.getProperty("upic.number.format");
 	}
-	
-	
-	//####---Boundary properties
+
+	// ####---Boundary properties
 	public String getInvalidBoundaryValidationUrl() {
 		return environment.getProperty("invalid.property.boundary.validation.url");
 	}
@@ -462,8 +465,8 @@ public class PropertiesManager {
 	public String getLocationBoundary() {
 		return environment.getProperty("location.boundary");
 	}
-	
-	//####---Pagination place holders ---------------#######
+
+	// ####---Pagination place holders ---------------#######
 	public String getDefaultPageSize() {
 		return environment.getProperty("default.page.size");
 	}
@@ -476,12 +479,12 @@ public class PropertiesManager {
 		return environment.getProperty("default.offset");
 	}
 
-	//#Set context root
+	// #Set context root
 	public String getServerContextpath() {
 		return environment.getProperty("server.contextPath");
 	}
-	
-	//#Unit
+
+	// #Unit
 	public String getUnitType() {
 		return environment.getProperty("unit.type");
 	}
@@ -509,13 +512,13 @@ public class PropertiesManager {
 	public String getInvalidTitleTransfer() {
 		return environment.getProperty("invalid.title.transfer");
 	}
-	
-	//#property chanel type
+
+	// #property chanel type
 	public String getChannelType() {
 		return environment.getProperty("egov.property.channel.type");
 	}
-	
-	//#tenantCode
+
+	// #tenantCode
 	public String getTenantHostName() {
 		return environment.getProperty("egov.services.tenant.hostname");
 	}
@@ -536,8 +539,7 @@ public class PropertiesManager {
 		return environment.getProperty("egov.propertytax.create.demand");
 	}
 
-	
-	//###---Code Validation Proprties---#####
+	// ###---Code Validation Proprties---#####
 	public String getInvalidPropertyTypeCode() {
 		return environment.getProperty("invalid.input.propertytype");
 	}
@@ -561,8 +563,8 @@ public class PropertiesManager {
 	public String getVacantLand() {
 		return environment.getProperty("egov.property.type.vacantLand");
 	}
-	
-	//#Workflow topics
+
+	// #Workflow topics
 	public String getCreatePropertyTitletransferWorkflow() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.create.workflow.started");
 	}
@@ -578,9 +580,8 @@ public class PropertiesManager {
 	public String getSavePropertyTitletransfer() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.db.saved");
 	}
-	
-	
-	//#code validation messages
+
+	// #code validation messages
 	public String getInvalidDocumentTypeCode() {
 		return environment.getProperty("invalid.input.documenttype");
 	}
@@ -604,8 +605,6 @@ public class PropertiesManager {
 	public String getInvalidWallTypeCode() {
 		return environment.getProperty("invalid.input.walltype");
 	}
-	
-	
 
 	public String getInvalidPropertyFloor() {
 		return environment.getProperty("invalid.property.floor");
@@ -615,8 +614,6 @@ public class PropertiesManager {
 		return environment.getProperty("invalid.property.vacantland");
 	}
 
-
-	
 	public String getSimpleDateFormat() {
 		return environment.getProperty("egov.property.simple.dateformat");
 	}
@@ -644,29 +641,29 @@ public class PropertiesManager {
 	public String getDefaultUlbImageUrl() {
 		return environment.getProperty("default.ulb.image.url");
 	}
-	
-	//#guidance and factor validation messages
+
+	// #guidance and factor validation messages
 
 	public String getCalculatorGuidanceSearchPath() {
 		return environment.getProperty("egov.services.pt_calculator.guidancesearchpath");
 	}
-	
+
 	public String getInvalidGuidanceSearchValidationUrl() {
 		return environment.getProperty("invalid.property.guidancesearch.validation.url");
 	}
-	
+
 	public String getInvalidGuidanceVal() {
 		return environment.getProperty("invalid.property.guidancevalue");
 	}
-	
+
 	public String getInvalidGuidanceValMsg() {
 		return environment.getProperty("invalid.property.guidancevalue.message");
 	}
-	
+
 	public String getCalculatorFactorSearchPath() {
 		return environment.getProperty("egov.services.pt_calculator.factorsearchpath");
 	}
-	
+
 	public String getFactorsearchValidationUrl() {
 		return environment.getProperty("invalid.property.factorsearch.validation.url");
 	}
@@ -674,27 +671,27 @@ public class PropertiesManager {
 	public String getInvalidFactorValue() {
 		return environment.getProperty("invalid.property.factorvalue");
 	}
-	
+
 	public String getInvalidFactorValueMsg() {
 		return environment.getProperty("invalid.property.factorvalue.message");
 	}
-	
+
 	public String getInvalidInputBoundary() {
 		return environment.getProperty("invalid.input.boundary");
 	}
-	
+
 	public String getInvalidInputOccupancydate() {
 		return environment.getProperty("invalid.input.occupancydate");
 	}
-    
+
 	public String getPropertyFactorOccupancy() {
 		return environment.getProperty("egov.property.factor.occupancy");
 	}
-	
+
 	public String getPropertyFactorUsage() {
 		return environment.getProperty("egov.property.factor.usage");
 	}
-	
+
 	public String getPropertyFactorStructure() {
 		return environment.getProperty("egov.property.factor.structure");
 	}
@@ -702,54 +699,74 @@ public class PropertiesManager {
 	public String getPropertyFactorPropertytype() {
 		return environment.getProperty("egov.property.factor.propertytype");
 	}
-	
+
 	public String getPropertyFactorAge() {
 		return environment.getProperty("egov.property.factor.age");
 	}
-	
+
 	public String getBillingServiceHostname() {
 		return environment.getProperty("egov.services.billing_service.hostname");
 	}
-	
+
 	public String getBillingServiceSearchdemand() {
 		return environment.getProperty("egov.services.billing_service.searchdemand");
 	}
-	
+
 	public String getInvalidTaxMessage() {
 		return environment.getProperty("invalid.titletransfer.tax.message");
 	}
-	
+
 	public String getInvalidDemandValidation() {
 		return environment.getProperty("invalid.titletransfer.demand.validation");
 	}
-	
-	//# Workflow URL's
-	
+
+	// # Workflow URL's
+
 	public String getWorkflowHostname() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
 	}
-	
+
 	public String getWorkflowBasepath() {
 		return environment.getProperty("egov.services.egov-common-workflows.basepath");
 	}
-	
+
 	public String getWorkflowStartPath() {
 		return environment.getProperty("egov.services.egov-common-workflows.startpath");
 	}
-	
+
 	public String getWorkflowUpdatepath() {
 		return environment.getProperty("egov.services.egov-common-workflows.updatepath");
 	}
-	
+
 	public String getWorkflowValidation() {
 		return environment.getProperty("invalid.update.workflow.validation");
 	}
-		
+
 	public String getWorkflowBusinessKey() {
 		return environment.getProperty("businessKey");
 	}
-	
-	public String getInvalidParentMsg(){
+
+	public String getInvalidParentMsg() {
 		return environment.getProperty("invalid.property.parent.code");
+	}
+
+	public String getInvalidFloorNo() {
+		return environment.getProperty("invalid.input.floorNo");
+	}
+
+	public String getInvalidUsage() {
+		return environment.getProperty("invalid.input.unit.usage");
+	}
+
+	public String getInvalidOccupancytype() {
+		return environment.getProperty("invalid.input.unit.occupancytype");
+	}
+
+	public String getInvalidStructure() {
+		return environment.getProperty("invalid.input.unit.structure");
+	}
+
+	public String getInvalidAge() {
+		return environment.getProperty("invalid.input.unit.age");
 	}
 }

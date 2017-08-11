@@ -55,6 +55,8 @@ import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -75,29 +77,47 @@ public class PropertyUsageTypeRepository {
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public PropertyTypeUsageTypeReq persistCreateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         log.info("Property Usage Type Request::" + propUsageTypeRequest);
         final String propUsageTypeInsert = propUsageTypeQueryBuilder.getPersistQuery();
-        final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(),
-                Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()) };
-        jdbcTemplate.update(propUsageTypeInsert, obj);
+        final List<PropertyTypeUsageType> propertyUsageList = propUsageTypeRequest.getPropertyTypeUsageType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(propertyUsageList.size());
+        for (final PropertyTypeUsageType propertyUsage : propertyUsageList)
+            batchValues.add(
+                    new MapSqlParameterSource("id", Long.valueOf(propertyUsage.getCode()))
+                            .addValue("code", propertyUsage.getCode())
+                            .addValue("propertytypeid", propertyUsage.getPropertyTypeId())
+                            .addValue("usagetypeid", propertyUsage.getUsageTypeId())
+                            .addValue("active", propertyUsage.getActive()).addValue("tenantid", propertyUsage.getTenantId())
+                            .addValue("createdby", Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifiedby",
+                                    Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("createddate", new Date(new java.util.Date().getTime()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .getValues());
+        namedParameterJdbcTemplate.batchUpdate(propUsageTypeInsert, batchValues.toArray(new Map[propertyUsageList.size()]));
         return propUsageTypeRequest;
     }
 
     public PropertyTypeUsageTypeReq persistUpdateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         log.info("Property Usage Type Request::" + propUsageTypeRequest);
         final String propUsageTypeUpdate = PropertyUsageTypeQueryBuilder.updatePropertyUsageQuery();
-        final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
-                Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), propUsageTypeRequest.getPropertyTypeUsageType().getId() };
-        jdbcTemplate.update(propUsageTypeUpdate, obj);
+        final List<PropertyTypeUsageType> propertyUsageList = propUsageTypeRequest.getPropertyTypeUsageType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(propertyUsageList.size());
+        for (final PropertyTypeUsageType propertyUsage : propertyUsageList)
+            batchValues.add(
+                    new MapSqlParameterSource("propertytypeid", propertyUsage.getPropertyTypeId())
+                            .addValue("usagetypeid", propertyUsage.getUsageTypeId())
+                            .addValue("active", propertyUsage.getActive())
+                            .addValue("lastmodifiedby",
+                                    Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()))
+
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .getValues());
+        namedParameterJdbcTemplate.batchUpdate(propUsageTypeUpdate, batchValues.toArray(new Map[propertyUsageList.size()]));
         return propUsageTypeRequest;
     }
 
@@ -133,17 +153,17 @@ public class PropertyUsageTypeRepository {
         return propUsageTypes;
     }
 
-    public boolean checkPropertyUsageTypeExists(final Long id, final String propertyTypeId, final String usageTypeId,
+    public boolean checkPropertyUsageTypeExists(final String code, final String propertyTypeId, final String usageTypeId,
             final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(propertyTypeId);
         preparedStatementValues.add(usageTypeId);
         preparedStatementValues.add(tenantId);
         final String query;
-        if (id == null)
+        if (code == null)
             query = PropertyUsageTypeQueryBuilder.selectPropertyByUsageTypeQuery();
         else {
-            preparedStatementValues.add(id);
+            preparedStatementValues.add(code);
             query = PropertyUsageTypeQueryBuilder.selectPropertyByUsageTypeNotInQuery();
         }
         final List<Map<String, Object>> propertyUsages = jdbcTemplate.queryForList(query,

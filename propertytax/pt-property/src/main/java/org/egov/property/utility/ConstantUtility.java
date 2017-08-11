@@ -7,7 +7,11 @@ package org.egov.property.utility;
 public class ConstantUtility {
 
     // Master table names
-
+	
+	public static final String PROPERTY_TABLE_NAME = "egpt_Property";
+	
+	public static final String TITLETRANSFER_TABLE_NAME = "egpt_titletransfer";
+	
     public static final String DEPRECIATION_TABLE_NAME = "egpt_mstr_depreciation";
 
     public static final String FLOOR_TYPE_TABLE_NAME = "egpt_mstr_floortype";
@@ -41,5 +45,6 @@ public class ConstantUtility {
     public static final String SPECIAL_NOTICE_TAXWISE_TABLE_NAME = "egpt_specialnotice_taxwise_detail";
 
     public static final String DOCUMENT_TYPE_TABLE_NAME = "egpt_mstr_documenttype";
-
+    
+    public static final String APARTMENT_TABLE_NAME = "egpt_mstr_apartment";
 }

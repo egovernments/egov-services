@@ -20,7 +20,6 @@ import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.TransactionType;
 import org.egov.egf.instrument.domain.service.InstrumentService;
 import org.egov.egf.instrument.utils.RequestJsonReader;
-import org.egov.egf.instrument.web.requests.InstrumentDepositRequest;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.junit.Test;
@@ -130,7 +129,7 @@ public class InstrumentControllerTest {
 	public void test_deposit_instrument() throws IOException, Exception {
 		List<Instrument> instruments = getInstrumentsForDeposit();
 		instruments.get(0).setId("726bb79942b24a75815fc11172cef45e");
-		when(instrumentService.deposit(any(InstrumentDepositRequest.class), any(BindingResult.class), any(RequestInfo.class)))
+		when(instrumentService.deposit(any(InstrumentRequest.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(instruments);
 
 		mockMvc.perform(post("/instruments/_deposit")
@@ -144,14 +143,14 @@ public class InstrumentControllerTest {
 	public void test_dishonor_instrument() throws IOException, Exception {
 		List<Instrument> instruments = getInstrumentsForDeposit();
 		instruments.get(0).setId("726bb79942b24a75815fc11172cef45e");
-		when(instrumentService.dishonor(any(InstrumentDepositRequest.class), any(BindingResult.class), any(RequestInfo.class)))
+		when(instrumentService.dishonor(any(InstrumentRequest.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(instruments);
 
 		mockMvc.perform(post("/instruments/_dishonor")
-				.content(resources.readRequest("instrument/instrument_deposit_valid_request.json"))
+				.content(resources.readRequest("instrument/instrument_dishonor_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.readResponse("instrument/instrument_deposit_valid_response.json")));
+				.andExpect(content().json(resources.readResponse("instrument/instrument_dishonor_valid_response.json")));
 	}
 	
 	private List<Instrument> getInstruments() {

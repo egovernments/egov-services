@@ -51,11 +51,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DonationQueryBuilder {
 
-    private static final String BASE_QUERY = "SELECT donation.id as donation_id, donation.propertytypeid as donation_propertytypeId,"
+    private static final String BASE_QUERY = "SELECT donation.id as donation_id, donation.code as donation_code,donation.propertytypeid as donation_propertytypeId,"
             + "donation.usagetypeid as donation_usagetypeId,donation.categorytypeid as donation_categorytypeId,donation.maxpipesizeid"
             + " as donation_maxpipesizId,donation.minpipesizeid as donation_minpipesizeId,donation.fromdate as donation_fromDate,"
             + "donation.todate as donation_toDate,donation.donationamount as donation_amount, donation.active as donation_active, "
-            + "donation.tenantId as donation_tenantId " + "FROM egwtr_donation donation ";
+            + "donation.tenantId as donation_tenantId FROM egwtr_donation donation ";
 
     public String getQuery(final DonationGetRequest donation, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
@@ -151,13 +151,15 @@ public class DonationQueryBuilder {
 
     public static String donationInsertQuery() {
         return "INSERT INTO egwtr_donation "
-                + "(id, propertytypeid, usagetypeid, categorytypeid, maxpipesizeid, minpipesizeid, fromdate, todate, donationamount, "
-                + "active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) VALUES (nextval('SEQ_EGWTR_DONATION'),?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "(id,code, propertytypeid, usagetypeid, categorytypeid, maxpipesizeid, minpipesizeid, fromdate, todate, donationamount, "
+                + "active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) VALUES (:id,:code,:propertytypeid, :usagetypeid, :categorytypeid, "
+                + ":maxpipesizeid, :minpipesizeid, :fromdate, :todate, :donationamount, "
+                + " :active, :tenantid, :createdby,:lastmodifiedby,:createddate,:lastmodifieddate)";
     }
 
     public static String donationUpdateQuery() {
-        return "UPDATE egwtr_donation set propertytypeid=?,usagetypeid=?,categorytypeid=?, maxpipesizeid= ?, minpipesizeid=?,"
-                + " fromdate=?, todate=?, donationamount=?, active=?,lastmodifiedby=?, lastmodifieddate= ? where id= ?)";
+        return "UPDATE egwtr_donation set propertytypeid= :propertytypeid,usagetypeid= :usagetypeid,categorytypeid= :categorytypeid, maxpipesizeid= :maxpipesizeid, minpipesizeid= :minpipesizeid ,"
+                + " fromdate= :fromdate, todate= :todate, donationamount= :donationamount, active=:active,lastmodifiedby= :lastmodifiedby, lastmodifieddate= :lastmodifieddate where code= :code ";
     }
 
     public static String getCategoryId() {

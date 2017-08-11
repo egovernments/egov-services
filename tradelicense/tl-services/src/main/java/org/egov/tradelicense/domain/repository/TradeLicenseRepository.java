@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.common.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -18,10 +19,14 @@ import org.egov.tradelicense.persistence.repository.SupportDocumentJdbcRepositor
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
 import org.egov.tradelicense.web.requests.TradeLicenseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class TradeLicenseRepository {
 
 	@Autowired
@@ -38,11 +43,41 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	PropertiesManager propertiesManager;
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	public Long getNextSequence() {
 
 		String id = tradeLicenseJdbcRepository.getSequence(TradeLicenseEntity.SEQUENCE_NAME);
 		return Long.valueOf(id);
+	}
+	
+	public void validateUniqueLicenseNumber(TradeLicense tradeLicense) {
+		
+		String sql = getUniqueTenantLicenseQuery(tradeLicense);
+		Integer count = null;
+		try {
+			count = (Integer) jdbcTemplate.queryForObject(sql, Integer.class);
+		} catch (Exception e) {
+			log.error("error while executing the query :" + sql + " , error message : " + e.getMessage());
+		}
+
+		if (count != 0) {
+			throw new InvalidInputException("tradeLicense number already exists");
+		}
+	}
+	
+	private String getUniqueTenantLicenseQuery(TradeLicense tradeLicense) {
+
+		String tenantId = tradeLicense.getTenantId();
+		String licNumber = tradeLicense.getLicenseNumber();
+
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
+		uniqueQuery.append(" where licenseNumber = '" + licNumber + "'");
+		uniqueQuery.append(" AND tenantId = '" + tenantId + "'");
+
+		return uniqueQuery.toString();
 	}
 
 	public Long getSupportDocumentNextSequence() {

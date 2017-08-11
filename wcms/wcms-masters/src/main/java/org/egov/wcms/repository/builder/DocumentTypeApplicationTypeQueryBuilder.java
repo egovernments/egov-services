@@ -56,7 +56,7 @@ public class DocumentTypeApplicationTypeQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT docapp.id AS id ,doctype.id as docTypeId,doctype.name as docTypeName, docapp.applicationtype , docapp.documenttypeid,docapp.mandatory,docapp.active,docapp.createddate,"
+    private static final String BASE_QUERY = "SELECT docapp.id AS id ,docapp.code as docapp_code,doctype.id as docTypeId,doctype.name as docTypeName, docapp.applicationtype , docapp.documenttypeid,docapp.mandatory,docapp.active,docapp.createddate,"
             + " docapp.lastmodifieddate,docapp.createdby,docapp.lastmodifiedby,docapp.tenantid from egwtr_documenttype_applicationtype docapp"
             + " LEFT JOIN egwtr_document_type doctype ON docapp.documenttypeid = doctype.id";
 
@@ -73,14 +73,14 @@ public class DocumentTypeApplicationTypeQueryBuilder {
         return selectQuery.toString();
     }
 
-    public static String insertDocNameQuery() {
-        return "INSERT INTO egwtr_documenttype_applicationtype(applicationtype,documenttypeid,mandatory,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(?,?,?,?,?,?,?,?,?)";
+    public static String insertDocumentApplicationQuery() {
+        return "INSERT INTO egwtr_documenttype_applicationtype(id,code,applicationtype,documenttypeid,mandatory,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+                + "(:id,:code,:applicationtype,:documenttypeid,:mandatory,:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updateDocumentTypeApplicationTypeQuery() {
-        return "UPDATE egwtr_documenttype_applicationtype SET applicationtype = ?,documenttypeid = ?,mandatory=?,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
+        return "UPDATE egwtr_documenttype_applicationtype SET applicationtype = :applicationtype,documenttypeid = :documenttypeid,mandatory= :mandatory,"
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code ";
     }
 
     public static String getDocumentTypeIdQuery() {
@@ -92,11 +92,11 @@ public class DocumentTypeApplicationTypeQueryBuilder {
     }
 
     public static String selectDocumentApplicationIdQuery() {
-        return " select id FROM egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid = ? and tenantId = ?";
+        return " select code FROM egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid = ? and tenantId = ?";
     }
 
     public static String selectDocumentApplicationIdNotInQuery() {
-        return " select id FROM egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid = ? and tenantId = ? and id! =? ";
+       return " select code from egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid = ? and tenantId = ? and code != ? ";
 
     }
 

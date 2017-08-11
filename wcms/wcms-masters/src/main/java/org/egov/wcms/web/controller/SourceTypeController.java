@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -63,7 +62,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,41 +100,38 @@ public class SourceTypeController {
         }
         log.info("WaterSourceTypeRequest::" + waterSourceRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final SourceType waterSource = waterSourceTypeService.createWaterSource(
+        final List<SourceType> sourceTypes = waterSourceTypeService.createWaterSource(
                 applicationProperties.getCreateSourceTypeTopicName(), "sourcetype-create", waterSourceRequest);
-        final List<SourceType> waterSourceTypes = new ArrayList<>();
-        waterSourceTypes.add(waterSource);
-        return getSuccessResponse(waterSourceTypes, "Created", waterSourceRequest.getRequestInfo());
+
+        return getSuccessResponse(sourceTypes, "Created", waterSourceRequest.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/{code}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final SourceTypeRequest waterSourceRequest,
-            final BindingResult errors, @PathVariable("code") final String code) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("waterSourceRequest::" + waterSourceRequest);
-        waterSourceRequest.getSourceType().setCode(code);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest,true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final SourceType waterSource = waterSourceTypeService.updateWaterSource(
+        final List<SourceType> waterSourceTypes = waterSourceTypeService.updateWaterSource(
                 applicationProperties.getUpdateSourceTypeTopicName(), "sourcetype-update", waterSourceRequest);
-        final List<SourceType> waterSourceTypes = new ArrayList<>();
-        waterSourceTypes.add(waterSource);
+
         return getSuccessResponse(waterSourceTypes, null, waterSourceRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final SourceTypeGetRequest waterSourceTypeGetRequest,
             final BindingResult modelAttributeBindingResult,

@@ -95,7 +95,7 @@ class Report extends Component {
         for(var j=1; j < arr.length; j++) {
           i++;
           specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
-          specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+          specs[moduleName + "." + actionName].groups[ind+1].index = j;
         }
       }
 
@@ -165,7 +165,7 @@ class Report extends Component {
           specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
         }
       } catch(e) {
-
+        console.log(e);
       }
 
       self.displayUI(specifications);
@@ -691,9 +691,12 @@ class Report extends Component {
             if(groupName == mockData[moduleName + "." + actionName].groups[j].name) {
               var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[j].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
               var stringified = JSON.stringify(_groupToBeInserted);
-              _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (j+1) + "]"));
-              _groupToBeInserted.index = j+1;
+              var ind = mockData[moduleName + "." + actionName].groups[j].index || 0;
+              //console.log(ind);
+              _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (ind+1) + "]"));
+              _groupToBeInserted.index = ind+1;
               mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
+              //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
               var temp = {...formData};
               self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);

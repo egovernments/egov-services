@@ -55,6 +55,7 @@ public class DocumentTypeApplicationTypeMapper implements RowMapper<DocumentType
 
         final DocumentTypeApplicationType appDocName = new DocumentTypeApplicationType();
         appDocName.setId(rs.getLong("id"));
+        appDocName.setCode(rs.getString("docapp_code"));
         appDocName.setDocumentTypeId(rs.getLong("docTypeId"));
         appDocName.setDocumentType(rs.getString("docTypeName"));
         appDocName.setMandatory(rs.getBoolean("mandatory"));

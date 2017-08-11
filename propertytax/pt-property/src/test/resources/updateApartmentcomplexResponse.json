@@ -1,0 +1,24 @@
+{
+	"responseInfo": {
+		
+	},
+	"apartments": [
+		{
+			"tenantId": "default",
+			"name": "FACEBOOK",
+			"code": "1010",
+			"totalFloors": 19,
+			"sourceOfWater": "test",
+			"totalOpenSpace": 10.5,
+			"totalProperties": 145,
+			"residtinalProperties": 10,
+			"totalBuiltUpArea": 5555,
+			"auditDetails": {
+				"createdBy": null,
+				"lastModifiedBy": null,
+				"createdTime": null,
+				"lastModifiedTime": null
+			}
+		}
+	]
+}

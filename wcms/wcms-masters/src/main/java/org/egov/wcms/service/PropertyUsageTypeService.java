@@ -67,6 +67,9 @@ public class PropertyUsageTypeService {
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
 
+    @Autowired
+    private CodeGeneratorService codeGeneratorService;
+
     public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);
     }
@@ -75,7 +78,21 @@ public class PropertyUsageTypeService {
         return propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest);
     }
 
-    public PropertyTypeUsageType createPropertyUsageType(final String topic, final String key,
+    public List<PropertyTypeUsageType> createPropertyUsageType(final String topic, final String key,
+            final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+        for (final PropertyTypeUsageType propertyUsage : propUsageTypeRequest.getPropertyTypeUsageType()) {
+            propertyUsage.setCode(codeGeneratorService.generate(PropertyTypeUsageType.SEQ_PROPERTYUSAGETYPE));
+        }
+
+        try {
+            kafkaTemplate.send(topic, key, propUsageTypeRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
+        return propUsageTypeRequest.getPropertyTypeUsageType();
+    }
+
+    public List<PropertyTypeUsageType> updatePropertyUsageType(final String topic, final String key,
             final PropertyTypeUsageTypeReq propUsageTypeRequest) {
 
         try {
@@ -105,25 +122,25 @@ public class PropertyUsageTypeService {
         return propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest);
     }
 
-    public boolean checkPropertyUsageTypeExists(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        getPropertyTypeByName(propUsageTypeRequest);
-        getUsageTypeByName(propUsageTypeRequest);
+    public boolean checkPropertyUsageTypeExists(final PropertyTypeUsageType propUsageType) {
+        getPropertyTypeByName(propUsageType);
+        getUsageTypeByName(propUsageType);
         return propUsageTypeRepository.checkPropertyUsageTypeExists(
-                propUsageTypeRequest.getPropertyTypeUsageType().getId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
+                propUsageType.getCode(),
+                propUsageType.getPropertyTypeId(),
+                propUsageType.getUsageTypeId(),
+                propUsageType.getTenantId());
     }
 
-    public Boolean getPropertyTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+    public Boolean getPropertyTypeByName(final PropertyTypeUsageType propUsageType) {
         Boolean isValidProperty = Boolean.FALSE;
 
         final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
-                propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
+                propUsageType.getPropertyType(),
+                propUsageType.getTenantId());
         if (propertyType.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
-            propUsageTypeRequest.getPropertyTypeUsageType().setPropertyTypeId(
+            propUsageType.setPropertyTypeId(
                     propertyType.getPropertyTypes() != null && propertyType.getPropertyTypes().get(0) != null
                             ? propertyType.getPropertyTypes().get(0).getId() : "");
 
@@ -132,14 +149,14 @@ public class PropertyUsageTypeService {
 
     }
 
-    public Boolean getUsageTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+    public Boolean getUsageTypeByName(final PropertyTypeUsageType propUsageType) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
+                propUsageType.getUsageType(),
+                propUsageType.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
-            propUsageTypeRequest.getPropertyTypeUsageType()
+            propUsageType
                     .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
                             ? usageType.getUsageMasters().get(0).getId() : "");
 

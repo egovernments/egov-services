@@ -108,6 +108,10 @@ class UiAutoComplete extends Component {
              errorText={this.props.fieldErrors[item.jsonPath]}
              onNewRequest={(value,index) =>{
               this.props.handler({target: {value: value.key}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+              if(this.props.autoComHandler && item.autoCompleteDependancy) {
+              	this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)
+              }
+
             }}
            />
         {/*

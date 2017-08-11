@@ -40,7 +40,6 @@
 
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -64,7 +63,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,41 +101,37 @@ public class CategoryTypeController {
         }
         log.info("categoryRequest::" + categoryRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateCategoryRequest(categoryRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateCategoryRequest(categoryRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final CategoryType category = categoryService.createCategory(applicationProperties.getCreateCategoryTopicName(),
+        final List<CategoryType> categoryList = categoryService.createCategory(applicationProperties.getCreateCategoryTopicName(),
                 "category-create", categoryRequest);
-        final List<CategoryType> categories = new ArrayList<>();
-        categories.add(category);
-        return getSuccessResponse(categories, "Created", categoryRequest.getRequestInfo());
+
+        return getSuccessResponse(categoryList, "Created", categoryRequest.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/{code}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final CategoryTypeRequest categoryRequest,
-            final BindingResult errors, @PathVariable("code") final String code) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("categoryRequest::" + categoryRequest);
-        categoryRequest.getCategoryType().setCode(code);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateCategoryRequest(categoryRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateCategoryRequest(categoryRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final CategoryType category = categoryService.updateCategory(applicationProperties.getUpdateCategoryTopicName(),
+        final List<CategoryType> categoryList = categoryService.updateCategory(applicationProperties.getUpdateCategoryTopicName(),
                 "category-update", categoryRequest);
-        final List<CategoryType> categories = new ArrayList<>();
-        categories.add(category);
-        return getSuccessResponse(categories, null, categoryRequest.getRequestInfo());
+        return getSuccessResponse(categoryList, null, categoryRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final CategoryTypeGetRequest categoryGetRequest,
             final BindingResult modelAttributeBindingResult,

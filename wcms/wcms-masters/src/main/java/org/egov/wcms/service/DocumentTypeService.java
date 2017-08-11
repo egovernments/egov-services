@@ -74,12 +74,20 @@ public class DocumentTypeService {
         return documentTypeRepository.persistModifyDocumentType(documentTypeReq);
     }
 
-    public DocumentType sendMessage(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
-
-        if (key.equalsIgnoreCase("documenttype-create")) {
-            documentTypeReq.getDocumentType();
-            documentTypeReq.getDocumentType().setCode(codeGeneratorService.generate(DocumentType.SEQ_DOCUMENTTYPE));
+    public List<DocumentType> createDocumentType(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
+        for (final DocumentType documentType : documentTypeReq.getDocumentType()){
+            documentType.setCode(codeGeneratorService.generate(DocumentType.SEQ_DOCUMENTTYPE));
         }
+
+        try {
+            kafkaTemplate.send(topic, key, documentTypeReq);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
+        return documentTypeReq.getDocumentType();
+    }
+
+    public List<DocumentType> updateDocumentType(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
         try {
             kafkaTemplate.send(topic, key, documentTypeReq);
         } catch (final Exception ex) {

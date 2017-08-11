@@ -53,6 +53,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.CategoryType;
 import org.egov.wcms.repository.CategoryTypeRepository;
 import org.egov.wcms.web.contract.CategoryTypeGetRequest;
+import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -103,6 +104,47 @@ public class CategoryTypeServiceTest {
 
         when(categoryRepository.findForCriteria(any(CategoryTypeGetRequest.class))).thenReturn(null);
         assertNull(categoryTypeService.getCategories(any(CategoryTypeGetRequest.class)));
+    }
+
+    @Test
+    public void test_throwException_Push_To_Producer_CategoryType() {
+        final List<CategoryType> categoryTypeList = new ArrayList<>();
+        categoryTypeList.add(getCategory());
+        final CategoryTypeRequest categoryTypeRequest = new CategoryTypeRequest();
+        categoryTypeRequest.setCategoryType(categoryTypeList);
+        assertTrue(categoryTypeList.equals(categoryTypeService.createCategory("", "", categoryTypeRequest)));
+    }
+
+    @Test
+    public void test_throwException_Create_CategoryType() {
+
+        final List<CategoryType> categoryTypeList = new ArrayList<>();
+        categoryTypeList.add(getCategory());
+        final CategoryTypeRequest categoryTypeRequest = new CategoryTypeRequest();
+        categoryTypeRequest.setCategoryType(categoryTypeList);
+        when(categoryRepository.persistCreateCategory(any(CategoryTypeRequest.class)))
+                .thenReturn(categoryTypeRequest);
+        assertTrue(categoryTypeRequest.equals(categoryTypeService.create(categoryTypeRequest)));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test(expected = Exception.class)
+    public void test_throwException_Update_CategoryType() throws Exception {
+
+        final CategoryTypeRequest categoryTypeRequest = Mockito.mock(CategoryTypeRequest.class);
+        when(categoryRepository.persistModifyCategory(categoryTypeRequest)).thenThrow(Exception.class);
+
+        assertTrue(categoryTypeRequest.equals(categoryTypeService.update(categoryTypeRequest)));
+    }
+
+    private CategoryType getCategory() {
+        final CategoryType category = new CategoryType();
+        category.setId(2L);
+        category.setCode("2");
+        category.setName("New Category");
+        category.setDescription("New Category of Connection");
+        category.setActive(true);
+        return category;
     }
 
 }

@@ -89,16 +89,12 @@ public class PipeSizeServiceTest {
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final PipeSize pipeSize = new PipeSize();
-        pipeSize.setCode("10");
-        pipeSize.setActive(true);
-        pipeSize.setSizeInInch(1.2);
-        pipeSize.setSizeInMilimeter(10.1);
-
+        final List<PipeSize> pipeSizeList = new ArrayList<>();
+        pipeSizeList.add(getPipeSize());
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSize);
+        pipeSizeRequest.setPipeSize(pipeSizeList);
 
-        final PipeSize pipeSizeResult = pipeSizeService.createPipeSize("topic", "key", pipeSizeRequest);
+        final List<PipeSize> pipeSizeResult = pipeSizeService.createPipeSize("topic", "key", pipeSizeRequest);
 
         assertNotNull(pipeSizeResult);
     }
@@ -118,16 +114,13 @@ public class PipeSizeServiceTest {
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final PipeSize pipeSize = new PipeSize();
-        pipeSize.setCode("10");
-        pipeSize.setActive(true);
-        pipeSize.setSizeInInch(1.2);
-        pipeSize.setSizeInMilimeter(10.1);
+        final List<PipeSize> pipeSizeList = new ArrayList<>();
+        pipeSizeList.add(getPipeSize());
 
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSize);
+        pipeSizeRequest.setPipeSize(pipeSizeList);
 
-        final PipeSize pipeSizeResult = pipeSizeService.updatePipeSize("topic", "key", pipeSizeRequest);
+        final List<PipeSize> pipeSizeResult = pipeSizeService.updatePipeSize("topic", "key", pipeSizeRequest);
 
         assertNotNull(pipeSizeResult);
     }
@@ -184,6 +177,15 @@ public class PipeSizeServiceTest {
         when(pipeSizeRepository.findForCriteria(pipeSizeGetRequest)).thenThrow(Exception.class);
         pipeSizesResult = pipeSizeService.getPipeSizes(pipeSizeGetRequest);
         assertTrue(null != pipeSizesResult);
+    }
+
+    private PipeSize getPipeSize() {
+        final PipeSize pipeSize = new PipeSize();
+        pipeSize.setCode("10");
+        pipeSize.setActive(true);
+        pipeSize.setSizeInInch(1.2);
+        pipeSize.setSizeInMilimeter(10.1);
+        return pipeSize;
     }
 
     /*

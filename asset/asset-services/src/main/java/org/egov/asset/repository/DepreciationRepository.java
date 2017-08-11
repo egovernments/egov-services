@@ -95,7 +95,7 @@ public class DepreciationRepository {
 					ps.setObject(6, depreciation.getVoucherReference());
 					ps.setString(7, depreciation.getTenantId());
 					ps.setString(8, depreciationDetail.getStatus().toString());
-					ps.setDouble(9, depreciationDetail.getDepreciationRate());
+					ps.setObject(9, depreciationDetail.getDepreciationRate());
 					ps.setBigDecimal(10, depreciationDetail.getValueBeforeDepreciation());
 					ps.setBigDecimal(11, depreciationDetail.getDepreciationValue());
 					ps.setBigDecimal(12, depreciationDetail.getValueAfterDepreciation());

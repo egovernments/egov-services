@@ -2,10 +2,13 @@ package org.egov.tradelicense.domain.service;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategoryDetail;
 import org.egov.tl.commons.web.requests.CategoryResponse;
 import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -17,6 +20,7 @@ import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.web.contract.TradeLicenseContract;
+import org.egov.tradelicense.web.requests.BoundaryResponse;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfoWrapper;
 import org.egov.tradelicense.web.requests.TradeLicenseRequest;
@@ -48,7 +52,7 @@ public class TradeLicenseService {
 
 	@Autowired
 	RestTemplate restTemplate;
-	
+
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -122,42 +126,16 @@ public class TradeLicenseService {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
-			validateUniqueLicenseNumber(tradeLicense);
+			tradeLicenseRepository.validateUniqueLicenseNumber(tradeLicense);
 			validateTradeLocality(tradeLicense, requestInfoWrapper);
 			validateTradeLocationWard(tradeLicense, requestInfoWrapper);
 			validateTradeCategory(tradeLicense, requestInfoWrapper);
 			validateTradeSubCategory(tradeLicense, requestInfoWrapper);
 			validateTradeSupportingDocument(tradeLicense, requestInfoWrapper);
+			validateTradeUom(tradeLicense, requestInfoWrapper);
 		}
 	}
 
-	private void validateUniqueLicenseNumber(TradeLicense tradeLicense) {
-		
-		String sql = getUniqueTenantLicenseQuery(tradeLicense);
-		Integer count = null;
-		try {
-			count = (Integer) jdbcTemplate.queryForObject(sql, Integer.class);
-		} catch (Exception e) {
-			log.error("error while executing the query :"+ sql + " , error message : " +  e.getMessage());
-		}
-
-		if (count != 0) {
-			throw new InvalidInputException("tradeLicense number already exists");
-		}
-	}
-
-	private String getUniqueTenantLicenseQuery(TradeLicense tradeLicense) {
-		
-		String tenantId = tradeLicense.getTenantId();
-				String licNumber = tradeLicense.getLicenseNumber();
-		
-		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
-		uniqueQuery.append(" where licenseNumber = '" + licNumber + "'");
-		uniqueQuery.append(" AND tenantId = '" + tenantId + "'");
-		
-		return uniqueQuery.toString();
-	}
-	
 	private void validateTradeSupportingDocument(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
 		for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
@@ -181,7 +159,8 @@ public class TradeLicenseService {
 			} catch (Exception e) {
 				log.error("Error while connecting to the document type end point");
 			}
-			if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes().size() == 0) {
+			if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
+					|| documentTypeResponse.getDocumentTypes().size() == 0) {
 				throw new InvalidInputException("Invalid document type ");
 			}
 		}
@@ -191,12 +170,12 @@ public class TradeLicenseService {
 
 		Long subCategoryId = tradeLicense.getSubCategoryId();
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
-		StringBuffer supportingDocumentURI = new StringBuffer();
-		supportingDocumentURI.append(propertiesManager.getTradeLicenseMasterServiceHostName())
+		StringBuffer subCategoryURI = new StringBuffer();
+		subCategoryURI.append(propertiesManager.getTradeLicenseMasterServiceHostName())
 				.append(propertiesManager.getTradeLicenseMasterServiceBasePath())
 				.append(propertiesManager.getCategoryServiceSearchPath());
 
-		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
+		URI uri = UriComponentsBuilder.fromUriString(subCategoryURI.toString())
 				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("ids", Long.valueOf(subCategoryId))
 				.queryParam("type", "subCategory").build(true).encode().toUri();
 
@@ -208,8 +187,57 @@ public class TradeLicenseService {
 		} catch (Exception e) {
 			log.error("Error while connecting to the sub category end point");
 		}
-		if (categoryResponse == null || categoryResponse.getCategories().size() == 0) {
+		if (categoryResponse == null || categoryResponse.getCategories() == null
+				|| categoryResponse.getCategories().size() == 0) {
 			throw new InvalidInputException("Invalid sub category type ");
+		}
+	}
+
+	private void validateTradeUom(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+
+		Long uomId = tradeLicense.getUomId();
+		Long subCategoryId = tradeLicense.getSubCategoryId();
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
+		StringBuffer subCategoryURI = new StringBuffer();
+		subCategoryURI.append(propertiesManager.getTradeLicenseMasterServiceHostName())
+				.append(propertiesManager.getTradeLicenseMasterServiceBasePath())
+				.append(propertiesManager.getCategoryServiceSearchPath());
+
+		URI uri = UriComponentsBuilder.fromUriString(subCategoryURI.toString())
+				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("type", "subCategory")
+				.queryParam("ids", Long.valueOf(subCategoryId))
+				.queryParam("businessNature", tradeLicense.getTradeType()).build(true).encode().toUri();
+
+		CategoryResponse categoryResponse = null;
+		try {
+
+			categoryResponse = restTemplate.postForObject(uri, tlMasterRequestInfoWrapper, CategoryResponse.class);
+
+		} catch (Exception e) {
+			log.error("Error while connecting to the sub category end point");
+		}
+		if (categoryResponse == null || categoryResponse.getCategories() == null
+				|| categoryResponse.getCategories().size() == 0) {
+
+			throw new InvalidInputException("Invalid Uom");
+		} else {
+
+			for (Category category : categoryResponse.getCategories()) {
+
+				if (category.getDetails() == null && category.getDetails().size() == 0) {
+					throw new InvalidInputException("Invalid Uom");
+				} else {
+					Boolean isExists = false;
+					for (CategoryDetail categoryDetail : category.getDetails()) {
+						if (categoryDetail.getUomId() == uomId) {
+							isExists = true;
+						}
+					}
+					if (!isExists) {
+						throw new InvalidInputException("Invalid Uom");
+					}
+				}
+			}
 		}
 	}
 
@@ -217,12 +245,12 @@ public class TradeLicenseService {
 
 		Long categoryId = tradeLicense.getCategoryId();
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
-		StringBuffer supportingDocumentURI = new StringBuffer();
-		supportingDocumentURI.append(propertiesManager.getTradeLicenseMasterServiceHostName())
+		StringBuffer categoryURI = new StringBuffer();
+		categoryURI.append(propertiesManager.getTradeLicenseMasterServiceHostName())
 				.append(propertiesManager.getTradeLicenseMasterServiceBasePath())
 				.append(propertiesManager.getCategoryServiceSearchPath());
 
-		URI uri = UriComponentsBuilder.fromUriString(supportingDocumentURI.toString())
+		URI uri = UriComponentsBuilder.fromUriString(categoryURI.toString())
 				.queryParam("tenantId", tradeLicense.getTenantId()).queryParam("ids", Long.valueOf(categoryId))
 				.build(true).encode().toUri();
 
@@ -234,7 +262,8 @@ public class TradeLicenseService {
 		} catch (Exception e) {
 			log.error("Error while connecting to the category end point");
 		}
-		if (categoryResponse == null || categoryResponse.getCategories().size() == 0) {
+		if (categoryResponse == null || categoryResponse.getCategories() == null
+				|| categoryResponse.getCategories().size() == 0) {
 			throw new InvalidInputException("Invalid category type ");
 		}
 	}
@@ -252,15 +281,16 @@ public class TradeLicenseService {
 				.queryParam("boundaryIds", revenueWardId).queryParam("tenantId", tradeLicense.getTenantId()).build(true)
 				.encode().toUri();
 
-		Object locationObj = null;
+		BoundaryResponse boundaryResponse = null;
 		try {
 
-			locationObj = restTemplate.postForObject(uri, requestInfoWrapper, Object.class);
+			boundaryResponse = restTemplate.postForObject(uri, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
 			log.error("Error while connecting to the location end point");
 		}
-		if (locationObj == null) {
+		if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
+				|| boundaryResponse.getBoundarys().size() == 0) {
 			throw new InvalidInputException("Invalid location ward ");
 		}
 	}
@@ -278,17 +308,18 @@ public class TradeLicenseService {
 				.queryParam("boundaryIds", localityId).queryParam("tenantId", tradeLicense.getTenantId()).build(true)
 				.encode().toUri();
 
-		Object locationObj = null;
+		BoundaryResponse boundaryResponse = null;
 
 		try {
 
-			locationObj = restTemplate.postForObject(uri, requestInfoWrapper, Object.class);
+			boundaryResponse = restTemplate.postForObject(uri, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
-			log.error("Error while connecting to the location ward end point");
+			log.error("Error while connecting to the location end point");
 		}
-		if (locationObj == null) {
-			throw new InvalidInputException("Invalid location ");
+		if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
+				|| boundaryResponse.getBoundarys().size() == 0) {
+			throw new InvalidInputException("Invalid trade locality ");
 		}
 	}
 
@@ -344,7 +375,7 @@ public class TradeLicenseService {
 		TlMasterRequestInfo tlMasterRequestInfo = new TlMasterRequestInfo();
 		ModelMapper mapper = new ModelMapper();
 		mapper.map(requestInfoWrapper.getRequestInfo(), tlMasterRequestInfo);
-		tlMasterRequestInfo.setTs(12345l);
+		tlMasterRequestInfo.setTs(new Date().getTime());
 		tlMasterRequestInfoWrapper.setRequestInfo(tlMasterRequestInfo);
 
 		return tlMasterRequestInfoWrapper;

@@ -1,5 +1,7 @@
 package org.egov.property.services;
 
+import org.egov.models.ApartmentRequest;
+import org.egov.models.ApartmentResponse;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.DepreciationRequest;
@@ -478,4 +480,35 @@ public interface Masterservice {
 	 */		
 	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo, String tenantId, String name,		
 			String code, String application, Integer pageSize, Integer offSet) throws Exception;
+	/**
+	 * This will create Apartment Master
+	 * 
+	 * @param tenantId
+	 * @param apartmentRequest
+	 * @return ApartmentResponse
+	 * @throws Exception
+	 */
+	public ApartmentResponse createApartment(String tenantId, ApartmentRequest apartmentRequest) throws Exception;
+	/**
+	 * This will update Apartment Master
+	 * 
+	 * @param apartmentRequest
+	 * @return ApartmentResponse
+	 * @throws Exception
+	 */
+	public ApartmentResponse updateApartment(ApartmentRequest apartmentRequest) throws Exception;
+	/**
+	 * This will search for Apartment Master
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param apartmentCode
+	 * @param apartmentName
+	 * @param pageSize
+	 * @param offSet
+	 * @return ApartmentResponse
+	 * @throws Exception
+	 */
+	public ApartmentResponse searchApartment(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code,
+			Boolean liftFacility, Boolean powerBackUp, Boolean parkingFacility, Integer pageSize, Integer offSet) throws Exception;
 }

@@ -65,6 +65,10 @@ public class PropertyTypePipeSize {
     private Long id;
 
     @NotNull
+    @Size(min = 3, max = 20)
+    private String code;
+    
+    @NotNull
     private Long pipeSizeId;
 
     @NotNull

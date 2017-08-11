@@ -59,10 +59,14 @@ import lombok.ToString;
 @Builder
 public class DocumentTypeApplicationType {
 
-    public static final String SEQ_DOCUMENT_TYPE_APPLICATION_TYPE = "SEQ_DOCUMENT_TYPE_APPLICATION_TYPE";
+    public static final String SEQ_DOCUMENT_TYPE_APPLICATION_TYPE = "seq_egwtr_documenttype_applicationtyp";
 
     @NotNull
     private Long id;
+    
+    @NotNull
+    @Size(min = 3, max = 20)
+    private String code;
 
     @NotNull
     private long documentTypeId;

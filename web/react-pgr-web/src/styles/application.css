@@ -819,7 +819,7 @@ table thead th {
 }
 
 .file-browser{
-	padding: 15px 15px 0 15px;
+	padding: 5px 15px 0 15px;
 }
 
 .file-header{
@@ -831,6 +831,11 @@ table thead th {
 	vertical-align: top;
 	padding-left: 5px;
 	color:#9E9E9E;
+}
+
+.file-header span.errorMsg{
+	padding-left: 0px;
+	font-size: 12px;
 }
 
 .list-remove-button{

@@ -39,6 +39,9 @@
  */
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -66,5 +69,5 @@ public class DonationRequest {
     private RequestInfo requestInfo;
 
     @JsonProperty("Donation")
-    private Donation donation;
+    private List<Donation> donation=new ArrayList<>();
 }

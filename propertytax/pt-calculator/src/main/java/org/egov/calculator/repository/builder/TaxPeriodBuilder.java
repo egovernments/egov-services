@@ -24,7 +24,7 @@ public class TaxPeriodBuilder {
 	public static final String BASE_SEARCH_QUERY = "SELECT * FROM " + ConstantUtility.TAXPERIODS_TABLE_NAME
 			+ " WHERE tenantId =?";
 
-	public static String getSearchQuery(String tenantId, String validDate, String code,
+	public static String getSearchQuery(String tenantId, String validDate, String code, String fromDate, String toDate,
 			List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -35,10 +35,16 @@ public class TaxPeriodBuilder {
 			searchSql.append(" AND code =?");
 			preparedStatementValues.add(code);
 		}
-
-		searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
-		preparedStatementValues.add(validDate);
-
+		
+		if(validDate != null && !validDate.isEmpty()){
+			searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
+			preparedStatementValues.add(validDate);	
+		}
+		
+		searchSql.append(" AND (fromdate::date>= to_date(?,'dd/MM/yyy') And  todate::date<= to_date(?,'dd/MM/yyy'))");
+		preparedStatementValues.add(fromDate);
+		preparedStatementValues.add(toDate);
+		
 		return searchSql.toString();
 	}
 

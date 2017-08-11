@@ -29,7 +29,7 @@ public class TradeLicenseController {
 	@Autowired
 	TradeLicenseService tradeLicenseService;
 
-	@RequestMapping(path = "/_create", method = RequestMethod.POST)
+	@RequestMapping(path = "/license/v1/_create", method = RequestMethod.POST)
 	public TradeLicenseResponse createTradelicense(@RequestBody TradeLicenseRequest tradeLicenseRequest,
 			BindingResult errors) throws Exception {
 
@@ -84,7 +84,7 @@ public class TradeLicenseController {
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 
-	@RequestMapping(path = "/_search", method = RequestMethod.POST)
+	@RequestMapping(path = "/license/v1/_search", method = RequestMethod.POST)
 	public TradeLicenseResponse createTradelicense(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId,
 			@RequestParam(required = false) Integer pageSize,

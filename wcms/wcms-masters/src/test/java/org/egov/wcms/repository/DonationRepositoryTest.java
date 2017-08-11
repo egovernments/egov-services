@@ -64,6 +64,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DonationRepositoryTest {
@@ -82,6 +83,9 @@ public class DonationRepositoryTest {
 
     @Mock
     private RestWaterExternalMasterService restExternalMasterService;
+    
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Test
     public void test_Should_Create_Donation_Valid() {
@@ -93,7 +97,7 @@ public class DonationRepositoryTest {
     @Test
     public void test_Should_Create_Donation_Invalid() {
         final DonationRequest donationRequest = getDonationRequest();
-        final Donation donation = donationRequest.getDonation();
+        final List<Donation> donation = donationRequest.getDonation();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(!donation.equals(donationRepository.persistDonationDetails(donationRequest)));
     }
@@ -127,22 +131,16 @@ public class DonationRepositoryTest {
 
     private DonationRequest getDonationRequest() {
         final DonationRequest donationReq = new DonationRequest();
-        final Donation donation = new Donation();
-        donation.setCategoryTypeId(1L);
-        donation.setPropertyTypeId("2");
-        donation.setUsageTypeId("3");
-        donation.setMaxPipeSizeId(2L);
-        donation.setMinPipeSizeId(2L);
-        donation.setFromDate(new Date());
-        donation.setToDate(new Date());
-
-        donation.setActive(true);
+        final List<Donation> donationList =new ArrayList<>();
+       
+        donationList.add(getDonation());
+       
         final RequestInfo requestInfo = new RequestInfo();
         final User newUser = new User();
         newUser.setId(2L);
         requestInfo.setUserInfo(newUser);
         donationReq.setRequestInfo(requestInfo);
-        donationReq.setDonation(donation);
+        donationReq.setDonation(donationList);
         return donationReq;
     }
 
@@ -154,20 +152,10 @@ public class DonationRepositoryTest {
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final Donation donation = new Donation();
-        final AuditDetails auditDetails = new AuditDetails();
-        donation.setAuditDetails(auditDetails);
-        donation.setActive(true);
-        donation.setCategoryTypeId(2L);
-        donation.setPropertyTypeId("2");
-        donation.setUsageTypeId("2");
-        donation.setFromDate(new Date());
-        donation.setToDate(new Date());
-        donation.setMaxPipeSizeId(2L);
-        donation.setMinPipeSizeId(2L);
-        donation.getAuditDetails().setCreatedBy(1L);
+        final List<Donation> donationList =new ArrayList<>();
+        donationList.add(getDonation());
         donationRequest.setRequestInfo(requestInfo);
-        donationRequest.setDonation(donation);
+        donationRequest.setDonation(donationList);
 
         assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
 
@@ -177,8 +165,23 @@ public class DonationRepositoryTest {
     public void test_throwException_Modify_Donation() throws Exception {
         final DonationRequest donationRequest = new DonationRequest();
         final RequestInfo requestInfo = new RequestInfo();
+        final List<Donation> donationList = new ArrayList<>();
+        donationList.add(getDonation());
+        donationRequest.setRequestInfo(requestInfo);
+        donationRequest.setDonation(donationList);
+
+        assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
+
+    }
+    
+    private Donation getDonation()
+    {
         final Donation donation = new Donation();
+        final AuditDetails auditDetails = new AuditDetails();
+        donation.setAuditDetails(auditDetails);
+        donation.getAuditDetails().setCreatedBy(1L);
         donation.setActive(true);
+        donation.setCode("2");
         donation.getAuditDetails().setCreatedBy(1L);
         donation.setCategoryTypeId(2L);
         donation.setPropertyTypeId("2");
@@ -187,12 +190,7 @@ public class DonationRepositoryTest {
         donation.setToDate(new Date());
         donation.setMaxPipeSizeId(2L);
         donation.setMinPipeSizeId(2L);
-
-        donationRequest.setRequestInfo(requestInfo);
-        donationRequest.setDonation(donation);
-
-        assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
-
+        return donation;
     }
 
 }

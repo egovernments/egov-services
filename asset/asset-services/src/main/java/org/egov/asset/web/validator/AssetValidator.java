@@ -68,13 +68,19 @@ public class AssetValidator {
 
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
-        if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null
+        final Asset asset = assetRequest.getAsset();
+        if (asset.getEnableYearWiseDepreciation() != null
                 && AssetCategoryType.LAND.compareTo(assetCategory.getAssetCategoryType()) == 0)
-            assetRequest.getAsset().setDepreciationRate(Double.valueOf("0.0"));
+            asset.setDepreciationRate(Double.valueOf("0.0"));
         else
-            validateYearWiseDepreciationRate(assetRequest.getAsset());
-        // findAsset(assetRequest); FIXME not need as per elzan remove the full
-        // code later
+            validateYearWiseDepreciationRate(asset);
+        if (Status.CAPITALIZED.toString().equals(asset.getStatus())) {
+            final BigDecimal grossValue = asset.getGrossValue();
+            if (grossValue == null)
+                throw new RuntimeException("Asset Gross Value can not be null.");
+            else if (grossValue.compareTo(BigDecimal.ONE) < 0)
+                throw new RuntimeException("Asset Gross Value can not be less than 1.");
+        }
     }
 
     public void validateYearWiseDepreciationRate(final Asset asset) {
@@ -269,17 +275,18 @@ public class AssetValidator {
         if (revaluation.getFunction() == null)
             throw new RuntimeException("Function from financials is necessary for asset revaluation");
 
-         BigDecimal assetCurrentAmount = null;
-         Set<Long> ids = new HashSet<>();
-         ids.add(revaluation.getAssetId());
-         List<AssetCurrentValue> assetCurrentValues = currentValueService.getCurrentValues(ids,revaluation.getTenantId(),
-        		 revaluationRequest.getRequestInfo()).getAssetCurrentValues();
-         if(!assetCurrentValues.isEmpty())
-        	 assetCurrentAmount = assetCurrentValues.get(0).getCurrentAmount();
-         else if(asset.getAccumulatedDepreciation()!=null)
-        	 assetCurrentAmount = asset.getGrossValue().subtract(asset.getAccumulatedDepreciation());
-         else 
-        	 assetCurrentAmount = asset.getGrossValue();
+        BigDecimal assetCurrentAmount = null;
+        final Set<Long> ids = new HashSet<>();
+        ids.add(revaluation.getAssetId());
+        final List<AssetCurrentValue> assetCurrentValues = currentValueService
+                .getCurrentValues(ids, revaluation.getTenantId(), revaluationRequest.getRequestInfo())
+                .getAssetCurrentValues();
+        if (!assetCurrentValues.isEmpty())
+            assetCurrentAmount = assetCurrentValues.get(0).getCurrentAmount();
+        else if (asset.getAccumulatedDepreciation() != null)
+            assetCurrentAmount = asset.getGrossValue().subtract(asset.getAccumulatedDepreciation());
+        else
+            assetCurrentAmount = asset.getGrossValue();
 
         log.debug("Asset Current Value :: " + assetCurrentAmount);
 

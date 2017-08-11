@@ -129,7 +129,13 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name"
+              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name",
+							"autoCompleteDependancy": {
+								"autoCompleteUrl": "/egf-masters/chartofaccounts/_search?id={value}",
+								"autoFillFields": {
+									"BusinessDetails[0].accountDetails[0].chartOfAccounts": "chartOfAccounts[0].glcode"
+								 }
+							 }
             },
 						{
 							"name": "AccountCode",
@@ -138,7 +144,7 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
-							"isDisabled": false,
+							"isDisabled": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -332,19 +338,16 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name"
+              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name",
+							"depedants":[{
+									"jsonPath":"BusinessDetails[0].accountDetails[0].chartOfAccounts",
+									"type":"textField",
+									"rg":"",
+									"isRequired": false,
+									"requiredErrMsg": "",
+									"patternErrMsg": ""
+								}]
             },
-						{
-							"name": "AccountCode",
-              "jsonPath": "BusinessDetails[0].accountDetails[0].chartOfAccounts",
-							"label": "wc.create.groups.fields.accountCode",
-							"pattern": "",
-							"type": "number",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
 						{
 							"name": "Amount",
 							"jsonPath": "BusinessDetails[0].accountDetails[0].amount",
@@ -493,7 +496,13 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name"
+              "url":"egf-masters/chartofaccounts/_search?|$..id|$..name",
+							"autoCompleteDependancy": {
+								"autoCompleteUrl": "/egf-masters/chartofaccounts/_search?id={value}",
+								"autoFillFields": {
+									"BusinessDetails[0].accountDetails[0].chartOfAccounts": "chartOfAccounts[0].glcode"
+								 }
+							 }
             },
 						{
 							"name": "AccountCode",
@@ -502,7 +511,7 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
-							"isDisabled": false,
+							"isDisabled": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},

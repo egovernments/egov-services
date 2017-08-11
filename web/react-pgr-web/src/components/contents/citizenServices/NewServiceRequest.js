@@ -17,10 +17,8 @@ import Fields from '../../common/Fields';
 import Api from '../../../api/api';
 import {translate, validate_fileupload} from '../../common/common';
 import FormSection from './FormSection';
-
-const STATUS_NEW = "DSNEW";
-const FILES_MODULE_TAG = "citizenservices";
-const CITIZEN_SERVICES_KEYWORD = "Deliverable_Service";
+import _ from "lodash";
+const constants = require('../../common/constants');
 
 class NewServiceRequest extends Component{
 
@@ -31,7 +29,6 @@ class NewServiceRequest extends Component{
         ack:"",
         openDialog:false
       }
-
     }
 
     handleOpen = () => {
@@ -169,7 +166,7 @@ class NewServiceRequest extends Component{
       this.props.setLoadingStatus('loading');
 
       var _this=this;
-      Api.commonApiPost("/pgr-master/service/v2/_search",{serviceCode : this.props.match.params.serviceCode, keywords:CITIZEN_SERVICES_KEYWORD}).then(function(response)
+      Api.commonApiPost("/pgr-master/service/v2/_search",{serviceCode : this.props.match.params.serviceCode, keywords:constants.CITIZEN_SERVICES_KEYWORD}).then(function(response)
       {
         _this.props.setLoadingStatus('hide');
         _this.fieldGrouping(response[0]);
@@ -181,7 +178,7 @@ class NewServiceRequest extends Component{
 
     getAttribValuesFromFields = (form)=>{
       let attribValues=[];
-      attribValues.push({key:"systemStatus", name:STATUS_NEW});
+      attribValues.push({key:"systemStatus", name:constants.CITIZEN_SERVICE_STATUS_NEW});
       Object.keys(this.props.form).map((key)=>{
         var name=this.props.form[key];
         if(name instanceof Array){
@@ -241,7 +238,7 @@ class NewServiceRequest extends Component{
       var _this=this;
       let formData = new FormData();
       formData.append("tenantId", tenantId);
-      formData.append("module", FILES_MODULE_TAG);
+      formData.append("module", constants.CITIZEN_SERVICE_FILE_TAG);
       files.map((field)=>{
           var fileAttribValue={key:field.code, name:""};
           field.files.map((file)=>{

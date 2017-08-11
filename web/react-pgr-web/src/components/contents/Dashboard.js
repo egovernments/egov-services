@@ -18,13 +18,12 @@ $.DataTable = require('datatables.net');
 const dt = require('datatables.net-bs');
 
 const buttons = require('datatables.net-buttons-bs');
+const constants = require('../common/constants');
 
 require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
 require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
-
-const CITIZEN_SERVICES_KEYWORD = "Deliverable_Service";
 
 const styles = {
   headline: {
@@ -82,7 +81,7 @@ class Dashboard extends Component {
     if(currentUser.type=="CITIZEN") {
       Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
-          Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:CITIZEN_SERVICES_KEYWORD},{})
+          Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{})
       ])
       .then((responses)=>{
         //if any error occurs

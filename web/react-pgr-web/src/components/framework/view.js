@@ -20,6 +20,23 @@ class Report extends Component {
     super(props);
   }
 
+  setLabelAndReturnRequired(configObject) {
+    if(configObject && configObject.groups) {
+      for(var i=0;configObject && i<configObject.groups.length; i++) {
+        configObject.groups[i].label = translate(configObject.groups[i].label);
+        for (var j = 0; j < configObject.groups[i].fields.length; j++) {
+              configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+        }
+
+        if(configObject.groups[i].children && configObject.groups[i].children.length) {
+          for(var k=0; k<configObject.groups[i].children.length; k++) {
+            this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
+          }
+        }
+      }
+    }
+  }
+
   setInitialUpdateChildData(form, children) {
     let _form = JSON.parse(JSON.stringify(form));
     for(var i=0; i<children.length; i++) {
@@ -178,6 +195,7 @@ class Report extends Component {
     let hashLocation = window.location.hash;
     let self = this;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);

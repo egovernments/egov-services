@@ -164,7 +164,7 @@ public class GrievanceTypeController {
         addGrievanceCodeNameValidator(serviceTypeRequest, mode);
         addGrievanceNameValidationErrors(serviceTypeRequest);
         addGrievanceNameValidator(serviceTypeRequest, mode);
-        addTeanantIdValidationErrors(serviceTypeRequest);
+        addTenantIdValidationErrors(serviceTypeRequest);
         checkMetadataExists(serviceTypeRequest);
         checkCategorySLAValues(serviceTypeRequest);
         checkServiceCodeExists(serviceTypeRequest);
@@ -173,7 +173,7 @@ public class GrievanceTypeController {
     private void validateUpdateServiceRequest(final ServiceRequest serviceTypeRequest, String mode) {
         addGrievanceNameValidationErrors(serviceTypeRequest);
         addGrievanceNameValidator(serviceTypeRequest, mode);
-        addTeanantIdValidationErrors(serviceTypeRequest);
+        addTenantIdValidationErrors(serviceTypeRequest);
         checkMetadataExists(serviceTypeRequest);
         checkCategorySLAValues(serviceTypeRequest);
     }
@@ -208,7 +208,7 @@ public class GrievanceTypeController {
         }
     }
 
-    private void addTeanantIdValidationErrors(final ServiceRequest serviceTypeRequest) {
+    private void addTenantIdValidationErrors(final ServiceRequest serviceTypeRequest) {
         final GrievanceType grievanceType = serviceTypeRequest.getService();
         if (grievanceType.getTenantId() == null || grievanceType.getTenantId().isEmpty()) {
             grievanceTypeException.put(CODE, PgrMasterConstants.TENANTID_MANDATORY_CODE);

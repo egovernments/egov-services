@@ -1042,7 +1042,7 @@ calcAssessableArea = (e, type) => {
                                             {floorDetails.floors && floorDetails.floors.map(function(i, index){
                                               if(i){
                                                 return (<tr key={index}>
-                                                    <td>{index}</td>
+                                                    <td>{index+1}</td>
                                                     <td>{getNameById(_this.state.floorNumber ,i.floorNo) || 'NA'}</td>
 													<td>{getNameById(_this.state.unitType ,i.unitType)  || 'NA'}</td>
 													<td>{i.flatNo ? i.flatNo : 'NA'}</td>
@@ -1067,8 +1067,6 @@ calcAssessableArea = (e, type) => {
                                                     <td>{i.builtupArea || 'NA'}</td>
                                                     <td>{i.occupancyCertiNumber || 'NA'}</td>
                                                     <td>{i.bpaNo || 'NA'}</td>
-                                                    <td>{i.bpaDate || 'NA'}</td>
-                                                    <td>{i.bpaBuiltupArea || 'NA'}</td>
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
 															if(i.isStructured){

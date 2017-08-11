@@ -163,7 +163,7 @@ public class CategoryServiceTest {
 				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 				categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, name, code, active,
-						type, null, pageSize, offset);
+						type, null, null, pageSize, offset);
 
 				if (categoryResponse.getCategories().size() == 0) {
 					assertTrue(false);
@@ -195,7 +195,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, name, code, active, type, parentId, pageSize, offset);
+					new Integer[] { categoryId.intValue() }, name, code, active, type, null, parentId, pageSize, offset);
 
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
@@ -311,7 +311,7 @@ public class CategoryServiceTest {
 				assertTrue(false);
 			} else {
 				categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, null, null, null,
-						"SUBCATEGORY", null, null, null);
+						"SUBCATEGORY", null, null, null, null);
 
 				if (categoryResponse.getCategories().size() == 0) {
 					assertTrue(false);
@@ -348,7 +348,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
-					subCatName, subCatCode, active, "SUBCATEGORY", null, pageSize, offset);
+					subCatName, subCatCode, active, "SUBCATEGORY", null, null, pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 
@@ -492,7 +492,7 @@ public class CategoryServiceTest {
 
 		try {
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
-					updatedName, null, null, null, null, pageSize, offset);
+					updatedName, null, null, null, null, null, pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
 
@@ -619,7 +619,7 @@ public class CategoryServiceTest {
 		try {
 			categoryConsumer.resetCountDown();
 			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
-					new Integer[] { categoryId.intValue() }, updatedName, updatedCode, active, type, parentId, pageSize,
+					new Integer[] { categoryId.intValue() }, updatedName, updatedCode, active, type, null, parentId, pageSize,
 					offset);
 			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0)

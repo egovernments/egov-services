@@ -44,14 +44,6 @@ class ViewEditServiceGroup extends Component {
     }
 
     componentWillMount() {
-        $('#searchTable').DataTable({
-             dom: 'lBfrtip',
-             buttons: [],
-              bDestroy: true,
-              language: {
-                 "emptyTable": "No Records"
-              }
-        });
     }
 
     componentWillUpdate() {
@@ -68,15 +60,19 @@ class ViewEditServiceGroup extends Component {
     }
 
     componentDidUpdate() {
-      if(this.state.modify)
-        $('#searchTable').DataTable({
+      if(this.state.modify){
+        var t = $('#searchTable').DataTable({
               dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
               buttons: ['excel', 'pdf'],
-              bDestroy: true,
-              language: {
-                 "emptyTable": "No Records"
-              }
+              bDestroy: true
         });
+
+        t.on( 'order.dt search.dt', function () {
+            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+      }
     }
 
     componentDidMount() {

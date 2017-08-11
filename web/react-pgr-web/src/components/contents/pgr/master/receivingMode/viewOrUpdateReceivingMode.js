@@ -43,14 +43,7 @@ class viewOrUpdateReceivingMode extends Component {
     }
 
     componentWillMount() {
-      $('#searchTable').DataTable({
-             dom: 'lBfrtip',
-             buttons: [],
-              bDestroy: true,
-              language: {
-                 "emptyTable": "No Records"
-              }
-        });
+      
     }
 
     componentDidMount() {
@@ -89,14 +82,17 @@ class viewOrUpdateReceivingMode extends Component {
 
     componentDidUpdate() {
       if(this.state.modify) {
-        $('#searchTable').DataTable({
+        var t = $('#searchTable').DataTable({
               dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
               buttons: ['excel', 'pdf'],
-              bDestroy: true,
-              language: {
-                 "emptyTable": "No Records"
-              }
+              bDestroy: true
         });
+
+        t.on( 'order.dt search.dt', function () {
+            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
       }
     }
 
@@ -151,7 +147,7 @@ class viewOrUpdateReceivingMode extends Component {
 												  this.props.history.push(`/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}`);
 											  }
 											}}>
-                                              <td>{i+1}</td>
+                                              <td></td>
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>

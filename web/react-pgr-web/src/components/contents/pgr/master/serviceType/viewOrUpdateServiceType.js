@@ -99,7 +99,7 @@ class viewOrUpdateServiceType extends Component {
     componentDidUpdate() {
       if(this.state.modify)
         $('#searchTable').DataTable({
-             dom : '<"col-md-12"f>rt<"row"><"col-md-5"i><"col-md-4"B><"col-md-3 pull-right"l><"row"><"col-md-12"p>',
+             dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
              buttons: ['excel', 'pdf'],
               bDestroy: true,
               language: {

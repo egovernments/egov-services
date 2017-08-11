@@ -13,17 +13,13 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-
-
-const buttons = require('datatables.net-buttons-bs');
-
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
 const styles = {
@@ -73,8 +69,8 @@ class ViewEditServiceGroup extends Component {
     componentDidUpdate() {
       if(this.state.modify)
         $('#searchTable').DataTable({
-             dom: 'lBfrtip',
-             buttons: [],
+              dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+              buttons: ['excel', 'pdf'],
               bDestroy: true,
               language: {
                  "emptyTable": "No Records"

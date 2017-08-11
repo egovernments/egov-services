@@ -41,6 +41,7 @@
 package org.egov.wcms.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,8 @@ import org.egov.wcms.web.contract.MeterCostReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -63,7 +65,7 @@ public class MeterCostRepository {
 	public static final Logger logger = LoggerFactory.getLogger(MeterCostRepository.class);
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -80,32 +82,39 @@ public class MeterCostRepository {
 	public MeterCostReq persistCreateMeterCost(final MeterCostReq meterCostRequest) {
 		logger.info("MeterCostRequest::" + meterCostRequest);
 		List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
-		List<Object[]> batchArguments = new ArrayList<>();
 		String insertQuery = meterCostQueryBuilder.insertMeterCostQuery();
+		List<Map<String, Object>> batchValues = new ArrayList<>(meterCosts.size());
 		for (MeterCost meterCost : meterCosts) {
-			final Object[] obj = { getNextSequenceForMeterCost("seq_egwtr_meter_cost"), meterCost.getCode(),
-					meterCost.getPipeSizeId(), meterCost.getMeterMake(), meterCost.getAmount(), meterCost.getActive(),
-					Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
-					Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
-					new java.util.Date().getTime(), new java.util.Date().getTime(), meterCost.getTenantId() };
-			batchArguments.add(obj);
+			batchValues.add(new MapSqlParameterSource("code", meterCost.getCode())
+					.addValue("pipesizeid", meterCost.getPipeSizeId()).addValue("metermake", meterCost.getMeterMake())
+					.addValue("amount", meterCost.getAmount()).addValue("active", meterCost.getActive())
+					.addValue("createdby", Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()))
+					.addValue("lastmodifiedby", Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()))
+					.addValue("createddate", new java.util.Date().getTime())
+					.addValue("lastmodifieddate", new java.util.Date().getTime())
+					.addValue("tenantid", meterCost.getTenantId()).getValues());
 		}
-		jdbcTemplate.batchUpdate(insertQuery, batchArguments);
+		namedParameterJdbcTemplate.batchUpdate(insertQuery, batchValues.toArray(new Map[meterCosts.size()]));
 		return meterCostRequest;
 	}
 
 	public MeterCostReq persistUpdateMeterCost(MeterCostReq meterCostRequest) {
 		logger.info("MeterCostRequest::" + meterCostRequest);
 		List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
-		List<Object[]> batchArguments = new ArrayList<>();
 		String updateMeterCostQuery = meterCostQueryBuilder.updateMeterCostQuery();
+		List<Map<String, Object>> batchValues = new ArrayList<>(meterCosts.size());
 		for (MeterCost meterCost : meterCosts) {
-			Object[] obj = { meterCost.getPipeSizeId(), meterCost.getMeterMake(), meterCost.getAmount(),
-					meterCost.getActive(), meterCostRequest.getRequestInfo().getUserInfo().getId(),
-					new java.util.Date().getTime(), meterCost.getCode(), meterCost.getTenantId() };
-			batchArguments.add(obj);
+			batchValues
+					.add(new MapSqlParameterSource("pipesizeid", meterCost.getPipeSizeId())
+							.addValue("metermake", meterCost.getMeterMake()).addValue("amount", meterCost.getAmount())
+							.addValue("active", meterCost.getActive())
+							.addValue("lastmodifiedby",
+									Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()))
+							.addValue("lastmodifieddate", new java.util.Date().getTime())
+							.addValue("code", meterCost.getCode()).addValue("tenantid", meterCost.getTenantId())
+							.getValues());
 		}
-		jdbcTemplate.batchUpdate(updateMeterCostQuery, batchArguments);
+		namedParameterJdbcTemplate.batchUpdate(updateMeterCostQuery, batchValues.toArray(new Map[meterCosts.size()]));
 		return meterCostRequest;
 	}
 
@@ -127,33 +136,29 @@ public class MeterCostRepository {
 		return meterCostRequest.getMeterCost();
 	}
 
-	private Long getNextSequenceForMeterCost(String sequenceName) {
-		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
-	}
-
 	public List<MeterCost> searchMeterCostByCriteria(MeterCostGetRequest meterCostGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<>();
+
+		Map<String, Object> preparedStatementValues = new HashMap<>();
 		String searchQuery = meterCostQueryBuilder.getQuery(meterCostGetRequest, preparedStatementValues);
-		return jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(), meterCostRowMapper);
+		return namedParameterJdbcTemplate.query(searchQuery, preparedStatementValues, meterCostRowMapper);
 
 	}
 
 	public Boolean checkMeterMakeAlreadyExistsInDB(MeterCost meterCost) {
-		String code = meterCost.getCode();
-		String name = meterCost.getMeterMake();
-		String tenantId = meterCost.getTenantId();
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(name);
-		preparedStatementValues.add(tenantId);
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		preparedStatementValues.put("name", meterCost.getMeterMake());
+		preparedStatementValues.put("tenantId", meterCost.getTenantId());
 		final String query;
-		if (code == null)
+		if (meterCost.getCode() == null)
 			query = meterCostQueryBuilder.selectMeterCostByNameAndTenantIdQuery();
 		else {
-			preparedStatementValues.add(code);
+			preparedStatementValues.put("code", meterCost.getCode());
 			query = meterCostQueryBuilder.selectMeterCostByNameTenantIdAndCodeNotInQuery();
 		}
-		final List<Map<String, Object>> meterMake = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+
+		final List<MeterCost> meterMake = namedParameterJdbcTemplate.query(query, preparedStatementValues,
+				meterCostRowMapper);
+
 		if (!meterMake.isEmpty())
 			return false;
 

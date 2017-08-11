@@ -40,9 +40,10 @@
  */
 package org.egov.wcms.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,12 +67,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MeterCostRepositoryTest {
 	@Mock
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Mock
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -104,34 +105,23 @@ public class MeterCostRepositoryTest {
 
 	@Test
 	public void test_should_persist_create_meterCost_to_DB() {
-		when(meterCostQueryBuilder.insertMeterCostQuery()).thenReturn(
-				"INSERT INTO egwtr_metercost(id,code,pipesizeid,metermake,amount,active,createdby,lastmodifiedby,createddate,"
-						+ "lastmodifieddate,tenantid) values " + "(?,?,?,?,?,?,?,?,?,?,?)");
-		when(jdbcTemplate.queryForObject("SELECT nextval('" + "seq_egwtr_meter_cost" + "')", Long.class)).thenReturn(1L,
-				2L);
-		meterCostRepository.persistCreateMeterCost(getMeterCostRequest());
-		verify(jdbcTemplate).batchUpdate(
-				eq("INSERT INTO egwtr_metercost(id,code,pipesizeid,metermake,amount,active,createdby,lastmodifiedby,createddate,"
-						+ "lastmodifieddate,tenantid) values " + "(?,?,?,?,?,?,?,?,?,?,?)"),
-				any(List.class));
+		MeterCostReq meterCostRequest = meterCostRepository.persistCreateMeterCost(getMeterCostRequest());
+		assertThat(meterCostRequest.getMeterCost().size()).isEqualTo(2);
 	}
 
 	@Test
 	public void test_should_update_meterCost_to_DB() {
-		when(meterCostQueryBuilder.updateMeterCostQuery())
-				.thenReturn("Update egwtr_metercost set pipesizeid=?, metermake=?, amount=?, active=?,"
-						+ " lastmodifiedby=?, lastmodifieddate=? where code = ? and tenantId = ?");
-		meterCostRepository.persistUpdateMeterCost(getMeterCostRequestForUpdate());
-		verify(jdbcTemplate)
-				.batchUpdate(
-						eq("Update egwtr_metercost set pipesizeid=?, metermake=?, amount=?, active=?,"
-								+ " lastmodifiedby=?, lastmodifieddate=? where code = ? and tenantId = ?"),
-						any(List.class));
+		MeterCostReq meterCostRequest = meterCostRepository.persistUpdateMeterCost(getMeterCostRequestForUpdate());
+		assertThat(meterCostRequest.getMeterCost().get(0).getMeterMake()).isEqualTo("meterMakeUpdated1");
+		assertThat(meterCostRequest.getMeterCost().get(1).getMeterMake()).isEqualTo("meterMakeUpdated2");
+		assertThat(meterCostRequest.getMeterCost().get(0).getAmount()).isEqualTo(3000);
+		assertThat(meterCostRequest.getMeterCost().get(1).getAmount()).isEqualTo(4000);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test_should_search_meterCost_from_DB() {
-		List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> preparedStatementValues = new HashMap<>();
 		when(meterCostQueryBuilder.getQuery(getMeterCostGetRequest(), preparedStatementValues))
 				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
 						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
@@ -139,71 +129,77 @@ public class MeterCostRepositoryTest {
 						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
 						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc WHERE wmc.tenantId = ? AND "
 						+ "wmc.active = ? AND  wmc.id IN (1, 2)  ORDER BY code desc");
-		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(MeterCostRowMapper.class)))
+		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
 				.thenReturn(getListOfMeterCosts());
 		assertTrue(
 				getListOfMeterCosts().equals(meterCostRepository.searchMeterCostByCriteria(getMeterCostGetRequest())));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test_should_return_false_if__meter_make_exists_in_DB_and_code_is_null() {
-		List<Map<String, Object>> meterCost = new ArrayList<>();
-		Map<String, Object> map = new HashMap<>();
-		map.put("code", "MM");
-		meterCost.add(map);
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add("MeterMake");
-		preparedStatementValues.add("default");
 		when(meterCostQueryBuilder.selectMeterCostByNameAndTenantIdQuery())
-				.thenReturn("select code FROM egwtr_metercost where metermake = ? and tenantId = ?");
-		when(jdbcTemplate.queryForList("select code FROM" + " egwtr_metercost where metermake = ? and tenantId = ?",
-				preparedStatementValues.toArray())).thenReturn(meterCost);
+				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc where wmc.metermake = :name and wmc.tenantId = :tenantId");
+		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+				.thenReturn(getListOfMeterCostFromDB());
 		assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCost()).equals(false));
 	}
 
+	private List<MeterCost> getListOfMeterCostFromDB() {
+		return Arrays.asList(MeterCost.builder().id(2L).meterMake("MeterMake").active(true).amount(3000.0).createdBy(2L)
+				.lastModifiedBy(2L).tenantId("default").build());
+	}
+
+	@SuppressWarnings("unchecked")
 	@Test
-	public void test_should_return_true_if__meter_make_exists_in_DB_and_code_is_null() {
-		List<Map<String, Object>> meterCost = new ArrayList<>();
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add("MeterMake");
-		preparedStatementValues.add("default");
+	public void test_should_return_true_if__meter_make_doesnot_exists_in_DB_and_code_is_null() {
+		List<MeterCost> listOfMeterCosts = new ArrayList<>();
 		when(meterCostQueryBuilder.selectMeterCostByNameAndTenantIdQuery())
-				.thenReturn("select code FROM egwtr_metercost where metermake = ? and tenantId = ?");
-		when(jdbcTemplate.queryForList("select code FROM" + " egwtr_metercost where metermake = ? and tenantId = ?",
-				preparedStatementValues.toArray())).thenReturn(meterCost);
+				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc where wmc.metermake = :name and wmc.tenantId = :tenantId");
+		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+				.thenReturn(listOfMeterCosts);
 		assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCost()).equals(true));
 	}
 
 	@Test
 	public void test_should_return_false_if__meter_make_exists_in_DB_and_code_is_notnull() {
-		List<Map<String, Object>> meterCost = new ArrayList<>();
-		Map<String, Object> map = new HashMap<>();
-		map.put("code", "MM");
-		meterCost.add(map);
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add("MeterMake");
-		preparedStatementValues.add("default");
-		preparedStatementValues.add("MMS");
 		when(meterCostQueryBuilder.selectMeterCostByNameTenantIdAndCodeNotInQuery())
-				.thenReturn("select code from egwtr_metercost where metermake = ? and tenantId = ? and code != ? ");
-		when(jdbcTemplate.queryForList(
-				"select code from egwtr_metercost where metermake = ? and tenantId = ? and code != ? ",
-				preparedStatementValues.toArray())).thenReturn(meterCost);
+				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc"
+						+ " where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code");
+		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+				.thenReturn(getListOfMeterCostsWhenCodeIsNotNull());
 		assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCostIfCodeIsNotNull()).equals(false));
 	}
 
+	private List<MeterCost> getListOfMeterCostsWhenCodeIsNotNull() {
+		return Arrays.asList(MeterCost.builder().id(2L).code("MM").meterMake("MeterMake").active(true).amount(3000.0)
+				.createdBy(2L).lastModifiedBy(2L).tenantId("default").build());
+	}
+
 	@Test
-	public void test_should_return_true_if__meter_make_exists_in_DB_and_code_is_notnull() {
-		List<Map<String, Object>> meterCost = new ArrayList<>();
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add("MeterMake");
-		preparedStatementValues.add("default");
-		preparedStatementValues.add("MMS");
+	public void test_should_return_true_if__meter_make_doesnot_exists_in_DB_and_code_is_notnull() {
+		List<MeterCost> listOfMeterCosts = new ArrayList<>();
 		when(meterCostQueryBuilder.selectMeterCostByNameTenantIdAndCodeNotInQuery())
-				.thenReturn("select code from egwtr_metercost where metermake = ? and tenantId = ? and code != ? ");
-		when(jdbcTemplate.queryForList(
-				"select code from egwtr_metercost where metermake = ? and tenantId = ? and code != ? ",
-				preparedStatementValues.toArray())).thenReturn(meterCost);
+				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc"
+						+ " where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code ");
+		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+				.thenReturn(listOfMeterCosts);
 		assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCostIfCodeIsNotNull()).equals(true));
 	}
 

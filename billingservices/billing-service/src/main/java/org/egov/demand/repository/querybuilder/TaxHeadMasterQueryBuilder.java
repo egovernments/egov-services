@@ -87,9 +87,9 @@ public class TaxHeadMasterQueryBuilder {
 		}
 		
 		if (searchTaxHead.getValidFrom() != null && searchTaxHead.getValidTill() != null) {
-			selectQuery.append(" AND taxhead.validfrom >= ?");
+			selectQuery.append(" AND taxhead.validfrom <= ?");
 			preparedStatementValues.add(searchTaxHead.getValidFrom());
-			selectQuery.append(" AND taxhead.validtill <= ?");
+			selectQuery.append(" AND taxhead.validtill >= ?");
 			preparedStatementValues.add(searchTaxHead.getValidTill());
 		}
 	}

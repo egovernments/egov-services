@@ -1,16 +1,27 @@
 {
 	"variables": [],
 	"info": {
-		"name": "Tl_Services",
-		"_postman_id": "c7ee2cf6-a12c-0463-f8c3-45e48cd45b8e",
+		"name": "Legacy Trade License",
+		"_postman_id": "a49495e1-1ae2-6d00-2f01-21c6da3e560b",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Tl_Services_Create",
+			"name": "Legacy trade license create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
 			"request": {
-				"url": "http://localhost:8080/tlservices/v1/tradelicense/_create",
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/v1/_create",
 				"method": "POST",
 				"header": [
 					{
@@ -21,26 +32,37 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n \"RequestInfo\": {\n \"action\": \"create\",\n\"did\": \"1\",\n\"msgId\": \"20170310130900\",\n\"requesterId\": \"yosadhara\",\n\"authToken\": \"2c099ea9-9919-47a2-b173-8b498aa07923\",\n\"apiId\": \"1\",\n\"ver\": \"1.0\",\n\"ts\": 1,\n\"key\": \"abcdkey\",\n\"tenantId\": \"default\"\n},\n  \"licesnses\": [\n  {\n  \"tenantId\": \"pavantest\",\n  \"applicationType\":\"NEW\",\n  \"applicationNumber\":\"8908799\",\n  \"licenseNumber\":\"uikjdj9008\",\n  \"oldLicenseNumber\":\"oo8879967\",\n  \"applicationDate\": null,\n  \"adhaarNumber\":\"081208020070\",\n  \"mobileNumber\":\"9987876565\",\n  \"ownerName\":\"Shubham\",\n  \"fatherSpouseName\":\"hhhdsksk\",\n  \"emailId\":\"pshubhamtechi@gmail.com\",\n  \"ownerAddress\":\"uuhkdsh\",\n  \"propertyAssesmentNo\":\"bjajdgjdg\",\n  \"localityId\":\"797799\",\n  \"wardId\":\"97927572\",\n  \"tradeAddress\":\"984789\",\n  \"ownerShipType\":\"RENTED\",\n  \"tradeTitle\":\"juice\",\n  \"tradeType\":\"PERMENANT\",\n  \"categoryId\":null,\n  \"subCategoryId\":null,\n  \"uomId\":null,\n  \"uomValue\":null,\n  \"remarks\":null,\n  \"tradeCommencementDate\":null,\n  \"agrementDate\":null,\n  \"agrementNo\":null,\n  \"isLegacy\":false,\n  \"active\":true,\n  \"expiryDate\":null,\n\"feeDetails\":null,\n\"supportDocuments\":null,\n\"auditDetails\":null\n\n  \n  \n }\n]\n\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"b87ab2e3-9c71-43b6-b57d-c3bed99f26fc\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licesnses\": [\r\n  {\r\n  \"tenantId\": \"default\",\r\n  \"applicationType\":\"NEW\",\r\n  \"applicationNumber\":\"8908799\",\r\n  \"licenseNumber\":\"12345\",\r\n  \"oldLicenseNumber\":\"oo8879967\",\r\n  \"applicationDate\": \"10/07/2017\",\r\n  \"adhaarNumber\":\"081208020070\",\r\n  \"mobileNumber\":\"9987876565\",\r\n  \"ownerName\":\"Shubham\",\r\n  \"fatherSpouseName\":\"hhhdsksk\",\r\n  \"emailId\":\"pshubhamtechi@gmail.com\",\r\n  \"ownerAddress\":\"uuhkdsh\",\r\n  \"propertyAssesmentNo\":\"bjajdgjdg\",\r\n  \"localityId\":\"20\",\r\n  \"revenueWardId\":\"7\",\r\n  \"tradeAddress\":\"984789\",\r\n  \"ownerShipType\":\"RENTED\",\r\n  \"tradeTitle\":\"juice\",\r\n  \"tradeType\":\"PERMANENT\",\r\n  \"categoryId\":1,\r\n  \"subCategoryId\":2,\r\n  \"uomId\":1,\r\n  \"quantity\":10,\r\n  \"remarks\":null,\r\n  \"tradeCommencementDate\":\"10/07/2017\",\r\n  \"agreementDate\":\"10/07/2017\",\r\n  \"agreementNo\":null,\r\n  \"isLegacy\":true,\r\n  \"active\":true,\r\n  \"expiryDate\":\"10/07/2017\",\r\n\"feeDetails\":[{\r\n\t\"id\":null,\r\n\"licenseId\":null,\r\n\"financialYear\":\"2013-14\",\r\n\"amount\":100,\r\n\"paid\":true\r\n}],\r\n\"supportDocuments\":[{\r\n\t\"id\":null,\r\n\"licenseId\":null,\r\n\"documentTypeId\":\"1\",\r\n\"fileStoreId\":1,\r\n\"comments\":\"hello\"\r\n}],\r\n\"auditDetails\":null\r\n\r\n  \r\n  \r\n }\r\n]\r\n\r\n}"
 				},
 				"description": ""
 			},
 			"response": []
 		},
 		{
-			"name": "Tl_Services_Search",
+			"name": "Legacy trade license search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tlservices/v1/tradelicense/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8080",
 					"path": [
-						"tlservices",
+						"tl-services",
 						"v1",
-						"tradelicense",
 						"_search"
 					],
 					"query": [
@@ -63,7 +85,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n \"RequestInfo\": {\n \"action\": \"create\",\n\"did\": \"1\",\n\"msgId\": \"20170310130900\",\n\"requesterId\": \"yosadhara\",\n\"authToken\": \"2c099ea9-9919-47a2-b173-8b498aa07923\",\n\"apiId\": \"1\",\n\"ver\": \"1.0\",\n\"ts\": 1,\n\"key\": \"abcdkey\",\n\"tenantId\": \"default\"\n}\n\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"b87ab2e3-9c71-43b6-b57d-c3bed99f26fc\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licesnses\": [\r\n  {\r\n  \"tenantId\": \"default\",\r\n  \"applicationType\":\"NEW\",\r\n  \"applicationNumber\":\"8908799\",\r\n  \"licenseNumber\":\"12345\",\r\n  \"oldLicenseNumber\":\"oo8879967\",\r\n  \"applicationDate\": \"10/07/2017\",\r\n  \"adhaarNumber\":\"081208020070\",\r\n  \"mobileNumber\":\"9987876565\",\r\n  \"ownerName\":\"Shubham\",\r\n  \"fatherSpouseName\":\"hhhdsksk\",\r\n  \"emailId\":\"pshubhamtechi@gmail.com\",\r\n  \"ownerAddress\":\"uuhkdsh\",\r\n  \"propertyAssesmentNo\":\"bjajdgjdg\",\r\n  \"localityId\":\"20\",\r\n  \"revenueWardId\":\"7\",\r\n  \"tradeAddress\":\"984789\",\r\n  \"ownerShipType\":\"RENTED\",\r\n  \"tradeTitle\":\"juice\",\r\n  \"tradeType\":\"PERMANENT\",\r\n  \"categoryId\":1,\r\n  \"subCategoryId\":2,\r\n  \"uomId\":1,\r\n  \"quantity\":10,\r\n  \"remarks\":null,\r\n  \"tradeCommencementDate\":\"10/07/2017\",\r\n  \"agreementDate\":\"10/07/2017\",\r\n  \"agreementNo\":null,\r\n  \"isLegacy\":true,\r\n  \"active\":true,\r\n  \"expiryDate\":\"10/07/2017\",\r\n\"feeDetails\":[{\r\n\t\"id\":null,\r\n\"licenseId\":null,\r\n\"financialYear\":\"2013-14\",\r\n\"amount\":100,\r\n\"paid\":true\r\n}],\r\n\"supportDocuments\":[{\r\n\t\"id\":null,\r\n\"licenseId\":null,\r\n\"documentTypeId\":\"1\",\r\n\"fileStoreId\":1,\r\n\"comments\":\"hello\"\r\n}],\r\n\"auditDetails\":null\r\n\r\n  \r\n  \r\n }\r\n]\r\n\r\n}"
 				},
 				"description": ""
 			},

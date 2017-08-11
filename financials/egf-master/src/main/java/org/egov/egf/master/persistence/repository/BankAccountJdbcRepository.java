@@ -67,6 +67,13 @@ public class BankAccountJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (bankAccountSearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", bankAccountSearchEntity.getTenantId());
+                }
 		if (bankAccountSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

@@ -67,6 +67,13 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+	        if (supplierSearchEntity.getTenantId() != null) {
+	                if (params.length() > 0) {
+	                    params.append(" and ");
+	                }
+	                params.append("tenantId =:tenantId");
+	                paramValues.put("tenantId", supplierSearchEntity.getTenantId());
+	        }
 		if (supplierSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

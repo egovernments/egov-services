@@ -21,7 +21,7 @@ public class AttributeDefinition {
     private String dataType;
     private char required;
     private String dataTypeDescription;
-    private int order;
+    private int ordernum;
     private String description;
     private String code;
     private String serviceCode;
@@ -40,7 +40,7 @@ public class AttributeDefinition {
                 .dataType(dataType)
                 .required(isRequired())
                 .dataTypeDescription(dataTypeDescription)
-                .order(order)
+                .order(ordernum)
                 .description(description)
                 .url(url)
                 .groupCode(groupCode)
@@ -58,7 +58,7 @@ public class AttributeDefinition {
     }
 
     private boolean isReadOnly() {
-        return variable == NO;
+        return variable == YES;
     }
 
     private List mapToDomainValueDefinitions(){

@@ -89,7 +89,7 @@ class UiSelectField extends Component {
 			case 'google':
 				// let {dropDownData}=this.state;
 				return (
-					<div style={{"display": "flex", "flex-direction": "column-reverse"}}>
+
 						<SelectField
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
@@ -107,7 +107,7 @@ class UiSelectField extends Component {
 					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
 					            ))}
 			            </SelectField>
-		            </div>
+
 				);
 		}
 	}
@@ -129,3 +129,6 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(UiSelectField);
+
+// <div style={{"display": "flex", "flexDirection": "column-reverse"}}>
+//</div>

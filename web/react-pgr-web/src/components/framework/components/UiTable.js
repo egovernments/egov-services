@@ -4,17 +4,27 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {translate} from '../../common/common';
 import {connect} from 'react-redux';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
+// const $ = require('jquery');
+// $.DataTable = require('datatables.net');
+// const dt = require('datatables.net-bs');
+//
+// const buttons = require('datatables.net-buttons-bs');
+//
+// require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
+// require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
+// require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
+// require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
-const buttons = require('datatables.net-buttons-bs');
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import 'datatables.net-buttons/js/buttons.flash.js';
+import 'datatables.net-buttons-bs';
 
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
-
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 class UiTable extends Component {
 	constructor(props) {
@@ -23,7 +33,7 @@ class UiTable extends Component {
 
    	componentWillMount() {
 	    $('#searchTable').DataTable({
-	       dom: 'lBfrtip',
+	       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
 	       buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
 	       bDestroy: true,
 	       language: {
@@ -46,7 +56,7 @@ class UiTable extends Component {
 
 	componentDidUpdate() {
 	    $('#searchTable').DataTable({
-	         dom: 'lBfrtip',
+	         dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
 	         buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
 	          ordering: false,
 	          bDestroy: true,
@@ -69,7 +79,7 @@ class UiTable extends Component {
 		            <tr>
 		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
 		                return (
-		                  <th key={i}>{translate(item.label)}</th>
+		                  <th  key={i}>{translate(item.label)}</th>
 		                )
 		              })}
 
@@ -83,7 +93,7 @@ class UiTable extends Component {
 		                      {
 		                      	item.map((item2, i2)=>{
 			                        return (
-			                          <td key={i2}>{item2?item2:""}</td>
+			                          <td  key={i2}>{item2?item2:""}</td>
 			                        )
 		                      })}
 		                    </tr>

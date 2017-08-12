@@ -76,7 +76,7 @@ var dat = {
 							"jsonPath": "fromDate",
 							"label": "collection.create.fromDate",
 							"pattern": "",
-							"type": "datePicker",
+							"type": "date",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -87,7 +87,7 @@ var dat = {
 							"jsonPath": "toDate",
 							"label": "collection.create.toDate",
 							"pattern": "",
-							"type": "datePicker",
+							"type": "date",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -126,7 +126,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"url":"collection-services/receipts/_status?tenantId=default|$.status.*|$.status.*",
+							"url":"collection-services/receipts/_status?tenantId=default|$..key|$..object",
 							"defaultValue":[]
 						},
 						{

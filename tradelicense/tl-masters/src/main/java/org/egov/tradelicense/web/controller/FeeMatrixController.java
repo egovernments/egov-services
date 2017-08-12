@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/feematrix")
+@RequestMapping(path = "/feematrix/v1")
 public class FeeMatrixController {
 
 	@Autowired

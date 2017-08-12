@@ -114,7 +114,7 @@ const RightIcon = (props) => {
           props.setRoute("/");
       }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
-
+      <span style={{color:"white"}}>{window.localStorage.getItem("userRequest")?JSON.parse(window.localStorage.getItem("userRequest")).name:""}</span>
       <IconMenu
             iconButtonElement={<IconButton style={{color:"white"}}><i className="material-icons">more_vert</i></IconButton>}
             anchorOrigin={{horizontal: 'left', vertical: 'top'}}

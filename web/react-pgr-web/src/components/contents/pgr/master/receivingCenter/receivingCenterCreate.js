@@ -139,7 +139,7 @@ class CreateReceivingCenter extends Component {
         <div className="createReceivingCenter">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.props.match.params.id ? 'Update Receiving Center' : 'Create Receiving Center'}< /div>} />
+                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.props.match.params.id ? translate('pgr.lbl.update') : translate('pgr.lbl.create')} {translate('pgr.lbl.receivingcenter')}< /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
@@ -233,7 +233,7 @@ class CreateReceivingCenter extends Component {
               </div>
           </form>
           <Dialog
-               title="Receiving Center Saved Successfully"
+               title={translate("pgr.lbl.success")}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
@@ -243,7 +243,7 @@ class CreateReceivingCenter extends Component {
                open={this.state.open}
                onRequestClose={this.handleClose}
              >
-              Receiving Center Saved Successfully
+              {translate('pgr.lbl.receivingcenter')} {this.props.match.params.id ? "updated" : "created"} successfully.
          </Dialog>
         </div>)
     }

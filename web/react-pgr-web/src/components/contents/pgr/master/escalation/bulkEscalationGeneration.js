@@ -174,7 +174,8 @@ class BulkEscalationGeneration extends Component {
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
 		setLoadingStatus("hide");
-		toggleDailogAndSetText(true, "To Position Updated Successfully");
+    let msg = `${translate('pgr.lbl.toposition')} Updated Successfully`;
+		toggleDailogAndSetText(true, msg);
           let query = {
 			fromPosition:bulkEscalationGeneration.fromPosition,
 			serviceCode : bulkEscalationGeneration.serviceCode

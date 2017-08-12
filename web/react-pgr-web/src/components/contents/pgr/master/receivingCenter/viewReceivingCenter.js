@@ -80,7 +80,7 @@ class ViewReceivingCenter extends Component {
           <Grid style={{width:'100%'}}>
             <Card style={{margin:'15px 0'}}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-                 Receiving Center
+                 {translate('pgr.lbl.receivingcenter')}
                < /div>}/>
                <CardText style={{padding:'8px 16px 0'}}>
                  <Row style={styles.addBorderBottom}>

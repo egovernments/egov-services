@@ -615,7 +615,28 @@ var localationData = {
   "tl.create.licenses.groups.FeeDetails.Amount": "Amount",
   "tl.create.licenses.groups.FeeDetails.IsPaid": "Is Paid",
   "tl.create.licenses.groups.SupportingDocuments": "Supporting Documents",
-  "wc.create.groups.applicationParticular.title":"Application Particular"
+  "wc.create.groups.applicationParticular.title":"Application Particular",
+  "wc.create.groups.applicationParticular.title":"Application Particular",
+
+  "collection.search.categorytype.title":"Serach Receipt",
+  "collection.create.serviceType":"Service Type",
+  "collection.create.fromDate":"From Date",
+  "collection.create.toDate":"To Date",
+  "collection.create.receiptNumber":"Receipt Number",
+  "collection.create.collectedBy":"Collected By",
+  "collection.create.status":"Status",
+  "collection.create.modeOfPayment":"Mode Of Payment",
+  "collection.search.receiptDate":"Receipt Date",
+  "collection.search.billNumber":"Bill Number",
+  "collection.search.billDescription":"Bill Description",
+  "collection.search.paidBy":"Paid By",
+  "collection.search.amount":"Amount",
+  "reports.collection.fromdate":"From Date",
+  "reports.collection.todate":"To Date",
+  "reports.collection.status":"Status",
+  "reports.collection.collectedby":"Collected By",
+  "reports.collection.paymentmode":"Payment Mode",
+  "reports.collection.revenuehead":"Revenue Head"
 
 }
 

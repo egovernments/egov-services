@@ -323,24 +323,6 @@ public class TradeLicenseService {
 		}
 	}
 
-	public TradeLicenseResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,
-			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
-			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String eamilId,
-			String propertyAssesmentNo, Integer revenueWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory) {
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		List<TradeLicense> tradeLicenses = new ArrayList<TradeLicense>();
-		TradeLicense tradeLicense = new TradeLicense();
-		tradeLicense.setActive(true);
-		tradeLicense.setId(1l);
-		tradeLicenses.add(tradeLicense);
-		TradeLicenseResponse TradeLicenseResponse = new TradeLicenseResponse();
-		// TradeLicenseResponse.setLicenses(tradeLicenses);
-		TradeLicenseResponse.setResponseInfo(responseInfo);
-
-		return TradeLicenseResponse;
-	}
 
 	public TradeLicenseResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,

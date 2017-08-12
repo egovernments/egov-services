@@ -1,6 +1,10 @@
 package org.egov.pgr.domain.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.egov.pgr.domain.model.ServiceDefinition;
+import org.egov.pgr.domain.service.validator.serviceDefinitionCreateValidator.ServiceDefinitionCreateValidator;
 import org.egov.pgr.persistence.dto.AttributeDefinition;
 import org.egov.pgr.persistence.dto.ValueDefinition;
 import org.egov.pgr.persistence.repository.AttributeDefinitionRepository;
@@ -10,11 +14,10 @@ import org.egov.pgr.persistence.repository.ValueDefinitionRepository;
 import org.egov.pgr.web.contract.ServiceDefinitionRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class ServiceDefinitionService {
+	
+	private List<ServiceDefinitionCreateValidator> createValidators;
 
     private static final String CREATE = "CREATE";
     private ServiceDefinitionMessageQueueRepository serviceDefinitionMessageQueueRepository;
@@ -25,14 +28,19 @@ public class ServiceDefinitionService {
     public ServiceDefinitionService(ServiceDefinitionMessageQueueRepository serviceDefinitionMessageQueueRepository,
                                     ServiceDefinitionRepository serviceDefinitionRepository,
                                     AttributeDefinitionRepository attributeDefinitionRepository,
-                                    ValueDefinitionRepository valueDefinitionRepository) {
+                                    ValueDefinitionRepository valueDefinitionRepository,
+                                    List<ServiceDefinitionCreateValidator> createValidators) {
+    	
         this.serviceDefinitionMessageQueueRepository = serviceDefinitionMessageQueueRepository;
         this.serviceDefinitionRepository = serviceDefinitionRepository;
         this.attributeDefinitionRepository = attributeDefinitionRepository;
         this.valueDefinitionRepository = valueDefinitionRepository;
+        this.createValidators=createValidators;
     }
 
     public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request){
+    	
+    	createMandatoryFieldValidate(serviceDefinition);
         serviceDefinitionMessageQueueRepository.save(request, CREATE);
     }
 
@@ -59,4 +67,11 @@ public class ServiceDefinitionService {
     private void persistValueDefinition(ValueDefinition valueDefinition){
         valueDefinitionRepository.save(valueDefinition);
     }
+    
+    private void createMandatoryFieldValidate(ServiceDefinition serviceDefinition){
+    	createValidators.stream()
+                .filter(validator -> validator.canValidate(serviceDefinition))
+                .forEach(v -> v.checkMandatoryField(serviceDefinition));
+    }
+    
 }

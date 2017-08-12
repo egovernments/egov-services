@@ -44,7 +44,7 @@ public class TradeLicenseController {
 		TradeLicense tradeLicense;
 
 		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
-		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicesnses()) {
+		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
 			
 			tradeLicense = new TradeLicense();
 			model.map(tradeLicenseContract, tradeLicense);
@@ -71,7 +71,7 @@ public class TradeLicenseController {
 			tradeLicenseContracts.add(contract);
 		}
 
-		tradeLicenseRequest.setLicesnses(tradeLicenseContracts);
+		tradeLicenseRequest.setLicenses(tradeLicenseContracts);
 		tradeLicenseService.addToQue(tradeLicenseRequest);
 		tradeLicenseResponse.setLicenses(tradeLicenseContracts);
 
@@ -85,7 +85,7 @@ public class TradeLicenseController {
 	}
 
 	@RequestMapping(path = "/license/v1/_search", method = RequestMethod.POST)
-	public TradeLicenseResponse createTradelicense(@RequestBody RequestInfoWrapper requestInfo,
+	public TradeLicenseResponse searchTradelicense(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId,
 			@RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer pageNumber,

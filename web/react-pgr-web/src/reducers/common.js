@@ -105,6 +105,13 @@ let menuConvention={
   "Trade License.Trade License Masters.License Category.CreateLicenseCategory":"/create/tl/CreateLicenseCategory",
   "Trade License.Trade License Masters.License Category.ViewLicenseCategory":"/search/tl/CreateLicenseCategory/view",
   "Trade License.Trade License Masters.License Category.ModifyLicenseCategory": "/search/tl/CreateLicenseCategory/update",
+
+  "Trade License.Trade License Masters.TL Sub Category.CreateTLSUBCATEGORY": "/create/tl/CreateLicenseSubCategory",
+  "Trade License.Trade License Masters.TL Sub Category.ViewTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/view",
+  "Trade License.Trade License Masters.TL Sub Category.ModifyTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/update",
+  "Trade License.Trade License Transactions.CreateLegacyLicense": "/create/tl/CreateLegacyLicense",
+
+
   "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy"
 
 }

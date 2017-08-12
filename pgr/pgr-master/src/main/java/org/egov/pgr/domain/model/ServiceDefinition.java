@@ -3,6 +3,8 @@ package org.egov.pgr.domain.model;
 import lombok.Builder;
 import lombok.Getter;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.Date;
 import java.util.List;
 
@@ -20,10 +22,18 @@ public class ServiceDefinition {
 
     public org.egov.pgr.persistence.dto.ServiceDefinition toDto(){
         return org.egov.pgr.persistence.dto.ServiceDefinition.builder()
-                    .code(code)
+                    .code(code.trim())
                     .tenantId(tenantId)
                     .createdBy(createdBy)
                     .createdDate(createdDate)
                     .build();
+    }
+    
+    public boolean isTenantIdAbsent(){
+        return isEmpty(tenantId) || tenantId == null;
+    }
+    
+    public boolean isCodeAbsent(){
+        return isEmpty(code) || code == null;
     }
 }

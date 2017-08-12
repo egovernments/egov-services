@@ -105,15 +105,6 @@ class searchRouter extends Component {
   }
 
   componentWillMount() {
-    $('#searchTable').DataTable({
-         dom: 'lBfrtip',
-         buttons: [],
-          ordering: false,
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
-    });
   }
 
   componentWillUnmount(){
@@ -123,15 +114,18 @@ class searchRouter extends Component {
   }
 
   componentDidUpdate() {
-    $('#searchTable').DataTable({
+
+    var t = $('#searchTable').DataTable({
       dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       buttons: ['excel', 'pdf'],
-      ordering: false,
-      bDestroy: true,
-      language: {
-      "emptyTable": "No Records"
-          }
+      bDestroy: true
     });
+
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
   }
 
   componentDidMount() {

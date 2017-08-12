@@ -21,7 +21,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/category/_create?",
+				"url": "http://localhost:8080/tl-masters/category/v1/_create?",
 				"method": "POST",
 				"header": [
 					{
@@ -52,7 +52,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/category/_create?",
+				"url": "http://localhost:8080/tl-masters/category/v1/_create?",
 				"method": "POST",
 				"header": [
 					{
@@ -83,7 +83,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/category/_update?",
+				"url": "http://localhost:8080/tl-masters/category/v1/_update?",
 				"method": "POST",
 				"header": [
 					{
@@ -115,7 +115,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/v1/category/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/category/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -175,7 +175,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/v1/category/_search?tenantId=default&type=subcategory",
+					"raw": "http://localhost:8080/tl-masters/category/v1/_search?tenantId=default&type=subcategory",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -233,7 +233,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/category/_update?",
+				"url": "http://localhost:8080/tl-masters/category/v1/_update?",
 				"method": "POST",
 				"header": [
 					{

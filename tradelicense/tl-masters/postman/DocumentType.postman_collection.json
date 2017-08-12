@@ -10,7 +10,7 @@
 		{
 			"name": "DocumentType Update",
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/documenttype/_update",
+				"url": "http://localhost:8080/tl-masters/documenttype/v1/_update",
 				"method": "POST",
 				"header": [
 					{
@@ -30,7 +30,7 @@
 		{
 			"name": "DocumentType create",
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/documenttype/_create",
+				"url": "http://localhost:8080/tl-masters/documenttype/v1/_create",
 				"method": "POST",
 				"header": [
 					{
@@ -51,7 +51,7 @@
 			"name": "DocumentType Search",
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/v1/documenttype/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/documenttype/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
 						"localhost"

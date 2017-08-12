@@ -22,7 +22,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/v1/feematrix/_create?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/feematrix/v1/_create?tenantId=default",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -75,7 +75,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/v1/feematrix/_update?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/feematrix/v1/_update?tenantId=default",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -128,7 +128,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/v1/feematrix/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/feematrix/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
 						"localhost"

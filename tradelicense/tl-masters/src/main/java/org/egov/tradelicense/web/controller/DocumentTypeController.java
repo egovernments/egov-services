@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/documenttype")
+@RequestMapping(path = "/documenttype/v1")
 public class DocumentTypeController {
 
 	@Autowired

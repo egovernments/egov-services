@@ -10,7 +10,7 @@
 		{
 			"name": "License Status Update",
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/status/_update",
+				"url": "http://localhost:8080/tl-masters/status/v1/_update",
 				"method": "POST",
 				"header": [
 					{
@@ -31,7 +31,7 @@
 			"name": "License Search",
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/v1/status/_search?tenantId=prasadupdate",
+					"raw": "http://localhost:8080/tl-masters/status/v1/_search?tenantId=prasadupdate",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -72,7 +72,7 @@
 		{
 			"name": "License Status Create",
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/status/_create",
+				"url": "http://localhost:8080/tl-masters/status/v1/_create",
 				"method": "POST",
 				"header": [
 					{

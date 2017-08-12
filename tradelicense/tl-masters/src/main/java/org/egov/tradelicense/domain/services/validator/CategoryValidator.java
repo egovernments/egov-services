@@ -33,7 +33,9 @@ public class CategoryValidator {
 		RequestInfo requestInfo = categoryRequest.getRequestInfo();
 
 		for (Category category : categoryRequest.getCategories()) {
-
+			category.setName((category.getName() == null) ? null : category.getName().trim());
+			category.setCode((category.getCode() == null) ? null : category.getCode().trim());
+			category.setTenantId((category.getTenantId() == null) ? null : category.getTenantId().trim());
 			Long ParentId = category.getParentId();
 			Long categoryId = null;
 

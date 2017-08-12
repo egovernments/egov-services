@@ -78,7 +78,7 @@ public class CategoryContollerTest {
 
 			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/category/_create").param("tenantId", "default")
+			mockMvc.perform(post("/category/v1/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -123,7 +123,7 @@ public class CategoryContollerTest {
 			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(
-					post("/category/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					post("/category/v1/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 							.content(getFileContents("categoryDetailsCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -162,7 +162,7 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.updateCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
-			mockMvc.perform(post("/category/_update").param("tenantId", "default")
+			mockMvc.perform(post("/category/v1/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -214,7 +214,7 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.updateCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
-			mockMvc.perform(post("/category/_update").param("tenantId", "default")
+			mockMvc.perform(post("/category/v1/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -255,7 +255,7 @@ public class CategoryContollerTest {
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
 					any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/category/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
+			mockMvc.perform(post("/category/v1/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categorySearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -305,7 +305,7 @@ public class CategoryContollerTest {
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
 					any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/category/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
+			mockMvc.perform(post("/category/v1/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("categoryDetailsSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -320,7 +320,7 @@ public class CategoryContollerTest {
 	}
 
 	private String getFileContents(String fileName) throws IOException {
-		ClassLoader classLoader = getClass().getClassLoader();
+		ClassLoader classLoader = this.getClass().getClassLoader();
 		return new String(Files.readAllBytes(new File(classLoader.getResource(fileName).getFile()).toPath()));
 	}
 }

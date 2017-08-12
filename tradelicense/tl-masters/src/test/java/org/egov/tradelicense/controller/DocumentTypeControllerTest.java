@@ -75,7 +75,7 @@ public class DocumentTypeControllerTest {
 			when(documentTypeService.createDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documentTypeResponse);
 
-			mockMvc.perform(post("/documenttype/_create").param("tenantId", "default")
+			mockMvc.perform(post("/tl-masters/documenttype/v1/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -113,7 +113,7 @@ public class DocumentTypeControllerTest {
 
 			when(documentTypeService.updateDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documenttypeResponse);
-			mockMvc.perform(post("/documenttype/_update").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/tl-masters/documenttype/v1/_update").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("documenttypeUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("documenttypeUpdateResponse.json")));
@@ -152,7 +152,7 @@ public class DocumentTypeControllerTest {
 					any(Integer[].class), any(String.class), any(String.class), any(String.class), any(Integer.class),
 					any(Integer.class))).thenReturn(documentTypeResponse);
 
-			mockMvc.perform(post("/documenttype/_search").param("tenantId", "default")
+			mockMvc.perform(post("/tl-masters/documenttype/v1/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeSearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

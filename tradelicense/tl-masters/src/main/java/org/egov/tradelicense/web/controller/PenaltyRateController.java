@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/penaltyrate")
+@RequestMapping(path = "/penaltyrate/v1")
 public class PenaltyRateController {
 
 	@Autowired

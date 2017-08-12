@@ -22,7 +22,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/penaltyrate/_create?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/penaltyrate/v1/_create?tenantId=default",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -73,7 +73,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:8080/tl-masters/penaltyrate/_update",
+				"url": "http://localhost:8080/tl-masters/penaltyrate/v1/_update",
 				"method": "POST",
 				"header": [
 					{
@@ -105,7 +105,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/penaltyrate/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/penaltyrate/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
 						"localhost"

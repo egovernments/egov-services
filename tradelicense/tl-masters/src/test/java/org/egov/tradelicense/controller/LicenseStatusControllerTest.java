@@ -79,7 +79,7 @@ public class LicenseStatusControllerTest {
 			when(licenseStatusService.createLicenseStatusMaster(any(LicenseStatusRequest.class)))
 					.thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/status/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/tl-masters/status/v1/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusCreateResponse.json")));
@@ -120,7 +120,7 @@ public class LicenseStatusControllerTest {
 			when(licenseStatusService.updateLicenseStatusMaster(any(LicenseStatusRequest.class)))
 					.thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/status/_update").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/tl-masters/status/v1/_update").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusUpdateResponse.json")));
@@ -162,7 +162,7 @@ public class LicenseStatusControllerTest {
 					any(Integer[].class), any(String.class), any(String.class), any(String.class), any(Integer.class),
 					any(Integer.class))).thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/status/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/tl-masters/status/v1/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusSearchResponse.json")));

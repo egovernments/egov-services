@@ -3,12 +3,10 @@ package org.egov.tl.commons.web.contract;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,16 +22,19 @@ import lombok.NoArgsConstructor;
 public class Category {
 
 	private Long id = null;
-
+    
+	@Pattern(regexp = ".*[^ ].*")
 	@JsonProperty("tenantId")
 	@NotNull
 	@Size(min = 4, max = 128)
 	private String tenantId = null;
 
+	@Pattern(regexp = ".*[^ ].*")
 	@NotNull
 	@Size(min = 4, max = 256)
 	private String name = null;
 
+	@Pattern(regexp = ".*[^ ].*")
 	@NotNull
 	@Size(min = 4, max = 50)
 	private String code = null;

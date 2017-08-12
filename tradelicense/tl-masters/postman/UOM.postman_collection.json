@@ -21,7 +21,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/uom/_create?",
+				"url": "http://localhost:8080/tl-masters/uom/v1/_create?",
 				"method": "POST",
 				"header": [
 					{
@@ -52,7 +52,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:8080/tl-masters/v1/uom/_update",
+				"url": "http://localhost:8080/tl-masters/uom/v1/_update",
 				"method": "POST",
 				"header": [
 					{
@@ -84,7 +84,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-masters/v1/uom/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/uom/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
 						"localhost"

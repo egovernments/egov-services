@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/category")
+@RequestMapping(path = "/category/v1")
 public class CategoryController {
 
 	@Autowired
@@ -76,7 +76,7 @@ public class CategoryController {
 			@RequestParam(required = false) String businessNature, @RequestParam(required = false) Integer categoryId, 
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet) throws Exception {
 
-		return categoryService.getCategoryMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, active, type,
+		return categoryService.getCategoryMaster(requestInfo.getRequestInfo(), tenantId.trim(), ids, name.trim(), code.trim(), active, type,
 				businessNature, categoryId, pageSize, offSet);
 	}
 }

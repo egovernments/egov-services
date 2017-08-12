@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/status")
+@RequestMapping(path = "/status/v1")
 public class LicenseStatusController {
 
 	@Autowired

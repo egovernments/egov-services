@@ -75,7 +75,7 @@ public class PenaltyRateControllerTest {
 			when(penaltyRateService.createPenaltyRateMaster(any(String.class), any(PenaltyRateRequest.class)))
 					.thenReturn(penaltyRateResponse);
 
-			mockMvc.perform(post("/penaltyrate/_create").param("tenantId", "default")
+			mockMvc.perform(post("/tl-masters/penaltyrate/v1/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -112,7 +112,7 @@ public class PenaltyRateControllerTest {
 
 			when(penaltyRateService.updatePenaltyRateMaster(any(PenaltyRateRequest.class)))
 					.thenReturn(penaltyRateResponse);
-			mockMvc.perform(post("/penaltyrate/_update").param("tenantId", "default")
+			mockMvc.perform(post("/tl-masters/penaltyrate/v1/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -153,7 +153,7 @@ public class PenaltyRateControllerTest {
 					any(Integer[].class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(penaltyRateResponse);
 
-			mockMvc.perform(post("/penaltyrate/_search").param("tenantId", "default").param("applicationType", "New")
+			mockMvc.perform(post("/tl-masters/penaltyrate/v1/_search").param("tenantId", "default").param("applicationType", "New")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateSearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

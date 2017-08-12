@@ -270,7 +270,41 @@ class grievanceSearch extends Component {
     });
   };
 
+  checkDate = (value, name, required, pattern) => {
+    if(name == 'startDate'){
+      let startDate = value;
+      let endDate = this.props.grievanceSearchSet.endDate;
+      this.props.handleChange(value, name, required, pattern);
+      this.validateDate(startDate, endDate, 'startDate');//3rd param to denote whether field fails
+    }else{
+      let endDate = value;
+      let startDate = this.props.grievanceSearchSet.startDate;
+      this.props.handleChange(value, name, required, pattern);
+      this.validateDate(startDate, endDate, 'endDate');//3rd param to denote whether field fails
+    }
+  }
+
+  validateDate = (startDate, endDate, field) => {
+    if(startDate && endDate){
+      let sD = new Date(startDate);
+      sD.setHours(0, 0, 0, 0);
+      let eD = new Date(endDate);
+      eD.setHours(0, 0, 0, 0);
+      if(eD >= sD){
+          this.setState({datefield : ''})
+          this.setState({dateError : ''})
+      }else{
+        this.props.handleChange('', field, false, '');
+        this.setState({datefield : field})
+        this.setState({dateError :
+          field === 'endDate' ? 'To Date should be greater than or equal to From Date' : 'From Date should be less than or equal to To Date'
+        })
+      }
+    }
+  }
+
   render() {
+
   	let {search, resetAndSearch, handlePageClick, handleNavigation, resetSearch} = this;
   	let {
   		complaintTypeList,
@@ -382,33 +416,32 @@ class grievanceSearch extends Component {
   		if(buttonText == translate("core.lbl.less")) {
   			return (
   				<Row>
-                	<Col xs={12} md={3}>
-        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.fullname")} value={grievanceSearchSet.name} onChange={(e) => {handleChange(e, "name", false, "")}}/>
+            	<Col xs={12} sm={4} md={3} lg={3}>
+        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.fullname")} value={grievanceSearchSet.name} onChange={(e, value) => {handleChange(value, "name", false, "")}}/>
         			</Col>
-        			<Col xs={12} md={3}>
-        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.mobilenumber")} errorText={fieldErrors.mobileNumber} value={grievanceSearchSet.mobileNumber} onChange={(e) => {handleChange(e, "mobileNumber", false, /^\d{10}$/g)}}/>
+        			<Col xs={12} sm={4} md={3} lg={3}>
+        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.mobilenumber")} errorText={fieldErrors.mobileNumber} value={grievanceSearchSet.mobileNumber} onChange={(e,value) => {handleChange(value, "mobileNumber", false, /^\d{10}$/g)}}/>
         			</Col>
-        			<Col xs={12} md={3}>
-        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e) => {handleChange(e, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
+        			<Col xs={12} sm={4} md={3} lg={3}>
+        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e,value) => {handleChange(value, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
         			</Col>
-        			<Col xs={12} md={3}>
-        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
-        					var e = {target: {value: val}};
-        					handleChange(e, "serviceCode", false, "")}}>
+        			<Col xs={12} sm={4} md={3} lg={3}>
+        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, value) => {
+        					handleChange(value, "serviceCode", false, "")}}>
                 			{complaintTypeList.map((com, index) => (
                                 <MenuItem value={com.serviceCode} key={index} primaryText={com.serviceName} />
                             ))}
                 		</SelectField>
         			</Col>
-        			<Col xs={12} md={3}>
+        			<Col xs={12} sm={4} md={3} lg={3}>
 	                	<SelectField
                         multiple={true}
                         fullWidth={true}
                         floatingLabelText={translate("core.lbl.status")}
                         value={grievanceSearchSet.status}
-                        onChange={(e, i, val) => {
-	                		var e = {target: {value: val}};
-	                		handleChange(e, "status", false, "")}} >
+                        onChange={(e, i, value) => {
+	                		       handleChange(value, "status", false, "")}}
+                     >
                     		{statusList.map((stat, index) => (
                                 <MenuItem
                                     value={stat.code}
@@ -419,10 +452,9 @@ class grievanceSearch extends Component {
                             ))}
                     	</SelectField>
                 	</Col>
-                	<Col xs={12} md={3}>
-                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receivingMode} onChange={(e, i, val) => {
-                    		var e = {target: {value: val}};
-                    		handleChange(e, "receivingMode", false, "")}}>
+                	<Col xs={12} sm={4} md={3} lg={3}>
+                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receivingMode} onChange={(e, i, value) => {
+                    		handleChange(value, "receivingMode", false, "")}}>
                     		{receiveingModeList.map((mod, index) => (
                                 <MenuItem value={mod.code} key={index} primaryText={mod.name} />
                             ))}
@@ -441,29 +473,30 @@ class grievanceSearch extends Component {
 	            	<CardText style={{padding:0}}>
 	              		<Grid>
 	                		<Row>
-	                			<Col xs={12} md={3}>
-	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.crnformat")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
+	                			<Col xs={12} sm={4} md={3} lg={3}>
+	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.crnformat")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e, value) => {handleChange(value, "serviceRequestId", false, "")}}/>
                         </Col>
-	                			<Col xs={12} md={3}>
-	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, val) => {
-	                					var e = {target: {value: val}};
-	                					handleChange(e, "locationId", false, "")}}>
+	                			<Col xs={12} sm={4} md={3} lg={3}>
+	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, value) => {
+	                					handleChange(value, "locationId", false, "")}}>
                             			{locationList.map((loc, index) => (
 			                                <MenuItem value={loc.id} key={index} primaryText={loc.name} />
 			                            ))}
                             		</SelectField>
 	                			</Col>
-	                			<Col xs={12} md={3}>
-	                				<DatePicker floatingLabelText={translate("core.lbl.date.fromdate")} hintText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate} onChange={(e, dat) => {
-	                					var e = {target: {value: dat}};
-	                					handleChange(e, "startDate", false, "")
-	                				}}/>
+	                			<Col xs={12} sm={4} md={3} lg={3}>
+	                				<DatePicker fullWidth={true} floatingLabelText={translate("core.lbl.date.fromdate")} hintText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate} onChange={(e, value) => {
+                            this.checkDate(value, "startDate", false, "");
+	                				}}
+                          errorText={this.state.datefield === 'startDate' ? this.state.dateError : ''}
+                          />
 	                			</Col>
-	                			<Col xs={12} md={3}>
-	                				<DatePicker floatingLabelText={translate("core.lbl.date.todate")} hintText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate} onChange={(e, dat) => {
-	                					var e = {target: {value: dat}};
-	                					handleChange(e, "endDate", false, "");
-	                				}}/>
+	                			<Col xs={12} sm={4} md={3} lg={3}>
+	                				<DatePicker fullWidth={true} floatingLabelText={translate("core.lbl.date.todate")} hintText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate} onChange={(e, value) => {
+                            this.checkDate(value, "endDate", false, "");
+	                				}}
+                          errorText={this.state.datefield === 'endDate' ? this.state.dateError : ''}
+                          />
 	                			</Col>
 	                		</Row>
 	                		<Row>
@@ -527,8 +560,8 @@ const mapDispatchToProps = dispatch => ({
 	      }
 	    });
     },
-    handleChange: (e, property, isRequired, pattern) => {
-        dispatch({ type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern });
+    handleChange: (value, property, isRequired, pattern) => {
+        dispatch({ type: "HANDLE_CHANGE", property, value, isRequired, pattern });
     },
     changeButtonText:(text) => {
     	dispatch({type: "BUTTON_TEXT", text});

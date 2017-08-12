@@ -1,16 +1,16 @@
 package org.egov.pgr.persistence.repository;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.egov.pgr.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgr.persistence.dto.ServiceDefinition;
-import org.egov.pgr.persistence.dto.ServiceType;
 import org.egov.pgr.persistence.querybuilder.ServiceDefinitionQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ServiceDefinitionRepository {
@@ -19,10 +19,14 @@ public class ServiceDefinitionRepository {
 
     private ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder;
 
+    private AttributeDefinitionRepository attributeDefinitionRepository;
+
     public ServiceDefinitionRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                       ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder) {
+                                       ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder,
+                                       AttributeDefinitionRepository attributeDefinitionRepository) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.serviceDefinitionQueryBuilder = serviceDefinitionQueryBuilder;
+        this.attributeDefinitionRepository = attributeDefinitionRepository;
     }
 
     public void save(ServiceDefinition serviceDefinition){
@@ -30,6 +34,17 @@ public class ServiceDefinitionRepository {
                 getInsertMap(serviceDefinition));
     }
 
+    public List<org.egov.pgr.domain.model.ServiceDefinition> search(ServiceDefinitionSearchCriteria searchCriteria){
+
+        List<ServiceDefinition> serviceDefinitions =  namedParameterJdbcTemplate.query(
+                    serviceDefinitionQueryBuilder.getSearchQuery(),
+                    getSearchMap(searchCriteria.getServiceCode(), searchCriteria.getTenantId()),
+                    new BeanPropertyRowMapper<>(ServiceDefinition.class));
+
+        return serviceDefinitions.stream()
+                    .map(ServiceDefinition::toDomain)
+                    .collect(Collectors.toList());
+    }
 
     private HashMap getInsertMap(ServiceDefinition serviceDefinition){
         HashMap<String, Object> parametersMap = new HashMap<>();
@@ -89,4 +104,12 @@ public class ServiceDefinitionRepository {
                 searchNamedQuery, rowMapper);
     }
 
+    private HashMap getSearchMap(String serviceCode, String tenantId){
+        HashMap<String, Object> parametersMap = new HashMap<>();
+
+        parametersMap.put("serviceCode", serviceCode);
+        parametersMap.put("tenantid", tenantId);
+
+        return parametersMap;
+    }
 }

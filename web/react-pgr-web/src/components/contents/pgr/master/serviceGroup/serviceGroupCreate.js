@@ -47,15 +47,12 @@ class ServiceGroupCreate extends Component {
     componentWillMount() {
 
         if(this.props.match.params.id) {
-          console.log();
             this.setState({id:this.props.match.params.id});
             var body = {}
             let  current = this;
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{id:this.props.match.params.id},body).then(function(response){
-                console.log("response",response);
-                  console.log("response object",response.ServiceGroups[0]);
                 current.setState({data:response.ServiceGroups})
                 setForm(response.ServiceGroups[0])
             }, function(err) {
@@ -124,7 +121,6 @@ class ServiceGroupCreate extends Component {
         	})
       } else {
           Api.commonApiPost("/pgr-master/serviceGroup/v1/_create",{},body).then(function(response){
-              console.log(response);
               current.setState({
                 open: true
               });
@@ -208,9 +204,7 @@ class ServiceGroupCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-
                 <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
-
               </div>
           </form>
           <Dialog
@@ -271,7 +265,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   resetObject: (object) => {
-    console.log(object);
    dispatch({
      type: "RESET_OBJECT",
      object

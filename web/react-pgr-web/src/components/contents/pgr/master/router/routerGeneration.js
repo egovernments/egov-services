@@ -149,11 +149,8 @@ class routerGeneration extends Component {
   	$('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          ordering: false,
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+         ordering: false,
+         bDestroy: true
     });
   }
 
@@ -333,10 +330,8 @@ class routerGeneration extends Component {
    		if(isSearchClicked && isFormValid) {
    			return (
    				<div style={{textAlign: 'center'}}>
-
 	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.save")} primary={true} onClick={(e) => {save(e)}}/>
 	   			</div>
-
    			)
    		}
    }
@@ -485,7 +480,6 @@ class routerGeneration extends Component {
            </Card>
            <div style={{textAlign: 'center'}}>
              <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} disabled={!isFormValid} primary={true}/>
-
            </div>
            {viewTable()}
            {showSaveButton()}
@@ -494,7 +488,7 @@ class routerGeneration extends Component {
           title="Confirm"
           actions={
           	[<FlatButton
-				        label="Close"
+				        label={translate('core.lbl.close')}
 				        primary={false}
 				        onTouchTap={handleOpenNClose}
 				      />, <FlatButton

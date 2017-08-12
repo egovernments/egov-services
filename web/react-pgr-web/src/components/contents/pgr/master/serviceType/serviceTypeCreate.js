@@ -67,8 +67,6 @@ class ServiceTypeCreate extends Component {
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id, keywords : 'complaint'},body).then(function(response){
-                console.log("response",response);
-                  console.log("response object",response.Service[0]);
                 current.setState({data:response.Service})
                 setForm(response.Service[0])
             }, function(err) {
@@ -84,7 +82,6 @@ class ServiceTypeCreate extends Component {
     componentDidMount() {
         let self = this;
       Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword:'complaint'}).then(function(response) {
-        console.log("response",response);
           self.setState({
             category: response.ServiceGroups
           })
@@ -191,7 +188,6 @@ class ServiceTypeCreate extends Component {
               });
               current.props.setLoadingStatus('hide');
           }, function(err) {
-            console.log(err.message);
             current.props.toggleSnackbarAndSetText(true, err.message);
             current.props.setLoadingStatus('hide');
         	})
@@ -265,7 +261,7 @@ class ServiceTypeCreate extends Component {
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
-                            floatingLabelText="Name"
+                            floatingLabelText={translate('core.lbl.add.name')}
                             value={createServiceType.dataType ? createServiceType.dataType.attributesName : ""}
                             errorText={fieldErrors.dataType ? fieldErrors.dataType.attributesName : ""}
                               onChange={(e) => handleChangeNextOne(e,"dataType" ,"attributesName", false, "")}
@@ -275,14 +271,14 @@ class ServiceTypeCreate extends Component {
                     <Col xs={12} sm={4} md={3} lg={3} style={styles.textRight}>
                     <br/>
                     { (editIndex == -1 || editIndex == undefined ) &&
-                      <RaisedButton type="button" label="Add" primary="true" onClick={()=> {
+                      <RaisedButton type="button" label={translate('pgr.lbl.add')} primary="true" onClick={()=> {
                           _this.props.addNestedFormData("dataTypes","dataType");
                           _this.props.resetObject("dataType");
                           }
                       }/>
                     }
                     { (editIndex > -1) &&
-                      <RaisedButton type="button" label="Save"    onClick={()=> {
+                      <RaisedButton type="button" label={translate('core.lbl.save')}   onClick={()=> {
                             this.props.updateObject("owners","owner",  editIndex);
                             this.props.resetObject("owner");
                             isEditIndex(-1);
@@ -333,7 +329,6 @@ class ServiceTypeCreate extends Component {
       const showAddNewBtn = function() {
 
           return (
-
               <RaisedButton style={{margin:'15px 5px'}} type="button" primary="true"  onClick={()=>{showCustomFieldForm(true)}} float="right"  label={translate('pgr.lbl.create')}/>
             )
 
@@ -343,7 +338,6 @@ class ServiceTypeCreate extends Component {
 
       const  promotionFunc =function() {
           if(createServiceType.metadata=="true"||createServiceType.metadata==true){
-            console.log("hi");
             return (
               <div className="form-section">
                 <h3 style = {styles.headerStyle} >Attributes</h3>

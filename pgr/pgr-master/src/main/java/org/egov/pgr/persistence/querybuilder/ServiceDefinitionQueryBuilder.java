@@ -10,7 +10,7 @@ public class ServiceDefinitionQueryBuilder {
         return "INSERT INTO service_definition (code, tenantid, createddate, createdby)"+
                 "VALUES (:code, :tenantid, :createddate, :createdby)";
     }
-    
+
     public String getQuery(ServiceDefinition serviceDefinition){
 
         StringBuilder query = new StringBuilder("SELECT * FROM service_definition WHERE tenantid = :tenantid" );
@@ -35,4 +35,8 @@ public class ServiceDefinitionQueryBuilder {
         return query.append(" AND ").append(fieldName).append("= :").append(paramName);
     }
     
+
+    public String getSearchQuery(){
+        return "SELECT * FROM service_definition WHERE code = :serviceCode AND tenantid = :tenantid";
+    }
 }

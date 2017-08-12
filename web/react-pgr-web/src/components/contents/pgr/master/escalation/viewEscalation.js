@@ -100,17 +100,13 @@ class ViewEscalation extends Component {
        $('#searchTable').DataTable({
              dom: 'lBfrtip',
              buttons: [],
-              bDestroy: true,
-              language: {
-                 "emptyTable": "No Records"
-              }
+             bDestroy: true
         });
     }
 
     componentDidMount() {
       let self = this;
       Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
-        console.log(response);
           self.setState({
             positionSource: response.Position
           })
@@ -121,7 +117,6 @@ class ViewEscalation extends Component {
       });
 
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
-          console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
           })
@@ -141,10 +136,7 @@ class ViewEscalation extends Component {
        $('#searchTable').DataTable({
           dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
           buttons: ['excel', 'pdf'],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+          bDestroy: true
      });
   }
 
@@ -189,8 +181,6 @@ class ViewEscalation extends Component {
     render() {
 
 		let self = this;
-
-		console.log(this.state.searchResult);
 
       let {
         isFormValid,
@@ -331,7 +321,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,

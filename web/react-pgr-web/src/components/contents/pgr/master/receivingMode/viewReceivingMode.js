@@ -48,7 +48,6 @@ class viewReceivingSet extends Component {
                 current.setState({data:response.ReceivingModeType})
                 setForm(response.ReceivingModeType[0])
             }).catch((error)=>{
-                console.log(error);
             })
         }
     }
@@ -69,8 +68,6 @@ class viewReceivingSet extends Component {
         handleChangeNextTwo,
         buttonText
       } = this.props;
-
-      console.log(viewReceivingSet);
 
       let {submitForm} = this;
 

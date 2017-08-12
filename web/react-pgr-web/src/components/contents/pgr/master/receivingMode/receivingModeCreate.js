@@ -65,7 +65,6 @@ class receivingModeCreate extends Component {
                  _this.setState({data:response.ReceivingModeType[0]});
                  setForm(response.ReceivingModeType[0])
              }).catch((error)=>{
-                 console.log(error);
              })
          } else {
            let {initForm}=this.props;
@@ -232,7 +231,7 @@ class receivingModeCreate extends Component {
            </Card>
            <div style={{textAlign:'center'}}>
 
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'} primary={true}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? translate('pgr.lbl.create') : translate('pgr.lbl.update')} primary={true}/>
 
               </div>
          </form>
@@ -301,7 +300,6 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
     });
   },
   resetObject: (object) => {
-    console.log(object);
    dispatch({
      type: "RESET_OBJECT",
      object

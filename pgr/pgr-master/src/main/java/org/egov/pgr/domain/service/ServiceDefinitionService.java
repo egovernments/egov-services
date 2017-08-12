@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.egov.pgr.domain.model.ServiceDefinition;
 import org.egov.pgr.domain.service.validator.serviceDefinitionCreateValidator.ServiceDefinitionCreateValidator;
+import org.egov.pgr.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgr.persistence.dto.AttributeDefinition;
 import org.egov.pgr.persistence.dto.ValueDefinition;
 import org.egov.pgr.persistence.repository.AttributeDefinitionRepository;
@@ -49,8 +50,15 @@ public class ServiceDefinitionService {
         persistServiceTypeAttributes(serviceDefinition);
     }
 
-    private void persistServiceTypeAttributes(ServiceDefinition serviceDefinition){
+    public List<ServiceDefinition> search(ServiceDefinitionSearchCriteria serviceDefinitionSearchCriteria){
 
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.search(serviceDefinitionSearchCriteria);
+        setAttributes(serviceDefinitionList);
+
+        return serviceDefinitionList;
+    }
+
+    private void persistServiceTypeAttributes(ServiceDefinition serviceDefinition){
         List<AttributeDefinition> attributeDefinitionList = serviceDefinition.getAttributes().stream()
                 .map(attributeDefinition -> attributeDefinition.toDto(serviceDefinition))
                 .collect(Collectors.toList());
@@ -67,11 +75,16 @@ public class ServiceDefinitionService {
     private void persistValueDefinition(ValueDefinition valueDefinition){
         valueDefinitionRepository.save(valueDefinition);
     }
-    
+
     private void createMandatoryFieldValidate(ServiceDefinition serviceDefinition){
     	createValidators.stream()
                 .filter(validator -> validator.canValidate(serviceDefinition))
                 .forEach(v -> v.checkMandatoryField(serviceDefinition));
     }
     
+    private void setAttributes(List<ServiceDefinition> serviceDefinitions){
+        serviceDefinitions.forEach(serviceDefinition -> serviceDefinition.setAttributes(
+                attributeDefinitionRepository.searchByCodeAndTenant(serviceDefinition.getCode(),
+                        serviceDefinition.getTenantId())));
+    }
 }

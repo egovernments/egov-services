@@ -175,10 +175,7 @@ componentWillUpdate() {
           bDestroy: true,
           "columnDefs": [
           { "orderable": false, "targets": 5 }
-          ],
-          language: {
-           "emptyTable": "No Records"
-          }
+          ]
         });
 
     }
@@ -233,7 +230,6 @@ componentWillUpdate() {
 	    currentThis.setState({designations : []});
 		  currentThis.setState({toPosition : []});
 
-		console.log(data);
 		let query = {
 			id : data.department
 		}

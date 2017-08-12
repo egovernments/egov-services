@@ -98,10 +98,7 @@ class BulkEscalationGeneration extends Component {
        $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+          bDestroy: true
         });
     }
 

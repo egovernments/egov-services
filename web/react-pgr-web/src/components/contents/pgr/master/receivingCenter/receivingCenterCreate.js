@@ -49,19 +49,15 @@ class CreateReceivingCenter extends Component {
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/receivingcenter/v1/_search",{id:this.props.match.params.id},body).then(function(response){
-                console.log(response);
                 current.setState({data:response.ReceivingCenterType})
                 setForm(response.ReceivingCenterType[0])
             }).catch((error)=>{
-                console.log(error);
             })
         } else {
           let {initForm}=this.props;
           initForm();
         }
     }
-
-
 
       componentWillUpdate() {
         if(window.urlCheck) {
@@ -139,8 +135,6 @@ class CreateReceivingCenter extends Component {
 
       let {submitForm} = this;
 
-      console.log(createReceivingCenter);
-
       return(
         <div className="createReceivingCenter">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
@@ -200,7 +194,7 @@ class CreateReceivingCenter extends Component {
                                     label={translate("pgr.lbl.active")}
                                     style={styles.setTopMargin}
                                     checked = {createReceivingCenter.active || false}
-                                    onCheck = {(e, i, v) => { console.log(createReceivingCenter.active, i);
+                                    onCheck = {(e, i, v) => {
 
                                       var e = {
                                         target: {
@@ -297,7 +291,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   resetObject: (object) => {
-    console.log(object);
    dispatch({
      type: "RESET_OBJECT",
      object

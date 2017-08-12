@@ -112,9 +112,10 @@ class Transaction extends Component {
       self.props.handleChange({target:{value:res.Bill}},"Receipt[0].Bill",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].tenantId",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.instrumentType.tenantId",false,false);
-      self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bankAccount.tenantId",false,false);
+      self.props.handleChange({target:{value:new Date().getTime()}},"Receipt[0].instrument.transactionDate",false,false);
+      self.props.handleChange({target:{value:"1232356543"}},"Receipt[0].instrument.transactionNumber",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
-      self.props.handleChange({target:{value:0}},"Receipt[0].instrument.amount",false,false);
+      self.props.handleChange({target:{value:100}},"Receipt[0].instrument.amount",false,false);
 
 
 
@@ -531,7 +532,7 @@ class Transaction extends Component {
     Api.commonApiPost("/collection-services/receipts/_create", "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
-      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
+      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
           if(self.props.actionName == "update") {

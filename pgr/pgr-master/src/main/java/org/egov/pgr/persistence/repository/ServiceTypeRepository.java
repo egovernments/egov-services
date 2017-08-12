@@ -89,7 +89,23 @@ public class ServiceTypeRepository {
 
         return Collections.EMPTY_LIST;
     }
+    
+    public List<org.egov.pgr.domain.model.ServiceType> getCodeTenantDataFromCategory(org.egov.pgr.domain.model.ServiceType serviceType) {
+    	org.egov.pgr.domain.model.ServiceType service= org.egov.pgr.domain.model.ServiceType.builder().category(serviceType.getCategory())
+    													.build();
+        List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.getCategoryData(service),
+        		getDetailQuery(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
+        System.out.println(serviceTypeQueryBuilder.getCategoryData(serviceType));
+        if(!serviceTypeList.isEmpty())
+        {
+        	return serviceTypeList.stream()
+        	.map(ServiceType::toDomain)
+            .collect(Collectors.toList());
+        }
 
+        return Collections.EMPTY_LIST;
+    }
+    
     private List<org.egov.pgr.domain.model.ServiceType> getServiceTypes(ServiceTypeSearchCriteria serviceTypeSearchCriteria, List<ServiceType> serviceTypeList) {
         return serviceTypeList.stream()
                 .filter(serviceType -> serviceType.isKeywordPresent(serviceTypeSearchCriteria.getKeywords()))
@@ -175,7 +191,12 @@ public class ServiceTypeRepository {
         parametersMap.put("tenantid", serviceType.getTenantId());
         return parametersMap;
     }
-
+    private HashMap<String, Object> getcategory(org.egov.pgr.domain.model.ServiceType serviceType) {
+        HashMap<String, Object> parametersMap = new HashMap<String, Object>();
+        parametersMap.put("category", serviceType.getCategory());
+        return parametersMap;
+    }
+    
     private HashMap<String, Object> getKeywordsSearchMap(ServiceType serviceType, List<String> keywords) {
         HashMap<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("code", serviceType.getCode());

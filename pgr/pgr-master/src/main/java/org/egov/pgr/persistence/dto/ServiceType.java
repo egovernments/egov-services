@@ -1,14 +1,16 @@
 package org.egov.pgr.persistence.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-
-import javax.validation.constraints.NotNull;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter

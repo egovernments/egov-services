@@ -37,9 +37,18 @@ public class ServiceTypeQueryBuilder {
 
         return query.toString();
     }
+    public String getCategoryData(ServiceType serviceType){
+
+        StringBuilder query = new StringBuilder("SELECT * FROM egpgr_complainttype_category");
+
+        if(!serviceType.isCategoryAbsent())
+        	addWhereClause(query,"id","category");
+                
+        return query.toString();
+    }
 
     private StringBuilder addWhereClause(StringBuilder query, String fieldName, String paramName){
-        return query.append("WHERE ").append(fieldName).append("= :").append(paramName);
+        return query.append(" WHERE ").append(fieldName).append("= :").append(paramName);
     }
 
     private StringBuilder addWhereClauseWithAnd(StringBuilder query, String fieldName, String paramName){

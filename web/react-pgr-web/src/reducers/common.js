@@ -32,7 +32,7 @@ let menuConvention={
   "Grievance Redressal.Reports.Drill Down By Department Report":"/report/pgr-master/DrillDownByDepartment",
 
   "Collection.Collection Reports.CashCollection":"/report/collection-services/CashCollection",
-  "Collection.Collection Reports.ReceiptRegister":"/report//collection-services/ReceiptRegister",
+  "Collection.Collection Reports.ReceiptRegister":"/report/collection-services/ReceiptRegister",
   "Collection.Collection Reports.CollectionSummaryAccountHead":"/report/collection-services/CollectionSummaryAccountHeadWise",
   "Collection.Collection Reports.ChequeCollection":"/report/collection-services/ChequeCollection",
 

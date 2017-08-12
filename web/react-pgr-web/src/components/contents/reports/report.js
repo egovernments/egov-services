@@ -58,7 +58,7 @@ class Report extends Component {
   render() {
     let {match}=this.props;
     return (
-      <div className="Report">
+      <div className="">
         <SearchForm match={match}/>
 
         <ReportResult match={match}/>

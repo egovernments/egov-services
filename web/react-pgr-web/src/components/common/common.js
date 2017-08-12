@@ -636,7 +636,8 @@ var localationData = {
   "reports.collection.status":"Status",
   "reports.collection.collectedby":"Collected By",
   "reports.collection.paymentmode":"Payment Mode",
-  "reports.collection.revenuehead":"Revenue Head"
+  "reports.collection.revenuehead":"Revenue Head",
+  "reports.collection.department":"Department"
 
 }
 

@@ -148,10 +148,6 @@ export default class ShowField extends Component
     }
   }
   render(){
-    return (
-      <div>
-        {this.renderFields(this.props.obj)}
-      </div>
-    );
+    return this.renderFields(this.props.obj);
   }
 }

@@ -37,8 +37,8 @@ class ShowField extends Component {
    componentWillMount()
    {
      $('#searchTable').DataTable({
-       dom: 'lBfrtip',
-       buttons: [],
+       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+       buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         bDestroy: true,
         language: {
            "emptyTable": "No Records"
@@ -66,7 +66,7 @@ class ShowField extends Component {
 
   componentDidUpdate() {
           $('#reportTable').DataTable({
-            dom: 'lBfrtip',
+            dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],

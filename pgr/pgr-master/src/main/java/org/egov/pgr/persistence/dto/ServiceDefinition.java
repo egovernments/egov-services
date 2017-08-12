@@ -1,7 +1,6 @@
 package org.egov.pgr.persistence.dto;
 
 import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +20,7 @@ public class ServiceDefinition {
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
-    
+
     
     public org.egov.pgr.domain.model.ServiceDefinition toDomain(){
         return org.egov.pgr.domain.model.ServiceDefinition.builder()
@@ -31,7 +30,4 @@ public class ServiceDefinition {
                 .createdDate(createdDate)
                 .build();
     }
-
-
-
 }

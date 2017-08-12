@@ -20,6 +20,10 @@ public class ServiceDefinition {
     private Date lastModifiedDate;
     private List<AttributeDefinition> attributes;
 
+    public void setAttributes(List<AttributeDefinition> attributes) {
+        this.attributes = attributes;
+    }
+
     public org.egov.pgr.persistence.dto.ServiceDefinition toDto(){
         return org.egov.pgr.persistence.dto.ServiceDefinition.builder()
                     .code(code.trim())

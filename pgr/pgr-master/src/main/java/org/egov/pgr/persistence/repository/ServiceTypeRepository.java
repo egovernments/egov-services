@@ -116,7 +116,6 @@ public class ServiceTypeRepository {
                 searchNamedQuery, rowMapper);
     }
 
-
     private List<String> fetchKeywords(ServiceType serviceType, List<String> keywords) {
         List<ServiceTypeKeyword> keywordList = namedParameterJdbcTemplate.query(serviceTypeKeywordQueryBuilder.keywordsSearchQuery(),
                 getKeywordsSearchMap(serviceType, keywords), new BeanPropertyRowMapper<>(ServiceTypeKeyword.class));

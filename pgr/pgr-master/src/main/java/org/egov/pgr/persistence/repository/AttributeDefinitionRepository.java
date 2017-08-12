@@ -1,12 +1,16 @@
 package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.persistence.dto.AttributeDefinition;
+import org.egov.pgr.persistence.dto.ValueDefinition;
 import org.egov.pgr.persistence.querybuilder.AttributeDefinitionQueryBuilder;
+import org.egov.pgr.persistence.querybuilder.ValueDefinitionQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class AttributeDefinitionRepository {
@@ -15,10 +19,18 @@ public class AttributeDefinitionRepository {
 
     private AttributeDefinitionQueryBuilder attributeDefinitionQueryBuilder;
 
+    private ValueDefinitionRepository valueDefinitionRepository;
+
+    private ValueDefinitionQueryBuilder valueDefinitionQueryBuilder;
+
     public AttributeDefinitionRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                         AttributeDefinitionQueryBuilder attributeDefinitionQueryBuilder) {
+                                         AttributeDefinitionQueryBuilder attributeDefinitionQueryBuilder,
+                                         ValueDefinitionRepository valueDefinitionRepository,
+                                         ValueDefinitionQueryBuilder valueDefinitionQueryBuilder) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.attributeDefinitionQueryBuilder = attributeDefinitionQueryBuilder;
+        this.valueDefinitionRepository = valueDefinitionRepository;
+        this.valueDefinitionQueryBuilder = valueDefinitionQueryBuilder;
     }
 
     public void save(AttributeDefinition attributeDefinition){
@@ -26,6 +38,26 @@ public class AttributeDefinitionRepository {
                 getInsertParamMap(attributeDefinition));
     }
 
+    public List<org.egov.pgr.domain.model.AttributeDefinition> searchByCodeAndTenant(String code, String tenantId){
+        List<AttributeDefinition> attributeDefinitions =  namedParameterJdbcTemplate.query(attributeDefinitionQueryBuilder.findByServiceCodeAndTenantId(),
+                                                searchByCodeAndTenantIdMap(code, tenantId),
+                                                new BeanPropertyRowMapper<>(AttributeDefinition.class));
+
+        attributeDefinitions.forEach(this::setValueDefinitions);
+
+        return attributeDefinitions.stream()
+                .map(AttributeDefinition::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    private void setValueDefinitions(AttributeDefinition attributeDefinition){
+
+        List<ValueDefinition> valueDefinitions = valueDefinitionRepository.fetchValueDefinition(
+                            attributeDefinition.getServiceCode(), attributeDefinition.getTenantId(),
+                            attributeDefinition.getCode());
+
+        attributeDefinition.setValueDefinitions(valueDefinitions);
+    }
 
     private HashMap getInsertParamMap(AttributeDefinition attributeDefinition){
         HashMap<String, Object> parametersMap = new HashMap<>();
@@ -42,6 +74,15 @@ public class AttributeDefinitionRepository {
         parametersMap.put("createdby", attributeDefinition.getCreatedBy());
         parametersMap.put("lastmodifiedby", attributeDefinition.getLastModifiedBy());
         parametersMap.put("lastmodifieddate", attributeDefinition.getLastModifiedDate());
+
+        return parametersMap;
+    }
+
+    private HashMap searchByCodeAndTenantIdMap(String code, String tenantId){
+        HashMap<String, Object> parametersMap = new HashMap<>();
+
+        parametersMap.put("servicecode", code);
+        parametersMap.put("tenantid", tenantId);
 
         return parametersMap;
     }

@@ -37,7 +37,7 @@ public class ValueDefinitionRepository {
                         fetchValueDefinition(serviceType.getCode(),serviceType.getTenantId(), Attribute.getCode())));
     }
 
-    private List<ValueDefinition> fetchValueDefinition(String code, String tenantId, String attributeCode){
+    public List<ValueDefinition> fetchValueDefinition(String code, String tenantId, String attributeCode){
 
       return  namedParameterJdbcTemplate.query(valueDefinitionQueryBuilder.findByTenantIdAndServiceCodeAndAttributeCode(),
                 getValueDefinitionMap(code, tenantId, attributeCode),

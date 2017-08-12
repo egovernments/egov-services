@@ -380,7 +380,7 @@ class routerGeneration extends Component {
     <div className="routerGeneration">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Create Grievance Router </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {translate('pgr.lbl.create.router')} </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>

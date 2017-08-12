@@ -161,7 +161,7 @@ class viewOrUpdateServiceType extends Component {
       return(
         <div className="serviceTypeCreate">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Grievance Type List</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pgr.lbl.grievance.type')}</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>

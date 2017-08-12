@@ -1,19 +1,21 @@
 package org.egov.pgr.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
-import lombok.Getter;
-
-import javax.validation.constraints.NotNull;
-
 import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
+@Setter
 public class ServiceType {
 
     private Long id;

@@ -160,7 +160,7 @@ class ServiceGroupCreate extends Component {
         <div className="createServiceGroup">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Category' : 'Create Category'} < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')} {translate('pgr.lbl.grievance.category') }< /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
@@ -208,7 +208,7 @@ class ServiceGroupCreate extends Component {
               </div>
           </form>
           <Dialog
-               title={this.state.id != '' ? "Grievance Category Updated Successfully" : "Grievance Category Created Successfully"}
+               title={translate("pgr.lbl.success")}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
@@ -218,6 +218,7 @@ class ServiceGroupCreate extends Component {
                open={this.state.open}
               onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
              >
+             {translate('pgr.lbl.grievance.category') } {this.state.id != '' ? "Updated Successfully" : "Created Successfully"}
          </Dialog>
         </div>)
     }

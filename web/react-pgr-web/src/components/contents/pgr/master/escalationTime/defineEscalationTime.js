@@ -420,7 +420,7 @@ class DefineEscalationTime extends Component {
       return(<div className="defineEscalationTime">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create / Update  Escalation Time < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.create')} / {translate('pgr.lbl.update')} Escalation Time < /div>} />
               <CardText>
                   <Grid>
                       <Row>

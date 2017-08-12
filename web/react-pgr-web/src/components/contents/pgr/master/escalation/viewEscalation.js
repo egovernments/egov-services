@@ -211,7 +211,7 @@ class ViewEscalation extends Component {
       	  if(isSearchClicked)
       		return (
    	        <Card>
-   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
+   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
    		         <thead style={{backgroundColor:"#f2851f",color:"white"}}>

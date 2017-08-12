@@ -152,7 +152,7 @@ class receivingModeCreate extends Component {
     <div className="receivingModeCreate">
          <form autoComplete="off" onSubmit={(e) => {addOrUpdate(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {this.props.match.params.id ? "Update " : "Create " } Receiving Mode</div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {this.props.match.params.id ? translate('pgr.lbl.update') : translate('pgr.lbl.create') } {translate('pgr.lbl.receivingmode')}</div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
@@ -246,7 +246,7 @@ class receivingModeCreate extends Component {
           open={open}
           onRequestClose={handleOpenNClose}
         >
-        Receiving mode {this.props.match.params.id ? "updated" : "created"} successfully.
+        {translate('pgr.lbl.receivingmode')} {this.props.match.params.id ? "updated" : "created"} successfully.
         </Dialog>
         </div>
    );

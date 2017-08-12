@@ -559,7 +559,7 @@ class ServiceTypeCreate extends Component {
         <div className="createServiceType">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Grievance Type' : 'Create Grievance Type'} < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')} {translate('pgr.lbl.grievance.type')}< /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
@@ -698,7 +698,7 @@ class ServiceTypeCreate extends Component {
               </div>
           </form>
           <Dialog
-               title={this.state.id != '' ? "Grievance Type Updated Successfully" : "Grievance Type Created Successfully"}
+               title={translate("pgr.lbl.success")}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
@@ -708,6 +708,7 @@ class ServiceTypeCreate extends Component {
                open={this.state.open}
                onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
              >
+            {translate('pgr.lbl.grievance.type')} {this.state.id != '' ? "Updated Successfully" : "Created Successfully"}
          </Dialog>
         </div>)
     }

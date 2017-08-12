@@ -170,11 +170,11 @@ class viewOrUpdateServiceType extends Component {
                                     <thead>
                                         <tr>
                                           <th>#</th>
-                                          <th>Name</th>
-                                          <th>Code</th>
-                                          <th>Category</th>
-                                          <th>Active</th>
-                                          <th>Description</th>
+                                          <th>{translate('core.lbl.add.name')}</th>
+                                          <th>{translate('core.lbl.code')}</th>
+                                          <th>{translate('core.category')}</th>
+                                          <th>{translate('pgr.lbl.active')}</th>
+                                          <th>{translate('core.lbl.description')}</th>
                                           <th>SLA Hour</th>
                                           <th>Has Financial Impact</th>
                                         </tr>

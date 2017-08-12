@@ -131,12 +131,10 @@ class createRouter extends Component {
           searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
           setForm(routerType);
           if(type == "view"){
-            console.log('view page');
             self.setState({
               readonly: true
             });
           }else {
-            console.log('edit page');
             self.setState({
               updateonly: true
             });
@@ -277,7 +275,6 @@ class createRouter extends Component {
       var data = this.state.complaintSource.find( function( ele ) {
           return ele.id == id;
       } );
-      console.log(id, data);
       if(data){
         return (
           <div>
@@ -297,7 +294,6 @@ class createRouter extends Component {
       var data = this.state.boundaryTypeList.find( function( ele ) {
           return ele.id == id;
       } );
-      console.log(id, data);
       if(data){
         return (
           <div>
@@ -317,7 +313,6 @@ class createRouter extends Component {
       var data = this.state.boundarySource.find( function( ele ) {
           return ele.id == id;
       } );
-      console.log(id, data);
       if(data){
         return (
           <div>
@@ -337,7 +332,6 @@ class createRouter extends Component {
       var data = this.state.positionSource.find( function( ele ) {
           return ele.id == id;
       } );
-      console.log(id, data);
       if(data){
         return (
           <div>
@@ -549,7 +543,7 @@ class createRouter extends Component {
              </div>
            </form>
            <Dialog
-            title="Success"
+            title={translate('pgr.lbl.success')}
             actions={[<FlatButton
                   label={translate("core.lbl.close")}
                   primary={true}

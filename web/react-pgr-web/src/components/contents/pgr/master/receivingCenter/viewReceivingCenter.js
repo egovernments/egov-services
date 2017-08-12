@@ -47,11 +47,9 @@ class ViewReceivingCenter extends Component {
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/receivingcenter/v1/_search",{id:this.props.match.params.id},{}).then(function(response){
-                console.log(response);
                 current.setState({data:response.ReceivingCenterType})
                 setForm(response.ReceivingCenterType[0])
             }).catch((error)=>{
-                console.log(error);
             })
         }
 

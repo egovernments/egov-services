@@ -43,7 +43,7 @@ class viewOrUpdateReceivingMode extends Component {
     }
 
     componentWillMount() {
-      
+
     }
 
     componentDidMount() {
@@ -190,7 +190,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,

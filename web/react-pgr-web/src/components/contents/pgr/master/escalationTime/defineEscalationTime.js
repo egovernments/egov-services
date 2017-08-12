@@ -86,7 +86,7 @@ class DefineEscalationTime extends Component {
                      'excel', 'pdf', 'print'
             ],
             ordering: false,
-            bDestroy: true,
+            bDestroy: true
       });
     }
 
@@ -129,11 +129,8 @@ class DefineEscalationTime extends Component {
          $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
-    });
+         bDestroy: true
+        });
       }
     }
 

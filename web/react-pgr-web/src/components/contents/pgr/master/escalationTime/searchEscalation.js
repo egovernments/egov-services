@@ -57,7 +57,6 @@ const getNameById = function(object, id, property = "") {
 
 
 const getNameByServiceCode = function(object, id, property = "") {
-	console.log(id)
   if (id == "" || id == null) {
         return "";
     }
@@ -109,10 +108,7 @@ class SearchEscalation extends Component {
       $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+         bDestroy: true
     });
 
       initForm()
@@ -126,7 +122,6 @@ class SearchEscalation extends Component {
 
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
         setLoadingStatus('hide');
-          console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
           })
@@ -137,7 +132,6 @@ class SearchEscalation extends Component {
       });
 
       Api.commonApiPost("/hr-masters/designations/_search").then(function(response) {
-          console.log(response);
           self.setState({
             designationSource: response.Designation
           })
@@ -166,10 +160,7 @@ class SearchEscalation extends Component {
        $('#searchTable').DataTable({
           dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
           buttons: ['excel', 'pdf'],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+          bDestroy: true
     });
 
   }
@@ -204,11 +195,8 @@ class SearchEscalation extends Component {
         }
       } else {}
 
-      console.log(query)
-
       Api.commonApiPost("/workflow/escalation-hours/v1/_search",query,{}).then(function(response){
           setLoadingStatus('hide');
-          console.log(response);
           flag = 1;
           current.setState({
             resultList: response.EscalationTimeType,
@@ -372,7 +360,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,

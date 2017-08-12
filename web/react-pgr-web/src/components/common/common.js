@@ -585,7 +585,7 @@ var localationData = {
   "tl.update.groups.licensevalidity.licensecategory": "License Category",
   "tl.update.groups.licensedocumenttype.basedonfinancialyear": "Based on Financial Year",
 
-  "tl.create.licenses.groups.TradeDetails": "Trade Details",
+  "tl.create.licenses.groups.TradeDetailsTab": "Trade Details",
   "tl.create.licenses.groups.TradeDetails.OldLicenseNumber": "Old License Number",
   "tl.create.licenses.groups.TradeOwnerDetails": "Trade Owner Details",
   "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber": "Aadhar Number",

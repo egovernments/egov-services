@@ -7,8 +7,8 @@ var dat = {
 		"objectName": "licenses",
 		"groups": [
 			{
-				"label": "tl.create.licenses.groups.TradeDetails",
-				"name": "TradeDetails",
+				"label": "tl.create.licenses.groups.TradeDetailsTab",
+				"name": "TradeDetailsTab",
 				"fields": [
 						{
 							"name": "OldLicenseNumber",

@@ -171,7 +171,7 @@ class ServiceGroupCreate extends Component {
                                       value={createServiceGroup.name? createServiceGroup.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                       maxLength="100"
-                                      onChange={(e) => handleChange(e, "name", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Please use only alphabets, space and special characters')}
+                                      onChange={(e) => handleChange(e, "name", true, /^[a-zA-Z\s'_.]{0,100}$/, 'Please use only alphabets, space and special characters')}
                                       id="name"
                                   />
                               </Col>
@@ -194,7 +194,7 @@ class ServiceGroupCreate extends Component {
                                       value={createServiceGroup.description? createServiceGroup.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
                                       maxLength="250"
-                                      onChange={(e) => handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Please use only alphabets, space and special characters')}
+                                      onChange={(e) => handleChange(e, "description", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
                                       multiLine={true}
                                       id="description"
                                   />

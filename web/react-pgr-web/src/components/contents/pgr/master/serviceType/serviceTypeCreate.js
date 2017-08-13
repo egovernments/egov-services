@@ -570,7 +570,7 @@ class ServiceTypeCreate extends Component {
                                       value={createServiceType.serviceName? createServiceType.serviceName : ""}
                                       errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
                                       maxLength="100"
-                                      onChange={(e) => handleChange(e, "serviceName", true, /^[a-zA-Z\s_@./#+-]{0,100}$/, 'Please use only alphabets, space and special characters')}
+                                      onChange={(e) => handleChange(e, "serviceName", true, /^[a-zA-Z\s'_.]{0,100}$/, 'Please use only alphabets, space and special characters')}
                                       id="serviceName"
 
                                   />
@@ -594,7 +594,7 @@ class ServiceTypeCreate extends Component {
                                       value={createServiceType.description? createServiceType.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
                                       maxLength="250"
-                                      onChange={(e) => handleChange(e, "description", false, /^[a-zA-Z\s\r\n_@./#+-]{0,250}$/, 'Please use only alphabets, space and special characters')}
+                                      onChange={(e) => handleChange(e, "description", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
                                       multiLine={true}
                                       id="description"
                                   />

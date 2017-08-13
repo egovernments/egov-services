@@ -139,6 +139,10 @@ public class PgrMasterConstants {
     public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME = "code";
     public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE = "Grievance Type Code already exists";
 
+    public static final String SERVICETYPE_DESCRIPTION_LENGTH_CODE = "pgr.0050";
+    public static final String SERVICETYPE_DESCRIPTION_LENGTH_FIELD_NAME = "description";
+    public static final String SERVICETYPE_DESCRIPTION_LENGTH_ERROR_MESSAGE = "Description length is greater than 250 characters";
+
     public static final String CATEGORY_ID_MANDATORY_CODE = "pgr.0025";
     public static final String CATEGORY_ID_MANDATORY_FIELD_NAME = "code";
     public static final String CATEGORY_ID_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";

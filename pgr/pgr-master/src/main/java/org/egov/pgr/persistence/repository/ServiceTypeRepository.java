@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -61,51 +60,50 @@ public class ServiceTypeRepository {
     public List<org.egov.pgr.domain.model.ServiceType> getData(org.egov.pgr.domain.model.ServiceType serviceType) {
 
         List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.getQuery(serviceType),
-        		getDetailNamedQuery(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
+                getDetailNamedQuery(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
         System.out.println(serviceTypeQueryBuilder.getQuery(serviceType));
-        if(!serviceTypeList.isEmpty())
-        {
-        	return serviceTypeList.stream()
-        	.map(ServiceType::toDomain)
-            .collect(Collectors.toList());
+        if (!serviceTypeList.isEmpty()) {
+            return serviceTypeList.stream()
+                    .map(ServiceType::toDomain)
+                    .collect(Collectors.toList());
         }
 
         return Collections.EMPTY_LIST;
     }
     
     public List<org.egov.pgr.domain.model.ServiceType> getCodeTenantData(org.egov.pgr.domain.model.ServiceType serviceType) {
-    	org.egov.pgr.domain.model.ServiceType ss= org.egov.pgr.domain.model.ServiceType.builder().serviceCode(serviceType.getServiceCode())
-    												.tenantId(serviceType.getTenantId())
-    													.build();
-        List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.getQuery(ss),
-        		getDetailQuery(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
+        org.egov.pgr.domain.model.ServiceType serviceTypeCodeTenant = org.egov.pgr.domain.model.ServiceType.builder().serviceCode(serviceType.getServiceCode())
+                .tenantId(serviceType.getTenantId())
+                .build();
+        List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.getQuery(serviceTypeCodeTenant),
+                getDetailQuery(serviceTypeCodeTenant), new BeanPropertyRowMapper<>(ServiceType.class));
         System.out.println(serviceTypeQueryBuilder.getQuery(serviceType));
-        if(!serviceTypeList.isEmpty())
-        {
-        	return serviceTypeList.stream()
-        	.map(ServiceType::toDomain)
-            .collect(Collectors.toList());
+        if (!serviceTypeList.isEmpty()) {
+            return serviceTypeList.stream()
+                    .map(ServiceType::toDomain)
+                    .collect(Collectors.toList());
         }
 
         return Collections.EMPTY_LIST;
     }
     
     public List<org.egov.pgr.domain.model.ServiceType> getCodeTenantDataFromCategory(org.egov.pgr.domain.model.ServiceType serviceType) {
-    	org.egov.pgr.domain.model.ServiceType service= org.egov.pgr.domain.model.ServiceType.builder().category(serviceType.getCategory())
-    													.build();
+        org.egov.pgr.domain.model.ServiceType service = org.egov.pgr.domain.model.ServiceType.builder()
+                .category(serviceType.getCategory())
+                .tenantId(serviceType.getTenantId())
+                .build();
         List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.getCategoryData(service),
-        		getDetailQuery(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
+                getcategory(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
         System.out.println(serviceTypeQueryBuilder.getCategoryData(serviceType));
-        if(!serviceTypeList.isEmpty())
-        {
-        	return serviceTypeList.stream()
-        	.map(ServiceType::toDomain)
-            .collect(Collectors.toList());
+        if (!serviceTypeList.isEmpty()) {
+            return serviceTypeList.stream()
+                    .map(ServiceType::toDomain)
+                    .collect(Collectors.toList());
         }
 
         return Collections.EMPTY_LIST;
     }
-    
+
     private List<org.egov.pgr.domain.model.ServiceType> getServiceTypes(ServiceTypeSearchCriteria serviceTypeSearchCriteria, List<ServiceType> serviceTypeList) {
         return serviceTypeList.stream()
                 .filter(serviceType -> serviceType.isKeywordPresent(serviceTypeSearchCriteria.getKeywords()))
@@ -113,7 +111,7 @@ public class ServiceTypeRepository {
                 .collect(Collectors.toList());
     }
 
-    private void fetchValueDefinitions(List<ServiceType> serviceTypeList){
+    private void fetchValueDefinitions(List<ServiceType> serviceTypeList) {
         serviceTypeList.forEach(st -> valueDefinitionRepository.setValueDefinition(st));
     }
 
@@ -175,7 +173,7 @@ public class ServiceTypeRepository {
 
         return parametersMap;
     }
-    
+
     private HashMap<String, Object> getDetailNamedQuery(org.egov.pgr.domain.model.ServiceType serviceType) {
         HashMap<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("code", serviceType.getServiceCode().toUpperCase());
@@ -184,19 +182,21 @@ public class ServiceTypeRepository {
         parametersMap.put("category", serviceType.getCategory());
         return parametersMap;
     }
-    
+
     private HashMap<String, Object> getDetailQuery(org.egov.pgr.domain.model.ServiceType serviceType) {
         HashMap<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("code", serviceType.getServiceCode().toUpperCase());
         parametersMap.put("tenantid", serviceType.getTenantId());
         return parametersMap;
     }
+
     private HashMap<String, Object> getcategory(org.egov.pgr.domain.model.ServiceType serviceType) {
         HashMap<String, Object> parametersMap = new HashMap<String, Object>();
-        parametersMap.put("category", serviceType.getCategory());
+        parametersMap.put("categoryId", serviceType.getCategory());
+        parametersMap.put("tenantId", serviceType.getTenantId());
         return parametersMap;
     }
-    
+
     private HashMap<String, Object> getKeywordsSearchMap(ServiceType serviceType, List<String> keywords) {
         HashMap<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("code", serviceType.getCode());

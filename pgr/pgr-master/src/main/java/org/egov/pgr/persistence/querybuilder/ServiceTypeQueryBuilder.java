@@ -21,14 +21,14 @@ public class ServiceTypeQueryBuilder {
 
         return query.toString();
     }
-    
+
     public String getQuery(ServiceType serviceType){
 
         StringBuilder query = new StringBuilder("SELECT * FROM egpgr_complainttype WHERE tenantid = :tenantid" );
 
         if(!serviceType.isServiceCodeAbsent())
             addWhereClauseWithAnd(query,"upper(code)","code");
-                
+
         if(!serviceType.isServiceNameAbsent())
         	addWhereClauseWithAnd(query, "upper(name)", "name");
 
@@ -37,13 +37,17 @@ public class ServiceTypeQueryBuilder {
 
         return query.toString();
     }
-    public String getCategoryData(ServiceType serviceType){
+
+    public String getCategoryData(ServiceType serviceType) {
 
         StringBuilder query = new StringBuilder("SELECT * FROM egpgr_complainttype_category");
 
-        if(!serviceType.isCategoryAbsent())
-        	addWhereClause(query,"id","category");
-                
+        if (!serviceType.isCategoryAbsent())
+            addWhereClause(query, "id", "categoryId");
+
+        if (!serviceType.isTenantIdAbsent())
+            addWhereClauseWithAnd(query, "tenantId", "tenantId");
+
         return query.toString();
     }
 

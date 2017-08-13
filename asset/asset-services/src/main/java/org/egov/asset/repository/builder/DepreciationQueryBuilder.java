@@ -62,7 +62,8 @@ public class DepreciationQueryBuilder {
 						+ "assetcategory.depreciationmethod,asset.assetreference,assetcategory.name as assetcategoryname,"
 						+ "asset.depreciationrate as assetdepreciationrate,"
 						+ "assetcategory.depreciationrate as assetcategorydepreciationrate,"
-						+ "ywdep.depreciationrate as yearwisedepreciationrate,ywdep.financialyear"
+						+ "ywdep.depreciationrate as yearwisedepreciationrate,ywdep.financialyear,"
+						+ "assetcategory.accumulateddepreciationaccount,assetcategory.depreciationexpenseaccount" 
 
 						+ " from egasset_asset asset inner join egasset_assetcategory assetcategory "
 						+ "ON asset.assetcategory=assetcategory.id left outer join egasset_yearwisedepreciation ywdep"
@@ -72,7 +73,8 @@ public class DepreciationQueryBuilder {
 						+ depreciationCriteria.getFromDate() + " AND createdtime<=" + depreciationCriteria.getToDate() 
 						+ ")" + assetIdString
 						+ " AND asset.status='"+Status.CAPITALIZED.toString()+"' AND "
-						+ "assetcategory.assetcategorytype!='"+AssetCategoryType.LAND.toString()+"'");
+						+ "assetcategory.assetcategorytype!='"+AssetCategoryType.LAND.toString()+"'"
+						+ " AND assetcategory.accumulatedDepreciationAccount!=null AND assetcategory.depreciationExpenseAccount!=null");
 								
 		
 		return sql.toString();

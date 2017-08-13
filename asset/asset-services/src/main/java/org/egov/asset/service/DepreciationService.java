@@ -85,11 +85,9 @@ public class DepreciationService {
         		.depreciationDetails(depreciationDetails).auditDetails(auditDetails).build();
         saveAsync(depreciation);
          //FIXME persist only success depreciaition is success        
-        for (final AssetCurrentValue assetCurrentValue : assetCurrentValues)
-            assetCurrentValue.setTenantId(tenantId);
-        
-        currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder()
-                .assetCurrentValues(assetCurrentValues).requestInfo(requestInfo).build());
+        for (final AssetCurrentValue assetCurrentValue : assetCurrentValues) { assetCurrentValue.setTenantId(tenantId); }
+        currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder().assetCurrentValues(
+        		assetCurrentValues).requestInfo(requestInfo).build());
 
         return new DepreciationResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
                 depreciation);
@@ -113,7 +111,6 @@ public class DepreciationService {
 				.collect(Collectors.toMap(CalculationCurrentValue::getAssetId, Function.identity()));
 		final Map<Long, BigDecimal> depreciationSumMap = depreciationRepository
 				.getdepreciationSum(depreciationCriteria.getTenantId());
-
 		assetDepreciator.depreciateAsset(depreciationRequest, calculationAssetDetailList, calculationCurrentValues,
 				depreciationSumMap, assetCurrentValues, depreciationDetails);
 
@@ -183,7 +180,5 @@ public class DepreciationService {
         kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(), depreciation);
     }
 
-    public void save(final Depreciation depreciation) {
-        depreciationRepository.saveDepreciation(depreciation);
-    }
+    public void save(final Depreciation depreciation) { depreciationRepository.saveDepreciation(depreciation); }
 }

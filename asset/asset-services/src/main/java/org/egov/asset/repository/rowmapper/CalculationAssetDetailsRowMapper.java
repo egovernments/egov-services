@@ -43,6 +43,8 @@ public class CalculationAssetDetailsRowMapper implements RowMapper<CalculationAs
 				.grossValue(rs.getBigDecimal("grossvalue"))
 				.yearwisedepreciationrate(yearWiseDepreciaitionRate)
 				.financialyear(rs.getString("financialyear"))
+				.accumulatedDepreciationAccount(rs.getLong("accumulatedDepreciationAccount"))
+				.depreciationExpenseAccount(rs.getLong("depreciationExpenseAccount"))
 				.build();
 	}
 }

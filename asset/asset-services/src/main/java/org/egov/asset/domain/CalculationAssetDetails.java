@@ -38,4 +38,8 @@ public class CalculationAssetDetails {
 	private Double yearwisedepreciationrate;
 	
 	private String financialyear;
+
+	private Long accumulatedDepreciationAccount;
+
+	private Long depreciationExpenseAccount;
 }

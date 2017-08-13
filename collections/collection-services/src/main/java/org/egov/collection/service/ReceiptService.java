@@ -117,9 +117,9 @@ public class ReceiptService {
 	private WorkflowService workflowService;
 
 	public ReceiptCommonModel getReceipts(
-			ReceiptSearchCriteria receiptSearchCriteria) throws ParseException {
+			ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
 		return receiptRepository
-				.findAllReceiptsByCriteria(receiptSearchCriteria);
+				.findAllReceiptsByCriteria(receiptSearchCriteria, requestInfo);
 	}
 
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
@@ -249,6 +249,7 @@ public class ReceiptService {
 				Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
 			try{
 				instrument.setTransactionType(TransactionType.Debit);
+                instrument.setTenantId(tenantId);
                 if(instrument.getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH)) {
                     instrument.setTransactionDate(new Date());
                     instrument.setTransactionNumber(transactionId);

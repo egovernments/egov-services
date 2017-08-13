@@ -45,10 +45,7 @@ import lombok.AllArgsConstructor;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
-import org.egov.collection.model.ReceiptCommonModel;
-import org.egov.collection.model.ReceiptDetail;
-import org.egov.collection.model.ReceiptHeader;
-import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.*;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.querybuilder.ReceiptDetailQueryBuilder;
@@ -101,6 +98,9 @@ public class ReceiptRepository {
 
 	@Autowired
 	private UserRepository userRepository;
+
+    @Autowired
+    private InstrumentRepository instrumentRepository;
 
 	@Autowired
 	private BusinessDetailsRepository businessDetailsRepository;
@@ -169,7 +169,7 @@ public class ReceiptRepository {
 	}
 
 	public ReceiptCommonModel findAllReceiptsByCriteria(
-			ReceiptSearchCriteria receiptSearchCriteria) throws ParseException {
+			ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String queryString = receiptDetailQueryBuilder.getQuery(
 				receiptSearchCriteria, preparedStatementValues);
@@ -195,7 +195,9 @@ public class ReceiptRepository {
 		List<ReceiptHeader> unqReceiptheader = uniqueReceiptheader.stream()
 				.map(unqheader -> unqheader.toDomainModel())
 				.collect(Collectors.toList());
-		return new ReceiptCommonModel(unqReceiptheader, uniqueReceiptDetails);
+
+        Instrument instrument = searchInstrumentHeader(uniqueReceiptheader.get(0).getId(),uniqueReceiptheader.get(0).getTenantId(),requestInfo);
+		return new ReceiptCommonModel(unqReceiptheader, uniqueReceiptDetails, instrument);
 	}
 
 	public static <T> Predicate<T> distinctByKey(
@@ -381,5 +383,12 @@ public class ReceiptRepository {
 		}
 		return sequence;
 	}
+
+    public Instrument searchInstrumentHeader(final Long receiptHeader,final String tenantId,final RequestInfo requestInfo) {
+        String queryString = receiptDetailQueryBuilder.searchReceiptInstrument();
+        List<String> instrumentHeaders = jdbcTemplate.queryForList(
+                queryString, String.class, new Object[] { receiptHeader,tenantId });
+        return instrumentRepository.searchInstruments(instrumentHeaders.get(0),tenantId,requestInfo);
+    }
 
 }

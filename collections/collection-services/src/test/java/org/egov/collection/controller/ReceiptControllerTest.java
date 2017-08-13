@@ -114,7 +114,7 @@ public class ReceiptControllerTest {
 	public void test_should_search_receipts_as_per_criteria() throws Exception {
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
-		when(receiptService.getReceipts(getReceiptSearchCriteria())).thenReturn(getReceiptCommonModel());
+		when(receiptService.getReceipts(getReceiptSearchCriteria(),new RequestInfo())).thenReturn(getReceiptCommonModel());
 		mockMvc.perform(post("/receipts/_search?fromDate=2016-02-02 00:00:00&toDate=2017-07-11 13:25:45.794050"
 				+ "&tenantId=default&collectedBy=1&status=CREATED&sortBy=payeename&sortOrder=desc")
 						.contentType(MediaType.APPLICATION_JSON_UTF8).content(getFileContents("receiptRequest.json")))

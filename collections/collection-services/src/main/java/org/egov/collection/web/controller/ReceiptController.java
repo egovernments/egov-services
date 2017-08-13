@@ -126,7 +126,7 @@ public class ReceiptController {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		List<Receipt> receipts = new ArrayList<>();
 		try {
-			receipts = receiptService.getReceipts(searchCriteria).toDomainContract();
+			receipts = receiptService.getReceipts(searchCriteria,requestInfo).toDomainContract();
 		} catch (final Exception exception) {
 			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -148,7 +148,7 @@ public class ReceiptController {
 
 		List<Receipt> receipts = new ArrayList<>();
 		try {
-			receipts = receiptService.getReceipts(searchCriteria).toDomainContract();
+			receipts = receiptService.getReceipts(searchCriteria,null).toDomainContract();
 		} catch (final Exception exception) {
 			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
 		}

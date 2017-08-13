@@ -60,6 +60,8 @@ public class ReceiptCommonModel {
 
 	private List<ReceiptDetail> receiptDetails;
 
+    private Instrument instrument;
+
 	public List<Receipt> toDomainContract() {
 		List<Receipt> receipts = new ArrayList<>();
 
@@ -85,7 +87,7 @@ public class ReceiptCommonModel {
 					billAccountDetails.add(BillAccountDetail.builder().isActualDemand(rctDetail.getIsActualDemand())
 							.id(rctDetail.getId().toString()).tenantId(rctDetail.getTenantId())
 							.billDetail(rctDetail.getReceiptHeader().getId().toString())
-							.creditAmount(BigDecimal.valueOf(rctDetail.getCramount()))
+							.creditAmount(rctDetail.getCramount() != null ? BigDecimal.valueOf(rctDetail.getCramount()) : BigDecimal.ZERO)
 							.glcode(rctDetail.getChartOfAccount())
 							.purpose(Purpose.valueOf(rctDetail.getPurpose())).build());
 				}
@@ -108,7 +110,8 @@ public class ReceiptCommonModel {
 					.reasonForCancellation(receiptHeader.getReasonForCancellation())
 					.cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus())
 					.billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDate().getTime())
-				    .billDescription(receiptHeader.getReferenceDesc()).amountPaid(BigDecimal.valueOf(receiptHeader.getTotalAmount())).build();
+				    .billDescription(receiptHeader.getReferenceDesc())
+                    .amountPaid(receiptHeader.getTotalAmount() != null ? BigDecimal.valueOf(receiptHeader.getTotalAmount()) : BigDecimal.ZERO).build();
 			if(null != receiptHeader.getMinimumAmount()){
 				billDetail.setMinimumAmount(BigDecimal.valueOf(receiptHeader.getMinimumAmount()));
 			}
@@ -121,7 +124,7 @@ public class ReceiptCommonModel {
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
 			Receipt receipt = Receipt.builder().stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).
-                    transactionId(receiptHeader.getTransactionId()).build();
+                    transactionId(receiptHeader.getTransactionId()).instrument(instrument).build();
 			receipts.add(receipt);
 		}
 

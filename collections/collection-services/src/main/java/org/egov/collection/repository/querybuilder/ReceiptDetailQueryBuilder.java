@@ -344,4 +344,9 @@ public class ReceiptDetailQueryBuilder {
 	public String insertInstrumentId() {
 		return "insert into egcl_receiptinstrument(instrumentheader, receiptheader, tenantId) values (?,?,?)";
 	}
+
+    public String searchReceiptInstrument() {
+        return "select instrumentheader from egcl_receiptinstrument where receiptheader = ? and tenantId = ? ";
+    }
+
 }

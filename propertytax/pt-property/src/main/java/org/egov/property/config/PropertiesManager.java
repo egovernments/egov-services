@@ -712,6 +712,10 @@ public class PropertiesManager {
 		return environment.getProperty("egov.services.billing_service.searchdemand");
 	}
 
+	public String getBillingServiceSearchTaxHeads(){
+		return environment.getProperty("egov.services.billing_service.searchtaxheads");
+	}
+	
 	public String getInvalidTaxMessage() {
 		return environment.getProperty("invalid.titletransfer.tax.message");
 	}
@@ -768,5 +772,9 @@ public class PropertiesManager {
 
 	public String getInvalidAge() {
 		return environment.getProperty("invalid.input.unit.age");
+	}
+
+	public String getDemandBusinessService() {
+		return environment.getProperty("businessService");
 	}
 }

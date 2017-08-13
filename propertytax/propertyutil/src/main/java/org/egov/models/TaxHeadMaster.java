@@ -3,7 +3,7 @@ package org.egov.models;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.enums.CategoryEnum;
+import org.egov.enums.Category;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,7 +34,7 @@ public class TaxHeadMaster {
 	private String tenantId = null;
 
 	@JsonProperty("category")
-	private CategoryEnum category = null;
+	private Category category = null;
 
 	@JsonProperty("service")
 	@Size(min = 2, max = 64)

@@ -7,6 +7,7 @@ import org.egov.models.SpecialNoticeRequest;
 import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
+import org.egov.models.DemandResponse;
 
 public interface PropertyService {
 
@@ -91,4 +92,13 @@ public interface PropertyService {
 	 * @throws Exception
 	 */
 	public SpecialNoticeResponse generateSpecialNotice(SpecialNoticeRequest specialNoticeRequest) throws Exception;
+
+	/**
+	 * API prepares DCB data for Add/Edit DCB feature
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param upicNumber
+	 * @throws Exception
+	 */
+	public DemandResponse getDemandsForProperty(RequestInfo requestInfo, String tenantId, String upicNumber) throws Exception;
 }

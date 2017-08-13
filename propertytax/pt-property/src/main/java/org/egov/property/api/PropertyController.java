@@ -9,6 +9,7 @@ import org.egov.models.SpecialNoticeRequest;
 import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
+import org.egov.models.DemandResponse;
 import org.egov.property.services.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * Property Controller have the api's related to property
@@ -147,6 +150,23 @@ public class PropertyController {
 			throws Exception {
 
 		return propertyService.generateSpecialNotice(specialNoticeRequest);
+	}
+
+	/**
+	 * API is for Add/Edit DCB feature
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param upicNumber
+	 * @return demandResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "_preparedcb", method = RequestMethod.POST)
+	public DemandResponse prepareDCB(@RequestBody RequestInfoWrapper requestInfo,
+									 @RequestParam(value = "tenantId", required = true) String tenantId,
+									 @RequestParam(value = "upicNumber", required = true) String upicNumber)
+			throws Exception {
+
+		return propertyService.getDemandsForProperty(requestInfo.getRequestInfo(), tenantId, upicNumber);
 	}
 
 }

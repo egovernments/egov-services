@@ -3,24 +3,20 @@ package org.egov.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * 
- * @author Prasad
- *
- */
-public enum CategoryEnum {
+public enum Category {
 
 	TAX("TAX"),
 	FEE("FEE"),
 	REBATE("REBATE"),
 	ADVANCE_COLLECTION("ADVANCE_COLLECTION"),
 	PENALTY("PENALTY"),
-	FINES("FINES");
+	FINES("FINES"),
+	CHARGES("CHARGES");
 	
 	
 	private String value;
 	
-	CategoryEnum(String value) {
+	Category(String value) {
 		this.value = value;
 	}
 	
@@ -31,8 +27,8 @@ public enum CategoryEnum {
 	}
 
 	@JsonCreator
-	public static CategoryEnum fromValue(String text) {
-		for (CategoryEnum b : CategoryEnum.values()) {
+	public static Category fromValue(String text) {
+		for (Category b : Category.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
 			}

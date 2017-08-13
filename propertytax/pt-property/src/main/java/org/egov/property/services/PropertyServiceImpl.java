@@ -1,51 +1,17 @@
 package org.egov.property.services;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import org.egov.models.Address;
-import org.egov.models.AttributeNotFoundException;
-import org.egov.models.Demand;
-import org.egov.models.DemandDetail;
-import org.egov.models.DemandResponse;
-import org.egov.models.Document;
+import org.egov.models.*;
 import org.egov.models.Error;
-import org.egov.models.ErrorRes;
-import org.egov.models.Floor;
-import org.egov.models.FloorSpec;
-import org.egov.models.HeadWiseTax;
-import org.egov.models.IdGenerationRequest;
-import org.egov.models.IdGenerationResponse;
-import org.egov.models.IdRequest;
-import org.egov.models.Notice;
-import org.egov.models.Property;
-import org.egov.models.PropertyDetail;
-import org.egov.models.PropertyLocation;
-import org.egov.models.PropertyRequest;
-import org.egov.models.PropertyResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.RequestInfoWrapper;
-import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfoFactory;
-import org.egov.models.SearchTenantResponse;
-import org.egov.models.SpecialNoticeRequest;
-import org.egov.models.SpecialNoticeResponse;
-import org.egov.models.TaxCalculation;
-import org.egov.models.TaxPeriod;
-import org.egov.models.TaxPeriodResponse;
-import org.egov.models.TitleTransfer;
-import org.egov.models.TitleTransferRequest;
-import org.egov.models.TitleTransferResponse;
-import org.egov.models.TotalTax;
-import org.egov.models.Unit;
-import org.egov.models.User;
-import org.egov.models.VacantLandDetail;
-import org.egov.models.WorkFlowDetails;
+import org.egov.models.demand.*;
+import org.egov.models.demand.TaxHeadMaster;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
@@ -839,4 +805,182 @@ public class PropertyServiceImpl implements PropertyService {
         return propertyRequest;
     }
 
+    /**
+     * API prepares DCB data for Add/Edit DCB feature
+     * @param requestInfo
+     * @param tenantId
+     * @param upicNumber
+     * @throws Exception
+     */
+    public DemandResponse getDemandsForProperty(RequestInfo requestInfo, String tenantId, String upicNumber) throws Exception {
+        DemandResponse demandResponse = null;
+        int noOfPeriods = 0;
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        PropertyResponse propertyResponse =  searchProperty(requestInfo, tenantId, null, upicNumber, null,
+                null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+
+        if(propertyResponse != null){
+            Property property = propertyResponse.getProperties().get(0);
+
+            SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date occupancyDate = dbDateFormat.parse(property.getOccupancyDate());
+            String occupancyDateStr = new SimpleDateFormat(propertiesManager.getSimpleDateFormat()).format(occupancyDate);
+
+            //Fetch TaxPeriods
+            TaxPeriodResponse taxPeriodResponse = getTaxPeriodsForOccupancyDate(requestInfo, tenantId, occupancyDateStr);
+            logger.info("PropertyServiceImpl getDemandsForProperty() taxPeriodResponse : " + taxPeriodResponse);
+
+            //Fetch TaxHeads
+            TaxHeadMasterResponse taxHeadResponse = getTaxHeadMasters(requestInfo, tenantId, occupancyDate);
+            logger.info("PropertyServiceImpl getDemandsForProperty() taxHeadResponse : " + taxHeadResponse);
+
+            //Fetch Demands for property
+            DemandResponse demandRespForSavedDemands = demandRepository.getDemands(upicNumber, tenantId, requestInfoWrapper);
+            if(!taxPeriodResponse.getTaxPeriods().isEmpty())
+                noOfPeriods = taxPeriodResponse.getTaxPeriods().size();
+
+            List<Demand> newDemandList = new ArrayList<>();
+            List<Demand> finalDemandList = new ArrayList<>();
+            //If demands are present, load them in the response, else prepare new demands and set in response
+            if(!demandRespForSavedDemands.getDemands().isEmpty()){
+                Date taxPeriodFromDate;
+                //If number of demands and tax periods are same, set the demands to the list,
+                // else prepare demands for the remaining taxperiods and add the existing demands along with the new demands to the response
+                if(demandRespForSavedDemands.getDemands().size() < noOfPeriods){
+                    for(TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()){
+                        taxPeriodFromDate = dbDateFormat.parse(taxPeriod.getFromDate());
+                        for(Demand demand : demandRespForSavedDemands.getDemands()){
+                            //If demand exists for a taxperiod, add it to the demandlist, else prepare new demand and add to the list
+                            if(demand.getTaxPeriodFrom().equals(taxPeriodFromDate.getTime()))
+                                finalDemandList.add(demand);
+                            else {
+                                newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod, dbDateFormat);
+                                finalDemandList.addAll(newDemandList);
+                            }
+                        }
+                    }
+                    demandResponse = new DemandResponse();
+                    demandResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+                    demandResponse.setDemands(finalDemandList);
+                } else{
+                    //set the existing demands to the response
+                    demandResponse = demandRespForSavedDemands;
+                }
+
+            } else {
+                demandResponse = new DemandResponse();
+                demandResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+                for(TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()){
+                    finalDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod, dbDateFormat);
+                    demandResponse.setDemands(finalDemandList);
+                }
+            }
+        }
+        return demandResponse;
+    }
+
+    /**
+     * Fetches the TaxPeriods from pt-calculator service for the given occupancy date, till the current date
+     * @param requestInfo
+     * @param tenantId
+     * @param occupancyDateStr
+     * @return TaxPeriodResponse
+     */
+    private TaxPeriodResponse getTaxPeriodsForOccupancyDate(RequestInfo requestInfo, String tenantId, String occupancyDateStr){
+        StringBuffer taxPeriodSearchUrl = new StringBuffer();
+        taxPeriodSearchUrl.append(propertiesManager.getCalculatorHostName());
+        taxPeriodSearchUrl.append(propertiesManager.getCalculatorTaxperiodsSearch());
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(taxPeriodSearchUrl.toString())
+                .queryParam("tenantId", tenantId).queryParam("fromDate", occupancyDateStr).queryParam("toDate", "30/09/2017");
+
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+        logger.info("PropertyServiceImpl BuilderUri : " + builder.buildAndExpand().toUri()
+                + " \n RequestInfoWrapper  : " + requestInfoWrapper);
+        RestTemplate restTemplate = new RestTemplate();
+        TaxPeriodResponse taxPeriodResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfoWrapper,
+                TaxPeriodResponse.class);
+        return taxPeriodResponse;
+    }
+
+    /**
+     * API fetches TaxHeadMasters from the Billing Service for the occupancy date
+     * @param requestInfo
+     * @param tenantId
+     * @param occupancyDate
+     * @return TaxHeadMasterResponse
+     */
+    private TaxHeadMasterResponse getTaxHeadMasters(RequestInfo requestInfo, String tenantId, Date occupancyDate){
+        TaxHeadMasterResponse taxHeadResponse = null;
+        RestTemplate restTemplate = new RestTemplate();
+        StringBuffer taxHeadsUrl = new StringBuffer();
+        taxHeadsUrl.append(propertiesManager.getBillingServiceHostname());
+        taxHeadsUrl.append(propertiesManager.getBillingServiceSearchTaxHeads());
+
+        URI uri = UriComponentsBuilder.fromUriString(taxHeadsUrl.toString()).queryParam("tenantId", tenantId).queryParam("service","PT")
+                .queryParam("validFrom", occupancyDate.getTime()).queryParam("validTill", new Date().getTime())
+                .build(true).encode().toUri();
+
+        logger.info("getTaxHeadMasters taxheads url --> " + uri + " taxheads request --> " + requestInfo);
+
+        String taxHeadsResponseStr = restTemplate.postForObject(uri, requestInfo, String.class);
+        logger.info("getTaxHeadMasters taxheads response string is --> " + taxHeadsResponseStr);
+        if (!taxHeadsResponseStr.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                taxHeadResponse = objectMapper.readValue(taxHeadsResponseStr, TaxHeadMasterResponse.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return taxHeadResponse;
+    }
+
+    /**
+     * API prepares the new demands
+     * @param tenantId
+     * @param upicNumber
+     * @param property
+     * @param taxHeadResponse
+     * @param taxPeriod
+     * @param dateFormat
+     * @return List of demands
+     */
+    private List<Demand> prepareDemands(String tenantId, String upicNumber, Property property,
+                                        TaxHeadMasterResponse taxHeadResponse, TaxPeriod taxPeriod,
+                                        SimpleDateFormat dateFormat) {
+        List<Demand> newDemandList = new ArrayList<>();
+        Demand newDemand;
+        List<DemandDetail> demandDetailsList;
+        DemandDetail demandDetail;
+        newDemand = new Demand();
+        newDemand.setTenantId(tenantId);
+        newDemand.setBusinessService(propertiesManager.getDemandBusinessService());
+        newDemand.setConsumerType(property.getPropertyDetail().getPropertyType());
+        newDemand.setConsumerCode(upicNumber);
+        newDemand.setMinimumAmountPayable(BigDecimal.ONE);
+        demandDetailsList = new ArrayList<>();
+        for(TaxHeadMaster taxHeadMaster : taxHeadResponse.getTaxHeadMasters()){
+            demandDetail = new DemandDetail();
+            demandDetail.setTaxHeadMasterCode(taxHeadMaster.getCode());
+            demandDetailsList.add(demandDetail);
+        }
+        newDemand.setDemandDetails(demandDetailsList);
+        logger.info("Demand fromDate = " + taxPeriod.getFromDate() + " \n toDate = " + taxPeriod.getToDate());
+        try{
+            Date fromDate = dateFormat.parse(taxPeriod.getFromDate());
+            Date toDate = dateFormat.parse(taxPeriod.getToDate());
+            logger.info(" Dates, fromDate = "+fromDate+", toDate = "+toDate+
+                    " \n Epoch values, fromDate = " + fromDate.getTime() + " \n toDate = " + toDate.getTime());
+            newDemand.setTaxPeriodFrom(fromDate.getTime());
+            newDemand.setTaxPeriodTo(toDate.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Owner owner = new Owner();
+        owner.setId(property.getOwners().get(0).getId());
+        newDemand.setOwner(owner);
+        newDemandList.add(newDemand);
+        return newDemandList;
+    }
 }

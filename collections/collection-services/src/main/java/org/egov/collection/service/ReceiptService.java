@@ -249,6 +249,10 @@ public class ReceiptService {
 				Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
 			try{
 				instrument.setTransactionType(TransactionType.Debit);
+                if(instrument.getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH)) {
+                    instrument.setTransactionDate(new Date());
+                    instrument.setTransactionNumber(transactionId);
+                }
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){

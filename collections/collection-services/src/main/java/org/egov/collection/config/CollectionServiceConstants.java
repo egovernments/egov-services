@@ -133,6 +133,8 @@ public class CollectionServiceConstants {
     
     public static final String ACCOUNT_CODE_EXCEPTION_MSG="glcode couldn't be fetched";
     public static final String ACCOUNT_CODE_EXCEPTION_DESC="ISE while fetching glcode for instrument type, instrument service failed to return values";
+
+    public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     
 
 }

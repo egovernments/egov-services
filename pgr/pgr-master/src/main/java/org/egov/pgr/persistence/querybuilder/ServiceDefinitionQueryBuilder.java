@@ -6,37 +6,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceDefinitionQueryBuilder {
 
-    public String getInsertQuery(){
-        return "INSERT INTO service_definition (code, tenantid, createddate, createdby)"+
-                "VALUES (:code, :tenantid, :createddate, :createdby)";
-    }
+	public String getInsertQuery() {
+		return "INSERT INTO service_definition (code, tenantid, createddate, createdby)"
+				+ "VALUES (:code, :tenantid, :createddate, :createdby)";
+	}
 
-    public String getSubmissionData(ServiceDefinition serviceDefinition){
+	public String getSubmissionData(ServiceDefinition serviceDefinition) {
 
-        StringBuilder query = new StringBuilder("SELECT * FROM service_definition WHERE tenantid = :tenantid" );
+		StringBuilder query = new StringBuilder("SELECT * FROM service_definition WHERE tenantid = :tenantid");
 
-        if(!serviceDefinition.isCodeAbsent())
-            addWhereClauseWithAnd(query,"upper(code)","code");
-                
-        return query.toString();
-    }
-    
-    public String buildSearchQuery(ServiceDefinition serviceDefinition){
+		if (!serviceDefinition.isCodeAbsent())
+			addWhereClauseWithAnd(query, "upper(code)", "code");
 
-        StringBuilder query = new StringBuilder("SELECT * FROM egpgr_complainttype WHERE tenantid = :tenantid");
+		return query.toString();
+	}
 
-        if(!serviceDefinition.isCodeAbsent())
-            addWhereClauseWithAnd(query,"upper(code)","code");
+	public String buildSearchQuery(ServiceDefinition serviceDefinition) {
 
-        return query.toString();
-    }
-    
-    private StringBuilder addWhereClauseWithAnd(StringBuilder query, String fieldName, String paramName){
-        return query.append(" AND ").append(fieldName).append("= :").append(paramName);
-    }
-    
+		StringBuilder query = new StringBuilder("SELECT * FROM egpgr_complainttype WHERE tenantid = :tenantid");
 
-    public String getSearchQuery(){
-        return "SELECT * FROM service_definition WHERE code = :serviceCode AND tenantid = :tenantid";
-    }
+		if (!serviceDefinition.isCodeAbsent())
+			addWhereClauseWithAnd(query, "upper(code)", "code");
+
+		return query.toString();
+	}
+
+	private StringBuilder addWhereClauseWithAnd(StringBuilder query, String fieldName, String paramName) {
+		return query.append(" AND ").append(fieldName).append("= :").append(paramName);
+	}
+
+	public String getSearchQuery() {
+		return "SELECT * FROM service_definition WHERE code = :serviceCode AND tenantid = :tenantid";
+	}
 }

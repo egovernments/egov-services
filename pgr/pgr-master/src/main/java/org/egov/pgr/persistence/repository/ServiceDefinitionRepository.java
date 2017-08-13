@@ -1,5 +1,10 @@
 package org.egov.pgr.persistence.repository;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.egov.pgr.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgr.persistence.dto.ServiceDefinition;
 import org.egov.pgr.persistence.querybuilder.ServiceDefinitionQueryBuilder;
@@ -7,109 +12,99 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Repository
 public class ServiceDefinitionRepository {
 
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder;
+	private ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder;
 
-    private AttributeDefinitionRepository attributeDefinitionRepository;
+	private AttributeDefinitionRepository attributeDefinitionRepository;
 
-    public ServiceDefinitionRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                       ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder,
-                                       AttributeDefinitionRepository attributeDefinitionRepository) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.serviceDefinitionQueryBuilder = serviceDefinitionQueryBuilder;
-        this.attributeDefinitionRepository = attributeDefinitionRepository;
-    }
+	public ServiceDefinitionRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+			ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder,
+			AttributeDefinitionRepository attributeDefinitionRepository) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.serviceDefinitionQueryBuilder = serviceDefinitionQueryBuilder;
+		this.attributeDefinitionRepository = attributeDefinitionRepository;
+	}
 
-    public void save(ServiceDefinition serviceDefinition){
-        namedParameterJdbcTemplate.update(serviceDefinitionQueryBuilder.getInsertQuery(),
-                getInsertMap(serviceDefinition));
-    }
+	public void save(ServiceDefinition serviceDefinition) {
+		namedParameterJdbcTemplate.update(serviceDefinitionQueryBuilder.getInsertQuery(),
+				getInsertMap(serviceDefinition));
+	}
 
-    public List<org.egov.pgr.domain.model.ServiceDefinition> search(ServiceDefinitionSearchCriteria searchCriteria){
+	public List<org.egov.pgr.domain.model.ServiceDefinition> search(ServiceDefinitionSearchCriteria searchCriteria) {
 
-        List<ServiceDefinition> serviceDefinitions =  namedParameterJdbcTemplate.query(
-                    serviceDefinitionQueryBuilder.getSearchQuery(),
-                    getSearchMap(searchCriteria.getServiceCode(), searchCriteria.getTenantId()),
-                    new BeanPropertyRowMapper<>(ServiceDefinition.class));
+		List<ServiceDefinition> serviceDefinitions = namedParameterJdbcTemplate.query(
+				serviceDefinitionQueryBuilder.getSearchQuery(),
+				getSearchMap(searchCriteria.getServiceCode(), searchCriteria.getTenantId()),
+				new BeanPropertyRowMapper<>(ServiceDefinition.class));
 
-        return serviceDefinitions.stream()
-                    .map(ServiceDefinition::toDomain)
-                    .collect(Collectors.toList());
-    }
+		return serviceDefinitions.stream().map(ServiceDefinition::toDomain).collect(Collectors.toList());
+	}
 
-    private HashMap getInsertMap(ServiceDefinition serviceDefinition){
-        HashMap<String, Object> parametersMap = new HashMap<>();
+	private HashMap getInsertMap(ServiceDefinition serviceDefinition) {
+		HashMap<String, Object> parametersMap = new HashMap<>();
 
-        parametersMap.put("code", serviceDefinition.getCode());
-        parametersMap.put("tenantid", serviceDefinition.getTenantId());
-        parametersMap.put("createddate", serviceDefinition.getCreatedDate());
-        parametersMap.put("createdby", serviceDefinition.getCreatedBy());
+		parametersMap.put("code", serviceDefinition.getCode());
+		parametersMap.put("tenantid", serviceDefinition.getTenantId());
+		parametersMap.put("createddate", serviceDefinition.getCreatedDate());
+		parametersMap.put("createdby", serviceDefinition.getCreatedBy());
 
-        return parametersMap;
-    }
-    
-    
-    public List<org.egov.pgr.domain.model.ServiceDefinition> getData(org.egov.pgr.domain.model.ServiceDefinition serviceDefinition) {
+		return parametersMap;
+	}
 
-        List<ServiceDefinition> serviceTypeList = getServiceList(serviceDefinitionQueryBuilder.buildSearchQuery(serviceDefinition),
-        		getDetailNamedQuery(serviceDefinition), new BeanPropertyRowMapper<>(ServiceDefinition.class));
-        
-        System.out.println(serviceDefinitionQueryBuilder.buildSearchQuery(serviceDefinition));
-        if(!serviceTypeList.isEmpty())
-        {
-        	return serviceTypeList.stream()
-        	.map(ServiceDefinition::toDomain)
-            .collect(Collectors.toList());
-        }
+	public List<org.egov.pgr.domain.model.ServiceDefinition> getData(
+			org.egov.pgr.domain.model.ServiceDefinition serviceDefinition) {
 
-        return Collections.EMPTY_LIST;
-    }
-    
-    public List<org.egov.pgr.domain.model.ServiceDefinition> getDefinitionCode(org.egov.pgr.domain.model.ServiceDefinition serviceDefinition) {
+		List<ServiceDefinition> serviceTypeList = getServiceList(
+				serviceDefinitionQueryBuilder.buildSearchQuery(serviceDefinition),
+				getDetailNamedQuery(serviceDefinition), new BeanPropertyRowMapper<>(ServiceDefinition.class));
 
-        List<ServiceDefinition> definitionList = getServiceList(serviceDefinitionQueryBuilder.getSubmissionData(serviceDefinition),
-        		getDetailNamedQuery(serviceDefinition), new BeanPropertyRowMapper<>(ServiceDefinition.class));
-        
-        System.out.println(serviceDefinitionQueryBuilder.buildSearchQuery(serviceDefinition));
-        if(!definitionList.isEmpty())
-        {
-        	return definitionList.stream()
-        	.map(ServiceDefinition::toDomain)
-            .collect(Collectors.toList());
-        }
+		System.out.println(serviceDefinitionQueryBuilder.buildSearchQuery(serviceDefinition));
+		if (!serviceTypeList.isEmpty()) {
+			return serviceTypeList.stream().map(ServiceDefinition::toDomain).collect(Collectors.toList());
+		}
 
-        return Collections.EMPTY_LIST;
-    }
-    
-    private HashMap<String, String> getDetailNamedQuery(org.egov.pgr.domain.model.ServiceDefinition serviceDefinition) {
-        HashMap<String, String> parametersMap = new HashMap<String, String>();
-        
-        parametersMap.put("code", serviceDefinition.getCode().toUpperCase());
-        parametersMap.put("tenantid", serviceDefinition.getTenantId());
+		return Collections.EMPTY_LIST;
+	}
 
-        return parametersMap;
-    }
-    
-    private List<ServiceDefinition> getServiceList(String sql, HashMap<String, String> searchNamedQuery, BeanPropertyRowMapper<ServiceDefinition> rowMapper) {
-        return namedParameterJdbcTemplate.query(sql,
-                searchNamedQuery, rowMapper);
-    }
+	public List<org.egov.pgr.domain.model.ServiceDefinition> getDefinitionCode(
+			org.egov.pgr.domain.model.ServiceDefinition serviceDefinition) {
 
-    private HashMap getSearchMap(String serviceCode, String tenantId){
-        HashMap<String, Object> parametersMap = new HashMap<>();
+		List<ServiceDefinition> definitionList = getServiceList(
+				serviceDefinitionQueryBuilder.getSubmissionData(serviceDefinition),
+				getDetailNamedQuery(serviceDefinition), new BeanPropertyRowMapper<>(ServiceDefinition.class));
 
-        parametersMap.put("serviceCode", serviceCode);
-        parametersMap.put("tenantid", tenantId);
+		System.out.println(serviceDefinitionQueryBuilder.buildSearchQuery(serviceDefinition));
+		if (!definitionList.isEmpty()) {
+			return definitionList.stream().map(ServiceDefinition::toDomain).collect(Collectors.toList());
+		}
 
-        return parametersMap;
-    }
+		return Collections.EMPTY_LIST;
+	}
+
+	private HashMap<String, String> getDetailNamedQuery(org.egov.pgr.domain.model.ServiceDefinition serviceDefinition) {
+		HashMap<String, String> parametersMap = new HashMap<String, String>();
+
+		parametersMap.put("code", serviceDefinition.getCode().toUpperCase());
+		parametersMap.put("tenantid", serviceDefinition.getTenantId());
+
+		return parametersMap;
+	}
+
+	private List<ServiceDefinition> getServiceList(String sql, HashMap<String, String> searchNamedQuery,
+			BeanPropertyRowMapper<ServiceDefinition> rowMapper) {
+		return namedParameterJdbcTemplate.query(sql, searchNamedQuery, rowMapper);
+	}
+
+	private HashMap getSearchMap(String serviceCode, String tenantId) {
+		HashMap<String, Object> parametersMap = new HashMap<>();
+
+		parametersMap.put("serviceCode", serviceCode);
+		parametersMap.put("tenantid", tenantId);
+
+		return parametersMap;
+	}
 }

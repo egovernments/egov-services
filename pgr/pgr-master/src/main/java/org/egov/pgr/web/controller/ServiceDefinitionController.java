@@ -15,34 +15,32 @@ import java.util.stream.Collectors;
 @RequestMapping("/servicedefinition")
 public class ServiceDefinitionController {
 
+	private ServiceDefinitionService serviceDefinitionService;
 
-    private ServiceDefinitionService serviceDefinitionService;
+	public ServiceDefinitionController(ServiceDefinitionService serviceDefinitionService) {
+		this.serviceDefinitionService = serviceDefinitionService;
+	}
 
-    public ServiceDefinitionController(ServiceDefinitionService serviceDefinitionService) {
-        this.serviceDefinitionService = serviceDefinitionService;
-    }
+	@PostMapping("/v1/_create")
+	public ServiceDefinitionResponse create(@RequestBody ServiceDefinitionRequest request) {
+		serviceDefinitionService.create(request.toDomain(), request);
+		return new ServiceDefinitionResponse(null, request.getServiceDefinition());
+	}
 
-    @PostMapping("/v1/_create")
-    public ServiceDefinitionResponse create(@RequestBody ServiceDefinitionRequest request){
-        serviceDefinitionService.create(request.toDomain(), request);
-        return new ServiceDefinitionResponse(null, request.getServiceDefinition());
-    }
+	@PostMapping("/v1/_search")
+	public List<ServiceDefinition> search(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
+			@RequestParam(value = "serviceCode", required = false) String serviceCode,
+			@RequestBody RequestInfoBody requestInfoBody) {
 
-    @PostMapping("/v1/_search")
-    public List<ServiceDefinition> search(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
-                                          @RequestParam(value = "serviceCode", required = false) String serviceCode,
-                                          @RequestBody RequestInfoBody requestInfoBody){
+		ServiceDefinitionSearchCriteria searchCriteria = ServiceDefinitionSearchCriteria.builder().tenantId(tenantId)
+				.serviceCode(serviceCode).build();
 
-        ServiceDefinitionSearchCriteria searchCriteria = ServiceDefinitionSearchCriteria.builder()
-                .tenantId(tenantId)
-                .serviceCode(serviceCode)
-                .build();
+		List<org.egov.pgr.domain.model.ServiceDefinition> serviceDefinitions = serviceDefinitionService
+				.search(searchCriteria);
 
-        List<org.egov.pgr.domain.model.ServiceDefinition> serviceDefinitions = serviceDefinitionService.search(searchCriteria);
-
-        return serviceDefinitions.stream()
-                .map(serviceDefinition -> new ServiceDefinition(serviceDefinition, serviceDefinition.getAttributes()))
-                .collect(Collectors.toList());
-    }
+		return serviceDefinitions.stream()
+				.map(serviceDefinition -> new ServiceDefinition(serviceDefinition, serviceDefinition.getAttributes()))
+				.collect(Collectors.toList());
+	}
 
 }

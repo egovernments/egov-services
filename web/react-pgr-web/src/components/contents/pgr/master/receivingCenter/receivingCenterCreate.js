@@ -243,7 +243,7 @@ class CreateReceivingCenter extends Component {
                open={this.state.open}
                onRequestClose={this.handleClose}
              >
-              {translate('pgr.lbl.receivingcenter')} {this.props.match.params.id ? "updated" : "created"} successfully.
+              {translate('pgr.lbl.receivingcenter')} {this.props.match.params.id ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
          </Dialog>
         </div>)
     }

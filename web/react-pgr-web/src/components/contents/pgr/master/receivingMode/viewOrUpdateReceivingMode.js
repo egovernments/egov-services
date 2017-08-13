@@ -133,7 +133,7 @@ class viewOrUpdateReceivingMode extends Component {
                                           <th>{translate("core.lbl.add.name")}</th>
                                           <th>{translate("core.lbl.code")}</th>
                                           <th>{translate("core.lbl.description")}</th>
-                                          <th>Channel</th>
+                                          <th>{translate('pgr.lbl.channel')}</th>
                                           <th>{translate("pgr.lbl.active")}</th>
                                         </tr>
                                     </thead>

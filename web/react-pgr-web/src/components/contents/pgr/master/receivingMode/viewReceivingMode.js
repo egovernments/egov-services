@@ -109,7 +109,7 @@ class viewReceivingSet extends Component {
                  </Row>
                  <Row style={styles.addBorderBottom}>
                    <Col xs={6} md={3}>
-                    Channel
+                    {translate('pgr.lbl.channel')}
                    </Col>
                    <Col xs={6} md={3}>
                     {viewReceivingSet.channels ? viewReceivingSet.channels : ''}

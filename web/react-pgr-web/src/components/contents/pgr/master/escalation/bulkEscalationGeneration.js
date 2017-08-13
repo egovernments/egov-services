@@ -174,7 +174,7 @@ class BulkEscalationGeneration extends Component {
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
 		setLoadingStatus("hide");
-    let msg = `${translate('pgr.lbl.toposition')} Updated Successfully`;
+    let msg = `${translate('core.position.to')} ${translate('core.lbl.updatedsuccessful')}`;
 		toggleDailogAndSetText(true, msg);
           let query = {
 			fromPosition:bulkEscalationGeneration.fromPosition,
@@ -276,7 +276,7 @@ class BulkEscalationGeneration extends Component {
    		            <tr>
    		              <th>{translate('pgr.lbl.grievance.type')}</th>
    		              <th>{translate('pgr.lbl.fromposition')}</th>
-   		              <th>{translate('pgr.lbl.toposition')}</th>
+   		              <th>{translate('core.position.to')}</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -356,7 +356,7 @@ class BulkEscalationGeneration extends Component {
                           </Col>
                           <Col xs={12} sm={4} md={3} lg={3}>
                               <AutoComplete
-                                  floatingLabelText={translate('pgr.lbl.toposition')+" *"}
+                                  floatingLabelText={translate('core.position.to')+" *"}
                                   fullWidth={true}
                                   filter={function filter(searchText, key) {
                                             return key.toLowerCase().includes(searchText.toLowerCase());

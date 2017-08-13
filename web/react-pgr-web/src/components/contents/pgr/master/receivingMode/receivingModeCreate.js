@@ -199,7 +199,7 @@ class receivingModeCreate extends Component {
                                }
                              };
                              handleChange(e, "channels", true, "")}}
-                          floatingLabelText="Channel*" >
+                          floatingLabelText={translate('pgr.lbl.channel')+" *"} >
                               <MenuItem
                                 value={"WEB"}
                                 primaryText="WEB"
@@ -246,7 +246,7 @@ class receivingModeCreate extends Component {
           open={open}
           onRequestClose={handleOpenNClose}
         >
-        {translate('pgr.lbl.receivingmode')} {this.props.match.params.id ? "updated" : "created"} successfully.
+        {translate('pgr.lbl.receivingmode')} {this.props.match.params.id ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
         </Dialog>
         </div>
    );

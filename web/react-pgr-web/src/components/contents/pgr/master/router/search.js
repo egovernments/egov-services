@@ -271,7 +271,7 @@ class searchRouter extends Component {
       <div className="searchRouter">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Grievance Router </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {translate('core.lbl.search')} {translate('pgr.lbl.router')}</div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>

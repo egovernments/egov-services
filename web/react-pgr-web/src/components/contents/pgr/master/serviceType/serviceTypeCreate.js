@@ -602,7 +602,7 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="SLA Hours *"
+                                      floatingLabelText={translate('pgr.lbl.slahour')+" *"}
                                       value={createServiceType.slaHours? createServiceType.slaHours : ""}
                                       errorText={fieldErrors.slaHours ? fieldErrors.slaHours : ""}
                                       maxLength="4"
@@ -654,7 +654,7 @@ class ServiceTypeCreate extends Component {
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
-                                    label="Has Financial Impact"
+                                    label={translate('pgr.lbl.finimpact')}
                                     style={styles.setTopMargin}
                                     checked = {createServiceType.hasFinancialImpact || false}
                                     onCheck = {(e, i, v) => { console.log(createServiceType.hasFinancialImpact, i);
@@ -708,7 +708,7 @@ class ServiceTypeCreate extends Component {
                open={this.state.open}
                onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
              >
-            {translate('pgr.lbl.grievance.type')} {this.state.id != '' ? "Updated Successfully" : "Created Successfully"}
+            {translate('pgr.lbl.grievance.type')} {this.state.id != '' ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
          </Dialog>
         </div>)
     }

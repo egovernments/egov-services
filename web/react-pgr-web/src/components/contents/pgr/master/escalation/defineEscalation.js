@@ -282,10 +282,12 @@ componentWillUpdate() {
     }
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
-		toggleDailogAndSetText(true, "Escalation Updated Successfully");
-          let query = {
+
+        let msg = `${translate('pgr.lbl.escalations')} ${translate('core.lbl.updatedsuccessful')}`
+		    toggleDailogAndSetText(true, msg);
+        let query = {
         fromPosition:current.props.defineEscalation.fromPosition
-      }
+        }
 		emptyProperty("serviceCode");
 		emptyProperty("department");
 		emptyProperty("designation");
@@ -336,7 +338,8 @@ componentWillUpdate() {
     }
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_create",{},body).then(function(response){
-		toggleDailogAndSetText(true, "Escalation Created Successfully");
+      let msg = `${translate('pgr.lbl.escalations')} ${translate('core.lbl.createdsuccessful')}`
+    toggleDailogAndSetText(true, msg);
         let query = {
         fromPosition:current.props.defineEscalation.fromPosition
 		}
@@ -522,7 +525,7 @@ componentWillUpdate() {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
-                           floatingLabelText={translate('pgr.lbl.toposition')+" *"}
+                           floatingLabelText={translate('core.position.to')+" *"}
                            fullWidth={true}
                            value={defineEscalation.toPosition ?  defineEscalation.toPosition  : ""}
                            onChange= {(e, index ,value) => {
@@ -561,7 +564,7 @@ componentWillUpdate() {
 						<th>{translate('pgr.lbl.grievance.type')}</th>
 						<th>{translate('core.lbl.department')}</th>
 						<th>{translate('pgr.lbl.designation')}</th>
-						<th>{translate('pgr.lbl.toposition')}</th>
+						<th>{translate('core.position.to')}</th>
 						<th>{translate('pgr.lbl.actions')}</th>
    		            </tr>
    		          </thead>
@@ -615,7 +618,7 @@ componentWillUpdate() {
           </div>
           {this.state.noData &&
             <Card className="text-center" style={styles.marginStyle}>
-              <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
+              <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > {translate('pgr.lbl.escalationmessage')} </strong>}/>
               <CardText>
                   <RaisedButton primary={true} style={{margin:'10px 0'}} label={translate('pgr.lbl.addesc')} onClick={() => {
                     this.setState({

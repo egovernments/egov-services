@@ -201,8 +201,8 @@ class DefineEscalationTime extends Component {
     }
 
     Api.commonApiPost("workflow/escalation-hours/v1/_create",{},body).then(function(response){
-
-	  toggleDailogAndSetText(true,"Escalation Time Created Successfully");
+      let msg = `${translate('pgr.lbl.escalationstime')} ${translate('core.lbl.createdsuccessful')}`;
+	  toggleDailogAndSetText(true,msg);
 	  emptyProperty('noOfHours');
 	emptyProperty('designation');
 	  let searchquery = {
@@ -260,8 +260,8 @@ class DefineEscalationTime extends Component {
       let searchquery = {
         id:current.props.defineEscalationTime.grievanceType.id
       }
-
-	  toggleDailogAndSetText(true,"Escalation Time Updated Successfully");
+      let msg = `${translate('pgr.lbl.escalationstime')} ${translate('core.lbl.updatedsuccessful')}`;
+	  toggleDailogAndSetText(true,msg);
 	  emptyProperty('noOfHours');
 	emptyProperty('designation');
 
@@ -420,7 +420,7 @@ class DefineEscalationTime extends Component {
       return(<div className="defineEscalationTime">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.create')} / {translate('pgr.lbl.update')} Escalation Time < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.create')} / {translate('pgr.lbl.update')} {translate('pgr.lbl.escalationstime')}< /div>} />
               <CardText>
                   <Grid>
                       <Row>

@@ -218,7 +218,7 @@ class ServiceGroupCreate extends Component {
                open={this.state.open}
               onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
              >
-             {translate('pgr.lbl.grievance.category') } {this.state.id != '' ? "Updated Successfully" : "Created Successfully"}
+             {translate('pgr.lbl.grievance.category') } {this.state.id != '' ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
          </Dialog>
         </div>)
     }

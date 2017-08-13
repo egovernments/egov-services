@@ -297,7 +297,7 @@ class grievanceSearch extends Component {
         this.props.handleChange('', field, false, '');
         this.setState({datefield : field})
         this.setState({dateError :
-          field === 'endDate' ? 'To Date should be greater than or equal to From Date' : 'From Date should be less than or equal to To Date'
+          field === 'endDate' ? translate('pgr.lbl.dategreater') : translate('pgr.lbl.datelesser')
         })
       }
     }

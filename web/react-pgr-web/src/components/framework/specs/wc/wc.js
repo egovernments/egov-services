@@ -352,9 +352,9 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-              "name": "Connection.workflowDetails.approver",
+              "name": "Connection.workflowDetails.assignee",
               "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$..name"
             }]
           },
           {
@@ -369,9 +369,9 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-              "jsonPath": "Connection.workflowDetails.approver",
+              "jsonPath": "Connection.workflowDetails.assignee",
               "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$..name"
             }]
           },
           {
@@ -380,7 +380,7 @@ var dat = {
             "label": "wc.create.groups.approvalDetails.fields.Assignee",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name",
+            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$.Employee.*.id|$.Employee.*.name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",

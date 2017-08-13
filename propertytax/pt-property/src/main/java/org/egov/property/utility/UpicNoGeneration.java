@@ -70,7 +70,7 @@ public class UpicNoGeneration {
 				upicNumber = getUpicNumber(property.getTenantId(), requestInfo, upicFormat);
 				upicNumber = String.format("%08d", Integer.parseInt(upicNumber));
 				if (cityCode != null) {
-					upicNumber = cityCode + "-" + upicNumber;
+					upicNumber = cityCode + upicNumber;
 				}
 			}
 		} catch (Exception e) {

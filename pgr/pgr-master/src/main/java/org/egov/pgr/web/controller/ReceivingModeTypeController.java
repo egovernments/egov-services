@@ -231,7 +231,7 @@ public class ReceivingModeTypeController {
             throw new PGRMasterException(receivingModeException);
         }
 
-        if ((receivingMode.getDescription() != null || !receivingMode.getDescription().isEmpty()) && !(receivingMode.getDescription().length() > 0 && receivingMode.getDescription().length() <= 250)) {
+        if (receivingMode.getDescription() != null && !receivingMode.getDescription().isEmpty() && !(receivingMode.getDescription().length() > 0 && receivingMode.getDescription().length() <= 250)) {
             receivingModeException.put(CODE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_CODE);
             receivingModeException.put(FIELD, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_FIELD_NAME);
             receivingModeException.put(MESSAGE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_ERROR_MESSAGE);

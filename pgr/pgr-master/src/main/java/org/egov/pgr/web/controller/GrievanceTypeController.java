@@ -262,7 +262,7 @@ public class GrievanceTypeController {
 
     private void checkDescriptionLength(final ServiceRequest serviceTypeRequest) {
         final GrievanceType grievanceType = serviceTypeRequest.getService();
-        if ((grievanceType.getDescription() != null || !grievanceType.getDescription().isEmpty()) && !(grievanceType.getDescription().length() > 0 && grievanceType.getDescription().length() <= 250)) {
+        if (grievanceType.getDescription() != null && !grievanceType.getDescription().isEmpty() && !(grievanceType.getDescription().length() > 0 && grievanceType.getDescription().length() <= 250)) {
             grievanceTypeException.put(CODE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_CODE);
             grievanceTypeException.put(FIELD, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_FIELD_NAME);
             grievanceTypeException.put(MESSAGE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_ERROR_MESSAGE);

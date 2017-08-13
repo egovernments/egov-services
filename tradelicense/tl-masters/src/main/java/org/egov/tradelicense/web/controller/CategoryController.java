@@ -76,7 +76,7 @@ public class CategoryController {
 			@RequestParam(required = false) String businessNature, @RequestParam(required = false) Integer categoryId, 
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet) throws Exception {
 
-		return categoryService.getCategoryMaster(requestInfo.getRequestInfo(), tenantId.trim(), ids, name.trim(), code.trim(), active, type,
+		return categoryService.getCategoryMaster(requestInfo.getRequestInfo(), tenantId.trim(), ids, name, code, active, type,
 				businessNature, categoryId, pageSize, offSet);
 	}
 }

@@ -80,12 +80,12 @@ public class CategoryQueryBuilder {
 
 		if (code != null && !code.isEmpty()) {
 			searchSql.append(" AND code =? ");
-			preparedStatementValues.add(code);
+			preparedStatementValues.add(code.trim());
 		}
 
 		if (name != null && !name.isEmpty()) {
 			searchSql.append(" AND name =? ");
-			preparedStatementValues.add(name);
+			preparedStatementValues.add(name.trim());
 		}
 
 		if (categoryId != null) {
@@ -101,7 +101,7 @@ public class CategoryQueryBuilder {
 		
 		if (businessNature != null && !businessNature.isEmpty()) {
 			searchSql.append(" AND businessNature =? ");
-			preparedStatementValues.add(businessNature.toUpperCase());
+			preparedStatementValues.add(businessNature.toUpperCase().trim());
 		}
 		
 

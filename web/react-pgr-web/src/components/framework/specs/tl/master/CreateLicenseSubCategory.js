@@ -17,7 +17,7 @@ var dat = {
             "label": "tl.create.groups.subcategorytype.category",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/v1/category/_search?|$..name|$..name",
+            "url": "/tl-masters/v1/category/_search?tenantId=default|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -27,23 +27,23 @@ var dat = {
 							"name": "name",
 							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.subcategorytype.name",
-							"pattern": "",
+							"pattern": "^.[a-zA-Z. ]{2,49}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid Name"
 						},
 						{
 							"name": "code",
 							"jsonPath": "categories[0].code",
 							"label": "tl.create.groups.subcategorytype.code",
-							"pattern": "",
+							"pattern": "^.[A-Za-z0-9]{14,14}$",
 							"type": "text",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
 						},
 						{
 							"name": "active",
@@ -160,8 +160,8 @@ var dat = {
               "label": "tl.search.groups.subcategorytype.category",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/tl-masters/v1/category/_search?|$..name|$..name",
-              "isRequired": true,
+              "url": "/tl-masters/v1/category/_search?tenantId=default|$..name|$..name",
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -173,7 +173,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "/tl-masters/v1/category/_search?tenantId=default&type=SUBCATEGORY|$..name|$..name",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -185,8 +185,8 @@ var dat = {
       "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.name"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}],
       "values": ["code","name", "type", "active"],
       "resultPath": "categories",
-      "rowClickUrlUpdate": "/update/tl/CreateLicenseCategory/{id}",
-      "rowClickUrlView": "/view/tl/CreateLicenseCategory/{id}"
+      "rowClickUrlUpdate": "/update/tl/CreateLicenseSubCategory/{id}",
+      "rowClickUrlView": "/view/tl/CreateLicenseSubCategory/{id}"
       }
   },
 
@@ -315,23 +315,23 @@ var dat = {
 						"name": "name",
 						"jsonPath": "categories.name",
 						"label": "tl.update.groups.subcategorytype.name",
-						"pattern": "",
+						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter Valid Name"
 					},
 					{
 						"name": "code",
 						"jsonPath": "categories.code",
 						"label": "tl.update.groups.subcategorytype.code",
-						"pattern": "",
+						"pattern": "^.[A-Za-z0-9]{14,14}$",
 						"type": "text",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
 					},
 					{
 						"name": "subcategory",

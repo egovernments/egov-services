@@ -1,7 +1,7 @@
 var dat = {
 	"tl.create": {
 		"numCols": 12/2,
-		"url": "/tl-masters/v1/category/_create",
+		"url": "/tl-services/license/v1/_create",
     "useTimestamp": true,
 		"tenantIdRequired": true,
 		"objectName": "licenses",
@@ -15,7 +15,7 @@ var dat = {
 							"jsonPath": "licenses.oldLicenseNumber",
 							"label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
 							"pattern": "",
-							"type": "number",
+							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -34,7 +34,7 @@ var dat = {
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber",
 							"pattern": "^.{12,12}$",
 							"type": "number",
-							"isRequired": true,
+							"isRequired": false ,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "Aadhar Number must be of 12 digits"
@@ -76,12 +76,12 @@ var dat = {
 							"name": "EmailID",
 							"jsonPath": "licenses.emailId",
 							"label": "tl.create.licenses.TradeOwnerDetails.groups.EmailID",
-							"pattern": "",
+							"pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,3}$",
 							"type": "email",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid EmailID"
 						},
             {
 							"name": "TradeOwnerAddress",
@@ -107,7 +107,7 @@ var dat = {
 							"label": "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo",
 							"pattern": "",
 							"type": "number",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -229,7 +229,7 @@ var dat = {
 							"label": "tl.create.licenses.groups.TradeDetails.TradeCategory",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/v1/category/_search?|$..name|$..name",
+              "url": "/tl-masters/category/v1/_search?|$..name|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -241,7 +241,7 @@ var dat = {
 							"label": "tl.create.licenses.groups.TradeDetails.TradeSubCategory",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/v1/category/_search?|$..name|$..name",
+              "url": "/tl-masters/category/v1/_search?|$..name|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -263,7 +263,7 @@ var dat = {
               "jsonPath": "licenses.uomValue",
               "label": "tl.create.licenses.groups.TradeDetails.TradeAreaPremises",
               "pattern": "",
-              "type": "text",
+              "type": "number",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -275,7 +275,7 @@ var dat = {
               "label": "tl.create.licenses.groups.TradeDetails.Remarks",
               "pattern": "",
               "type": "text",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -301,7 +301,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue":true
+							"defaultValue":false
 						}
         ]
       },
@@ -337,7 +337,7 @@ var dat = {
 							"jsonPath": "licenses.IsPaid",
 							"label": "tl.create.licenses.groups.FeeDetails.IsPaid",
 							"pattern": "",
-							"type": "number",
+							"type": "checkbox",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",

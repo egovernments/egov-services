@@ -14,23 +14,23 @@ var dat = {
 							"name": "name",
 							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.categorytype.name",
-							"pattern": "",
+							"pattern": "^.[a-zA-Z. ]{2,49}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid Name"
 						},
 						{
 							"name": "code",
 							"jsonPath": "categories[0].code",
 							"label": "tl.create.groups.categorytype.code",
-							"pattern": "",
+							"pattern": "^.[A-Za-z0-9]{14,14}$",
 							"type": "text",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
 						},
 						{
 							"name": "active",
@@ -66,7 +66,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
               "url": "/tl-masters/v1/category/_search?|$..name|$..name",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -136,23 +136,23 @@ var dat = {
 						"name": "name",
 						"jsonPath": "categories.name",
 						"label": "tl.update.groups.categorytype.name",
-						"pattern": "",
+						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter Valid Name"
 					},
 					{
 						"name": "code",
 						"jsonPath": "categories.code",
 						"label": "tl.update.groups.categorytype.code",
-						"pattern": "",
+						"pattern": "^.[A-Za-z0-9]{14,14}$",
 						"type": "text",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
 					},
 					{
 						"name": "active",

@@ -40,9 +40,9 @@
 package org.egov.pgr.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.ReceivingModeType;
 import org.egov.pgr.domain.model.enums.ChannelType;
 import org.egov.pgr.service.ReceivingModeTypeService;
@@ -66,6 +66,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -73,6 +74,9 @@ import java.util.List;
 public class ReceivingModeTypeController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReceivingModeTypeController.class);
+    public static final String CODE = "code";
+    public static final String MESSAGE = "message";
+    public static final String FIELD = "field";
 
     @Autowired
     private ReceivingModeTypeService modeTypeService;
@@ -86,6 +90,8 @@ public class ReceivingModeTypeController {
     @Autowired
     private ErrorHandler errHandler;
 
+    HashMap<String, String> receivingModeException = new HashMap<>();
+
     @PostMapping(value = "/v1/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final ReceivingModeTypeReq ModeTypeRequest,
@@ -96,9 +102,7 @@ public class ReceivingModeTypeController {
         }
         logger.info("ReceivingModeType Create : Request::" + ModeTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validateReceivingModeRequest(ModeTypeRequest, true);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        validateReceivingModeRequest(ModeTypeRequest, "create");
 
         final ReceivingModeType ReceivingMode = modeTypeService.sendMessage(
                 applicationProperties.getCreateReceivingModeTopicName(),
@@ -117,11 +121,9 @@ public class ReceivingModeTypeController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("ReceivingCenterType Update : Request::" + modeTypeRequest);
+        logger.info("ReceivingMode Update : Request::" + modeTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validateReceivingModeRequest(modeTypeRequest, false);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        validateReceivingModeRequest(modeTypeRequest, "update");
 
         final ReceivingModeType modeType = modeTypeService.sendMessage(
                 applicationProperties.getUpdateReceivingModeTopicName(),
@@ -171,15 +173,11 @@ public class ReceivingModeTypeController {
 
     }
 
-    private List<ErrorResponse> validateReceivingModeRequest(final ReceivingModeTypeReq receivingModeRequest,
-                                                             boolean flag) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(receivingModeRequest, flag);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-        return errorResponses;
+    private void validateReceivingModeRequest(final ReceivingModeTypeReq receivingModeRequest,
+                                              String mode) {
+        validate(receivingModeRequest, mode);
+        addTenantIdValidationErrors(receivingModeRequest);
+        addChannelValidationErrors(receivingModeRequest);
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {
@@ -195,75 +193,73 @@ public class ReceivingModeTypeController {
         return errRes;
     }
 
-    private List<ErrorField> getErrorFields(final ReceivingModeTypeReq categoryRequest, boolean flag) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-        addReceivingModeNameAndCodeValidationErrors(categoryRequest, errorFields, flag);
-        addTeanantIdValidationErrors(categoryRequest, errorFields);
-        addChannelValidationErrors(categoryRequest, errorFields);
-        return errorFields;
-    }
-
-    private void addReceivingModeNameAndCodeValidationErrors(final ReceivingModeTypeReq receivingModeRequest,
-                                                             final List<ErrorField> errorFields, boolean flag) {
+    private void validate(final ReceivingModeTypeReq receivingModeRequest, String mode) {
         final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
         if (receivingMode.getCode() == null || receivingMode.getCode().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGMODE_CODE_MANDATORY_CODE)
-                    .message(PgrMasterConstants.RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
+            receivingModeException.put(CODE, PgrMasterConstants.RECEIVINGMODE_CODE_MANDATORY_CODE);
+            receivingModeException.put(MESSAGE, PgrMasterConstants.RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE);
+            receivingModeException.put(FIELD, PgrMasterConstants.RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(receivingModeException);
         }
         if (receivingMode.getName() == null || receivingMode.getName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGMODE_NAME_MANDATORY_CODE)
-                    .message(PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (flag && modeTypeService.checkReceivingModeTypeByNameAndCode(receivingMode.getCode(),
-                receivingMode.getName(), receivingMode.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.RECEIVINGMODE_CODE_UNIQUE_CODE)
-                    .message(PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGMODE_CODE_UNQ_FIELD_NAME).build();
-            errorFields.add(errorField);
+            receivingModeException.put(CODE, PgrMasterConstants.RECEIVINGMODE_NAME_MANDATORY_CODE);
+            receivingModeException.put(MESSAGE, PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE);
+            receivingModeException.put(FIELD, PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(receivingModeException);
         }
 
-        if (errorFields.size() == 0) {
-            if (modeTypeService.checkReceivingModeTypeByName(receivingMode.getCode(), receivingMode.getName(),
-                    receivingMode.getTenantId())) {
-                final ErrorField errorField = ErrorField.builder()
-                        .code(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_CODE)
-                        .message(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE)
-                        .field(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_FIELD_NAME).build();
-                errorFields.add(errorField);
-            }
+        if (modeTypeService.checkReceivingModeTypeByNameAndCode(receivingMode.getCode(),
+                receivingMode.getName(), receivingMode.getTenantId(), mode)) {
+            receivingModeException.put(CODE, PgrMasterConstants.CODENAME_UNIQUE_CODE);
+            receivingModeException.put(MESSAGE, PgrMasterConstants.CODENAME_UNIQUE_ERROR_MESSAGE);
+            receivingModeException.put(FIELD, PgrMasterConstants.CODENAME_UNIQUE_FIELD_NAME);
+            throw new PGRMasterException(receivingModeException);
         }
+
+        if (modeTypeService.checkReceivingModeTypeByName(receivingMode.getCode(), receivingMode.getName(),
+                receivingMode.getTenantId(), mode)) {
+            receivingModeException.put(CODE, PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_CODE);
+            receivingModeException.put(MESSAGE, PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE);
+            receivingModeException.put(FIELD, PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_FIELD_NAME);
+            throw new PGRMasterException(receivingModeException);
+        }
+
+        if (modeTypeService.checkReceivingModeTypeByCode(receivingMode.getCode(), receivingMode.getTenantId(), mode)) {
+            receivingModeException.put(CODE, PgrMasterConstants.RECEIVINGMODE_CODE_UNIQUE_CODE);
+            receivingModeException.put(MESSAGE, PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE);
+            receivingModeException.put(FIELD, PgrMasterConstants.RECEIVINGMODE_CODE_UNQ_FIELD_NAME);
+            throw new PGRMasterException(receivingModeException);
+        }
+
+        if ((receivingMode.getDescription() != null || !receivingMode.getDescription().isEmpty()) && !(receivingMode.getDescription().length() > 0 && receivingMode.getDescription().length() <= 250)) {
+            receivingModeException.put(CODE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_CODE);
+            receivingModeException.put(FIELD, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_FIELD_NAME);
+            receivingModeException.put(MESSAGE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_ERROR_MESSAGE);
+            throw new PGRMasterException(receivingModeException);
+        }
+
     }
 
-    private void addChannelValidationErrors(final ReceivingModeTypeReq receivingModeRequest,
-                                            final List<ErrorField> errorFields) {
+
+    private void addChannelValidationErrors(final ReceivingModeTypeReq receivingModeRequest) {
 
         final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
 
         if (receivingMode.getChannels().isEmpty() || receivingMode.getChannels().size() == 0) {
-
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANDATORY_CODE)
-                    .message(PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-
-        } else
-            return;
+            receivingModeException.put(CODE, PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANDATORY_CODE);
+            receivingModeException.put(MESSAGE, PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE);
+            receivingModeException.put(FIELD, PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(receivingModeException);
+        }
     }
 
-    private void addTeanantIdValidationErrors(final ReceivingModeTypeReq receivingModeRequest,
-                                              final List<ErrorField> errorFields) {
+    private void addTenantIdValidationErrors(final ReceivingModeTypeReq receivingModeRequest) {
         final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
         if (receivingMode.getTenantId() == null || receivingMode.getTenantId().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
-                    .message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
+            receivingModeException.put(CODE, PgrMasterConstants.TENANTID_MANDATORY_CODE);
+            receivingModeException.put(MESSAGE, PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE);
+            receivingModeException.put(FIELD, PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(receivingModeException);
         } else if (receivingMode.getChannels().size() > 0) {
 
             for (String chanel : receivingMode.getChannels()) {
@@ -271,28 +267,14 @@ public class ReceivingModeTypeController {
                 ChannelType chaType = ChannelType.fromValue(chanel);
 
                 if (chaType == null) {
-
-                    final ErrorField errorField = ErrorField.builder()
-                            .code(PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID_CODE)
-                            .message(PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE)
-                            .field(PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME).build();
-                    errorFields.add(errorField);
-
+                    receivingModeException.put(CODE, PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID_CODE);
+                    receivingModeException.put(MESSAGE, PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE);
+                    receivingModeException.put(FIELD, PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME);
+                    throw new PGRMasterException(receivingModeException);
                 }
 
             }
 
         }
-        return;
     }
-
-    private Error getError(final ReceivingModeTypeReq ModeTypeRequest, boolean flag) {
-        ModeTypeRequest.getModeType();
-        final List<ErrorField> errorFields = getErrorFields(ModeTypeRequest, flag);
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(PgrMasterConstants.INVALID_RECEIVING_MODETYPE_REQUEST_MESSAGE).errorFields(errorFields)
-                .build();
-
-    }
-
 }

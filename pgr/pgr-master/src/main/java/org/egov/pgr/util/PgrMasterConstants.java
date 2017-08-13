@@ -99,9 +99,9 @@ public class PgrMasterConstants {
     public static final String RECEIVINGCENTER_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingCenter Code is required";
 
 
-    public static final String RECEIVINGMODE_NAME_MANDATORY_CODE = "pgr.0005";
+    public static final String RECEIVINGMODE_NAME_MANDATORY_CODE = "pgr.0032";
     public static final String RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME = "name";
-    public static final String RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingMode Name is required";
+    public static final String RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE = "Receiving Mode name is required";
 
     public static final String GRIEVANCETYPE_NAME_MANDATORY_CODE = "pgr.0006";
     public static final String GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME = "serviceName";
@@ -123,13 +123,13 @@ public class PgrMasterConstants {
     public static final String RECEIVINGCENTER_UNQ_ERROR_MESSAGE = "Entered ReceivingCenter Name Already Exist.";
     public static final String RECEIVINGCENTER_NAME_UNQ_FIELD_NAME = "name";
 
-    public static final String RECEIVINGMODE_CODE_UNIQUE_CODE = "pgr.0011";
-    public static final String RECEIVINGMODE_UNQ_ERROR_MESSAGE = "Entered ReceivingMode Code Already Exist.";
+    public static final String RECEIVINGMODE_CODE_UNIQUE_CODE = "pgr.0034";
+    public static final String RECEIVINGMODE_UNQ_ERROR_MESSAGE = "Receiving Mode code already exist.";
     public static final String RECEIVINGMODE_CODE_UNQ_FIELD_NAME = "code";
 
-    public static final String RECEIVINGMODE_CODE_MANDATORY_CODE = "pgr.0012";
+    public static final String RECEIVINGMODE_CODE_MANDATORY_CODE = "pgr.0031";
     public static final String RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME = "code";
-    public static final String RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingMode Code is required";
+    public static final String RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE = "Receiving Mode code is required";
 
     public static final String ATTRIBUTE_DETAILS_MANDATORY_CODE = "pgr.0023";
     public static final String ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME = "attributes";
@@ -155,7 +155,7 @@ public class PgrMasterConstants {
     public static final String RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME = "channels";
     public static final String RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE = "Channels should be WEB or MOBILE.";
 
-    public static final String RECEIVINGMODE_CHANNEL_MANDATORY_CODE = "pgr.0012";
+    public static final String RECEIVINGMODE_CHANNEL_MANDATORY_CODE = "pgr.0035";
     public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "Channels Are Required.";
     public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "channels;";
 
@@ -175,7 +175,7 @@ public class PgrMasterConstants {
     public static final String GRIEVANCETYPE_NAME_UNIQUE_FIELD_NAME = "serviceName";
     public static final String GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE = "Grievance Type Name already exists";
 
-    public static final String RECEIVINGMODE_NAME_UNIQUE_CODE = "pgr.0017";
+    public static final String RECEIVINGMODE_NAME_UNIQUE_CODE = "pgr.0033";
     public static final String RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE = "Entered ReceivingMode Name Already Exist.";
     public static final String RECEIVINGMODE_NAME_UNIQUE_FIELD_NAME = "name";
 
@@ -186,7 +186,6 @@ public class PgrMasterConstants {
     public static final String CODENAME_UNIQUE_CODE = "pgr.0019";
     public static final String CODENAME_UNIQUE_ERROR_MESSAGE = "Combination of code and name already exists";
     public static final String CODENAME_UNIQUE_FIELD_NAME = "code,name";
-
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

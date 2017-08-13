@@ -40,7 +40,7 @@ public class ServiceDefinitionService {
     }
 
     public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request){
-    	
+    	createUniqueConstraintValidation(serviceDefinition);
     	createMandatoryFieldValidate(serviceDefinition);
         serviceDefinitionMessageQueueRepository.save(request, CREATE);
     }
@@ -80,6 +80,12 @@ public class ServiceDefinitionService {
     	createValidators.stream()
                 .filter(validator -> validator.canValidate(serviceDefinition))
                 .forEach(v -> v.checkMandatoryField(serviceDefinition));
+    }
+    
+    private void createUniqueConstraintValidation(ServiceDefinition serviceDefinition){
+    	createValidators.stream()
+                .filter(validator -> validator.canValidate(serviceDefinition))
+                .forEach(v -> v.checkConstraints(serviceDefinition));
     }
     
     private void setAttributes(List<ServiceDefinition> serviceDefinitions){

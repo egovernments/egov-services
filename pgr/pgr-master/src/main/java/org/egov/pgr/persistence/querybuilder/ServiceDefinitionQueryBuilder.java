@@ -11,7 +11,7 @@ public class ServiceDefinitionQueryBuilder {
                 "VALUES (:code, :tenantid, :createddate, :createdby)";
     }
 
-    public String getQuery(ServiceDefinition serviceDefinition){
+    public String getSubmissionData(ServiceDefinition serviceDefinition){
 
         StringBuilder query = new StringBuilder("SELECT * FROM service_definition WHERE tenantid = :tenantid" );
 

@@ -76,7 +76,7 @@ public class ServiceDefinitionRepository {
     
     public List<org.egov.pgr.domain.model.ServiceDefinition> getDefinitionCode(org.egov.pgr.domain.model.ServiceDefinition serviceDefinition) {
 
-        List<ServiceDefinition> definitionList = getServiceList(serviceDefinitionQueryBuilder.getQuery(serviceDefinition),
+        List<ServiceDefinition> definitionList = getServiceList(serviceDefinitionQueryBuilder.getSubmissionData(serviceDefinition),
         		getDetailNamedQuery(serviceDefinition), new BeanPropertyRowMapper<>(ServiceDefinition.class));
         
         System.out.println(serviceDefinitionQueryBuilder.buildSearchQuery(serviceDefinition));

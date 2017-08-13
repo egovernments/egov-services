@@ -776,10 +776,25 @@ table thead th {
     flex-wrap: wrap;
 }
 
-.service-menu-item{
- 	margin-top:10px;
- 	text-align: center;
+.disable-selection{
+	-moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
  	margin-bottom: 10px;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .application-title{
@@ -842,4 +857,27 @@ table thead th {
 	top: -12px;
   bottom: 12px;
 	right:12px;
+}
+
+.custom-card-title{
+	vertical-align: top;
+	line-height: 50px;
+	font-size: 24px;
+	margin-left: 5px;
+}
+
+.empty-info{
+	 padding: 20px 20px 0 20px;
+	 text-align: center;
+}
+
+.empty-info .icon{
+	font-size:50px !important;
+	color:rgb(165, 164, 164) !important;
+}
+
+.empty-info .msg{
+	display: block;
+	font-size: 18px;
+	color:rgb(165, 164, 164);
 }

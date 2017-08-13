@@ -10,6 +10,10 @@ import DataTable from '../common/Table';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {translate} from '../common/common';
 import SwipeableViews from 'react-swipeable-views';
+import {ListItem} from 'material-ui/List';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+
 //api import
 import Api from "../../api/api";
 
@@ -55,10 +59,14 @@ class Dashboard extends Component {
     this.state = {
       slideIndex: 0,
       serviceRequests: [],
+      citizenServices:[],
+      selectedServiceCode:"",
+      selectedServiceName:constants.LABEL_SERVICES,
 	    localArray:[],
       hasData:false,
       workflowResult: {}
     };
+    this.onClickServiceGroup=this.onClickServiceGroup.bind(this);
   }
 
   componentWillMount() {
@@ -78,16 +86,17 @@ class Dashboard extends Component {
     let current = this;
     let {currentUser}=this.props;
 
-    if(currentUser.type=="CITIZEN") {
+    if(currentUser.type === constants.ROLE_CITIZEN) {
       Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
-          Api.commonApiPost("/pgr-master/service/v2/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{})
+          Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{})
       ])
       .then((responses)=>{
         //if any error occurs
         if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
           current.setState({
             serviceRequests: [],
+            citizenServices:[],
             localArray:[],
              hasData:false
           });
@@ -117,7 +126,7 @@ class Dashboard extends Component {
         });
 
         //citizen services
-        let citizenServices=responses[1];
+        let citizenServices=responses[1].ServiceGroups;
 
         current.props.setLoadingStatus('hide');
 
@@ -264,15 +273,47 @@ class Dashboard extends Component {
     }
   }
 
+  loadServiceTypes = (service) => {
+    var _this=this;
+    this.props.setLoadingStatus("loading");
+    Api.commonApiPost("/pgr-master/service/v1/_search",{categoryId:service.id,
+       keywords:constants.CITIZEN_SERVICES_KEYWORD, type:"category"},{}).then(function(response){
+      _this.props.setLoadingStatus("hide");
+      service['types'] = response.Service;
+      _this.setState([..._this.state.citizenServices, ...service]);
+    });
+  }
+
+  onClickServiceGroup= ({code, name}) =>{
+    this.setState({servicesFilter:"", selectedServiceCode:code, selectedServiceName:name});
+    var service = this.state.citizenServices.find((service) => service.code === code);
+    if(service && !service.hasOwnProperty("types")){
+          this.loadServiceTypes(service);
+    }
+  }
+
+  onBackFromServiceType(){
+    this.setState({servicesFilter:"", selectedServiceCode:"", selectedServiceName:translate(constants.LABEL_SERVICES)});
+  }
+
   render() {
     //filter citizen services
-    let services=[];
-    if(this.state.servicesFilter){
-      services = this.state.citizenServices.filter(
-        (service)=> service.serviceName.toLowerCase().indexOf(this.state.servicesFilter.toLowerCase()) > -1);
-    }
-    else{
-      services=this.state.citizenServices;
+    let servicesMenus=[];
+    let serviceTypeMenus=[];
+
+    if(!this.state.selectedServiceCode)
+      servicesMenus = this.state.citizenServices.filter(
+        (service)=>  !this.state.servicesFilter ||
+         service.name.toLowerCase().indexOf(this.state.servicesFilter.toLowerCase()) > -1);
+    else
+    {
+        var service=this.state.citizenServices.find((service)=>service.code === this.state.selectedServiceCode);
+        if(service){
+          var types = [];
+          if(service.hasOwnProperty("types"))
+             types=service.types.filter((type)=> !this.state.servicesFilter || type.serviceName.toLowerCase().indexOf(this.state.servicesFilter.toLowerCase()) > -1);
+          serviceTypeMenus=[...types];
+        }
     }
 
     let {workflowResult} = this.state;
@@ -334,13 +375,13 @@ class Dashboard extends Component {
       <div className="Dashboard">
 
       {
-            currentUser && currentUser.type=="CITIZEN"?<div>
+            currentUser && currentUser.type==constants.ROLE_CITIZEN?<div>
           <Tabs
               onChange={this.handleChange}
               value={this.state.slideIndex}
             >
               <Tab label={translate("csv.lbl.myrequest")} value={0}/>
-              <Tab label={translate("csv.lbl.services")} value={1} />
+              <Tab label={translate(constants.LABEL_SERVICES)} value={1} />
               <Tab label={translate("pgr.title.create.grievence")} value={2} onClick={()=>{
                   this.props.history.push("/pgr/createGrievance")
                 }} />
@@ -404,18 +445,46 @@ class Dashboard extends Component {
                   <Grid>
                     <Row>
                       <TextField
-        								hintText={translate("core.lbl.search")}
         								floatingLabelText={translate("core.lbl.search")}
         								fullWidth={true}
+                        value={this.state.servicesFilter||""}
                         onChange={(e, value) => this.filterCitizenServices(value)}
         							/>
                     </Row>
                     <Row>
-                      {services && services.map((service, index) => {
-                         return <ServiceMenu key={index} service={service} onClick={()=>{
-                             this.props.setRoute(`/services/apply/${service.serviceCode}/${service.serviceName}`);
-                           }}></ServiceMenu>;
-                      })}
+                        <Card style={{width:'100%'}}>
+                          <CardTitle style={{padding:'16px 16px 0px 16px'}}>
+                            {this.state.selectedServiceCode ? (
+                              <IconButton onTouchTap={()=>{
+                                  this.onBackFromServiceType();
+                                }}>
+                                <FontIcon className="material-icons">arrow_back</FontIcon>
+                              </IconButton>
+                            ):null}
+                            <span className="custom-card-title disable-selection">{translate(this.state.selectedServiceName)}</span>
+                          </CardTitle>
+
+                           <CardText style={{padding:'0px 16px 16px 16px'}}>
+                              <Row>
+                                {!this.state.selectedServiceCode && servicesMenus.map((service, index)=>{
+                                     return (<ServiceMenu key={index} service={service} onClick={this.onClickServiceGroup} />);
+                                  })}
+                                {serviceTypeMenus.map((serviceType, index)=>{
+                                  return (<ServiceTypeItem key={index} serviceType={serviceType} onClick={()=>{
+                                      this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName}`);
+                                    }}></ServiceTypeItem>)
+                                })}
+
+                                {serviceTypeMenus.length === 0 && servicesMenus.length === 0? (
+                                  <div className="col-xs-12 empty-info">
+                                    <FontIcon className="material-icons icon">inbox</FontIcon>
+                                    <span className="msg">No Services Found</span>
+                                  </div>
+                                ) : null}
+
+                              </Row>
+                           </CardText>
+                        </Card>
                     </Row>
                   </Grid>
               </div>
@@ -530,11 +599,32 @@ class Dashboard extends Component {
   }
 }
 
-const ServiceMenu = ({service, onClick}) =>{
+const ServiceMenu = ({service, onClick}) => {
+  return(
+    <Col md={4} sm={4} lg={4} xs={12}>
+      <div className="service-menu-item disable-selection">
+        <ListItem
+          primaryText={<div className="ellipsis">{service.name}</div>}
+          secondaryText={service.description}
+          onTouchTap={()=> {
+            onClick(service);
+          }}
+        />
+      </div>
+    </Col>
+  )
+};
+
+const ServiceTypeItem = ({serviceType, onClick}) =>{
     return(
-      <Col md={3} sm={4} xs={12}>
-        <div className="service-menu-item">
-            <RaisedButton fullWidth={true} label={service.serviceName} primary={true} onClick={onClick} />
+      <Col md={4} sm={4} lg={4} xs={12}>
+        <div className="service-menu-item disable-selection">
+          <ListItem
+            primaryText={serviceType.serviceName}
+            secondaryText={serviceType.description}
+            onClick={onClick}
+          />
+          {/*<RaisedButton fullWidth={true} label={service.serviceName} primary={true} onClick={onClick} /> */}
         </div>
       </Col>
     )

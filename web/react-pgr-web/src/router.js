@@ -91,6 +91,8 @@ import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
+import ReceiptView from './components/non-framework/collection/master/receipt/view';
+
 const base = "";
 
 const Main = () => {
@@ -196,6 +198,9 @@ const Main = () => {
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
+
+      <Route exact path= {base + '/non-framework/collection/receipt/view/:id?'} component={ReceiptView}/>
+
 
     </Switch>
   </main>

@@ -268,7 +268,7 @@ var dat = {
           "type": "text",
           "isRequired": true,
           "isDisabled": false,
-          "requiredErrMsg": "",
+          "requiredErrMsg": "Amount paid should be above minimum amount",
           "patternErrMsg": "",
           "isLabel": false
         }
@@ -309,20 +309,17 @@ var dat = {
           "url": "",
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "showHideFields": [{
-            "ifValue": "Cheque",
-            "hide": [],
-            "show": [{
-              "name": "chequeOrDD",
-              "isGroup": true,
-              "isField": false
-            }]
-          }],
+          // "showHideFields": [{
+          //   "ifValue": "Cheque",
+          //   "hide": [],
+          //   "show": [{
+          //     "name": "chequeOrDD",
+          //     "isGroup": true,
+          //     "isField": false
+          //   }]
+          // }],
 
-          "defaultValue": [{
-              "key": "",
-              "value": null
-            },
+          "defaultValue": [
             {
               "key": "Cash",
               "value": "Cash"

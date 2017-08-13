@@ -17,6 +17,8 @@ import jp from "jsonpath";
 import $ from "jquery";
 
 
+
+
 var specifications={};
 
 let reqRequired = [];
@@ -115,7 +117,8 @@ class Transaction extends Component {
       self.props.handleChange({target:{value:new Date().getTime()}},"Receipt[0].instrument.transactionDate",false,false);
       self.props.handleChange({target:{value:"1232356543"}},"Receipt[0].instrument.transactionNumber",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
-      self.props.handleChange({target:{value:100}},"Receipt[0].instrument.amount",false,false);
+      // self.props.handleChange({target:{value:100}},"Receipt[0].instrument.amount",false,false);
+      self.props.handleChange({target:{value:res.Bill[0].payeeName}},"Receipt[0].Bill[0].paidBy",false,false);
 
 
 
@@ -168,10 +171,13 @@ class Transaction extends Component {
       });
 
       self.props.setFlag(1);
+
+        $(".chequeOrDD").hide();
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.props.setLoadingStatus('hide');
     })
+
   }
 
   getVal = (path) => {
@@ -459,6 +465,27 @@ class Transaction extends Component {
         this.checkIfHasEnDisFields(property, e.target.value);
         handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
+
+        if(property.indexOf("Receipt[0].Bill[0].billDetails")>-1){
+          let bill=this.getVal("Receipt[0].Bill[0].billDetails");
+          let sum=0;
+          for (var i = 0; i < bill.length; i++) {
+             if (bill[i].hasOwnProperty("amountPaid")) {
+               sum+=parseInt(bill[i].amountPaid);
+             }
+          }
+          handleChange({target:{value:sum}},"Receipt[0].instrument.amount",false,false);
+        }
+
+        if (property.indexOf("Receipt[0].instrument.instrumentType.name")>-1) {
+          if (e.target.value=="Cash") {
+              $(".chequeOrDD").hide();
+          } else {
+              $(".chequeOrDD").show();
+          }
+
+        }
+
         _.forEach(depedants, function(value, key) {
               if (value.type=="dropDown") {
                   let splitArray=value.pattern.split("?");
@@ -534,15 +561,18 @@ class Transaction extends Component {
       self.initData();
       self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
       setTimeout(function() {
-        if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          if(self.props.actionName == "update") {
-            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
-          } else {
-            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
-          }
-          self.props.setRoute(hash);
-        }
+        // if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+        //   if(self.props.actionName == "update") {
+        //     var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+        //   } else {
+        //     var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+        //   }
+        //   self.props.setRoute(hash);
+        // }
+        self.props.setRoute("/non-framework/collection/receipt/view");
       }, 1500);
+      // self.handleChange({target:{value:response}},"response",false,"","","");
+
     }, function(err) {
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);
@@ -555,7 +585,7 @@ class Transaction extends Component {
     let {showResult, resultList} = this.state;
     // showResult=true;
 
-    console.log(isFormValid);
+    // console.log(isFormValid);
 
 
     console.log(formData);
@@ -652,6 +682,8 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
+
+
 
 
 /*let res=

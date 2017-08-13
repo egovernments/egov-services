@@ -67,14 +67,16 @@ class UiTable extends Component {
   	}
 
   	render() {
-  		let {resultList, rowClickHandler} = this.props;
+  		let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
 
+			console.log(showHeader);
+			console.log(showDataTable);
   		const renderTable = function () {
   			return (
   				<Card className="uiCard">
-		          <CardHeader title={<strong> {translate("ui.table.title")} </strong>}/>
+		          <CardHeader title={<strong> {showHeader==undefined?translate("ui.table.title"):(showHeader?translate("ui.table.title"):"")} </strong>}/>
 		          <CardText>
-		          <Table id="searchTable" bordered responsive className="table-striped">
+		          <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
 		          <thead>
 		            <tr>
 		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {

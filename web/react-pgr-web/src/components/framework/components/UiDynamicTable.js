@@ -128,16 +128,16 @@ class UiDynamicTable extends Component {
 				let {renderFields}=this;
 				// console.log(resultList);
 
-				const totalAmount=()=>{
-					 let bill=getVal("Receipt[0].Bill");
-					 let sum=0;
-					 for (var i = 0; i < bill.length; i++) {
-						 	if (bill[i].hasOwnProperty("amountPaid")) {
-						 		sum+=bill[i].amountPaid;
-						 	}
-					 }
-					 return sum;
-				}
+				// const totalAmount=()=>{
+				// 	 let bill=getVal("Receipt[0].Bill");
+				// 	 let sum=0;
+				// 	 for (var i = 0; i < bill.length; i++) {
+				// 		 	if (bill[i].hasOwnProperty("amountPaid")) {
+				// 		 		sum+=bill[i].amountPaid;
+				// 		 	}
+				// 	 }
+				// 	 return sum;
+				// }
 
 			const renderTable = function () {
   			return (

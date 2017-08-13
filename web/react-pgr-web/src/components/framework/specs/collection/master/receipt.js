@@ -176,58 +176,65 @@ var dat = {
 			"values": ["Bill[0].billDetails[0].receiptNumber","Bill[0].billDetails[0].receiptDate", "Bill[0].billDetails[0].businessService", "Bill[0].billDetails[0].billNumber","Bill[0].billDetails[0].billDescription","Bill[0].paidBy","Bill[0].billDetails[0].amountPaid","Bill[0].billDetails[0].collectionType","Bill[0].billDetails[0].status"],
 			"resultPath": "Receipt",
 			"rowClickUrlUpdate": "/update/collection/categoryType/{id}",
-			"rowClickUrlView": "/view/collection/receipt/{id}"
+			"rowClickUrlView": "/non-framework/collection/receipt/view/{id}"
 			}
 	}
-  // ,
-	// "collection.view": {
-	// 	"numCols": 12/3,
-	// 	"url": "/collectionms/masters/categorytype/_search?id={id}",
-	// 	"tenantIdRequired": true,
-	// 	"useTimestamp": true,
-	// 	"objectName": "CategoryType",
-	// 	"groups": [
-	// 		{
-	// 			"label": "collection.view.categorytype.title",
-	// 			"name": "viewCategoryType",
-	// 			"fields": [
-	// 					{
-	// 						"name": "name",
-	// 						"jsonPath": "CategoryTypes[0].name",
-	// 						"label": "collection.create.categorytype",
-	// 						"pattern": "",
-	// 						"type": "text",
-	// 						"isRequired": true,
-	// 						"isDisabled": false,
-	// 						"requiredErrMsg": "",
-	// 						"patternErrMsg": ""
-	// 					},
-	// 					{
-	// 						"name": "description",
-	// 						"jsonPath": "CategoryTypes[0].description",
-	// 						"label": "collection.create.description",
-	// 						"pattern": "",
-	// 						"type": "text",
-	// 						"isRequired": false,
-	// 						"isDisabled": false,
-	// 						"requiredErrMsg": "",
-	// 						"patternErrMsg": ""
-	// 					},
-	// 					{
-	// 						"name": "Active",
-	// 						"jsonPath": "CategoryTypes[0].active",
-	// 						"label": "collection.create.active",
-	// 						"pattern": "",
-	// 						"type": "checkbox",
-	// 						"isRequired": false,
-	// 						"isDisabled": false,
-	// 						"requiredErrMsg": "",
-	// 						"patternErrMsg": ""
-	// 					}
-	// 			]
-	// 		}
-	// 	]
-	// },
+  ,
+	"collection.view": {
+		"numCols": 12/3,
+		"url": "/collection-services/receipts/_search",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "",
+		// "groups": [
+		// 	{
+		// 		"label": "collection.view.categorytype.title",
+		// 		"name": "viewCategoryType",
+		// 		"fields": [
+		// 				{
+		// 					"name": "name",
+		// 					"jsonPath": "CategoryTypes[0].name",
+		// 					"label": "collection.create.categorytype",
+		// 					"pattern": "",
+		// 					"type": "text",
+		// 					"isRequired": true,
+		// 					"isDisabled": false,
+		// 					"requiredErrMsg": "",
+		// 					"patternErrMsg": ""
+		// 				},
+		// 				{
+		// 					"name": "description",
+		// 					"jsonPath": "CategoryTypes[0].description",
+		// 					"label": "collection.create.description",
+		// 					"pattern": "",
+		// 					"type": "text",
+		// 					"isRequired": false,
+		// 					"isDisabled": false,
+		// 					"requiredErrMsg": "",
+		// 					"patternErrMsg": ""
+		// 				},
+		// 				{
+		// 					"name": "Active",
+		// 					"jsonPath": "CategoryTypes[0].active",
+		// 					"label": "collection.create.active",
+		// 					"pattern": "",
+		// 					"type": "checkbox",
+		// 					"isRequired": false,
+		// 					"isDisabled": false,
+		// 					"requiredErrMsg": "",
+		// 					"patternErrMsg": ""
+		// 				}
+		// 		]
+		// 	}
+		// ],
+		"result": {
+			"header": [{label: "collection.create.serviceType"},{label: "collection.create.receiptNumber"},{label: "Consumer Code"},  {label: "collection.search.billNumber"},{label: "collection.search.billDescription"},{label: "collection.search.paidBy"},{label: "collection.search.amount"},{label: "collection.create.modeOfPayment"},{label:"collection.create.status"}],
+			"values": ["businessService","receiptNumber","consumerCode",  "billNumber","billDescription","status","amountPaid","collectionType","status"],
+			"resultPath": "Receipt[0].Bill[0].billDetails",
+			"rowClickUrlUpdate": "/update/collection/categoryType/{id}",
+			"rowClickUrlView": "/view/collection/receipt/{id}"
+			}
+	},
 	// "collection.update": {
 	// 	"numCols": 12/3,
 	// 	"searchUrl": "/collectionms/masters/categorytype/_search?id={id}",

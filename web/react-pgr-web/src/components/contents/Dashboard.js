@@ -471,7 +471,7 @@ class Dashboard extends Component {
                                   })}
                                 {serviceTypeMenus.map((serviceType, index)=>{
                                   return (<ServiceTypeItem key={index} serviceType={serviceType} onClick={()=>{
-                                      this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName}`);
+                                      this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName.replace(/\//g, "~")}`);
                                     }}></ServiceTypeItem>)
                                 })}
 

@@ -90,14 +90,17 @@ public class PgrMasterConstants {
     public static final String ROUTER_BOUNDARY_MANADATORY_FIELD_NAME = "boundary";
     public static final String ROUTER_BOUNDARY_MANADATORY_ERROR_MESSAGE = "Boundary is required";
 
-    public static final String RECEIVINGCENTER_NAME_MANDATORY_CODE = "pgr.0004";
+    public static final String RECEIVINGCENTER_NAME_MANDATORY_CODE = "pgr.0037";
     public static final String RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME = "name";
-    public static final String RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingCenter Name is required";
+    public static final String RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE = "Receiving Center name is required";
 
-    public static final String RECEIVINGCENTER_CODE_MANDATORY_CODE = "pgr.0004";
+    public static final String RECEIVINGCENTER_CODE_MANDATORY_CODE = "pgr.0038";
     public static final String RECEIVINGCENTER_CODE_MANADATORY_FIELD_NAME = "name";
-    public static final String RECEIVINGCENTER_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingCenter Code is required";
+    public static final String RECEIVINGCENTER_CODE_MANADATORY_ERROR_MESSAGE = "Receiving Center code is required";
 
+    public static final String RECEIVINGCENTER_CODE_EXISTS_CODE = "pgr.0039";
+    public static final String RECEIVINGCENTER_CODE_EXISTS_FIELD_NAME = "code";
+    public static final String RECEIVINGCENTER_CODE_EXISTS_ERROR_MESSAGE = "Receiving Center code already exists";
 
     public static final String RECEIVINGMODE_NAME_MANDATORY_CODE = "pgr.0032";
     public static final String RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME = "name";
@@ -119,8 +122,8 @@ public class PgrMasterConstants {
     public static final String NO_0F_HOURS_MANADATORY_FIELD_NAME = "noOfHours";
     public static final String NO_0F_HOURS_MANADATORY_ERROR_MESSAGE = "No of hours is required";
 
-    public static final String RECEIVINGCENTER_NAME_UNIQUE_CODE = "pgr.0010";
-    public static final String RECEIVINGCENTER_UNQ_ERROR_MESSAGE = "Entered ReceivingCenter Name Already Exist.";
+    public static final String RECEIVINGCENTER_NAME_UNIQUE_CODE = "pgr.0040";
+    public static final String RECEIVINGCENTER_UNQ_ERROR_MESSAGE = "Receiving Center name already exist.";
     public static final String RECEIVINGCENTER_NAME_UNQ_FIELD_NAME = "name";
 
     public static final String RECEIVINGMODE_CODE_UNIQUE_CODE = "pgr.0034";
@@ -176,7 +179,7 @@ public class PgrMasterConstants {
     public static final String GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE = "Grievance Type Name already exists";
 
     public static final String RECEIVINGMODE_NAME_UNIQUE_CODE = "pgr.0033";
-    public static final String RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE = "Entered ReceivingMode Name Already Exist.";
+    public static final String RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE = "Receiving Mode Name Already Exist.";
     public static final String RECEIVINGMODE_NAME_UNIQUE_FIELD_NAME = "name";
 
     public static final String FROMTOPOSITION_UNIQUE_CODE = "pgr.0018";

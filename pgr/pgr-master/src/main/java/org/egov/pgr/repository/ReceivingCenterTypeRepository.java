@@ -40,11 +40,6 @@
 
 package org.egov.pgr.repository;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.pgr.domain.model.ReceivingCenterType;
 import org.egov.pgr.repository.builder.ReceivingCenterTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ReceivingCenterTypeRowMapper;
@@ -56,105 +51,136 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Repository
 public class ReceivingCenterTypeRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ReceivingCenterTypeRepository.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ReceivingCenterTypeRepository.class);
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private ReceivingCenterTypeQueryBuilder receivingCenterQueryBuilder;
+    @Autowired
+    private ReceivingCenterTypeQueryBuilder receivingCenterQueryBuilder;
 
-	@Autowired
-	private ReceivingCenterTypeRowMapper receivingCenterRowMapper;
+    @Autowired
+    private ReceivingCenterTypeRowMapper receivingCenterRowMapper;
 
-	public ReceivingCenterTypeReq persistReceivingCenterType(final ReceivingCenterTypeReq centerTypeRequest) {
-		LOGGER.info("ReceivingCenterType Create Request::" + centerTypeRequest);
-		final String receivingCenterTypeInsert = ReceivingCenterTypeQueryBuilder.insertReceivingCenterTypeQuery();
-		final ReceivingCenterType centerType = centerTypeRequest.getCenterType();
+    public ReceivingCenterTypeReq persistReceivingCenterType(final ReceivingCenterTypeReq centerTypeRequest) {
+        LOGGER.info("ReceivingCenterType Create Request::" + centerTypeRequest);
+        final String receivingCenterTypeInsert = ReceivingCenterTypeQueryBuilder.insertReceivingCenterTypeQuery();
+        final ReceivingCenterType centerType = centerTypeRequest.getCenterType();
 
-		final Object[] obj = new Object[] {centerType.getCode(), centerType.getName(), centerType.getDescription(),
-				centerType.getIscrnrequired(), centerType.getOrderno(), centerType.getActive(),
-				Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				centerType.getTenantId() };
+        final Object[] obj = new Object[]{centerType.getCode(), centerType.getName(), centerType.getDescription(),
+                centerType.getIscrnrequired(), centerType.getOrderno(), centerType.getActive(),
+                Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                centerType.getTenantId()};
 
-		jdbcTemplate.update(receivingCenterTypeInsert, obj);
-		return centerTypeRequest;
-	}
+        jdbcTemplate.update(receivingCenterTypeInsert, obj);
+        return centerTypeRequest;
+    }
 
-	public ReceivingCenterTypeReq persistModifyReceivingCenterType(final ReceivingCenterTypeReq centerTypeRequest) {
-		LOGGER.info("ReceivingCenterType Update Request::" + centerTypeRequest);
-		final String receivingCenterTypeUpdate = ReceivingCenterTypeQueryBuilder.updateReceivingCenterTypeQuery();
-		final ReceivingCenterType centerType = centerTypeRequest.getCenterType();
-		final Object[] obj = new Object[] { centerType.getName(), centerType.getDescription(),
-				centerType.getIscrnrequired(), centerType.getOrderno(), centerType.getActive(),
-				Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), centerType.getCode() };
-		jdbcTemplate.update(receivingCenterTypeUpdate, obj);
-		return centerTypeRequest;
+    public ReceivingCenterTypeReq persistModifyReceivingCenterType(final ReceivingCenterTypeReq centerTypeRequest) {
+        LOGGER.info("ReceivingCenterType Update Request::" + centerTypeRequest);
+        final String receivingCenterTypeUpdate = ReceivingCenterTypeQueryBuilder.updateReceivingCenterTypeQuery();
+        final ReceivingCenterType centerType = centerTypeRequest.getCenterType();
+        final Object[] obj = new Object[]{centerType.getName(), centerType.getDescription(),
+                centerType.getIscrnrequired(), centerType.getOrderno(), centerType.getActive(),
+                Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), centerType.getCode()};
+        jdbcTemplate.update(receivingCenterTypeUpdate, obj);
+        return centerTypeRequest;
 
-	}
+    }
 
-	public List<ReceivingCenterType> getAllReceivingCenterTypes(final ReceivingCenterTypeGetReq centerTypeGetRequest) {
-		LOGGER.info("ReceivingCenterType search Request::" + centerTypeGetRequest);
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		final String queryStr = receivingCenterQueryBuilder.getQuery(centerTypeGetRequest, preparedStatementValues);
-		final List<ReceivingCenterType> receivingCenterTypes = jdbcTemplate.query(queryStr,
-				preparedStatementValues.toArray(), receivingCenterRowMapper);
-		return receivingCenterTypes;
-	}
+    public List<ReceivingCenterType> getAllReceivingCenterTypes(final ReceivingCenterTypeGetReq centerTypeGetRequest) {
+        LOGGER.info("ReceivingCenterType search Request::" + centerTypeGetRequest);
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = receivingCenterQueryBuilder.getQuery(centerTypeGetRequest, preparedStatementValues);
+        final List<ReceivingCenterType> receivingCenterTypes = jdbcTemplate.query(queryStr,
+                preparedStatementValues.toArray(), receivingCenterRowMapper);
+        return receivingCenterTypes;
+    }
 
-	public boolean checkReceivingCenterTypeByCode(final String code, final String tenantId) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
+    public boolean checkReceivingCenterTypeByCode(final String code, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
 
-		// preparedStatementValues.add(id);
-		preparedStatementValues.add(tenantId);
-		String query = "";
-		if ((code != null && code != "")) {
+        // preparedStatementValues.add(id);
+        preparedStatementValues.add(tenantId);
+        String query = "";
+        if ((code != null && code != "")) {
 
-			preparedStatementValues.add(code);
-			query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByCode();
+            preparedStatementValues.add(code);
+            query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByCode();
 
-		}
-		/*
-		 * if(name!=null && tenantId!=null){ preparedStatementValues.add(name);
+        }
+        /*
+         * if(name!=null && tenantId!=null){ preparedStatementValues.add(name);
 		 * query =
 		 * ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName(); }
 		 */
-		final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
-				preparedStatementValues.toArray());
-		if (!ceneterTypes.isEmpty())
-			return false;
+        final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!ceneterTypes.isEmpty())
+            return false;
 
-		return true;
-	}
-	
-	public boolean checkReceivingCenterNameExists(ReceivingCenterType receivingCenter, boolean flag) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
+        return true;
+    }
 
-		// preparedStatementValues.add(id);
-		preparedStatementValues.add(receivingCenter.getTenantId());
-		String query = "";
-		if ((null != receivingCenter.getName() && receivingCenter.getName() != "")) {
+    public boolean checkReceivingCenterTypeByCodeAndName(String code, String name, String tenantId, String mode) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
 
-			preparedStatementValues.add(receivingCenter.getName().toUpperCase().trim());
-			if (flag) {
-				query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
-			} else {
-				preparedStatementValues.add(receivingCenter.getId());
-				query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByNameUpdate();
-			}
-		}
-		final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
-				preparedStatementValues.toArray());
-		if (!ceneterTypes.isEmpty())
-			return true;
+        // preparedStatementValues.add(id);
+        preparedStatementValues.add(tenantId.trim());
+        String query = "";
+        if (code != null && code != "" && name != null & name != "") {
 
-		return false;
-	}
+            preparedStatementValues.add(code.toUpperCase().trim());
+            preparedStatementValues.add(name.toUpperCase().toUpperCase());
+            query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByCodeName();
+
+        }
+        final List<Map<String, Object>> centerTypes = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+        if (!centerTypes.isEmpty() && "update".equalsIgnoreCase(mode)) {
+            String codeFromDB = (String) centerTypes.get(0).get("code");
+            if (!codeFromDB.equalsIgnoreCase(code))
+                return true;
+        }
+        if (!centerTypes.isEmpty() && "create".equalsIgnoreCase(mode)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean checkReceivingCenterNameExists(ReceivingCenterType receivingCenter, String mode) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+
+        // preparedStatementValues.add(id);
+        preparedStatementValues.add(receivingCenter.getTenantId());
+        String query = "";
+        if (null != receivingCenter.getName() && receivingCenter.getName() != "") {
+            preparedStatementValues.add(receivingCenter.getName().toUpperCase().trim());
+            query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
+        }
+
+        final List<Map<String, Object>> centerTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!centerTypes.isEmpty() && "update".equalsIgnoreCase(mode)) {
+            String codeFromDB = (String) centerTypes.get(0).get("code");
+            if (!codeFromDB.equalsIgnoreCase(receivingCenter.getCode()))
+                return true;
+        }
+        if (!centerTypes.isEmpty() && "create".equalsIgnoreCase(mode)) {
+            return true;
+        }
+        return false;
+    }
 
 }

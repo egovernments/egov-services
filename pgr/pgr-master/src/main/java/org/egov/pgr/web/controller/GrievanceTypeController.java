@@ -168,6 +168,7 @@ public class GrievanceTypeController {
         checkMetadataExists(serviceTypeRequest);
         checkCategorySLAValues(serviceTypeRequest);
         checkServiceCodeExists(serviceTypeRequest);
+        checkDescriptionLength(serviceTypeRequest);
     }
 
     private void validateUpdateServiceRequest(final ServiceRequest serviceTypeRequest, String mode) {
@@ -176,6 +177,7 @@ public class GrievanceTypeController {
         addTenantIdValidationErrors(serviceTypeRequest);
         checkMetadataExists(serviceTypeRequest);
         checkCategorySLAValues(serviceTypeRequest);
+        checkDescriptionLength(serviceTypeRequest);
     }
 
     private void addGrievanceNameValidationErrors(final ServiceRequest serviceTypeRequest) {
@@ -218,6 +220,8 @@ public class GrievanceTypeController {
         }
     }
 
+
+
     private void checkMetadataExists(final ServiceRequest serviceTypeRequest) {
         final GrievanceType grievanceType = serviceTypeRequest.getService();
         if (grievanceType.isMetadata()) {
@@ -252,6 +256,16 @@ public class GrievanceTypeController {
             grievanceTypeException.put(CODE, PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_CODE);
             grievanceTypeException.put(FIELD, PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME);
             grievanceTypeException.put(MESSAGE, PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE);
+            throw new PGRMasterException(grievanceTypeException);
+        }
+    }
+
+    private void checkDescriptionLength(final ServiceRequest serviceTypeRequest) {
+        final GrievanceType grievanceType = serviceTypeRequest.getService();
+        if ((grievanceType.getDescription() != null || !grievanceType.getDescription().isEmpty()) && !(grievanceType.getDescription().length() > 0 && grievanceType.getDescription().length() <= 250)) {
+            grievanceTypeException.put(CODE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_CODE);
+            grievanceTypeException.put(FIELD, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_FIELD_NAME);
+            grievanceTypeException.put(MESSAGE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_ERROR_MESSAGE);
             throw new PGRMasterException(grievanceTypeException);
         }
     }

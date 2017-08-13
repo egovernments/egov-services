@@ -1,7 +1,7 @@
 var dat = {
 	"tl.create": {
 		"numCols": 12/2,
-		"url": "/tl-masters/v1/category/_create",
+		"url": "/tl-masters/category//v1_create",
 		"useTimestamp": true,
 		"tenantIdRequired": true,
 		"objectName": "categories",
@@ -50,7 +50,7 @@ var dat = {
 	},
 	"tl.search": {
 		"numCols": 12/1,
-		"url": "/tl-masters/v1/category/_search",
+		"url": "/tl-masters/category//v1_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "categories",
@@ -65,7 +65,7 @@ var dat = {
 							"label": "tl.search.groups.categorytype.category",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/v1/category/_search?|$..name|$..name",
+              "url": "/tl-masters/category//v1_search?|$..name|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -84,7 +84,7 @@ var dat = {
 	},
 	"tl.view": {
 		"numCols": 12/2,
-		"url": "/tl-masters/v1/category/_search?id={id}",
+		"url": "/tl-masters/category/v1/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "categories",
@@ -121,8 +121,8 @@ var dat = {
 	},
 	"tl.update": {
 		"numCols": 12/2,
-		"searchUrl": "/tl-masters/v1/category/_search?id={id}",
-		"url": "/tl-masters/v1/tl-tradelicense/category/{categories.code}/_update",
+		"searchUrl": "/tl-masters/category/v1/_search?id={id}",
+		"url": "/tl-masters/tl-tradelicense/category/v1/{categories.code}/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,

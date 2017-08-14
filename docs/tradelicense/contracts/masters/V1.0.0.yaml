@@ -9,9 +9,9 @@ info:
 
 schemes:
   - https
-basePath: '/tl-masters'
+basePath: '/'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
-x-api-id: 'org.egov.tl-masters'
+x-api-id: 'org.egov.tl.masters'
 
 paths:
     /category/v1/_search:

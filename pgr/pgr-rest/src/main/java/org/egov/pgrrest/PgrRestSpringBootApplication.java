@@ -1,13 +1,28 @@
 package org.egov.pgrrest;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.egov.pgr.common.repository.ComplaintConfigurationRepository;
 import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgr.common.repository.OtpRepository;
 import org.egov.pgr.common.repository.OtpSMSRepository;
 import org.egov.pgrrest.common.persistence.repository.UserRepository;
-import org.egov.pgrrest.read.domain.service.validator.*;
+import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
+import org.egov.pgrrest.read.domain.service.validator.DateAttributeValidator;
+import org.egov.pgrrest.read.domain.service.validator.DoubleAttributeValidator;
+import org.egov.pgrrest.read.domain.service.validator.GroupConstraintAttributeValidator;
+import org.egov.pgrrest.read.domain.service.validator.IntegerAttributeValidator;
+import org.egov.pgrrest.read.domain.service.validator.LongAttributeValidator;
+import org.egov.pgrrest.read.domain.service.validator.MandatoryAttributeValidator;
+import org.egov.pgrrest.read.domain.service.validator.SingleValueAttributeValidator;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;
@@ -27,14 +42,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.annotation.PostConstruct;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 @Import({TracerConfiguration.class})
@@ -148,7 +157,8 @@ public class PgrRestSpringBootApplication {
             new SingleValueAttributeValidator(),
             new DateAttributeValidator(),
             new IntegerAttributeValidator(),
-            new DoubleAttributeValidator()
+            new DoubleAttributeValidator(),
+            new LongAttributeValidator()
         );
     }
 

@@ -15,6 +15,7 @@ import org.egov.asset.model.ChartOfAccountContract;
 import org.egov.asset.model.ChartOfAccountContractResponse;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.ChartOfAccountDetailContractResponse;
+import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.Function;
 import org.egov.asset.model.Fund;
@@ -128,6 +129,12 @@ public class VoucherService {
                     .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
             voucher.setDescription(assetConfigurationService
                     .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
+        } else if (entity instanceof Depreciation) {
+            log.info("Setting Depreciation Voucher Name and Description ");
+            voucher.setName(assetConfigurationService
+                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId));
+            voucher.setDescription(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(
+                    AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId));
         }
         voucher.setFund(fund);
 

@@ -5,14 +5,16 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum AssetConfigurationKeys {
 
-	ENABLEVOUCHERGENERATION("EnableVoucherGeneration"), REVALUATIONVOUCHERNAME(
-			"AssetRevaluationVoucherName"), REVALUATIONVOUCHERDESCRIPTION(
-					"AssetRevaluationVoucherDescription"), DISPOSALVOUCHERNAME(
-							"AssetDisposalVoucherName"), DISPOSALVOUCHERDESCRIPTION(
-									"AssetDisposalVoucherDescription"), ASSETDEFAULTCAPITALIZEDVALUE(
-											"AssetDefaultCapitalizedValue"), ASSETMINIMUMVALUE(
-													"AssetMinimumValue"), DEPRECIATIONSEPARATIONDATE(
-															"DepreciationSeparationDate");
+    ENABLEVOUCHERGENERATION("EnableVoucherGeneration"), REVALUATIONVOUCHERNAME(
+            "AssetRevaluationVoucherName"), REVALUATIONVOUCHERDESCRIPTION(
+                    "AssetRevaluationVoucherDescription"), DISPOSALVOUCHERNAME(
+                            "AssetDisposalVoucherName"), DISPOSALVOUCHERDESCRIPTION(
+                                    "AssetDisposalVoucherDescription"), ASSETDEFAULTCAPITALIZEDVALUE(
+                                            "AssetDefaultCapitalizedValue"), ASSETMINIMUMVALUE(
+                                                    "AssetMinimumValue"), DEPRECIATIONSEPARATIONDATE(
+                                                            "DepreciationSeparationDate"), DEPRECIATIONVOUCHERNAME(
+                                                                    "AssetDepreciationVoucherName"), DEPRECIATIONVOUCHERDESCRIPTION(
+                                                                            "AssetDepreciationVoucherDescription");
 
     private String value;
 

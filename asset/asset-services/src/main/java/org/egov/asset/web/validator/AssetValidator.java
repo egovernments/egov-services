@@ -36,7 +36,6 @@ import org.egov.asset.service.AssetMasterService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.CurrentValueService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -168,8 +167,7 @@ public class AssetValidator {
             throw new RuntimeException("Invalid Search! to date should not be equal to from date");
     }
 
-    public void validateDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
-        validateRequestHeaderSessionId(headers);
+    public void validateDisposal(final DisposalRequest disposalRequest) {
         final Disposal disposal = disposalRequest.getDisposal();
         final List<Long> assetIds = new ArrayList<>();
         assetIds.add(disposal.getAssetId());
@@ -203,11 +201,6 @@ public class AssetValidator {
 
             validateFund(disposal.getFund());
         }
-    }
-
-    private void validateRequestHeaderSessionId(final HttpHeaders headers) {
-        if (!headers.containsKey("sessionId"))
-            throw new RuntimeException("SESSIONID is not present in the Request Header");
     }
 
     private void verifyPanCardAndAdhaarCardForAssetSale(final Disposal disposal) {
@@ -246,8 +239,7 @@ public class AssetValidator {
                     "Status of asset :" + asset.getName() + "doesn't exists for tenant id : " + asset.getTenantId());
     }
 
-    public void validateRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
-        validateRequestHeaderSessionId(headers);
+    public void validateRevaluation(final RevaluationRequest revaluationRequest) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final List<Long> assetIds = new ArrayList<>();
         assetIds.add(revaluation.getAssetId());
@@ -285,7 +277,7 @@ public class AssetValidator {
             assetCurrentAmount = asset.getGrossValue();
 
         log.debug("Asset Current Value :: " + assetCurrentAmount);
-        
+
         revaluation.setCurrentCapitalizedValue(assetCurrentAmount);
 
         if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
@@ -298,8 +290,8 @@ public class AssetValidator {
 
         if (revaluation.getRevaluationDate() == null)
             throw new RuntimeException("Revaluation Date is Required");
-        
-        //Setting Default Revaluation Status as APPROVED
+
+        // Setting Default Revaluation Status as APPROVED
         revaluation.setStatus(Status.APPROVED.toString());
 
     }

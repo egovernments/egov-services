@@ -52,6 +52,7 @@ public class ServiceTypeService {
 
     public void create(ServiceType serviceType, ServiceTypeRequest serviceTypeRequest){
     	createMandatoryFieldValidate(serviceType);
+    	createLengthValidate(serviceType);
     	createUniqueCombinationValidate(serviceType);
         serviceTypeMessageQueueRepository.save(serviceTypeRequest, CREATE);
     }
@@ -93,6 +94,12 @@ public class ServiceTypeService {
     	createValidators.stream()
                 .filter(validator -> validator.canValidate(serviceType))
                 .forEach(v -> v.validateUniqueCombinations(serviceType));
+    }
+    
+    private void createLengthValidate(ServiceType serviceType){
+    	createValidators.stream()
+                .filter(validator -> validator.canValidate(serviceType))
+                .forEach(v -> v.lengthValidate(serviceType));
     }
     
     private void validateSearch(ServiceTypeSearchCriteria serviceTypeSearchCriteria){

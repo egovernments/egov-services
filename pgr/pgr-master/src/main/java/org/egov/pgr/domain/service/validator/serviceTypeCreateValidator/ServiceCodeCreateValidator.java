@@ -63,7 +63,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
 
         if (categoryTypeList.isEmpty()) {
             HashMap<String, String> error = new HashMap<>();
-            error.put(CODE, "ServiceCodeValidator.8");
+            error.put(CODE, "ServiceCodeValidator.");
             error.put(FIELD, "serviceTypeConfiguration.category");
             error.put(MESSAGE, "category data not exist");
             throw new PGRMasterException(error);
@@ -73,7 +73,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
                 && (serviceTypeList.get(0).getServiceCode().equalsIgnoreCase(serviceType.getServiceCode())
                 && serviceTypeList.get(0).getTenantId().equalsIgnoreCase(serviceType.getTenantId()))) {
             HashMap<String, String> error = new HashMap<>();
-            error.put(CODE, "ServiceCodeValidator.1");
+            error.put(CODE, "ServiceCodeValidator.4");
             error.put(FIELD, "serviceTypeConfiguration.serviceCode");
             error.put(MESSAGE, "serviceCode already exists");
             throw new PGRMasterException(error);
@@ -85,13 +85,64 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
                 && (getall.get(0).getServiceName().equalsIgnoreCase(serviceType.getServiceName()))
                 && getall.get(0).getTenantId().equalsIgnoreCase(serviceType.getTenantId()))) {
             HashMap<String, String> error = new HashMap<>();
-            error.put(CODE, "ServiceCodeValidator.1");
+            error.put(CODE, "ServiceCodeValidator.5");
             error.put(FIELD, "serviceTypeConfiguration.serviceCode");
             error.put(MESSAGE, "serviceCode already exists");
             throw new PGRMasterException(error);
         }
 
-
     }
 
+
+	@Override
+	public void lengthValidate(ServiceType serviceType) {
+		
+		if(!serviceType.isTenantIdLengthMatch())	
+		{
+			HashMap<String, String> error = new HashMap<>();
+            error.put(CODE, "ServiceCodeValidator.6");
+            error.put(FIELD, "ServiceLengthValidator.tenant");
+            error.put(MESSAGE, "tenant Id should be >0 and <=256");
+            throw new PGRMasterException(error);
+			
+		}
+		if(!serviceType.isDescriptionLengthMatch())	
+		{
+			HashMap<String, String> error = new HashMap<>();
+            error.put(CODE, "ServiceCodeValidator.6");
+            error.put(FIELD, "ServiceLengthValidator.Description");
+            error.put(MESSAGE, "Description Length should be >0 and <=250");
+            throw new PGRMasterException(error);
+			
+		}
+		if(!serviceType.isCodeLengthMatch())	
+		{
+			HashMap<String, String> error = new HashMap<>();
+            error.put(CODE, "ServiceLengthValidator.7");
+            error.put(FIELD, "ServiceLengthValidator.Code");
+            error.put(MESSAGE, "code should be >0 and <=20");
+            throw new PGRMasterException(error);
+			
+		}
+		
+		if(!serviceType.isnameLengthMatch())	
+		{
+			HashMap<String, String> error = new HashMap<>();
+            error.put(CODE, "ServiceCodeValidator.9");
+            error.put(FIELD, "ServiceLengthValidator.name");
+            error.put(MESSAGE, "name should be >0 and <=150");
+            throw new PGRMasterException(error);
+			
+		}
+		if(!serviceType.isTypeLengthMatch())	
+		{
+			HashMap<String, String> error = new HashMap<>();
+            error.put(CODE, "ServiceCodeValidator.10");
+            error.put(FIELD, "ServiceLengthValidator.type");
+            error.put(MESSAGE, "type should be >0 and <=50");
+            throw new PGRMasterException(error);
+			
+		}
+		}
+    
 }

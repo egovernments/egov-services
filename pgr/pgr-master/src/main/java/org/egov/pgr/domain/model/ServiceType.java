@@ -65,7 +65,28 @@ public class ServiceType {
                 .lastModifiedBy(lastModifiedBy)
                 .build();
     }
+    
 
+    public boolean isTenantIdLengthMatch(){
+        return (tenantId.length() > 0 && tenantId.length() <= 256);
+    }
+    
+    public boolean isCodeLengthMatch(){
+        return (serviceCode.length() > 0 && serviceCode.length() <= 20);
+    }
+    
+    public boolean isDescriptionLengthMatch(){
+        return (description.length() > 0 && description.length() <= 250);
+    }
+    
+    public boolean isTypeLengthMatch(){
+        return (type.length() >0 &&  type.length() <= 50);
+    }
+    
+    public boolean isnameLengthMatch(){
+        return (serviceName.length() > 0 && serviceName.length() <= 150);
+    }
+    
     public boolean isTenantIdAbsent(){
         return isEmpty(tenantId) || tenantId == null;
     }

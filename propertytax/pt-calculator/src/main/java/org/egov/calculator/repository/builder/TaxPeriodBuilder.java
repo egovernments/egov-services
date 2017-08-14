@@ -41,7 +41,7 @@ public class TaxPeriodBuilder {
 			preparedStatementValues.add(validDate);	
 		}
 		
-		searchSql.append(" AND (fromdate::date>= to_date(?,'dd/MM/yyy') And  todate::date<= to_date(?,'dd/MM/yyy'))");
+		searchSql.append(" AND (fromdate::date<= to_date(?,'dd/MM/yyy') And  todate::date>= to_date(?,'dd/MM/yyy'))");
 		preparedStatementValues.add(fromDate);
 		preparedStatementValues.add(toDate);
 		

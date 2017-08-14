@@ -304,7 +304,7 @@ var dat = {
           "label": "Mode Of Payment",
           "pattern": "",
           "type": "singleValueList",
-          "isRequired": false,
+          "isRequired": true,
           "isDisabled": false,
           "url": "",
           "requiredErrMsg": "",

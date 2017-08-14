@@ -64,7 +64,7 @@ public class CityDocumentEnricher implements ReceiptRequestDocumentEnricher {
 
     @Override
     public void enrich(ReceiptRequest receiptRequest, List<ReceiptRequestDocument> documents) {
-        City city = tenantRepository.fetchTenantByCode(receiptRequest.getTenantId());
+        City city = tenantRepository.fetchTenantByCode(receiptRequest.getReceipt().get(0).getTenantId());
         if (city == null) {
             return;
         }

@@ -172,13 +172,11 @@ public class AssetValidator {
         validateRequestHeaderSessionId(headers);
         final Disposal disposal = disposalRequest.getDisposal();
         final List<Long> assetIds = new ArrayList<>();
-        assetIds.add(disposalRequest.getDisposal().getAssetId());
-        final Asset asset = assetRepository.findForCriteria(
-                AssetCriteria.builder().tenantId(disposalRequest.getDisposal().getTenantId()).id(assetIds).build())
-                .get(0);
+        assetIds.add(disposal.getAssetId());
+        final String tenantId = disposal.getTenantId();
+        final Asset asset = assetRepository
+                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
         validateAssetForCapitalizedStatus(asset);
-        validateAssetForCapitalizedStatus(asset);
-
         if (StringUtils.isEmpty(disposal.getBuyerName()))
             throw new RuntimeException("Buyer Name should be present for disposing asset : " + asset.getName());
 
@@ -193,7 +191,7 @@ public class AssetValidator {
 
         verifyPanCardAndAdhaarCardForAssetSale(disposal);
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                disposal.getTenantId())) {
+                tenantId)) {
             validateAssetCategoryForVoucherGeneration(asset);
 
             if (asset.getAssetCategory() != null && asset.getAssetCategory().getAssetAccount() == null)
@@ -253,13 +251,12 @@ public class AssetValidator {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final List<Long> assetIds = new ArrayList<>();
         assetIds.add(revaluation.getAssetId());
+        final String tenantId = revaluation.getTenantId();
         final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(revaluation.getTenantId()).id(assetIds).build())
-                .get(0);
-        validateAssetForCapitalizedStatus(asset);
+                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
         validateAssetForCapitalizedStatus(asset);
         final boolean enableVoucherGeneration = assetConfigurationService
-                .getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION, revaluation.getTenantId());
+                .getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION, tenantId);
         if (enableVoucherGeneration) {
             validateAssetCategoryForVoucherGeneration(asset);
             validateFund(revaluation.getFund());
@@ -279,8 +276,7 @@ public class AssetValidator {
         final Set<Long> ids = new HashSet<>();
         ids.add(revaluation.getAssetId());
         final List<AssetCurrentValue> assetCurrentValues = currentValueService
-                .getCurrentValues(ids, revaluation.getTenantId(), revaluationRequest.getRequestInfo())
-                .getAssetCurrentValues();
+                .getCurrentValues(ids, tenantId, revaluationRequest.getRequestInfo()).getAssetCurrentValues();
         if (!assetCurrentValues.isEmpty())
             assetCurrentAmount = assetCurrentValues.get(0).getCurrentAmount();
         else if (asset.getAccumulatedDepreciation() != null)
@@ -289,6 +285,8 @@ public class AssetValidator {
             assetCurrentAmount = asset.getGrossValue();
 
         log.debug("Asset Current Value :: " + assetCurrentAmount);
+        
+        revaluation.setCurrentCapitalizedValue(assetCurrentAmount);
 
         if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
                 && (revaluation.getValueAfterRevaluation().compareTo(assetCurrentAmount) == 0
@@ -300,13 +298,16 @@ public class AssetValidator {
 
         if (revaluation.getRevaluationDate() == null)
             throw new RuntimeException("Revaluation Date is Required");
+        
+        //Setting Default Revaluation Status as APPROVED
+        revaluation.setStatus(Status.APPROVED.toString());
 
     }
 
     private void validateFund(final Long fundId) {
         if (fundId == null)
             throw new RuntimeException(
-                    "Fund from financials is necessary for Asset Revaluation and Asset Sale/Disposal");
+                    "Fund from financials is necessary for Asset Revaluation,Asset Depreciation and Asset Sale/Disposal");
     }
 
     private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset,

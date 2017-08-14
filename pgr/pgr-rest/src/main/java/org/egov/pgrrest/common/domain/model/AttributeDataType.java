@@ -11,7 +11,8 @@ public enum AttributeDataType {
     SINGLE_VALUE_LIST("singlevaluelist"),
     MULTI_VALUE_LIST("multivaluelist"),
     SINGLE_FILE("file"),
-    MULTI_FILE("multifile");
+    MULTI_FILE("multifile"),
+    LONG("long");
 
     @Getter
     private String name;

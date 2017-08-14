@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.egov.enums.StatusEnum;
 import org.egov.models.ErrorRes;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
@@ -101,6 +102,7 @@ public class WorkflowConsumer {
 				if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
 					String upicNumber = generateUpicNo(property, propertyRequest);
 					property.setUpicNumber(upicNumber);
+					property.getPropertyDetail().setStatus(StatusEnum.ACTIVE);
 					kafkaTemplate.send(propertiesManager.getApproveWorkflow(), propertyRequest);
 				} else {
 					kafkaTemplate.send(propertiesManager.getUpdateWorkflow(), propertyRequest);

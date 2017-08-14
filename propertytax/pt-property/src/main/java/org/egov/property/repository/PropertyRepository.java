@@ -135,6 +135,7 @@ public class PropertyRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(gson.toJson(demandIdList));
 				ps.setObject(16, jsonObject);
+				ps.setInt(17, getInteger(property.getSequenceNo()));
 				return ps;
 			}
 		};
@@ -221,6 +222,21 @@ public class PropertyRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(propertyDetails.getTaxCalculations());
 				ps.setObject(34, jsonObject);
+				Gson gson = new Gson();
+				PGobject factorsObject = new PGobject();
+				factorsObject.setType("jsonb");
+				factorsObject.setValue(gson.toJson(propertyDetails.getFactors()));
+				ps.setObject(35, factorsObject);
+
+				PGobject assessmentDatesObject = new PGobject();
+				assessmentDatesObject.setType("jsonb");
+				assessmentDatesObject.setValue(gson.toJson(propertyDetails.getAssessmentDates()));
+				ps.setObject(36, assessmentDatesObject);
+				PGobject builderDetailsObject = new PGobject();
+				builderDetailsObject.setType("jsonb");
+				builderDetailsObject.setValue(gson.toJson(propertyDetails.getBuilderDetails()));
+				ps.setObject(37, builderDetailsObject);
+
 				return ps;
 			}
 		};
@@ -317,6 +333,9 @@ public class PropertyRepository {
 				ps.setLong(28, getLong(unit.getAuditDetails().getLastModifiedTime()));
 				ps.setLong(29, getLong(floorId));
 				ps.setBoolean(30, unit.getIsAuthorised());
+				ps.setTimestamp(31, TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()));
+				ps.setDouble(32, getDouble(unit.getLandCost()));
+				ps.setDouble(33, getDouble(unit.getBuildingCost()));
 				return ps;
 			}
 		};
@@ -352,7 +371,8 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
 				unit.getAuditDetails().getLastModifiedBy(), unit.getAuditDetails().getCreatedTime(),
-				unit.getAuditDetails().getLastModifiedTime(), floorId, parent, unit.getIsAuthorised() };
+				unit.getAuditDetails().getLastModifiedTime(), floorId, parent, unit.getIsAuthorised(),
+				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost() };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
@@ -768,7 +788,7 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(property.getOccupancyDate()), property.getGisRefNo(),
 				property.getIsAuthorised(), property.getIsUnderWorkflow(), property.getChannel().name(),
 				property.getAuditDetails().getLastModifiedBy(), property.getAuditDetails().getLastModifiedTime(),
-				jsonObject, property.getId() };
+				jsonObject, property.getSequenceNo(), property.getId() };
 
 		jdbcTemplate.update(propertyUpdate, propertyArgs);
 
@@ -796,6 +816,23 @@ public class PropertyRepository {
 		jsonObject.setType("jsonb");
 		jsonObject.setValue(propertyDetails.getTaxCalculations());
 
+		Gson gson = new Gson();
+		PGobject factorsObject = null;
+		PGobject assessmentDatesObject = null;
+		PGobject builderDetailsObject = null;
+
+		factorsObject = new PGobject();
+		factorsObject.setType("jsonb");
+		factorsObject.setValue(gson.toJson(propertyDetails.getFactors()));
+
+		assessmentDatesObject = new PGobject();
+		assessmentDatesObject.setType("jsonb");
+		assessmentDatesObject.setValue(gson.toJson(propertyDetails.getAssessmentDates()));
+
+		builderDetailsObject = new PGobject();
+		builderDetailsObject.setType("jsonb");
+		builderDetailsObject.setValue(gson.toJson(propertyDetails.getBuilderDetails()));
+
 		Object[] propertyDetailsArgs = { propertyDetails.getSource().toString(), propertyDetails.getRegdDocNo(),
 				TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocDate()), propertyDetails.getReason(),
 				propertyDetails.getStatus().toString(), propertyDetails.getIsVerified(),
@@ -808,8 +845,8 @@ public class PropertyRepository {
 				propertyDetails.getFloorType(), propertyDetails.getWoodType(), propertyDetails.getRoofType(),
 				propertyDetails.getWallType(), propertyDetails.getStateId(), propertyDetails.getApplicationNo(),
 				propertyDetails.getAuditDetails().getLastModifiedBy(),
-				propertyDetails.getAuditDetails().getLastModifiedTime(), proertyId, jsonObject,
-				propertyDetails.getId() };
+				propertyDetails.getAuditDetails().getLastModifiedTime(), proertyId, jsonObject, factorsObject,
+				assessmentDatesObject, builderDetailsObject, propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
 	}
@@ -855,8 +892,8 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
-				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getId(),
-				unit.getIsAuthorised() };
+				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
+				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
 
@@ -878,8 +915,8 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
-				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getId(),
-				unit.getIsAuthorised() };
+				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
+				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getId() };
 
 		jdbcTemplate.update(roomUpdate, roomArgs);
 
@@ -1198,7 +1235,8 @@ public class PropertyRepository {
 				jsonObject.setValue(demands);
 
 				ps.setObject(16, jsonObject);
-				ps.setLong(17, getLong(property.getId()));
+				ps.setInt(17, getInteger(property.getSequenceNo()));
+				ps.setLong(18, getLong(property.getId()));
 				return ps;
 			}
 		};
@@ -1279,7 +1317,24 @@ public class PropertyRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(propertyDetails.getTaxCalculations());
 				ps.setObject(34, jsonObject);
-				ps.setLong(35, getLong(propertyDetails.getId()));
+				Gson gson = new Gson();
+
+				PGobject factorsObject = new PGobject();
+				factorsObject.setType("jsonb");
+				factorsObject.setValue(gson.toJson(propertyDetails.getFactors()));
+				ps.setObject(35, factorsObject);
+				
+				PGobject assessmentDatesObject = new PGobject();
+				assessmentDatesObject.setType("jsonb");
+				assessmentDatesObject.setValue(gson.toJson(propertyDetails.getAssessmentDates()));
+				ps.setObject(36, assessmentDatesObject);
+				
+				PGobject builderDetailsObject = new PGobject();
+				builderDetailsObject.setType("jsonb");
+				builderDetailsObject.setValue(gson.toJson(propertyDetails.getBuilderDetails()));
+				ps.setObject(37, builderDetailsObject);
+				
+				ps.setLong(38, getLong(propertyDetails.getId()));
 				return ps;
 			}
 		};
@@ -1362,7 +1417,10 @@ public class PropertyRepository {
 				ps.setLong(28, getLong(createdTime));
 				ps.setLong(29, getLong(floorId));
 				ps.setBoolean(30, unit.getIsAuthorised());
-				ps.setLong(31, getLong(unit.getId()));
+				ps.setTimestamp(31, TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()));
+				ps.setDouble(32, getDouble(unit.getLandCost()));
+				ps.setDouble(33, getDouble(unit.getBuildingCost()));
+				ps.setLong(34, getLong(unit.getId()));
 				return ps;
 			}
 		};
@@ -1389,7 +1447,8 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
 				unit.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, floorId, parent,
-				unit.getIsAuthorised(), unit.getId() };
+				unit.getIsAuthorised(), unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(),
+				unit.getId() };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOMHISTORY_QUERY, roomArgs);
 
@@ -1875,6 +1934,13 @@ public class PropertyRepository {
 		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { ownerId },
 				new BeanPropertyRowMapper(AuditDetails.class));
 		return auditDetails;
+	}
+
+	public String getDemandForProperty(String upicNumber) {
+
+		String demands = jdbcTemplate.queryForObject(PropertyBuilder.getDemands, new Object[] { upicNumber },
+				String.class);
+		return demands;
 	}
 
 }

@@ -147,4 +147,10 @@ public class CustomControllerAdvice {
     public ErrorResponse handleGroupConstraintViolationException(GroupConstraintViolationException ex) {
         return new GroupConstraintViolationExceptionAdapter().adapt(ex.getGroupCode());
     }
+    
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidLongAttributeEntryException.class)
+    public ErrorResponse handleGroupConstraintViolationException(InvalidLongAttributeEntryException ex) {
+        return new InvalidcLongAttributeEntryExceptionAdapter().adapt(ex.getAttributeCode());
+    }
 }

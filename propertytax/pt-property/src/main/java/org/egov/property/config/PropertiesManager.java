@@ -280,6 +280,11 @@ public class PropertiesManager {
 	private String invalidStructure;
 
 	private String invalidAge;
+	
+	//#Billing services
+	private String workflowBusinessService;
+	
+	private String billingServiceUpdateMisPath;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -752,6 +757,14 @@ public class PropertiesManager {
 
 	public String getInvalidParentMsg() {
 		return environment.getProperty("invalid.property.parent.code");
+	}		
+	
+	public String getWorkflowBusinessService() {
+		return environment.getProperty("business.service");
+	}		
+	
+	public String getBillingServiceUpdateMisPath() {
+		return environment.getProperty("egov.services.billing_service.updatemisdemand");
 	}
 
 	public String getInvalidFloorNo() {

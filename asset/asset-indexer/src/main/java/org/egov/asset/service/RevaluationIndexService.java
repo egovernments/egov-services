@@ -53,45 +53,53 @@ public class RevaluationIndexService {
 
     private void setFunctionData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
             final Revaluation revaluation) {
-        final Function function = assetIndexCommonService.getFunctionData(requestInfo, revaluation.getTenantId(),
-                revaluation.getFunction());
-        if (function != null) {
-            revaluationIndex.setFunctionId(function.getId());
-            revaluationIndex.setFunctionCode(function.getCode());
-            revaluationIndex.setFunctionName(function.getName());
+        if (revaluation.getFunction() != null) {
+            final Function function = assetIndexCommonService.getFunctionData(requestInfo, revaluation.getTenantId(),
+                    revaluation.getFunction());
+            if (function != null) {
+                revaluationIndex.setFunctionId(function.getId());
+                revaluationIndex.setFunctionCode(function.getCode());
+                revaluationIndex.setFunctionName(function.getName());
+            }
         }
     }
 
     private void setFundData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
             final Revaluation revaluation) {
-        final Fund fund = assetIndexCommonService.getFundData(requestInfo, revaluation.getTenantId(),
-                revaluation.getFund());
-        if (fund != null) {
-            revaluationIndex.setFundId(fund.getId());
-            revaluationIndex.setFundCode(fund.getCode());
-            revaluationIndex.setFundName(fund.getName());
+        if (revaluation.getFund() != null) {
+            final Fund fund = assetIndexCommonService.getFundData(requestInfo, revaluation.getTenantId(),
+                    revaluation.getFund());
+            if (fund != null) {
+                revaluationIndex.setFundId(fund.getId());
+                revaluationIndex.setFundCode(fund.getCode());
+                revaluationIndex.setFundName(fund.getName());
+            }
         }
     }
 
     private void setSchemeData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
             final Revaluation revaluation) {
-        final Scheme scheme = assetIndexCommonService.getSchemeData(requestInfo, revaluation.getTenantId(),
-                revaluation.getScheme());
-        if (scheme != null) {
-            revaluationIndex.setSchemeId(scheme.getId());
-            revaluationIndex.setSchemeCode(scheme.getCode());
-            revaluationIndex.setSchemeName(scheme.getName());
+        if (revaluation.getScheme() != null) {
+            final Scheme scheme = assetIndexCommonService.getSchemeData(requestInfo, revaluation.getTenantId(),
+                    revaluation.getScheme());
+            if (scheme != null) {
+                revaluationIndex.setSchemeId(scheme.getId());
+                revaluationIndex.setSchemeCode(scheme.getCode());
+                revaluationIndex.setSchemeName(scheme.getName());
+            }
         }
     }
 
     private void setSubSchemeData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
             final Revaluation revaluation) {
-        final SubScheme subscheme = assetIndexCommonService.getSubSchemeData(requestInfo, revaluation.getTenantId(),
-                revaluation.getSubScheme());
-        if (subscheme != null) {
-            revaluationIndex.setSubSchemeId(subscheme.getId());
-            revaluationIndex.setSubSchemeCode(subscheme.getCode());
-            revaluationIndex.setSubSchemeName(subscheme.getName());
+        if (revaluation.getSubScheme() != null) {
+            final SubScheme subscheme = assetIndexCommonService.getSubSchemeData(requestInfo, revaluation.getTenantId(),
+                    revaluation.getSubScheme());
+            if (subscheme != null) {
+                revaluationIndex.setSubSchemeId(subscheme.getId());
+                revaluationIndex.setSubSchemeCode(subscheme.getCode());
+                revaluationIndex.setSubSchemeName(subscheme.getName());
+            }
         }
     }
 

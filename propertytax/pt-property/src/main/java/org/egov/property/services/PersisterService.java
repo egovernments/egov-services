@@ -104,6 +104,14 @@ public class PersisterService {
 			propertyDetail.setAuditDetails(auditDetails);
 			Long propertyDetailsId = propertyRepository.savePropertyDetails(property, propertyId);
 			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+				if (property.getPropertyDetail().getNoOfFloors() == null) {
+					if (property.getPropertyDetail().getFloors() != null) {
+						int floorCount = property.getPropertyDetail().getFloors().size();
+						property.getPropertyDetail().setNoOfFloors((long) floorCount);
+					}
+
+				}
+
 				for (Floor floor : property.getPropertyDetail().getFloors()) {
 					floor.setAuditDetails(auditDetails);
 					Long floorId = propertyRepository.saveFloor(floor, propertyDetailsId);
@@ -202,6 +210,15 @@ public class PersisterService {
 						property.getId());
 			}
 			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+
+				if (property.getPropertyDetail().getNoOfFloors() == null) {
+					if (property.getPropertyDetail().getFloors() != null) {
+						int floorCount = property.getPropertyDetail().getFloors().size();
+						property.getPropertyDetail().setNoOfFloors((long) floorCount);
+					}
+
+				}
+
 				for (Floor floor : property.getPropertyDetail().getFloors()) {
 					floor.setAuditDetails(auditDetails);
 					propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
@@ -337,17 +354,18 @@ public class PersisterService {
 	public Property updateTitleTransferProperty(TitleTransferRequest titleTransferRequest, Property property)
 			throws Exception {
 		TitleTransfer titleTransfer = titleTransferRequest.getTitleTransfer();
-		AuditDetails auditDetails = getUpdatedAuditDetails(titleTransferRequest.getRequestInfo(),ConstantUtility.PROPERTY_TABLE_NAME, property.getId());
+		AuditDetails auditDetails = getUpdatedAuditDetails(titleTransferRequest.getRequestInfo(),
+				ConstantUtility.PROPERTY_TABLE_NAME, property.getId());
 		property.getPropertyDetail().setStateId(titleTransfer.getStateId());
 		property.getPropertyDetail().setAuditDetails(auditDetails);
-		
+
 		Long propertyId = property.getId();
 		updateTitleTransfer(titleTransferRequest);
 		property.setAuditDetails(auditDetails);
 
 		propertyRepository.updateTitleTransferProperty(property);
 		if (titleTransfer.getCorrespondenceAddress() != null) {
-			
+
 			AuditDetails titletransferAuditDetails = getUpdatedAuditDetails(titleTransferRequest.getRequestInfo(),
 					ConstantUtility.TITLETRANSFER_TABLE_NAME, titleTransferRequest.getTitleTransfer().getId());
 			titleTransfer.getCorrespondenceAddress().setAuditDetails(titletransferAuditDetails);
@@ -392,12 +410,12 @@ public class PersisterService {
 	 */
 	private Property savePropertyHistory(Property property) throws Exception {
 		Long propertyId = property.getId();
-		
+
 		propertyRepository.savePropertyHistory(property);
 		if (property.getAddress() != null) {
 			propertyRepository.saveAddressHistory(property);
 		}
-		
+
 		if (property.getPropertyDetail() != null) {
 			property.getPropertyDetail().setStatus(StatusEnum.HISTORY);
 			propertyRepository.savePropertyDetailsHistory(property);

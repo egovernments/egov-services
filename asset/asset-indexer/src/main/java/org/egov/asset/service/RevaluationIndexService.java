@@ -1,5 +1,6 @@
 package org.egov.asset.service;
 
+import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AuditDetails;
@@ -38,19 +39,21 @@ public class RevaluationIndexService {
     private RevaluationIndex prepareRevaluationIndex(final RevaluationRequest revaluationRequest) {
         final RevaluationIndex revaluationIndex = new RevaluationIndex();
         final Revaluation revaluation = revaluationRequest.getRevaluation();
+        final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
         revaluationIndex.setRevaluationData(revaluation);
-        setAssetData(revaluationIndex, revaluation);
-        setSubSchemeData(revaluationIndex, revaluation);
-        setSchemeData(revaluationIndex, revaluation);
-        setFundData(revaluationIndex, revaluation);
-        setFunctionData(revaluationIndex, revaluation);
+        setAssetData(requestInfo, revaluationIndex, revaluation);
+        setSubSchemeData(requestInfo, revaluationIndex, revaluation);
+        setSchemeData(requestInfo, revaluationIndex, revaluation);
+        setFundData(requestInfo, revaluationIndex, revaluation);
+        setFunctionData(requestInfo, revaluationIndex, revaluation);
         setAuditDetails(revaluationIndex, revaluation);
-        setTenantProperties(revaluationIndex, revaluation.getTenantId());
+        setTenantProperties(requestInfo, revaluationIndex, revaluation.getTenantId());
         return revaluationIndex;
     }
 
-    private void setFunctionData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-        final Function function = assetIndexCommonService.getFunctionData(revaluation.getTenantId(),
+    private void setFunctionData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
+            final Revaluation revaluation) {
+        final Function function = assetIndexCommonService.getFunctionData(requestInfo, revaluation.getTenantId(),
                 revaluation.getFunction());
         if (function != null) {
             revaluationIndex.setFunctionId(function.getId());
@@ -59,8 +62,10 @@ public class RevaluationIndexService {
         }
     }
 
-    private void setFundData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-        final Fund fund = assetIndexCommonService.getFundData(revaluation.getTenantId(), revaluation.getFund());
+    private void setFundData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
+            final Revaluation revaluation) {
+        final Fund fund = assetIndexCommonService.getFundData(requestInfo, revaluation.getTenantId(),
+                revaluation.getFund());
         if (fund != null) {
             revaluationIndex.setFundId(fund.getId());
             revaluationIndex.setFundCode(fund.getCode());
@@ -68,8 +73,10 @@ public class RevaluationIndexService {
         }
     }
 
-    private void setSchemeData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-        final Scheme scheme = assetIndexCommonService.getSchemeData(revaluation.getTenantId(), revaluation.getScheme());
+    private void setSchemeData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
+            final Revaluation revaluation) {
+        final Scheme scheme = assetIndexCommonService.getSchemeData(requestInfo, revaluation.getTenantId(),
+                revaluation.getScheme());
         if (scheme != null) {
             revaluationIndex.setSchemeId(scheme.getId());
             revaluationIndex.setSchemeCode(scheme.getCode());
@@ -77,8 +84,9 @@ public class RevaluationIndexService {
         }
     }
 
-    private void setSubSchemeData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-        final SubScheme subscheme = assetIndexCommonService.getSubSchemeData(revaluation.getTenantId(),
+    private void setSubSchemeData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
+            final Revaluation revaluation) {
+        final SubScheme subscheme = assetIndexCommonService.getSubSchemeData(requestInfo, revaluation.getTenantId(),
                 revaluation.getSubScheme());
         if (subscheme != null) {
             revaluationIndex.setSubSchemeId(subscheme.getId());
@@ -87,8 +95,10 @@ public class RevaluationIndexService {
         }
     }
 
-    private void setAssetData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-        final Asset asset = assetIndexCommonService.getAssetData(revaluation.getAssetId(), revaluation.getTenantId());
+    private void setAssetData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
+            final Revaluation revaluation) {
+        final Asset asset = assetIndexCommonService.getAssetData(requestInfo, revaluation.getAssetId(),
+                revaluation.getTenantId());
         if (asset != null) {
             revaluationIndex.setAssetId(asset.getId());
             revaluationIndex.setAssetCode(asset.getCode());
@@ -106,8 +116,9 @@ public class RevaluationIndexService {
         }
     }
 
-    private void setTenantProperties(final RevaluationIndex revaluationIndex, final String tenantId) {
-        final Tenant tenant = assetIndexCommonService.getTenantData(tenantId).get(0);
+    private void setTenantProperties(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,
+            final String tenantId) {
+        final Tenant tenant = assetIndexCommonService.getTenantData(requestInfo, tenantId).get(0);
         revaluationIndex.setCityName(tenant.getCity().getName());
         revaluationIndex.setUlbGrade(tenant.getCity().getUlbGrade());
         revaluationIndex.setLocalName(tenant.getCity().getLocalName());

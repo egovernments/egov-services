@@ -3,6 +3,7 @@ package org.egov.asset.service;
 import java.util.Map;
 
 import org.egov.asset.contract.AssetRequest;
+import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetIndex;
 import org.egov.asset.model.Boundary;
@@ -43,12 +44,13 @@ public class AssetIndexService {
         assetIndex.setAssetData(asset);
         final Map<Long, Boundary> locationMap = assetRepository.getlocationsById(asset);
         assetIndex.setAssetLocation(location, locationMap);
-        setTenantProperties(assetIndex, asset.getTenantId());
+        setTenantProperties(assetRequest.getRequestInfo(), assetIndex, asset.getTenantId());
         return assetIndex;
     }
 
-    private void setTenantProperties(final AssetIndex assetIndex, final String tenantId) {
-        final Tenant tenant = assetIndexCommonService.getTenantData(tenantId).get(0);
+    private void setTenantProperties(final RequestInfo requestInfo, final AssetIndex assetIndex,
+            final String tenantId) {
+        final Tenant tenant = assetIndexCommonService.getTenantData(requestInfo, tenantId).get(0);
         assetIndex.setCityName(tenant.getCity().getName());
         assetIndex.setUlbGrade(tenant.getCity().getUlbGrade());
         assetIndex.setLocalName(tenant.getCity().getLocalName());

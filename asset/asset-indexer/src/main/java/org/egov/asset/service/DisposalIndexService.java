@@ -1,6 +1,7 @@
 package org.egov.asset.service;
 
 import org.egov.asset.contract.DisposalRequest;
+import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Disposal;
@@ -34,15 +35,18 @@ public class DisposalIndexService {
     private DisposalIndex prepareDisposalIndex(final DisposalRequest disposalRequest) {
         final DisposalIndex disposalIndex = new DisposalIndex();
         final Disposal disposal = disposalRequest.getDisposal();
+        final RequestInfo requestInfo = disposalRequest.getRequestInfo();
         disposalIndex.setDisposalData(disposal);
-        setAssetData(disposalIndex, disposal);
+        setAssetData(requestInfo, disposalIndex, disposal);
         setAuditDetails(disposalIndex, disposal);
-        setTenantProperties(disposalIndex, disposal.getTenantId());
+        setTenantProperties(requestInfo, disposalIndex, disposal.getTenantId());
         return disposalIndex;
     }
 
-    public void setAssetData(final DisposalIndex disposalIndex, final Disposal disposal) {
-        final Asset asset = assetIndexCommonService.getAssetData(disposal.getAssetId(), disposal.getTenantId());
+    public void setAssetData(final RequestInfo requestInfo, final DisposalIndex disposalIndex,
+            final Disposal disposal) {
+        final Asset asset = assetIndexCommonService.getAssetData(requestInfo, disposal.getAssetId(),
+                disposal.getTenantId());
         if (asset != null) {
             disposalIndex.setAssetId(asset.getId());
             disposalIndex.setAssetCode(asset.getCode());
@@ -60,8 +64,9 @@ public class DisposalIndexService {
         }
     }
 
-    private void setTenantProperties(final DisposalIndex disposalIndex, final String tenantId) {
-        final Tenant tenant = assetIndexCommonService.getTenantData(tenantId).get(0);
+    private void setTenantProperties(final RequestInfo requestInfo, final DisposalIndex disposalIndex,
+            final String tenantId) {
+        final Tenant tenant = assetIndexCommonService.getTenantData(requestInfo, tenantId).get(0);
         disposalIndex.setCityName(tenant.getCity().getName());
         disposalIndex.setUlbGrade(tenant.getCity().getUlbGrade());
         disposalIndex.setLocalName(tenant.getCity().getLocalName());

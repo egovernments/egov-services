@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypeUsageType.propertyType",
+						"jsonPath": "PropertyTypeUsageType[0].propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -25,7 +25,7 @@ var dat = {
 					},
 					{
 						"name": "usageType",
-						"jsonPath": "PropertyTypeUsageType.usageType",
+						"jsonPath": "PropertyTypeUsageType[0].usageType",
 						"label": "wc.create.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -37,7 +37,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypeUsageType.active",
+							"jsonPath": "PropertyTypeUsageType[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
@@ -161,7 +161,6 @@ var dat = {
 		"searchUrl": "/wcms/masters/propertytype-usagetype/_search?id={id}",
 		"url":"/wcms/masters/propertytype-usagetype/{PropertyTypeUsageType.id}/_update",
 		"tenantIdRequired": true,
-		"isResponseArray":true,
 		"useTimestamp": true,
 		"objectName": "PropertyTypeUsageType",
 		"groups": [
@@ -171,7 +170,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypeUsageType.propertyType",
+						"jsonPath": "PropertyTypeUsageType[0].propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -183,7 +182,7 @@ var dat = {
 					},
 					{
 						"name": "usageType",
-						"jsonPath": "PropertyTypeUsageType.usageType",
+						"jsonPath": "PropertyTypeUsageType[0].usageType",
 						"label": "wc.create.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -195,7 +194,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypeUsageType.active",
+							"jsonPath": "PropertyTypeUsageType[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

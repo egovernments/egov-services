@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "pipeSize.sizeInMilimeter",
+							"jsonPath": "pipeSize[0].sizeInMilimeter",
 							"label": "wc.create.mm",
 							"pattern": "^\\d+(\\.\\d+)?$",
 							"type": "number",
@@ -21,7 +21,7 @@ var dat = {
 							"requiredErrMsg": "Please Enter valid Number",
 							"patternErrMsg": "",
 							"depedants":[{
-									"jsonPath":"pipeSize.sizeInInch",
+									"jsonPath":"pipeSize[0].sizeInInch",
 									"type":"textField",
 									"pattern":"`${getVal('pipeSize.sizeInMilimeter')!=''?getVal('pipeSize.sizeInMilimeter'):0} * 0.039370`",
 									"rg":"",
@@ -32,7 +32,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "pipeSize.sizeInInch",
+							"jsonPath": "pipeSize[0].sizeInInch",
 							"label": "wc.create.groups.connectionDetails.hscPipeSizeType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "number",
@@ -43,7 +43,7 @@ var dat = {
 						},
             {
 							"name": "description",
-							"jsonPath": "pipeSize.description",
+							"jsonPath": "pipeSize[0].description",
 							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
@@ -54,7 +54,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "pipeSize.active",
+							"jsonPath": "pipeSize[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -188,7 +188,6 @@ var dat = {
 		"url":"/wcms/masters/pipesize/{PipeSize.code}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"isResponseArray":true,
 		"objectName": "PipeSize",
 		"groups": [
 			{
@@ -197,7 +196,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "name",
-						"jsonPath": "PipeSize.sizeInMilimeter",
+						"jsonPath": "PipeSize[0].sizeInMilimeter",
 						"label": "wc.create.mm",
 						"pattern": "",
 						"type": "number",
@@ -217,7 +216,7 @@ var dat = {
 					},
 					{
 						"name": "sizeInInch",
-						"jsonPath": "PipeSize.sizeInInch",
+						"jsonPath": "PipeSize[0].sizeInInch",
 						"label": "wc.create.groups.connectionDetails.hscPipeSizeType",
 						"pattern": "",
 						"type": "number",
@@ -228,7 +227,7 @@ var dat = {
 					},
 					{
 						"name": "description",
-						"jsonPath": "PipeSize.description",
+						"jsonPath": "PipeSize[0].description",
 						"label": "wc.create.description",
 						"pattern": "",
 						"type": "text",
@@ -239,7 +238,7 @@ var dat = {
 					},
 					{
 						"name": "Active",
-						"jsonPath": "PipeSize.active",
+						"jsonPath": "PipeSize[0].active",
 						"label": "wc.create.active",
 						"pattern": "",
 						"type": "checkbox",

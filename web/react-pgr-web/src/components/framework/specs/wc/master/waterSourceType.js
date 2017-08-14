@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SourceType.name",
+							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -23,7 +23,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "SourceType.description",
+							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -34,7 +34,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SourceType.active",
+							"jsonPath": "SourceType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -155,7 +155,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SourceType.name",
+							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -166,7 +166,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "SourceType.description",
+							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -177,7 +177,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SourceType.active",
+							"jsonPath": "SourceType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

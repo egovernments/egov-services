@@ -3,7 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/propertytype-pipesize/_create",
 		"tenantIdRequired": true,
-		"idJsonPath": "PropertyTypePipeSizes[0].id",
+		"idJsonPath": "PropertyTypePipeSizes[0].code",
 		"useTimestamp": true,
 		"objectName": "PropertyTypePipeSize",
 		"groups": [
@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypePipeSize.propertyTypeName",
+						"jsonPath": "PropertyTypePipeSize[0].propertyTypeName",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -25,7 +25,7 @@ var dat = {
 					},
 					{
 						"name": "pipeSize",
-						"jsonPath": "PropertyTypePipeSize.pipeSize",
+						"jsonPath": "PropertyTypePipeSize[0].pipeSize",
 						"label": "wc.create.pipeSize",
 						"pattern": "",
 						"type": "singleValueList",
@@ -37,7 +37,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypePipeSize.active",
+							"jsonPath": "PropertyTypePipeSize[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
@@ -161,9 +161,8 @@ var dat = {
 		"searchUrl": "/wcms/masters/propertytype-pipesize/_search?id={id}",
 		"url":"/wcms/masters/propertytype-pipesize/{PropertyTypePipeSize.id}/_update",
 		"tenantIdRequired": true,
-		"isResponseArray":true,
 		"useTimestamp": true,
-		"objectName": "PropertyTypePipeSize",
+		"objectName": "PropertyTypePipeSizes",
 		"groups": [
 			{
 				"label": "wc.update.PropertyTypePipeSize.title",
@@ -171,7 +170,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypePipeSize.propertyTypeName",
+						"jsonPath": "PropertyTypePipeSizes[0].propertyTypeName",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -183,7 +182,7 @@ var dat = {
 					},
 					{
 						"name": "pipeSize",
-						"jsonPath": "PropertyTypePipeSize.pipeSize",
+						"jsonPath": "PropertyTypePipeSizes[0].pipeSize",
 						"label": "wc.create.pipeSize",
 						"pattern": "",
 						"type": "singleValueList",
@@ -195,7 +194,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypePipeSize.active",
+							"jsonPath": "PropertyTypePipeSizes[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

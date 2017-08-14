@@ -637,7 +637,28 @@ var localationData = {
   "reports.collection.collectedby":"Collected By",
   "reports.collection.paymentmode":"Payment Mode",
   "reports.collection.revenuehead":"Revenue Head",
-  "reports.collection.department":"Department"
+  "reports.collection.department":"Department",
+
+
+
+
+
+
+
+
+
+  "employee.create.position.title":"Create Position",
+  "employee.create.groups.fields.department":"Department",
+  "employee.create.groups.fields.designation":"Designation",
+  "employee.create.group.fields.positionName":"No. of Position",
+  "employee.create.group.fields.isPostOutsourced": "Outsourced Post *",
+  "employee.search.position.title":"Search Position",
+  "employee.view.position.title":"View Position",
+  "employee.update.position.title":"Update Position",
+  "employee.create.group.fields.position":"Position",
+  "employee.create.groups.fields.code":"Code",
+  "employee.create.group.fields.empName":"Name",
+  "employee.search.emp.title":"Search Employee"
 
 }
 

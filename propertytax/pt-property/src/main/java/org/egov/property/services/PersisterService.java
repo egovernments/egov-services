@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.enums.StatusEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.Document;
 import org.egov.models.Floor;
@@ -391,11 +392,14 @@ public class PersisterService {
 	 */
 	private Property savePropertyHistory(Property property) throws Exception {
 		Long propertyId = property.getId();
+		
 		propertyRepository.savePropertyHistory(property);
 		if (property.getAddress() != null) {
 			propertyRepository.saveAddressHistory(property);
 		}
+		
 		if (property.getPropertyDetail() != null) {
+			property.getPropertyDetail().setStatus(StatusEnum.HISTORY);
 			propertyRepository.savePropertyDetailsHistory(property);
 		}
 		Long propertyDetailsId = property.getPropertyDetail().getId();

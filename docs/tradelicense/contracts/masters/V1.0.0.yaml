@@ -9,12 +9,12 @@ info:
 
 schemes:
   - https
-basePath: '/v1'
+basePath: '/tl-masters'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.tl-masters'
 
 paths:
-    /category/_search:
+    /category/v1/_search:
       post:
         summary: Get the list of catogery(s) or subcatogey(s) 
         description: |
@@ -89,7 +89,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /category/_create:
+    /category/v1/_create:
       post:
         summary: Create new Category/SubCategory(s)
         description: |
@@ -122,7 +122,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /category/_update:
+    /category/v1/_update:
       post:
         summary: Update Category/SubCategory(s)
         description: |
@@ -148,7 +148,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /uom/_search:
+    /uom/v1/_search:
       post:
         summary: Get the list of UOM(s)
         description: |
@@ -198,7 +198,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /uom/_create:
+    /uom/v1/_create:
       post:
         summary: Create new Unit of Measure(s)
         description: |
@@ -222,7 +222,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /uom/_update:
+    /uom/v1/_update:
       post:
         summary: Update any of the UOM
         description: |
@@ -245,7 +245,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /documenttype/_search:
+    /documenttype/v1/_search:
       post:
         summary: Get the list of document types
         description: |
@@ -298,7 +298,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /documenttype/_create:
+    /documenttype/v1/_create:
       post:
         summary: Create new DocumentType(s)
         description: |
@@ -322,7 +322,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /documenttype/_update:
+    /documenttype/v1/_update:
       post:
         summary: Update any of the documentTypes
         description: |
@@ -345,7 +345,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /penaltyrate/_search:
+    /penaltyrate/v1/_search:
       post:
         summary: Get the list of PenaltyRate(s)
         description: |
@@ -385,7 +385,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /penaltyrate/_create:
+    /penaltyrate/v1/_create:
       post:
         summary: Create new PenalityRate(s)
         description: |
@@ -409,7 +409,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /penaltyrate/_update:
+    /penaltyrate/v1/_update:
       post:
         summary: Update any of the PenalityRate
         description: |
@@ -432,7 +432,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes' 
-    /feematrix/_search:
+    /feematrix/v1/_search:
       post:
         summary: Get the list of feematrix(s)
         description: |
@@ -502,7 +502,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /feematrix/_create:
+    /feematrix/v1/_create:
       post:
         summary: Create new FeeMatrix(s)
         description: |
@@ -529,7 +529,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /feematrix/_update:
+    /feematrix/v1/_update:
       post:
         summary: Update any of the FeeMatrix
         description: |
@@ -553,13 +553,12 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /status/_search:
+    /status/v1/_search:
       post:
         summary: Get the list of License Status(s)
         description: |
           Search and get LiceseStatus(s)  based on defined search criteria.
           Currently search parameters are only allowed as HTTP query params.
-          
           In case multiple parameters are passed LicenseStatus(s) will be searched as an AND combination of all the parameters.
           
           Maximum result size is restricted based on the maxlength of LicenseStatus(s) as defined in LicenseStatusResponse model.
@@ -605,7 +604,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /status/_create:
+    /status/v1/_create:
       post:
         summary: Create new LicenseStatus(s)
         description: |
@@ -631,7 +630,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /status/_update:
+    /status/v1/_update:
       post:
         summary: Update any of the LicenseStatus
         description: |

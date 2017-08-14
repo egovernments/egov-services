@@ -25,11 +25,11 @@ info:
     email : contacts@egovernments.org
 schemes:
   - https
-basePath: '/v1'
+basePath: '/tl-services'
 x-api-id: 'org.egov.tl-services'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
-  /_search:
+  /license/v1/_search:
     post:
       summary: Get the list of Trade License defined in the system.
       description: |
@@ -168,7 +168,7 @@ paths:
       tags:
        - TradeLicense
        
-  /_create:
+  /license/v1/_create:
     post:
       summary: Create new Trade Licenses.
       description: |

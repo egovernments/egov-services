@@ -18,8 +18,77 @@ import Api from '../../../api/api';
 import $ from "jquery";
 
 const checkRequiredFields = function(type, object) {
-  let errorTexts = {};
+  let errorText = {};
+  switch(type) {
+    case 'assignment':
+      if(!object.fromDate) {
+        errorText["assignments.fromDate"] = "Required";
+      } else if(!object.toDate) {
+        errorText["assignments.toDate"] = "Required";
+      } else if(!object.department) {
+        errorText["assignments.department"] = "Required";
+      } else if(!object.designation) {
+        errorText["assignments.designation"] = "Required";
+      } else if(!object.position) {
+        errorText["assignments.position"] = "Required";
+      } else if(object.hod == true || object.hod == "true" && !object.mainDepartments) {
+        errorText["assignments.mainDepartments"] = "Required";
+      }
+      break;
+    case 'jurisdiction':
+      if(!object.jurisdictionsType) {
+        errorText["jurisdictions.jurisdictionsType"] = "Required";
+      } else if(!object.boundary) {
+        errorText["jurisdictions.boundary"] = "Required";
+      }
+      break;
+    case 'serviceDet':
+      if(!object.serviceInfo) {
+        errorText["serviceHistory.serviceInfo"] = "Required";
+      } else if(!object.serviceFrom) {
+        errorText["serviceHistory.serviceFrom"] = "Required";
+      }
+      break;
+    case 'probation':
+      if(!object.designation) {
+        errorText["probation.designation"] = "Required";
+      } else if(!object.declaredOn) {
+        errorText["probation.declaredOn"] = "Required";
+      } else if(!object.orderDate) {
+        errorText["probation.orderDate"] = "Required";
+      }
+      break;
+    case 'regular':
+      if(!object.designation) {
+        errorText["regularisation.designation"] = "Required";
+      } else if(!object.declaredOn) {
+        errorText["regularisation.declaredOn"] = "Required";
+      } else if(!object.orderDate) {
+        errorText["regularisation.orderDate"] = "Required";
+      }
+      break;
+    case 'edu':
+      if(!object.designation) {
+        errorText["education.qualification"] = "Required";
+      } else if(!object.declaredOn) {
+        errorText["education.yearOfPassing"] = "Required";
+      }
+      break;
+    case 'tech':
+      if(!object.skill) {
+        errorText["technical.skill"] = "Required";
+      }
+      break;
+    case 'dept':
+      if(!object.skill) {
+        errorText["test.test"] = "Required";
+      } else if(!object.skill) {
+        errorText["test.yearOfPassing"] = "Required";
+      }
+      break;
+  }
 
+  return errorText;
 }
 
 const hasFile = function(elements) {
@@ -375,7 +444,7 @@ class Employee extends Component {
         value: 'id'
       },
       screenType: "create",
-      errorTexts: {},
+      errorText: {},
       subObject: {
         assignments: Object.assign({}, assignmentsDefState),
         jurisdictions: Object.assign({}, jurisDefState),
@@ -498,6 +567,7 @@ class Employee extends Component {
         this.setState({
           open: true,
           modal: 'assignment',
+          errorText: {},
           editIndex: ind,
           subObject: {
             'assignments': dat
@@ -509,6 +579,7 @@ class Employee extends Component {
         this.setState({
           open: true,
           modal: 'jurisdiction',
+          errorText: {},
           editIndex: ind,
           subObject: {
             'jurisdictions': dat
@@ -520,6 +591,7 @@ class Employee extends Component {
         this.setState({
           open: true,
           modal: 'serviceDet',
+          errorText: {},
           editIndex: ind,
           subObject: {
             'serviceHistory': dat
@@ -531,6 +603,7 @@ class Employee extends Component {
         this.setState({
           open: true,
           modal: 'probation',
+          errorText: {},
           editIndex: ind,
           subObject: {
             'probation': dat
@@ -542,6 +615,7 @@ class Employee extends Component {
         this.setState({
           open: true,
           modal: 'regular',
+          errorText: {},
           editIndex: ind,
           subObject: {
             'regularisation': dat
@@ -553,6 +627,7 @@ class Employee extends Component {
         this.setState({
           open: true,
           modal: 'edu',
+          errorText: {},
           editIndex: ind,
           subObject: {
             'education': dat
@@ -563,6 +638,7 @@ class Employee extends Component {
         dat = Object.assign([], this.props.Employee.technical[ind]);
         this.setState({
           open: true,
+          errorText: {},
           modal: 'tech',
           editIndex: ind,
           subObject: {
@@ -574,6 +650,7 @@ class Employee extends Component {
         dat = Object.assign([], this.props.Employee.jurisdictions[ind]);
         this.setState({
           open: true,
+          errorText: {},
           modal: 'dept',
           editIndex: ind,
           subObject: {
@@ -631,12 +708,12 @@ class Employee extends Component {
 
   submitModalData = (e) => {
     let {editIndex} = this.state, self = this;
-    let errorTexts = {};
+    let errorText = {};
     switch (this.state.modal) {
       case 'assignment':
-        errorTexts = checkRequiredFields('assignment', this.state.subObject.assignments);
-        if(Object.keys(errorTexts).length > 0) {
-          return self.setState({errorTexts});
+        errorText = checkRequiredFields('assignment', this.state.subObject.assignments);
+        if(Object.keys(errorText).length > 0) {
+          return self.setState({errorText});
         }
 
         let assignments = Object.assign([], this.props.Employee.assignments || []);
@@ -653,9 +730,9 @@ class Employee extends Component {
         })
         break;
       case 'jurisdiction':
-        errorTexts = checkRequiredFields('jurisdiction', this.state.subObject.jurisdictions);
-        if(Object.keys(errorTexts).length > 0) {
-          return self.setState({errorTexts});
+        errorText = checkRequiredFields('jurisdiction', this.state.subObject.jurisdictions);
+        if(Object.keys(errorText).length > 0) {
+          return self.setState({errorText});
         }
 
         let jurisdictions = Object.assign([], this.props.Employee.jurisdictions || []);
@@ -672,9 +749,9 @@ class Employee extends Component {
         })
         break;
       case 'serviceDet':
-        errorTexts = checkRequiredFields('serviceDet', this.state.subObject.serviceHistory);
-        if(Object.keys(errorTexts).length > 0) {
-          return self.setState({errorTexts});
+        errorText = checkRequiredFields('serviceDet', this.state.subObject.serviceHistory);
+        if(Object.keys(errorText).length > 0) {
+          return self.setState({errorText});
         }
 
         let serviceHistory = Object.assign([], this.props.Employee.serviceHistory || []);
@@ -693,9 +770,9 @@ class Employee extends Component {
         })
         break;
       case 'probation':
-        errorTexts = checkRequiredFields('probation', this.state.subObject.probation);
-        if(Object.keys(errorTexts).length > 0) {
-          return self.setState({errorTexts});
+        errorText = checkRequiredFields('probation', this.state.subObject.probation);
+        if(Object.keys(errorText).length > 0) {
+          return self.setState({errorText});
         }
 
         let probation = Object.assign([], this.props.Employee.probation || []);
@@ -712,9 +789,9 @@ class Employee extends Component {
         })
         break;
       case 'regular':
-        errorTexts = checkRequiredFields('regular', this.state.subObject.regularisation);
-        if(Object.keys(errorTexts).length > 0) {
-          return self.setState({errorTexts});
+        errorText = checkRequiredFields('regular', this.state.subObject.regularisation);
+        if(Object.keys(errorText).length > 0) {
+          return self.setState({errorText});
         }
 
         let regularisation = Object.assign([], this.props.Employee.regularisation || []);
@@ -731,9 +808,9 @@ class Employee extends Component {
         })
         break;
       case 'edu':
-        errorTexts = checkRequiredFields('edu', this.state.subObject.education);
-        if(Object.keys(errorTexts).length > 0) {
-          return self.setState({errorTexts});
+        errorText = checkRequiredFields('edu', this.state.subObject.education);
+        if(Object.keys(errorText).length > 0) {
+          return self.setState({errorText});
         }
 
         let education = Object.assign([], this.props.Employee.education || []);
@@ -750,9 +827,9 @@ class Employee extends Component {
         })
         break;
       case 'tech':
-        errorTexts = checkRequiredFields('tech', this.state.subObject.technical);
-        if(Object.keys(errorTexts).length > 0) {
-          return self.setState({errorTexts});
+        errorText = checkRequiredFields('tech', this.state.subObject.technical);
+        if(Object.keys(errorText).length > 0) {
+          return self.setState({errorText});
         }
 
         let technical = Object.assign([], this.props.Employee.technical || []);
@@ -769,9 +846,9 @@ class Employee extends Component {
         })
         break;
       case 'dept':
-        errorTexts = checkRequiredFields('dept', this.state.subObject.test);
-        if(Object.keys(errorTexts).length > 0) {
-          return self.setState({errorTexts});
+        errorText = checkRequiredFields('dept', this.state.subObject.test);
+        if(Object.keys(errorText).length > 0) {
+          return self.setState({errorText});
         }
 
         let test = Object.assign([], this.props.Employee.test || []);
@@ -1337,6 +1414,7 @@ class Employee extends Component {
       modal: type,
       boundaries: [],
       editIndex: '',
+      errorText: {},
       subObject: {
         assignments: Object.assign({}, assignmentsDefState),
         jurisdictions: Object.assign({}, jurisDefState),
@@ -1769,7 +1847,7 @@ class Employee extends Component {
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	<TextField type="number" floatingLabelText={"Mobile Number *"}  errorText={fieldErrors["user"] && fieldErrors["user"]["mobileNumber"]} value={Employee.user ? Employee.user.mobileNumber : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'mobileNumber', true, '')
+                      		handleChangeNextLevel(e, 'user', 'mobileNumber', true, /^\d{10}$/)
                       	}}/>
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>

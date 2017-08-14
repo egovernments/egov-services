@@ -131,7 +131,7 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
   let errorText = isRequired && !value ? translate('ui.framework.required') : '';
   let isFormValid = true;
   for(var i=0; i<requiredFields.length; i++) {
-    if(!_.get(form, requiredFields[i])) {
+    if(typeof _.get(form, requiredFields[i]) == 'undefined') {
       isFormValid = false;
       break;
     }

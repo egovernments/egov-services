@@ -92,6 +92,7 @@ import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
+import Employee from './components/non-framework/employee/create';
 
 const base = "";
 
@@ -102,6 +103,7 @@ const Main = () => {
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
 	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
+        <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
         <Route exact path={base+'/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest}/>

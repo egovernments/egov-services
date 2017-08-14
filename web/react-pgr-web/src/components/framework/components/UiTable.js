@@ -146,7 +146,7 @@ class UiTable extends Component {
 		                      {
 		                      	item.map((item2, i2)=>{
 			                        return (
-			                          <td  key={i2}>{item2 ? getNameById(item2, i2) : ""}</td>
+			                          <td  key={i2}>{typeof item2 != "undefined" ? getNameById(item2, i2) : ""}</td>
 			                        )
 		                      })}
 		                    </tr>

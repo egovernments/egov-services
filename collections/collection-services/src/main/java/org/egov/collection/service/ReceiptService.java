@@ -300,6 +300,7 @@ public class ReceiptService {
 		receipt.setBill(Arrays.asList(bill));
 		receipt.setAuditDetails(auditDetail);
         receipt.setTransactionId(transactionId);
+        receipt.setTenantId(tenantId);
 		return receipt;
 	}
 

@@ -15,6 +15,6 @@ public class BusinessDetailsResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
-	@JsonProperty("BusinessDetailsInfo")
+	@JsonProperty("BusinessDetails")
 	private List<BusinessDetailsRequestInfo> businessDetails;
 }

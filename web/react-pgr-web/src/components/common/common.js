@@ -349,13 +349,14 @@ var localationData = {
 
 
   //employee Object
-  "employee.Employee.fields.code": "Code",
+    "employee.Employee.fields.code": "Code",
+    "employee.Employee.fields.pan": "PAN",
 		"employee.Employee.fields.dateOfAppointment": "Date Of Appointment",
-		"employee.Employee.fields.dateOfJoining": "Date Of Joining",
+		"employee.Employee.fields.dateOfJoining": "Date Of Joining/Deputation",
 		"employee.Employee.fields.dateOfRetirement": "Date Of Retirement",
 		"employee.Employee.fields.employeeStatus": "Employee Status",
 		"employee.Employee.fields.recruitmentMode": "Recruitment Mode",
-		"employee.Employee.fields.recruitmentType": "Recruitment Type",
+		"employee.Employee.fields.recruitmentType": "Recruitment Type/Service Type",
 		"employee.Employee.fields.recruitmentQuota": "Recruitment Quota",
 		"employee.Employee.fields.retirementAge": "Retirement Age",
 		"employee.Employee.fields.dateOfResignation": "Date Of Resignation",
@@ -372,10 +373,10 @@ var localationData = {
 		"employee.Employee.fields.languagesKnown": "Languages Known",
 		"employee.Employee.fields.maritalStatus": "Marital Status",
 		"employee.Employee.fields.passportNo": "Passport No",
-		"employee.Employee.fields.gpfNo": "Gpf No",
+		"employee.Employee.fields.gpfNo": "Gpf No/CPS Number",
 		"employee.Employee.fields.bank": "Bank",
 		"employee.Employee.fields.bankBranch": "Bank Branch",
-		"employee.Employee.fields.bankAccount": "Bank Account",
+		"employee.Employee.fields.bankAccount": "Account Number",
 		"employee.Employee.fields.group": "Group",
 		"employee.Employee.fields.placeOfBirth": "Place Of Birth",
 		"employee.Employee.fields.serviceHistory": "Service History",
@@ -389,9 +390,11 @@ var localationData = {
 		"employee.Employee.fields.User.userName": "User Name",
 		"employee.Employee.fields.User.authToken": "Auth Token",
 		"employee.Employee.fields.User.salutation": "Salutation",
-		"employee.Employee.fields.User.name": "Name",
+		"employee.Employee.fields.User.name": "Employee Name",
 		"employee.Employee.fields.User.gender": "Gender",
-		"employee.Employee.fields.User.mobileNumber": "Mobile Number",
+    "employee.Employee.fields.User.birth": "Native/Birth Place",
+    "employee.Employee.fields.User.bloodGroup": "Blood Group",
+		"employee.Employee.fields.User.mobileNumber": "Phone Number(Emergency/Res)",
 		"employee.Employee.fields.User.aadhaarNumber": "Aadhaar Number",
 		"employee.Employee.fields.User.active": "Active",
 		"employee.Employee.fields.User.pwdExpiryDate": "Pwd Expiry Date",
@@ -414,10 +417,15 @@ var localationData = {
 		"employee.Assignment.fields.grade": "Grade",
 		"employee.Assignment.fields.govtOrderNumber": "Govt Order Number",
 		"employee.Assignment.fields.documents": "Documents",
+    "employee.Assignment.fields.action":"Action",
+    "employee.jurisdiction.fields.boundaryType":"Boundary Type",
+    "employee.jurisdiction.fields.boundary":"Boundary",
 		"employee.Assignment.title": " Assignment",
 		"employee.ServiceHistory.fields.serviceInfo": "Service Info",
 		"employee.ServiceHistory.fields.serviceFrom": "Service From",
 		"employee.ServiceHistory.fields.remarks": "Remarks",
+    "employee.ServiceHistory.fields.ServiceEntryDescription":"Service Entry Designation",
+    "employee.ServiceHistory.fields.date":"Date",
 		"employee.ServiceHistory.fields.orderNo": "Order No",
 		"employee.ServiceHistory.fields.documents": "Documents",
 		"employee.ServiceHistory.title": " Service History",
@@ -435,17 +443,17 @@ var localationData = {
 		"employee.Regularisation.fields.remarks": "Remarks",
 		"employee.Regularisation.fields.documents": "Documents",
 		"employee.Regularisation.title": " Regularisation",
-		"employee.TechnicalQualification.fields.skill": "Skill",
+		"employee.TechnicalQualification.fields.skill": "Skills",
 		"employee.TechnicalQualification.fields.grade": "Grade",
-		"employee.TechnicalQualification.fields.yearOfPassing": "Year Of Passing",
+		"employee.TechnicalQualification.fields.yearOfPassing": "Year Of Completion",
 		"employee.TechnicalQualification.fields.remarks": "Remarks",
 		"employee.TechnicalQualification.fields.documents": "Documents",
 		"employee.TechnicalQualification.title": " Technical Qualification",
 		"employee.EducationalQualification.fields.qualification": "Qualification",
 		"employee.EducationalQualification.fields.majorSubject": "Major Subject",
 		"employee.EducationalQualification.fields.yearOfPassing": "Year Of Passing",
-		"employee.EducationalQualification.fields.university": "University",
-		"employee.EducationalQualification.fields.documents": "Documents",
+		"employee.EducationalQualification.fields.university": "University/Board",
+		"employee.EducationalQualification.fields.documents": " Doc Documents",
 		"employee.EducationalQualification.title": " Educational Qualification",
 		"employee.DepartmentalTest.fields.test": "Test",
 		"employee.DepartmentalTest.fields.yearOfPassing": "Year Of Passing",
@@ -461,7 +469,17 @@ var localationData = {
 		"employee.EmployeeDocuments.fields.document": "Document",
 		"employee.EmployeeDocuments.fields.referenceType": "Reference Type",
 		"employee.EmployeeDocuments.title": " Employee Documents",
-
+    "employee.Employee.fields.email":"Email Id",
+    "employee.Employee.fields.fatherSpouseName":"Father's/Spouse Name",
+    "employee.Employee.fields.identification":"Identification Mark",
+    "employee.Employee.fields.permanentAddress":"Permanent Address",
+    "employee.Employee.fields.correspondenceAddress":"Correspondence Address",
+    "employee.Employee.fields.parmanentPinNumber":"Correspondence Pin Number",
+    "employee.Employee.fields.correspondencePinNumber":"Correspondence Pin Number",
+    "employee.Employee.fields.city":"City",
+    "employee.Employee.fields.EmployeePhoto": "Employee Photo",
+    "employee.Employee.fields.EmployeeSignature":"Employee Signature",
+    "employee.Employee.fields.OtherAttachments":"Other Attachment",
 
   "tl.create.categorytype.title":"Create License Category",
   "tl.create.groups.categorytype.name":"Name",
@@ -637,28 +655,7 @@ var localationData = {
   "reports.collection.collectedby":"Collected By",
   "reports.collection.paymentmode":"Payment Mode",
   "reports.collection.revenuehead":"Revenue Head",
-  "reports.collection.department":"Department",
-
-
-
-
-
-
-
-
-
-  "employee.create.position.title":"Create Position",
-  "employee.create.groups.fields.department":"Department",
-  "employee.create.groups.fields.designation":"Designation",
-  "employee.create.group.fields.positionName":"No. of Position",
-  "employee.create.group.fields.isPostOutsourced": "Outsourced Post *",
-  "employee.search.position.title":"Search Position",
-  "employee.view.position.title":"View Position",
-  "employee.update.position.title":"Update Position",
-  "employee.create.group.fields.position":"Position",
-  "employee.create.groups.fields.code":"Code",
-  "employee.create.group.fields.empName":"Name",
-  "employee.search.emp.title":"Search Employee"
+  "reports.collection.department":"Department"
 
 }
 

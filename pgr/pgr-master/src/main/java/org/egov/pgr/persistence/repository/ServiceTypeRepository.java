@@ -46,6 +46,11 @@ public class ServiceTypeRepository {
                 getNamedQuery(serviceType));
     }
 
+    public void update(ServiceType serviceType){
+        namedParameterJdbcTemplate.update(serviceTypeQueryBuilder.getUpdateQuery(),
+                getNamedQuery(serviceType));
+    }
+
     public List<org.egov.pgr.domain.model.ServiceType> search(ServiceTypeSearchCriteria serviceTypeSearchCriteria) {
 
         List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.buildSearchQuery(serviceTypeSearchCriteria),

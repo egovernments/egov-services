@@ -3,7 +3,12 @@ package org.egov.asset.service;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetResponse;
+import org.egov.asset.contract.FunctionResponse;
+import org.egov.asset.contract.FundResponse;
 import org.egov.asset.contract.RequestInfo;
+import org.egov.asset.contract.SchemeResponse;
+import org.egov.asset.contract.SubSchemeResponse;
 import org.egov.asset.contract.TenantResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.Function;
@@ -29,50 +34,50 @@ public class AssetIndexCommonService {
 
     public Asset getAssetData(final RequestInfo requestInfo, final Long assetId, final String tenantId) {
         final String url = applicationProperties.getAssetServiceHostName()
-                + applicationProperties.getAssetServiceSearchPath() + "?&tenantId=" + tenantId + "&id="
-                + assetId.toString();
+                + applicationProperties.getAssetServiceSearchPath() + "?&tenantId=" + tenantId + "&id=" + assetId;
         log.info("asset search url :: " + url);
-        final Asset asset = restTemplate.postForObject(url, requestInfo, Asset.class);
-        log.info("asset object :: " + asset);
-        return asset;
+        final AssetResponse assetResponse = restTemplate.postForObject(url, requestInfo, AssetResponse.class);
+        log.info("asset Response :: " + assetResponse);
+        return assetResponse.getAssets().get(0);
     }
 
     public SubScheme getSubSchemeData(final RequestInfo requestInfo, final String tenantId, final Long subSchemeId) {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceSubSchemesSearchPath() + "?&tenantId=" + tenantId + "&id="
                 + subSchemeId;
-        log.info("subscheme url :: " + url);
-        final SubScheme subScheme = restTemplate.postForObject(url, requestInfo, SubScheme.class);
-        log.info("subscheme object :: " + subScheme);
-        return subScheme;
+        log.info("subscheme search url :: " + url);
+        final SubSchemeResponse subSchemeResponse = restTemplate.postForObject(url, requestInfo,
+                SubSchemeResponse.class);
+        log.info("subscheme Response :: " + subSchemeResponse);
+        return subSchemeResponse.getSubScheme();
     }
 
     public Scheme getSchemeData(final RequestInfo requestInfo, final String tenantId, final Long schemeId) {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceSchemesSearchPath() + "?&tenantId=" + tenantId + "&id=" + schemeId;
-        log.info("scheme url :: " + url);
-        final Scheme scheme = restTemplate.postForObject(url, requestInfo, Scheme.class);
-        log.info("scheme object :: " + scheme);
-        return scheme;
+        log.info("scheme search url :: " + url);
+        final SchemeResponse schemeResponse = restTemplate.postForObject(url, requestInfo, SchemeResponse.class);
+        log.info("scheme Response :: " + schemeResponse);
+        return schemeResponse.getScheme();
     }
 
     public Fund getFundData(final RequestInfo requestInfo, final String tenantId, final Long fundId) {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + tenantId + "&id=" + fundId;
-        log.info("fund url :: " + url);
-        final Fund fund = restTemplate.postForObject(url, requestInfo, Fund.class);
-        log.info("fund object :: " + fund);
-        return fund;
+        log.info("fund search url :: " + url);
+        final FundResponse fundResponse = restTemplate.postForObject(url, requestInfo, FundResponse.class);
+        log.info("fund Response :: " + fundResponse);
+        return fundResponse.getFund();
     }
 
     public Function getFunctionData(final RequestInfo requestInfo, final String tenantId, final Long functionId) {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + tenantId + "&id="
                 + functionId;
-        log.info("function url :: " + url);
-        final Function function = restTemplate.postForObject(url, requestInfo, Function.class);
-        log.info("function object :: " + function);
-        return function;
+        log.info("function search url :: " + url);
+        final FunctionResponse functionResponse = restTemplate.postForObject(url, requestInfo, FunctionResponse.class);
+        log.info("function Response :: " + functionResponse);
+        return functionResponse.getFunction();
     }
 
     public List<Tenant> getTenantData(final RequestInfo requestInfo, final String tenantId) {

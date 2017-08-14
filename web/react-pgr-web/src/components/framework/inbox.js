@@ -21,8 +21,26 @@ class Inbox extends Component {
   constructor(props) {
     super(props);
 	this.state = {
-		searchResult : []
+		searchResult : [],
+		buttons : []
 	}
+  }
+  
+   setLabelAndReturnRequired(configObject) {
+    if(configObject && configObject.groups) {
+      for(var i=0;configObject && i<configObject.groups.length; i++) {
+        configObject.groups[i].label = translate(configObject.groups[i].label);
+        for (var j = 0; j < configObject.groups[i].fields.length; j++) {
+              configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+        }
+
+        if(configObject.groups[i].children && configObject.groups[i].children.length) {
+          for(var k=0; k<configObject.groups[i].children.length; k++) {
+            this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
+          }
+        }
+      }
+    }
   }
 
   setInitialUpdateChildData(form, children) {
@@ -186,6 +204,7 @@ class Inbox extends Component {
     let hashLocation = window.location.hash;
     let self = this;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+	self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
@@ -209,7 +228,22 @@ class Inbox extends Component {
 			workflow.approver =workflowDetails.assignee || null;
 		}
 		
-		console.log(workflowDetails);
+		var query = {
+			id : res.properties[0].propertyDetail.stateId
+		}
+		
+		Api.commonApiPost('egov-common-workflows/process/_search', query,{}, false, true).then((res)=>{
+			console.log(res);
+			current.setState({
+				buttons: res.processInstance
+			});
+		}).catch((err)=> {
+			console.log(res);
+			current.setState({
+				buttons: []
+			});
+		})
+		
       self.props.setFormData(res);
       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
     }, function(err){
@@ -222,7 +256,7 @@ class Inbox extends Component {
 	  this.props.initForm();
   }
   
-  updateInbox = () => {
+  updateInbox = (actionName, status) => {
 	  
 	  var currentThis = this;
 	  
@@ -234,8 +268,8 @@ class Inbox extends Component {
 		"department": workflow.workflowDepartment || null,
 		"designation":workflow.workflowDesignation || null,
 		"assignee": workflow.approver || null,
-		"action": "Forward",
-		"status": "Assitant approved"
+		"action": actionName,
+		"status": status
 	  }
 	  
 		data[0].owners[0].tenantId = "default";
@@ -253,11 +287,6 @@ class Inbox extends Component {
 	   } 
 	  
 	     Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
-			currentThis.setState({
-				ack: res.properties.applicationNo
-			});
-			localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-			this.props.history.push('acknowledgement');
 			setLoadingStatus('hide');
 		  }).catch((err)=> {
 			console.log(err)
@@ -274,8 +303,11 @@ class Inbox extends Component {
   printer = () => {
     window.print();
   }
-
+  
   render() {
+	  
+	var current = this;
+	
     let {mockData, moduleName, actionName, formData, fieldErrors, workflow} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer} = this;
 
@@ -309,9 +341,15 @@ class Inbox extends Component {
 		  <br/>
         </form>
         <div style={{"textAlign": "center"}}>
-			<RaisedButton type="button" primary={true} label="Update" style={{margin:'0 5px'}} style={{display:'inline-block'}} onClick={()=> {
-				this.updateInbox();
-			}}/>
+	
+			{(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
+				return(
+					<RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+						this.updateInbox(item.name, current.state.buttons.status);
+					}}/>
+				)
+			})}
+			
         </div>
       </div>
     );
@@ -319,7 +357,7 @@ class Inbox extends Component {
 }
 
 const mapStateToProps = state => ({
-	workflow:state.form.form,
+  workflow:state.form.form,
   metaData:state.framework.metaData,
   mockData: state.framework.mockData,
   moduleName:state.framework.moduleName,

@@ -267,7 +267,7 @@ class PropertyTaxSearch extends Component {
 	
 	let {history} = this.props;
 	
-    const viewTabel=()=>
+    const viewTable=()=>
     {
       return (
         <Card className="uiCard">
@@ -371,7 +371,6 @@ class PropertyTaxSearch extends Component {
                       </Col>
                     </Row>
                   </Grid>
-
                 </CardText>
               </Card>
 
@@ -529,7 +528,7 @@ class PropertyTaxSearch extends Component {
               </div>
 
 
-                  {isTableShow?viewTabel():""}
+                  {isTableShow?viewTable():""}
 
 
 

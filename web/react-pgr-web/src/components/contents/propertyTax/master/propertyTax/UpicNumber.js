@@ -140,13 +140,13 @@ class UpicNumber extends Component {
 
     return ( 
 		  <Card className="uiCard">
-			<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Upic Number</div>} />
+			<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Assessment Number</div>} />
 			<CardText style={styles.reducePadding}>
 				<Grid fluid>
 					<Row>
 						<Col xs={12} md={3} sm={6}>
 						  <TextField  className="fullWidth"
-							  floatingLabelText="Upic Number *"
+							  floatingLabelText="Assessment Number *"
 							  errorText={fieldErrors.oldUpicNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.oldUpicNumber}</span>: ""}
 							  value={upicNumber.oldUpicNumber ? upicNumber.oldUpicNumber : ""}
 							  onChange={(e) => {

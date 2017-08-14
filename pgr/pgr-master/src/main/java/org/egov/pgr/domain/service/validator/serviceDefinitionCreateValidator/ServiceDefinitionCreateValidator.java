@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.ServiceDefinition;
-import org.egov.pgr.domain.model.ServiceType;
 import org.egov.pgr.persistence.repository.ServiceDefinitionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

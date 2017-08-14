@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.pgr.domain.model.ServiceDefinition;
-import org.egov.pgr.domain.service.validator.serviceDefinitionCreateValidator.ServiceDefinitionCreateValidator;
 import org.egov.pgr.domain.model.ServiceDefinitionSearchCriteria;
+import org.egov.pgr.domain.service.validator.Attributedefinition.validator.AttributeDefinitionCreateValidator;
+import org.egov.pgr.domain.service.validator.serviceDefinitionCreateValidator.ServiceDefinitionCreateValidator;
 import org.egov.pgr.persistence.dto.AttributeDefinition;
 import org.egov.pgr.persistence.dto.ValueDefinition;
 import org.egov.pgr.persistence.repository.AttributeDefinitionRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class ServiceDefinitionService {
 
 	private List<ServiceDefinitionCreateValidator> createValidators;
+	private List<AttributeDefinitionCreateValidator> attributeValidate;
 
 	private static final String CREATE = "CREATE";
 	private ServiceDefinitionMessageQueueRepository serviceDefinitionMessageQueueRepository;
@@ -30,19 +32,22 @@ public class ServiceDefinitionService {
 			ServiceDefinitionRepository serviceDefinitionRepository,
 			AttributeDefinitionRepository attributeDefinitionRepository,
 			ValueDefinitionRepository valueDefinitionRepository,
-			List<ServiceDefinitionCreateValidator> createValidators) {
+			List<ServiceDefinitionCreateValidator> createValidators,
+			List<AttributeDefinitionCreateValidator> attributeValidate) {
 
 		this.serviceDefinitionMessageQueueRepository = serviceDefinitionMessageQueueRepository;
 		this.serviceDefinitionRepository = serviceDefinitionRepository;
 		this.attributeDefinitionRepository = attributeDefinitionRepository;
 		this.valueDefinitionRepository = valueDefinitionRepository;
 		this.createValidators = createValidators;
+		this.attributeValidate=attributeValidate;
 	}
 
 	public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request) {
-		
 		createMandatoryFieldValidate(serviceDefinition);
-		createLengthValidate( serviceDefinition);
+		ServiceDefinitionFieldLengthValidate( serviceDefinition);
+		attributeLengthValidation(serviceDefinition);
+		
 		createUniqueConstraintValidation(serviceDefinition);
 		serviceDefinitionMessageQueueRepository.save(request, CREATE);
 	}
@@ -83,7 +88,7 @@ public class ServiceDefinitionService {
 				.forEach(v -> v.checkMandatoryField(serviceDefinition));
 	}
 	
-	private void createLengthValidate(ServiceDefinition serviceDefinition) {
+	private void ServiceDefinitionFieldLengthValidate(ServiceDefinition serviceDefinition) {
 		createValidators.stream().filter(validator -> validator.canValidate(serviceDefinition))
 				.forEach(v -> v.checkLength(serviceDefinition));
 	}
@@ -92,6 +97,17 @@ public class ServiceDefinitionService {
 		createValidators.stream().filter(validator -> validator.canValidate(serviceDefinition))
 				.forEach(v -> v.checkConstraints(serviceDefinition));
 	}
+	
+	private void attributeLengthValidation(ServiceDefinition serviceDefinition) {
+		serviceDefinition.getAttributes().stream().forEach(attributeDefinition -> 
+		{
+			attributeValidate.stream().filter(validator -> 
+			validator.canValidate(attributeDefinition))
+			.forEach(v -> v.validatingLength(attributeDefinition));
+		});
+		
+	}
+	
 
 	private void setAttributes(List<ServiceDefinition> serviceDefinitions) {
 		serviceDefinitions.forEach(serviceDefinition -> serviceDefinition.setAttributes(attributeDefinitionRepository

@@ -101,7 +101,14 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "employee.create.group.fields.positionName"}, {label: "employee.create.group.fields.department"}, {label: "employee.create.group.fields.designation"}, {label: "employee.create.group.fields.isPostOutsourced"}],
+			"header": [{
+				"label": "employee.create.group.fields.positionName"}, {
+					"label": "employee.create.group.fields.department",
+					"url": "/egov-common-masters/departments/_search?|$..id|$..name"
+				}, {
+					"label": "employee.create.group.fields.designation",
+					"url": "/hr-masters/designations/_search?|$..id|$..name"
+				}, {label: "employee.create.group.fields.isPostOutsourced"}],
 			"values": ["name", "deptdesig.department", "deptdesig.designation.id","isPostOutsourced"],
 			"resultPath": "Position",
 			"rowlickUrlUpdate": "/update/employee/createPosition/{id}",

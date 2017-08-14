@@ -1,5 +1,7 @@
 package org.egov.egf.instrument.domain.model;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,4 +17,8 @@ public class InstrumentSearch extends Instrument {
 	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
+	private String instrumentTypes;
+	private String financialStatuses;
+	private Date transactionFromDate;
+	private Date transactionToDate;
 }

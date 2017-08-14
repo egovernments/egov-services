@@ -1,6 +1,7 @@
 package org.egov.egf.instrument.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +187,29 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 				params.append(" and ");
 			}
 			params.append("id in (:ids)");
-			paramValues.put("ids", instrumentSearchEntity.getIds());
+			paramValues.put("ids", new ArrayList<String>(Arrays.asList(instrumentSearchEntity.getIds().split(","))));
+		}
+		if (instrumentSearchEntity.getFinancialStatuses() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("financialStatusId in (:financialStatuses)");
+			paramValues.put("financialStatuses", new ArrayList<String>(Arrays.asList(instrumentSearchEntity.getFinancialStatuses().split(","))));
+		}
+		if (instrumentSearchEntity.getInstrumentTypes() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("instrumentTypeId in (:instrumentTypes)");
+			paramValues.put("instrumentTypes", new ArrayList<String>(Arrays.asList(instrumentSearchEntity.getInstrumentTypes().split(","))));
+		}
+		if (instrumentSearchEntity.getTransactionFromDate() != null && instrumentSearchEntity.getTransactionToDate() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("transactionDate >= :fromDate and transactionDate <= :toDate");
+			paramValues.put("fromDate", instrumentSearchEntity.getTransactionFromDate());
+			paramValues.put("toDate", instrumentSearchEntity.getTransactionToDate());
 		}
 
 		Pagination<Instrument> page = new Pagination<>();

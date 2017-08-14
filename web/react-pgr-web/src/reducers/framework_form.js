@@ -74,7 +74,7 @@ export default (state = defaultState, action) => {
 
         case "HANDLE_CHANGE_FRAMEWORK":
             var currentState = { ...state };
-            _.set(currentState.form, action.property, action.value);
+            _.set(currentState.form, action.property, (action.value || ""));
             var validationDat = validate(currentState.fieldErrors, action.property, action.value, action.isRequired, currentState.form, currentState.requiredFields, action.pattern, action.patternErrMsg);
             //Set field errors
             currentState.fieldErrors = {

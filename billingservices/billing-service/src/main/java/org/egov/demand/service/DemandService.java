@@ -72,6 +72,7 @@ import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.DemandUpdateMisResponse;
+import org.egov.demand.web.contract.ReceiptRequest;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -152,6 +153,16 @@ public class DemandService {
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 	
+	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest)
+	{
+	    BillRequest billRequest=new BillRequest();
+	    billRequest.setRequestInfo(receiptRequest.getRequestInfo());
+	    billRequest.setBills(receiptRequest.getReceipt().get(0).getBill());
+	    return updateDemandFromBill(billRequest);
+	    
+	}
+	
+	
 	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
 
 		List<Bill> bills = billRequest.getBills();
@@ -217,7 +228,9 @@ public class DemandService {
 			}
 		}
 		demandRepository.update(new DemandRequest(requestInfo,demands));
-		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
+	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
+                kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandResponse);
+		return demandResponse;
 	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {
@@ -257,7 +270,7 @@ public class DemandService {
 			}
 		}
 		demandRequest.setDemands(existingDemands);
-		kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandRequest);
+		kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED),
 				existingDemands);
 	}

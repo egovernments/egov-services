@@ -80,7 +80,7 @@ public class DemandConnectionService {
     @Autowired
     private ConfigurationManager configurationManager;
     
-    private static final String BUSINESSSERVICE="Water Charge";
+    private static final String BUSINESSSERVICE="WC";
 
     public List<Demand> prepareDemand(final Demand demandrequest, final WaterConnectionReq waterConnectionRequest) {
 

@@ -170,6 +170,11 @@ public class WaterConnectionQueryBuilder {
                 + " where acknowledgmentnumber = ?";
     }
 
+    public static String updateConnectionAfterWorkFlowQuery() {
+
+        return "UPDATE egwtr_waterconnection SET lastmodifiedtime =?,status =? "
+                + " where acknowledgmentnumber = ?";
+    }
     
     public static String persistEstimationNoticeQuery() { 
     	return "INSERT INTO egwtr_estimationnotice_audit_log (id, waterconnectionid, tenantid, dateofletter, letternumber, letterto, letterintimationsubject, applicationnumber, applicationdate, applicantname, servicename, waternumber, sladays, chargeDescription1, chargeDescription2, createdby, createdtime) "

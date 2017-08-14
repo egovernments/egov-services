@@ -70,6 +70,9 @@ public class ApplicationProperties {
     @Value("${kafka.topics.estimationnotice.persist.name}")
     private String estimationNoticePersistTopicName; 
     
+    @Value("${kafka.topics.demandBill.update.name}")
+    private String updateDemandBillTopicName;
+    
     @Value("${kafka.topics.workorder.persist.name}")
     private String workOrderNoticePersistTopicName; 
     
@@ -98,6 +101,10 @@ public class ApplicationProperties {
     public String getCreateNewConnectionTopicName() {
         return createNewConnectionTopicName;
     }
+    
+    public String getUpdateDemandBillTopicName() {
+        return updateDemandBillTopicName;
+    }
 
     public String getCreateLegacyConnectionTopicName() {
         return createLegacyConnectionTopicName;
@@ -122,4 +129,5 @@ public class ApplicationProperties {
     public String getWorkOrderTopicKey() {
     	return workOrderPersistTopicKey;
     }
+    
 }

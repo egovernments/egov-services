@@ -37,34 +37,26 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.demand.web.contract;
 
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
+import org.egov.common.contract.request.RequestInfo;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.List;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    ESTIMATIONAMOUNTCOLLECTED("Estimation Amount Collected"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
 
-    public String getName() {
-        return name;
-    }
+@Getter
+@Setter
 
-    
+public class ReceiptRequest {
+
+    private String tenantId;
+
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
+
+    @JsonProperty("Receipt")
+    private List<Receipt> receipt;
 }

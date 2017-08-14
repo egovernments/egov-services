@@ -77,7 +77,7 @@ public class AssetIndexCommonService {
 
     public List<Tenant> getTenantData(final RequestInfo requestInfo, final String tenantId) {
         final String url = applicationProperties.getTenantServiceHostName()
-                + applicationProperties.getTenantServiceSearchPath() + "?&tenantId=" + tenantId;
+                + applicationProperties.getTenantServiceSearchPath() + "?&code=" + tenantId;
         log.info("Tenant Service URL :: " + url);
         final TenantResponse tenantResponse = restTemplate.postForObject(url, requestInfo, TenantResponse.class);
         log.info("Tenant Response :: " + tenantResponse);

@@ -40,8 +40,10 @@ public class ServiceDefinitionService {
 	}
 
 	public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request) {
-		createUniqueConstraintValidation(serviceDefinition);
+		
 		createMandatoryFieldValidate(serviceDefinition);
+		createLengthValidate( serviceDefinition);
+		createUniqueConstraintValidation(serviceDefinition);
 		serviceDefinitionMessageQueueRepository.save(request, CREATE);
 	}
 
@@ -79,6 +81,11 @@ public class ServiceDefinitionService {
 	private void createMandatoryFieldValidate(ServiceDefinition serviceDefinition) {
 		createValidators.stream().filter(validator -> validator.canValidate(serviceDefinition))
 				.forEach(v -> v.checkMandatoryField(serviceDefinition));
+	}
+	
+	private void createLengthValidate(ServiceDefinition serviceDefinition) {
+		createValidators.stream().filter(validator -> validator.canValidate(serviceDefinition))
+				.forEach(v -> v.checkLength(serviceDefinition));
 	}
 
 	private void createUniqueConstraintValidation(ServiceDefinition serviceDefinition) {

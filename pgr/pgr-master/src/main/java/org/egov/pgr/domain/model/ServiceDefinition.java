@@ -33,6 +33,14 @@ public class ServiceDefinition {
                     .build();
     }
     
+    public boolean isTenantIdLengthMatch(){
+        return (tenantId.length() > 0 && tenantId.length() <= 256);
+    }
+    
+    public boolean isCodeLengthMatch(){
+        return (code.length() > 0 && code.length() <= 20);
+    }
+    
     public boolean isTenantIdAbsent(){
         return isEmpty(tenantId) || tenantId == null;
     }

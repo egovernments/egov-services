@@ -91,6 +91,9 @@ import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
+import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
+
+
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
 import Employee from './components/non-framework/employee/create';
 
@@ -200,6 +203,8 @@ const Main = () => {
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
+
+      <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate/:id?'} component={LegacyLicenseCreate}/>
 
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id?'} component={ReceiptView}/>
 

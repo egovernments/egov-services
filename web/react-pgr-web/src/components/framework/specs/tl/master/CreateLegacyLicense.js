@@ -301,11 +301,49 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue":false
+							"defaultValue":false,
+              "showHideFields": [{
+                   "ifValue": true,
+                   "hide": [],
+                   "show": [{
+                  "name": "createLicenseCategoryType",
+                  "isGroup": true,
+                  "isField": false
+                   }]
+                  }]
 						}
         ]
       },
 
+      {
+				"label": "Agreement Details",
+				"name": "createLicenseCategoryType",
+        "hide":true,
+				"fields": [
+            {
+              "name": "dateOfExecution",
+              "jsonPath": "licenses[0].agreementDate",
+              "label": "Date of Execution",
+              "pattern": "",
+              "type": "datePicker",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+						{
+							"name": "agreementNo",
+							"jsonPath": "categories[0].agreementNo",
+							"label": "Registered/Non Registered Document No",
+							"pattern": "^.[a-zA-Z. ]{2,49}$",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "Enter Valid Name"
+						}
+				]
+			},
       {
 				"label": "tl.create.licenses.groups.FeeDetails",
 				"name": "FeeDetails",
@@ -356,7 +394,7 @@ var dat = {
 		"url": "/tl-services/license/v1/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories",
+		"objectName": "licenses",
 		"groups": [
 			{
 				"label": "tl.search.groups.license.searchTradeLicense",
@@ -375,7 +413,7 @@ var dat = {
           },
           {
             "name": "showInactiveLicense",
-            "jsonPath": "showInactiveLicense",
+            "jsonPath": "active",
             "label": "tl.search.groups.showInactiveLicense",
             "pattern": "",
             "type": "checkbox",
@@ -420,7 +458,7 @@ var dat = {
           },
           {
             "name": "tradeCategory",
-            "jsonPath": "tradeCategory",
+            "jsonPath": "categoryId",
             "label": "tl.search.groups.tradeCategory",
             "pattern": "",
             "type": "singleValueList",
@@ -432,7 +470,7 @@ var dat = {
           },
           {
             "name": "tradeSubCategory",
-            "jsonPath": "tradeSubCategory",
+            "jsonPath": "subCategoryId",
             "label": "tl.search.groups.tradeSubCategory",
             "pattern": "",
             "type": "singleValueList",
@@ -455,7 +493,7 @@ var dat = {
           },
           {
             "name": "tradeOwnerName",
-            "jsonPath": "tradeOwnerName",
+            "jsonPath": "ownerName",
             "label": "tl.search.groups.tradeOwnerName",
             "pattern": "",
             "type": "text",
@@ -465,9 +503,9 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "propertyAssessmentNo",
-            "jsonPath": "propertyAssessmentNo",
-            "label": "tl.search.groups.propertyAssessmentNo",
+            "name": "propertyAssesmentNo",
+            "jsonPath": "propertyAssesmentNo",
+            "label": "tl.search.groups.propertyAssesmentNo",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -492,11 +530,11 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "tl.search.groups.applicationNumber"},{label: "tl.create.groups.categorytype.name"}, {label: "tl.create.groups.categorytype.active"}],
+			"header": [{label: "tl.search.result.groups.applicationNumber"},{label: "tl.search.result.groups.tlNumber"}, {label: "tl.search.result.groups.oldTLNumber"},{label: "tl.search.result.groups.category"},{label: "tl.search.result.groups.subCategory"},{label: "tl.search.result.groups.titleOfTrade"},{label: "tl.search.result.groups.tradeOwner"},{label: "tl.search.result.groups.mobileNumber"},{label: "tl.search.result.groups.propertyAssessmentNumber"},{label: "tl.search.result.groups.financialYear"},{label: "tl.search.result.groups.applicationStatus"},{label: "tl.search.result.groups.licenseActive"}],
 			"values": ["code","name", "active"],
-			"resultPath": "categories",
-			"rowClickUrlUpdate": "/update/tl/CreateLicenseCategory/{id}",
-			"rowClickUrlView": "/view/tl/CreateLicenseCategory/{id}"
+			"resultPath": "licenses",
+			"rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
+			"rowClickUrlView": "/view/tl/CreateLegacyLicense/{id}"
 			}
 	},
 	"tl.view": {
@@ -528,7 +566,7 @@ var dat = {
             "label": "tl.view.groups.mobileNumber",
             "pattern": "^.{10,10}$",
             "type": "number",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "Mobile Number must be of 10 digits"
@@ -539,7 +577,7 @@ var dat = {
             "label": "tl.view.groups.tradeOwnerName",
             "pattern": "^.[a-zA-Z. ]{2,49}$",
             "type": "text",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "Enter Valid Name"
@@ -561,7 +599,7 @@ var dat = {
             "label": "tl.view.groups.emailId",
             "pattern": "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$",
             "type": "text",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "Enter Valid EmailID"
@@ -572,7 +610,7 @@ var dat = {
             "label": "tl.view.groups.tradeOwnerAddress",
             "pattern": "",
             "type": "textarea",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -601,7 +639,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -613,7 +651,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -625,7 +663,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
@@ -657,7 +695,7 @@ var dat = {
               "label": "tl.licenses.view.groups.TradeAddress",
               "pattern": "",
               "type": "textarea",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -675,7 +713,7 @@ var dat = {
               "label": "tl.view.licenses.groups.TradeTitle",
               "pattern": "",
               "type": "text",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -687,7 +725,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
@@ -713,7 +751,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
               "url": "/tl-masters/category/v1/_search?|$..id|$..name",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -725,7 +763,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
               "url": "/tl-masters/category/v1/_search?type=subcategory|$..id|$..name",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -736,7 +774,7 @@ var dat = {
               "label": "tl.view.licenses.groups.UOM",
               "pattern": "",
               "type": "text",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -747,7 +785,7 @@ var dat = {
               "label": "tl.view.licenses.groups.TradeAreaPremises",
               "pattern": "",
               "type": "number",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -769,7 +807,7 @@ var dat = {
               "label": "tl.view.licenses.groups.TradeCommencementDate",
               "pattern": "",
               "type": "datePicker",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -794,308 +832,57 @@ var dat = {
 
 		]
 	},
-
 	"tl.update": {
 		"numCols": 12/2,
-		"searchUrl": "/tl-services/v1/category/_search?id={id}",
-		"url": "/tl-services/v1/tl-tradelicense/category/Flammables/{CategoryType.code}/_update",
+		"searchUrl": "/tl-masters/v1/category/_search?id={id}",
+		"url": "/tl-masters/v1/tl-tradelicense/category/Flammables/{CategoryType.code}/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "categories",
 		"groups": [
 			{
-				"label": "tl.update.groups.license.title",
+				"label": "tl.update.groups.categorytype.title",
 				"name": "createCategoryType",
 				"fields": [
-          {
-    				"label": "tl.update.licenses.groups.TradeOwnerDetails",
-    				"name": "TradeOwnerDetails",
-    				"fields": [
-    						{
-    							"name": "AadharNumber",
-    							"jsonPath": "licenses[0].adhaarNumber",
-    							"label": "tl.update.licenses.groups.AadharNumber",
-    							"pattern": "^.{12,12}$",
-    							"type": "number",
-    							"isRequired": false ,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": "Aadhar Number must be of 12 digits"
-    						},
-                {
-    							"name": "MobileNumber",
-    							"jsonPath": "licenses[0].mobileNumber",
-    							"label": "tl.update.licenses.groups.Mobile Number",
-    							"pattern": "^.{10,10}$",
-    							"type": "number",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": "Mobile Number must be of 10 digits"
-    						},
-                {
-    							"name": "TradeOwnerName",
-    							"jsonPath": "licenses[0].ownerName",
-    							"label": "tl.update.licenses.groups.TradeOwnerName",
-    							"pattern": "^.[a-zA-Z. ]{2,49}$",
-    							"type": "text",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": "Enter Valid Name"
-    						},
-                {
-    							"name": "FatherSpouseName",
-    							"jsonPath": "licenses[0].fatherSpouseName",
-    							"label": "tl.update.licenses.groups.FatherSpouseName",
-    							"pattern": "",
-    							"type": "text",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": ""
-    						},
-                {
-    							"name": "EmailID",
-    							"jsonPath": "licenses[0].emailId",
-    							"label": "tl.update.licenses.groups.EmailID",
-    							"pattern": "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$",
-    							"type": "text",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": "Enter Valid EmailID"
-    						},
-                {
-    							"name": "TradeOwnerAddress",
-    							"jsonPath": "licenses[0].ownerAddress",
-    							"label": "tl.update.licenses.groups.TradeOwnerAddress",
-    							"pattern": "",
-    							"type": "textarea",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": ""
-    						}
-    				]
-    			},
-
-          {
-    				"label": "tl.update.licenses.groups.TradeLocationDetails",
-    				"name": "TradeLocationDetails",
-    				"fields": [
-    						{
-    							"name": "PropertyAssessmentNo",
-    							"jsonPath": "licenses[0].propertyAssesmentNo",
-    							"label": "tl.update.licenses.groups.PropertyAssessmentNo",
-    							"pattern": "",
-    							"type": "number",
-    							"isRequired": false,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": ""
-    						},
-                {
-    							"name": "Locality",
-    							"jsonPath": "licenses[0].localityId",
-    							"label": "tl.update.licenses.groups.Locality",
-    							"pattern": "",
-    							"type": "singleValueList",
-                  "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": ""
-    						},
-                {
-    							"name": "Ward",
-    							"jsonPath": "licenses[0].wardId",
-    							"label": "tl.update.licenses.groups.Ward",
-    							"pattern": "",
-    							"type": "singleValueList",
-                  "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": ""
-    						},
-                {
-    							"name": "OwnershipType",
-    							"jsonPath": "licenses[0].ownerShipType",
-    							"label": "tl.update.licenses.groups.OwnershipType",
-    							"pattern": "",
-    							"type": "singleValueList",
-                  "url": "",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": "",
-                  "defaultValue": [{
-                "key": "",
-                "value": null
-              },
-              {
-                "key": "STATE_GOVERNMENT_OWNED",
-                "value": "STATE_GOVERNMENT_OWNED"
-              },
-              {
-                "key": "RENTED",
-                "value": "RENTED"
-              },
-              {
-                "key": "CENTRAL_GOVERNMENT_OWNED",
-                "value": "CENTRAL_GOVERNMENT_OWNED"
-              },
-              {
-                "key": "ULB",
-                "value": "ULB"
-              }
-              ]
-    						},
-                {
-                  "name": "TradeAddress",
-                  "jsonPath": "licenses[0].tradeAddress",
-                  "label": "tl.update.licenses.groups.TradeAddress",
-                  "pattern": "",
-                  "type": "textarea",
-                  "isRequired": true,
-                  "isDisabled": false,
-                  "requiredErrMsg": "",
-                  "patternErrMsg": ""
-                }
-    				]
-    			},
-          {
-            "label": "tl.update.licenses.groups.TradeDetails",
-            "name": "TradeDetails",
-            "fields": [
-                {
-                  "name": "TradeTitle",
-                  "jsonPath": "licenses[0].tradeTitle",
-                  "label": "tl.update.licenses.groups.TradeTitle",
-                  "pattern": "",
-                  "type": "text",
-                  "isRequired": true,
-                  "isDisabled": false,
-                  "requiredErrMsg": "",
-                  "patternErrMsg": ""
-                },
-                {
-                  "name": "TradeType",
-                  "jsonPath": "licenses[0].tradeType",
-                  "label": "tl.update.licenses.groups.TradeType",
-                  "pattern": "",
-                  "type": "singleValueList",
-                  "url": "",
-                  "isRequired": true,
-                  "isDisabled": false,
-                  "requiredErrMsg": "",
-                  "patternErrMsg": "",
-                  "defaultValue": [{
-                "key": "",
-                "value": null
-              },
-              {
-                "key": "PERMANENT",
-                "value": "PERMANENT"
-              },
-              {
-                "key": "TEMPORARY",
-                "value": "TEMPORARY"
-              }
-              ]
-
-                },
-                {
-    							"name": "TradeCategory",
-    							"jsonPath": "licenses[0].categoryId",
-    							"label": "tl.update.licenses.groups.TradeCategory",
-    							"pattern": "",
-    							"type": "singleValueList",
-                  "url": "/tl-masters/category/v1/_search?|$..id|$..name",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": ""
-    						},
-                {
-    							"name": "TradeSubCategory",
-    							"jsonPath": "licenses[0].subCategoryId",
-    							"label": "tl.update.licenses.groups.TradeSubCategory",
-    							"pattern": "",
-    							"type": "singleValueList",
-                  "url": "/tl-masters/category/v1/_search?type=subcategory|$..id|$..name",
-    							"isRequired": true,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": ""
-    						},
-                {
-                  "name": "UOM",
-                  "jsonPath": "licenses[0].uomId",
-                  "label": "tl.update.licenses.groups.UOM",
-                  "pattern": "",
-                  "type": "text",
-                  "isRequired": true,
-                  "isDisabled": false,
-                  "requiredErrMsg": "",
-                  "patternErrMsg": ""
-                },
-                {
-                  "name": "TradeAreaWeight",
-                  "jsonPath": "licenses[0].uomValue",
-                  "label": "tl.update.licenses.groups.TradeAreaPremises",
-                  "pattern": "",
-                  "type": "number",
-                  "isRequired": true,
-                  "isDisabled": false,
-                  "requiredErrMsg": "",
-                  "patternErrMsg": ""
-                },
-                {
-                  "name": "Remarks",
-                  "jsonPath": "licenses[0].remarks",
-                  "label": "tl.update.licenses.groups.Remarks",
-                  "pattern": "",
-                  "type": "text",
-                  "isRequired": false,
-                  "isDisabled": false,
-                  "requiredErrMsg": "",
-                  "patternErrMsg": ""
-                },
-                {
-                  "name": "TradeCommencementDate",
-                  "jsonPath": "licenses[0].tradeCommencementDate",
-                  "label": "tl.update.licenses.groups.TradeCommencementDate",
-                  "pattern": "",
-                  "type": "datePicker",
-                  "isRequired": true,
-                  "isDisabled": false,
-                  "requiredErrMsg": "",
-                  "patternErrMsg": ""
-                },
-                {
-    							"name": "TradeOwner",
-    							"jsonPath": "licenses[0].active",
-    							"label": "tl.update.licenses.groups.TraderOwnerProperty",
-    							"pattern": "",
-    							"type": "checkbox",
-    							"isRequired": false,
-    							"isDisabled": false,
-    							"requiredErrMsg": "",
-    							"patternErrMsg": "",
-    							"defaultValue":false
-    						}
-            ]
-          }
-
-
+					{
+						"name": "name",
+						"jsonPath": "categories.name",
+						"label": "tl.update.groups.categorytype.name",
+						"pattern": "",
+						"type": "text",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "code",
+						"jsonPath": "categories.code",
+						"label": "tl.update.groups.categorytype.code",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "active",
+						"jsonPath": "categories.active",
+						"label": "tl.update.groups.categorytype.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":true
+					}
+				]
+			}
 		]
 	}
-]
 }
-}
-
 
 export default dat;

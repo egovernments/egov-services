@@ -17,6 +17,53 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Api from '../../../api/api';
 import $ from "jquery";
 
+const checkIfNoDup = function(employee, subObject) {
+    if (employee["jurisdictions"].length === 0)
+        return true;
+    else {
+        for (let i = 0; i < employee["jurisdictions"].length; i++) {
+            if (employee["jurisdictions"][i] == subObject)
+                return false;
+        }
+    }
+
+    return true;
+}
+
+const validateDates = function(employee, subObject, editIndex) {
+    if (subObject.isPrimary == "true" || subObject.isPrimary == true) {
+        for (let i = 0; i < employee["assignments"].length; i++) {
+            if (employee["assignments"][i].isPrimary && (editIndex == '' || (editIndex && i != editIndex))) {
+                var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();
+                var fromDate = new Date(employee["assignments"][i].fromDate.split("/")[1] + "/" + employee["assignments"][i].fromDate.split("/")[0] + "/" + employee["assignments"][i].fromDate.split("/")[2]).getTime();
+                var subToDate = new Date(subObject.toDate.split("/")[1] + "/" + subObject.toDate.split("/")[0] + "/" + subObject.toDate.split("/")[2]).getTime();
+                var toDate = new Date(employee["assignments"][i].toDate.split("/")[1] + "/" + employee["assignments"][i].toDate.split("/")[0] + "/" + employee["assignments"][i].toDate.split("/")[2]).getTime();
+
+                if (((fromDate >= subFromDate) &&
+                        (fromDate <= subToDate)) ||
+                    ((toDate >= subFromDate) &&
+                        (toDate <= subToDate)) ||
+                    ((subFromDate >= fromDate) &&
+                        (subFromDate <= toDate)) ||
+                    ((subToDate >= fromDate) &&
+                        (subToDate <= toDate))) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+const getNameById = function(object, id) {
+    if(!id) return '';
+    for(var i=0; i<object.length; i++) {
+        if(id == object[i].id)
+            return object[i].name;
+    }
+}
+
 const checkRequiredFields = function(type, object) {
   let errorText = {};
   switch(type) {
@@ -31,7 +78,8 @@ const checkRequiredFields = function(type, object) {
         errorText["assignments.designation"] = "Required";
       } else if(!object.position) {
         errorText["assignments.position"] = "Required";
-      } else if(object.hod == true || object.hod == "true" && !object.mainDepartments) {
+      } else if((object.hod == true || object.hod == "true") && (!object.mainDepartments || (object.mainDepartments && object.mainDepartments.length == 0))) {
+        console.log(object.mainDepartments);
         errorText["assignments.mainDepartments"] = "Required";
       }
       break;
@@ -345,6 +393,23 @@ const uploadFiles = function(employee, cb) {
     }
 }
 
+const getBoundaryValues = function(allBoundariesList, boundary, self, ind) {
+    for(var i=0; i<allBoundariesList.length; i++) {
+        if(allBoundariesList[i].id == boundary){
+            return (
+                <tr key={ind}>
+                    <td>{allBoundariesList[i].boundaryType.name}</td>
+                    <td>{allBoundariesList[i].name}</td>
+                    <td>
+                        <span className="glyphicon glyphicon-pencil" onClick={() => { self.editModalOpen(ind, 'jurisdictions')}}></span>&nbsp;&nbsp;
+                        <span className="glyphicon glyphicon-trash"  onClick={() => { self.delModalOpen(ind, 'jurisdictions')}}></span>
+                    </td>
+                </tr>
+            )
+        }
+    }
+}
+
 const assignmentsDefState = {
     fromDate: "",
     toDate: "",
@@ -436,6 +501,7 @@ class Employee extends Component {
 			recruitmentquotas: [],
 			genders: [],
 			communities: [],
+            allBoundariesList: [],
       bankBranches: [],
       boundaries: [],
       positionList: [],
@@ -445,6 +511,7 @@ class Employee extends Component {
       },
       screenType: "create",
       errorText: {},
+      allPosition: [],
       subObject: {
         assignments: Object.assign({}, assignmentsDefState),
         jurisdictions: Object.assign({}, jurisDefState),
@@ -563,7 +630,14 @@ class Employee extends Component {
     let dat;
     switch (type) {
       case 'assignments':
-        dat = Object.assign([], this.props.Employee.assignments[ind]);
+        dat = Object.assign({}, this.props.Employee.assignments[ind]);
+        if(dat.hod && dat.hod.length) {
+            dat.mainDepartments = [];
+            for(var i=0; i<dat.hod.length; i++) {
+                dat.mainDepartments.push(dat.hod[i]);
+            }
+            dat.hod = true;
+        }
         this.setState({
           open: true,
           modal: 'assignment',
@@ -575,7 +649,15 @@ class Employee extends Component {
         })
         break;
       case 'jurisdictions':
-        dat = Object.assign([], this.props.Employee.jurisdictions[ind]);
+        dat = {};
+        for(var i=0; i<this.state.allBoundariesList.length; i++) {
+            if(this.props.Employee.jurisdictions[ind] == this.state.allBoundariesList[i].id) {
+                dat["jurisdictionsType"] = this.state.allBoundariesList[i].boundaryType.id + "";
+                this.loadBoundaries(dat["jurisdictionsType"]);
+                dat["boundary"] = this.state.allBoundariesList[i].id;
+                break;
+            }
+        }
         this.setState({
           open: true,
           modal: 'jurisdiction',
@@ -587,7 +669,7 @@ class Employee extends Component {
         })
         break;
       case 'serviceDet':
-        dat = Object.assign([], this.props.Employee.serviceHistory[ind]);
+        dat = Object.assign({}, this.props.Employee.serviceHistory[ind]);
         this.setState({
           open: true,
           modal: 'serviceDet',
@@ -599,7 +681,7 @@ class Employee extends Component {
         })
         break;
       case 'probation':
-        dat = Object.assign([], this.props.Employee.probation[ind]);
+        dat = Object.assign({}, this.props.Employee.probation[ind]);
         this.setState({
           open: true,
           modal: 'probation',
@@ -611,7 +693,7 @@ class Employee extends Component {
         })
         break;
       case 'regular':
-        dat = Object.assign([], this.props.Employee.regularisation[ind]);
+        dat = Object.assign({}, this.props.Employee.regularisation[ind]);
         this.setState({
           open: true,
           modal: 'regular',
@@ -623,7 +705,7 @@ class Employee extends Component {
         })
         break;
       case 'edu':
-        dat = Object.assign([], this.props.Employee.education[ind]);
+        dat = Object.assign({}, this.props.Employee.education[ind]);
         this.setState({
           open: true,
           modal: 'edu',
@@ -635,7 +717,7 @@ class Employee extends Component {
         })
         break;
       case 'tech':
-        dat = Object.assign([], this.props.Employee.technical[ind]);
+        dat = Object.assign({}, this.props.Employee.technical[ind]);
         this.setState({
           open: true,
           errorText: {},
@@ -647,7 +729,7 @@ class Employee extends Component {
         })
         break;
       case 'dept':
-        dat = Object.assign([], this.props.Employee.jurisdictions[ind]);
+        dat = Object.assign({}, this.props.Employee.jurisdictions[ind]);
         this.setState({
           open: true,
           errorText: {},
@@ -717,10 +799,23 @@ class Employee extends Component {
         }
 
         let assignments = Object.assign([], this.props.Employee.assignments || []);
+        var asst = {...this.state.subObject.assignments};
+        if(asst.hod == "true" || asst.hod == true) {
+            asst.hod = [];
+            for(let i=0; i<asst.mainDepartments.length; i++) {
+                asst.hod.push(asst.mainDepartments[i]);
+            }
+        }
+
+        delete asst.mainDepartments;
+        if(!validateDates(this.props.Employee, asst, editIndex)) {
+            return this.props.toggleSnackbarAndSetText(true, "Assignment dates overlapping.", false, true);
+        }
+
         if(this.state.editIndex === '')
-          assignments.push(this.state.subObject.assignments);
+          assignments.push(asst);
         else
-          assignments[editIndex] = Object.assign({}, this.state.subObject.assignments);
+          assignments[editIndex] = Object.assign({}, asst);
         this.props.handleChange({target:{value: assignments}}, "assignments", false, '');
         this.setState({
           subObject: {
@@ -736,10 +831,15 @@ class Employee extends Component {
         }
 
         let jurisdictions = Object.assign([], this.props.Employee.jurisdictions || []);
+        var jst = this.state.subObject.jurisdictions.boundary;
+        if(!checkIfNoDup(this.props.Employee, jst)) {
+            return this.props.toggleSnackbarAndSetText(true, "Duplicate entry not allowed.", false, true);
+        }
+
         if(this.state.editIndex === '')
-          jurisdictions.push(this.state.subObject.jurisdictions);
+          jurisdictions.push(jst);
         else
-          jurisdictions[editIndex] = Object.assign({}, this.state.subObject.jurisdictions);
+          jurisdictions[editIndex] = Object.assign({}, jst);
         this.props.handleChange({target:{value: jurisdictions}}, "jurisdictions", false, '');
         this.setState({
           subObject: {
@@ -968,14 +1068,14 @@ class Employee extends Component {
                   dataSource={self.state.positionList}
                   dataSourceConfig={this.state.positionListConfig}
                   value={subObject.assignments.position}
-                  onKeyUp={(e) => {handleChange({target: {value: ''}}, "position"), true, ''}}
+                  onKeyUp={(e) => {handleChange({target: {value: ''}}, "position", true, '')}}
                   onNewRequest={(chosenRequest, index) => {
                     var e = {
                         target: {
                           value: chosenRequest.id
                         }
                     };
-                    handleChange(e, "position", true, "");
+                    self.handleStateChange(e, "assignments", "position")
                    }}
                 />
               </div>
@@ -1060,7 +1160,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <TextField floatingLabelText={"Govt Order No *"} value={subObject.assignments.govtOrderNumber} onChange={(e) => {
+                <TextField floatingLabelText={"Govt Order No"} value={subObject.assignments.govtOrderNumber} onChange={(e) => {
                   self.handleStateChange(e, "assignments", "govtOrderNumber")
                 }}/>
               </div>
@@ -1428,12 +1528,12 @@ class Employee extends Component {
     })
   }
 	componentDidMount() {
-    		let self = this;
+    	let self = this;
         self.setState({
           screenType: window.location.hash.indexOf("update") > -1 ? "update" : (window.location.hash.indexOf("view") > -1 ? "view" : "create")
         }, function() {
           if(self.state.screenType == "update" || self.state.screenType == "view") {
-            Api.commonApiPost("hr-employee/employees/" + self.props.params.match.id, "/_search", {}).then(function(res) {
+            Api.commonApiPost("/hr-employee/employees/" + self.props.match.params.id + "/_search", {}).then(function(res) {
               self.props.setForm(res.Employee);
             }, function(err) {
 
@@ -1513,7 +1613,7 @@ class Employee extends Component {
           }
         });
 
-   		let count = 21, _state = {};
+   		let count = 23, _state = {};
    		let checkCountAndSetState = function(key, res) {
    			_state[key] = res;
    			count--;
@@ -1527,6 +1627,9 @@ class Employee extends Component {
    		self.fetchURLData("/hr-masters/employeetypes/_search", {}, [], function(res){
    			checkCountAndSetState("employeetypes", res["EmployeeType"]);
    		});
+        self.fetchURLData("hr-masters/positions/_search", {}, [], function(res){
+            checkCountAndSetState("allPosition", res["Position"]);
+        });
    		self.fetchURLData("/hr-masters/hrstatuses/_search", { objectName:"Employee Master" }, [], function(res){
    			checkCountAndSetState("statuses", res["HRStatus"]);
    		});
@@ -1587,6 +1690,14 @@ class Employee extends Component {
    		self.fetchURLData("egov-common-masters/communities/_search", {}, [], function(res){
    			checkCountAndSetState("communities", res["Community"]);
    		});
+
+        Api.commonApiGet("egov-location/boundarys", {
+            "Boundary.tenantId": localStorage.getItem("tenantId")
+        }).then(function(res) {
+            checkCountAndSetState("allBoundariesList", res["Boundary"]);
+        }, function(err) {
+            checkCountAndSetState("allBoundariesList", []);
+        })
 	}
 
 	handleDateChange = (type, date) => {
@@ -1752,7 +1863,7 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	<TextField floatingLabelText={translate("employee.Employee.fields.code")+ "*"} errorText={fieldErrors["code"]} value={Employee.code} onChange={(e) => {
                       		handleChange(e, "code", true, '')
-                      	}}/>
+                      	}} disabled={self.state.screenType == 'update'}/>
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	<SelectField floatingLabelText={translate("employee.Employee.fields.employeeType") + " *"} errorText={fieldErrors["employeeType"]} value={Employee.employeeType} onChange={(event, key, value) => {
@@ -1828,7 +1939,7 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	<TextField floatingLabelText={translate("employee.Employee.fields.User.userName")+" *"} errorText={fieldErrors["user"] && fieldErrors["user"]["userName"]} errorText={fieldErrors["user.userName"]} value={Employee.user ? Employee.user.userName : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, "user", "userName", true, '')
-                      	}}/>
+                      	}} disabled={self.state.screenType == 'update'}/>
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         <label>Is User Active? *</label>
@@ -2207,15 +2318,19 @@ class Employee extends Component {
           <tr key={i}>
               <td>{val.fromDate}</td>
               <td>{val.toDate}</td>
-              <td>{val.department}</td>
-              <td>{val.designation}</td>
-              <td>{val.position}</td>
-              <td>{val.isPrimary}</td>
-              <td>{val.fund}</td>
-              <td>{val.function}</td>
-              <td>{val.functionary}</td>
-              <td>{val.grade}</td>
-              <td>{val.hod}</td>
+              <td>{getNameById(self.state.departments, val.department)}</td>
+              <td>{getNameById(self.state.designations, val.designation)}</td>
+              <td>{getNameById(self.state.allPosition, val.position)}</td>
+              <td>{val.isPrimary ? "Yes" : "No"}</td>
+              <td>{getNameById(self.state.funds, val.fund)}</td>
+              <td>{getNameById(self.state.functions, val.function)}</td>
+              <td>{getNameById(self.state.functionaries, val.functionary)}</td>
+              <td>{getNameById(self.state.grades, val.grade)}</td>
+              <td><ol>{val.hod && val.hod.length ? val.hod.map(function(v, i) {
+                return (
+                    <li>{getNameById(self.state.departments, v)}</li>
+                )
+              }) : ""}</ol></td>
               <td>{val.govtOrderNumber}</td>
               <td>{val.documents && val.documents.length}</td>
               <td>
@@ -2272,21 +2387,12 @@ class Employee extends Component {
 	      handleChange,
 	      handleChangeNextLevel
 		} = this.props;
-    let self = this;
+        let self = this;
 		const renderJurisdictionBody = function() {
-      return self.props.Employee.jurisdictions &&  self.props.Employee.jurisdictions.length ? self.props.Employee.jurisdictions.map(function(val, i) {
-        return (
-          <tr key={i}>
-              <td>{val.jurisdictionsType}</td>
-              <td>{val.boundary}</td>
-              <td>
-                <span className="glyphicon glyphicon-pencil" onClick={() => { self.editModalOpen(i, 'jurisdictions')}}></span>&nbsp;&nbsp;
-                <span className="glyphicon glyphicon-trash"  onClick={() => { self.delModalOpen(i, 'jurisdictions')}}></span>
-              </td>
-          </tr>
-        )
-      }) : ''
-    }
+          return self.props.Employee.jurisdictions &&  self.props.Employee.jurisdictions.length ? self.props.Employee.jurisdictions.map(function(val, i) {
+            return getBoundaryValues(self.state.allBoundariesList, val, self, i);
+          }) : ''
+        }
 		return (
 			<Card className="uiCard">
 				<CardText>
@@ -2346,7 +2452,7 @@ class Employee extends Component {
           return self.props.Employee.probation &&  self.props.Employee.probation.length ? self.props.Employee.probation.map(function(val, i) {
             return (
               <tr key={i}>
-                  <td>{val.designation}</td>
+                  <td>{getNameById(self.state.designations, val.designation)}</td>
                   <td>{val.declaredOn}</td>
                   <td>{val.orderNo}</td>
                   <td>{val.orderDate}</td>

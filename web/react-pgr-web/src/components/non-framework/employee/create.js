@@ -798,7 +798,7 @@ class Employee extends Component {
     let errorText = {};
     switch (this.state.modal) {
       case 'assignment':
-      
+
         errorText = checkRequiredFields('assignment', this.state.subObject.assignments);
 
         if(Object.keys(errorText).length > 0) {
@@ -2266,7 +2266,7 @@ class Employee extends Component {
                          :
 
                       	<TextField floatingLabelText={translate("employee.Employee.fields.pan")} errorText={fieldErrors["user"] && fieldErrors["user"]["pan"]} value={Employee.user ? Employee.user.pan : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'pan', false, '')
+                      		handleChangeNextLevel(e, 'user', 'pan', false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/)
                       	}}/>
                       }
                       </Col>
@@ -2307,7 +2307,7 @@ class Employee extends Component {
                          :
 
                       	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.User.aadhaarNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["aadhaarNumber"]} value={Employee.user ? Employee.user.aadhaarNumber : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'aadhaarNumber', false, '')
+                      		handleChangeNextLevel(e, 'user', 'aadhaarNumber', false, /^\d{12}$/)
                       	}}/>
                       }
                       </Col>
@@ -3127,6 +3127,14 @@ class Employee extends Component {
           }
       }
 
+      if(employee["assignments"] && employee["assignments"].length) {
+        for(var i=0; i<employee["assignments"].length; i++) {
+            if(employee["assignments"][i].hod == false) {
+                employee["assignments"][i].hod = [];
+            }
+        }
+      }
+
       if (employee.user && employee.user.dob && self.state.screenType == "update" && employee.user.dob.indexOf("-") > -1) {
         var _date = employee.user.dob.split("-");
         employee.user.dob = _date[2] + "/" + _date[1] + "/" + _date[0];
@@ -3138,7 +3146,7 @@ class Employee extends Component {
             //Handle error
             self.props.setLoadingStatus('hide');
         } else {
-          Api.commonApiPost("/hr-employee/employees/" + ((self.state.screenType == "update") ? "_update" : "_create"), {}, employee).then(function(res) {
+          Api.commonApiPost("/hr-employee/employees/" + ((self.state.screenType == "update") ? "_update" : "_create"), {}, {Employee: employee}).then(function(res) {
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, "Employee created successfully.");
             setTimeout(function() {

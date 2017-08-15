@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
@@ -17,7 +18,6 @@ import org.egov.tradelicense.persistence.queue.TradeLicenseQueueRepository;
 import org.egov.tradelicense.persistence.repository.LicenseFeeDetailJdbcRepository;
 import org.egov.tradelicense.persistence.repository.SupportDocumentJdbcRepository;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
-import org.egov.tradelicense.web.requests.TradeLicenseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;

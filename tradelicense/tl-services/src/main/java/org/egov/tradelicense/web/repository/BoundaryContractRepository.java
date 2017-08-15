@@ -1,9 +1,10 @@
 package org.egov.tradelicense.web.repository;
 
-import org.egov.tradelicense.common.domain.model.RequestInfoWrapper;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.requests.BoundaryResponse;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,17 +16,20 @@ public class BoundaryContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "egov-location/boundarys/_search?";
+	private String searchUrl ;
+	
+	@Autowired
+	private PropertiesManager propertiesManger;
 
-	public BoundaryContractRepository(@Value("${egov.services.egov-location.hostname}") String hostUrl,
-			RestTemplate restTemplate) {
+	public BoundaryContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
-		this.hostUrl = hostUrl;
+		this.hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
+		this.searchUrl = propertiesManger.getLocationServiceSearchPath();
 	}
 
 	public BoundaryResponse findByLocalityId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
-		String url = String.format("%s%s", hostUrl, SEARCH_URL);
+		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getLocalityId() != null) {
 			content.append("boundaryIds=" + tradeLicense.getLocalityId());
@@ -55,7 +59,7 @@ public class BoundaryContractRepository {
 
 	public BoundaryResponse findByRevenueWardId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
-		String url = String.format("%s%s", hostUrl, SEARCH_URL);
+		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getRevenueWardId() != null) {
 			content.append("boundaryIds=" + tradeLicense.getRevenueWardId());

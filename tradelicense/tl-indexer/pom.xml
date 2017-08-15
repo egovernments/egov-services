@@ -2,16 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.egov</groupId>
-	<artifactId>tl-services</artifactId>
+	<artifactId>tl-indexer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
-	<name>tl-services</name>
-	<description>tl-services project for egov services</description>
+	<name>tl-indexer</name>
+	<description>tl-index will read kafka topics and push data to Es</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.4.RELEASE</version>
+		<version>1.5.3.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -22,33 +21,31 @@
 	</properties>
 
 	<dependencies>
+		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter</artifactId> 
+			</dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>tl-commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>0.7.5</version>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>transport</artifactId>
@@ -62,37 +59,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-to-slf4j</artifactId>
-			<version>2.8.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.8</version>
 		</dependency>
+
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.egov.services</groupId>
-			<artifactId>tracer</artifactId>
-			<version>0.18.1</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -100,26 +73,43 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.egov.services</groupId>
-			<artifactId>tl-commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>services-common</artifactId>
 			<version>0.11.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
 		<dependency>
-	      <groupId>org.springframework.kafka</groupId>
-	      <artifactId>spring-kafka-test</artifactId>
-	      <scope>test</scope>
-	    </dependency>
-	    <dependency>
-			<groupId>org.egov.services</groupId>
-			<artifactId>propertyutil</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>0.7.5</version>
 		</dependency>
+
+
+		<dependency>
+			<groupId>io.searchbox</groupId>
+			<artifactId>jest</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.metamodel/MetaModel-elasticsearch-common -->
+
+		<dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>tracer</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+
 	</dependencies>
+	
 	<distributionManagement>
 		<repository>
 			<id>repo.egovernments.org</id>
@@ -132,22 +122,18 @@
 			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
-
 	<repositories>
 		<repository>
-		    <id>repo.egovernments.org</id>
-		    <name>eGov Public Repository Group</name>
-		    <url>http://repo.egovernments.org/nexus/content/groups/public/</url>
-		    <snapshots>
-		        <enabled>true</enabled>
-		        <updatePolicy>always</updatePolicy>
-		    </snapshots>
-		    <releases>
-		        <enabled>true</enabled>
-		    </releases>
+			<id>repo.egovernments.org</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>repo.egovernments.org.snapshots</id>
+			<name>eGov ERP Snapshots Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
-
 
 	<build>
 		<plugins>
@@ -157,4 +143,5 @@
 			</plugin>
 		</plugins>
 	</build>
+
 </project>

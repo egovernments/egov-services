@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
+import org.egov.tl.commons.web.requests.TradeLicenseRequest;
+import org.egov.tl.commons.web.requests.TradeLicenseResponse;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
-import org.egov.tradelicense.common.domain.model.RequestInfoWrapper;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
-import org.egov.tradelicense.web.contract.TradeLicenseContract;
-import org.egov.tradelicense.web.requests.TradeLicenseRequest;
-import org.egov.tradelicense.web.requests.TradeLicenseResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,9 @@ public class TradeLicenseController {
 
 	@Autowired
 	TradeLicenseService tradeLicenseService;
+	
+	@Autowired
+	ResponseInfoFactory responseInfoFactory;
 
 	@RequestMapping(path = "/license/v1/_create", method = RequestMethod.POST)
 	public TradeLicenseResponse createTradelicense(@RequestBody TradeLicenseRequest tradeLicenseRequest,
@@ -80,8 +84,9 @@ public class TradeLicenseController {
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+		return responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo,true );
+//		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+//				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 
 	@RequestMapping(path = "/license/v1/_search", method = RequestMethod.POST)

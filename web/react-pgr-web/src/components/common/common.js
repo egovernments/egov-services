@@ -530,6 +530,7 @@ var localationData = {
     "employee.searchEmployee.groups.fields.code":"Employee Code",
     "employee.searchEmployee.groups.fields.name":"Employee Name",
     "employee.searchEmployee.groups.fields.designation":"Employee Designation",
+    "employee.searchEmployee.groups.fields.position":"Employee Position",
 
 
 

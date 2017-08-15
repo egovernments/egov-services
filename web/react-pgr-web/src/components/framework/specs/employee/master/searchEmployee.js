@@ -60,7 +60,14 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "employee.searchEmployee.groups.fields.code"},{label: "employee.searchEmployee.groups.fields.name"},{label: "employee.searchEmployee.groups.fields.department"}, {label: "employee.searchEmployee.groups.fields.designation"}, {label: "employee.create.group.fields.position"}],
+			"header": [{label: "employee.searchEmployee.groups.fields.code"},
+			{label: "employee.searchEmployee.groups.fields.name"},
+			{label: "employee.searchEmployee.groups.fields.department",
+						"url": "/egov-common-masters/departments/_search?|$..id|$..name"},
+			{label: "employee.searchEmployee.groups.fields.designation",
+					"url": "/hr-masters/designations/_search?|$..id|$..name"},
+			{label: "employee.searchEmployee.groups.fields.position",
+					"url": "/hr-masters/positions/_search?|$..id|$..name"}],
 			"values": ["code","name", "assignments[0].department", "assignments[0].designation","assignments[0].position"],
 			"resultPath": "Employee",
 			"rowlickUrlUpdate": "/employee/update/{id}",

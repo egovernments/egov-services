@@ -798,6 +798,7 @@ class Employee extends Component {
     let errorText = {};
     switch (this.state.modal) {
       case 'assignment':
+      
         errorText = checkRequiredFields('assignment', this.state.subObject.assignments);
 
         if(Object.keys(errorText).length > 0) {

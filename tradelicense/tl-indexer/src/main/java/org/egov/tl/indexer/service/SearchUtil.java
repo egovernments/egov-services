@@ -9,8 +9,8 @@ public class SearchUtil {
 	
 	
 	public static BoolQueryBuilder buildSearchQuery( String tenantId,  String active, String tradeLicenseId, String applicationNumber,
-			String licenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
-			Integer revenueWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
+			String licenseNumber,String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
+			Integer adminWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
 			Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status){
 		
 		BoolQueryBuilder bool = QueryBuilders.boolQuery();
@@ -38,6 +38,9 @@ public class SearchUtil {
 		if ( applicationNumber!=null && !applicationNumber.isEmpty() )
 			bool.must(QueryBuilders.termQuery("applicationNumber", applicationNumber));
 		
+		if ( oldLicenseNumber!=null && !oldLicenseNumber.isEmpty() )
+			bool.must(QueryBuilders.termQuery("oldLicenseNumber", oldLicenseNumber));
+		
 		if ( licenseNumber!=null && !licenseNumber.isEmpty() )
 			bool.must(QueryBuilders.termQuery("licenseNumber", licenseNumber));
 		
@@ -54,8 +57,8 @@ public class SearchUtil {
 		if ( propertyAssesmentNo!=null && !propertyAssesmentNo.isEmpty() )
 			bool.must(QueryBuilders.termQuery("propertyAssesmentNo", propertyAssesmentNo));
 		
-		if ( revenueWard!=null  )
-			bool.must(QueryBuilders.termQuery("revenueWardId", revenueWard));
+		if ( adminWard!=null  )
+			bool.must(QueryBuilders.termQuery("adminWard", adminWard));
 		
 		if ( locality!=null  )
 			bool.must(QueryBuilders.termQuery("localityId", locality));

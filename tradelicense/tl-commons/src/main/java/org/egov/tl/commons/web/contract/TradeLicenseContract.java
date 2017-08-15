@@ -43,6 +43,7 @@ public class TradeLicenseContract {
 	@JsonProperty("oldLicenseNumber")
 	private String oldLicenseNumber;
 
+	@NotNull
 	@JsonProperty("applicationDate")
 	private String applicationDate;
 

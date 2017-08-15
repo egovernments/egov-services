@@ -387,6 +387,7 @@ definitions:
     - tenantId
     - mobileNumber
     - applicationType
+    - applicationDate
     - ownerName
     - fatherSpouseName
     - emailId

@@ -141,7 +141,7 @@ class grievanceCreate extends Component {
 
    loadGrievanceType(value){
      var currentThis = this;
-     Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : value, keywords : 'complaint'}).then(function(response)
+     Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : value, keywords : 'complaint', active : true}).then(function(response)
      {
        currentThis.setState({grievanceType : response.Service});
      },function(err) {
@@ -704,7 +704,7 @@ class grievanceCreate extends Component {
                   {this.state.attributes ? this.loadSD() : ''}
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} maxLength="1000" onChange={(event, value) => handleChange(value, "description", true, /^.[^]{10,1000}$/, translate('pgr.lbl.min')+' 10 '+translate('pgr.lbl.characters')+'. '+translate('pgr.lbl.max')+' 1000 '+translate('pgr.lbl.characters'))}/>
+                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} maxLength="1000" onChange={(event, value) => handleChange(value, "description", true, /^.[^]{9,1000}$/, translate('pgr.lbl.min')+' 10 '+translate('pgr.lbl.characters')+'. '+translate('pgr.lbl.max')+' 1000 '+translate('pgr.lbl.characters'))}/>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} maxLength="100" onChange={(event, value) => handleChange(value, "address", false, /^.[^]{0,100}$/, translate('pgr.lbl.max')+' 100 '+translate('pgr.lbl.characters'))}/>
@@ -832,7 +832,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "HANDLE_CHANGE", property: 'serviceCategory', value: group, isRequired : true, pattern: ''});
 
     var currentThis = _this;
-    Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : group, keywords : 'complaint'}).then(function(response)
+    Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : group, keywords : 'complaint', active : true}).then(function(response)
     {
       currentThis.setState({grievanceType : response.Service});
       dispatch({type: "HANDLE_CHANGE", property: 'serviceCode', value: sCode, isRequired : true, pattern: ''});

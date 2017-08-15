@@ -79,6 +79,15 @@ paths:
           maxLength: 128
           exclusiveMinimum: true
           exclusiveMaximum: false
+        - name: oldLicenseNumber
+          in: query
+          required: false
+          description: The unique  Old license number no for a Trade license.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
         - name: mobileNumber
           in: query
           required: false
@@ -106,9 +115,9 @@ paths:
           required: false
           type: string
           maxLength: 15
-        - name: revenueWard
+        - name: adminWard
           in: query
-          description: Unique identifier of the RevenueWard where the Trade is located.
+          description: Unique identifier of the AdminWard where the Trade is located.
           required: false
           type: integer
           format: int64
@@ -178,8 +187,8 @@ paths:
             2. PropertyAssesmentNumber is not mandatory, If entered then validate. Invalid number fails trade license creation
             3. Adhaar Number is not mandatory, If entered it will validated with Adhaar system, Invalid number fails trade license creation
             4. feeDetails will be considered for creation only when legacy is TRUE,  FeeDetails from last five years  to current year
-            5. supportDocuments for a given Trade License will created. In case of not attaching the Mandatory Supported Documents creation of Trade License Fails. 
-            6. localityId, wardId, categoryId, subCategoryId, uomId are Validated for existance, On Non existance of any of these entered values in the system, creation of TradeLicense will Fail
+            5. supportDocuments for a given Trade License will created. In case of not attaching the Mandatory Supported Documents creation of New Trade License Fails, Legacy Trade License does not follow this rule.
+            6. localityId, adminWardId, revenuewardId, categoryId, subCategoryId, uomId are Validated for existance, On Non existance of any of these entered values in the system, creation of TradeLicense will Fail
           
       parameters:
         - name: TradeLicenseRequest
@@ -235,6 +244,11 @@ definitions:
         description: Unique identfiication number of the Trade License Appilcaiton . This is a unique in system. This is mandatory but always be generated on Trade License create Request processing. Not Valid for Legacy Trade License
         maxLength: 128
         minLength: 6  
+      oldLicenseNumber:
+        type: string
+        description: Unique Old License Number of the Trade. This is  unique in system for a tenant. This is mandatory  for legacy license.
+        maxLength: 128
+        minLength: 6  
       licenseNumber:
         type: string
         description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
@@ -282,10 +296,14 @@ definitions:
         type: integer
         format: int64
         description: Locality Id of the Property in which Trade is established or running
+      adminWardId:
+        type: integer
+        format: int64
+        description: Admin Ward Id of the Property in which Trade is established or running
       revenueWardId:
         type: integer
         format: int64
-        description: Ward Id of the Property in which Trade is established or running
+        description: Revenue Ward Id of the Property in which Trade is established or running
       tradeAddress:
         type: string
         description: Address of the property in which Trade is established or running

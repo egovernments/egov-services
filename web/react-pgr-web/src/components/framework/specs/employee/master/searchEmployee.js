@@ -70,7 +70,7 @@ var dat = {
 					"url": "/hr-masters/positions/_search?|$..id|$..name"}],
 			"values": ["code","name", "assignments[0].department", "assignments[0].designation","assignments[0].position"],
 			"resultPath": "Employee",
-			"rowlickUrlUpdate": "/employee/update/{id}",
+			"rowClickUrlUpdate": "/employee/update/{id}",
 			"rowClickUrlView": "/employee/view/{id}"
 			}
 	}

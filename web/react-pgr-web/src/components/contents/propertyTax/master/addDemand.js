@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 
 
@@ -120,10 +121,79 @@ class AddDemand extends Component {
   constructor(props) {
     super(props);
     this.state= {
-        propertytypes: [],
-        reasonForCreation:[],
-        departments:[],
-		usages:[]
+		periods: [],
+		demands:  [
+			{
+				"id": "32",
+				"tenantId": "default",
+				"consumerCode": "AP-PT-2017/07/27-003395-18",
+				"consumerType": "PRIVATE",
+				"businessService": "PT",
+				"owner": {
+					"tenantId": null,
+					"id": 279,
+					"userName": "9302930251",
+					"name": "Tester10",
+					"permanentAddress": null,
+					"mobileNumber": "9302930251",
+					"emailId": null,
+					"aadhaarNumber": null
+				},
+				"taxPeriodFrom": 1490985000000,
+				"taxPeriodTo": 1506796199000,
+				"demandDetails": [
+					{
+						"id": "79",
+						"demandId": "32",
+						"taxHeadMasterCode": "EDU_CESS",
+						"taxAmount": 295,
+						"collectionAmount": 0,
+						"auditDetail": {
+							"createdBy": "74",
+							"lastModifiedBy": "74",
+							"createdTime": 1501135450460,
+							"lastModifiedTime": 1501135450460
+						},
+						"tenantId": "default"
+					},
+					{
+						"id": "80",
+						"demandId": "32",
+						"taxHeadMasterCode": "PT_TAX",
+						"taxAmount": 1055,
+						"collectionAmount": 0,
+						"auditDetail": {
+							"createdBy": "74",
+							"lastModifiedBy": "74",
+							"createdTime": 1501135450460,
+							"lastModifiedTime": 1501135450460
+						},
+						"tenantId": "default"
+					},
+					{
+						"id": "81",
+						"demandId": "32",
+						"taxHeadMasterCode": "LIB_CESS",
+						"taxAmount": 23,
+						"collectionAmount": 0,
+						"auditDetail": {
+							"createdBy": "74",
+							"lastModifiedBy": "74",
+							"createdTime": 1501135450460,
+							"lastModifiedTime": 1501135450460
+						},
+						"tenantId": "default"
+					}
+				],
+				"minimumAmountPayable": 1,
+				"auditDetail": {
+					"createdBy": "74",
+					"lastModifiedBy": "74",
+					"createdTime": 1501135450460,
+					"lastModifiedTime": 1501135450460
+				}
+			}
+		]
     }
   } 
 
@@ -133,61 +203,41 @@ class AddDemand extends Component {
     var currentThis = this;
 	
 	let {toggleSnackbarAndSetText} = this.props;
-
-      Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-		  res.propertyTypes.unshift({id:-1, name:'None'});
-        console.log(res);
-        currentThis.setState({propertytypes:res.propertyTypes})
-      }).catch((err)=> {
-        currentThis.setState({
-          propertytypes:[]
-        })
-		toggleSnackbarAndSetText(true, err.message);
-        console.log(err)
-      })
-	  
-	  
-        Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
-          console.log(res);
-          currentThis.setState({usages : res.usageMasters})
-        }).catch((err)=> {
-          console.log(err)
-        })
+	
+	var taxHeads = [];
 		
-  } 
+	this.state.demands.map((demand, index)=>{
+		var query = {
+			service:'PT',
+			code:[]
+		}
 
-handleDepartment = (e) => {
-	
-	let {toggleSnackbarAndSetText, setLoadingStatus} = this.props;
-		
-		setLoadingStatus('loading');
-	
-	var currentThis = this;
-	
-	 currentThis.setState({
-            departments:[]
-     })
-	 
-	 this.props.addDemand.department = '';
-	
-	let query = {
-		category : e.target.value
-	}
-	
-	  Api.commonApiPost('pt-property/property/departments/_search',query, {},false, true).then((res)=>{
-		   res.departments.unshift({id:-1, name:'None'});
-		  console.log(res);
-		  currentThis.setState({
-			departments:res.departments
-		  })
-		setLoadingStatus('hide');
+		Api.commonApiPost('/billing-service/taxheads/_search', query).then((res)=>{
+		  console.log('periods', res);
+		  currentThis.setState({structureclasses: res.structureClasses})
 		}).catch((err)=> {
 		  console.log(err)
-		  	toggleSnackbarAndSetText(true, err.message);
-			setLoadingStatus('hide');
 		})
+	})
+	
+  } 
+  
+ getTaxHead = (demand, headName) => {
+	 demand.demandDetails.map((item, index)=>{
+		 if(item.taxHeadMasterCode == headName){
+			 var query = {
+				service:'PT',
+				code:[item.taxHeadMasterCode]
+			}
+			 Api.commonApiPost('/billing-service/taxheads/_search', query).then((res)=>{
+			console.log('periods', res);
+			}).catch((err)=> {
+		  console.log(err)
+			})
+		 }
+	 })
+ } 
 
-} 
   
   render() {
 
@@ -218,14 +268,15 @@ handleDepartment = (e) => {
 	  removeDepandencyFields
     } = this.props;
 
-    let {search, handleDepartment} = this;
+    let {search, handleDepartment, getTaxHead} = this;
 
     let cThis = this;
-
-    return (
-				<Card className="uiCard">
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Add Demand</div>} />
-                      <CardText style={styles.reducePadding}>
+	
+	const showfields = () => {
+		return this.state.demands.map((demand, index)=>{
+			return(<Card className="uiCard" key={index}>
+						<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.demands.addDemand')}</div>} />
+						<CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
                                          <Col xs={12} md={4}>
@@ -244,7 +295,7 @@ handleDepartment = (e) => {
 											</Col>
 										 </Col>
 										  <Col xs={12} md={4}>
-											<h4>Property tax</h4>
+											<h4>{getTaxHead(demand, 'PT_TAX')}</h4>
 											<Col xs={12} md={6}>
 												<TextField  className="fullWidth"
 												  floatingLabelText="Demand"
@@ -273,8 +324,13 @@ handleDepartment = (e) => {
 										 </Col>
                                       </Row>
                                   </Grid>
-                      </CardText>
-                  </Card>)
+								</CardText>
+						</Card>
+					)
+		})
+	}
+
+    return (<div>{showfields()}</div>)
   }
 
 }

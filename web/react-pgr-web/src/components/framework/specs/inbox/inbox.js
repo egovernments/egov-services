@@ -404,7 +404,7 @@ var dat = {
 						{
 							"name": "AadhaarNumber",
 							"jsonPath": "properties[0].owners[0].aadhaarNumber",
-							"label": "pt.create.groups.propertyAddress.fields.aadhaarNumber",
+							"label": "pt.create.groups.ownerDetails.fields.aadhaarNumber", 
 							"pattern": "^\\d{12}$",
 							"type": "aadhar",
 							"isRequired": false,
@@ -416,7 +416,7 @@ var dat = {
 						{
 							"name": "PhoneNumber",
 							"jsonPath": "properties[0].owners[0].mobileNumber",
-							"label": "pt.create.groups.propertyAddress.fields.phoneNumber",
+							"label": "pt.create.groups.ownerDetails.fields.phoneNumber",
 							"pattern": "",
 							"type": "mobileNumber",
 							"isRequired": true,
@@ -427,7 +427,7 @@ var dat = {
 						{
 							"name": "OwnerName",
 							"jsonPath": "properties[0].owners[0].name",
-							"label": "pt.create.groups.propertyAddress.fields.ownerName",
+							"label": "pt.create.groups.ownerDetails.fields.ownerName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -439,7 +439,7 @@ var dat = {
 						{
 							"name": "Gender",
 							"jsonPath": "properties[0].owners[0].gender",
-							"label": "pt.create.groups.propertyAddress.fields.gender",
+							"label": "pt.create.groups.ownerDetails.fields.gender",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -452,7 +452,7 @@ var dat = {
 						{
 							"name": "Email",
 							"jsonPath": "properties[0].owners[0].emailId",
-							"label": "pt.create.groups.propertyAddress.fields.email",
+							"label": "pt.create.groups.ownerDetails.fields.email",
 							"pattern": "",
 							"type": "email",
 							"isRequired": false,
@@ -463,7 +463,7 @@ var dat = {
 						{
 							"name": "PanNumber",
 							"jsonPath": "properties[0].owners[0].pan",
-							"label": "pt.create.groups.propertyAddress.fields.pan",
+							"label": "pt.create.groups.ownerDetails.fields.pan",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
@@ -474,7 +474,7 @@ var dat = {
 						{
 							"name": "GuardianRelation",
 							"jsonPath": "properties[0].owners[0].gaurdianRelation",
-							"label": "pt.create.groups.propertyAddress.fields.guardianRelation",
+							"label": "pt.create.groups.ownerDetails.fields.guardianRelation",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -487,7 +487,7 @@ var dat = {
 						{
 							"name": "Guardian",
 							"jsonPath": "properties[0].owners[0].fatherOrHusbandName",
-							"label": "pt.create.groups.propertyAddress.fields.guardian",
+							"label": "pt.create.groups.ownerDetails.fields.guardian",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -498,7 +498,7 @@ var dat = {
 						{
 							"name": "OwnerType",
 							"jsonPath": "properties[0].owners[0].ownerType",
-							"label": "pt.create.groups.propertyAddress.fields.ownerType",
+							"label": "pt.create.groups.ownerDetails.fields.ownerType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -511,7 +511,7 @@ var dat = {
 						{
 							"name": "PercentageOfOwnerShip",
 							"jsonPath": "properties[0].owners[0].ownerShipPercentage",
-							"label": "pt.create.groups.propertyAddress.fields.percentageOfOwnerShip",
+							"label": "pt.create.groups.ownerDetails.fields.percentageOfOwnerShip",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -529,7 +529,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"values": [{"label":"Primary Owner", "value":true},{"label":"Secondary Owner", "value":false}],
+							"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
 							"defaultValue":true
 						},
 						
@@ -765,7 +765,7 @@ var dat = {
 						{
 							"name": "CreationReason",
 							"jsonPath": "properties[0].creationReason",
-							"label": "pt.create.groups.propertyAddress.fields.creationReason",
+							"label": "pt.create.groups.assessmentDetails.fields.creationReason",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,

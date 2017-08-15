@@ -298,7 +298,9 @@ class PropertyTaxSearch extends Component {
 					  <td style={{color:'blue'}} onClick={() => {
 						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
 					  }}>{item.upicNumber || ''}</td>
-					  <td>{item.owners[0] ? item.owners[0].name : ''}</td>
+					  <td>{(item.owners.length != 0) &&  item.owners.map((item, index)=>{
+						  return(<span>{item.name}</span>)
+					  })}</td>
 					  <td>{item.address.addressNumber || ''}</td>
 					  <td>{item.address.addressLine1 || ''}</td>
 					  <td>-</td>

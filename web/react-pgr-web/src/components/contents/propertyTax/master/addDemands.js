@@ -16,7 +16,6 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
-import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 var flag = 0;
@@ -92,34 +91,69 @@ chip: {
 };
 
 
-class PropertyFactors extends Component {
+class ConstructionTypes extends Component {
 
   constructor(props) {
     super(props);
     this.state= {
-          toiletFactor:[],
-          roadFactor:[],
-          liftFactor:[],
-          parkingFactor:[],
+          floortypes:[],
+          rooftypes:[],
+          walltypes:[],
+          woodtypes:[],
     }
   } 
 
 
   componentDidMount() {
-	  
-	  var a = 11;
-	  var data = [{id:0, name:'None'}];
-	  for(var i=1;i<a;i++){
-		  data.push({id:i, name:i});
-	  }
-	  
-	  this.setState({
-		  toiletFactor:data,
-          roadFactor:data,
-          liftFactor:data,
-          parkingFactor:data,
-	  })
- 
+    //call boundary service fetch wards,location,zone data
+    var currentThis = this;
+
+     let isTimeLong;
+
+    Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+	  res.floorTypes.unshift({code:-1, name:'None'})
+      currentThis.setState({floortypes:res.floorTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        floortypes:[]
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+	  res.roofTypes.unshift({code:-1, name:'None'})
+      currentThis.setState({rooftypes: res.roofTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        rooftypes: []
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+	  res.wallTypes.unshift({code:-1, name:'None'})
+      currentThis.setState({walltypes: res.wallTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        walltypes:[]
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+	  res.woodTypes.unshift({code:-1, name:'None'})
+      currentThis.setState({woodtypes: res.woodTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        woodtypes:[]
+      })
+      console.log(err)
+    })
+
   }      
 
 
@@ -130,13 +164,14 @@ class PropertyFactors extends Component {
         {	
             return list.map((item)=>
             {
-                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+                return (<MenuItem key={item.id} value={item.code} primaryText={item.name}/>)
             })
         }
     }
 
     let {
-      propertyFactors,
+      owners,
+      constructionTypes,
       fieldErrors,
       isFormValid,
       handleChange,
@@ -156,15 +191,15 @@ class PropertyFactors extends Component {
 
     return (	
 				<Card className="uiCard">
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.propertyFactors')}</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Construction Types</div>} />
                       <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText={translate('pt.create.groups.propertyFactors.fields.totalFactor')}
-                                                errorText={fieldErrors.toiletFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.toiletFactor}</span> : ""}
-                                                value={propertyFactors.toiletFactor ? propertyFactors.toiletFactor : ""}
+                                                floatingLabelText="Floor Type *"
+                                                errorText={fieldErrors.floorType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floorType}</span> : ""}
+                                                value={constructionTypes.floorType ? constructionTypes.floorType : ""}
                                                 onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';
                                                     var e = {
@@ -172,43 +207,21 @@ class PropertyFactors extends Component {
                                                         value: value
                                                       }
                                                     };
-                                                    handleChange(e, "toiletFactor", false, "")}
+                                                    handleChange(e, "floorType", true, "")}
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
-                                                      {renderOption(this.state.toiletFactor)}
+                                                      {renderOption(this.state.floortypes)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText={translate('pt.create.groups.propertyFactors.fields.roadFactor')}
-                                                errorText={fieldErrors.roadFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.roadFactor}</span> : ""}
-                                                value={propertyFactors.roadFactor ? propertyFactors.roadFactor : ""}
-                                                onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';
-                                                    var e = {
-                                                      target: {
-                                                        value: value 
-                                                      }
-                                                    };
-                                                    handleChange(e, "roadFactor", false, "")}
-                                                }
-                                                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                underlineStyle={styles.underlineStyle}
-                                                underlineFocusStyle={styles.underlineFocusStyle}
-                                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >		
-                                                    {renderOption(this.state.roadFactor)}
-                                              </SelectField>
-                                          </Col>
-                                          <Col xs={12} md={3} sm={6}>
-                                              <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText={translate('pt.create.groups.propertyFactors.fields.liftFactor')}
-                                                errorText={fieldErrors.liftFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.liftFactor}</span> : ""}
-                                                value={propertyFactors.liftFactor ? propertyFactors.liftFactor : ""}
+                                                floatingLabelText="Roof Type *"
+                                                errorText={fieldErrors.roofType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.roofType}</span> : ""}
+                                                value={constructionTypes.roofType ? constructionTypes.roofType : ""}
                                                 onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';
                                                     var e = {
@@ -216,21 +229,21 @@ class PropertyFactors extends Component {
                                                         value: value
                                                       }
                                                     };
-                                                    handleChange(e, "liftFactor", false, "")}
+                                                    handleChange(e, "roofType", true, "")}
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >		
-                                                    {renderOption(this.state.liftFactor)}
+                                                    {renderOption(this.state.rooftypes)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText={translate('pt.create.groups.propertyFactors.fields.parkingFactor')}
-                                                errorText={fieldErrors.parkingFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.parkingFactor }</span>: ""}
-                                                value={propertyFactors.parkingFactor ? propertyFactors.parkingFactor : ""}
+                                                floatingLabelText="Wall Type"
+                                                errorText={fieldErrors.wallType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.wallType}</span> : ""}
+                                                value={constructionTypes.wallType ? constructionTypes.wallType : ""}
                                                 onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';
                                                     var e = {
@@ -238,14 +251,36 @@ class PropertyFactors extends Component {
                                                         value: value
                                                       }
                                                     };
-                                                    handleChange(e, "parkingFactor", false, "")}
+                                                    handleChange(e, "wallType", false, "")}
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >		
-                                                    {renderOption(this.state.parkingFactor)}
+                                                    {renderOption(this.state.walltypes)}
+                                              </SelectField>
+                                          </Col>
+                                          <Col xs={12} md={3} sm={6}>
+                                              <SelectField  className="fullWidth selectOption"
+                                                floatingLabelText="Wood Type"
+                                                errorText={fieldErrors.woodType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.woodType }</span>: ""}
+                                                value={constructionTypes.woodType ? constructionTypes.woodType : ""}
+                                                onChange={(event, index, value) => {
+													(value == -1) ? value = '' : '';
+                                                    var e = {
+                                                      target: {
+                                                        value: value
+                                                      }
+                                                    };
+                                                    handleChange(e, "woodType", false, "")}
+                                                }
+                                                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                underlineStyle={styles.underlineStyle}
+                                                underlineFocusStyle={styles.underlineFocusStyle}
+                                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                              >		
+                                                    {renderOption(this.state.woodtypes)}
                                               </SelectField>
                                           </Col>
                                       </Row>
@@ -257,7 +292,7 @@ class PropertyFactors extends Component {
 }
 
 const mapStateToProps = state => ({
-  propertyFactors:state.form.form,
+  constructionTypes:state.form.form,
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
   addRoom : state.form.addRoom
@@ -376,6 +411,6 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PropertyFactors);
+export default connect(mapStateToProps, mapDispatchToProps)(ConstructionTypes);
 
 

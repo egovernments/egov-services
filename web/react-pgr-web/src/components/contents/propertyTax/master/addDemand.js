@@ -242,7 +242,7 @@ class AddDemand extends Component {
     } = this.props;
 
     let {search, handleDepartment, getTaxHead} = this;
-
+	
     let cThis = this;
 	
 	console.log(addDemand);
@@ -361,7 +361,7 @@ class AddDemand extends Component {
 				
 			</Card>
 			<div style={{textAlign:'center'}}>
-					<RaisedButton type="button" label="Update" disabled={!siFormValid}  primary={true} onClick={()=> {
+					<RaisedButton type="button" label="Update"  primary={true} onClick={()=> {
 								this.submitDemand();
 								}
 					}/>														

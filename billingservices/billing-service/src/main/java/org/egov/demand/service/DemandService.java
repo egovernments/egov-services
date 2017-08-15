@@ -212,7 +212,10 @@ public class DemandService {
 				}
 				for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
 
-					List<String> accDescription = Arrays.asList(accountDetail.getAccountDescription().split("-"));
+					String[] array = accountDetail.getAccountDescription().split("-");
+					log.info("the string array of values--------"+array.toString());
+					
+					List<String> accDescription = Arrays.asList(array);
 					String taxHeadCode = accDescription.get(0);
 					Long fromDate = Long.valueOf(accDescription.get(1));
 					Long toDate = Long.valueOf(accDescription.get(2));

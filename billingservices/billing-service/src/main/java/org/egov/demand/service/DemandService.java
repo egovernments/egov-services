@@ -168,6 +168,7 @@ public class DemandService {
 	
 	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
 	    
+		log.debug("THE recieved bill request object------"+billRequest);
 	    if(billRequest !=null && billRequest.getBills()!=null){
 
 		List<Bill> bills = billRequest.getBills();
@@ -180,6 +181,7 @@ public class DemandService {
 		}
 		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).tenantId(tenantId).build();
 		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
+		log.debug("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
 		Map<String, Demand> demandIdMap = demands.stream()
 				.collect(Collectors.toMap(Demand::getId, Function.identity()));
 		Map<String, List<Demand>> demandListMap = new HashMap<>();
@@ -224,9 +226,10 @@ public class DemandService {
 							
 							BigDecimal collectedAmount = accountDetail.getCreditAmount();
 							log.debug("the credit amt :"+ collectedAmount);
-							System.out.println();
 							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
 							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
+							log.debug("the setTaxAmount ::: "+demandDetail.getTaxAmount());
+							log.debug("the setCollectionAmount ::: "+demandDetail.getCollectionAmount());
 						}
 					}
 				}

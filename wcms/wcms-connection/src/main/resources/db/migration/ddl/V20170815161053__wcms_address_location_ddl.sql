@@ -16,7 +16,7 @@ CREATE SEQUENCE seq_egwtr_connectionlocation;
 
 CREATE TABLE egwtr_address(
     id bigint NOT NULL,
-    tenantid character varying NOT NULL
+    tenantid character varying NOT NULL,
     latitude integer,
     longitude integer,
     addressId character varying,

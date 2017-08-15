@@ -146,7 +146,7 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.update.demand}")
 	private String updateDemandTopic;
 	
-	@Value("{kafka.topics.receipt.update.demand}")
+	@Value("${kafka.topics.receipt.update.demand}")
 	private String updateDemandFromReceipt;
 	
 	@Value("${kafka.topics.demandBill.update.name}")

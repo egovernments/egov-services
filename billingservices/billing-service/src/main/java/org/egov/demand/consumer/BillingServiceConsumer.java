@@ -2,7 +2,9 @@ package org.egov.demand.consumer;
 
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.helper.JsonIgnoreHelper;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.service.BusinessServDetailService;
@@ -85,8 +87,12 @@ public class BillingServiceConsumer {
 				glCodeMasterService.update(objectMapper.convertValue(consumerRecord, GlCodeMasterRequest.class));
 			else if(applicationProperties.getUpdateMISTopicName().equals(topic))
 				demandService.updateMIS(objectMapper.convertValue(consumerRecord, DemandUpdateMisRequest.class));
-			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic))
-			    demandService.updateDemandFromReceipt(objectMapper.convertValue(consumerRecord, ReceiptRequest.class));
+			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic)){
+				objectMapper.addMixIn(RequestInfo.class, JsonIgnoreHelper.class);
+				ReceiptRequest xyz = objectMapper.convertValue(consumerRecord, ReceiptRequest.class);
+				System.err.println(xyz);
+			    //demandService.updateDemandFromReceipt(xyz);
+			}
 			
 		} catch (Exception exception) {
 			log.debug("processMessage:" + exception);

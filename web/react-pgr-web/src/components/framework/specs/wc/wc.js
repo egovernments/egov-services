@@ -19,7 +19,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.propertyIdentifier",
             "pattern": "",
             "type": "textSearch",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
@@ -363,7 +363,7 @@ var dat = {
             "label": "wc.create.groups.approvalDetails.fields.designation",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
+            "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..name|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -410,10 +410,6 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }
-
-
-
-
         ]
       }
     ]

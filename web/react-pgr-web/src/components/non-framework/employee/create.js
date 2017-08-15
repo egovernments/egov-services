@@ -1009,7 +1009,7 @@ class Employee extends Component {
                               + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                               + date.getFullYear();
                   }}
-                  style={{"marginTop": "24px"}} hintText={translate("employee.Assignment.fields.fromDate")+" *"} value={self.getDate(subObject.assignments.fromDate)} onChange={(eve, date) => {
+                  floatingLabelText={translate("employee.Assignment.fields.fromDate")+" *"} hintText={translate("employee.Assignment.fields.fromDate")+" *"} value={self.getDate(subObject.assignments.fromDate)} onChange={(eve, date) => {
                   self.handleStateChange({target:{value:date.getTime()}}, "assignments", "fromDate", true)
                 }}/>
               </div>
@@ -1024,7 +1024,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                  style={{"marginTop": "24px"}} hintText={translate("employee.Assignment.fields.toDate")+" *"} value={self.getDate(subObject.assignments.toDate)} onChange={(eve, date) => {
+                  floatingLabelText={translate("employee.Assignment.fields.toDate")+" *"} hintText={translate("employee.Assignment.fields.toDate")+" *"} value={self.getDate(subObject.assignments.toDate)} onChange={(eve, date) => {
                   self.handleStateChange({target:{value:date.getTime()}}, "assignments", "toDate", true)
                 }}/>
               </div>
@@ -1225,7 +1225,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                style={{"marginTop": "24px"}} hintText={translate("employee.ServiceHistory.fields.date")+"*"} value={self.getDate(subObject.serviceHistory.serviceFrom)} onChange={(eve, date) => {
+                floatingLabelText={translate("employee.ServiceHistory.fields.date")+"*"} hintText={translate("employee.ServiceHistory.fields.date")+"*"} value={self.getDate(subObject.serviceHistory.serviceFrom)} onChange={(eve, date) => {
                   self.handleStateChange({target:{value:date.getTime()}}, "serviceHistory", "serviceFrom", true)
                 }}/>
               </div>
@@ -1276,7 +1276,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                  style={{"marginTop": "24px"}} hintText={translate("employee.Regularisation.fields.declaredOn")+" *"} value={self.getDate(subObject.probation.declaredOn)} onChange={(eve, date) => {
+                  floatingLabelText={translate("employee.Regularisation.fields.declaredOn")+" *"} hintText={translate("employee.Regularisation.fields.declaredOn")+" *"} value={self.getDate(subObject.probation.declaredOn)} onChange={(eve, date) => {
                     self.handleStateChange({target:{value: date.getTime()}}, "probation", "declaredOn", true)
                   }}/>
                 </div>
@@ -1295,7 +1295,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                  style={{"marginTop": "24px"}} hintText={translate("employee.Probation.fields.orderDate")+"*" }value={self.getDate(subObject.probation.orderDate)} onChange={(eve, date) => {
+                  floatingLabelText={translate("employee.Probation.fields.orderDate")+"*"} hintText={translate("employee.Probation.fields.orderDate")+"*" }value={self.getDate(subObject.probation.orderDate)} onChange={(eve, date) => {
                     self.handleStateChange({target:{value:date.getTime()}}, "probation", "orderDate", true)
                   }}/>
                 </div>
@@ -1339,7 +1339,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                  style={{"marginTop": "24px"}} hintText={translate("employee.Regularisation.fields.declaredOn")+" *"} value={self.getDate(subObject.regularisation.declaredOn)} onChange={(eve, date) => {
+                  floatingLabelText={translate("employee.Regularisation.fields.declaredOn")+" *"} hintText={translate("employee.Regularisation.fields.declaredOn")+" *"} value={self.getDate(subObject.regularisation.declaredOn)} onChange={(eve, date) => {
                     self.handleStateChange({target:{value: date.getTime()}}, "regularisation", "declaredOn", true)
                   }}/>
                 </div>
@@ -1358,7 +1358,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                  style={{"marginTop": "24px"}} hintText={translate("employee.Regularisation.fields.orderDate")+" *"} value={self.getDate(subObject.regularisation.orderDate)} onChange={(eve, date) => {
+                  floatingLabelText={translate("employee.Regularisation.fields.orderDate")+" *"} hintText={translate("employee.Regularisation.fields.orderDate")+" *"} value={self.getDate(subObject.regularisation.orderDate)} onChange={(eve, date) => {
                     self.handleStateChange({target:{value: date.getTime()}}, "regularisation", "orderDate", true)
                   }}/>
                 </div>
@@ -1955,8 +1955,7 @@ class Employee extends Component {
                             return ('0' + date.getDate()).slice(-2) + '/'
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
-                          }}
-                          style={{"marginTop": "24px"}} hintText="Date Of Birth *" value={Employee.user ? self.getDate(Employee.user.dob) : ""} onChange={(eve, date) => {
+                          }} floatingLabelText="Date Of Birth *" hintText="Date Of Birth *" value={Employee.user ? self.getDate(Employee.user.dob) : ""} onChange={(eve, date) => {
                       		handleDateChange('dob', date)
                       	}}/>
                       }
@@ -2548,8 +2547,7 @@ class Employee extends Component {
                             return ('0' + date.getDate()).slice(-2) + '/'
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
-                          }}
-                         style={{"marginTop": "24px"}} hintText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} errorText={fieldErrors["dateOfAppointment"]} value={self.getDate(Employee.dateOfAppointment)} onChange={(eve, date) => {
+                          }} floatingLabelText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} hintText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} errorText={fieldErrors["dateOfAppointment"]} value={self.getDate(Employee.dateOfAppointment)} onChange={(eve, date) => {
                       		handleDateChange('appointmentDate', date.getTime())
                       	}}/>
                       }
@@ -2569,7 +2567,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                          style={{"marginTop": "24px"}} hintText={translate("employee.Employee.fields.dateOfJoining")} errorText={fieldErrors["dateOfJoining"]} value={self.getDate(Employee.dateOfJoining)} onChange={(eve, date) => {
+                          floatingLabelText={translate("employee.Employee.fields.dateOfJoining")} hintText={translate("employee.Employee.fields.dateOfJoining")} errorText={fieldErrors["dateOfJoining"]} value={self.getDate(Employee.dateOfJoining)} onChange={(eve, date) => {
                       		handleDateChange('joiningDate', date.getTime())
                       	}}/>
                       }
@@ -2602,7 +2600,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                          }}
-                         style={{"marginTop": "24px"}} hintText={translate("employee.Employee.fields.dateOfRetirement")} errorText={fieldErrors["dateOfRetirement"]} value={self.getDate(Employee.dateOfRetirement)} onChange={(eve, date) => {
+                         floatingLabelText={translate("employee.Employee.fields.dateOfRetirement")} hintText={translate("employee.Employee.fields.dateOfRetirement")} errorText={fieldErrors["dateOfRetirement"]} value={self.getDate(Employee.dateOfRetirement)} onChange={(eve, date) => {
                       		handleDateChange('retirementDate', date.getTime())
                       	}}/>
                       }
@@ -2624,7 +2622,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                          style={{"marginTop": "24px"}} hintText={translate("employee.Employee.fields.dateOfTermination")} errorText={fieldErrors["dateOfTermination"]} value={self.getDate(Employee.dateOfTermination)} onChange={(eve, date) => {
+                          floatingLabelText={translate("employee.Employee.fields.dateOfTermination")} hintText={translate("employee.Employee.fields.dateOfTermination")} errorText={fieldErrors["dateOfTermination"]} value={self.getDate(Employee.dateOfTermination)} onChange={(eve, date) => {
                       		handleDateChange('terminationDate', date.getTime())
                       	}}/>
                       }
@@ -2644,7 +2642,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }}
-                          style={{"marginTop": "24px"}} hintText={translate("employee.Employee.fields.dateOfResignation")} errorText={fieldErrors["dateOfResignation"]} value={self.getDate(Employee.dateOfResignation)} onChange={(eve, date) => {
+                          floatingLabelText={translate("employee.Employee.fields.dateOfResignation")} hintText={translate("employee.Employee.fields.dateOfResignation")} errorText={fieldErrors["dateOfResignation"]} value={self.getDate(Employee.dateOfResignation)} onChange={(eve, date) => {
                       		handleDateChange('resignationDate', date.getTime())
                       	}}/>
                       }

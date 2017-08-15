@@ -33,6 +33,10 @@ public class BillDetail {
 	private String billDescription;
 
 	private String displayMessage;
+	
+	private Long receiptDate;
+	
+	private String receiptNumber;
 
 	private BigDecimal minimumAmount;
 

@@ -216,14 +216,14 @@ public class DemandService {
 					Long toDate = Long.valueOf(accDescription.get(2));
 
 					for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
-						System.err.println("the current demand detail : " + demandDetail);
+						log.debug("the current demand detail : " + demandDetail);
 						Demand demand = demandIdMap.get(demandDetail.getDemandId());
-						System.err.println("the respective deman"+demand);
+						log.debug("the respective deman"+demand);
 						
 						if (fromDate.equals(demand.getTaxPeriodFrom()) && toDate.equals(demand.getTaxPeriodTo())) {
 							
 							BigDecimal collectedAmount = accountDetail.getCreditAmount();
-							System.err.println("the credit amt :"+ collectedAmount);
+							log.debug("the credit amt :"+ collectedAmount);
 							System.out.println();
 							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
 							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
@@ -235,8 +235,7 @@ public class DemandService {
 		
 		demandRepository.update(new DemandRequest(requestInfo,demands));
 	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
-                kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandResponse);
-                System.out.println(demands);
+                kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandResponse);
 		return demandResponse;
 	    }
             return null;

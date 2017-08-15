@@ -60,7 +60,10 @@ class updateUserRole extends Component {
     _this.props.setLoadingStatus('loading');
     Api.commonApiPost("/access/v1/roles/_search").then(function(response) {
       _this.props.setLoadingStatus('loading');
-      _this.setState({allRoles: response.roles});
+      var ALL_ROLES = response.roles.filter(function (el){
+        return el.code !== 'CITIZEN';
+      })
+      _this.setState({allRoles: ALL_ROLES});
       Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, id : [_this.props.match.params.userId]}).then(function(response) {
         _this.setState({userName: response.user[0].userName});
         _this.setState({userRoles: response.user[0].roles});

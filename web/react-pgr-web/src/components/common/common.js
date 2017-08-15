@@ -44,6 +44,9 @@ var localationData = {
   "wc.create.groups.fileDetails.title": "Document Upload",
   "wc.create.groups.fileDetails.fields.pan": "Pan Card",
   "employee.createPosition.groups.title": "Create Position",
+  "employee.searchPosition.groups.title": "Search Position",
+  "employee.viewPosition.groups.title": "View Position",
+  "employee.updatePosition.groups.title": "Update Position",
   "employee.createPosition.groups.fields.departmenttype" : "Department",
   "employee.createPosition.groups.fields.designationtype" : "Designation",
   "employee.createPosition.groups.fields.positiontype" : "Position",
@@ -69,8 +72,9 @@ var localationData = {
   "employee.createPosition.groups.fields.accumulative" : "Accumulative",
   "employee.createPosition.groups.fields.accumulative.value1" : "Yes",
   "employee.createPosition.groups.fields.accumulative.value2" : "No",
+  "employee.createPosition.groups.fields.noOfPositions" : "No of Position",
 
-  "wc.create.documenttype.title": "Create Position",
+  "wc.create.documenttype.title": "Create Document Type",
   "wc.create.applicationtype" : "Application Type",
   "wc.create.documenttype" : "Document Type",
   "wc.create.positiontype" : "Position Type",
@@ -258,7 +262,7 @@ var localationData = {
   "pt.create.groups.ownerDetails.fields.add":"Add",
   "pt.create.groups.ownerDetails.fields.save":"Save",
   "pt.create.groups.ownerDetails.fields.isPrimaryOwner":"Is Primary Owner",
-  
+
   "pt.create.groups.propertyAddress.fields.referancePropertyNumber":"Referance Property Number",
   "pt.create.groups.propertyAddress.fields.appartment":"Appartment/Complex Name",
   "pt.create.groups.propertyAddress.fields.doorNo":"Door No",
@@ -273,7 +277,7 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.readyReckoner":"Ready Reckoner",
   "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress" : "Is Correspondance Address Different From Address",
   "pt.create.groups.propertyAddress.fields.address1":"Address 1",
-  
+
   "pt.create.groups.assessmentDetails.fields.creationReason": "Reason For Creation",
   "pt.create.groups.assessmentDetails.fields.parentUpicNo":"Parent UPIC No.",
   "pt.create.groups.assessmentDetails.fields.propertyType":"Tariff Category",
@@ -284,13 +288,13 @@ var localationData = {
   "pt.create.groups.assessmentDetails.fields.extentOfSite":"Extent Of Site",
   "pt.create.groups.assessmentDetails.fields.sequenceNo":"Sequence No.",
   "pt.create.groups.assessmentDetails.fields.isAuthorized":"Is Authorized?",
-  
+
   "pt.create.groups.propertyFactors":"Property Factors",
   "pt.create.groups.propertyFactors.fields.totalFactor": "Toilet factor",
   "pt.create.groups.propertyFactors.fields.roadFactor": "Road factor",
   "pt.create.groups.propertyFactors.fields.liftFactor": "Lift factor",
   "pt.create.groups.propertyFactors.fields.parkingFactor": "Parking Factor",
- 
+
   "pt.create.groups.propertyAddress.fields.lift":"Lift",
   "pt.create.groups.propertyAddress.fields.toilet": "Toilet",
   "pt.create.groups.propertyAddress.fields.waterTap":"Water Tap",
@@ -298,12 +302,12 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.attachedBathroom": "Attached Bathroom",
   "pt.create.groups.propertyAddress.fields.cableConnection": "Cable Connection",
   "pt.create.groups.propertyAddress.fields.waterHarvesting": "Water Harvesting",
-  
+
   "pt.create.groups.propertyAddress.fields.floorType": "Floor Type",
   "pt.create.groups.propertyAddress.fields.roofType": "Roof Type",
   "pt.create.groups.propertyAddress.fields.wallType": "Wall Type",
   "pt.create.groups.propertyAddress.fields.woodType": "Wood Type",
-  
+
   "pt.create.groups.floorDetails" : "Floor Details",
   "pt.create.groups.floorDetails.fields.floorNumber":"Floor Number",
   "pt.create.groups.floorDetails.fields.unitType":"Unit Type",
@@ -329,10 +333,10 @@ var localationData = {
   "pt.create.groups.floorDetails.fields.buildingPermissionNumber": "Building Permission Number",
   "pt.create.groups.floorDetails.fields.buildingPermissionDate": "Building Permission Date",
   "pt.create.groups.floorDetails.fields.plinthAreaInBuildingPlan": "Plinth Area In Building Plan",
-  
+
   "pt.create.demands.addDemand": "Add Demand",
-  
-  
+
+
   "pt.create.groups.propertyAddress.fields.surveyNumber":"Survey Number",
   "pt.create.groups.propertyAddress.fields.pattaNumber":"Patta Number",
   "pt.create.groups.propertyAddress.fields.vacantLandArea":"Vacant Land Area",

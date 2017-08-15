@@ -79,7 +79,7 @@ const checkRequiredFields = function(type, object) {
       } else if(!object.position) {
         errorText["assignments.position"] = "Required";
       } else if((object.hod == true || object.hod == "true") && (!object.mainDepartments || (object.mainDepartments && object.mainDepartments.length == 0))) {
-        console.log(object.mainDepartments);
+        
         errorText["assignments.mainDepartments"] = "Required";
       }
       break;
@@ -3118,6 +3118,11 @@ class Employee extends Component {
           }
       }
 
+      if (employee.user && employee.user.dob && self.state.screenType == "update" && employee.user.dob.indexOf("-") > -1) {
+        var _date = employee.user.dob.split("-");
+        employee.user.dob = _date[2] + "/" + _date[1] + "/" + _date[0];
+      }
+
       self.props.setLoadingStatus('loading');
       uploadFiles(employee, function(err, emp) {
         if (err) {
@@ -3126,6 +3131,10 @@ class Employee extends Component {
         } else {
           Api.commonApiPost("/hr-employee/employees/" + (self.state.screenType == "update") ? "_update" : "_create", {}, employee).then(function(res) {
             self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, "Employee created successfully.");
+            setTimeout(function() {
+                self.props.setRoute("/search/employee/searchEmployee/view");
+            }, 1500);
           }, function(err) {
             self.props.setLoadingStatus('hide');
           })
@@ -3171,7 +3180,7 @@ class Employee extends Component {
   				</Tabs>
   				<br/>
           <div style={{textAlign: "center"}}>
-  				  <RaisedButton label="Submit" primary={true} disabled={!self.props.isFormValid}/>
+  				  <RaisedButton type="submit" label="Submit" primary={true} disabled={!self.props.isFormValid}/>
           </div>
   			</form>
         <Dialog
@@ -3258,6 +3267,7 @@ const mapDispatchToProps = dispatch => ({
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
         dispatch({ type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg });
     },
+    setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Employee);

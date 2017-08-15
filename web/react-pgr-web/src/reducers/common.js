@@ -118,7 +118,7 @@ let menuConvention={
   "Employee Management.Employee Masters.Position.CreatePosition":"/create/employee/createPosition",
   "Employee Management.Employee Masters.Position.UpdatePosition":"/search/employee/createPosition/update",
   "Employee Management.Employee Masters.Position.ViewPosition":"/search/employee/createPosition/view",
-  "Employee Management.Employee Masters.Employee.CreateEmployee":"/create/employee/searchEmployee",
+  "Employee Management.Employee Masters.Employee.CreateEmployee":"/employee/create",
   "Employee Management.Employee Masters.Employee.ViewEmployee":"/search/employee/searchEmployee/view",
   "Employee Management.Employee Masters.Employee.UpdateEmployee":"/search/employee/searchEmployee/update"
 

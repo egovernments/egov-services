@@ -799,8 +799,13 @@ class Employee extends Component {
     switch (this.state.modal) {
       case 'assignment':
         errorText = checkRequiredFields('assignment', this.state.subObject.assignments);
+
         if(Object.keys(errorText).length > 0) {
           return self.setState({errorText});
+        }
+
+        if(self.getDate(this.state.subObject.assignments.fromDate).getTime() > self.getDate(this.state.subObject.assignments.toDate).getTime()) {
+            return self.props.toggleSnackbarAndSetText(true, "From Date should be less than To Date.", false, true);
         }
 
         let assignments = Object.assign([], this.props.Employee.assignments || []);
@@ -3104,9 +3109,9 @@ class Employee extends Component {
     let employee = Object.assign({}, this.props.Employee);
     let self = this;
     if (employee.assignments.length == 0 || employee.jurisdictions.length == 0) {
-      self.props.toggleDailogAndSetText(true, "Please enter atleast one assignment and jurisdiction.");
+      self.props.toggleSnackbarAndSetText(true, "Please enter atleast one assignment and jurisdiction.");
     } else if(!isHavingPrimary(employee)) {
-      self.props.toggleDailogAndSetText(true, "Atleast one primary assignment is required.");
+      self.props.toggleSnackbarAndSetText(true, "Atleast one primary assignment is required.");
     } else {
       var __emp = Object.assign({}, employee);
 

@@ -1,9 +1,11 @@
 package org.egov.demand.consumer;
 
+import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.helper.CollectionReceiptRequest;
 import org.egov.demand.helper.JsonIgnoreHelper;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.repository.BillRepository;
@@ -89,9 +91,15 @@ public class BillingServiceConsumer {
 				demandService.updateMIS(objectMapper.convertValue(consumerRecord, DemandUpdateMisRequest.class));
 			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic)){
 				objectMapper.addMixIn(RequestInfo.class, JsonIgnoreHelper.class);
-				ReceiptRequest xyz = objectMapper.convertValue(consumerRecord, ReceiptRequest.class);
-				System.err.println(xyz);
-			    //demandService.updateDemandFromReceipt(xyz);
+				CollectionReceiptRequest collectionReceiptRequest = objectMapper.convertValue(consumerRecord, CollectionReceiptRequest.class);
+				RequestInfo requestInfo = collectionReceiptRequest.getRequestInfo().toRequestInfo();
+				List<Receipt> receipts = collectionReceiptRequest.getReceipt();
+				
+				ReceiptRequest receiptRequest = ReceiptRequest.builder()
+						.receipt(receipts).requestInfo(requestInfo)
+						.tenantId(collectionReceiptRequest.getTenantId()).build();
+				log.debug("the receipt request is -------------------"+receiptRequest);
+				demandService.updateDemandFromReceipt(receiptRequest);
 			}
 			
 		} catch (Exception exception) {

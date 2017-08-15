@@ -102,7 +102,7 @@ public class TradeLicenseService {
 
 			if (tradeLicense.getIsLegacy()) {
 				// check unique constraint
-				tradeLicenseRepository.validateUniqueLicenseNumber(tradeLicense);
+				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
 			} else {
 
 			}
@@ -152,6 +152,18 @@ public class TradeLicenseService {
 				}
 
 			}
+			
+			// admin ward validation
+				if (tradeLicense.getAdminWardId() != null) {
+					BoundaryResponse boundaryResponse = boundaryContractRepository.findByRevenueWardId(tradeLicense,
+							requestInfoWrapper);
+
+					if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
+							|| boundaryResponse.getBoundarys().size() == 0) {
+						throw new InvalidInputException("Invalid location ward ");
+					}
+
+				}
 
 			// category validation
 			if (tradeLicense.getCategoryId() != null) {
@@ -176,6 +188,12 @@ public class TradeLicenseService {
 			}
 
 			// supporting documents validation
+			
+			if( !tradeLicense.getIsLegacy()){
+				//TODO check for all mdantory documents types for the given 
+				//application type are filled are not.
+			}
+			
 			if (tradeLicense.getSupportDocuments() != null) {
 				for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
@@ -269,14 +287,14 @@ public class TradeLicenseService {
 
 	public TradeLicenseResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
-			String licenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
+			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
 			Integer revenueWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
 			Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
 		
 		TradeLicenseResponse TradeLicenseResponse = new TradeLicenseResponse();
 		
 		TradeLicenseResponse tradeLicenseResponse = getLicensesFromEs(tenantId, pageSize, pageNumber, sort, active,
-				tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId,
+				tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
 				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
 				tradeSubCategory, legacy, status);
 	
@@ -288,7 +306,7 @@ public class TradeLicenseService {
 		}
 		
 		List<TradeLicense> licenses = tradeLicenseRepository.search(tenantId, pageSize, pageNumber, sort, active,
-				tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId,
+				tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
 				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
 				tradeSubCategory, legacy, status);
 
@@ -310,7 +328,7 @@ public class TradeLicenseService {
 	}
 	
 	private TradeLicenseResponse getLicensesFromEs(String tenantId, Integer pageSize, Integer pageNumber, String sort,
-			String active, String tradeLicenseId, String applicationNumber, String licenseNumber, String mobileNumber,
+			String active, String tradeLicenseId, String applicationNumber, String licenseNumber, String oldLicenseNumber, String mobileNumber,
 			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer revenueWard, Integer locality,
 			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
 			String legacy, Integer status) {

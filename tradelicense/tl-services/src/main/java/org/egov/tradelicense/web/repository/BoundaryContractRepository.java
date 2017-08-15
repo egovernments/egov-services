@@ -86,4 +86,33 @@ public class BoundaryContractRepository {
 		}
 
 	}
+	public BoundaryResponse findByAdminWardId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+
+		String url = String.format("%s%s", hostUrl, searchUrl);
+		StringBuffer content = new StringBuffer();
+		if (tradeLicense.getRevenueWardId() != null) {
+			content.append("boundaryIds=" + tradeLicense.getAdminWardId());
+		}
+
+		if (tradeLicense.getTenantId() != null) {
+			content.append("&tenantId=" + tradeLicense.getTenantId());
+		}
+		url = url + content.toString();
+		BoundaryResponse boundaryResponse = null;
+		try {
+
+			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
+
+		} catch (Exception e) {
+			log.error("Error while connecting to the location end point");
+		}
+
+		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
+				&& boundaryResponse.getBoundarys().size() > 0) {
+			return boundaryResponse;
+		} else {
+			return null;
+		}
+
+	}
 }

@@ -53,7 +53,7 @@ public class TradeLicenseRepository {
 		return Long.valueOf(id);
 	}
 
-	public void validateUniqueLicenseNumber(TradeLicense tradeLicense) {
+	public void validateUniqueOldLicenseNumber(TradeLicense tradeLicense) {
 
 		String sql = getUniqueTenantLicenseQuery(tradeLicense);
 		Integer count = null;
@@ -71,10 +71,10 @@ public class TradeLicenseRepository {
 	private String getUniqueTenantLicenseQuery(TradeLicense tradeLicense) {
 
 		String tenantId = tradeLicense.getTenantId();
-		String licNumber = tradeLicense.getLicenseNumber();
+		String licNumber = tradeLicense.getOldLicenseNumber();
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
-		uniqueQuery.append(" where licenseNumber = '" + licNumber + "'");
+		uniqueQuery.append(" where oldlicenseNumber = '" + licNumber + "'");
 		uniqueQuery.append(" AND tenantId = '" + tenantId + "'");
 
 		return uniqueQuery.toString();
@@ -123,14 +123,14 @@ public class TradeLicenseRepository {
 
 	@Transactional
 	public List<TradeLicense> search(String tenantId, Integer pageSize, Integer pageNumber, String sort, String active,
-			String tradeLicenseId, String applicationNumber, String licenseNumber, String mobileNumber,
+			String tradeLicenseId, String applicationNumber, String licenseNumber, String oldLicenseNumber, String mobileNumber,
 			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer revenueWard, Integer locality,
 			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
 			String legacy, Integer status) {
 
 		List<TradeLicense> tradeLicenselst = new ArrayList<TradeLicense>();
 		List<TradeLicenseEntity> license = tradeLicenseJdbcRepository.search(tenantId, pageSize, pageNumber, sort,
-				active, tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId,
+				active, tradeLicenseId, applicationNumber, licenseNumber,  oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
 				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
 				tradeSubCategory, legacy, status);
 

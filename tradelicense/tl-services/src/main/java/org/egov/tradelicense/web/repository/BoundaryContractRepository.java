@@ -92,7 +92,7 @@ public class BoundaryContractRepository {
 		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getRevenueWardId() != null) {
+		if (tradeLicense.getAdminWardId() != null) {
 			content.append("boundaryIds=" + tradeLicense.getAdminWardId());
 		}
 

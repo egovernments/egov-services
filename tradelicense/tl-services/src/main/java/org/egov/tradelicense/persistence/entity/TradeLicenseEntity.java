@@ -33,6 +33,8 @@ public class TradeLicenseEntity {
 	private String applicationNumber;
 
 	private String licenseNumber;
+	
+	private String oldLicenseNumber;
 
 	private Timestamp applicationDate;
 
@@ -53,6 +55,8 @@ public class TradeLicenseEntity {
 	private Integer localityId;
 
 	private Integer revenueWardId;
+
+	private Integer adminWardId;
 
 	private String tradeAddress;
 
@@ -75,6 +79,8 @@ public class TradeLicenseEntity {
 	private Timestamp tradeCommencementDate;
 
 	private Timestamp agreementDate;
+	
+	private Timestamp licenseValidFromDate;
 
 	private String agreementNo;
 
@@ -106,13 +112,19 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setTenantId(this.tenantId);
 
-		tradeLicense.setApplicationType(ApplicationType.valueOf(this.applicationType));
+		if(this.applicationType != null){
+			tradeLicense.setApplicationType(ApplicationType.valueOf(this.applicationType));
+		}
 
 		tradeLicense.setApplicationNumber(this.applicationNumber);
 
 		tradeLicense.setLicenseNumber(this.licenseNumber);
+		
+		tradeLicense.setOldLicenseNumber(this.oldLicenseNumber);
 
-		tradeLicense.setApplicationDate(TimeStampUtil.getDateFromTimeStamp(this.applicationDate));
+		if(this.applicationDate != null){
+			tradeLicense.setApplicationDate(TimeStampUtil.getDateFromTimeStamp(this.applicationDate));
+		}
 
 		tradeLicense.setAdhaarNumber(this.adhaarNumber);
 
@@ -131,15 +143,21 @@ public class TradeLicenseEntity {
 		tradeLicense.setLocalityId(this.localityId);
 
 		tradeLicense.setRevenueWardId(this.revenueWardId);
+		
+		tradeLicense.setAdminWardId(this.adminWardId);
 
 		tradeLicense.setTradeAddress(this.tradeAddress);
 
-		tradeLicense.setOwnerShipType(OwnerShipType.valueOf(this.ownerShipType));
+		if(this.ownerShipType != null){
+			tradeLicense.setOwnerShipType(OwnerShipType.valueOf(this.ownerShipType));
+		}
 
 		tradeLicense.setTradeTitle(this.tradeTitle);
 
-		tradeLicense.setTradeType(BusinessNature.valueOf(this.tradeType));
-
+		if(this.tradeType != null){
+			tradeLicense.setTradeType(BusinessNature.valueOf(this.tradeType));
+		}
+		
 		tradeLicense.setCategoryId(this.categoryId);
 
 		tradeLicense.setSubCategoryId(this.subCategoryId);
@@ -150,9 +168,17 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setRemarks(this.remarks);
 
-		tradeLicense.setTradeCommencementDate(TimeStampUtil.getDateFromTimeStamp(this.tradeCommencementDate));
+		if(this.tradeCommencementDate != null){
+			tradeLicense.setTradeCommencementDate(TimeStampUtil.getDateFromTimeStamp(this.tradeCommencementDate));
+		}
 
-		tradeLicense.setAgreementDate(TimeStampUtil.getDateFromTimeStamp(this.agreementDate));
+		if(this.agreementDate != null){
+			tradeLicense.setAgreementDate(TimeStampUtil.getDateFromTimeStamp(this.agreementDate));
+		}
+		
+		if(this.licenseValidFromDate != null){
+			tradeLicense.setLicenseValidFromDate(TimeStampUtil.getDateFromTimeStamp(this.licenseValidFromDate));
+		}
 
 		tradeLicense.setAgreementNo(this.agreementNo);
 
@@ -160,8 +186,10 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setActive(this.active);
 
-		tradeLicense.setExpiryDate(TimeStampUtil.getDateFromTimeStamp(this.expiryDate));
-
+		if(this.expiryDate != null){
+			tradeLicense.setExpiryDate(TimeStampUtil.getDateFromTimeStamp(this.expiryDate));
+		}
+		
 		tradeLicense.setFeeDetails(this.feeDetails);
 
 		tradeLicense.setSupportDocuments(this.supportDocuments);
@@ -184,13 +212,19 @@ public class TradeLicenseEntity {
 
 		this.tenantId = tradeLicense.getTenantId();
 
-		this.applicationType = tradeLicense.getApplicationType().toString();
+		if(tradeLicense.getApplicationType() != null){
+			this.applicationType = tradeLicense.getApplicationType().toString();
+		}
 
 		this.applicationNumber = tradeLicense.getApplicationNumber();
 
 		this.licenseNumber = tradeLicense.getLicenseNumber();
+		
+		this.oldLicenseNumber = tradeLicense.getOldLicenseNumber();
 
-		this.applicationDate = TimeStampUtil.getTimeStamp(tradeLicense.getApplicationDate());
+		if(tradeLicense.getApplicationDate() != null){
+			this.applicationDate = TimeStampUtil.getTimeStamp(tradeLicense.getApplicationDate());
+		}
 
 		this.adhaarNumber = tradeLicense.getAdhaarNumber();
 
@@ -210,13 +244,19 @@ public class TradeLicenseEntity {
 
 		this.revenueWardId = tradeLicense.getRevenueWardId();
 
+		this.adminWardId = tradeLicense.getAdminWardId();
+
 		this.tradeAddress = tradeLicense.getTradeAddress();
 
-		this.ownerShipType = tradeLicense.getOwnerShipType().toString();
+		if(tradeLicense.getOwnerShipType() != null){
+			this.ownerShipType = tradeLicense.getOwnerShipType().toString();
+		}
 
 		this.tradeTitle = tradeLicense.getTradeTitle();
 
-		this.tradeType = tradeLicense.getTradeType().toString();
+		if(tradeLicense.getTradeType() != null){
+			this.tradeType = tradeLicense.getTradeType().toString();
+		}
 
 		this.categoryId = tradeLicense.getCategoryId();
 
@@ -228,9 +268,17 @@ public class TradeLicenseEntity {
 
 		this.remarks = tradeLicense.getRemarks();
 
-		this.tradeCommencementDate = TimeStampUtil.getTimeStamp(tradeLicense.getTradeCommencementDate());
-
-		this.agreementDate = TimeStampUtil.getTimeStamp(tradeLicense.getAgreementDate());
+		if(tradeLicense.getTradeCommencementDate() != null){
+			this.tradeCommencementDate = TimeStampUtil.getTimeStamp(tradeLicense.getTradeCommencementDate());
+		}
+		
+		if(tradeLicense.getAgreementDate() != null){
+			this.agreementDate = TimeStampUtil.getTimeStamp(tradeLicense.getAgreementDate());
+		}
+		
+		if(tradeLicense.getLicenseValidFromDate() != null){
+			this.licenseValidFromDate = TimeStampUtil.getTimeStamp(tradeLicense.getLicenseValidFromDate());
+		}
 
 		this.agreementNo = tradeLicense.getAgreementNo();
 
@@ -238,7 +286,9 @@ public class TradeLicenseEntity {
 
 		this.active = tradeLicense.getActive();
 
-		this.expiryDate = TimeStampUtil.getTimeStamp(tradeLicense.getExpiryDate());
+		if(tradeLicense.getExpiryDate() != null){
+			this.expiryDate = TimeStampUtil.getTimeStamp(tradeLicense.getExpiryDate());
+		}
 
 		this.feeDetails = tradeLicense.getFeeDetails();
 

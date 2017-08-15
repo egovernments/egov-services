@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Category {
 
 	private Long id = null;

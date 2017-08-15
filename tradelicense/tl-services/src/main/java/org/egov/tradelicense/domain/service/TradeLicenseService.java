@@ -71,6 +71,7 @@ public class TradeLicenseService {
 	@Autowired
 	private SmartValidator validator;
 	
+	@Autowired
 	private RestTemplate restTemplate;
 	
 	@Autowired
@@ -155,12 +156,12 @@ public class TradeLicenseService {
 			
 			// admin ward validation
 				if (tradeLicense.getAdminWardId() != null) {
-					BoundaryResponse boundaryResponse = boundaryContractRepository.findByRevenueWardId(tradeLicense,
+					BoundaryResponse boundaryResponse = boundaryContractRepository.findByAdminWardId(tradeLicense,
 							requestInfoWrapper);
 
 					if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 							|| boundaryResponse.getBoundarys().size() == 0) {
-						throw new InvalidInputException("Invalid location ward ");
+						throw new InvalidInputException("Invalid location Admin ward ");
 					}
 
 				}
@@ -288,26 +289,27 @@ public class TradeLicenseService {
 	public TradeLicenseResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
-			Integer revenueWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
+			Integer adminWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
 			Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
 		
 		TradeLicenseResponse TradeLicenseResponse = new TradeLicenseResponse();
 		
 		TradeLicenseResponse tradeLicenseResponse = getLicensesFromEs(tenantId, pageSize, pageNumber, sort, active,
 				tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
-				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+				propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
 				tradeSubCategory, legacy, status);
 	
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		
-		if(tradeLicenseResponse.getLicenses() != null && !(tradeLicenseResponse.getLicenses().size() == 0)){
+		if(tradeLicenseResponse != null && tradeLicenseResponse.getLicenses() != null && !(tradeLicenseResponse.getLicenses()
+				.size() == 0)){
 			tradeLicenseResponse.setResponseInfo(responseInfo);
 			return tradeLicenseResponse;
 		}
 		
 		List<TradeLicense> licenses = tradeLicenseRepository.search(tenantId, pageSize, pageNumber, sort, active,
 				tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
-				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+				propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
 				tradeSubCategory, legacy, status);
 
 		List<TradeLicenseContract> tradeLicenseContracts = new ArrayList<TradeLicenseContract>();
@@ -329,7 +331,7 @@ public class TradeLicenseService {
 	
 	private TradeLicenseResponse getLicensesFromEs(String tenantId, Integer pageSize, Integer pageNumber, String sort,
 			String active, String tradeLicenseId, String applicationNumber, String licenseNumber, String oldLicenseNumber, String mobileNumber,
-			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer revenueWard, Integer locality,
+			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard, Integer locality,
 			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
 			String legacy, Integer status) {
 		
@@ -338,11 +340,12 @@ public class TradeLicenseService {
 		url.append(propertiesManager.getTradeLicenseIndexerServiceBasePath());
 		url.append(propertiesManager.getTradeLicenseIndexerLicenseSearchPath());
 		
-		url.append("?tenantId="+tenantId);
+		url.append("?tenantId="+tenantId+"&");
 		
 		if(pageSize != null){
 			url.append("pageSize="+pageSize+"&");
 		}
+		
 		if(pageNumber != null){
 			url.append("pageNumber="+pageNumber+"&");
 		}
@@ -362,9 +365,15 @@ public class TradeLicenseService {
 		if(applicationNumber != null && !applicationNumber.isEmpty()){
 			url.append("applicationNumber="+applicationNumber+"&");
 		}
+		
 		if(licenseNumber != null && !licenseNumber.isEmpty()){
 			url.append("licenseNumber="+licenseNumber+"&");
 		}
+		
+		if(oldLicenseNumber != null && !oldLicenseNumber.isEmpty()){
+			url.append("oldLicenseNumber="+oldLicenseNumber+"&");
+		}
+		
 		if(mobileNumber != null && !mobileNumber.isEmpty()){
 			url.append("mobileNumber="+mobileNumber+"&");
 		}
@@ -380,8 +389,8 @@ public class TradeLicenseService {
 			url.append("propertyAssesmentNo="+propertyAssesmentNo+"&");
 		}
 		
-		if(revenueWard != null ){
-			url.append("revenueWard="+revenueWard+"&");
+		if(adminWard != null ){
+			url.append("adminWard="+adminWard+"&");
 		}
 		
 		if(locality != null ){
@@ -415,7 +424,9 @@ public class TradeLicenseService {
 		if(status != null ){
 			url.append("status="+status);
 		}
-
+		else{
+			url.setLength(url.length() - 1);	
+		}
 
 		TradeLicenseResponse tradeLicenseResponse = null;
 		try {

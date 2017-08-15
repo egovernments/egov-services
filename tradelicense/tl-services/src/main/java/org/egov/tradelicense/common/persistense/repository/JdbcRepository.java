@@ -276,6 +276,7 @@ public abstract class JdbcRepository {
 				license.setApplicationDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("applicationDate"))));
 				license.setApplicationNumber(getString(row.get("applicationNumber")));
 				license.setLicenseNumber(getString(row.get("licenseNumber")));
+				license.setOldLicenseNumber(getString(row.get("oldLicenseNumber")));
 				license.setAdhaarNumber(getString(row.get("adhaarNumber")));
 				license.setMobileNumber(getString(row.get("mobileNumber")));
 				license.setOwnerName(getString(row.get("ownerName")));
@@ -296,6 +297,8 @@ public abstract class JdbcRepository {
 				license.setRemarks(getString(row.get("remarks")));
 				license.setTradeCommencementDate(
 						TimeStampUtil.getTimeStampFromDB(getString(row.get("tradeCommencementDate"))));
+				license.setLicenseValidFromDate(
+						TimeStampUtil.getTimeStampFromDB(getString(row.get("licenseValidFromDate"))));
 				license.setAgreementDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("agreementDate"))));
 				license.setAgreementNo(getString(row.get("agreementNo")));
 				license.setIsLegacy(getBoolean(row.get("isLegacy")));

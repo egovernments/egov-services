@@ -130,6 +130,10 @@ public class TradeLicense {
 	@NotNull
 	@JsonProperty("tradeCommencementDate")
 	private String tradeCommencementDate;
+	
+	@NotNull
+	@JsonProperty("licenseValidFromDate")
+	private String licenseValidFromDate;
 
 	@JsonProperty("agreementDate")
 	private String agreementDate;

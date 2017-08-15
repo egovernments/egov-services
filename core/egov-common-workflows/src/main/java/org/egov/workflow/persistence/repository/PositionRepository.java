@@ -62,13 +62,11 @@ public class PositionRepository {
 		return position;
 	}
 
-	public Position getPrimaryPositionByEmployeeId(final Long employeeId, RequestInfo requestInfo) {
+	public Position getPrimaryPositionByEmployeeId(final Long employeeId,final String tenantId , RequestInfo requestInfo) {
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		String tenantId = "";
 		if (requestInfo != null) {
 			requestInfoWrapper.setRequestInfo(requestInfo);
-			tenantId = requestInfo.getUserInfo().getTenantId();
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
 

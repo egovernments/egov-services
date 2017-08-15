@@ -127,7 +127,13 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (processInstance.getInitiatorPosition() != null)
 			state.setInitiatorPosition(processInstance.getInitiatorPosition());
 		else {
-			Position initiator = positionRepository.getPrimaryPositionByEmployeeId(userId, requestInfo);
+			String tenantId = "";
+			if (requestInfo != null && requestInfo.getUserInfo().getTenantId()!=null && !requestInfo.getUserInfo().getTenantId().isEmpty()) {
+				tenantId = requestInfo.getUserInfo().getTenantId();
+			} else
+				tenantId = processInstanceRequest.getProcessInstance().getTenantId();
+
+			Position initiator = positionRepository.getPrimaryPositionByEmployeeId(userId, tenantId,requestInfo);
 			if (initiator != null && initiator.getId() != null)
 				state.setInitiatorPosition(initiator.getId());
 		}

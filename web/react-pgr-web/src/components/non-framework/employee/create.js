@@ -558,9 +558,14 @@ class Employee extends Component {
   }
 
   getDate = (dateStr) => {
-    if(dateStr && typeof dateStr == "string" && dateStr.indexOf("/") > -1){
-      var dateArr = dateStr.split("/");
-      return new Date(dateArr[2], Number(dateArr[1])-1, dateArr[0]);
+    if(dateStr && typeof dateStr == "string"){
+        if(dateStr.indexOf("/") > -1) {
+            var dateArr = dateStr.split("/");
+            return new Date(dateArr[2], Number(dateArr[1])-1, dateArr[0]);
+        } else if(dateStr.indexOf("-") > -1) {
+            var dateArr = dateStr.split("-");
+            return new Date(dateArr[0], Number(dateArr[1])-1, dateArr[2]);
+        }
     } else return "";
   }
 
@@ -1537,7 +1542,7 @@ class Employee extends Component {
               for(var i=0; i<res.Employee.assignments.length; i++) {
                 res.Employee.assignments[i].fromServer = true;
               }
-              self.props.setForm(res.Employee);
+              self.props.setForm(res.Employee, true);
             }, function(err) {
 
             })
@@ -1930,7 +1935,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField floatingLabelText={"Employee Group"+" *"} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelText={"Employee Group"} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "group", true, '')
                       	}}>
                             {
@@ -3127,7 +3132,7 @@ class Employee extends Component {
             //Handle error
             self.props.setLoadingStatus('hide');
         } else {
-          Api.commonApiPost("/hr-employee/employees/" + (self.state.screenType == "update") ? "_update" : "_create", {}, employee).then(function(res) {
+          Api.commonApiPost("/hr-employee/employees/" + ((self.state.screenType == "update") ? "_update" : "_create"), {}, employee).then(function(res) {
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, "Employee created successfully.");
             setTimeout(function() {
@@ -3214,16 +3219,17 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 
-    setForm: (data) => {
+    setForm: (data, isUpdate) => {
+        var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.gender', 'user.mobileNumber', 'user.active', 'user.dob'];
         dispatch({
             type: "SET_FORM",
             data,
-            isFormValid: false,
+            isFormValid: isUpdate ? true : false,
             fieldErrors: {},
             validationData: {
                 required: {
                     current: [],
-                    required: ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.gender', 'user.mobileNumber', 'user.active', 'user.dob']
+                    required: requiredList
                 },
                 pattern: {
                     current: [],

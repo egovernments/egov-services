@@ -25,9 +25,10 @@ public class ComplaintAssignmentListener {
 
 	@Autowired
 	public ComplaintAssignmentListener(ComplaintMessageQueueRepository complaintMessageQueueRepository,
-			WorkflowService workflowService, EscalationDateService escalationDateService,
-			PositionService positionService) {
+			WorkflowService workflowService, CommonWorkflowService commonworkflowService,
+			EscalationDateService escalationDateService, PositionService positionService) {
 		this.workflowService = workflowService;
+		this.commonworkflowService = commonworkflowService;
 		this.complaintMessageQueueRepository = complaintMessageQueueRepository;
 		this.escalationDateService = escalationDateService;
 		this.positionService = positionService;

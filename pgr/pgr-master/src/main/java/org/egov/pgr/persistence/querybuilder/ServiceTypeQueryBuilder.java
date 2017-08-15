@@ -26,6 +26,9 @@ public class ServiceTypeQueryBuilder {
         if(!serviceTypeSearchCriteria.isServiceCodeEmpty())
             addWhereClauseWithAnd(query,"code","code");
 
+        if(!serviceTypeSearchCriteria.isCategoryEmpty())
+            addWhereClauseWithAnd(query,"category","category");
+
         return query.toString();
     }
 

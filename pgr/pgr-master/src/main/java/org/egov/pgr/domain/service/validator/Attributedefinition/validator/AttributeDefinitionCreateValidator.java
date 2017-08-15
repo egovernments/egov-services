@@ -19,8 +19,6 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 		return true;
 	}
 
-
-
 	@Override
 	public void validatingLength(AttributeDefinition attributeDefinition) {
 		
@@ -106,6 +104,50 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 			}
 			
 			
+	}
+	
+	@Override
+	public void checkMandatoryField(AttributeDefinition attributeDefinition) {
+
+		if (attributeDefinition.isTenantAbsent()) {
+			HashMap<String, String> error = new HashMap<>();
+
+			error.put("code", "AttributeDefinition Vaalidator.9");
+			error.put("field", "AttributeDefinition.tanantId");
+			error.put("message", "tanantId mandatory");
+
+			throw new PGRMasterException(error);
+		}
+
+		if (attributeDefinition.isAttributCodeAbsent()) {
+			HashMap<String, String> error = new HashMap<>();
+
+			error.put("code", "AttributeDefinition Vaalidator.10");
+			error.put("field", "AttributeDefinition.code");
+			error.put("message", "Code mandatory ");
+
+			throw new PGRMasterException(error);
+		}
+		
+		if (attributeDefinition.isDatatypeAbsent()) {
+			HashMap<String, String> error = new HashMap<>();
+
+			error.put("code", " AttributeDefinition Vaalidator.11");
+			error.put("field", "AttributeDefinition.dataType");
+			error.put("message", "dataType mandatory ");
+
+			throw new PGRMasterException(error);
+		}
+		
+		if (attributeDefinition.isServiceCodeAbsent()) {
+			HashMap<String, String> error = new HashMap<>();
+
+			error.put("code", "  AttributeDefinition Vaalidator.12");
+			error.put("field", "AttributeDefinition .servicecode");
+			error.put("message", "servicecode mandatory ");
+
+			throw new PGRMasterException(error);
+		}
 	}
 
 }

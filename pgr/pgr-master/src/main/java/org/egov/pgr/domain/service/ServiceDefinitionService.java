@@ -45,9 +45,9 @@ public class ServiceDefinitionService {
 
 	public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request) {
 		createMandatoryFieldValidate(serviceDefinition);
+		attributeMAndatoryFieldValidation(serviceDefinition);
 		ServiceDefinitionFieldLengthValidate( serviceDefinition);
 		attributeLengthValidation(serviceDefinition);
-		
 		createUniqueConstraintValidation(serviceDefinition);
 		serviceDefinitionMessageQueueRepository.save(request, CREATE);
 	}
@@ -107,6 +107,17 @@ public class ServiceDefinitionService {
 		});
 		
 	}
+	
+	private void attributeMAndatoryFieldValidation(ServiceDefinition serviceDefinition) {
+		serviceDefinition.getAttributes().stream().forEach(attributeDefinition -> 
+		{
+			attributeValidate.stream().filter(validator -> 
+			validator.canValidate(attributeDefinition))
+			.forEach(v -> v.checkMandatoryField(attributeDefinition));
+		});
+		
+	}
+
 	
 
 	private void setAttributes(List<ServiceDefinition> serviceDefinitions) {

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import static org.springframework.util.StringUtils.isEmpty;
 import lombok.Getter;
 
 @Getter
@@ -32,8 +33,6 @@ public class AttributeDefinition {
     private char readOnlyToChar() {
         return readOnly == true ? 'Y' : 'N';
     }
-    
-
     
     /* field length validation*/
     public boolean isTenantIdLengthMatch(){
@@ -67,6 +66,28 @@ public class AttributeDefinition {
     public boolean isGroupCodeLengthMatch(){
         return (groupCode.length() > 0 && groupCode.length() <= 300);
     }
+    
+    /* mandatory validation*/
+    public boolean isTenantAbsent()
+    {
+    	return isEmpty(tenantId) || tenantId == null;  
+    }
+    
+    public boolean isServiceCodeAbsent()
+    {
+    	return isEmpty(serviceCode) || serviceCode == null;      
+    }
+    
+    public boolean isAttributCodeAbsent()
+    {
+        return isEmpty(code) || code == null;
+    }
+    
+    public boolean isDatatypeAbsent()
+    {
+    	return isEmpty(dataType) || dataType == null;      
+    }
+
     
     
     public org.egov.pgr.persistence.dto.AttributeDefinition toDto(ServiceDefinition serviceDefinition){

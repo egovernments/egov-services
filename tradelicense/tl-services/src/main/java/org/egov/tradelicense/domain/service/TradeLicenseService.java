@@ -254,7 +254,7 @@ public class TradeLicenseService {
 			throw new CustomBindException(errors);
 		}
 		// external end point validations
-		validateRelated(tradeLicenses, requestInfo);
+		//validateRelated(tradeLicenses, requestInfo);
 
 		// setting the id for the license and support document and fee details
 		for (TradeLicense license : tradeLicenses) {

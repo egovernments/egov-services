@@ -26,6 +26,9 @@ public class PropertiesManager {
 	@Value("${invalid.input}")
 	private String invalidInput;
 
+	@Value("${invalid.category.validityYears.msg}")
+	private String invalidValidityYears;
+	
 	@Value("${duplicate.code}")
 	private String duplicateCode;
 

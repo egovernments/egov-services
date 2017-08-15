@@ -78,6 +78,18 @@ paths:
             enum:
             - CATEGORY
             - SUBCATEGORY
+          - name: feeType
+            type: string
+            in  : query
+            description: set FeeType from the FeeType ENUM to get the subcategories with the feetype in the detail
+          - name: rateType
+            type: string
+            in  : query
+            description: set Rate Type from the RateType ENUM to get the subcategories with the ratetype in the detail
+          - name: uomId
+            type: integer
+            in  : query
+            description : set unique identified of the UOM to get the sub categories with the UOM in detail.
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
@@ -101,7 +113,7 @@ paths:
           
           Only for SubCategory request i.e request with parentId as not null and equal to one of the existing Category, Will consider CategoryDetails from the request to create CategoryDetails.
           
-          CategoryDetails with combination of categoryId, feeType, rateType cannot be duplicated.
+          CategoryDetails with combination of categoryId, feeType cannot be duplicated. 
           
           Category/SubCategory with combination of tenantId,Code duplication will not be allowed
         tags: 
@@ -671,12 +683,12 @@ definitions:
         name:
           type: string
           description: name of the Category/SubCategory
-          maxLength: 256
+          maxLength: 100
           minLength: 4
         code:
           type: string
           description: Unique code of the Category/SubCategory
-          maxLength: 50
+          maxLength: 20
           minLength: 4
         parentId:
          type: integer
@@ -685,6 +697,12 @@ definitions:
         active:
           type: boolean
           description: true if Category is active and false if Category is inactive 
+        validityYears:
+          type: integer
+          description: No of validity years for the trade license created with the given subcategory
+          default: 1
+          maximum: 10
+          minimum: 1
         businessNature:
           $ref: '#/definitions/BusinessNature' 
         details:
@@ -787,12 +805,12 @@ definitions:
         name:
           type: string
           description: name of the UOM
-          maxLength: 256
+          maxLength: 100
           minLength: 4
         code:
           type: string
           description: code of the UOM
-          maxLength: 50
+          maxLength: 20
           minLength: 4
         active:
           type: boolean
@@ -847,7 +865,7 @@ definitions:
         name:
           type: string
           description: name of the DocumentType
-          maxLength: 256
+          maxLength: 100
           minLength: 4
         mandatory:
           type: boolean
@@ -1062,11 +1080,11 @@ definitions:
           description: Unique Identifier of the Status
         name:
           type: string
-          maxLength: 256
+          maxLength: 100
           description: Unique Name of the Status
         code:
           type: string
-          maxLength: 50
+          maxLength: 20
           description: Unique code of the Status
         active:
           type: string

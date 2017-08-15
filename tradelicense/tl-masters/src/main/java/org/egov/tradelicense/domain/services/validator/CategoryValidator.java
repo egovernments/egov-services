@@ -1,5 +1,7 @@
 package org.egov.tradelicense.domain.services.validator;
 
+import java.math.BigDecimal;
+
 import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.Category;
 import org.egov.tl.commons.web.contract.CategoryDetail;
@@ -82,11 +84,15 @@ public class CategoryValidator {
 
 		if (isParentExists) {
 
+			if( category.getValidityYears() == null || 
+					category.getValidityYears() < 1 || 
+					category.getValidityYears() > 10){
+				throw new InvalidInputException(propertiesManager.getInvalidValidityYears(), requestInfo);
+			}
 			for (CategoryDetail categoryDetail : category.getDetails()) {
 
 				Long categoryDetailId = null;
 				Boolean isCategoryDetailDuplicateExists = null;
-
 				if (isNewCategory) {
 
 					isCategoryDetailDuplicateExists = false;

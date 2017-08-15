@@ -253,7 +253,7 @@ public class CategoryContollerTest {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
-					any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
+					any(String.class), any(String.class), any(Integer.class), any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/category/v1/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categorySearchRequest.json")))
@@ -303,7 +303,7 @@ public class CategoryContollerTest {
 
 			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
-					any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
+					any(String.class), any(String.class), any(Integer.class), any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/category/v1/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
 					.contentType(MediaType.APPLICATION_JSON)

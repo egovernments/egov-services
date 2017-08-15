@@ -119,11 +119,21 @@ public class Unit {
 
 	@JsonProperty("parentid")
 	private Long parentId = null;
-	
+
 	@JsonProperty("isAuthorised")
 	private Boolean isAuthorised = true;
 
+	@JsonProperty("constructionStartDate")
+	private String constructionStartDate = null;
+
+	@JsonProperty("landCost")
+	private Double landCost = null;
+
+	@JsonProperty("buildingCost")
+	private Double buildingCost = null;
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+
 
 }

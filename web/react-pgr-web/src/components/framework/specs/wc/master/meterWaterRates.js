@@ -84,7 +84,7 @@ var dat = {
 				]
 			},
       {
-				"label": "Slabs",
+				"label": "wc.crete.Slabs",
 				"name": "Slabs",
 				"multiple":true,
         "jsonPath":"MeterWaterRates[0].slab",
@@ -227,7 +227,7 @@ var dat = {
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/sourcetype/_search?&active=true|$..name|$..name",
+							"url": "/wcms/masters/sourcetype/_search?&active=true|$..id|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -270,7 +270,7 @@ var dat = {
 				]
 			},
       {
-				"label": "Slabs",
+				"label": "wc.crete.Slabs",
 				"name": "Slabs",
 				"multiple":true,
         "jsonPath":"MeterWaterRates[0].slab",
@@ -387,7 +387,7 @@ var dat = {
 				]
 			},
       {
-				"label": "Slabs",
+				"label": "wc.crete.Slabs",
 				"name": "Slabs",
 				"multiple":true,
         "jsonPath":"MeterWaterRates[0].slab",

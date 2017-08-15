@@ -55,7 +55,7 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 
 		if (complaintCodeList.isEmpty()) {
 			HashMap<String, String> error = new HashMap<>();
-			error.put("code", "DefinitionCode Vaalidator.1");
+			error.put("code", "DefinitionCode Vaalidator.3");
 			error.put("field", "DefinitionTypeConfiguration.ServiceCode");
 			error.put("message", "ServiceCode not exist in cmplnttyp table ");
 			throw new PGRMasterException(error);
@@ -65,7 +65,7 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 		if (!definitionList.isEmpty() && (definitionList.get(0).getCode().equalsIgnoreCase(serviceDefinition.getCode())
 				&& definitionList.get(0).getTenantId().equalsIgnoreCase(serviceDefinition.getTenantId()))) {
 			HashMap<String, String> error = new HashMap<>();
-			error.put("code", "DefinitionCode Vaalidator.2");
+			error.put("code", "DefinitionCode Vaalidator.4");
 			error.put("field", "DefinitionTypeConfiguration.code");
 			error.put("message", "code already exist in definition table ");
 			throw new PGRMasterException(error);
@@ -73,5 +73,28 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 		}
 
 	}
+
+	@Override
+	public void checkLength(ServiceDefinition serviceDefinition) {
+			
+			if(!serviceDefinition.isTenantIdLengthMatch())	
+			{
+			HashMap<String, String> error = new HashMap<>();
+			error.put("code", "DefinitionCode Vaalidator.5");
+			error.put("field", "DefinitionTypeConfiguration.tenant");
+			error.put("message", "tenant Id should be >0 and <=256");
+			throw new PGRMasterException(error);
+				
+			}
+			
+			if(!serviceDefinition.isCodeLengthMatch())	
+			{
+				HashMap<String, String> error = new HashMap<>();
+				error.put("code", "DefinitionCode Vaalidator.6");
+				error.put("field", "DefinitionTypeConfiguration.code");
+				error.put("message", "code should be >0 and <=20");
+				throw new PGRMasterException(error);
+				
+			}	}
 
 }

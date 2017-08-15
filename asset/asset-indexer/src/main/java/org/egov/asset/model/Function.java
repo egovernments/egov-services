@@ -39,6 +39,10 @@
  */
 package org.egov.asset.model;
 
+import java.util.Date;
+
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,10 +54,27 @@ import lombok.Setter;
 @Setter
 public class Function {
 
-	private Long id;
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private String code;
+    private String code;
+
+    private Integer level;
+    private Boolean active;
+    private Boolean isParent;
+
+    private Function parentId;
+
+    private Long createdBy;
+
+    private Date createdDate;
+
+    private Long lastModifiedBy;
+
+    private Date lastModifiedDate;
+
+    @NotNull
+    private String tenantId;
 
 }

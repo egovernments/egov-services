@@ -7,5 +7,6 @@ public interface ServiceTypeCreateValidator {
     boolean canValidate(ServiceType serviceType);
     void validateUniqueCombinations(ServiceType serviceType);
     void checkMandatoryField(ServiceType serviceType);
+    void lengthValidate(ServiceType serviceType);
 
 }

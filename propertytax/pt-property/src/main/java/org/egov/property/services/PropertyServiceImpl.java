@@ -1,5 +1,4 @@
 package org.egov.property.services;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -7,8 +6,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import org.egov.models.*;
+import org.egov.enums.StatusEnum;
+import org.egov.models.Address;
+import org.egov.models.AttributeNotFoundException;
+import org.egov.models.Demand;
+import org.egov.models.DemandDetail;
+import org.egov.models.DemandResponse;
+import org.egov.models.Document;
 import org.egov.models.Error;
 import org.egov.models.demand.*;
 import org.egov.models.demand.TaxHeadMaster;
@@ -82,7 +87,7 @@ public class PropertyServiceImpl implements PropertyService {
             String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
                     propertyRequest.getRequestInfo());
             property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
-
+            property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
             PropertyRequest updatedPropertyRequest = new PropertyRequest();
             updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
             List<Property> updatedPropertyList = new ArrayList<Property>();
@@ -104,6 +109,7 @@ public class PropertyServiceImpl implements PropertyService {
         for (Property property : propertyRequest.getProperties()) {
             propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
             propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
+            property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
             PropertyRequest updatedPropertyRequest = new PropertyRequest();
             updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
             List<Property> updatedPropertyList = new ArrayList<Property>();

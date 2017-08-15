@@ -143,4 +143,13 @@ public class PropertyDetail {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+	
+	@JsonProperty("factors")
+	private List<Factors> factors;
+
+	@JsonProperty("assessmentDates")
+	private AssessmentDate assessmentDates = null;
+
+	@JsonProperty("builderDetails")
+	private BuilderDetail builderDetails = null;
 }

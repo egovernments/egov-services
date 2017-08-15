@@ -31,7 +31,7 @@ public class PositionServiceTest {
         final String tenantId = "tenantId";
         when(sevaRequest.getTenantId()).thenReturn(tenantId);
         final long assigneeId = 2L;
-        when(sevaRequest.getPositionId()).thenReturn(assigneeId);
+        when(sevaRequest.getCurrentPositionId()).thenReturn(assigneeId);
         final Position position = new Position(designationId, departmentId);
         when(positionRepository.getDesignationIdForAssignee(tenantId, assigneeId)).thenReturn(position);
 

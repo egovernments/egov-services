@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class ServiceTypeService {
 
     public static final String CREATE = "CREATE";
+    public static final String UPDATE = "UPDATE";
     private ServiceTypeMessageQueueRepository serviceTypeMessageQueueRepository;
 
     private ServiceTypeRepository serviceTypeRepository;
@@ -52,13 +53,23 @@ public class ServiceTypeService {
 
     public void create(ServiceType serviceType, ServiceTypeRequest serviceTypeRequest){
     	createMandatoryFieldValidate(serviceType);
+    	createLengthValidate(serviceType);
     	createUniqueCombinationValidate(serviceType);
         serviceTypeMessageQueueRepository.save(serviceTypeRequest, CREATE);
     }
 
     public void persistServiceType(ServiceType serviceType){
         serviceTypeRepository.save(serviceType.toDto());
-        persistServiceTypeKeywords(serviceType);
+        persistServiceTypeKeywords(serviceType, CREATE);
+    }
+
+    public void update(ServiceType serviceType, ServiceTypeRequest serviceTypeRequest){
+        serviceTypeMessageQueueRepository.save(serviceTypeRequest, UPDATE);
+    }
+
+    public void persistForUpdate(ServiceType serviceType){
+        serviceTypeRepository.update(serviceType.toDto());
+        persistServiceTypeKeywords(serviceType, UPDATE);
     }
 
     public List<ServiceType> search(ServiceTypeSearchCriteria serviceTypeSearchCriteria){
@@ -66,15 +77,23 @@ public class ServiceTypeService {
         return serviceTypeRepository.search(serviceTypeSearchCriteria);
     }
 
-    private void persistServiceTypeKeywords(ServiceType serviceType){
+    private void persistServiceTypeKeywords(ServiceType serviceType, String action){
 
         List<ServiceTypeKeyword> serviceTypeKeywordList =  serviceType.getKeywords().stream()
                                 .map(keyword -> new ServiceTypeKeyword(serviceType.getServiceCode(),
                                             serviceType.getTenantId(), keyword))
                                 .collect(Collectors.toList());
 
-        serviceTypeKeywordList.forEach(serviceTypeKeyword ->
-                serviceTypeKeywordRepository.save(serviceTypeKeyword.toDto(serviceType)));
+        if(CREATE.equalsIgnoreCase(action)){
+            serviceTypeKeywordList.forEach(serviceTypeKeyword ->
+                    serviceTypeKeywordRepository.save(serviceTypeKeyword.toDto(serviceType)));
+        }
+
+        if(UPDATE.equalsIgnoreCase(action)){
+            serviceTypeKeywordList.forEach(serviceTypeKeyword ->
+                    serviceTypeKeywordRepository.update(serviceTypeKeyword.toDto(serviceType)));
+        }
+
     }
 
     private void validate(ServiceType serviceType){
@@ -93,6 +112,12 @@ public class ServiceTypeService {
     	createValidators.stream()
                 .filter(validator -> validator.canValidate(serviceType))
                 .forEach(v -> v.validateUniqueCombinations(serviceType));
+    }
+    
+    private void createLengthValidate(ServiceType serviceType){
+    	createValidators.stream()
+                .filter(validator -> validator.canValidate(serviceType))
+                .forEach(v -> v.lengthValidate(serviceType));
     }
     
     private void validateSearch(ServiceTypeSearchCriteria serviceTypeSearchCriteria){

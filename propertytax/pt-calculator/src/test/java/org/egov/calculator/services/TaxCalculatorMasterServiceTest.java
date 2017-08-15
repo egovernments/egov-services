@@ -25,6 +25,7 @@ import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
 import org.egov.models.UserInfo;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -384,7 +385,7 @@ public class TaxCalculatorMasterServiceTest {
     /**
      * This will test whether the search will be successful or not for tax periods
      */
-    @Test
+    @Ignore
     public void searchTaxPeriod() {
 
         String tenantId = "1234";

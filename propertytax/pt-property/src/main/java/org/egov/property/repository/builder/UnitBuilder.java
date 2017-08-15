@@ -7,20 +7,20 @@ public class UnitBuilder {
 			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
-			+ "floor,isAuthorised) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "floor,isAuthorised,constructionStartDate,landCost,buildingCost) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static String updateUnitQuery() {
 
 		StringBuffer unitSql = new StringBuffer();
 
 		unitSql.append("UPDATE egpt_unit").append(" SET unitNo = ?, unitType = ?, length = ?, width = ?,")
-				.append(" builtupArea = ?, assessableArea = ?, bpaBuiltupArea = ?,")
-				.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancytype = ?, occupierName = ?,")
-				.append(" firmName = ?, rentCollected = ?, structure = ?, age = ?,")
-				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
-				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
-				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
-				.append(" parentid = ?,isAuthorised = ? WHERE id = ?");
+		.append(" builtupArea = ?, assessableArea = ?, bpaBuiltupArea = ?,")
+		.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancytype = ?, occupierName = ?,")
+		.append(" firmName = ?, rentCollected = ?, structure = ?, age = ?,")
+		.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
+		.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
+		.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
+		.append(" parentid = ?,isAuthorised = ?, constructionStartDate =  ?,landCost = ?,buildingCost = ? WHERE id = ?");
 
 		return unitSql.toString();
 	}
@@ -32,20 +32,20 @@ public class UnitBuilder {
 			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
-			+ "floor,parentid,isAuthorised) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "floor,parentid,isAuthorised, constructionStartDate,landCost,buildingCost) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static String updateRoomQuery() {
 
 		StringBuffer unitSql = new StringBuffer();
 
 		unitSql.append("UPDATE egpt_unit").append(" SET unitNo = ?, unitType = ?, length = ?, width = ?,")
-				.append(" builtupArea = ?, assessableArea = ?, bpaBuiltupArea = ?,")
-				.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancytype = ?, occupierName = ?,")
-				.append(" firmName = ?, rentCollected = ?, structure = ?, age = ?,")
-				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
-				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
-				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
-				.append("  parentid = ?, isAuthorised = ? WHERE id = ?");
+		.append(" builtupArea = ?, assessableArea = ?, bpaBuiltupArea = ?,")
+		.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancytype = ?, occupierName = ?,")
+		.append(" firmName = ?, rentCollected = ?, structure = ?, age = ?,")
+		.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
+		.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
+		.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
+		.append("  parentid = ?, isAuthorised = ?, constructionStartDate =  ?,landCost = ?,buildingCost = ? WHERE id = ?");
 
 		return unitSql.toString();
 	}
@@ -58,13 +58,13 @@ public class UnitBuilder {
 			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
-			+ "floor,isAuthorised,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "floor,isAuthorised,constructionStartDate,landCost,buildingCost,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String INSERT_ROOMHISTORY_QUERY = "INSERT INTO egpt_unit_history ("
 			+ "unitNo, unitType, length,width,builtupArea,assessableArea,"
 			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
-			+ "floor,parentid,isAuthorised,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "floor,parentid,isAuthorised,constructionStartDate,landCost,buildingCost,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 }

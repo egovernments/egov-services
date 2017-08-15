@@ -172,6 +172,12 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.servicetypes.create.key}")
 	private String createServiceTypeTopicKey;
 
+	@Value("${kafka.topics.servicetypes.update.name}")
+	private String updateServiceTypeTopicName;
+
+	@Value("${kafka.topics.servicetypes.update.key}")
+	private String updateServiceTypeTopicKey;
+
 	@Value("${kafka.topics.servicedefinition.create.name}")
 	private String createServiceDefinitionName;
 
@@ -338,5 +344,13 @@ public class ApplicationProperties {
 
 	public String getCreateServiceDefinitionKey() {
 		return createServiceDefinitionKey;
+	}
+
+	public String getUpdateServiceTypeTopicName() {
+		return updateServiceTypeTopicName;
+	}
+
+	public String getUpdateServiceTypeTopicKey() {
+		return updateServiceTypeTopicKey;
 	}
 }

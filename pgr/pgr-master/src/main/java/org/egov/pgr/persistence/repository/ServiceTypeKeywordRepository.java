@@ -22,11 +22,15 @@ public class ServiceTypeKeywordRepository {
 
     public void save(ServiceTypeKeyword serviceTypeKeyword){
         namedParameterJdbcTemplate.update(serviceTypeKeywordQueryBuilder.getInsertQuery(),
-                getInsertMap(serviceTypeKeyword));
+                getMap(serviceTypeKeyword));
+    }
+
+    public void update(ServiceTypeKeyword serviceTypeKeyword){
+
     }
 
 
-    private HashMap getInsertMap(ServiceTypeKeyword serviceTypeKeyword){
+    private HashMap getMap(ServiceTypeKeyword serviceTypeKeyword){
         HashMap<String, Object> parametersMap = new HashMap<>();
 
         parametersMap.put("servicecode", serviceTypeKeyword.getServicecode());

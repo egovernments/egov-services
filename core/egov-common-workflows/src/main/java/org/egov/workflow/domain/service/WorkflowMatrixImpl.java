@@ -51,6 +51,7 @@ import org.springframework.stereotype.Service;
 public class WorkflowMatrixImpl implements Workflow {
 
 	private static Logger LOG = LoggerFactory.getLogger(WorkflowMatrixImpl.class);
+	public static final String SERVICE_CATEGORY_NAME = "serviceCategoryName";
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -78,8 +79,20 @@ public class WorkflowMatrixImpl implements Workflow {
 	public ProcessInstanceResponse start(ProcessInstanceRequest processInstanceRequest) {
 		LOG.info("ProcessInstance Request Payload" + processInstanceRequest.toString());
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
-		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
-				null, null, processInstance.getTenantId());
+		WorkFlowMatrix wfMatrix = null;
+
+		if (processInstance != null && processInstance.getValueForKey(SERVICE_CATEGORY_NAME) != null) {
+			wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null, null, null,
+					processInstance.getTenantId());
+			if (wfMatrix == null) {
+				wfMatrix = workflowService.getWfMatrix(processInstance.getValueForKey(SERVICE_CATEGORY_NAME), null,
+						null, null, null, null, processInstance.getTenantId());
+			}
+		} else {
+			wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null, null, null,
+					processInstance.getTenantId());
+		}
+
 		Position owner = processInstance.getAssignee();
 		if (processInstance.getAssignee() != null && processInstance.getAssignee().getId() != null)
 			owner = positionRepository.getById(Long.valueOf(processInstance.getAssignee().getId()),
@@ -114,8 +127,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (processInstance.getInitiatorPosition() != null)
 			state.setInitiatorPosition(processInstance.getInitiatorPosition());
 		else {
-			Position initiator = positionRepository
-					.getPrimaryPositionByEmployeeId(userId, requestInfo);
+			Position initiator = positionRepository.getPrimaryPositionByEmployeeId(userId, requestInfo);
 			if (initiator != null && initiator.getId() != null)
 				state.setInitiatorPosition(initiator.getId());
 		}
@@ -185,8 +197,19 @@ public class WorkflowMatrixImpl implements Workflow {
 		String dept = null;
 		if (task.getAttributes() != null && task.getAttributes().get("department") != null)
 			dept = task.getAttributes().get("department").getCode();
-		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null,
-				task.getStatus(), null, task.getTenantId());
+
+		WorkFlowMatrix wfMatrix = null;
+		if (task != null && task.getValueForKey(SERVICE_CATEGORY_NAME) != null) {
+			wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null, task.getStatus(), null,
+					task.getTenantId());
+			if (wfMatrix == null) {
+				wfMatrix = workflowService.getWfMatrix(task.getValueForKey(SERVICE_CATEGORY_NAME), dept, null, null,
+						task.getStatus(), null, task.getTenantId());
+			}
+		} else {
+			wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null, task.getStatus(), null,
+					task.getTenantId());
+		}
 
 		String nextState = wfMatrix.getNextState();
 		final State state = stateService.findOne(Long.valueOf(task.getId()));

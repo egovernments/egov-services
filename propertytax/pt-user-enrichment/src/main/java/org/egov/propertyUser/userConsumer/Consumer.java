@@ -6,6 +6,7 @@ import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.User;
 import org.egov.propertyUser.config.PropertiesManager;
+import org.egov.propertyUser.util.UpicNoGeneration;
 import org.egov.propertyUser.util.UserUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class Consumer {
 	
 	@Autowired
 	private UserUtil userUtil;
+	
+	@Autowired
+	private UpicNoGeneration upicNoGeneration;
 
 	/*
 	 * This method for creating rest template
@@ -69,18 +73,22 @@ public class Consumer {
 				user = userUtil.getUserId(user, propertyRequest.getRequestInfo());
 
 			}
-			if (topic
-					.equalsIgnoreCase(propertiesManager.getCreatePropertyValidator())) {
 
-				kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(),
-						propertyRequest);
+			if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+				if (topic.equalsIgnoreCase(propertiesManager.getCreatePropertyValidator())) {
 
-			} else if (topic
-					.equalsIgnoreCase(propertiesManager.getUpdatePropertyValidator())) {
+					kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(), propertyRequest);
 
-				kafkaTemplate.send(propertiesManager.getUpdatePropertyUserValidator(),
-						propertyRequest);
+				} else if (topic.equalsIgnoreCase(propertiesManager.getUpdatePropertyValidator())) {
 
+					kafkaTemplate.send(propertiesManager.getUpdatePropertyUserValidator(), propertyRequest);
+
+				}
+
+			} else {
+				String upicNo = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
+				propertyRequest.getProperties().get(0).setUpicNumber(upicNo);
+				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
 			}
 		}
 	}

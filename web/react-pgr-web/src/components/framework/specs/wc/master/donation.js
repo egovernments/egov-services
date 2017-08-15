@@ -3,7 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/donation/_create",
 		"tenantIdRequired": true,
-		"idJsonPath": "Donations[0].id",
+		"idJsonPath": "Donations[0].code",
 		"useTimestamp": true,
 		"objectName": "Donation",
 		"groups": [
@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "Donation.propertyType",
+						"jsonPath": "Donation[0].propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -25,7 +25,7 @@ var dat = {
 					},
           {
 								"name": "CategoryType",
-								"jsonPath": "Donation.category",
+								"jsonPath": "Donation[0].category",
 								"label": "wc.create.groups.connectionDetails.categoryType",
 								"pattern": "",
 								"type": "singleValueList",
@@ -37,7 +37,7 @@ var dat = {
 					},
           {
 						"name": "UsageType",
-						"jsonPath": "Donation.usageType",
+						"jsonPath": "Donation[0].usageType",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -49,7 +49,7 @@ var dat = {
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "Donation.minPipeSize",
+						"jsonPath": "Donation[0].minPipeSize",
 						"label": "wc.create.minPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
@@ -61,7 +61,7 @@ var dat = {
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "Donation.maxPipeSize",
+						"jsonPath": "Donation[0].maxPipeSize",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
@@ -73,7 +73,7 @@ var dat = {
 					},
           {
             "name": "donationAmount",
-            "jsonPath": "Donation.donationAmount",
+            "jsonPath": "Donation[0].donationAmount",
             "label": "wc.create.donationAmount",
             "pattern": "^\\d+(\\.\\d+)?$",
             "type": "number",
@@ -84,7 +84,7 @@ var dat = {
           },
 					{
             "name": "fromDate",
-            "jsonPath": "Donation.fromDate",
+            "jsonPath": "Donation[0].fromDate",
             "label": "wc.create.fromDate",
             "pattern": "",
             "type": "datePicker",
@@ -95,7 +95,7 @@ var dat = {
           },
 					{
             "name": "fromDate",
-            "jsonPath": "Donation.toDate",
+            "jsonPath": "Donation[0].toDate",
             "label": "wc.create.toDate",
             "pattern": "",
             "type": "datePicker",
@@ -106,7 +106,7 @@ var dat = {
           },
 					{
 						"name": "Active",
-						"jsonPath": "Donation.active",
+						"jsonPath": "Donation[0].active",
 						"label": "wc.create.active",
 						"pattern": "",
 						"type": "checkbox",
@@ -303,7 +303,7 @@ var dat = {
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "Donation",
+		"objectName": "Donations",
 		"groups": [
 			{
 				"label": "wc.update.Donation.title",
@@ -311,7 +311,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "Donation.propertyType",
+						"jsonPath": "Donations[0].propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -323,7 +323,7 @@ var dat = {
 					},
 					{
 								"name": "CategoryType",
-								"jsonPath": "Donation.category",
+								"jsonPath": "Donations[0].category",
 								"label": "wc.create.groups.connectionDetails.categoryType",
 								"pattern": "",
 								"type": "singleValueList",
@@ -335,7 +335,7 @@ var dat = {
 					},
 					{
 						"name": "UsageType",
-						"jsonPath": "Donation.usageType",
+						"jsonPath": "Donations[0].usageType",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -347,7 +347,7 @@ var dat = {
 					},
 					{
 						"name": "hscPipeSizeType",
-						"jsonPath": "Donation.minPipeSize",
+						"jsonPath": "Donations[0].minPipeSize",
 						"label": "wc.create.minPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
@@ -360,7 +360,7 @@ var dat = {
 					},
 					{
 						"name": "hscPipeSizeType",
-						"jsonPath": "Donation.maxPipeSize",
+						"jsonPath": "Donations[0].maxPipeSize",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
@@ -372,7 +372,7 @@ var dat = {
 					},
 					{
 						"name": "donationAmount",
-						"jsonPath": "Donation.donationAmount",
+						"jsonPath": "Donations[0].donationAmount",
 						"label": "wc.create.donationAmount",
 						"pattern": "^\\d+(\\.\\d+)?$",
 						"type": "number",
@@ -383,7 +383,7 @@ var dat = {
 					},
 					{
 						"name": "fromDate",
-						"jsonPath": "Donation.fromDate",
+						"jsonPath": "Donations[0].fromDate",
 						"label": "wc.create.fromDate",
 						"pattern": "",
 						"type": "datePicker",
@@ -394,7 +394,7 @@ var dat = {
 					},
 					{
 						"name": "fromDate",
-						"jsonPath": "Donation.toDate",
+						"jsonPath": "Donations[0].toDate",
 						"label": "wc.create.toDate",
 						"pattern": "",
 						"type": "datePicker",
@@ -405,7 +405,7 @@ var dat = {
 					},
 					{
 						"name": "Active",
-						"jsonPath": "Donation.active",
+						"jsonPath": "Donations[0].active",
 						"label": "wc.create.active",
 						"pattern": "",
 						"type": "checkbox",

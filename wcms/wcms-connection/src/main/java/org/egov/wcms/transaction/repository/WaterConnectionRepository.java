@@ -59,7 +59,6 @@ import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
-import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -86,8 +85,6 @@ public class WaterConnectionRepository {
     @Autowired
     private WaterConnectionQueryBuilder waterConnectionQueryBuilder;
     
-    @Autowired
-    private RestConnectionService restConnectionService;
 
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
@@ -247,6 +244,16 @@ public class WaterConnectionRepository {
 
         return waterConnectionRequest;
 
+    }
+    
+    public void updateConnectionAfterWorkFlowQuery(final String consumerCode)
+    {
+        String insertquery=waterConnectionQueryBuilder.updateConnectionAfterWorkFlowQuery();
+        Object[] obj = new Object[] { 
+                new Date(new java.util.Date().getTime()), NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED,
+               consumerCode };
+        jdbcTemplate.update(insertquery, obj);
+        
     }
 
     public WaterConnectionReq updateConnectionWorkflow(final WaterConnectionReq waterConnectionReq,Connection connectiondemand)

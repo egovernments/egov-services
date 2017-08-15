@@ -17,4 +17,10 @@ public class ServiceTypeKeywordQueryBuilder {
         return "INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate, createdby, lastmodifieddate, lastmodifiedby)"
                 + " VALUES (NEXTVAL('seq_servicetype_keyword'), :servicecode, :keyword, :tenantid, :createddate, :createdby, :lastmodifieddate, :lastmodifiedby)";
     }
+
+    public String getUpdateQuery(){
+        return "UPDATE servicetype_keyword SET servicecode = :servicecode, keyword = :keyword, tenantid = :tenantid, " +
+                "lastmodifieddate = :lastmodifieddate, lastmodifiedby = :lastmodifiedby WHERE servicecode = :servicecode" +
+                "tenantid = :tenantid AND keyword = :keyword";
+    }
 }

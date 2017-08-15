@@ -40,6 +40,10 @@
 
 package org.egov.asset.model;
 
+import java.util.Date;
+
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,7 +55,27 @@ import lombok.Setter;
 @Setter
 public class Fund {
 
-	private Long id;
-	private String name;
-	private String code;
+    private Long id;
+    private String name;
+    private String code;
+
+    private Character identifier;
+
+    private Long level;
+
+    private Fund parentId;
+
+    private Boolean isParent;
+    private Boolean active;
+
+    private Long createdBy;
+
+    private Date createdDate;
+
+    private Long lastModifiedBy;
+
+    private Date lastModifiedDate;
+
+    @NotNull
+    private String tenantId;
 }

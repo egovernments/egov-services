@@ -63,9 +63,9 @@ public class BillingServiceConsumer {
 				demandService.save(objectMapper.convertValue(consumerRecord, DemandRequest.class));
 			else if (applicationProperties.getUpdateDemandTopic().equals(topic))
 				demandService.update(objectMapper.convertValue(consumerRecord, DemandRequest.class));
-			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic))
+			/*else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic))
 				demandService.updateDemandFromBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
-			else if (topic.equals(applicationProperties.getCreateBillTopic()))
+			*/else if (topic.equals(applicationProperties.getCreateBillTopic()))
 				billRepository.saveBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
 			else if (applicationProperties.getCreateTaxHeadMasterTopicName().equals(topic))
 				taxheadMasterService.create(objectMapper.convertValue(consumerRecord, TaxHeadMasterRequest.class));
@@ -85,6 +85,9 @@ public class BillingServiceConsumer {
 				glCodeMasterService.update(objectMapper.convertValue(consumerRecord, GlCodeMasterRequest.class));
 			else if(applicationProperties.getUpdateMISTopicName().equals(topic))
 				demandService.updateMIS(objectMapper.convertValue(consumerRecord, DemandUpdateMisRequest.class));
+			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic))
+			    demandService.updateDemandFromReceipt(objectMapper.convertValue(consumerRecord, ReceiptRequest.class));
+			
 		} catch (Exception exception) {
 			log.debug("processMessage:" + exception);
 			throw exception;

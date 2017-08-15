@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNull;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -274,13 +276,25 @@ public class InstrumentJdbcRepositoryTest {
 		instrumentSearch.setBranchName("branchName");
 		instrumentSearch.setDrawer("drawer");
 		instrumentSearch.setFinancialStatus(FinancialStatusContract.builder().id("1").build());
+		instrumentSearch.setFinancialStatuses("1");
 		instrumentSearch.setRemittanceVoucherId("1");
 		instrumentSearch.setInstrumentType(InstrumentType.builder().name("name").build());
+		instrumentSearch.setInstrumentTypes("name");
 		instrumentSearch.setPayee("payee");
 		instrumentSearch.setSerialNo("serialNo");
 		instrumentSearch.setSurrenderReason(SurrenderReason.builder().id("1").build());
 		instrumentSearch.setTransactionNumber("transactionNumber");
 		instrumentSearch.setTransactionType(TransactionType.Credit);
+		try {
+			String startDateString = "07/27/2017";
+			DateFormat df = new SimpleDateFormat("MM/dd/yyyy"); 
+			Date startDate;
+			startDate = df.parse(startDateString);
+			instrumentSearch.setTransactionFromDate(startDate);
+			instrumentSearch.setTransactionToDate(startDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		instrumentSearch.setTenantId("default");
 		instrumentSearch.setPageSize(500);
 		instrumentSearch.setOffset(0);

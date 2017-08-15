@@ -123,14 +123,15 @@ public class WaterConnectionRepository {
                 statement.setDate(16, new Date(new java.util.Date().getTime()));
                 statement.setDate(17, new Date(new java.util.Date().getTime()));
                 statement.setString(18, waterConnectionRequest.getConnection().getPropertyIdentifier());
-                statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageTypeId());
-                statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyTypeId());
+                statement.setString(19, "1");
+                statement.setString(20, "1");
    
-                statement.setString(21, "AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
-                statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
+                statement.setString(21, "AddressTest"); // waterConnectionRequest.getConnection().getProperty().ge                statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageTypeId());
+                statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyTypeId());
+getDonationCharge());
 
                 statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
-                statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatmentId());
+                statement.setString(24, "1");
                 statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
                 if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0)
                     statement.setString(26, NewConnectionStatus.CREATED.name());
@@ -138,10 +139,10 @@ public class WaterConnectionRepository {
                     statement.setString(26, NewConnectionStatus.SANCTIONED.name());
                 else
                     statement.setString(26, NewConnectionStatus.VERIFIED.name());
-                if (!waterConnectionRequest.getConnection().getIsLegacy()) {
+                /*if (!waterConnectionRequest.getConnection().getIsLegacy()) {
                     statement.setLong(27, waterConnectionRequest.getConnection().getStateId() != null
                             ? waterConnectionRequest.getConnection().getStateId() : 1l);
-                }
+                }*/
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
                     statement.setString(27, waterConnectionRequest.getConnection().getLegacyConsumerNumber());

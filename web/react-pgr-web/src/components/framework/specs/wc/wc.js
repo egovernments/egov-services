@@ -15,7 +15,7 @@ var dat = {
         "multiple": false,
         "fields": [{
             "name": "AssessmentNumber",
-            "jsonPath": "connection.property.propertyIdentifier",
+            "jsonPath": "Connection.property.propertyIdentifier",
             "label": "wc.create.groups.applicantDetails.propertyIdentifier",
             "pattern": "",
             "type": "textSearch",

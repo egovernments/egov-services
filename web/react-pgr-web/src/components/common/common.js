@@ -73,6 +73,7 @@ var localationData = {
   "employee.createPosition.groups.fields.accumulative.value1" : "Yes",
   "employee.createPosition.groups.fields.accumulative.value2" : "No",
   "employee.createPosition.groups.fields.noOfPositions" : "No of Position",
+  "employee.createPosition.groups.fields.positionName":"Position Name",
 
   "wc.create.documenttype.title": "Create Document Type",
   "wc.create.applicationtype" : "Application Type",

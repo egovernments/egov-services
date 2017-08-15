@@ -44,17 +44,6 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
-					},
-          {
-						"name": "Name",
-						"jsonPath": "name",
-						"label": "employee.searchEmployee.groups.fields.name",
-						"pattern": "",
-						"type": "text",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
 					}
 				]
 			}

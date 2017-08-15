@@ -102,16 +102,16 @@ var dat = {
 		],
 		"result": {
 			"header": [{
-				"label": "employee.createPosition.groups.fields.noOfPositions"}, {
+				"label": "employee.createPosition.groups.fields.positionName"}, {
 					"label": "employee.createPosition.groups.fields.departmenttype",
 					"url": "/egov-common-masters/departments/_search?|$..id|$..name"
 				}, {
 					"label": "employee.createPosition.groups.fields.designationtype",
 					"url": "/hr-masters/designations/_search?|$..id|$..name"
 				}, {label: "employee.createPosition.groups.fields.outsourcepost"}],
-			"values": ["noOfPositions", "deptdesig.department", "deptdesig.designation.id","isPostOutsourced"],
+			"values": ["name", "deptdesig.department", "deptdesig.designation.id","isPostOutsourced"],
 			"resultPath": "Position",
-			"rowlickUrlUpdate": "/update/employee/createPosition/{id}",
+			"rowClickUrlUpdate": "/update/employee/createPosition/{id}",
 			"rowClickUrlView": "/view/employee/createPosition/{id}"
 			}
 	},
@@ -152,12 +152,12 @@ var dat = {
 					},
 					{
 						"name": "Position",
-						"jsonPath": "Position[0].noOfPositions",
-						"label": "employee.createPosition.groups.fields.noOfPositions",
+						"jsonPath": "Position[0].name",
+						"label": "employee.createPosition.groups.fields.positionName",
 						"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
-						"type": "number",
+						"type": "text",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -173,6 +173,17 @@ var dat = {
 						"patternErrMsg": "",
 						"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}]
 
+					},
+					{
+						"name": "Active",
+						"jsonPath": "Position[0].active",
+						"label": "wc.create.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 					}
 				]
 			}
@@ -198,7 +209,7 @@ var dat = {
 						"type": "singleValueList",
 						"url": "/egov-common-masters/departments/_search?|$..id|$..name",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -210,18 +221,18 @@ var dat = {
 						"type": "singleValueList",
 						"url": "/hr-masters/designations/_search?|$..id|$..name",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
 					{
 						"name": "Position",
-						"jsonPath": "Position[0].noOfPositions",
-						"label": "employee.createPosition.groups.fields.noOfPositions",
+						"jsonPath": "Position[0].name",
+						"label": "employee.createPosition.groups.fields.positionName",
 						"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
-						"type": "number",
+						"type": "text",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},

@@ -26,6 +26,7 @@ import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.egov.tradelicense.web.contract.LicenseFeeDetailContract;
 import org.egov.tradelicense.web.contract.SupportDocumentContract;
 import org.egov.tradelicense.web.contract.TradeLicenseContract;
+import org.egov.tradelicense.web.controller.TradeLicenseController;
 import org.egov.tradelicense.web.requests.TradeLicenseResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;

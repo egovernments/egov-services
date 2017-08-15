@@ -43,7 +43,7 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -52,9 +52,9 @@ public class TradeLicenseRepository {
 		String id = tradeLicenseJdbcRepository.getSequence(TradeLicenseEntity.SEQUENCE_NAME);
 		return Long.valueOf(id);
 	}
-	
+
 	public void validateUniqueLicenseNumber(TradeLicense tradeLicense) {
-		
+
 		String sql = getUniqueTenantLicenseQuery(tradeLicense);
 		Integer count = null;
 		try {
@@ -67,7 +67,7 @@ public class TradeLicenseRepository {
 			throw new InvalidInputException("tradeLicense number already exists");
 		}
 	}
-	
+
 	private String getUniqueTenantLicenseQuery(TradeLicense tradeLicense) {
 
 		String tenantId = tradeLicense.getTenantId();
@@ -120,28 +120,27 @@ public class TradeLicenseRepository {
 
 		return entity.toDomain();
 	}
-	
+
 	@Transactional
-	public List<TradeLicense> search(String tenantId, Integer pageSize,
-			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
-			String licenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
-			String propertyAssesmentNo, Integer revenueWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory,String legacy, Integer status) {
-		
+	public List<TradeLicense> search(String tenantId, Integer pageSize, Integer pageNumber, String sort, String active,
+			String tradeLicenseId, String applicationNumber, String licenseNumber, String mobileNumber,
+			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer revenueWard, Integer locality,
+			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
+			String legacy, Integer status) {
+
 		List<TradeLicense> tradeLicenselst = new ArrayList<TradeLicense>();
-		List<TradeLicenseEntity> license = tradeLicenseJdbcRepository.search(tenantId, pageSize,
-				pageNumber, sort, active, tradeLicenseId, applicationNumber,
-				licenseNumber, mobileNumber, aadhaarNumber, emailId,
-				propertyAssesmentNo,  revenueWard,  locality, ownerName,  tradeTitle,
-				tradeType, tradeCategory,  tradeSubCategory, legacy, status);
-		
-		for(TradeLicenseEntity tradeLicenseEntity : license){
+		List<TradeLicenseEntity> license = tradeLicenseJdbcRepository.search(tenantId, pageSize, pageNumber, sort,
+				active, tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId,
+				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+				tradeSubCategory, legacy, status);
+
+		for (TradeLicenseEntity tradeLicenseEntity : license) {
 			TradeLicense tradeLicense = tradeLicenseEntity.toDomain();
 			tradeLicenselst.add(tradeLicense);
 		}
-		
+
 		return tradeLicenselst;
-		 
+
 	}
 
 }

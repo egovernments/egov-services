@@ -34,3 +34,5 @@ tenant_v1.0.1: 'https://raw.githubusercontent.com/egovernments/egov-services/mas
 user_otp: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/user-otp/contracts/v1-0-0.yml'
 wcms_masters: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/wcms/contracts/masters/v1-0-0.yml'
 wcms_new_connection: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/wcms/contracts/new-connection/v1-0-0.yml'
+tradelicense_masters: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml'
+tradelicense_services: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/services/V1.0.0.yaml'

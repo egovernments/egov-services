@@ -452,7 +452,6 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
                 .build();
             errorFields.add(errorField);
         }
-        return;
     }
 
     private void addKeywordsValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {

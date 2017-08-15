@@ -63,8 +63,8 @@ var dat = {
 			"header": [{label: "employee.create.groups.fields.code"},{label: "employee.create.group.fields.empName"},{label: "employee.create.groups.fields.department"}, {label: "employee.create.groups.fields.designation"}, {label: "employee.create.group.fields.position"}],
 			"values": ["code","name", "assignments[0].department", "assignments[0].designation","assignments[0].position"],
 			"resultPath": "Employee",
-			"rowlickUrlUpdate": "/update/employee/employee/{id}",
-			"rowClickUrlView": "/view/employee/employee/{id}"
+			"rowlickUrlUpdate": "/employee/update/{id}",
+			"rowClickUrlView": "/employee/view/{id}"
 			}
 	}
 }

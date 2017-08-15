@@ -179,12 +179,12 @@ public class SevaRequest {
     }
     
     public void update(ProcessInstanceResponse processInstanceResponse) {
-        setAssignee(processInstanceResponse.getProcessInstance().getAssignee().getId().toString());
+        setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId().toString());
         setStateId(processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID));
     }
     
     public void update(TaskResponse taskResponse) {
-        setAssignee(taskResponse.getTask().getAssignee().getId().toString());
+        setAssignee(taskResponse.getTask().getOwner().getId().toString());
         setStateId(taskResponse.getTask().getValueForKey(STATE_ID));
     }
 

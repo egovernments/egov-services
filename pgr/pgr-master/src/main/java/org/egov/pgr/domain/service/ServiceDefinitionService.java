@@ -7,6 +7,7 @@ import org.egov.pgr.domain.model.ServiceDefinition;
 import org.egov.pgr.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgr.domain.service.validator.Attributedefinition.validator.AttributeDefinitionCreateValidator;
 import org.egov.pgr.domain.service.validator.serviceDefinitionCreateValidator.ServiceDefinitionCreateValidator;
+import org.egov.pgr.domain.service.validator.valueDeficnitionValidator.ValueDefinitionCreateValidator;
 import org.egov.pgr.persistence.dto.AttributeDefinition;
 import org.egov.pgr.persistence.dto.ValueDefinition;
 import org.egov.pgr.persistence.repository.AttributeDefinitionRepository;
@@ -21,6 +22,7 @@ public class ServiceDefinitionService {
 
 	private List<ServiceDefinitionCreateValidator> createValidators;
 	private List<AttributeDefinitionCreateValidator> attributeValidate;
+	private List<ValueDefinitionCreateValidator> valueDefinitionValidate;
 
 	private static final String CREATE = "CREATE";
 	private ServiceDefinitionMessageQueueRepository serviceDefinitionMessageQueueRepository;
@@ -33,22 +35,29 @@ public class ServiceDefinitionService {
 			AttributeDefinitionRepository attributeDefinitionRepository,
 			ValueDefinitionRepository valueDefinitionRepository,
 			List<ServiceDefinitionCreateValidator> createValidators,
-			List<AttributeDefinitionCreateValidator> attributeValidate) {
+			List<AttributeDefinitionCreateValidator> attributeValidate,
+			List<ValueDefinitionCreateValidator> valueDefinitionValidate) {
 
 		this.serviceDefinitionMessageQueueRepository = serviceDefinitionMessageQueueRepository;
 		this.serviceDefinitionRepository = serviceDefinitionRepository;
 		this.attributeDefinitionRepository = attributeDefinitionRepository;
 		this.valueDefinitionRepository = valueDefinitionRepository;
 		this.createValidators = createValidators;
-		this.attributeValidate=attributeValidate;
+		this.attributeValidate = attributeValidate;
+		this.valueDefinitionValidate = valueDefinitionValidate; 
 	}
-
+	
 	public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request) {
 		createMandatoryFieldValidate(serviceDefinition);
 		attributeMAndatoryFieldValidation(serviceDefinition);
+		valueDefinMandatoryFieldValidation(serviceDefinition);
+		
 		ServiceDefinitionFieldLengthValidate( serviceDefinition);
+		valueDefLengthValidation(serviceDefinition);
 		attributeLengthValidation(serviceDefinition);
+		
 		createUniqueConstraintValidation(serviceDefinition);
+		
 		serviceDefinitionMessageQueueRepository.save(request, CREATE);
 	}
 
@@ -108,6 +117,7 @@ public class ServiceDefinitionService {
 		
 	}
 	
+	
 	private void attributeMAndatoryFieldValidation(ServiceDefinition serviceDefinition) {
 		serviceDefinition.getAttributes().stream().forEach(attributeDefinition -> 
 		{
@@ -117,9 +127,33 @@ public class ServiceDefinitionService {
 		});
 		
 	}
-
 	
-
+	private void valueDefLengthValidation(ServiceDefinition serviceDefinition) {
+		serviceDefinition.getAttributes().stream().forEach(attributeDefinition -> 
+		{
+			attributeDefinition.getValueDefinitions().stream().forEach(valueDefinition ->
+			{
+			valueDefinitionValidate.stream().filter(validator -> 
+			validator.canValidate(valueDefinition))
+			.forEach(v -> v.validateLength(valueDefinition));
+		});
+		});
+		
+	}
+	
+	private void valueDefinMandatoryFieldValidation(ServiceDefinition serviceDefinition) {
+		serviceDefinition.getAttributes().stream().forEach(attributeDefinition -> 
+		{
+			attributeDefinition.getValueDefinitions().stream().forEach(valueDefinition ->
+			{
+			valueDefinitionValidate.stream().filter(validator -> 
+			validator.canValidate(valueDefinition))
+			.forEach(v -> v.checkMandatoryField(valueDefinition));
+		});
+		});
+		
+	}
+	
 	private void setAttributes(List<ServiceDefinition> serviceDefinitions) {
 		serviceDefinitions.forEach(serviceDefinition -> serviceDefinition.setAttributes(attributeDefinitionRepository
 				.searchByCodeAndTenant(serviceDefinition.getCode(), serviceDefinition.getTenantId())));

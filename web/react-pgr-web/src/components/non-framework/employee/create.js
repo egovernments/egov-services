@@ -60,7 +60,7 @@ const getNameById = function(object, id) {
     if(!id) return '';
     for(var i=0; i<object.length; i++) {
         if(id == object[i].id)
-            return object[i].name;
+            return object[i].name || object[i].code;
     }
 }
 
@@ -1549,6 +1549,9 @@ class Employee extends Component {
                 res.Employee.assignments[i].fromServer = true;
               }
               self.props.setForm(res.Employee, true);
+              if(self.state.screenType == "view" && res.Employee.bank) {
+                self.loadBranches(res.Employee.bank);
+              }
             }, function(err) {
 
             })
@@ -1714,7 +1717,7 @@ class Employee extends Component {
         })
 	}
 
-	handleDateChange = (type, date) => {
+	handleDateChange = (type, date, isRequired) => {
     let self = this;
     let _date = new Date(date);
     let name;
@@ -1846,11 +1849,11 @@ class Employee extends Component {
     }
 
     if(name.indexOf(".") == -1){
-      self.props.handleChange({target: {value: ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth()+1)).slice(-2) + '/' + _date.getFullYear()}}, name, true, '');
+      self.props.handleChange({target: {value: ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth()+1)).slice(-2) + '/' + _date.getFullYear()}}, name, (isRequired || false), '');
     }
 	  else {
       var _split = name.split(".");
-      self.props.handleChangeNextLevel({target: {value: ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth()+1)).slice(-2) + '/' + _date.getFullYear()}}, _split[0], _split[1], true, '');
+      self.props.handleChangeNextLevel({target: {value: ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth()+1)).slice(-2) + '/' + _date.getFullYear()}}, _split[0], _split[1], (isRequired || false), '');
     }
   }
 
@@ -1897,7 +1900,7 @@ class Employee extends Component {
                         {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.employeeType")}</span></label><br/>
-                                <label>{Employee.employeeType}</label></span>
+                                <label>{getNameById(self.state.employeetypes, Employee.employeeType)}</label></span>
                             )
                          :
 
@@ -1916,7 +1919,7 @@ class Employee extends Component {
                         {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.employeeStatus")}</span></label><br/>
-                                <label>{Employee.employeeStatus}</label></span>
+                                <label>{getNameById(self.state.statuses, Employee.employeeStatus)}</label></span>
                             )
                          :
 
@@ -1937,12 +1940,12 @@ class Employee extends Component {
                         {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>Employee Group</span></label><br/>
-                                <label>{Employee.group}</label></span>
+                                <label>{getNameById(self.state.groups, Employee.group)}</label></span>
                             )
                          :
 
                       	<SelectField floatingLabelText={"Employee Group"} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
-                      		handleChange({target:{value:value}}, "group", true, '')
+                      		handleChange({target:{value:value}}, "group", false, '')
                       	}}>
                             {
                             	self.state.groups && self.state.groups.map(function(v, i){
@@ -1967,7 +1970,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }} floatingLabelText="Date Of Birth *" hintText="Date Of Birth *" value={Employee.user ? self.getDate(Employee.user.dob) : ""} onChange={(eve, date) => {
-                      		handleDateChange('dob', date)
+                      		handleDateChange('dob', date, true)
                       	}}/>
                       }
                       </Col>
@@ -1978,8 +1981,8 @@ class Employee extends Component {
                                 <label>{Employee.user ? Employee.user.gender : ""}</label></span>
                             )
                          :
-                            <SelectField floatingLabelText={translate("employee.Employee.fields.User.gender") +"*"} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
-                      		handleChangeNextLevel({target:{value:value}}, "user", "gender", true, '')
+                            <SelectField floatingLabelText={translate("employee.Employee.fields.User.gender")} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
+                      		handleChangeNextLevel({target:{value:value}}, "user", "gender", false, '')
                       	}}>
                             {
                             	self.state.genders && self.state.genders.map(function(v, i){
@@ -2026,7 +2029,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>Is User Active?</span></label><br/>
-                                <label>{Employee.user ? Employee.user.active : ''}</label></span>
+                                <label>{Employee.user && [true, "true"].indexOf(Employee.user.active) > -1 ? "Yes" : "No" }</label></span>
                             )
                          :
 
@@ -2095,7 +2098,7 @@ class Employee extends Component {
                          :
 
                       	<TextField floatingLabelText={translate("employee.Employee.fields.User.birth")} errorText={fieldErrors["placeOfBirth"]} value={Employee.placeOfBirth} onChange={(e) => {
-                      		handleChange(e, 'placeOfBirth', true, '')
+                      		handleChange(e, 'placeOfBirth', false, '')
                       	}}/>
                       }
                       </Col>
@@ -2315,7 +2318,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.bank")}</span></label><br/>
-                                <label>{Employee.bank}</label></span>
+                                <label>{getNameById(self.state.banks, Employee.bank)}</label></span>
                             )
                          :
 
@@ -2335,7 +2338,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.bankBranch")}</span></label><br/>
-                                <label>{Employee.bankBranch}</label></span>
+                                <label>{getNameById(self.state.bankBranches, Employee.bankBranch)}</label></span>
                             )
                          :
 
@@ -2559,7 +2562,7 @@ class Employee extends Component {
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
                           }} floatingLabelText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} hintText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} errorText={fieldErrors["dateOfAppointment"]} value={self.getDate(Employee.dateOfAppointment)} onChange={(eve, date) => {
-                      		handleDateChange('appointmentDate', date.getTime())
+                      		handleDateChange('appointmentDate', date.getTime(), true)
                       	}}/>
                       }
                       </Col>
@@ -3148,12 +3151,13 @@ class Employee extends Component {
         } else {
           Api.commonApiPost("/hr-employee/employees/" + ((self.state.screenType == "update") ? "_update" : "_create"), {}, {Employee: employee}).then(function(res) {
             self.props.setLoadingStatus('hide');
-            self.props.toggleSnackbarAndSetText(true, "Employee created successfully.");
+            self.props.toggleSnackbarAndSetText(true, (self.state.screenType == "update" ? "Employee updated successfully." : "Employee created successfully."));
             setTimeout(function() {
                 self.props.setRoute("/search/employee/searchEmployee/view");
             }, 1500);
           }, function(err) {
             self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err.message);
           })
         }
       })
@@ -3234,7 +3238,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 
     setForm: (data, isUpdate) => {
-        var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.gender', 'user.mobileNumber', 'user.active', 'user.dob'];
+        var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob'];
         dispatch({
             type: "SET_FORM",
             data,
@@ -3242,7 +3246,7 @@ const mapDispatchToProps = dispatch => ({
             fieldErrors: {},
             validationData: {
                 required: {
-                    current: [],
+                    current: isUpdate ? requiredList : ['user.active'],
                     required: requiredList
                 },
                 pattern: {

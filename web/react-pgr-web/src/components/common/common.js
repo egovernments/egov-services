@@ -637,7 +637,19 @@ var localationData = {
   "reports.collection.collectedby":"Collected By",
   "reports.collection.paymentmode":"Payment Mode",
   "reports.collection.revenuehead":"Revenue Head",
-  "reports.collection.department":"Department"
+  "reports.collection.department":"Department",
+  "collection.create.consumerCode":"Consumer Code",
+  "collection.search.period":"Period",
+  "collection.search.arrears":"Arrears",
+  "collection.search.current":"Current",
+  "collection.search.rebate":"Rebate",
+  "collection.search.interest":"Interest",
+  "collection.create.advance":"Advance",
+  "collection.create.arrearLatePayment":"Area of LatePayment",
+  "collection.create.currentLatePayment":"Current Late Payment",
+  "collection.create.checkLatePayment":"Cheque bounce Penalty	Rebate",
+  "collection.create.total":"Total"
+
 
 }
 

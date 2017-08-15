@@ -14,6 +14,10 @@ import UiButton from '../../../../framework/components/UiButton';
 import UiDynamicTable from '../../../../framework/components/UiDynamicTable';
 import {fileUpload} from '../../../../framework/utility/utility';
 import UiTable from '../../../../framework/components/UiTable';
+import IconButton from 'material-ui/IconButton';
+import jsPDF from 'jspdf';
+import html2canvas from "html2canvas";
+
 
 var specifications={};
 
@@ -139,6 +143,7 @@ class Report extends Component {
 
   componentDidMount() {
       this.initData();
+
   }
   componentWillReceiveProps(nextProps)
   {
@@ -204,20 +209,111 @@ class Report extends Component {
     this.props.setRoute(_url);
   }
 
+  getPurposeTotal=(purpose="",item=[])=>{
+    let sum=0;
+    _.forEach(_.filter(item, { 'purpose': purpose}),(value,key)=>{
+      sum+=value.creditAmount;
+    })
+    return sum;
+  }
+
+  getTotal=(item=[])=>{
+    let sum=0;
+    _.forEach(item,(value,key)=>{
+      sum+=value.creditAmount;
+    })
+    return sum;
+  }
+
+  getGrandTotal=(purpose="",item=[])=>{
+
+    let sum=0;
+    if (purpose) {
+      _.forEach(item,(value,key)=>{
+        _.forEach(_.filter(value.billAccountDetails, { 'purpose': purpose}),(value1,key1)=>{
+          sum+=value1.creditAmount;
+        })
+      })
+    }
+    else {
+      _.forEach(item,(value,key)=>{
+        _.forEach(value.billAccountDetails,(value1,key1)=>{
+          sum+=value1.creditAmount;
+        })
+      })
+    }
+
+    return sum;
+  }
+
+  int_to_words=(int)=> {
+  if (int === 0) return 'zero';
+
+  var ONES  = ['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+  var TENS  = ['','','twenty','thirty','fourty','fifty','sixty','seventy','eighty','ninety'];
+  var SCALE = ['','thousand','million','billion','trillion','quadrillion','quintillion','sextillion','septillion','octillion','nonillion'];
+
+  // Return string of first three digits, padded with zeros if needed
+  function get_first(str) {
+    return ('000' + str).substr(-3);
+  }
+
+  // Return string of digits with first three digits chopped off
+  function get_rest(str) {
+    return str.substr(0, str.length - 3);
+  }
+
+  // Return string of triplet convereted to words
+  function triplet_to_words(_3rd, _2nd, _1st) {
+    return (_3rd == '0' ? '' : ONES[_3rd] + ' hundred ') + (_1st == '0' ? TENS[_2nd] : TENS[_2nd] && TENS[_2nd] + '-' || '') + (ONES[_2nd + _1st] || ONES[_1st]);
+  }
+
+  // Add to words, triplet words with scale word
+  function add_to_words(words, triplet_words, scale_word) {
+    return triplet_words ? triplet_words + (scale_word && ' ' + scale_word || '') + ' ' + words : words;
+  }
+
+  function iter(words, i, first, rest) {
+    if (first == '000' && rest.length === 0) return words;
+    return iter(add_to_words(words, triplet_to_words(first[0], first[1], first[2]), SCALE[i]), ++i, get_first(rest), get_rest(rest));
+  }
+
+  return iter('', 0, get_first(String(int)), get_rest(String(int)));
+}
+
+  print=()=>{
+    window.print();
+  }
+
+  generatePdf=()=>{
+    const input = document.getElementById('receipt');
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/jpeg');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'JPEG', 0, 0, 210,130);
+        pdf.save("receipt.pdf");
+      });
+  }
+
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
-    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
+    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,getPurposeTotal,getTotal,getGrandTotal,int_to_words,print,generatePdf} = this;
     let {showResult, resultList} = this.state;
     // console.log(formData);
     return (
-      <div className="SearchResult">
+      <div className="SearchResult" >
 
 
       {
-        formData.hasOwnProperty("Receipt") &&   <Card className="uiCard">
-              <CardHeader title={<strong> {translate("Receipt")} </strong>}/>
-              <CardText>
+        formData.hasOwnProperty("Receipt") && <div>  <Card className="uiCard" id="receipt">
+              <CardHeader title={""}/>
+              <CardText >
               <Grid>
+                    <Row><Col style={{textAlign:"center"}} xs={12} md={12}><h3><strong> {translate("Receipt")} </strong></h3></Col> </Row>
+                    <br/>
+                    <br/>
+
                     <Row className="show-grid">
                       <Col xs={12} md={3}><strong>Payee Name - </strong>{getVal("Receipt[0].Bill[0].payeeName")} </Col>
                       <Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument.transactionDate")} </Col>
@@ -227,21 +323,72 @@ class Report extends Component {
                     </Row>
                     <br/>
 
-                    <Row>
-                    {showResult && <Table bordered responsive className="table-striped">
+
+                    <Row >
+                    <Col className="text-center" xs={12} md={12}>
+                    {showResult && <Table bordered condensed responsive className="table-striped">
                     <thead>
                       <tr>
-                        {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
+                        <th>{translate("collection.create.serviceType")}</th>
+                        <th>{translate("collection.create.receiptNumber")}</th>
+                        <th>{translate("collection.create.consumerCode")}</th>
+                        <th>{translate("collection.search.period")}</th>
+                        {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && <th>{translate("collection.search.arrears")}</th>}
+                        {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.current")}</th>}
+                        {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.interest")}</th>}
+                        {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.rebate")}</th>}
+                        {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.create.advance")}</th>}
+                        {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.create.arrearLatePayment")}</th>}
+                        {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.create.currentLatePayment")}</th>}
+                        {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.create.checkLatePayment")}</th>}
+                        <th>{translate("collection.create.total")}</th>
+
+
+
+                        {/*resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
                           return (
                             <th  key={i}>{translate(item.label)}</th>
                           )
-                        })}
+                        })*/}
 
                       </tr>
                     </thead>
                     <tbody>
+                          {formData.Receipt[0].Bill[0].billDetails.map((item,index)=>{
+                              return (
+                                <tr key={index}>
+                                    <td>{item.businessService} </td>
+                                    <td>{item.receiptNumber} </td>
+                                    <td>{item.consumerCode} </td>
+                                    <td>{item.period} </td>
+                                    {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("ARREAR_AMOUNT",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("CURRENT_AMOUNT",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("OTHERS",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("REBATE",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("ADVANCE_AMOUNT",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("ARREAR_LATEPAYMENT_CHARGES",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("CURRENT_LATEPAYMENT_CHARGES",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("CHEQUE_BOUNCE_PENALTY",item.billAccountDetails)}</td>}
+                                    <td>{getTotal(item.billAccountDetails)}</td>
 
-                          {resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
+
+                                </tr>
+                              )
+                          })}
+                          <tr>
+                              <td colSpan={5}></td>
+                              <td><strong>{getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)}</strong></td>
+                          </tr>
+                          <tr>
+                              <td colSpan={3}>Amount in words</td>
+                              <td colSpan={3}><strong>{int_to_words(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)).toUpperCase()+" ONLY"}</strong></td>
+                          </tr>
+
+                          {formData.Receipt[0].instrument.instrumentType.name!="Cash" && <tr>
+                              <td colSpan={6}>Cheque/DD No <strong>{formData.Receipt[0].instrument.transactionNumber}</strong> drawn on <strong>{formData.Receipt[0].instrument.bank.name}</strong>, <strong>{formData.Receipt[0].instrument.branchName}</strong> Dated <strong>{formData.Receipt[0].instrument.transactionDate}</strong><br/>
+                                Cheque/DD payments are subject to realisation</td>
+                          </tr>}
+                          {/*resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
                             return (
                               <tr key={i} onClick={() => {rowClickHandler(i)}}>
                                 {
@@ -253,18 +400,29 @@ class Report extends Component {
                               </tr>
                               )
 
-                          })}
+                          })*/}
 
 
                     </tbody>
                   </Table>}
+                  </Col>
                     </Row>
+
 
 
                     </Grid>
 
+
+
+
                </CardText>
           </Card>
+          <Grid>
+            <Row>
+                <Col className="text-center" xs={12} md={12} ><IconButton onClick={e=>print()}><i className="material-icons">print</i></IconButton><IconButton onClick={e=>generatePdf()}><i className="material-icons">receipt</i></IconButton></Col>
+            </Row>
+          </Grid>
+          </div>
       }
 
 

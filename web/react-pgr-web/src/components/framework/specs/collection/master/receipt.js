@@ -173,7 +173,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "collection.create.receiptNumber"},{label: "collection.search.receiptDate"}, {label: "collection.create.serviceType"}, {label: "collection.search.billNumber"},{label: "collection.search.billDescription"},{label: "collection.search.paidBy"},{label: "collection.search.amount"},{label: "collection.create.modeOfPayment"},{label:"collection.create.status"}],
-			"values": ["Bill[0].billDetails[0].receiptNumber","Bill[0].billDetails[0].receiptDate", "Bill[0].billDetails[0].businessService", "Bill[0].billDetails[0].billNumber","Bill[0].billDetails[0].billDescription","Bill[0].paidBy","Bill[0].billDetails[0].amountPaid","Bill[0].billDetails[0].collectionType","Bill[0].billDetails[0].status"],
+			"values": ["Bill[0].billDetails[0].receiptNumber","Bill[0].billDetails[0].receiptDate", "Bill[0].billDetails[0].businessService", "Bill[0].billDetails[0].billNumber","Bill[0].billDetails[0].billDescription","Bill[0].paidBy","Bill[0].billDetails[0].amountPaid","instrument.instrumentType.name","Bill[0].billDetails[0].status"],
 			"resultPath": "Receipt",
 			"rowClickUrlUpdate": "/update/collection/categoryType/{id}",
 			"rowClickUrlView": "/non-framework/collection/receipt/view/{id}"
@@ -228,8 +228,8 @@ var dat = {
 		// 	}
 		// ],
 		"result": {
-			"header": [{label: "collection.create.serviceType"},{label: "collection.create.receiptNumber"},{label: "Consumer Code"},  {label: "collection.search.billNumber"},{label: "collection.search.billDescription"},{label: "collection.search.paidBy"},{label: "collection.search.amount"},{label: "collection.create.modeOfPayment"},{label:"collection.create.status"}],
-			"values": ["businessService","receiptNumber","consumerCode",  "billNumber","billDescription","status","amountPaid","collectionType","status"],
+			"header": [{label: "collection.create.serviceType"},{label: "collection.search.receiptDate"}, {label: "collection.create.consumerCode"}, {label: "collection.search.period"},{label: "collection.search.arrears"},{label: "collection.search.current"},{label: "collection.search.interest"},{label: "collection.create.rebate"},{label:"collection.create.advance"},{label:"collection.create.arrearLatePayment"},{label:"collection.create.arrearLatePayment"},{label:"collection.create.currentLatePayment"},{label:"collection.create.checkLatePayment"},{label:"collection.create.total"}],
+			"values": ["businessService","receiptDate","consumerCode","period","billDescription","status","amountPaid","collectionType","status"],
 			"resultPath": "Receipt[0].Bill[0].billDetails",
 			"rowClickUrlUpdate": "/update/collection/categoryType/{id}",
 			"rowClickUrlView": "/view/collection/receipt/{id}"

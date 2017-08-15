@@ -6,6 +6,7 @@ import org.egov.tl.commons.web.contract.DocumentType;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class DocumentTypeResponse {
 
 	private ResponseInfo responseInfo;

@@ -303,6 +303,12 @@ public class WcmsConnectionConstants {
     public static final String LEGACY_EXECUTIONDATE_INVALID_CODE = "wcms.0047";
     public static final String LEGACY_EXECUTIONDATE_INVALID_FIELD_NAME = "executionDate";
     public static final String LEGACY_EXECUTIONDATE_INVALID_ERROR_MESSAGE = "Please provide executionDate";
+    
+    
+    public static final String SUBUSAGETYPE_INVALID_CODE = "wcms.0050";
+    public static final String SUBUSAGETYPE_INVALID_FIELD_NAME = "SubusageType";
+    public static final String SUBUSAGETYPE_INVALID_ERROR_MESSAGE = "Sub Usage Type don't exist ";
+  
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

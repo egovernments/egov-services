@@ -32,7 +32,7 @@ public class ValueDefinitionCreateValidator implements VAlueDefinitionValidator 
 			HashMap<String, String> error = new HashMap<>();
 
 			error.put("code", "valueDefinition Vaalidator.2");
-			error.put("field", "valueDefinition.NAme");
+			error.put("field", "valueDefinition.Name");
 			error.put("message", "Name mandatory ");
 
 			throw new PGRMasterException(error);

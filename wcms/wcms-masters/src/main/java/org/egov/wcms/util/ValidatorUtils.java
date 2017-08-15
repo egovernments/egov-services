@@ -616,7 +616,7 @@ public class ValidatorUtils {
                     .message(WcmsConstants.AMOUNT_MANDATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.AMOUNT_MANDATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (meterCost.getPipeSizeId().toString() == null || meterCost.getPipeSizeId().toString().isEmpty()) {
+        } else if (meterCost.getPipeSizeInMM().toString() == null || meterCost.getPipeSizeInMM().toString().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_MANDATORY_CODE)
                     .message(WcmsConstants.PIPESIZE_MANDATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.PIPESIZE_MANDATORY_FIELD_NAME).build();

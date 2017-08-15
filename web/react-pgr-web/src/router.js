@@ -210,7 +210,7 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate/:id?'} component={LegacyLicenseCreate}/>
 
-      <Route exact path= {base + '/non-framework/collection/receipt/view/:id?'} component={ReceiptView}/>
+      <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
 
 
     </Switch>

@@ -176,7 +176,7 @@ var dat = {
 			"values": ["Bill[0].billDetails[0].receiptNumber","Bill[0].billDetails[0].receiptDate", "Bill[0].billDetails[0].businessService", "Bill[0].billDetails[0].billNumber","Bill[0].billDetails[0].billDescription","Bill[0].paidBy","Bill[0].billDetails[0].amountPaid","instrument.instrumentType.name","Bill[0].billDetails[0].status"],
 			"resultPath": "Receipt",
 			"rowClickUrlUpdate": "/update/collection/categoryType/{id}",
-			"rowClickUrlView": "/non-framework/collection/receipt/view/{id}"
+			"rowClickUrlView": "/non-framework/collection/receipt/view/{transactionId}"
 			}
 	}
   ,

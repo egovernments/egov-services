@@ -569,7 +569,7 @@ class Transaction extends Component {
         //   }
         //   self.props.setRoute(hash);
         // }
-        self.props.setRoute("/non-framework/collection/receipt/view");
+        self.props.setRoute("/non-framework/collection/receipt/view/"+response.Receipt[0].transactionId);
       }, 1500);
       // self.handleChange({target:{value:response}},"response",false,"","","");
 

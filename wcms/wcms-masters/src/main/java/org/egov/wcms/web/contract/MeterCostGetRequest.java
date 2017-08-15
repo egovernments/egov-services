@@ -63,6 +63,8 @@ public class MeterCostGetRequest {
 
 	private String code;
 
+	private Double pipeSizeInMM;
+	
 	private Long pipeSizeId;
 
 	private String name;

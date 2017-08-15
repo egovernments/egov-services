@@ -176,6 +176,9 @@ public class ConfigurationManager {
     
     @Value("${egov.services.demandbill_service.taxheadperiod}")
     private String taxHeadMasterNameTopic;
+    
+    @Value("${egov.services.pt_property_subusagetype.searchpath}")
+    private String serachSubUsageType;
 
     @Value("${estimation.notice.placeholders}")
     private String estimationNoticePlaceHolders;

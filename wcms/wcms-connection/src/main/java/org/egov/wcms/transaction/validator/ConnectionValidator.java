@@ -243,6 +243,14 @@ public class ConnectionValidator {
                     .field(WcmsConnectionConstants.PROPERTY_USAGE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
+        isRequestValid=restConnectionService.validateSubUsageType(waterConnectionRequest);
+        if (!isRequestValid) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_CODE)
+                    .message(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
 
         /*
          * if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null) { isRequestValid =

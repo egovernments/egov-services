@@ -98,7 +98,7 @@ public class TaxHeadMasterQueryBuilder {
 	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final TaxHeadMasterCriteria searchTaxHeads) {
 		
-		selectQuery.append(" ORDER BY name");
+		selectQuery.append(" ORDER BY taxhead.validfrom,taxhead.code");
 
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());

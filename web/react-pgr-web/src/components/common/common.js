@@ -44,6 +44,9 @@ var localationData = {
   "wc.create.groups.fileDetails.title": "Document Upload",
   "wc.create.groups.fileDetails.fields.pan": "Pan Card",
   "employee.createPosition.groups.title": "Create Position",
+  "employee.searchPosition.groups.title": "Search Position",
+  "employee.viewPosition.groups.title": "View Position",
+  "employee.updatePosition.groups.title": "Update Position",
   "employee.createPosition.groups.fields.departmenttype" : "Department",
   "employee.createPosition.groups.fields.designationtype" : "Designation",
   "employee.createPosition.groups.fields.positiontype" : "Position",
@@ -69,8 +72,10 @@ var localationData = {
   "employee.createPosition.groups.fields.accumulative" : "Accumulative",
   "employee.createPosition.groups.fields.accumulative.value1" : "Yes",
   "employee.createPosition.groups.fields.accumulative.value2" : "No",
+  "employee.createPosition.groups.fields.noOfPositions" : "No of Position",
+  "employee.createPosition.groups.fields.positionName":"Position Name",
 
-  "wc.create.documenttype.title": "Create Position",
+  "wc.create.documenttype.title": "Create Document Type",
   "wc.create.applicationtype" : "Application Type",
   "wc.create.documenttype" : "Document Type",
   "wc.create.positiontype" : "Position Type",
@@ -83,6 +88,7 @@ var localationData = {
   "wc.create.groups.connectionDetails.supplyType":"Supply Type",
   "wc.create.groups.applicantDetails.acknowledgementNumber":"Acknowledgement Number",
   "wc.create.groups.connectionDetails.supplyType":"Supply Type",
+  "wc.create.groups.connectionDetails.subUsageType":"Sub Usage Type",
   "reports.pgr.locality.name":"Locality Name",
   "reports.pgr.complaint.crn":"CRN",
   "reports.pgr.complaint.createddate":"Registerd Date",
@@ -258,7 +264,7 @@ var localationData = {
   "pt.create.groups.ownerDetails.fields.add":"Add",
   "pt.create.groups.ownerDetails.fields.save":"Save",
   "pt.create.groups.ownerDetails.fields.isPrimaryOwner":"Is Primary Owner",
-  
+
   "pt.create.groups.propertyAddress.fields.referancePropertyNumber":"Referance Property Number",
   "pt.create.groups.propertyAddress.fields.appartment":"Appartment/Complex Name",
   "pt.create.groups.propertyAddress.fields.doorNo":"Door No",
@@ -273,7 +279,7 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.readyReckoner":"Ready Reckoner",
   "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress" : "Is Correspondance Address Different From Address",
   "pt.create.groups.propertyAddress.fields.address1":"Address 1",
-  
+
   "pt.create.groups.assessmentDetails.fields.creationReason": "Reason For Creation",
   "pt.create.groups.assessmentDetails.fields.parentUpicNo":"Parent UPIC No.",
   "pt.create.groups.assessmentDetails.fields.propertyType":"Tariff Category",
@@ -284,13 +290,13 @@ var localationData = {
   "pt.create.groups.assessmentDetails.fields.extentOfSite":"Extent Of Site",
   "pt.create.groups.assessmentDetails.fields.sequenceNo":"Sequence No.",
   "pt.create.groups.assessmentDetails.fields.isAuthorized":"Is Authorized?",
-  
+
   "pt.create.groups.propertyFactors":"Property Factors",
   "pt.create.groups.propertyFactors.fields.totalFactor": "Toilet factor",
   "pt.create.groups.propertyFactors.fields.roadFactor": "Road factor",
   "pt.create.groups.propertyFactors.fields.liftFactor": "Lift factor",
   "pt.create.groups.propertyFactors.fields.parkingFactor": "Parking Factor",
- 
+
   "pt.create.groups.propertyAddress.fields.lift":"Lift",
   "pt.create.groups.propertyAddress.fields.toilet": "Toilet",
   "pt.create.groups.propertyAddress.fields.waterTap":"Water Tap",
@@ -298,12 +304,12 @@ var localationData = {
   "pt.create.groups.propertyAddress.fields.attachedBathroom": "Attached Bathroom",
   "pt.create.groups.propertyAddress.fields.cableConnection": "Cable Connection",
   "pt.create.groups.propertyAddress.fields.waterHarvesting": "Water Harvesting",
-  
+
   "pt.create.groups.propertyAddress.fields.floorType": "Floor Type",
   "pt.create.groups.propertyAddress.fields.roofType": "Roof Type",
   "pt.create.groups.propertyAddress.fields.wallType": "Wall Type",
   "pt.create.groups.propertyAddress.fields.woodType": "Wood Type",
-  
+
   "pt.create.groups.floorDetails" : "Floor Details",
   "pt.create.groups.floorDetails.fields.floorNumber":"Floor Number",
   "pt.create.groups.floorDetails.fields.unitType":"Unit Type",
@@ -329,10 +335,10 @@ var localationData = {
   "pt.create.groups.floorDetails.fields.buildingPermissionNumber": "Building Permission Number",
   "pt.create.groups.floorDetails.fields.buildingPermissionDate": "Building Permission Date",
   "pt.create.groups.floorDetails.fields.plinthAreaInBuildingPlan": "Plinth Area In Building Plan",
-  
+
   "pt.create.demands.addDemand": "Add Demand",
-  
-  
+
+
   "pt.create.groups.propertyAddress.fields.surveyNumber":"Survey Number",
   "pt.create.groups.propertyAddress.fields.pattaNumber":"Patta Number",
   "pt.create.groups.propertyAddress.fields.vacantLandArea":"Vacant Land Area",
@@ -394,6 +400,10 @@ var localationData = {
 		"employee.Employee.fields.employeeType": "Employee Type",
 		"employee.Employee.fields.assignments": "Assignments",
 		"employee.Employee.fields.jurisdictions": "Jurisdictions",
+    "employee.Employee.fields.jurisdictionsType":"Jurisdictions Type",
+    "employee.Employee.fields.jurisdictionsList":"Jurisdictions List",
+    "employee.Jurisdictions.title":"JURISDICTION LIST",
+
 		"employee.Employee.fields.motherTongue": "Mother Tongue",
 		"employee.Employee.fields.religion": "Religion",
 		"employee.Employee.fields.community": "Community",
@@ -409,7 +419,7 @@ var localationData = {
 		"employee.Employee.fields.bankAccount": "Account Number",
 		"employee.Employee.fields.group": "Group",
 		"employee.Employee.fields.placeOfBirth": "Place Of Birth",
-		"employee.Employee.fields.serviceHistory": "Service History",
+		"employee.Employee.fields.serviceHistory": "Service Details/history/ledger",
 		"employee.Employee.fields.probation": "Probation",
 		"employee.Employee.fields.regularisation": "Regularisation",
 		"employee.Employee.fields.technical": "Technical",
@@ -433,15 +443,15 @@ var localationData = {
 		"employee.Employee.fields.User.accountLocked": "Account Locked",
 		"employee.Employee.fields.User.roles": "Roles",
 		"employee.Employee.fields.User.userDetails": "User Details",
-		"employee.Employee.title": " Employee",
+		"employee.Employee.title": " Employee Details",
 		"employee.Assignment.fields.position": "Position",
 		"employee.Assignment.fields.fund": "Fund",
 		"employee.Assignment.fields.functionary": "Functionary",
 		"employee.Assignment.fields.function": "Function",
 		"employee.Assignment.fields.designation": "Designation",
 		"employee.Assignment.fields.department": "Department",
-		"employee.Assignment.fields.hod": "Hod",
-		"employee.Assignment.fields.primary": "Primary",
+		"employee.Assignment.fields.hod": "IfHod",
+		"employee.Assignment.fields.primary": "Is Primary",
 		"employee.Assignment.fields.fromDate": "From Date",
 		"employee.Assignment.fields.toDate": "To Date",
 		"employee.Assignment.fields.grade": "Grade",
@@ -450,11 +460,11 @@ var localationData = {
     "employee.Assignment.fields.action":"Action",
     "employee.jurisdiction.fields.boundaryType":"Boundary Type",
     "employee.jurisdiction.fields.boundary":"Boundary",
-		"employee.Assignment.title": " Assignment",
+		"employee.Assignment.title": " Assignment Details",
 		"employee.ServiceHistory.fields.serviceInfo": "Service Info",
 		"employee.ServiceHistory.fields.serviceFrom": "Service From",
-		"employee.ServiceHistory.fields.remarks": "Remarks",
-    "employee.ServiceHistory.fields.ServiceEntryDescription":"Service Entry Designation",
+		"employee.ServiceHistory.fields.remarks": "Remarks/Comments",
+    "employee.ServiceHistory.fields.ServiceEntryDescription":"Service Entry Description",
     "employee.ServiceHistory.fields.date":"Date",
 		"employee.ServiceHistory.fields.orderNo": "Order No",
 		"employee.ServiceHistory.fields.documents": "Documents",
@@ -467,7 +477,7 @@ var localationData = {
 		"employee.Probation.fields.documents": "Documents",
 		"employee.Probation.title": " Probation",
 		"employee.Regularisation.fields.designation": "Designation",
-		"employee.Regularisation.fields.declaredOn": "Declared On",
+		"employee.Regularisation.fields.declaredOn": "Declared On Date",
 		"employee.Regularisation.fields.orderNo": "Order No",
 		"employee.Regularisation.fields.orderDate": "Order Date",
 		"employee.Regularisation.fields.remarks": "Remarks",
@@ -489,7 +499,7 @@ var localationData = {
 		"employee.DepartmentalTest.fields.yearOfPassing": "Year Of Passing",
 		"employee.DepartmentalTest.fields.remarks": "Remarks",
 		"employee.DepartmentalTest.fields.documents": "Documents",
-		"employee.DepartmentalTest.title": " Departmental Test",
+		"employee.DepartmentalTest.title": " Departmental Test Details",
 		"employee.APRDetails.fields.yearOfSubmission": "Year Of Submission",
 		"employee.APRDetails.fields.detailsSubmitted": "Details Submitted",
 		"employee.APRDetails.fields.dateOfSubmission": "Date Of Submission",
@@ -510,6 +520,41 @@ var localationData = {
     "employee.Employee.fields.EmployeePhoto": "Employee Photo",
     "employee.Employee.fields.EmployeeSignature":"Employee Signature",
     "employee.Employee.fields.OtherAttachments":"Other Attachment",
+    "employee.service.title":"SERVICE SECTION",
+    "employee.other.title": "OTHER DETAILS",
+    "employee.Cancel.Button":"Cancel",
+    "employee.addedit.Button":"Add/Edit",
+
+
+
+    "employee.searchEmployee.title":"Search Employee",
+    "employee.searchEmployee.groups.fields.department":"Employee Department",
+    "employee.searchEmployee.groups.fields.code":"Employee Code",
+    "employee.searchEmployee.groups.fields.name":"Employee Name",
+    "employee.searchEmployee.groups.fields.designation":"Employee Designation",
+    "employee.searchEmployee.groups.fields.position":"Employee Position",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   "tl.create.categorytype.title":"Create License Category",
   "tl.create.groups.categorytype.name":"Name",

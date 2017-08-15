@@ -375,8 +375,7 @@ public class ReceiptServiceTest {
 				.financialYear("sixteen").isActualDemand(true)
 				.purpose("REBATE").tenantId("default").build();
 		return ReceiptCommonModel.builder()
-				.receiptHeaders(Arrays.asList(header))
-				.receiptDetails(Arrays.asList(detail1, detail2)).build();
+				.receiptHeaders(Arrays.asList(header)).build();
 	}
 
 	private ReceiptSearchCriteria getReceiptSearchCriteriaForUpdate() {
@@ -575,8 +574,7 @@ public class ReceiptServiceTest {
 				.financialYear("sixteen").isActualDemand(true)
 				.purpose("REBATE").tenantId("default").build();
 		return ReceiptCommonModel.builder()
-				.receiptHeaders(Arrays.asList(header))
-				.receiptDetails(Arrays.asList(detail1, detail2)).build();
+				.receiptHeaders(Arrays.asList(header)).build();
 	}
 
 	private BusinessDetailsResponse getBusinessDetails() {

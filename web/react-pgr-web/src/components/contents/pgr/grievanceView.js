@@ -73,7 +73,7 @@ class grievanceView extends Component{
 
       if(response.serviceRequests.length === 0){
         currentThis.props.setLoadingStatus('hide');
-        currentThis.handleError('Not a valid SRN.');
+        currentThis.handleError('Invalid CRN');
         return false;
       }
 

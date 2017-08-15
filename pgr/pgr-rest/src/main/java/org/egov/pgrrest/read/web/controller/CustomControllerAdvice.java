@@ -34,6 +34,12 @@ public class CustomControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidServiceRequestFieldException.class)
+    public ErrorResponse handleInvalidComplaintException(InvalidServiceRequestFieldException ex) {
+        return new SevaRequestFieldErrorAdapter().adapt(ex.getErrorFields());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ServiceDefinitionNotFoundException.class)
     public ErrorResponse handleInvalidServiceDefinitionCode() {
         return new ServiceDefinitionNotFoundExceptionAdapter().adapt(null);

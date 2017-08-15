@@ -346,7 +346,11 @@ public class WaterConnectionService {
         Demand demand=null;
         if(demandResponse!=null){
             demand=demandResponse.getDemands().get(0);
+            if(demand!=null && demand.getBusinessService()!=null && demand.getBusinessService().equals("WC")){
+            System.out.println(demand.getBusinessService());
+            System.out.println(demand !=null? demand:"demand is nul in WTMS servicel");
             waterConnectionRepository.updateConnectionAfterWorkFlowQuery(demand.getConsumerCode());
+            }
         }
     }
     

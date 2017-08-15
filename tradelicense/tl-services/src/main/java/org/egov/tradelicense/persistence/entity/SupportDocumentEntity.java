@@ -69,7 +69,9 @@ public class SupportDocumentEntity {
 
 		this.documentTypeId = supportDocument.getDocumentTypeId();
 
-		this.fileStoreId = supportDocument.getFileStoreId().toString();
+		if(supportDocument.getFileStoreId() != null){
+			this.fileStoreId = supportDocument.getFileStoreId().toString();
+		}
 
 		this.comments = supportDocument.getComments();
 

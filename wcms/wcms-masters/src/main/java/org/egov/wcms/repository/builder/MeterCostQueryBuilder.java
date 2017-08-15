@@ -132,7 +132,7 @@ public class MeterCostQueryBuilder {
 	public String insertMeterCostQuery() {
 		return "INSERT INTO egwtr_metercost(id,code,pipesizeid,metermake,amount,active,createdby,lastmodifiedby,createddate,"
 				+ "lastmodifieddate,tenantid) values "
-				+ "(nextval('seq_egwtr_meter_cost'),:code,:pipesizeid,:metermake,:amount"
+				+ "(:id,:code,:pipesizeid,:metermake,:amount"
 				+ ",:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
 	}
 
@@ -152,5 +152,14 @@ public class MeterCostQueryBuilder {
 		selectQuery.append(" where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code");
 		return selectQuery.toString();
 	}
+
+    public String getPipeSiZeIdQuery() {
+        return "Select id from egwtr_pipesize where sizeinmilimeter= :pipeSizeInMM and"
+                + " tenantId= :tenantId";
+    }
+
+    public String getPipeSizeInMMQuery() {
+        return "Select sizeinmilimeter from egwtr_pipesize where id= :id and tenantId= :tenantId";
+    }
 
 }

@@ -7,13 +7,13 @@ var dat = {
 		"objectName": "Employee",
 		"groups": [
 			{
-				"label": "employee.search.emp.title",
+				"label": "employee.searchEmployee.title",
 				"name": "businessDetailsType",
 				"fields": [
 					{
 						"name": "Department",
 						"jsonPath": "departmentId",
-						"label": "employee.create.groups.fields.department",
+						"label": "employee.searchEmployee.groups.fields.department",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/egov-common-masters/departments/_search?|$..id|$..name",
@@ -25,7 +25,7 @@ var dat = {
 					{
 						"name": "Designation",
 						"jsonPath": "designationId",
-						"label": "employee.create.groups.fields.designation",
+						"label": "employee.searchEmployee.groups.fields.designation",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/hr-masters/designations/_search?|$..id|$..name",
@@ -37,18 +37,7 @@ var dat = {
           {
 						"name": "Code",
 						"jsonPath": "code",
-						"label": "employee.create.groups.fields.code",
-						"pattern": "",
-						"type": "text",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-          {
-						"name": "Name",
-						"jsonPath": "name",
-						"label": "employee.create.group.fields.empName",
+						"label": "employee.searchEmployee.groups.fields.code",
 						"pattern": "",
 						"type": "text",
 						"isRequired": false,
@@ -60,10 +49,17 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "employee.create.groups.fields.code"},{label: "employee.create.group.fields.empName"},{label: "employee.create.groups.fields.department"}, {label: "employee.create.groups.fields.designation"}, {label: "employee.create.group.fields.position"}],
+			"header": [{label: "employee.searchEmployee.groups.fields.code"},
+			{label: "employee.searchEmployee.groups.fields.name"},
+			{label: "employee.searchEmployee.groups.fields.department",
+						"url": "/egov-common-masters/departments/_search?|$..id|$..name"},
+			{label: "employee.searchEmployee.groups.fields.designation",
+					"url": "/hr-masters/designations/_search?|$..id|$..name"},
+			{label: "employee.searchEmployee.groups.fields.position",
+					"url": "/hr-masters/positions/_search?|$..id|$..name"}],
 			"values": ["code","name", "assignments[0].department", "assignments[0].designation","assignments[0].position"],
 			"resultPath": "Employee",
-			"rowlickUrlUpdate": "/employee/update/{id}",
+			"rowClickUrlUpdate": "/employee/update/{id}",
 			"rowClickUrlView": "/employee/view/{id}"
 			}
 	}

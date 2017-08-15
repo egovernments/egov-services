@@ -43,11 +43,12 @@ package org.egov.eis.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.Department;
+import org.egov.eis.model.DepartmentDesignation;
+import org.egov.eis.model.Designation;
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.PositionRepository;
-import org.egov.eis.web.contract.PositionGetRequest;
-import org.egov.eis.web.contract.PositionRequest;
-import org.egov.eis.web.contract.PositionResponse;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
@@ -57,13 +58,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class PositionService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PositionService.class);
+
+	@Value("${kafka.topics.position.db_persist.name}")
+	private String positionDBPersistTopic;
 
 	@Value("${kafka.topics.position.create.name}")
 	private String positionCreateTopic;
@@ -73,6 +81,15 @@ public class PositionService {
 
 	@Autowired
 	private PositionRepository positionRepository;
+
+	@Autowired
+	private DepartmentDesignationService deptDesigService;
+
+	@Autowired
+	private DepartmentService departmentService;
+
+	@Autowired
+	private DesignationService designationService;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -89,7 +106,7 @@ public class PositionService {
 
 	public ResponseEntity<?> createPosition(PositionRequest positionRequest) {
 		List<Position> positions = positionRequest.getPosition();
-		kafkaTemplate.send(positionCreateTopic, positionRequest);
+		kafkaTemplate.send(positionDBPersistTopic, positionRequest);
 		return getSuccessResponseForCreate(positions, positionRequest.getRequestInfo());
 	}
 
@@ -117,12 +134,62 @@ public class PositionService {
 		return new ResponseEntity<PositionResponse>(positionResponse, HttpStatus.OK);
 	}
 
+	@Transactional
 	public void create(PositionRequest positionRequest) {
+		populateCreatePositionDetails(positionRequest);
+		List<Long> ids = positionRequest.getPosition().stream().map(Position::getId).collect(Collectors.toList());
 		positionRepository.create(positionRequest);
+		PositionGetRequest positionGetRequest = new PositionGetRequest();
+		positionGetRequest.setId(ids);
+		// FIXME : Assuming request will come from same tenant & so, adding common tenantId for all positions search.
+		positionGetRequest.setTenantId(positionRequest.getRequestInfo().getUserInfo().getTenantId());
+		List<Position> positions = positionRepository.findForCriteria(positionGetRequest);
+		positionRequest.setPosition(positions);
+		kafkaTemplate.send(positionCreateTopic, positionRequest);
 	}
 
+	@Transactional
 	public void update(PositionRequest positionRequest) {
 		positionRepository.update(positionRequest);
+	}
+
+	private void populateCreatePositionDetails(PositionRequest positionRequest) {
+		List<Position> positions = positionRequest.getPosition();
+		RequestInfo requestInfo = positionRequest.getRequestInfo();
+		RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+
+		List<Position> positionsList = new ArrayList<>();
+		for (int i = 0; i < positions.size(); i++) {
+			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
+			String tenantId = positions.get(i).getTenantId();
+
+			Department department = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
+					tenantId, requestInfoWrapper).get(0);
+
+			DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+					.id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
+			Designation designation = designationService.getDesignations(designationGetRequest).get(0);
+
+			deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
+
+			if (isEmpty(deptDesig)) {
+				deptDesig = DepartmentDesignation.builder()
+						.departmentId(department.getId()).designation(designation).tenantId(tenantId).build();
+				deptDesigService.create(deptDesig);
+			}
+			deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
+
+			List<Long> sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());
+
+			for (int j = 0; j < positions.get(i).getNoOfPositions(); j++) {
+				String name = department.getCode().toUpperCase() + "_" + designation.getCode().toUpperCase() + "_";
+				Position pos = Position.builder().id(sequences.get(j)).name(name).active(true).deptdesig(deptDesig)
+						.isPostOutsourced(positions.get(i).getIsPostOutsourced()).tenantId(positions.get(i).getTenantId()).build();
+				positionsList.add(pos);
+			}
+		}
+
+		positionRequest.setPosition(positionsList);
 	}
 
 }

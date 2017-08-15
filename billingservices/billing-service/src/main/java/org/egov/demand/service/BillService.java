@@ -158,7 +158,7 @@ public class BillService {
 		if(!demands.isEmpty())
 			bills = prepareBill(demands, billCriteria.getTenantId(), requestInfo);
 		else
-			throw new RuntimeException("Invalid demand criteria");
+			throw new RuntimeException("No Demands Found for the given criteria");
 
 		return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
@@ -302,6 +302,8 @@ public class BillService {
 		log.debug("getTaxHeadMaster taxHeadMasterCode:"+taxHeadMasterCode);
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterService.getTaxHeads(
 				TaxHeadMasterCriteria.builder().tenantId(tenantId).code(taxHeadMasterCode).build(),requestInfo).getTaxHeadMasters();
+		if(taxHeadMasters.isEmpty())
+			throw new RuntimeException("No TaxHead masters found for the given criteria");
 		log.debug("getTaxHeadMaster taxHeadMasters:"+taxHeadMasters);
 		Map<String, List<TaxHeadMaster>> map = taxHeadMasters.stream().collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
 
@@ -326,6 +328,8 @@ public class BillService {
 				GlCodeMasterCriteria.builder().taxHead(taxHeadMasterCode).service(
 				service).tenantId(tenantId).build(), requestInfo).getGlCodeMasters();
 		log.debug("getGlCodes glCodeMasters:"+glCodeMasters);
+		if(glCodeMasters.isEmpty())
+			throw new RuntimeException("No GlcodeMasters found for the given criteria");
 		Map<String, List<GlCodeMaster>> map = glCodeMasters.stream().collect(
 				Collectors.groupingBy(GlCodeMaster::getTaxHead, Collectors.toList()));
 

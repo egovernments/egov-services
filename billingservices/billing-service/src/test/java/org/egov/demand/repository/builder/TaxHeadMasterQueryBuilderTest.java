@@ -48,7 +48,7 @@ public class TaxHeadMasterQueryBuilderTest {
 			+ " glcode.lastmodifiedby AS gllastmodifiedby, glcode.lastmodifiedtime AS gllastmodifiedtime"
 			+ " FROM egbs_taxheadmaster taxhead LEFT OUTER Join egbs_glcodemaster glcode "
 			+ " ON taxhead.code=glcode.taxhead and taxhead.tenantid=glcode.tenantid "
-			+ " WHERE taxhead.tenantId = ?  ORDER BY name LIMIT ? OFFSET ?";
+			+ " WHERE taxhead.tenantId = ?  ORDER BY taxhead.validfrom,taxhead.code LIMIT ? OFFSET ?";
 	
 	private String insertQuery = "INSERT INTO egbs_taxheadmaster(id, tenantid, category, service, name, code,"
 			+ " isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime, lastmodifiedby,"

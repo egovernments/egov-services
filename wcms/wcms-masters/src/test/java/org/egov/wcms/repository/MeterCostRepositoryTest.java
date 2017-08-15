@@ -60,6 +60,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.repository.builder.MeterCostQueryBuilder;
 import org.egov.wcms.repository.rowmapper.MeterCostRowMapper;
+import org.egov.wcms.service.CodeGeneratorService;
 import org.egov.wcms.web.contract.MeterCostGetRequest;
 import org.egov.wcms.web.contract.MeterCostReq;
 import org.junit.Test;
@@ -85,12 +86,16 @@ public class MeterCostRepositoryTest {
 
 	@Mock
 	private MeterCostRowMapper meterCostRowMapper;
+	
+	@Mock
+	private CodeGeneratorService CodeGeneratorService;
 
 	@InjectMocks
 	private MeterCostRepository meterCostRepository;
 
 	@Test
 	public void test_should_push_create_meterCostRequest_to_Queue() {
+	        when(CodeGeneratorService.generate("SEQ_EGWTR_METER_COST")).thenReturn("1","2");
 		when(applicationProperties.getCreateMeterCostTopicName()).thenReturn("egov.wcms.metercost-create");
 		meterCostRepository.pushCreateMeterCostReqToQueue(getMeterCostRequest());
 		verify(kafkaTemplate).send("egov.wcms.metercost-create", getMeterCostRequest());
@@ -244,9 +249,9 @@ public class MeterCostRepositoryTest {
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
 				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
+		MeterCost meterCost1 = MeterCost.builder().id(1L).code("1").pipeSizeId(1L).meterMake("meterMake123")
 				.amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
+		MeterCost meterCost2 = MeterCost.builder().id(2L).code("2").pipeSizeId(2L).meterMake("meterMake234")
 				.amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
 		return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
 

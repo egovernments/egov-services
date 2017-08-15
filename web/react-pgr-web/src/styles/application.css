@@ -14,6 +14,8 @@ html, body{
   src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v22/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
 }
 
+
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
@@ -852,7 +854,7 @@ table thead th {
 	color:#9E9E9E;
 }
 
-.file-header span.errorMsg{
+span.errorMsg{
 	padding-left: 0px;
 	font-size: 12px;
 }
@@ -884,4 +886,13 @@ table thead th {
 	display: block;
 	font-size: 18px;
 	color:rgb(165, 164, 164);
+}
+
+.radio-group {
+	margin-top:10px;
+	margin-bottom: 5px;
+}
+
+.radio-group .field-title{
+	margin-bottom: 10px;
 }

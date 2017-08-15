@@ -991,7 +991,7 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
-				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getId() };
+				TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()), unit.getLandCost(), unit.getBuildingCost(), unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
 
@@ -1049,9 +1049,9 @@ public class PropertyRepository {
 		String boundaryUpdate = BoundaryBuilder.updateBoundaryQuery();
 
 		Object[] boundaryArgs = { boundary.getRevenueBoundary().getId(), boundary.getLocationBoundary().getId(),
-				boundary.getAdminBoundary().getId(), boundary.getNorthBoundedBy().toString(),
-				boundary.getEastBoundedBy().toString(), boundary.getWestBoundedBy().toString(),
-				boundary.getSouthBoundedBy().toString(), boundary.getAuditDetails().getLastModifiedBy(),
+				getLong(boundary.getAdminBoundary().getId()), getString(boundary.getNorthBoundedBy()),
+				getString(boundary.getEastBoundedBy()), getString(boundary.getWestBoundedBy()),
+				getString(boundary.getSouthBoundedBy()), boundary.getAuditDetails().getLastModifiedBy(),
 				boundary.getAuditDetails().getLastModifiedTime(), propertId, boundary.getId() };
 
 		jdbcTemplate.update(boundaryUpdate, boundaryArgs);
@@ -1615,15 +1615,14 @@ public class PropertyRepository {
 	 * @param propertyId
 	 */
 	public void saveVacantLandDetailHistory(Property property, Long propertyId) {
-		Long createdTime = new Date().getTime();
 		VacantLandDetail vacantLand = property.getVacantLand();
 
 		Object[] vaccantLandArgs = { vacantLand.getSurveyNumber(), vacantLand.getPattaNumber(),
 				vacantLand.getMarketValue(), vacantLand.getCapitalValue(), vacantLand.getLayoutApprovedAuth(),
 				vacantLand.getLayoutPermissionNo(), TimeStampUtil.getTimeStamp(vacantLand.getLayoutPermissionDate()),
 				vacantLand.getResdPlotArea(), vacantLand.getNonResdPlotArea(),
-				vacantLand.getAuditDetails().getCreatedBy(), vacantLand.getAuditDetails().getLastModifiedBy(),
-				createdTime, createdTime, propertyId, vacantLand.getId() };
+				property.getAuditDetails().getCreatedBy(), property.getAuditDetails().getLastModifiedBy(),
+				property.getAuditDetails().getCreatedTime(), property.getAuditDetails().getLastModifiedTime(), propertyId, vacantLand.getId() };
 
 		jdbcTemplate.update(VacantLandDetailBuilder.INSERT_VACANTLANDDETAILHISTORY_QUERY, vaccantLandArgs);
 
@@ -1636,13 +1635,12 @@ public class PropertyRepository {
 	 * @param propertyId
 	 */
 	public void saveBoundaryHistory(Property property, Long propertyId) {
-		Long createdTime = new Date().getTime();
 		PropertyLocation boundary = property.getBoundary();
 
 		Object[] boundaryArgs = { boundary.getRevenueBoundary().getId(), boundary.getLocationBoundary().getId(),
 				boundary.getAdminBoundary().getId(), boundary.getNorthBoundedBy(), boundary.getEastBoundedBy(),
-				boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(), boundary.getAuditDetails().getCreatedBy(),
-				boundary.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, propertyId,
+				boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(), property.getAuditDetails().getCreatedBy(),
+				property.getAuditDetails().getLastModifiedBy(), property.getAuditDetails().getCreatedTime(), property.getAuditDetails().getLastModifiedTime(), propertyId,
 				boundary.getId() };
 
 		jdbcTemplate.update(BoundaryBuilder.INSERT_BOUNDARYHISTORY_QUERY, boundaryArgs);
@@ -2040,5 +2038,4 @@ public class PropertyRepository {
 				String.class);
 		return demands;
 	}
-
 }

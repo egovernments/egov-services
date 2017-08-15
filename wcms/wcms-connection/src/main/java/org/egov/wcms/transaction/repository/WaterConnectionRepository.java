@@ -85,6 +85,9 @@ public class WaterConnectionRepository {
     @Autowired
     private WaterConnectionQueryBuilder waterConnectionQueryBuilder;
     
+    @Autowired
+    private WaterConnectionRowMapper waterConnectionRowMapper;
+    
 
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
@@ -138,10 +141,10 @@ public class WaterConnectionRepository {
                     statement.setString(26, NewConnectionStatus.SANCTIONED.name());
                 else
                     statement.setString(26, NewConnectionStatus.VERIFIED.name());
-                if (!waterConnectionRequest.getConnection().getIsLegacy()) {
+              /*  if (!waterConnectionRequest.getConnection().getIsLegacy()) {
                     statement.setLong(27, waterConnectionRequest.getConnection().getStateId() != null
                             ? waterConnectionRequest.getConnection().getStateId() : 1l);
-                }
+                }*/
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
                     statement.setString(27, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
@@ -157,6 +160,7 @@ public class WaterConnectionRepository {
                 
                 statement.setDouble(28, waterConnectionRequest.getConnection().getNumberOfFamily());
                 // Please verify if there's proper validation on all these fields to avoid NPE.
+                statement.setString(29, waterConnectionRequest.getConnection().getSubUsageTypeId());
                 return statement;
             }, keyHolder);
 
@@ -413,7 +417,7 @@ public class WaterConnectionRepository {
         final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
         LOGGER.info("Get Connection Details Query : " + fetchQuery);
         final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
-                new WaterConnectionRowMapper());
+                waterConnectionRowMapper);
         return connectionList;
     }
     

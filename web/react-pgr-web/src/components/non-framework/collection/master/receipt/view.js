@@ -85,7 +85,8 @@ class Report extends Component {
     specifications = require('../../../../framework/specs/collection/master/receipt').default;
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications[`collection.view`];
-    Api.commonApiPost(obj.url, formData, {}, null, obj.useTimestamp).then(function(res){
+
+    Api.commonApiPost(obj.url, {transactionId:this.props.match.params.hasOwnProperty("id")?this.props.match.params.id:""}, {}, null, obj.useTimestamp).then(function(res){
         // console.log(res);
         self.handleChange({target:{value:res.Receipt}},"Receipt",false,"","");
         self.props.setLoadingStatus('hide');
@@ -297,9 +298,10 @@ class Report extends Component {
   }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid,tenantInfo} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,getPurposeTotal,getTotal,getGrandTotal,int_to_words,print,generatePdf} = this;
     let {showResult, resultList} = this.state;
+    console.log(tenantInfo);
     // console.log(formData);
     return (
       <div className="SearchResult" >
@@ -440,7 +442,8 @@ const mapStateToProps = state => ({
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
   flag: state.report.flag,
-  isFormValid: state.frameworkForm.isFormValid
+  isFormValid: state.frameworkForm.isFormValid,
+  tenantInfo: state.common.tenantInfo
 });
 
 const mapDispatchToProps = dispatch => ({

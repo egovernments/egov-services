@@ -68,6 +68,7 @@ import org.egov.wcms.transaction.web.contract.PropertyUsageTypeResponseInfo;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.SupplyResponseInfo;
 import org.egov.wcms.transaction.web.contract.TreatmentPlantResponse;
+import org.egov.wcms.transaction.web.contract.UsageMasterResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transaction.web.errorhandler.Error;
@@ -214,6 +215,27 @@ public class RestConnectionService {
      * getPropertyTypeId())); isValidPropAndCategory = Boolean.TRUE; } return isValidPropAndCategory; }
      */
 
+    public Boolean validateSubUsageType(WaterConnectionReq waterConnectionRequest) {
+        Boolean isValidSubUsageType = Boolean.FALSE;
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+                .append(configurationManager.getSerachSubUsageType())
+                .append("?parent=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
+                .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
+        final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        UsageMasterResponse usagesubtype = new RestTemplate().postForObject(url.toString(),
+                wrapper, UsageMasterResponse.class);
+        if (usagesubtype != null && usagesubtype.getUsageMasters() != null && !usagesubtype.getUsageMasters().isEmpty()
+                && usagesubtype.getUsageMasters().get(0).getId() != null) {
+            waterConnectionRequest.getConnection()
+                    .setSubUsageTypeId(usagesubtype.getUsageMasters().get(0).getId().toString());
+            isValidSubUsageType = Boolean.TRUE;
+        }
+        return isValidSubUsageType;
+    }
+    
+    
     public Boolean validatePropertyUsageTypeMapping(WaterConnectionReq waterConnectionRequest) {
         Boolean isValidPropAndCategory = Boolean.FALSE;
         StringBuilder url = new StringBuilder();

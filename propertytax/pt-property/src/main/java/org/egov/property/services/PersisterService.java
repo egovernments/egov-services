@@ -233,6 +233,7 @@ public class PersisterService {
                         if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
                                 && unit.getUnits() != null) {
                             for (Unit room : unit.getUnits()) {
+                                room.setAuditDetails(auditDetails);
                                 propertyRepository.updateRoom(room);
                             }
                         }
@@ -258,6 +259,7 @@ public class PersisterService {
                 owner.setAuditDetails(auditDetails);
                 propertyRepository.updateUser(owner, property.getId());
             }
+            property.getBoundary().setAuditDetails(auditDetails);
             propertyRepository.updateBoundary(property.getBoundary(), property.getId());
         }
     }

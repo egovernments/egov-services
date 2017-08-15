@@ -37,6 +37,10 @@ class FileInput extends Component{
       };
     }
 
+    shouldComponentUpdate(){
+      return true;
+    }
+
     componentWillMount(){
       this.openFileBrowser= this.openFileBrowser.bind(this);
       this.handleFileChange=this.handleFileChange.bind(this);

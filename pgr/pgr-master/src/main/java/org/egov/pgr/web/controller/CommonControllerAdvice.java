@@ -1,9 +1,11 @@
 package org.egov.pgr.web.controller;
 
 import org.egov.common.contract.response.ErrorResponse;
+import org.egov.pgr.domain.exception.InvalidServiceTypeException;
 import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.exception.ServiceCodeMandatoryException;
 import org.egov.pgr.domain.exception.TenantIdMandatoryException;
+import org.egov.pgr.web.adapters.error.InvalidServiceTypeErrorAdapter;
 import org.egov.pgr.web.adapters.error.PGRMasterExceptionAdapter;
 import org.egov.pgr.web.adapters.error.ServiceCodeMandatoryExceptionAdapter;
 import org.egov.pgr.web.adapters.error.TenantIdMandatoryExceptionAdapter;
@@ -33,5 +35,11 @@ public class CommonControllerAdvice {
     @ExceptionHandler(PGRMasterException.class)
     public ErrorResponse handleMastersException(PGRMasterException ex) {
         return new PGRMasterExceptionAdapter().adapt(ex.getHashMap());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidServiceTypeException.class)
+    public ErrorResponse handleInvalidServiceTypeException(InvalidServiceTypeException exception) {
+        return new InvalidServiceTypeErrorAdapter().adapt(exception.getErrorFields());
     }
 }

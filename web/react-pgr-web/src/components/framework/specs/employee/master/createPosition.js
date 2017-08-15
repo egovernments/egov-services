@@ -7,13 +7,13 @@ var dat = {
 		"objectName": "Position",
 		"groups": [
 			{
-				"label": "employee.create.position.title",
+				"label": "employee.createPosition.groups.title",
 				"name": "createPositionType",
 				"fields": [
 					{
 						"name": "Department",
 						"jsonPath": "Position[0].deptdesig.department",
-						"label": "employee.create.groups.fields.department",
+						"label": "employee.createPosition.groups.fields.departmenttype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/egov-common-masters/departments/_search?|$..id|$..name",
@@ -25,7 +25,7 @@ var dat = {
 					{
 						"name": "Designation",
 						"jsonPath": "Position[0].deptdesig.designation.id",
-						"label": "employee.create.groups.fields.designation",
+						"label": "employee.createPosition.groups.fields.designationtype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/hr-masters/designations/_search?|$..id|$..name",
@@ -37,7 +37,7 @@ var dat = {
 					{
 						"name": "Position",
 						"jsonPath": "Position[0].noOfPositions",
-						"label": "employee.create.group.fields.positionName",
+						"label": "employee.createPosition.groups.fields.noOfPositions",
 						"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 						"type": "number",
 						"isRequired": true,
@@ -48,14 +48,14 @@ var dat = {
 					{
 						"name": "Outsourced Post",
 						"jsonPath": "Position[0].isPostOutsourced",
-						"label": "employee.create.group.fields.isPostOutsourced",
+						"label": "employee.createPosition.groups.fields.outsourcepost",
 						"pattern": "",
 						"type": "radio",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"values": [{"label":"Yes", "value":true},{"label":"No", "value":false}]
+						"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}]
 
 					}
 				]
@@ -67,16 +67,16 @@ var dat = {
 		"url": "/hr-masters/positions/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "BusinessDetails",
+		"objectName": "Position",
 		"groups": [
 			{
-				"label": "employee.search.position.title",
-				"name": "businessDetailsType",
+				"label": "employee.searchPosition.groups.title",
+				"name": "createPositionType",
 				"fields": [
 					{
 						"name": "Department",
 						"jsonPath": "departmentId",
-						"label": "employee.create.groups.fields.department",
+						"label": "employee.createPosition.groups.fields.departmenttype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/egov-common-masters/departments/_search?|$..id|$..name",
@@ -88,7 +88,7 @@ var dat = {
 					{
 						"name": "Designation",
 						"jsonPath": "designationId",
-						"label": "employee.create.groups.fields.designation",
+						"label": "employee.createPosition.groups.fields.designationtype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/hr-masters/designations/_search?|$..id|$..name",
@@ -102,16 +102,16 @@ var dat = {
 		],
 		"result": {
 			"header": [{
-				"label": "employee.create.group.fields.positionName"}, {
-					"label": "employee.create.group.fields.department",
+				"label": "employee.createPosition.groups.fields.positionName"}, {
+					"label": "employee.createPosition.groups.fields.departmenttype",
 					"url": "/egov-common-masters/departments/_search?|$..id|$..name"
 				}, {
-					"label": "employee.create.group.fields.designation",
+					"label": "employee.createPosition.groups.fields.designationtype",
 					"url": "/hr-masters/designations/_search?|$..id|$..name"
-				}, {label: "employee.create.group.fields.isPostOutsourced"}],
+				}, {label: "employee.createPosition.groups.fields.outsourcepost"}],
 			"values": ["name", "deptdesig.department", "deptdesig.designation.id","isPostOutsourced"],
 			"resultPath": "Position",
-			"rowlickUrlUpdate": "/update/employee/createPosition/{id}",
+			"rowClickUrlUpdate": "/update/employee/createPosition/{id}",
 			"rowClickUrlView": "/view/employee/createPosition/{id}"
 			}
 	},
@@ -123,13 +123,13 @@ var dat = {
 		"objectName": "Position",
 		"groups": [
 			{
-				"label": "employee.view.position.title",
+				"label": "employee.viewPosition.groups.title",
 				"name": "createPositionType",
 				"fields": [
 					{
 						"name": "Department",
 						"jsonPath": "Position[0].deptdesig.department",
-						"label": "employee.create.groups.fields.department",
+						"label": "employee.createPosition.groups.fields.departmenttype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/egov-common-masters/departments/_search?|$..id|$..name",
@@ -141,7 +141,7 @@ var dat = {
 					{
 						"name": "Designation",
 						"jsonPath": "Position[0].deptdesig.designation.id",
-						"label": "employee.create.groups.fields.designation",
+						"label": "employee.createPosition.groups.fields.designationtype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/hr-masters/designations/_search?|$..id|$..name",
@@ -152,27 +152,38 @@ var dat = {
 					},
 					{
 						"name": "Position",
-						"jsonPath": "Position[0].noOfPositions",
-						"label": "employee.create.group.fields.positionName",
+						"jsonPath": "Position[0].name",
+						"label": "employee.createPosition.groups.fields.positionName",
 						"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 						"type": "text",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
-						"patternErrMsg": "Length minimum is 3 and maximum is 100"
+						"patternErrMsg": ""
 					},
 					{
 						"name": "Outsourced Post",
 						"jsonPath": "Position[0].isPostOutsourced",
-						"label": "employee.create.group.fields.isPostOutsourced",
+						"label": "employee.createPosition.groups.fields.outsourcepost",
 						"pattern": "",
 						"type": "radio",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"values": [{"label":"Yes", "value":true},{"label":"No", "value":false}],
-						"defaultValue":true
+						"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}]
+
+					},
+					{
+						"name": "Active",
+						"jsonPath": "Position[0].active",
+						"label": "wc.create.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 					}
 				]
 			}
@@ -181,62 +192,62 @@ var dat = {
 	"employee.update": {
 		"numCols": 12/3,
 		"searchUrl": "/hr-masters/positions/_search?id={id}",
-		"url":"/hr-masters/positions/{position.id}/_update",
+		"url":"/hr-masters/positions/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Position",
 		"groups": [
 			{
-				"label": "employee.update.position.title",
+				"label": "employee.updatePosition.groups.title",
 				"name": "createPositionType",
 				"fields": [
 					{
 						"name": "Department",
 						"jsonPath": "Position[0].deptdesig.department",
-						"label": "employee.create.groups.fields.department",
+						"label": "employee.createPosition.groups.fields.departmenttype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/egov-common-masters/departments/_search?|$..id|$..name",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
 					{
 						"name": "Designation",
 						"jsonPath": "Position[0].deptdesig.designation.id",
-						"label": "employee.create.groups.fields.designation",
+						"label": "employee.createPosition.groups.fields.designationtype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/hr-masters/designations/_search?|$..id|$..name",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
 					{
 						"name": "Position",
-						"jsonPath": "Position[0].noOfPositions",
-						"label": "employee.create.group.fields.positionName",
+						"jsonPath": "Position[0].name",
+						"label": "employee.createPosition.groups.fields.positionName",
 						"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 						"type": "text",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
-						"patternErrMsg": "Length minimum is 3 and maximum is 100"
+						"patternErrMsg": ""
 					},
 					{
 						"name": "Outsourced Post",
 						"jsonPath": "Position[0].isPostOutsourced",
-						"label": "employee.create.group.fields.isPostOutsourced",
+						"label": "employee.createPosition.groups.fields.outsourcepost",
 						"pattern": "",
 						"type": "radio",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"values": [{"label":"Yes", "value":true},{"label":"No", "value":"false"}],
-						"defaultValue":true
+						"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}]
+
 					},
 					{
 						"name": "Active",

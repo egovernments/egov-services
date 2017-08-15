@@ -44,6 +44,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.egov.wcms.transaction.demand.contract.Demand;
+import org.egov.wcms.transaction.web.contract.Address;
+import org.egov.wcms.transaction.web.contract.ConnectionLocation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -83,12 +85,12 @@ public class Connection {
     private String hscPipeSizeType;
 
     private String pipesizeId;
-    
+
     private Long executionDate;
 
     @NotNull
     private String supplyType;
-    
+
     private int noOfFlats;
 
     private String supplyTypeId;
@@ -106,12 +108,12 @@ public class Connection {
     private String waterTreatment;
 
     private String waterTreatmentId;
-    
+
     @NotNull
     private String subUsageType;
 
     private String subUsageTypeId;
-    
+
     private int numberOfFamily;
 
     @NotNull
@@ -138,11 +140,10 @@ public class Connection {
 
     @NotNull
     private String legacyConsumerNumber;
-    
+
     @NotNull
     private String estimationNumber;
-    
-    
+
     @NotNull
     private String workOrderNumber;
 
@@ -160,16 +161,16 @@ public class Connection {
 
     @NotNull
     private long parentConnectionId;
-    
+
     @NotNull
     private long manualReceiptDate;
-    
+
     @NotNull
     private String manualReceiptNumber;
 
     @NotNull
     private List<DocumentOwner> documents;
-    
+
     @NotNull
     private List<ConnectionDemand> connectionDemands;
 
@@ -178,12 +179,15 @@ public class Connection {
 
     @NotNull
     private Property property;
-    
+
     @NotNull
     private Demand demand;
 
-    @NotNull
-    private Asset asset;
+    private ConnectionOwner connectionOwner;
+
+    private Address address;
+
+    private ConnectionLocation connectionLocation;
 
     @NotNull
     private List<Meter> meter;
@@ -201,7 +205,7 @@ public class Connection {
     private String tenantId;
 
     private WorkflowDetails workflowDetails;
-    
-    private String createdDate; 
-    
+
+    private String createdDate;
+
 }

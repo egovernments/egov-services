@@ -13,6 +13,8 @@ public class ServiceTypeSearchCriteria {
 
     private String serviceCode;
 
+    private Integer category;
+
     private List<String> keywords;
 
     public boolean isTenantIdEmpty(){
@@ -25,5 +27,9 @@ public class ServiceTypeSearchCriteria {
 
     public boolean isKeywordsEmpty(){
         return null == keywords;
+    }
+
+    public boolean isCategoryEmpty(){
+        return null == category;
     }
 }

@@ -41,7 +41,6 @@
 package org.egov.collection.repository;
 
 import lombok.AllArgsConstructor;
-
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
@@ -49,6 +48,7 @@ import org.egov.collection.model.*;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.querybuilder.ReceiptDetailQueryBuilder;
+import org.egov.collection.repository.rowmapper.ReceiptDetaiRowMapper;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
 import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
@@ -65,15 +65,11 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.Comparator.comparingLong;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
 
 @AllArgsConstructor
 @Repository
@@ -95,6 +91,9 @@ public class ReceiptRepository {
 
 	@Autowired
 	private ReceiptRowMapper receiptRowMapper;
+
+    @Autowired
+    private ReceiptDetaiRowMapper receiptDetaiRowMapper;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -171,39 +170,29 @@ public class ReceiptRepository {
 	public ReceiptCommonModel findAllReceiptsByCriteria(
 			ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
 		List<Object> preparedStatementValues = new ArrayList<>();
-		String queryString = receiptDetailQueryBuilder.getQuery(
+		String receiptHeaderQuery = receiptDetailQueryBuilder.getQuery(
 				receiptSearchCriteria, preparedStatementValues);
+        String receiptDetailsQuery = receiptDetailQueryBuilder.getReceiptDetailByReceiptHeader();
 		List<ReceiptHeader> listOfHeadersFromDB = jdbcTemplate.query(
-				queryString, preparedStatementValues.toArray(),
+                receiptHeaderQuery, preparedStatementValues.toArray(),
 				receiptRowMapper);
-		Set<ReceiptDetail> receiptDetails = new LinkedHashSet<>(0);
+        List<Object> receiptDetailsPreparedStatementValues = null;
+        List<ReceiptHeader> receiptHeaders = new ArrayList<ReceiptHeader>();
 		for (ReceiptHeader header : listOfHeadersFromDB) {
-			receiptDetails.add((ReceiptDetail) header.getReceiptDetails()
-					.toArray()[0]);
+            ReceiptHeader receiptHeader = new ReceiptHeader();
+            receiptDetailsPreparedStatementValues = new ArrayList<>();
+            receiptDetailsPreparedStatementValues.add(receiptSearchCriteria.getTenantId());
+            receiptDetailsPreparedStatementValues.add(header.getId());
+            List<ReceiptDetail> receiptDetails = jdbcTemplate.query(
+                    receiptDetailsQuery, receiptDetailsPreparedStatementValues.toArray(),
+                    receiptDetaiRowMapper);
+            receiptHeader = header;
+            receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
+            receiptHeader.setReceiptInstrument(searchInstrumentHeader(receiptHeader.getId(),receiptSearchCriteria.getTenantId(),requestInfo));
+            receiptHeaders.add(receiptHeader);
 		}
 
-		List<ReceiptHeader> uniqueReceiptheader = listOfHeadersFromDB.stream()
-				.filter(distinctByKey(p -> p.getId()))
-				.collect(Collectors.toList());
-		List<ReceiptDetail> uniqueReceiptDetails = receiptDetails
-				.stream()
-				.filter(accountdetail -> accountdetail.getId() != null)
-				.collect(
-						collectingAndThen(toCollection(() -> new TreeSet<>(
-								comparingLong(ReceiptDetail::getId))),
-								ArrayList::new));
-		List<ReceiptHeader> unqReceiptheader = uniqueReceiptheader.stream()
-				.map(unqheader -> unqheader.toDomainModel())
-				.collect(Collectors.toList());
-
-        Instrument instrument = searchInstrumentHeader(uniqueReceiptheader.get(0).getId(),uniqueReceiptheader.get(0).getTenantId(),requestInfo);
-		return new ReceiptCommonModel(unqReceiptheader, uniqueReceiptDetails, instrument);
-	}
-
-	public static <T> Predicate<T> distinctByKey(
-			Function<? super T, Object> keyExtractor) {
-		Map<Object, Boolean> map = new ConcurrentHashMap<>();
-		return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+		return new ReceiptCommonModel(receiptHeaders);
 	}
 
 	public ReceiptReq cancelReceipt(ReceiptReq receiptReq) {
@@ -388,7 +377,7 @@ public class ReceiptRepository {
         String queryString = receiptDetailQueryBuilder.searchReceiptInstrument();
         List<String> instrumentHeaders = jdbcTemplate.queryForList(
                 queryString, String.class, new Object[] { receiptHeader,tenantId });
-        return instrumentRepository.searchInstruments(instrumentHeaders.get(0),tenantId,requestInfo);
+        return !instrumentHeaders.isEmpty() ? instrumentRepository.searchInstruments(instrumentHeaders.get(0),tenantId,requestInfo) : null;
     }
 
 }

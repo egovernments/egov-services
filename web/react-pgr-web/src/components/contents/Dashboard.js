@@ -276,10 +276,10 @@ class Dashboard extends Component {
   loadServiceTypes = (service) => {
     var _this=this;
     this.props.setLoadingStatus("loading");
-    Api.commonApiPost("/pgr-master/service/v1/_search",{categoryId:service.id,
-       keywords:constants.CITIZEN_SERVICES_KEYWORD, type:"category"},{}).then(function(response){
+    Api.commonApiPost("/pgr-master/service/v2/_search",{categoryId:service.id,
+       keywords:constants.CITIZEN_SERVICES_KEYWORD},{}).then(function(response){
       _this.props.setLoadingStatus("hide");
-      service['types'] = response.Service;
+      service['types'] = response;
       _this.setState([..._this.state.citizenServices, ...service]);
     });
   }
@@ -478,7 +478,7 @@ class Dashboard extends Component {
                                 {serviceTypeMenus.length === 0 && servicesMenus.length === 0? (
                                   <div className="col-xs-12 empty-info">
                                     <FontIcon className="material-icons icon">inbox</FontIcon>
-                                    <span className="msg">No Services Found</span>
+                                    <span className="msg">{translate(constants.LABEL_NO_SERVICS)}</span>
                                   </div>
                                 ) : null}
 

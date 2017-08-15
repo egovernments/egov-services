@@ -31,8 +31,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	}
 	
 	public List<TradeLicenseEntity> search(String tenantId, Integer pageSize, Integer pageNumber, String sort, String active,
-			String tradeLicenseId, String applicationNumber, String licenseNumber, 
-			String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer revenueWard,
+			String tradeLicenseId, String applicationNumber, String licenseNumber, String oldLicenseNumber,
+			String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard,
 			Integer locality, String ownerName, String tradeTitle, String tradeType, Integer tradeCategory,
 			Integer tradeSubCategory, String legacy, Integer status) {
 		
@@ -40,8 +40,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		
 		String query = buildSearchQuery(tenantId, pageSize, pageNumber, sort, active,
-				tradeLicenseId, applicationNumber, licenseNumber, mobileNumber,
-				aadhaarNumber, emailId, propertyAssesmentNo, revenueWard, locality,
+				tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber,
+				aadhaarNumber, emailId, propertyAssesmentNo, adminWard, locality,
 				ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory,
 				legacy, status, preparedStatementValues);
 
@@ -53,8 +53,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 
 	public String buildSearchQuery(String tenantId, Integer pageSize, Integer pageNumber, String sort, String active,
-			String tradeLicenseId, String applicationNumber, String licenseNumber,
-			String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer revenueWard,
+			String tradeLicenseId, String applicationNumber, String licenseNumber, String oldLicenseNumber,
+			String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard,
 			Integer locality, String ownerName, String tradeTitle, String tradeType, Integer tradeCategory,
 			Integer tradeSubCategory,String legacy, Integer status, List<Object> preparedStatementValues) {
 
@@ -92,6 +92,11 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			preparedStatementValues.add(licenseNumber);
 		}
 		
+		if (oldLicenseNumber != null && !oldLicenseNumber.isEmpty()) {
+			searchSql.append(" AND oldLicenseNumber = ? ");
+			preparedStatementValues.add(oldLicenseNumber);
+		}
+		
 		if (mobileNumber != null && !mobileNumber.isEmpty()) {
 			searchSql.append(" AND mobileNumber = ? ");
 			preparedStatementValues.add(mobileNumber);
@@ -114,9 +119,9 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 		
 		
-		if (revenueWard != null) {
-			searchSql.append(" AND revenueWardId = ? ");
-			preparedStatementValues.add(revenueWard);
+		if (adminWard != null) {
+			searchSql.append(" AND adminWardId = ? ");
+			preparedStatementValues.add(adminWard);
 		}
 		
 		if (locality != null) {

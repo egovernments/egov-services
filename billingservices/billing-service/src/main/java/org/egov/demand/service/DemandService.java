@@ -156,14 +156,20 @@ public class DemandService {
 	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest)
 	{
 	    BillRequest billRequest=new BillRequest();
+	    if(receiptRequest !=null && receiptRequest.getReceipt() !=null && !receiptRequest.getReceipt().isEmpty()){
 	    billRequest.setRequestInfo(receiptRequest.getRequestInfo());
 	    billRequest.setBills(receiptRequest.getReceipt().get(0).getBill());
+	    }
 	    return updateDemandFromBill(billRequest);
+	    
 	    
 	}
 	
 	
 	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
+	    
+		log.debug("THE recieved bill request object------"+billRequest);
+	    if(billRequest !=null && billRequest.getBills()!=null){
 
 		List<Bill> bills = billRequest.getBills();
 		RequestInfo requestInfo = billRequest.getRequestInfo();
@@ -175,6 +181,7 @@ public class DemandService {
 		}
 		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).tenantId(tenantId).build();
 		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
+		log.debug("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
 		Map<String, Demand> demandIdMap = demands.stream()
 				.collect(Collectors.toMap(Demand::getId, Function.identity()));
 		Map<String, List<Demand>> demandListMap = new HashMap<>();
@@ -211,26 +218,30 @@ public class DemandService {
 					Long toDate = Long.valueOf(accDescription.get(2));
 
 					for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
-						System.err.println("the current demand detail : " + demandDetail);
+						log.debug("the current demand detail : " + demandDetail);
 						Demand demand = demandIdMap.get(demandDetail.getDemandId());
-						System.err.println("the respective deman"+demand);
+						log.debug("the respective deman"+demand);
 						
 						if (fromDate.equals(demand.getTaxPeriodFrom()) && toDate.equals(demand.getTaxPeriodTo())) {
 							
 							BigDecimal collectedAmount = accountDetail.getCreditAmount();
-							System.err.println("the credit amt :"+ collectedAmount);
-							System.out.println();
+							log.debug("the credit amt :"+ collectedAmount);
 							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
 							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
+							log.debug("the setTaxAmount ::: "+demandDetail.getTaxAmount());
+							log.debug("the setCollectionAmount ::: "+demandDetail.getCollectionAmount());
 						}
 					}
 				}
 			}
 		}
+		
 		demandRepository.update(new DemandRequest(requestInfo,demands));
 	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
-                kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandResponse);
+                kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandResponse);
 		return demandResponse;
+	    }
+            return null;
 	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {
@@ -331,7 +342,6 @@ public class DemandService {
 		List<Demand> demands = null;
 
 		if (demandCriteria.getEmail() != null || demandCriteria.getMobileNumber() != null) {
-
 			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
 					.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
 					.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).build();
@@ -341,11 +351,13 @@ public class DemandService {
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
 		} else {
 			demands = demandRepository.getDemands(demandCriteria, null);
-			List<Long> ownerIds = new ArrayList<>(
-					demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
-			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
-					.tenantId(demandCriteria.getTenantId()).id(ownerIds).pageSize(500).build();
-			owners = ownerRepository.getOwners(userSearchRequest);
+			if(!demands.isEmpty()) {
+				List<Long> ownerIds = new ArrayList<>(
+						demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
+				userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+						.tenantId(demandCriteria.getTenantId()).id(ownerIds).pageSize(500).build();
+				owners = ownerRepository.getOwners(userSearchRequest);
+			}
 		}
 		if (demands!=null && !demands.isEmpty())
 			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
@@ -391,4 +403,5 @@ public class DemandService {
 		auditDetail.setLastModifiedTime(currEpochDate);
 		return auditDetail;
 	}
+	
 }

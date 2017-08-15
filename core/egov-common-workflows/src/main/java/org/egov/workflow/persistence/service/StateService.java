@@ -48,6 +48,10 @@ public class StateService {
 	public List<State> findAll() {
 		return stateRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
 	}
+	
+	public State findByIdAndTenantId(Long id,String tenantId) {
+		return stateRepository.findOne(id);
+	}
 
 	public State findOne(Long id) {
 		return stateRepository.findOne(id);

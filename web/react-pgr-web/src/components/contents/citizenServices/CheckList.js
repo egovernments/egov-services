@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 const styles = {
   checkbox: {
-    marginBottom: 16,
-    marginTop: 16
+    marginBottom: 5,
+    marginTop: 10
   }
 };
 
@@ -24,7 +24,7 @@ export default class CheckList extends Component{
 
     return this.props.items.map((attribute, index)=>{
          if(attribute.isActive)
-           return <CheckBoxItem key={index} obj={attribute}/>
+           return (<CheckBoxItem key={index} required={this.props.required} obj={attribute} handler={this.props.handler} value={this.props.values[attribute.key]} />)
     });
   }
 
@@ -43,7 +43,11 @@ class CheckBoxItem extends Component{
         return (
           <Checkbox
             ref = {this.props.obj.key}
-            label = {translate(this.props.obj.name)}
+            checked={this.props.value? this.props.value : false}
+            onCheck={(e, isChecked)=>{
+              this.props.handler((isChecked? true : ""), this.props.obj.key, this.props.required, '');
+            }}
+            label = {translate(this.props.obj.name) + (this.props.required ? " *":null)}
             style = {styles.checkbox}
           />)
     }

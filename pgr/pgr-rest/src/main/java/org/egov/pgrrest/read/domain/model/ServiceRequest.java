@@ -76,6 +76,10 @@ public class ServiceRequest {
         return requester.isAbsent();
     }
 
+    public boolean isValidMobileNumber() {
+        return requester.isMobileNumberValid();
+    }
+
     public boolean isComplainantPhoneAbsent() {
         return requester.isMobileAbsent();
     }
@@ -138,7 +142,25 @@ public class ServiceRequest {
     }
 
     public boolean descriptionLength() {
-        return description.length() < 10 || description.length() > 500;
+        return description.length() >= 10 && description.length() <= 1000;
+    }
+
+    public boolean firstNameLength() {
+        return requester.getFirstName().length() > 0 && requester.getFirstName().length() <= 100;
+    }
+
+    public boolean emailLength() {
+        if (isEmpty(requester.getEmail()))
+            return false;
+        else
+            return requester.getEmail().length() > 0 && requester.getEmail().length() <= 100;
+    }
+
+    public boolean tenantIdLength() {
+        if (isEmpty(tenantId))
+            return false;
+        else
+            return tenantId.length() > 0 && tenantId.length() <= 256;
     }
 
     public boolean isEmailValid() {
@@ -177,7 +199,7 @@ public class ServiceRequest {
 
     public AttributeEntry getAttributeWithKey(String attributeDefinitionCode) {
         final List<AttributeEntry> matchingAttributes = getAttributesWithKey(attributeDefinitionCode);
-        if(CollectionUtils.isEmpty(matchingAttributes)) {
+        if (CollectionUtils.isEmpty(matchingAttributes)) {
             return null;
         }
         return matchingAttributes.get(0);
@@ -185,5 +207,20 @@ public class ServiceRequest {
 
     public boolean isMultipleAttributeEntriesPresent(String attributeCode) {
         return getAttributesWithKey(attributeCode).size() > 1;
+    }
+
+/*    public void validateFields() {
+       throw new InvalidServiceRequestException(this);
+    }*/
+
+    public boolean isAttributePresent(String key) {
+        List<AttributeEntry> attributeValueByKey = getAttributeValueByKey(key);
+        return attributeValueByKey.isEmpty();
+    }
+
+    public List<AttributeEntry> getAttributeValueByKey(String key) {
+        return attributeEntries.stream()
+            .filter(attributeEntry -> key.equalsIgnoreCase(attributeEntry.getKey()))
+            .collect(Collectors.toList());
     }
 }

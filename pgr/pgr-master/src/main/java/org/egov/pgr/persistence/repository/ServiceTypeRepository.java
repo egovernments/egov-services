@@ -175,6 +175,7 @@ public class ServiceTypeRepository {
         HashMap<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("code", serviceTypeSearchCriteria.getServiceCode());
         parametersMap.put("tenantid", serviceTypeSearchCriteria.getTenantId());
+        parametersMap.put("category", serviceTypeSearchCriteria.getCategory());
 
         return parametersMap;
     }

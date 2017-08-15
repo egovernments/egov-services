@@ -505,7 +505,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "licenses",
-    "label": "tl.view.groups.title"
+    "label": "tl.view.groups.title",
 		"groups": [
 			{
 				"label": "tl.view.groups.tradeOwnerDetails",
@@ -1093,6 +1093,9 @@ var dat = {
 
 		]
 	}
+]
 }
+}
+
 
 export default dat;

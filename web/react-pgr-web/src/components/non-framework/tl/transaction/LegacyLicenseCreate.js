@@ -174,7 +174,8 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
 
   componentDidMount() {
       this.initData();
-      this.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",false,false);
+
+      //this.props.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",false,false);
 
   }
 

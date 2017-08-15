@@ -38,47 +38,28 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.service;
+package org.egov.eis.web.contract;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.egov.eis.model.Position;
-import org.egov.eis.repository.PositionAssignmentRepository;
-import org.egov.eis.service.helper.PositionSearchURLHelper;
-import org.egov.eis.web.contract.PositionGetRequest;
-import org.egov.eis.web.contract.PositionResponse;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class HRConfigurationResponse {
 
-@Service
-public class PositionService {
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	@Autowired
-	private RestTemplate restTemplate;
+	@JsonProperty("HRConfiguration")
+	private Map<String, List<String>> hrConfiguration = new HashMap<>();
 
-	@Autowired
-	private PositionAssignmentRepository positionAssignmentRepository;
-
-	@Autowired
-	private PositionSearchURLHelper positionSearchURLHelper;
-
-	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest,
-			RequestInfoWrapper requestInfoWrapper) {
-		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
-		if(isEmpty(actualPositionIds)) {
-			actualPositionIds.add(0L);
-		}
-		positionGetRequest.setId(actualPositionIds);
-
-		String url = positionSearchURLHelper.searchURL(positionGetRequest);
-
-		PositionResponse positionResponse = restTemplate.postForObject(url, requestInfoWrapper,
-				PositionResponse.class);
-
-		return positionResponse.getPosition();
-	}
 }

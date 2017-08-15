@@ -86,12 +86,6 @@ public class EmployeeHelper {
 		}
 	}
 
-/*
-	public String getEmployeeCode(Long id) {
-		return "EMP" + id;
-	}
-*/
-
 	public UserRequest getUserRequest(EmployeeRequest employeeRequest) {
 		UserRequest userRequest = new UserRequest();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
@@ -105,13 +99,13 @@ public class EmployeeHelper {
 		return userRequest;
 	}
 
-	public void populateDefaultDataForCreate(EmployeeRequest employeeRequest) {
+	public void populateDefaultDataForCreate(EmployeeRequest employeeRequest, Map<String, List<String>> hrConfigurations) {
 		Employee employee = employeeRequest.getEmployee();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		Long requesterId = requestInfo.getUserInfo().getId();
 		String tenantId = employeeRequest.getEmployee().getTenantId();
 
-		populateDefaultDataForNewEmployee(employee, requesterId, tenantId);
+		populateDefaultDataForNewEmployee(employee, requesterId, tenantId, hrConfigurations);
 
 		employee.getAssignments().forEach((assignment) -> {
 			populateDefaultDataForNewAssignment(assignment, requesterId, tenantId);
@@ -241,7 +235,15 @@ public class EmployeeHelper {
 		}
 	}
 
-	private void populateDefaultDataForNewEmployee(Employee employee, Long requesterId, String tenantId) {
+	private String getEmployeeCode(Long id) {
+		return "EMP" + id;
+	}
+
+	private void populateDefaultDataForNewEmployee(Employee employee, Long requesterId, String tenantId,
+												   Map<String, List<String>> hrConfigurations) {
+		if (hrConfigurations.get("Autogenerate_employeecode").get(0).equals("Y")) {
+			employee.setCode(getEmployeeCode(employee.getId()));
+		}
 		employee.setTenantId(tenantId);
 		employee.setCreatedBy(requesterId);
 		employee.setCreatedDate(new Date());

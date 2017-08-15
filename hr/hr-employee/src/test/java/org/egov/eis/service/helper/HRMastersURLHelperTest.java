@@ -9,30 +9,30 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class PositionSearchURLHelperTest {
-		
+public class HRMastersURLHelperTest {
+
 	@InjectMocks
-    private PositionSearchURLHelper testingObject;
-	
+	private HRMastersURLHelper testingObject;
+
 	@Mock
 	private ApplicationProperties applicationProperties;
-	
+
 	@Mock
 	private PropertiesManager propertiesManager;
-	
+
 	@Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
+	public void initMocks() {
+		MockitoAnnotations.initMocks(this);
+	}
 
 	@Test
 	public void testGetBlankQuery() {
 		String searchPositionsBaseURL = propertiesManager.getHrMastersServiceHostName()
-				+ propertiesManager.getHrMastersServicePositionsBasePath()
+				+ propertiesManager.getHrMastersServiceBasePath()
 				+ propertiesManager.getHrMastersServicePositionsSearchPath();
 
 		Mockito.when(searchPositionsBaseURL)
-			.thenReturn("http://localhost:7777/hr-masters/positions/_search");
+				.thenReturn("http://localhost:7777/hr-masters/positions/_search");
 		Mockito.when(applicationProperties.empSearchPageSizeMax()).thenReturn("500");
 /*
 		PositionGetRequest positionGetRequest = getNewPositionGetRequest();

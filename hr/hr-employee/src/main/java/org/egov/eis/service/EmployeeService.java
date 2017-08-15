@@ -58,10 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -152,6 +149,9 @@ public class EmployeeService {
     private EmployeeDataSyncService employeeDataSyncService;
 
     @Autowired
+    private HRMastersService hrMastersService;
+
+    @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
@@ -228,20 +228,27 @@ public class EmployeeService {
     }
 
     public Employee createAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(employeeRequest.getRequestInfo());
+        Employee employee = employeeRequest.getEmployee();
+
+        Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(requestInfoWrapper);
+
         UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
         userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
                 : userRequest.getUser().getBloodGroup());
+        if (hrConfigurations.get("Autogenerate_username").get(0).equals("Y")) {
+            userRequest.getUser().setUserName(employee.getCode());
+        }
 
         // FIXME : Fix a common standard for date formats in User Service.
         UserResponse userResponse = userService.createUser(userRequest);
-
         User user = userResponse.getUser().get(0);
 
-        Employee employee = employeeRequest.getEmployee();
         employee.setId(user.getId());
         employee.setUser(user);
 
-        employeeHelper.populateDefaultDataForCreate(employeeRequest);
+        employeeHelper.populateDefaultDataForCreate(employeeRequest, hrConfigurations);
 
         log.info("employeeRequest before sending to kafka :: " + employeeRequest);
         kafkaTemplate.send(propertiesManager.getSaveEmployeeTopic(), employeeRequest);

@@ -49,17 +49,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PositionSearchURLHelper {
-	
+public class HRMastersURLHelper {
+
 	@Autowired
 	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	public String searchURL(PositionGetRequest positionGetRequest) {
+	public String positionSearchURL(PositionGetRequest positionGetRequest) {
 		String BASE_URL = propertiesManager.getHrMastersServiceHostName()
-				+ propertiesManager.getHrMastersServicePositionsBasePath()
+				+ propertiesManager.getHrMastersServiceBasePath()
 				+ propertiesManager.getHrMastersServicePositionsSearchPath();
 
 		StringBuilder searchURL = new StringBuilder(BASE_URL + "?");
@@ -84,11 +84,19 @@ public class PositionSearchURLHelper {
 		return searchURL.toString();
 	}
 
+	// FIXME : Hard-coded tenantId as default for seed data
+	public String hrConfigurationsSearchURL() {
+		return propertiesManager.getHrMastersServiceHostName()
+				+ propertiesManager.getHrMastersServiceBasePath()
+				+ propertiesManager.getHrMastersServiceHRConfigurationsSearchPath()
+				+ "?tenantId=default";
+	}
+
 	/**
 	 * This method is always called at the beginning of the method so that &
 	 * is prepended before the next parameter is appended.
-	 * 
-	 * @param appendAndFlag
+	 *
+	 * @param appendAndSeperatorFlag
 	 * @param searchURL
 	 * @return boolean indicates if the next parameter should append an "&"
 	 */

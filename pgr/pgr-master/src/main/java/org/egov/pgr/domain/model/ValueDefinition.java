@@ -37,11 +37,11 @@ public class ValueDefinition {
     /* field length valiadtion*/
     
     public boolean isKeyLengthMatch(){
-        return (key.length() > 0 && key.length() <= 50);
+        return (!isEmpty(key) && (key.length() > 0 && key.length() <= 50));
     }
     
     public boolean isNameLengthMatch(){
-        return (name.length() > 0 && name.length() <= 100);
+        return (!isEmpty(name) && (name.length() > 0 && name.length() <= 100));
     }
     
     

@@ -23,6 +23,11 @@ import IconButton from 'material-ui/IconButton';
 import $ from 'jquery';
 var axios = require('axios');
 
+const hideAutoFillColorStyle = {
+  WebkitBoxShadow: '0 0 0 1000px white inset'
+};
+const hintStyle = { zIndex: '1' };
+
 const styles = {
     errorStyle: {
       color: red500,
@@ -599,9 +604,9 @@ class Login extends Component {
                       </SelectField>
                   </Col>
               </Row>
-              <Row style={styles.marginTop}>
+              <Row  style={styles.marginTop}>
                   <Col xs={12} md={6} mdPush={6} style={styles.marginBottom}>
-					<form autoComplete="off" onSubmit={(e) => {
+					<form  autoComplete="off" onSubmit={(e) => {
 					loginRequest(e)}}>
                     <Card>
                       <CardText>
@@ -798,7 +803,7 @@ class Login extends Component {
               onRequestClose={(e) => {handleClose("open3")}}
               contentStyle={{"maxWidth": "500px"}}
             >
-                <Row>
+                <Row className="formcontainer">
                   <Col xs={12} md={12}>
                     <TextField
                         floatingLabelText={translate('core.lbl.mobilenumber')}
@@ -815,7 +820,8 @@ class Login extends Component {
                         floatingLabelText={translate('core.lbl.password')}
                         fullWidth={true}
                         value={signUpObject.password}
-                        autoComplete="new-password"
+
+                        autoComplete="off"
                         type="password"
                         errorText={signUpObject.passwordMsg ? signUpObject.passwordMsg : ""}
                         onChange={(e) => handleStateChange(e, "signUpObject.password", /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/, translate('pgr.lbl.btwncharacter'))}
@@ -826,7 +832,7 @@ class Login extends Component {
                         floatingLabelText={translate('core.lbl.confirm.password')}
                         fullWidth={true}
                         value={signUpObject.confirmPassword}
-                        autoComplete="new-password"
+                        autoComplete="off"
                         type="password"
                         errorText={!signUpObject.passwordMsg ? this.passwordValidation() : '' }
                         onChange={(e) => handleStateChange(e, "signUpObject.confirmPassword")}

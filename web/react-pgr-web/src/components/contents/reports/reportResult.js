@@ -29,22 +29,20 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 class ShowField extends Component {
   constructor(props) {
        super(props);
-
    }
 
-
-
-   componentWillMount()
-   {
-     $('#searchTable').DataTable({
-       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-       buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-        bDestroy: true,
-        language: {
-           "emptyTable": "No Records"
-        }
-      });
-   }
+  //  componentWillMount()
+  //  {
+  //    console.log('will mount');
+  //    $('#searchTable').DataTable({
+  //      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+  //      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+  //       bDestroy: true,
+  //       language: {
+  //          "emptyTable": "No Records"
+  //       }
+  //     });
+  //  }
 
   componentWillUnmount()
   {
@@ -53,10 +51,8 @@ class ShowField extends Component {
      .destroy(true);
   }
 
-
-
-
   componentWillUpdate() {
+    // console.log('will update');
     let {flag}=this.props;
     if(flag == 1) {
       flag = 0;
@@ -64,16 +60,20 @@ class ShowField extends Component {
     }
   }
 
-  componentDidUpdate() {
-          $('#reportTable').DataTable({
-            dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
-             ],
-             ordering: false,
-             bDestroy: true,
+  componentWillReceiveProps(nextprops){
+  }
 
-          });
+  componentDidUpdate() {
+    // console.log('did update');
+    $('#reportTable').DataTable({
+      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      buttons: [
+               'copy', 'csv', 'excel', 'pdf', 'print'
+       ],
+       ordering: false,
+       bDestroy: true,
+
+    });
   }
 
   drillDown=(e,i,i2,item,item1)=>{

@@ -6,7 +6,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.GenerateBillCriteria;
-import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.service.BillService;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -75,7 +74,7 @@ public class BillController {
 	@PostMapping("_generate")
 	@ResponseBody
 	public ResponseEntity<?> genrateBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute GenerateBillCriteria generateBillCriteria, BindingResult bindingResult){
+			@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria, BindingResult bindingResult){
 		log.debug("genrateBill generateBillCriteria : "+generateBillCriteria);
 		log.debug("genrateBill requestInfoWrapper : "+requestInfoWrapper);
 		

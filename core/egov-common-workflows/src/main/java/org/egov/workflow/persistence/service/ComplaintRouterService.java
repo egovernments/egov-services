@@ -163,7 +163,7 @@ public class ComplaintRouterService {
 					complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");
 			}
 			if (complaintRouter != null)
-				positionResponse = positionRepository.getById(complaintRouter.getPosition(), requestInfo);
+				positionResponse = positionRepository.getById(complaintRouter.getPosition(),requestInfo.getUserInfo().getTenantId(),requestInfo);
 			else
 				throw new ApplicationRuntimeException("PGR.001");
 		} else
@@ -177,7 +177,7 @@ public class ComplaintRouterService {
 					if (employeeResponse != null)
 						positions = positionRepository.getByEmployeeId(employeeResponse.getCode(), requestInfo);
 					if (!positions.isEmpty())
-						positionResponse = positionRepository.getById(positions.iterator().next().getId(), requestInfo);
+						positionResponse = positionRepository.getById(positions.iterator().next().getId(),requestInfo.getUserInfo().getTenantId(), requestInfo);
 				} else
 					positionResponse = positionHierarchies.iterator().next().getToPosition();
 			} catch (final EscalationException e) {

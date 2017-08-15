@@ -123,13 +123,13 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,stateid,numberOfFamily) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?)";
+                + ",?,?)";
     }
     public static String insertDemandConnection() {
 

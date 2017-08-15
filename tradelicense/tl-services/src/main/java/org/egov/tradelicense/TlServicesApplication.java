@@ -1,5 +1,6 @@
 package org.egov.tradelicense;
 
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class TlServicesApplication {
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
+	}
+	
+	@Bean
+	public ResponseInfoFactory ResponseInfoFactory() {
+		return new ResponseInfoFactory();
 	}
 
 	@Autowired

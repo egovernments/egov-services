@@ -87,6 +87,10 @@ public class TradeLicense {
 	private Integer revenueWardId;
 
 	@NotNull
+	@JsonProperty("adminWardId")
+	private Integer adminWardId;
+	
+	@NotNull
 	@JsonProperty("tradeAddress")
 	@Size(max = 256)
 	private String tradeAddress;

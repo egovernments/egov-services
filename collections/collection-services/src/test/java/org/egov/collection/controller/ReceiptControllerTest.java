@@ -179,8 +179,7 @@ public class ReceiptControllerTest {
 				.ordernumber(6L).receiptHeader(receiptHeader).actualcramountToBePaid(800.0)
 				.description("receipt details received").financialYear("sixteen").isActualDemand(true).purpose("REBATE")
 				.tenantId("default").build();
-		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header))
-				.receiptDetails(Arrays.asList(detail1, detail2)).build();
+		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header)).build();
 	}
 
 	private ReceiptSearchCriteria getReceiptSearchCriteria() {

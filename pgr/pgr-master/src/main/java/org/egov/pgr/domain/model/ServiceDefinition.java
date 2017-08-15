@@ -35,11 +35,11 @@ public class ServiceDefinition {
      
     
     public boolean isTenantIdLengthMatch(){
-        return (tenantId.length() > 0 && tenantId.length() <= 256);
+        return (!isEmpty(tenantId) && (tenantId.length() > 0 && tenantId.length() <= 256));
     }
     
     public boolean isCodeLengthMatch(){
-        return (code.length() > 0 && code.length() <= 20);
+        return (!isEmpty(code) && (code.length() > 0 && code.length() <= 20));
     }
     
     public boolean isTenantIdAbsent(){

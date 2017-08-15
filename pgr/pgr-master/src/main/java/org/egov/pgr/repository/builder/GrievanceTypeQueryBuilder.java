@@ -46,6 +46,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Component
 public class GrievanceTypeQueryBuilder {
 
@@ -113,7 +115,16 @@ public class GrievanceTypeQueryBuilder {
             selectQuery.append(" comp.code in (select servicecode from servicetype_keyword where keyword = ? )");
             preparedStatementValues.add(serviceGetRequest.getKeywords());
         }
+
+        if (!isEmpty(serviceGetRequest.getActive()))
+        {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" comp.isactive = ?");
+            preparedStatementValues.add(serviceGetRequest.getActive());
+        }
     }
+
+
 
     private void addOrderByClause(final StringBuilder selectQuery, final ServiceGetRequest categoryGetRequest) {
         final String sortBy = categoryGetRequest.getSortBy() == null ? "category.code"

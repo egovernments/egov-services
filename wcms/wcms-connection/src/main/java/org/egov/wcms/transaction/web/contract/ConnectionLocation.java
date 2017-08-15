@@ -37,50 +37,27 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model;
+package org.egov.wcms.transaction.web.contract;
 
-import javax.validation.constraints.NotNull;
+import org.egov.wcms.transaction.model.AuditDetails;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-@Builder
+public class ConnectionLocation {
 
-public class Asset {
+    @JsonProperty("id")
+    private Long id;
 
-    @NotNull
-    private String assetidentifier;
+    @JsonProperty("revenueBoundary")
+    private Boundary revenueBoundary;
 
-    private Long assetidentifierId;
+    @JsonProperty("locationBoundary")
+    private Boundary locationBoundary;
 
-    @NotNull
-    private String address;
-    @NotNull
-    private String nameOfApplicant;
-    @NotNull
-    private String mobileNumber;
-    @NotNull
-    private String email;
-    @NotNull
-    private String adharNumber;
+    @JsonProperty("adminBoundary")
+    private Boundary adminBoundary;
 
-    @NotNull
-    private String locality;
-
-    @NotNull
-    private String zone;
-    private String block;
-    private String ward;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails;
 
 }

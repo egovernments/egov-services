@@ -40,21 +40,12 @@
 
 package org.egov.collection.model;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
-
-
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 @ToString
 @Data
 @Builder
@@ -86,8 +77,8 @@ public class ReceiptHeader {
 	
 	private Set<ReceiptDetail> receiptDetails = new LinkedHashSet<>(0);
 	
-    private Set receiptInstrument = new HashSet<>(0);
-	
+    private Instrument receiptInstrument;
+
 	private Date receiptDate;
 	
 	private String referenceDesc;

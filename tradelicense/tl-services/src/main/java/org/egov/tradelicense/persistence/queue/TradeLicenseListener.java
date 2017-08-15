@@ -2,11 +2,11 @@ package org.egov.tradelicense.persistence.queue;
 
 import java.util.Map;
 
+import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
-import org.egov.tradelicense.web.contract.TradeLicenseContract;
-import org.egov.tradelicense.web.requests.TradeLicenseRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

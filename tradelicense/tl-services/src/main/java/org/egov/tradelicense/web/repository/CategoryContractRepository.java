@@ -3,12 +3,13 @@ package org.egov.tradelicense.web.repository;
 import java.util.Date;
 
 import org.egov.tl.commons.web.requests.CategoryResponse;
-import org.egov.tradelicense.common.domain.model.RequestInfoWrapper;
+import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfoWrapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,18 +20,19 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoryContractRepository {
 
 	private RestTemplate restTemplate;
-	private String hostUrl;
-	public static final String SEARCH_URL = "tl-masters/category/v1/_search?";
+	
+	@Autowired
+	private PropertiesManager propertiesManger;
 
-	public CategoryContractRepository(@Value("${egov.services.tl-masters_v1.hostname}") String hostUrl,
-			RestTemplate restTemplate) {
+	public CategoryContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
-		this.hostUrl = hostUrl;
+		
 	}
 
 	public CategoryResponse findByCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
-		String url = String.format("%s%s", hostUrl, SEARCH_URL);
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getCategoryId() != null) {
 			content.append("ids=" + Long.valueOf(tradeLicense.getCategoryId()));
@@ -59,8 +61,9 @@ public class CategoryContractRepository {
 	}
 
 	public CategoryResponse findBySubCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
-		String url = String.format("%s%s", hostUrl, SEARCH_URL);
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getSubCategoryId() != null) {
 			content.append("ids=" + Long.valueOf(tradeLicense.getSubCategoryId()));
@@ -90,8 +93,9 @@ public class CategoryContractRepository {
 	}
 
 	public CategoryResponse findBySubCategoryUomId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
-		String url = String.format("%s%s", hostUrl, SEARCH_URL);
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getSubCategoryId() != null) {
 			content.append("ids=" + Long.valueOf(tradeLicense.getSubCategoryId()));

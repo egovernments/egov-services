@@ -1,28 +1,35 @@
 package org.egov.tradelicense.domain.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
+
+import org.egov.models.PropertyResponse;
 import org.egov.tl.commons.web.contract.Category;
 import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.requests.CategoryResponse;
 import org.egov.tl.commons.web.requests.DocumentTypeResponse;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
+import org.egov.tl.commons.web.requests.TradeLicenseRequest;
+import org.egov.tl.commons.web.requests.TradeLicenseResponse;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.InvalidInputException;
-import org.egov.tradelicense.common.domain.model.RequestInfoWrapper;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
-import org.egov.tradelicense.web.contract.TradeLicenseContract;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
 import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
+import org.egov.tradelicense.web.repository.PropertyContractRespository;
 import org.egov.tradelicense.web.requests.BoundaryResponse;
-import org.egov.tradelicense.web.requests.TradeLicenseRequest;
-import org.egov.tradelicense.web.requests.TradeLicenseResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +38,9 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
+import org.springframework.web.client.RestTemplate;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * CategoryService implementation class
@@ -39,6 +49,7 @@ import org.springframework.validation.SmartValidator;
  *
  */
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 public class TradeLicenseService {
 
@@ -55,7 +66,18 @@ public class TradeLicenseService {
 	DocumentTypeContractRepository documentTypeContractRepository;
 
 	@Autowired
+	PropertyContractRespository propertyContractRepository;
+	
+	@Autowired
 	private SmartValidator validator;
+	
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private PropertiesManager propertiesManager;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
 	private BindingResult validate(List<TradeLicense> tradeLicenses, BindingResult errors) {
 
@@ -80,11 +102,33 @@ public class TradeLicenseService {
 
 			if (tradeLicense.getIsLegacy()) {
 				// check unique constraint
-				tradeLicenseRepository.validateUniqueLicenseNumber(tradeLicense);
+				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
 			} else {
 
 			}
 
+			if (propertiesManager.getPtisValidation()) {
+				
+				if (tradeLicense.getPropertyAssesmentNo() == null){
+					throw new InvalidInputException("Property assesment number is mandatory!");
+				}
+				else{
+					PropertyResponse propertyResponse = propertyContractRepository.findByAssesmentNo(tradeLicense,
+							requestInfoWrapper);
+
+					if (propertyResponse == null || propertyResponse.getProperties() == null
+							|| propertyResponse.getProperties().size() == 0) {
+						throw new InvalidInputException("Invalid sub category type ");
+					}
+				}
+			}
+			
+			if( propertiesManager.getAdhaarValidation() ){
+				if (tradeLicense.getAdhaarNumber() == null){
+					throw new InvalidInputException("AdhaarNumber number is mandatory!");
+				}
+			}
+			
 			// locality validation
 			if (tradeLicense.getLocalityId() != null) {
 				BoundaryResponse boundaryResponse = boundaryContractRepository.findByLocalityId(tradeLicense,
@@ -108,6 +152,18 @@ public class TradeLicenseService {
 				}
 
 			}
+			
+			// admin ward validation
+				if (tradeLicense.getAdminWardId() != null) {
+					BoundaryResponse boundaryResponse = boundaryContractRepository.findByRevenueWardId(tradeLicense,
+							requestInfoWrapper);
+
+					if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
+							|| boundaryResponse.getBoundarys().size() == 0) {
+						throw new InvalidInputException("Invalid location ward ");
+					}
+
+				}
 
 			// category validation
 			if (tradeLicense.getCategoryId() != null) {
@@ -132,6 +188,12 @@ public class TradeLicenseService {
 			}
 
 			// supporting documents validation
+			
+			if( !tradeLicense.getIsLegacy()){
+				//TODO check for all mdantory documents types for the given 
+				//application type are filled are not.
+			}
+			
 			if (tradeLicense.getSupportDocuments() != null) {
 				for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
@@ -176,7 +238,7 @@ public class TradeLicenseService {
 				}
 
 			}
-
+			
 		}
 
 		return tradeLicenses;
@@ -225,12 +287,26 @@ public class TradeLicenseService {
 
 	public TradeLicenseResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
-			String licenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
+			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
 			Integer revenueWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
 			Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
-
+		
+		TradeLicenseResponse TradeLicenseResponse = new TradeLicenseResponse();
+		
+		TradeLicenseResponse tradeLicenseResponse = getLicensesFromEs(tenantId, pageSize, pageNumber, sort, active,
+				tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
+				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+				tradeSubCategory, legacy, status);
+	
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		
+		if(tradeLicenseResponse.getLicenses() != null && !(tradeLicenseResponse.getLicenses().size() == 0)){
+			tradeLicenseResponse.setResponseInfo(responseInfo);
+			return tradeLicenseResponse;
+		}
+		
 		List<TradeLicense> licenses = tradeLicenseRepository.search(tenantId, pageSize, pageNumber, sort, active,
-				tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId,
+				tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
 				propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
 				tradeSubCategory, legacy, status);
 
@@ -243,11 +319,114 @@ public class TradeLicenseService {
 			model.map(license, tradeContract);
 			tradeLicenseContracts.add(tradeContract);
 		}
-		TradeLicenseResponse TradeLicenseResponse = new TradeLicenseResponse();
-		TradeLicenseResponse.setResponseInfo(createResponseInfoFromRequestInfo(requestInfo, true));
+		
 		TradeLicenseResponse.setLicenses(tradeLicenseContracts);
+		TradeLicenseResponse.setResponseInfo(responseInfo);
+		
 
 		return TradeLicenseResponse;
+	}
+	
+	private TradeLicenseResponse getLicensesFromEs(String tenantId, Integer pageSize, Integer pageNumber, String sort,
+			String active, String tradeLicenseId, String applicationNumber, String licenseNumber, String oldLicenseNumber, String mobileNumber,
+			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer revenueWard, Integer locality,
+			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
+			String legacy, Integer status) {
+		
+		Map<String,Object> requestMap = new HashMap();
+		StringBuilder url = new StringBuilder( propertiesManager.getTradeLicenseIndexerServiceHostName());
+		url.append(propertiesManager.getTradeLicenseIndexerServiceBasePath());
+		url.append(propertiesManager.getTradeLicenseIndexerLicenseSearchPath());
+		
+		url.append("?tenantId="+tenantId);
+		
+		if(pageSize != null){
+			url.append("pageSize="+pageSize+"&");
+		}
+		if(pageNumber != null){
+			url.append("pageNumber="+pageNumber+"&");
+		}
+		
+		if(sort != null && !sort.isEmpty()){
+			url.append("sort="+sort+"&");
+		}
+		
+		if(active != null && !active.isEmpty()){
+			url.append("active="+active+"&");
+		}
+		
+		if(tradeLicenseId != null && !tradeLicenseId.isEmpty()){
+			url.append("tradeLicenseId="+tradeLicenseId+"&");
+		}
+		
+		if(applicationNumber != null && !applicationNumber.isEmpty()){
+			url.append("applicationNumber="+applicationNumber+"&");
+		}
+		if(licenseNumber != null && !licenseNumber.isEmpty()){
+			url.append("licenseNumber="+licenseNumber+"&");
+		}
+		if(mobileNumber != null && !mobileNumber.isEmpty()){
+			url.append("mobileNumber="+mobileNumber+"&");
+		}
+		if(aadhaarNumber != null && !aadhaarNumber.isEmpty()){
+			url.append("aadhaarNumber="+aadhaarNumber+"&");
+		}
+		
+		if(emailId != null && !emailId.isEmpty()){
+			url.append("emailId="+emailId+"&");
+		}
+		
+		if(propertyAssesmentNo != null && !propertyAssesmentNo.isEmpty()){
+			url.append("propertyAssesmentNo="+propertyAssesmentNo+"&");
+		}
+		
+		if(revenueWard != null ){
+			url.append("revenueWard="+revenueWard+"&");
+		}
+		
+		if(locality != null ){
+			url.append("locality="+locality+"&");
+		}
+		
+		if(ownerName != null && !ownerName.isEmpty()){
+			url.append("ownerName="+ownerName+"&");
+		}
+		
+		if(tradeTitle != null && !tradeTitle.isEmpty()){
+			url.append("tradeTitle="+tradeTitle+"&");
+		}
+		
+		if(tradeType != null && !tradeType.isEmpty()){
+			url.append("tradeType="+tradeType+"&");
+		}
+		
+		if(tradeCategory != null ){
+			url.append("tradeCategory="+tradeCategory+"&");
+		}
+		
+		if(tradeSubCategory != null ){
+			url.append("tradeSubCategory="+tradeSubCategory+"&");
+		}
+		
+		if(legacy != null && !legacy.isEmpty()){
+			url.append("legacy="+legacy+"&");
+		}
+		
+		if(status != null ){
+			url.append("status="+status);
+		}
+
+
+		TradeLicenseResponse tradeLicenseResponse = null;
+		try {
+
+			tradeLicenseResponse = restTemplate.postForObject(url.toString(), requestMap,
+					TradeLicenseResponse.class);
+
+		} catch (Exception e) {
+			log.error("Error while connecting to the Tl-Indexer end point");
+		}
+		return tradeLicenseResponse;
 	}
 
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
@@ -256,9 +435,10 @@ public class TradeLicenseService {
 		responseInfo.setApiId(apiId);
 		String ver = requestInfo.getVer();
 		responseInfo.setVer(ver);
-		String ts = null;
+		Long ts = null;
 		if (requestInfo.getTs() != null)
-			ts = requestInfo.getTs().toString();
+			ts = requestInfo.getTs();
+		
 		responseInfo.setTs(ts);
 		String resMsgId = "uief87324";
 		responseInfo.setResMsgId(resMsgId);

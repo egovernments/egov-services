@@ -138,10 +138,10 @@ public class WaterConnectionRepository {
                     statement.setString(26, NewConnectionStatus.SANCTIONED.name());
                 else
                     statement.setString(26, NewConnectionStatus.VERIFIED.name());
-                if (!waterConnectionRequest.getConnection().getIsLegacy()) {
+              /*  if (!waterConnectionRequest.getConnection().getIsLegacy()) {
                     statement.setLong(27, waterConnectionRequest.getConnection().getStateId() != null
                             ? waterConnectionRequest.getConnection().getStateId() : 1l);
-                }
+                }*/
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
                     statement.setString(27, waterConnectionRequest.getConnection().getLegacyConsumerNumber());

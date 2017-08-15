@@ -2,6 +2,8 @@ package org.egov.pgr.domain.model;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -65,28 +67,42 @@ public class ServiceType {
                 .lastModifiedBy(lastModifiedBy)
                 .build();
     }
-    
-
+   
+    	/*Length validation*/
     public boolean isTenantIdLengthMatch(){
-        return (tenantId.length() > 0 && tenantId.length() <= 256);
+    	
+        return (!tenantId.isEmpty() && (tenantId.length() > 0 && tenantId.length() <= 256));
     }
     
     public boolean isCodeLengthMatch(){
+    	if(serviceCode != null){
         return (serviceCode.length() > 0 && serviceCode.length() <= 20);
+    	}
+    	return true;
     }
     
     public boolean isDescriptionLengthMatch(){
+    	if(description != null){
         return (description.length() > 0 && description.length() <= 250);
+    	}
+    	return true;
     }
     
     public boolean isTypeLengthMatch(){
+    	if(type != null){
+
         return (type.length() >0 &&  type.length() <= 50);
+    	}
+    	return true;
     }
     
     public boolean isnameLengthMatch(){
+    	if(serviceName != null){
         return (serviceName.length() > 0 && serviceName.length() <= 150);
+    	}
+    	return true;
     }
-    
+
     public boolean isTenantIdAbsent(){
         return isEmpty(tenantId) || tenantId == null;
     }
@@ -102,6 +118,19 @@ public class ServiceType {
     public boolean isCategoryAbsent(){
         return isEmpty(category) || category == null;
     }
+    
+     public boolean isKeywordAbsent()
+     {
+    	 return (!keywords.isEmpty() && keywords.get(0).isEmpty() || keywords.size() == 0) ;
+     }
+     
+     public boolean isKeywordValid()
+     {
+    	 List<String> keywordsExpected = Arrays.asList("Deliverable_Service","Complaint");
+
+    	   return (!keywords.isEmpty() && (!keywordsExpected.stream().anyMatch(keywords::contains)));
+     }
+     
 
 //    private List<org.egov.pgr.persistence.dto.AttributeDefinition> mapToDtoAttribute(){
 //        return attributes.stream()

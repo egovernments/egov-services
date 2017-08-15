@@ -45,6 +45,7 @@ import org.egov.eis.repository.rowmapper.DepartmentDesignationRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -61,31 +62,32 @@ public class DepartmentDesignationRepository {
 			+ " FROM egeis_departmentDesignation WHERE id = ?";
 
 	private static final String GET_BY_DEPT_AND_DESG_QUERY = "SELECT id, departmentId, designationId, tenantId"
-			+ " FROM egeis_departmentDesignation WHERE departmentId = ? and designationId = ?";
+			+ " FROM egeis_departmentDesignation WHERE departmentId = ? AND designationId = ? AND tenantId = ?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	private DepartmentDesignationRowMapper departmentDesignationRowMapper;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	@Autowired
+	private DepartmentDesignationRowMapper deptDesigRowMapper;
 
 	public DepartmentDesignation findForId(Long id) {
-		DepartmentDesignation departmentDesignation = jdbcTemplate.queryForObject(BASE_QUERY,
-				departmentDesignationRowMapper, id);
-		return departmentDesignation;
+		return jdbcTemplate.queryForObject(BASE_QUERY, deptDesigRowMapper, id);
 	}
 
-	public DepartmentDesignation findByDepartmentAndDesignation(Long department, Long designation) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
+	public DepartmentDesignation findByDepartmentAndDesignation(Long department, Long designation, String tenantId) {
+		List<Object> preparedStatementValues = new ArrayList<>();
 		preparedStatementValues.add(department);
 		preparedStatementValues.add(designation);
+		preparedStatementValues.add(tenantId);
 		List<DepartmentDesignation> departmentDesignations = jdbcTemplate.query(GET_BY_DEPT_AND_DESG_QUERY,
-				preparedStatementValues.toArray(), departmentDesignationRowMapper);
+				preparedStatementValues.toArray(), deptDesigRowMapper);
 		return departmentDesignations.isEmpty() ? null : departmentDesignations.get(0);
 	}
 
 	public void create(DepartmentDesignation departmentDesignation) {
-
 		List<Object[]> batchArgs = new ArrayList<>();
 		Object[] deptDesgRecord = { departmentDesignation.getDepartmentId(),
 				departmentDesignation.getDesignation().getId(), departmentDesignation.getTenantId() };

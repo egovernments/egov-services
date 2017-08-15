@@ -3,13 +3,14 @@ package org.egov.tradelicense.web.repository;
 import java.util.Date;
 
 import org.egov.tl.commons.web.requests.DocumentTypeResponse;
-import org.egov.tradelicense.common.domain.model.RequestInfoWrapper;
+import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfoWrapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,22 +21,23 @@ import lombok.extern.slf4j.Slf4j;
 public class DocumentTypeContractRepository {
 
 	private RestTemplate restTemplate;
-	private String hostUrl;
-	public static final String SEARCH_URL = "tl-masters/documenttype/v1/_search?";
+	
+	@Autowired
+	private PropertiesManager propertiesManger;
 
-	public DocumentTypeContractRepository(@Value("${egov.services.tl-masters_v1.hostname}") String hostUrl,
-			RestTemplate restTemplate) {
+	public DocumentTypeContractRepository( RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
-		this.hostUrl = hostUrl;
 	}
 
 	public DocumentTypeResponse findById(TradeLicense tradeLicense, SupportDocument supportDocument,
 			RequestInfoWrapper requestInfoWrapper) {
 
-		String url = String.format("%s%s", hostUrl, SEARCH_URL);
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getDocumentServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (supportDocument.getDocumentTypeId() != null) {
-			content.append("id=" + supportDocument.getDocumentTypeId());
+			content.append("ids=" + supportDocument.getDocumentTypeId());
 		}
 
 		if (tradeLicense.getTenantId() != null) {

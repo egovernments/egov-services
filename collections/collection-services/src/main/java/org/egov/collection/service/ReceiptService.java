@@ -263,7 +263,8 @@ public class ReceiptService {
 			}
 				
 				billDetail.setCollectionType(CollectionType.COUNTER);
-				billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
+				//TODO: Revert back once the workflow is enabled
+				billDetail.setStatus(ReceiptStatus.APPROVED.toString());
 				billDetail.setReceiptDate(new Date().getTime());
 				billDetail.setReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
 						tenantId));

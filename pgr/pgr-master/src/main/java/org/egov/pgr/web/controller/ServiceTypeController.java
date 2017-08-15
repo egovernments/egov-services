@@ -36,12 +36,14 @@ public class ServiceTypeController {
     @PostMapping("/v2/_search")
     public List<ServiceType> search(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
                                     @RequestParam(value = "serviceCode", required = false) String serviceCode,
+                                    @RequestParam(value = "categoryId", required = false) Integer category,
                                     @RequestParam(value = "keywords", required = false) List<String> keywords,
                                     @RequestBody RequestInfoBody requestInfoBody){
 
         ServiceTypeSearchCriteria serviceTypeSearchCriteria = ServiceTypeSearchCriteria.builder()
                 .tenantId(tenantId)
                 .serviceCode(serviceCode)
+                .category(category)
                 .keywords(keywords)
                 .build();
 

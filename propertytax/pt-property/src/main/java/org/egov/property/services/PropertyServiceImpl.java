@@ -818,11 +818,11 @@ public class PropertyServiceImpl implements PropertyService {
      * @param upicNumber
      * @throws Exception
      */
-    public DemandResponse getDemandsForProperty(RequestInfo requestInfo, String tenantId, String upicNumber) throws Exception {
+    public DemandResponse getDemandsForProperty(RequestInfoWrapper requestInfoWrapper, String tenantId, String upicNumber) throws Exception {
         DemandResponse demandResponse = null;
         int noOfPeriods = 0;
-        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-        PropertyResponse propertyResponse =  searchProperty(requestInfo, tenantId, null, upicNumber, null,
+        //RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        PropertyResponse propertyResponse =  searchProperty(requestInfoWrapper.getRequestInfo(), tenantId, null, upicNumber, null,
                 null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
         if(propertyResponse != null){
@@ -833,11 +833,11 @@ public class PropertyServiceImpl implements PropertyService {
             String occupancyDateStr = new SimpleDateFormat(propertiesManager.getSimpleDateFormat()).format(occupancyDate);
 
             //Fetch TaxPeriods
-            TaxPeriodResponse taxPeriodResponse = getTaxPeriodsForOccupancyDate(requestInfo, tenantId, occupancyDateStr);
+            TaxPeriodResponse taxPeriodResponse = getTaxPeriodsForOccupancyDate(requestInfoWrapper.getRequestInfo(), tenantId, occupancyDateStr);
             logger.info("PropertyServiceImpl getDemandsForProperty() taxPeriodResponse : " + taxPeriodResponse);
 
             //Fetch TaxHeads
-            TaxHeadMasterResponse taxHeadResponse = getTaxHeadMasters(requestInfo, tenantId, occupancyDate);
+            TaxHeadMasterResponse taxHeadResponse = getTaxHeadMasters(requestInfoWrapper.getRequestInfo(), tenantId, occupancyDate);
             logger.info("PropertyServiceImpl getDemandsForProperty() taxHeadResponse : " + taxHeadResponse);
 
             //Fetch Demands for property
@@ -866,7 +866,7 @@ public class PropertyServiceImpl implements PropertyService {
                         }
                     }
                     demandResponse = new DemandResponse();
-                    demandResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+                    demandResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true));
                     demandResponse.setDemands(finalDemandList);
                 } else{
                     //set the existing demands to the response
@@ -875,7 +875,7 @@ public class PropertyServiceImpl implements PropertyService {
 
             } else {
                 demandResponse = new DemandResponse();
-                demandResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+                demandResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true));
                 for(TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()){
                     finalDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod, dbDateFormat);
                     demandResponse.setDemands(finalDemandList);
@@ -985,6 +985,7 @@ public class PropertyServiceImpl implements PropertyService {
         }
         Owner owner = new Owner();
         owner.setId(property.getOwners().get(0).getId());
+        owner.setId(1l);
         newDemand.setOwner(owner);
         newDemandList.add(newDemand);
         return newDemandList;

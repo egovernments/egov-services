@@ -14,8 +14,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
+import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.contract.SupportDocumentContract;
+import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.requests.TradeLicenseResponse;
 import org.egov.tradelicense.TlServicesApplication;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.AuditDetails;
@@ -23,11 +27,7 @@ import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
-import org.egov.tradelicense.web.contract.LicenseFeeDetailContract;
-import org.egov.tradelicense.web.contract.SupportDocumentContract;
-import org.egov.tradelicense.web.contract.TradeLicenseContract;
-import org.egov.tradelicense.web.controller.TradeLicenseController;
-import org.egov.tradelicense.web.requests.TradeLicenseResponse;
+import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,9 @@ public class TradeLicenseControllerTest {
 
 	@MockBean
 	private PropertiesManager propertiesManager;
+	
+	@MockBean
+	private BoundaryContractRepository boundaryContractRepository;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -111,7 +114,7 @@ public class TradeLicenseControllerTest {
 
 			ResponseInfo responseInfo = new ResponseInfo();
 
-			AuditDetails auditDetails = new AuditDetails();
+			org.egov.tl.commons.web.contract.AuditDetails auditDetails = new org.egov.tl.commons.web.contract.AuditDetails();
 
 			List<TradeLicenseContract> tradeLicenseContracts = new ArrayList<>();
 
@@ -137,8 +140,8 @@ public class TradeLicenseControllerTest {
 			when(tradeLicenseService.getTradeLicense(any(RequestInfo.class), any(String.class), any(Integer.class),
 					any(Integer.class), any(String.class), any(String.class), any(String.class), any(String.class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
-					any(Integer.class), any(Integer.class), any(String.class), any(String.class), any(String.class),
-					any(Integer.class), any(Integer.class), any(String.class), any(Integer.class)))
+					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(String.class),
+					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(Integer.class)))
 							.thenReturn(tradeLicenseResponse);
 
 			mockMvc.perform(post("/license/v1/_search").param("tenantId", "default")

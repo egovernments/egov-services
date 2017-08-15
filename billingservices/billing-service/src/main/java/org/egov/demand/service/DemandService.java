@@ -156,14 +156,19 @@ public class DemandService {
 	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest)
 	{
 	    BillRequest billRequest=new BillRequest();
+	    if(receiptRequest !=null && receiptRequest.getReceipt() !=null && !receiptRequest.getReceipt().isEmpty()){
 	    billRequest.setRequestInfo(receiptRequest.getRequestInfo());
 	    billRequest.setBills(receiptRequest.getReceipt().get(0).getBill());
+	    }
 	    return updateDemandFromBill(billRequest);
+	    
 	    
 	}
 	
 	
 	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
+	    
+	    if(billRequest !=null && billRequest.getBills()!=null){
 
 		List<Bill> bills = billRequest.getBills();
 		RequestInfo requestInfo = billRequest.getRequestInfo();
@@ -227,10 +232,14 @@ public class DemandService {
 				}
 			}
 		}
+		
 		demandRepository.update(new DemandRequest(requestInfo,demands));
 	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
                 kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandResponse);
+                System.out.println(demands);
 		return demandResponse;
+	    }
+            return null;
 	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {
@@ -331,7 +340,6 @@ public class DemandService {
 		List<Demand> demands = null;
 
 		if (demandCriteria.getEmail() != null || demandCriteria.getMobileNumber() != null) {
-
 			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
 					.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
 					.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).build();
@@ -341,11 +349,13 @@ public class DemandService {
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
 		} else {
 			demands = demandRepository.getDemands(demandCriteria, null);
-			List<Long> ownerIds = new ArrayList<>(
-					demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
-			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
-					.tenantId(demandCriteria.getTenantId()).id(ownerIds).pageSize(500).build();
-			owners = ownerRepository.getOwners(userSearchRequest);
+			if(!demands.isEmpty()) {
+				List<Long> ownerIds = new ArrayList<>(
+						demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
+				userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+						.tenantId(demandCriteria.getTenantId()).id(ownerIds).pageSize(500).build();
+				owners = ownerRepository.getOwners(userSearchRequest);
+			}
 		}
 		if (demands!=null && !demands.isEmpty())
 			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
@@ -391,4 +401,5 @@ public class DemandService {
 		auditDetail.setLastModifiedTime(currEpochDate);
 		return auditDetail;
 	}
+	
 }

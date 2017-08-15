@@ -1,11 +1,12 @@
 package org.egov.pgr.domain.model;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import static org.springframework.util.StringUtils.isEmpty;
 import lombok.Getter;
 
 @Getter
@@ -33,39 +34,57 @@ public class AttributeDefinition {
     private char readOnlyToChar() {
         return readOnly == true ? 'Y' : 'N';
     }
-    
+
     /* field length validation*/
     public boolean isTenantIdLengthMatch(){
-        return (tenantId.length() > 0 && tenantId.length() <= 256);
+        return (!tenantId.isEmpty() && (tenantId.length() > 0 && tenantId.length() <= 256));
     }
     
     public boolean isCodeLengthMatch(){
-        return (code.length() > 0 && code.length() <= 50);
+        return (!isEmpty(code) && (code.length() > 0 && code.length() <= 50));
     }
 
     public boolean isDataTypeLengthMatch(){
-        return (code.length() > 0 && code.length() <= 100);
+        return (!isEmpty(dataType) && (dataType.length() > 0 && dataType.length() <= 100));
     }
     
     public boolean isDatatypedescriptionLengthMatch(){
-        return (code.length() > 0 && code.length() <= 200);
+    	if(dataTypeDescription != null){
+        return (dataTypeDescription.length() > 0 && dataTypeDescription.length() <= 200);
+    	}
+    	return true;
     }
     
     public boolean isDescriptionLengthMatch(){
-        return (code.length() > 0 && code.length() <= 300);
+    	if(description != null)
+    	{
+        return (description.length() > 0 && description.length() <= 300);
     }
+    	return true;
+	}
     
     public boolean isServicecodeLengthMatch(){
-        return (serviceCode.length() > 0 && serviceCode.length() <= 256);
+        return (!isEmpty(serviceCode) && (serviceCode.length() > 0 && serviceCode.length() <= 256));
     }
     
     public boolean isUrlLengthMatch(){
+    	if(url != null)
+    	{
         return (url.length() > 0 && url.length() <= 300);
+    	}
+    	return true;
     }
     
     public boolean isGroupCodeLengthMatch(){
+    	if(groupCode != null)
+    	{
+    		
         return (groupCode.length() > 0 && groupCode.length() <= 300);
     }
+    	return true;
+    }
+    
+
     
     /* mandatory validation*/
     public boolean isTenantAbsent()

@@ -107,14 +107,6 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     private static final String FIRST_NAME_LENGTH_FIELD = "ServiceRequest.firstName";
     private static final String FIRST_NAME_LENGTH_MESSAGE = "First name must be below 20 characters";
 
-    private static final String EMAIL_LENGTH_CODE = "pgr.0028";
-    private static final String EMAIL_LENGTH_FIELD = "ServiceRequest.email";
-    private static final String EMAIL_LENGTH_MESSAGE = "Email must be below 100 characters";
-
-    private static final String TENANTID_LENGTH_CODE = "pgr.0029";
-    private static final String TENANTID_LENGTH_FIELD = "ServiceRequest.tenantId";
-    private static final String TENANTID_LENGTH_MESSAGE = "Tenant Id must be below 256 characters";
-
     private static final String STATE_ID_MANDATORY_CODE = "pgr.0027";
     private static final String STATE_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemStateId";
     private static final String STATE_ID_MANDATORY_MESSAGE = "State ID is required";
@@ -203,9 +195,6 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
 
     private void addTenantIdValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!model.isTenantIdAbsent()) {
-            {
-                addTenantLengthValidationErrors(model, errorFields);
-            }
             return;
         }
         final ErrorField errorField = ErrorField.builder()
@@ -331,10 +320,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
 
     private void addEmailPattern(ServiceRequest model, List<ErrorField> errorFields) {
         if (model.isEmailValid()) {
-            {
-                addEmailLengthValidationErrors(model, errorFields);
-                return;
-            }
+            return;
         }
         final ErrorField errorField = ErrorField.builder()
             .code(EMAIL_PATTERN_CODE)
@@ -456,16 +442,17 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         List<AttributeEntry> systemRating = model.getAttributeValueByKey(SYSTEM_RECEIVING_MODE);
         List<String> employeeRole = Collections.singletonList(EMPLOYEE);
 
-        boolean isRolePresent = model.getAuthenticatedUser().getRoleCodes().stream().anyMatch(employeeRole::contains);
-        if (!isRolePresent && !systemRating.isEmpty()) {
-            return;
+        boolean isRolePresent = model.getAuthenticatedUser().getRoleCodes().stream()
+            .anyMatch(employeeRole::contains);
+        if (!isRolePresent && systemRating.isEmpty()) {
+            final ErrorField errorField = ErrorField.builder()
+                .code(RECEIVING_MODE_MANDATORY_CODE)
+                .message(RECEIVING_MODE_MANDATORY_MESSAGE)
+                .field(RECEIVING_MODE_MANDATORY_FIELD_NAME)
+                .build();
+            errorFields.add(errorField);
         }
-        final ErrorField errorField = ErrorField.builder()
-            .code(RECEIVING_MODE_MANDATORY_CODE)
-            .message(RECEIVING_MODE_MANDATORY_MESSAGE)
-            .field(RECEIVING_MODE_MANDATORY_FIELD_NAME)
-            .build();
-        errorFields.add(errorField);
+        return;
     }
 
     private void addKeywordsValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
@@ -489,30 +476,6 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
             .code(FIRST_NAME_LENGTH_CODE)
             .message(FIRST_NAME_LENGTH_MESSAGE)
             .field(FIRST_NAME_LENGTH_FIELD)
-            .build();
-        errorFields.add(errorField);
-    }
-
-    private void addEmailLengthValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!model.emailLength()) {
-            return;
-        }
-        final ErrorField errorField = ErrorField.builder()
-            .code(EMAIL_LENGTH_CODE)
-            .message(EMAIL_LENGTH_MESSAGE)
-            .field(EMAIL_LENGTH_FIELD)
-            .build();
-        errorFields.add(errorField);
-    }
-
-    private void addTenantLengthValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (model.tenantIdLength()) {
-            return;
-        }
-        final ErrorField errorField = ErrorField.builder()
-            .code(TENANTID_LENGTH_CODE)
-            .message(TENANTID_LENGTH_MESSAGE)
-            .field(TENANTID_LENGTH_FIELD)
             .build();
         errorFields.add(errorField);
     }

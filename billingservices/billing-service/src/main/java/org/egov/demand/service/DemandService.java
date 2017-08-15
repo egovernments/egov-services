@@ -227,9 +227,11 @@ public class DemandService {
 				}
 			}
 		}
+		
 		demandRepository.update(new DemandRequest(requestInfo,demands));
 	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
                 kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandResponse);
+                System.out.println(!demands.isEmpty() ? demands.get(0):"demand is nul in billing servicel");
 		return demandResponse;
 	}
 

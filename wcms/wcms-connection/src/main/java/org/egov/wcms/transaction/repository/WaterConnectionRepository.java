@@ -160,6 +160,7 @@ public class WaterConnectionRepository {
                 
                 statement.setDouble(28, waterConnectionRequest.getConnection().getNumberOfFamily());
                 // Please verify if there's proper validation on all these fields to avoid NPE.
+                statement.setString(29, waterConnectionRequest.getConnection().getSubUsageTypeId());
                 return statement;
             }, keyHolder);
 

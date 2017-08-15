@@ -747,6 +747,10 @@ table thead th {
 	  border-right:0 !important;
 	  text-align: left;
  }
+ 
+ .lastTdBorder {
+	 border-right:1px solid #ddd !important;
+ }
 
 
  .searchMargin {

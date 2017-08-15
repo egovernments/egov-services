@@ -156,8 +156,10 @@ public class DemandService {
 	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest)
 	{
 	    BillRequest billRequest=new BillRequest();
+	       System.out.println(receiptRequest!=null ?( !receiptRequest.getReceipt().isEmpty()? receiptRequest.getReceipt():""):"receiptRequest");
 	    billRequest.setRequestInfo(receiptRequest.getRequestInfo());
 	    billRequest.setBills(receiptRequest.getReceipt().get(0).getBill());
+	    System.out.println(billRequest!=null ?( !billRequest.getBills().isEmpty() ? billRequest.getBills().get(0).getBillDetails():""):"billRequest= Before updateDemandFromBill");
 	    return updateDemandFromBill(billRequest);
 	    
 	}

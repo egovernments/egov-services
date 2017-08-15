@@ -24,7 +24,7 @@ public class PropertyDetailBuilder {
 				.append(" apartment = ?, siteLength = ?, siteBreadth = ?, sitalArea = ?, totalBuiltupArea = ?,")
 				.append(" undividedShare = ?, noOfFloors = ?, isSuperStructure = ?, landOwner = ?,")
 				.append(" floorType = ?, woodType = ?, roofType = ?, wallType = ?, stateId = ?,")
-				.append(" applicationNo = ?, lastModifiedBy = ?, lastmodifiedtime = ?, property= ?, taxCalculations = ?")
+				.append(" applicationNo = ?, lastModifiedBy = ?, lastmodifiedtime = ?, property= ?, taxCalculations = ?,")
 				.append(" factors = ?, assessmentDates = ?,builderDetails = ? WHERE id = ?");
 
 		return propertyDetailUpdateSQL.toString();

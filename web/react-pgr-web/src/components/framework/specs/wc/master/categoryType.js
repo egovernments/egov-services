@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType.name",
+							"jsonPath": "CategoryType[0].name",
 							"label": "wc.create.categorytype",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -23,7 +23,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryType.description",
+							"jsonPath": "CategoryType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -34,7 +34,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType.active",
+							"jsonPath": "CategoryType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -143,11 +143,10 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/categorytype/_search?id={id}",
-		"url":"/wcms/masters/categorytype/{CategoryType.code}/_update",
-		"isResponseArray":true,
+		"url":"/wcms/masters/categorytype/{CategoryTypes.code}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "CategoryTypes",
 		"groups": [
 			{
 				"label": "wc.update.categorytype.title",
@@ -155,7 +154,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType.name",
+							"jsonPath": "CategoryTypes[0].name",
 							"label": "wc.create.categorytype",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
 							"type": "text",
@@ -166,7 +165,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryType.description",
+							"jsonPath": "CategoryTypes[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}",
 							"type": "text",
@@ -177,7 +176,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType.active",
+							"jsonPath": "CategoryTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

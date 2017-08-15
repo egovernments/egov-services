@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 
@@ -472,7 +473,7 @@ calcAssessableArea = (e, type) => {
 	   return(
 			
 			<Card className="uiCard">
-                <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Floor Details</div>} />
+                <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.floorDetails')}</div>} />
 				<CardText>
 								<Grid fluid>
 									<Row>
@@ -481,7 +482,7 @@ calcAssessableArea = (e, type) => {
 												<Row>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Floor Number *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.floorNumber')+ '*'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.floorNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.floorNo}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.floorNo : ""}
 														  onChange={(event, index, value) => {
@@ -503,7 +504,7 @@ calcAssessableArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														 <SelectField  className="fullWidth selectOption"
-															floatingLabelText="Unit Type *"
+															floatingLabelText={translate('pt.create.groups.floorDetails.fields.unitType')+ '*'}
 															errorText={fieldErrors.floor ? (fieldErrors.floor.unitType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.unitType}</span>:"" ): ""}
 															value={floorDetails.floor ? floorDetails.floor.unitType : ""}
 															onChange={(event, index, value) => {
@@ -538,7 +539,7 @@ calcAssessableArea = (e, type) => {
 													{(floorDetails.floor ? (floorDetails.floor.unitType == 'FLAT' ? true: false ): false) &&
 															<Col xs={12} md={3} sm={6}>
 																 <SelectField  className="fullWidth selectOption"
-																	floatingLabelText="Is Room in Flat?"
+																	floatingLabelText={translate('pt.create.groups.floorDetails.fields.isRoomFlat')}
 																	errorText={fieldErrors.roomInFlat ? (fieldErrors.floor.roomInFlat ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.roomInFlat}</span>:"" ): ""}
 																	value={floorDetails.floor ? floorDetails.floor.roomInFlat : ""}
 																	onChange={(event, index, value) => {
@@ -572,14 +573,12 @@ calcAssessableArea = (e, type) => {
 																  {renderOption(_this.state.roomInFlat)}																								
 																</SelectField>
 															</Col>	
-															
-												
 													}
 													{(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true: false ): false) && 
 																<Col xs={12} md={3} sm={6}>			
 																	<TextField  className="fullWidth"
 																	  hintText="201"
-																	  floatingLabelText="Flat Number *"
+																	  floatingLabelText={translate('pt.create.groups.floorDetails.fields.flatNo')+' *'}
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
 																	  onChange={(e) => {handleChangeFloor(e,"floor" ,"flatNo", true, /^\d+$/g)}}
@@ -592,7 +591,7 @@ calcAssessableArea = (e, type) => {
 															}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Unit Number *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.unitNumber')+' *'}
 														  hintText="102"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
@@ -606,7 +605,7 @@ calcAssessableArea = (e, type) => {
 													</Col>		
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Construction Class *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionClass')+' *'}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.structure? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.structure}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.structure : ""}
 														  onChange={(event, index, value) => {
@@ -628,7 +627,7 @@ calcAssessableArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Usage type *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.usageType')+' *'}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usage? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usage}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usage : ""}
 														  onChange={(event, index, value) => {
@@ -651,7 +650,7 @@ calcAssessableArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Usage sub type"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.usageSubType')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usageSubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usageSubType}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usageSubType : ""}
 														  onChange={(event, index, value) => {
@@ -673,7 +672,7 @@ calcAssessableArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Firm Name"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.firmName')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.firmName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.firmName}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.firmName : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"firmName", false, "")}}
@@ -686,7 +685,7 @@ calcAssessableArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Occupancy *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancy')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyType?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.occupancyType}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyType : ""}
 														  onChange={(event, index, value) => {
@@ -708,7 +707,7 @@ calcAssessableArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Occupant Name"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupierName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupierName}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupierName : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" , "occupierName", false, "")}}
@@ -724,7 +723,7 @@ calcAssessableArea = (e, type) => {
 													
 													&& <Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Annual Rent"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.annualRent')}
 														  hintText="15000"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.annualRent ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.annualRent}</span>:""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.annualRent : ""}
@@ -738,7 +737,7 @@ calcAssessableArea = (e, type) => {
 													</Col>}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Manual ARV"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.manualArv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.manualArv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.manualArv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.manualArv : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" , "manualArv", false, /^\d{9}$/g)}}
@@ -752,7 +751,7 @@ calcAssessableArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<DatePicker  className="fullWidth datepicker"
 														  formatDate={(date)=> this.formatDate(date)}
-														  floatingLabelText="Construction Start Date"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :""): ""}
 														  onChange={(event,date) => {
 															  var e = {
@@ -772,7 +771,7 @@ calcAssessableArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<DatePicker  className="fullWidth datepicker"
 														  formatDate={(date)=> this.formatDate(date)}
-														  floatingLabelText="Construction End Date *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionEndDate')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
 														  onChange={(event,date) => {
 															  var e = {
@@ -792,7 +791,7 @@ calcAssessableArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<DatePicker  className="fullWidth datepicker"
 														formatDate={(date)=> this.formatDate(date)}
-														  floatingLabelText="Effective From Date *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.effectiveFromDate')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> : "") : ""}
 														  onChange={(event,date) => {
 															  var e = {
@@ -810,7 +809,7 @@ calcAssessableArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Unstructured land *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.unstructuredLand')+' *'}
 														  errorText={fieldErrors.floor ? ( fieldErrors.floor.isStructured?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.isStructured}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.isStructured : ""}
 														  onChange={(event, index, value) => {
@@ -839,7 +838,7 @@ calcAssessableArea = (e, type) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Length"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.length')}
 														  hintText="12.50"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.length ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.length}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.length : ""}
@@ -858,7 +857,7 @@ calcAssessableArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  hintText="15.25"
-														  floatingLabelText="Breadth"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.breadth')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.width ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.width}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.width : ""}
 														  onChange={(e) => {

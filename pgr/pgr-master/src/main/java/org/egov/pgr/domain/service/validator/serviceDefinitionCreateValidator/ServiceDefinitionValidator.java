@@ -7,5 +7,6 @@ public interface ServiceDefinitionValidator {
     boolean canValidate(ServiceDefinition serviceDefinition);
     void checkMandatoryField(ServiceDefinition serviceDefinition);
     void checkConstraints(ServiceDefinition serviceDefinition);
+    void checkLength(ServiceDefinition serviceDefinition);
 
 }

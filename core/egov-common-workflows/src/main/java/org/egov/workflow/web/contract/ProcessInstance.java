@@ -150,7 +150,8 @@ public class ProcessInstance {
 	 */
 	// To be used to fetch single value attributes
 	public String getValueForKey(String key) {
-		if (Objects.nonNull(attributes.get(key)))
+		
+		if (Objects.nonNull(attributes) && Objects.nonNull(attributes.get(key)))
 			return attributes.get(key).getValues().get(0).getName();
 
 		return "";

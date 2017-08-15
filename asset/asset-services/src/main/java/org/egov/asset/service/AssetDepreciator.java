@@ -14,8 +14,9 @@ import org.springframework.stereotype.Component;
 @Component
 public interface AssetDepreciator {
 
-	public void depreciateAsset(DepreciationRequest depreciationRequest,List<CalculationAssetDetails> calculationAssetDetailList,
-			Map<Long, CalculationCurrentValue> calculationCurrentValues,Map<Long, BigDecimal> depreciationSumMap,
-			List<AssetCurrentValue> assetCurrentValues,List<DepreciationDetail> depreciationDetails);
-	
+    public void depreciateAsset(DepreciationRequest depreciationRequest,
+            List<CalculationAssetDetails> calculationAssetDetailList,
+            Map<Long, CalculationCurrentValue> calculationCurrentValues, Map<Long, BigDecimal> depreciationSumMap,
+            List<AssetCurrentValue> assetCurrentValues, Map<Long, DepreciationDetail> depreciationDetailsMap);
+
 }

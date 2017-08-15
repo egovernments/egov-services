@@ -11,14 +11,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.egov.enums.ChannelEnum;
 import org.egov.enums.CreationReasonEnum;
+import org.egov.enums.SourceEnum;
+import org.egov.enums.StatusEnum;
 import org.egov.models.Address;
+import org.egov.models.AssessmentDate;
 import org.egov.models.AuditDetails;
+import org.egov.models.BuilderDetail;
 import org.egov.models.Demand;
 import org.egov.models.DemandId;
 import org.egov.models.Document;
+import org.egov.models.Factors;
 import org.egov.models.Floor;
 import org.egov.models.FloorSpec;
 import org.egov.models.HeadWiseTax;
@@ -63,7 +67,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -428,6 +431,10 @@ public class PropertyRepository {
 			return value;
 	}
 
+	private Double getDouble(Object object) {
+		return object == null ? 0.0 : Double.parseDouble(object.toString());
+	}
+
 	public Integer getInteger(Integer value) {
 
 		if (value == null)
@@ -637,17 +644,108 @@ public class PropertyRepository {
 	public PropertyDetail getPropertyDetailsByProperty(Long propertyId) {
 		PropertyDetail propertyDetail = null;
 		try {
-			propertyDetail = (PropertyDetail) jdbcTemplate.queryForObject(
-					PropertyDetailBuilder.PROPERTY_DETAIL_BY_PROPERTY_QUERY, new Object[] { propertyId },
-					new BeanPropertyRowMapper(PropertyDetail.class));
+
+			propertyDetail = getPropertyDetails(propertyId);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
-		if (propertyDetail != null && propertyDetail.getId() != null && propertyDetail.getId() > 0)
-			propertyDetail.setAuditDetails(getAuditDetailsForPropertyDetail(propertyDetail.getId()));
 
 		return propertyDetail;
 
+	}
+
+	private PropertyDetail getPropertyDetails(Long propertyId) {
+		List<Map<String, Object>> rows = jdbcTemplate
+				.queryForList(PropertyDetailBuilder.PROPERTY_DETAIL_BY_PROPERTY_QUERY, new Object[] { propertyId });
+
+		PropertyDetail propertyDetail = new PropertyDetail();
+		for (Map<String, Object> row : rows) {
+
+			try {
+				propertyDetail.setId(getLong(row.get("id")));
+				if (row.get("source") != null)
+					propertyDetail.setSource(SourceEnum.valueOf(getString(row.get("source"))));
+				propertyDetail.setRegdDocNo(getString(row.get("regddocno")));
+				propertyDetail.setRegdDocDate(getString(row.get("regddocdate")));
+				propertyDetail.setReason(getString(row.get("reason")));
+				if (row.get("status") != null)
+					propertyDetail.setStatus(StatusEnum.valueOf(getString(row.get("status"))));
+				propertyDetail.setIsVerified(getBooleaan(row.get("isverified")));
+				propertyDetail.setVerificationDate(getString(row.get("verificationdate")));
+				propertyDetail.setIsExempted(getBooleaan(row.get("isexempted")));
+				propertyDetail.setExemptionReason(getString(row.get("exemptionreason")));
+				propertyDetail.setPropertyType(getString(row.get("propertytype")));
+				propertyDetail.setCategory(getString(row.get("category")));
+				propertyDetail.setUsage(getString(row.get("usage")));
+				propertyDetail.setDepartment(getString(row.get("department")));
+				propertyDetail.setApartment(getString(row.get("apartment")));
+				propertyDetail.setSiteLength(getDouble(row.get("sitelength")));
+				propertyDetail.setSiteBreadth(getDouble(row.get("sitebreadth")));
+				propertyDetail.setSitalArea(getDouble(row.get("sitalarea")));
+				propertyDetail.setTotalBuiltupArea(getDouble(row.get("totalbuiltuparea")));
+				propertyDetail.setUndividedShare(getDouble(row.get("undividedshare")));
+				propertyDetail.setNoOfFloors(getLong(row.get("nooffloors")));
+				propertyDetail.setIsSuperStructure(getBooleaan(row.get("issuperstructure")));
+				propertyDetail.setLandOwner(getString(row.get("landowner")));
+				propertyDetail.setFloorType(getString(row.get("floortype")));
+				propertyDetail.setWoodType(getString(row.get("woodtype")));
+				propertyDetail.setRoofType(getString(row.get("rooftype")));
+				propertyDetail.setWallType(getString(row.get("walltype")));
+				propertyDetail.setStateId(getString(row.get("stateid")));
+				propertyDetail.setApplicationNo(getString(row.get("applicationno")));
+
+				AuditDetails auditDetails = new AuditDetails();
+				auditDetails.setCreatedBy(getString(row.get("createdby")));
+				auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+				auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+				auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+
+				propertyDetail.setAuditDetails(auditDetails);
+
+				propertyDetail.setTaxCalculations(getString(row.get("taxcalculations")));
+
+				ObjectMapper mapper = new ObjectMapper();
+				if (row.get("assessmentdates") != null) {
+
+					AssessmentDate assessmentDate = mapper.readValue(row.get("assessmentdates").toString(),
+							AssessmentDate.class);
+
+					propertyDetail.setAssessmentDates(assessmentDate);
+
+				} else {
+					AssessmentDate assessmentDate = new AssessmentDate();
+					propertyDetail.setAssessmentDates(assessmentDate);
+				}
+
+				if (row.get("factors") != null) {
+					List<Factors> factors = new ArrayList<>();
+					TypeReference<List<Factors>> typeReference = new TypeReference<List<Factors>>() {
+					};
+					factors = new ObjectMapper().readValue(row.get("factors").toString(), typeReference);
+
+					propertyDetail.setFactors(factors);
+				} else {
+					List<Factors> factors = new ArrayList<>();
+					propertyDetail.setFactors(factors);
+				}
+
+				if (row.get("builderdetails") != null) {
+					BuilderDetail builderDetail = new ObjectMapper().readValue(row.get("builderdetails").toString(),
+							BuilderDetail.class);
+					propertyDetail.setBuilderDetails(builderDetail);
+
+				} else {
+					BuilderDetail builderDetail = new BuilderDetail();
+					propertyDetail.setBuilderDetails(builderDetail);
+
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+		}
+
+		return propertyDetail;
 	}
 
 	public VacantLandDetail getVacantLandByProperty(Long propertyId) {
@@ -1323,17 +1421,17 @@ public class PropertyRepository {
 				factorsObject.setType("jsonb");
 				factorsObject.setValue(gson.toJson(propertyDetails.getFactors()));
 				ps.setObject(35, factorsObject);
-				
+
 				PGobject assessmentDatesObject = new PGobject();
 				assessmentDatesObject.setType("jsonb");
 				assessmentDatesObject.setValue(gson.toJson(propertyDetails.getAssessmentDates()));
 				ps.setObject(36, assessmentDatesObject);
-				
+
 				PGobject builderDetailsObject = new PGobject();
 				builderDetailsObject.setType("jsonb");
 				builderDetailsObject.setValue(gson.toJson(propertyDetails.getBuilderDetails()));
 				ps.setObject(37, builderDetailsObject);
-				
+
 				ps.setLong(38, getLong(propertyDetails.getId()));
 				return ps;
 			}

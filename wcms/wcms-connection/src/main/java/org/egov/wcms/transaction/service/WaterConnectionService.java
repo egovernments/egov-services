@@ -341,6 +341,14 @@ public class WaterConnectionService {
     public boolean persistWorkOrderLog(WorkOrderFormat workOrder) { 
     	return waterConnectionRepository.persistWorkOrderLog(workOrder);
     }
+    public void updateWaterConnectionAfterCollection(DemandResponse demandResponse)
+    {
+        Demand demand=null;
+        if(demandResponse!=null){
+            demand=demandResponse.getDemands().get(0);
+            waterConnectionRepository.updateConnectionAfterWorkFlowQuery(demand.getConsumerCode());
+        }
+    }
     
     private WaterConnectionReq getWaterConnectionRequest(Connection connection) { 
     	RequestInfo rInfo = new RequestInfo();

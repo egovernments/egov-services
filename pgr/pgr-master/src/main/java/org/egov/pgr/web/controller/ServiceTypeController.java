@@ -27,6 +27,12 @@ public class ServiceTypeController {
         return new ServiceTypeResponse(null, serviceTypeRequest.getServiceType());
     }
 
+    @PostMapping("/v2/_update")
+    public ServiceTypeResponse update(@RequestBody ServiceTypeRequest serviceTypeRequest){
+        serviceTypeService.update(serviceTypeRequest.toDomain(), serviceTypeRequest);
+        return new ServiceTypeResponse(null, serviceTypeRequest.getServiceType());
+    }
+
     @PostMapping("/v2/_search")
     public List<ServiceType> search(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
                                     @RequestParam(value = "serviceCode", required = false) String serviceCode,

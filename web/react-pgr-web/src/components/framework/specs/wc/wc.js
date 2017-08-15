@@ -19,7 +19,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.propertyIdentifier",
             "pattern": "",
             "type": "textSearch",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
@@ -410,10 +410,6 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }
-
-
-
-
         ]
       }
     ]

@@ -112,7 +112,18 @@ let menuConvention={
   "Trade License.License Transactions.CreateLegacyLicense": "/create/tl/CreateLegacyLicense",
 
 
-  "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy"
+  "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy",
+
+  //employee Master,
+  "Employee Management.Employee Masters.Position.CreatePosition":"/create/employee/createPosition",
+  "Employee Management.Employee Masters.Position.UpdatePosition":"/search/employee/createPosition/update",
+  "Employee Management.Employee Masters.Position.ViewPosition":"/search/employee/createPosition/view",
+  "Employee Management.Employee Masters.Employee.CreateEmployee":"/employee/create",
+  "Employee Management.Employee Masters.Employee.ViewEmployee":"/search/employee/searchEmployee/view",
+  "Employee Management.Employee Masters.Employee.UpdateEmployee":"/search/employee/searchEmployee/update"
+
+
+
 
 }
 

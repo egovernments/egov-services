@@ -38,119 +38,119 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(DepreciationService.class)
 public class DepreciationServiceTest {
-	
-	@Mock
-	private RestTemplate restTemplate;
-	
-	@Mock
-	private AssetConfigurationService assetConfigurationService;
 
-	@Mock
-	private DepreciationRepository depreciationRepository;
-	
-	@Mock
-	private CurrentValueService currentValueService;
-	
-	@Mock
-	private ResponseInfoFactory responseInfoFactory;
+    @Mock
+    private RestTemplate restTemplate;
 
-	@Mock
-	private AssetDepreciator assetDepreciator;
-	
-	@Mock
-	private SequenceGenService sequenceGenService;
-	
-	@Mock
-	private ApplicationProperties applicationProperties;
-	
-	@Mock
-	private AssetCommonService assetCommonService;
-	
-	@Mock
-	private ObjectMapper mapper;
-	
-	@InjectMocks
-	private DepreciationService depreciationService;
-	
-	@Test
-	public void test_Depreciate_Asset(){
-		DepreciationResponse depreciationResponse = null;
+    @Mock
+    private AssetConfigurationService assetConfigurationService;
 
-		AuditDetails auditDetails = getAuditDetails();
+    @Mock
+    private DepreciationRepository depreciationRepository;
 
-		DepreciationService dsMock = PowerMockito.mock(DepreciationService.class);
-		AssetCommonService acsMock = PowerMockito.mock(AssetCommonService.class);
-		AssetDepreciator assetDepreciator = PowerMockito.mock(AssetDepreciator.class);
-		try {
-			PowerMockito.doReturn(auditDetails).when(acsMock, "getAuditDetails", any(RequestInfo.class));
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		assetDepreciator.depreciateAsset(any(DepreciationRequest.class), (java.util.List<CalculationAssetDetails>) any(List.class),
-				any(Map.class), any(Map.class), (java.util.List<AssetCurrentValue>) any(List.class),
-				(java.util.List<DepreciationDetail>) any(List.class));
+    @Mock
+    private CurrentValueService currentValueService;
 
-		try {
-			depreciationResponse = getDepreciationResponse("depreciation/depreciationscreateresponse.json");
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail();
-		}
-		DepreciationRequest depreciationRequest = new DepreciationRequest();
-		depreciationRequest.setDepreciationCriteria(getDepreciationCriteria());
-		
-		Depreciation depreciation = getDepreciation(getDepreciationCriteria(),getAuditDetails());
-		
-		
-		doNothing().when(depreciationRepository).saveDepreciation(depreciation);
-		
-	}
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
+    @Mock
+    private AssetDepreciator assetDepreciator;
 
-	private Depreciation getDepreciation(DepreciationCriteria depreciationCriteria,AuditDetails auditDetails) {
-		ArrayList depreciationDetails = new ArrayList();
-		depreciationDetails.add(getDepreciationDetail());
-		Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria).depreciationDetails(
-				depreciationDetails).voucherReference(Long.valueOf("1")).auditDetails(auditDetails).build();
-		return depreciation;
-	}
+    @Mock
+    private SequenceGenService sequenceGenService;
 
-	private DepreciationDetail getDepreciationDetail() {
-		DepreciationDetail depreciationDetail = new DepreciationDetail();
-		depreciationDetail.setAssetId(Long.valueOf("2"));
-		depreciationDetail.setDepreciationRate(Double.valueOf("10"));
-		depreciationDetail.setId(Long.valueOf("399"));
-		depreciationDetail.setStatus(DepreciationStatus.SUCCESS);
-		depreciationDetail.setValueBeforeDepreciation(new BigDecimal("0.18"));
-		depreciationDetail.setDepreciationValue(new BigDecimal("1.068"));
-		depreciationDetail.setValueAfterDepreciation(new BigDecimal("0.888"));
-		depreciationDetail.setReasonForFailure(null);
-		return depreciationDetail;
-	}
+    @Mock
+    private ApplicationProperties applicationProperties;
 
+    @Mock
+    private AssetCommonService assetCommonService;
 
-	private AuditDetails getAuditDetails() {
-		final AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("1");
-		auditDetails.setCreatedDate(Long.valueOf("1501756252639"));
-		auditDetails.setLastModifiedBy("1");
-		auditDetails.setLastModifiedDate(Long.valueOf("1501756252639"));
-		return auditDetails;
-	}
+    @Mock
+    private ObjectMapper mapper;
 
-	private DepreciationCriteria getDepreciationCriteria() {
-		DepreciationCriteria depreciationCriteria = new DepreciationCriteria();
-		depreciationCriteria.setAssetIds(null);
-		depreciationCriteria.setFinancialYear("2017");
-		depreciationCriteria.setFromDate(Long.valueOf(0));
-		depreciationCriteria.setToDate(Long.valueOf("0"));
-		depreciationCriteria.setTenantId("ap.kurnool");
-		return depreciationCriteria;
-	}
+    @InjectMocks
+    private DepreciationService depreciationService;
 
-	private DepreciationResponse getDepreciationResponse(String filePath) throws IOException {
-		final String empJson = new FileUtils().getFileContents(filePath);
-		return mapper.readValue(empJson, DepreciationResponse.class);
-	}
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test_Depreciate_Asset() {
+        final AuditDetails auditDetails = getAuditDetails();
+
+        PowerMockito.mock(DepreciationService.class);
+        final AssetCommonService acsMock = PowerMockito.mock(AssetCommonService.class);
+        final AssetDepreciator assetDepreciator = PowerMockito.mock(AssetDepreciator.class);
+        try {
+            PowerMockito.doReturn(auditDetails).when(acsMock, "getAuditDetails", any(RequestInfo.class));
+        } catch (final Exception e1) {
+            e1.printStackTrace();
+        }
+
+        assetDepreciator.depreciateAsset(any(DepreciationRequest.class),
+                (java.util.List<CalculationAssetDetails>) any(List.class), any(Map.class), any(Map.class),
+                (java.util.List<AssetCurrentValue>) any(List.class), any(Map.class));
+
+        try {
+            getDepreciationResponse("depreciation/depreciationscreateresponse.json");
+        } catch (final IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+        final DepreciationRequest depreciationRequest = new DepreciationRequest();
+        depreciationRequest.setDepreciationCriteria(getDepreciationCriteria());
+
+        final Depreciation depreciation = getDepreciation(getDepreciationCriteria(), getAuditDetails());
+
+        doNothing().when(depreciationRepository).saveDepreciation(depreciation);
+
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private Depreciation getDepreciation(final DepreciationCriteria depreciationCriteria,
+            final AuditDetails auditDetails) {
+        final ArrayList depreciationDetails = new ArrayList();
+        depreciationDetails.add(getDepreciationDetail());
+        final Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
+                .depreciationDetails(depreciationDetails).voucherReference(Long.valueOf("1")).auditDetails(auditDetails)
+                .build();
+        return depreciation;
+    }
+
+    private DepreciationDetail getDepreciationDetail() {
+        final DepreciationDetail depreciationDetail = new DepreciationDetail();
+        depreciationDetail.setAssetId(Long.valueOf("2"));
+        depreciationDetail.setDepreciationRate(Double.valueOf("10"));
+        depreciationDetail.setId(Long.valueOf("399"));
+        depreciationDetail.setStatus(DepreciationStatus.SUCCESS);
+        depreciationDetail.setValueBeforeDepreciation(new BigDecimal("0.18"));
+        depreciationDetail.setDepreciationValue(new BigDecimal("1.068"));
+        depreciationDetail.setValueAfterDepreciation(new BigDecimal("0.888"));
+        depreciationDetail.setReasonForFailure(null);
+        return depreciationDetail;
+    }
+
+    private AuditDetails getAuditDetails() {
+        final AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy("1");
+        auditDetails.setCreatedDate(Long.valueOf("1501756252639"));
+        auditDetails.setLastModifiedBy("1");
+        auditDetails.setLastModifiedDate(Long.valueOf("1501756252639"));
+        return auditDetails;
+    }
+
+    private DepreciationCriteria getDepreciationCriteria() {
+        final DepreciationCriteria depreciationCriteria = new DepreciationCriteria();
+        depreciationCriteria.setAssetIds(null);
+        depreciationCriteria.setFinancialYear("2017");
+        depreciationCriteria.setFromDate(Long.valueOf(0));
+        depreciationCriteria.setToDate(Long.valueOf("0"));
+        depreciationCriteria.setTenantId("ap.kurnool");
+        return depreciationCriteria;
+    }
+
+    private DepreciationResponse getDepreciationResponse(final String filePath) throws IOException {
+        final String empJson = new FileUtils().getFileContents(filePath);
+        return mapper.readValue(empJson, DepreciationResponse.class);
+    }
 
 }

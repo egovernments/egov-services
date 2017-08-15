@@ -257,16 +257,14 @@ public class RestConnectionService {
                     "Error while Fetching Data from PropertyTax", requestInfo);
         }
 
-       
-        if (propResp != null && propResp.getProperties()!=null && !propResp.getProperties().isEmpty()){
-            waterRequestReq.getConnection().setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
-        if(!propResp.getProperties().get(0).getOwners().isEmpty()){
+        waterRequestReq.getConnection().setPropertyIdentifier(waterRequestReq.getConnection().getProperty().getPropertyidentifier());
+        if(propResp.getProperties()!=null && !propResp.getProperties().isEmpty() && !propResp.getProperties().get(0).getOwners().isEmpty()){
             waterRequestReq.getConnection().getProperty().setNameOfApplicant(propResp.getProperties().get(0).getOwners().get(0).getName());
             waterRequestReq.getConnection().getProperty().setEmail(propResp.getProperties().get(0).getOwners().get(0).getEmailId());
             waterRequestReq.getConnection().getProperty().setMobileNumber(propResp.getProperties().get(0).getOwners().get(0).getMobileNumber());
             waterRequestReq.getConnection().getProperty().setZone(propResp.getProperties().get(0).getBoundary()!=null?propResp.getProperties().get(0).getBoundary().getRevenueBoundary().getName():null);
         }
-        }
+        
         return propResp;
     }
 

@@ -1,12 +1,12 @@
 package org.egov.pgr.domain.model;
 
-import lombok.Builder;
-import lombok.Getter;
-
 import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.Date;
 import java.util.List;
+
+import lombok.Builder;
+import lombok.Getter;
 
 @Builder
 @Getter
@@ -31,6 +31,15 @@ public class ServiceDefinition {
                     .createdBy(createdBy)
                     .createdDate(createdDate)
                     .build();
+    }
+     
+    
+    public boolean isTenantIdLengthMatch(){
+        return (tenantId.length() > 0 && tenantId.length() <= 256);
+    }
+    
+    public boolean isCodeLengthMatch(){
+        return (code.length() > 0 && code.length() <= 20);
     }
     
     public boolean isTenantIdAbsent(){

@@ -3,7 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/propertytype-categorytype/_create",
 		"tenantIdRequired": true,
-		"idJsonPath": "PropertyTypeCategoryTypes[0].id",
+		"idJsonPath": "PropertyTypeCategoryTypes[0].code",
 		"useTimestamp": true,
 		"objectName": "PropertyTypeCategoryType",
 		"groups": [
@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypeCategoryType.propertyTypeName",
+						"jsonPath": "PropertyTypeCategoryType[0].propertyTypeName",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -25,7 +25,7 @@ var dat = {
 					},
 					{
 						"name": "categoryType",
-						"jsonPath": "PropertyTypeCategoryType.categoryTypeName",
+						"jsonPath": "PropertyTypeCategoryType[0].categoryTypeName",
 						"label": "wc.create.categoryType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -37,7 +37,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypeCategoryType.active",
+							"jsonPath": "PropertyTypeCategoryType[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
@@ -162,9 +162,8 @@ var dat = {
 		"searchUrl": "/wcms/masters/propertytype-categorytype/_search?id={id}",
 		"url":"/wcms/masters/propertytype-categorytype/{PropertyTypeCategoryType.id}/_update",
 		"tenantIdRequired": true,
-		"isResponseArray":true,
 		"useTimestamp": true,
-		"objectName": "PropertyTypeCategoryType",
+		"objectName": "PropertyTypeCategoryTypes",
 		"groups": [
 			{
 				"label": "wc.update.PropertyTypeCategoryType.title",
@@ -172,7 +171,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypeCategoryType.propertyTypeName",
+						"jsonPath": "PropertyTypeCategoryTypes[0].propertyTypeName",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -184,7 +183,7 @@ var dat = {
 					},
 					{
 						"name": "categoryType",
-						"jsonPath": "PropertyTypeCategoryType.categoryTypeName",
+						"jsonPath": "PropertyTypeCategoryTypes[0].categoryTypeName",
 						"label": "wc.create.categoryType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -196,7 +195,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypeCategoryType.active",
+							"jsonPath": "PropertyTypeCategoryTypes[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

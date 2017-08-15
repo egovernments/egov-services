@@ -1,5 +1,7 @@
 package org.egov.pgr.domain.model;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +18,34 @@ public class ValueDefinition {
     private char activeToChar(){
         return active ? 'Y' : 'N';
     }
+
+    /* mandatory field validation*/
+ 
+    
+    public boolean isNameAbsent()
+    {
+    	return isEmpty(name) || name == null;  
+    }
+    
+    
+    public boolean isKeyAbsent()
+    {
+    	return isEmpty(key) || key == null;      
+    }
+    
+    
+    /* field length valiadtion*/
+    
+    public boolean isKeyLengthMatch(){
+        return (key.length() > 0 && key.length() <= 50);
+    }
+    
+    public boolean isNameLengthMatch(){
+        return (name.length() > 0 && name.length() <= 100);
+    }
+    
+    
+    
 
     public org.egov.pgr.persistence.dto.ValueDefinition toDto(ServiceDefinition serviceDefinition,
                                                               String attributeCode, String tenantId, String serviceCode){

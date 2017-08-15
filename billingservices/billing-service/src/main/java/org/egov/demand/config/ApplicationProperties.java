@@ -148,6 +148,9 @@ public class ApplicationProperties {
 	
 	@Value("{kafka.topics.receipt.update.demand}")
 	private String updateDemandFromReceipt;
+	
+	@Value("${kafka.topics.demandBill.update.name}")
+	private String updateDemandBillTopicName;
 
 	@Value("${bs.demand.seq.name}")
 	private String demandSeqName;

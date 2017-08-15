@@ -43,6 +43,7 @@ package org.egov.wcms.transaction.consumer;
 import java.util.Map;
 
 import org.egov.wcms.transaction.config.ApplicationProperties;
+import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
@@ -72,7 +73,8 @@ public class TransactionPersistConsumer {
 
     @KafkaListener(topics =
         { "${kafka.topics.newconnection.create.name}","${kafka.topics.newconnection.update.name}",
-            "${kafka.topics.legacyconnection.create.name}" , "${kafka.topics.workorder.persist.name}" })
+            "${kafka.topics.legacyconnection.create.name}" , "${kafka.topics.workorder.persist.name}" ,
+            "${kafka.topics.demandBill.update.name}"})
 
     public void processMessage(final Map<String, Object> consumerRecord,
 			@Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
@@ -84,6 +86,8 @@ public class TransactionPersistConsumer {
 				waterConnectionService.update(objectMapper.convertValue(consumerRecord, WaterConnectionReq.class));
 			if(topic.equals(applicationProperties.getWorkOrderTopicName()))
 				waterConnectionService.persistWorkOrderLog(objectMapper.convertValue(consumerRecord, WorkOrderFormat.class));
+			if(topic.equals(applicationProperties.getUpdateDemandBillTopicName()))
+			    waterConnectionService.updateWaterConnectionAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
 		} catch (final Exception e) {
 			LOGGER.error("Exception Encountered while processing the received message : " + e.getMessage());
 		}

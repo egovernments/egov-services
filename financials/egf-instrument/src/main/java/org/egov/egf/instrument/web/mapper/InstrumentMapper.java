@@ -1,5 +1,8 @@
 package org.egov.egf.instrument.web.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.model.InstrumentVoucher;
@@ -8,9 +11,6 @@ import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.contract.InstrumentVoucherContract;
 import org.egov.egf.instrument.web.contract.TransactionTypeContract;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InstrumentMapper {
 
@@ -160,6 +160,10 @@ public class InstrumentMapper {
 		instrumentSearch.setOffset(contract.getOffset());
 		instrumentSearch.setSortBy(contract.getSortBy());
 		instrumentSearch.setIds(contract.getIds());
+		instrumentSearch.setInstrumentTypes(contract.getInstrumentTypes());
+		instrumentSearch.setFinancialStatuses(contract.getFinancialStatuses());
+		instrumentSearch.setTransactionFromDate(contract.getTransactionFromDate());
+		instrumentSearch.setTransactionToDate(contract.getTransactionToDate());
 
 		return instrumentSearch;
 	}
@@ -213,6 +217,10 @@ public class InstrumentMapper {
 		contract.setOffset(instrumentSearch.getOffset());
 		contract.setSortBy(instrumentSearch.getSortBy());
 		contract.setIds(instrumentSearch.getIds());
+		contract.setFinancialStatuses(instrumentSearch.getFinancialStatuses());
+		contract.setInstrumentTypes(instrumentSearch.getInstrumentTypes());
+		contract.setTransactionFromDate(instrumentSearch.getTransactionFromDate());
+		contract.setTransactionToDate(instrumentSearch.getTransactionToDate());
 
 		return contract;
 	}

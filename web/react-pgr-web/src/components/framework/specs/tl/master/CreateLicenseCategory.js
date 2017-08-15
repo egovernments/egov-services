@@ -1,7 +1,7 @@
 var dat = {
 	"tl.create": {
 		"numCols": 12/2,
-		"url": "/tl-masters/category/v1_create",
+		"url": "/tl-masters/category/v1/_create",
 		"useTimestamp": true,
 		"tenantIdRequired": true,
 		"objectName": "categories",
@@ -65,7 +65,7 @@ var dat = {
 							"label": "tl.search.groups.categorytype.category",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?|$..name|$..name",
+              "url": "/tl-masters/category/v1/_search?|$..id|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

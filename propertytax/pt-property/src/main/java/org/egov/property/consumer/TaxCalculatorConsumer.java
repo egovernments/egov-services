@@ -69,7 +69,6 @@ public class TaxCalculatorConsumer {
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
 		propertyRequest.getProperties().get(0).getPropertyDetail().setTaxCalculations(taxCalculations);
-		if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
 
 			if (topic.equalsIgnoreCase(propertiesManager.getCreateValidatedUser())) {
 
@@ -83,12 +82,5 @@ public class TaxCalculatorConsumer {
 
 		}
 
-		else {
-
-			String upicNo = upicGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
-			propertyRequest.getProperties().get(0).setUpicNumber(upicNo);
-			kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
-		}
-
 	}
-}
+

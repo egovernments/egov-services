@@ -1,9 +1,18 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintMessageQueueRepository;
-import org.egov.pgr.employee.enrichment.service.PositionService;
+import org.egov.pgr.employee.enrichment.service.CommonWorkflowService;
 import org.egov.pgr.employee.enrichment.service.EscalationDateService;
+import org.egov.pgr.employee.enrichment.service.PositionService;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,17 +22,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.HashMap;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintAssignmentListenerTest {
 
     @Mock
     private WorkflowService workflowService;
+    
+    @Mock
+    private CommonWorkflowService commonWorkflowService;
 
     @Mock
     private ComplaintMessageQueueRepository complaintMessageQueueRepository;

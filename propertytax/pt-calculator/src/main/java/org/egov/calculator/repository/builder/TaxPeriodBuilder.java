@@ -40,10 +40,14 @@ public class TaxPeriodBuilder {
 			searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
 			preparedStatementValues.add(validDate);	
 		}
-		
-		searchSql.append(" AND (fromdate::date<= to_date(?,'dd/MM/yyy') And  todate::date>= to_date(?,'dd/MM/yyy'))");
-		preparedStatementValues.add(fromDate);
-		preparedStatementValues.add(toDate);
+		if((fromDate != null && !fromDate.isEmpty()) && (toDate != null && !toDate.isEmpty())) {
+			searchSql.append(" AND (fromdate::date >= (SELECT fromdate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' " +
+					"AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date)) and todate::date<=" +
+					"(SELECT todate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' AND (to_date(?,'dd/MM/yyyy') " +
+					"BETWEEN fromdate::date AND  todate::date)))");
+			preparedStatementValues.add(fromDate);
+			preparedStatementValues.add(toDate);
+		}
 		
 		return searchSql.toString();
 	}

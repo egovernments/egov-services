@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 
@@ -230,7 +231,7 @@ handleDepartment = (e) => {
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Reason for Creation *"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.creationReason')+' *'}
                                                   errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.reasonForCreation}</span> : ""}
                                                   value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ""}
                                                   onChange={(event, index, value) => {
@@ -261,7 +262,7 @@ handleDepartment = (e) => {
 
                                           {(assessmentDetails.reasonForCreation == 'SUBDIVISION') && <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Parent UPIC No. *"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.parentUpicNo')+' *'}
                                                   errorText={fieldErrors.parentUpicNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.parentUpicNo}</span> : ""}
                                                   value={assessmentDetails.parentUpicNo ? assessmentDetails.parentUpicNo : ""}
                                                   onChange={(e) => {handleChange(e, "parentUpicNo", true, "")}}
@@ -275,7 +276,7 @@ handleDepartment = (e) => {
                                           </Col>}
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Property Type *"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.propertyType')+' *'}
                                                   errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertyType}</span> : ""}
                                                   value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ""}
                                                   onChange={(event, index, value) => {
@@ -322,7 +323,7 @@ handleDepartment = (e) => {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Property Sub-type"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.propertySubType')}
                                                   errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertySubType}</span> : ""}
                                                   value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ""}
                                                   onChange={(event, index, value) => {
@@ -345,7 +346,7 @@ handleDepartment = (e) => {
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Usage type *"
+														  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageType')+' *'}
 														  errorText={fieldErrors.usage ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.usage}</span> : ""}
 														  value={assessmentDetails.usage ? assessmentDetails.usage : ""}
 														  onChange={(event, index, value) => {
@@ -368,7 +369,7 @@ handleDepartment = (e) => {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Usage sub type"
+														  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageSubType')}
 														  errorText={fieldErrors.usageSubType ?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.usageSubType}</span> : ""}
 														  value={assessmentDetails.usageSubType ? assessmentDetails.usageSubType : ""}
 														  onChange={(event, index, value) => {
@@ -392,7 +393,7 @@ handleDepartment = (e) => {
 											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government')) 
 											&& <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Department"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.department')}
                                                   errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.department}</span> : ""}
                                                   value={assessmentDetails.department ? assessmentDetails.department : ""}
                                                   onChange={(event, index, value) => {
@@ -415,7 +416,7 @@ handleDepartment = (e) => {
                                           }
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Total Area *"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.extentOfSite')+' *'}
 												  hintText="14"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
@@ -429,7 +430,7 @@ handleDepartment = (e) => {
                                           </Col>
 										   <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Sequence No. *"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.sequenceNo')+' *'}
 												  hintText="14"
                                                   errorText={fieldErrors.sequenceNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.sequenceNo}</span> : ""}
                                                   value={assessmentDetails.sequenceNo ? assessmentDetails.sequenceNo : ""}
@@ -443,7 +444,7 @@ handleDepartment = (e) => {
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
                                               <Checkbox
-                                                label="Is Authorized?"
+                                                label={translate('pt.create.groups.assessmentDetails.fields.isAuthorized')+' *'}
                                                 style={styles.checkbox}
                                                 defaultChecked ={true}
                                                 onCheck = {(e, i, v) => {

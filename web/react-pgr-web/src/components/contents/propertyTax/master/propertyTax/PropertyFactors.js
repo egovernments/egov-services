@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 var flag = 0;
@@ -155,13 +156,13 @@ class PropertyFactors extends Component {
 
     return (	
 				<Card className="uiCard">
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Property Factors</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.propertyFactors')}</div>} />
                       <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText="Toilet factor"
+                                                floatingLabelText={translate('pt.create.groups.propertyFactors.fields.totalFactor')}
                                                 errorText={fieldErrors.toiletFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.toiletFactor}</span> : ""}
                                                 value={propertyFactors.toiletFactor ? propertyFactors.toiletFactor : ""}
                                                 onChange={(event, index, value) => {
@@ -183,7 +184,7 @@ class PropertyFactors extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText="Road factor"
+                                                floatingLabelText={translate('pt.create.groups.propertyFactors.fields.roadFactor')}
                                                 errorText={fieldErrors.roadFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.roadFactor}</span> : ""}
                                                 value={propertyFactors.roadFactor ? propertyFactors.roadFactor : ""}
                                                 onChange={(event, index, value) => {
@@ -205,7 +206,7 @@ class PropertyFactors extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText="Lift factor"
+                                                floatingLabelText={translate('pt.create.groups.propertyFactors.fields.liftFactor')}
                                                 errorText={fieldErrors.liftFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.liftFactor}</span> : ""}
                                                 value={propertyFactors.liftFactor ? propertyFactors.liftFactor : ""}
                                                 onChange={(event, index, value) => {
@@ -227,7 +228,7 @@ class PropertyFactors extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText="Parking factor"
+                                                floatingLabelText={translate('pt.create.groups.propertyFactors.fields.parkingFactor')}
                                                 errorText={fieldErrors.parkingFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.parkingFactor }</span>: ""}
                                                 value={propertyFactors.parkingFactor ? propertyFactors.parkingFactor : ""}
                                                 onChange={(event, index, value) => {

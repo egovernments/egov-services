@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {EXIF} from 'exif-js';
-import {withRouter} from 'react-router-dom';
 import ImagePreview from '../../common/ImagePreview.js';
 import SimpleMap from '../../common/GoogleMaps.js';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';

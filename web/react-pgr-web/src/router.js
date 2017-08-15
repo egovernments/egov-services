@@ -1,11 +1,13 @@
-
 import React from 'react';
 import {Switch,Route} from 'react-router-dom';
-
 
 import Login from './components/contents/Login';
 import Dashboard from './components/contents/Dashboard';
 import ProfileEdit from './components/contents/settings/profileEdit';
+
+//ADMINISTRATION
+import searchUserRole from './components/contents/administration/userManagement/searchUserRole';
+import updateUserRole from './components/contents/administration/userManagement/updateUserRole';
 
 //CITIZEN SERVICES
 import VisibleNewServiceRequest from './components/contents/citizenServices/VisibleNewServiceRequest';
@@ -104,11 +106,13 @@ const Main = () => {
     <main style={{"marginBottom": "50px"}}>
     <Switch>
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
-	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
+	     <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
+        <Route exact path={base+'/administration/searchUserRole'} component={searchUserRole}/>
+        <Route exact path={base+'/administration/updateUserRole/:userId'} component={updateUserRole}/>
         <Route exact path={base+'/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>

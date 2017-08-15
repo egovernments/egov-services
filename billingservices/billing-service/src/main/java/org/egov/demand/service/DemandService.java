@@ -168,7 +168,7 @@ public class DemandService {
 	
 	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
 	    
-		log.debug("THE recieved bill request object------"+billRequest);
+		log.info("THE recieved bill request object------"+billRequest);
 	    if(billRequest !=null && billRequest.getBills()!=null){
 
 		List<Bill> bills = billRequest.getBills();
@@ -181,7 +181,7 @@ public class DemandService {
 		}
 		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).tenantId(tenantId).build();
 		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
-		log.debug("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
+		log.info("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
 		Map<String, Demand> demandIdMap = demands.stream()
 				.collect(Collectors.toMap(Demand::getId, Function.identity()));
 		Map<String, List<Demand>> demandListMap = new HashMap<>();
@@ -221,18 +221,18 @@ public class DemandService {
 					Long toDate = Long.valueOf(accDescription.get(2));
 
 					for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
-						log.debug("the current demand detail : " + demandDetail);
+						log.info("the current demand detail : " + demandDetail);
 						Demand demand = demandIdMap.get(demandDetail.getDemandId());
-						log.debug("the respective deman"+demand);
+						log.info("the respective deman"+demand);
 						
 						if (fromDate.equals(demand.getTaxPeriodFrom()) && toDate.equals(demand.getTaxPeriodTo())) {
 							
 							BigDecimal collectedAmount = accountDetail.getCreditAmount();
-							log.debug("the credit amt :"+ collectedAmount);
+							log.info("the credit amt :"+ collectedAmount);
 							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
 							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
-							log.debug("the setTaxAmount ::: "+demandDetail.getTaxAmount());
-							log.debug("the setCollectionAmount ::: "+demandDetail.getCollectionAmount());
+							log.info("the setTaxAmount ::: "+demandDetail.getTaxAmount());
+							log.info("the setCollectionAmount ::: "+demandDetail.getCollectionAmount());
 						}
 					}
 				}

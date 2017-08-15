@@ -19,10 +19,10 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.propertyIdentifier",
             "pattern": "",
             "type": "textSearch",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "autoCompleteDependancy": {
-              "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
+              "autoCompleteUrl": "/pt-property/properties/_search?upicNumber={value}&tenantId=default",
               "autoFillFields": {
                 "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
                 "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
@@ -410,6 +410,10 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }
+
+
+
+
         ]
       }
     ]

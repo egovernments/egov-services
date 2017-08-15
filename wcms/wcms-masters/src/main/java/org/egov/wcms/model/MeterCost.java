@@ -68,6 +68,8 @@ public class MeterCost {
 	private String code;
 
 	@NotNull
+	private Double pipeSizeInMM;
+	
 	private Long pipeSizeId;
 
 	@NotNull

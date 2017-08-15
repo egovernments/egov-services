@@ -41,6 +41,8 @@ package org.egov.wcms.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Builder;
+@Builder
 public class BoundaryType {
 
     @JsonProperty("id")

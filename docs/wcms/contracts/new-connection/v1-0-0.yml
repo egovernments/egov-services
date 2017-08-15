@@ -45,7 +45,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
-  /_search:
+  /connection/_search:
     post:
       summary: Retrieve water connection
       description: Searchs water connection details based upon acknowledgment number, HSC consumer number or legacy consumer number. In case multiple parameterts are passed user will be searched as an AND combination of all the parameters.
@@ -56,6 +56,7 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/legacyConsumerNumber"
         - $ref: "#/parameters/acknowledgmentNumber"
+        - $ref: "#/parameters/stateId"
         - $ref: "#/parameters/consumerNumber"
         - $ref: "#/parameters/assigneeId"
         - $ref: "#/parameters/name"
@@ -726,7 +727,9 @@ definitions:
         type: string 
         description: This field holds pre-defined value of supported  sub usageType.check
          master API to look at supported values your ULB.
-
+      stateId:
+        type: integer
+        description: Work flow ref id.
       workOrderNumber:
         type: string
         description: workOrderNumber generated once Officer submits Generate WOrkorder .
@@ -960,6 +963,13 @@ parameters:
     description: door number
     required: false
     type: string
+    
+  stateId:
+    name: stateId
+    in: query
+    description:  Work flow ref id.
+    required: false
+    type: integer
   
   pageSize:
     name: pageSize
@@ -994,4 +1004,3 @@ parameters:
       pattern: '[-+](name|mobileNumber|locality|consumerNumber)'
     default:
       - +name
-

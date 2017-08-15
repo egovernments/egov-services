@@ -68,7 +68,8 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         connection.setPipesizeId(rs.getString("pipesize_id")); 
         connection.setSourceTypeId(rs.getString("watersource_id")); 
         connection.setSourceType(rs.getString("watersource_name"));
-        connection.setNumberOfPersons(rs.getInt("conn_noofperson"));  
+        connection.setNumberOfPersons(rs.getInt("conn_noofperson")); 
+        connection.setStateId(rs.getLong("conn_stateid")); 
         connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
         connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
         connection.setWaterTreatment((null!=rs.getString("watertreatmentname") && rs.getString("watertreatmentname")!="")? rs.getString("watertreatmentname")  : "" );
@@ -89,9 +90,6 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         	prop.setNameOfApplicant(rs.getString("propertyowner"));
         }
         connection.setProperty(prop);
-   /*     connection.setAssetIdentifier(rs.getString("assetidentifier"));
-        connection.setStatus(rs.getString("status"));
-        connection.setStateId(rs.getLong("stateid"));*/
         return connection;
     }
 }

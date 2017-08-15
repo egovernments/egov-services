@@ -85,6 +85,9 @@ public class WaterConnectionRepository {
     @Autowired
     private WaterConnectionQueryBuilder waterConnectionQueryBuilder;
     
+    @Autowired
+    private WaterConnectionRowMapper waterConnectionRowMapper;
+    
 
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
@@ -413,7 +416,7 @@ public class WaterConnectionRepository {
         final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
         LOGGER.info("Get Connection Details Query : " + fetchQuery);
         final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
-                new WaterConnectionRowMapper());
+                waterConnectionRowMapper);
         return connectionList;
     }
     

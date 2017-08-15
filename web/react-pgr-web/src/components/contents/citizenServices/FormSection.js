@@ -8,14 +8,11 @@ import CheckList from './CheckList';
 import Documents from './Documents';
 import PropTypes from 'prop-types';
 import FileInput from './FileInput';
+const constants = require('../../common/constants');
 
 //group constraint value
 const CONDITION_ALL_REQUIRED = 'ALL_REQUIRED';
 const CONDITION_AT_LEAST_ONE_REQUIRED = 'AT_LEAST_ONE_REQUIRED';
-
-//codes of the documents and checklists
-const CHECKLIST_CODE = "CHECKLIST";
-const DOCUMENTS_CODE = "DOCUMENTS";
 
 const styles={
   cardStyle : {
@@ -58,7 +55,7 @@ class FormSection extends Component{
 
       renderFiles = (fields) => {
         return fields.map((field, index)=>{
-          if(field.code != CHECKLIST_CODE && field.code != DOCUMENTS_CODE){
+          if(field.code != constants.CITIZEN_SERVICES_CHECKLIST_CODE && field.code != constants.CITIZEN_SERVICES_DOCUMENTS_CODE){
             if(field.dataType == "file" || field.dataType == "multifile"){
               var fileField = this.props.files.find((fileField) => fileField.code == field.code);
               var files = fileField ? fileField.files : [];
@@ -74,20 +71,19 @@ class FormSection extends Component{
       renderFields = (fields) => {
 
           const renderSections = [fields.map((field, index)=>{
-            if(field.code != CHECKLIST_CODE && field.code != DOCUMENTS_CODE){
+            if(field.code != constants.CITIZEN_SERVICES_CHECKLIST_CODE && field.code != constants.CITIZEN_SERVICES_DOCUMENTS_CODE){
               if(field.dataType != "file" && field.dataType != "multifile"){
                 return <Fields key={index} obj={field} value={this.props.values[field.code] || ""} error={this.props.errors[field.code] || ""} handler={this.props.handler}></Fields>;
               }
             }
-
-            /*else if (field.code == CHECKLIST_CODE){
-              return <CheckList key={index} items={field.attribValues}></CheckList>
+            else if (field.code == constants.CITIZEN_SERVICES_CHECKLIST_CODE){
+              return <CheckList key={index} required={field.required} items={field.attribValues} handler={this.props.handler} values={this.props.values}></CheckList>
             }
-            else if(field.code == DOCUMENTS_CODE){
+            else if(field.code == constants.CITIZEN_SERVICES_DOCUMENTS_CODE){
                return <Documents key={index} items={field.attribValues} addFileHandler={this.props.addFile}
                    removeFileHandler={this.props.removeFile}
                    files={this.props.files}></Documents>
-            }*/
+            }
           })];
 
           return renderSections;
@@ -97,8 +93,6 @@ class FormSection extends Component{
 
         const fields=this.renderFields(this.props.fields);
         const files=this.renderFiles(this.props.fields);
-
-        const obj={code:"test", required:true, description:"Test DateTime"};
 
         return(
           <Card style={styles.cardStyle}>

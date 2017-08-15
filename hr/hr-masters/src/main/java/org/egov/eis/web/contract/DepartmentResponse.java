@@ -38,32 +38,28 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.Department;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
-@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class DepartmentDesignation {
+public class DepartmentResponse {
 
-	@NotNull
-	private Long id;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	@NotNull
-	@JsonProperty("department")
-	private Long departmentId;
-
-	private Designation designation;
-
-	@NotNull
-	private String tenantId;
+	@JsonProperty("Department")
+	private List<Department> department = new ArrayList<>();
 
 }

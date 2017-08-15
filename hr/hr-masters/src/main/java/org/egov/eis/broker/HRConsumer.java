@@ -67,8 +67,8 @@ public class HRConsumer {
     @Value("${kafka.topics.designation.update.name}")
     private String designationUpdateTopic;
 
-    @Value("${kafka.topics.position.create.name}")
-    private String positionCreateTopic;
+    @Value("${kafka.topics.position.db_persist.name}")
+    private String positionDBPersistTopic;
 
     @Value("${kafka.topics.position.update.name}")
     private String positionUpdateTopic;
@@ -83,14 +83,14 @@ public class HRConsumer {
     private ObjectMapper objectMapper;
 
     @KafkaListener(topics = {"${kafka.topics.designation.create.name}", "${kafka.topics.designation.update.name}",
-            "${kafka.topics.position.create.name}", "${kafka.topics.position.update.name}"})
+            "${kafka.topics.position.db_persist.name}", "${kafka.topics.position.update.name}"})
     public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         LOGGER.info("record :: " + record);
         if (topic.equalsIgnoreCase(designationCreateTopic))
             designationService.create(objectMapper.convertValue(record, DesignationRequest.class));
         else if (topic.equalsIgnoreCase(designationUpdateTopic))
             designationService.update(objectMapper.convertValue(record, DesignationRequest.class));
-        else if (topic.equalsIgnoreCase(positionCreateTopic))
+        else if (topic.equalsIgnoreCase(positionDBPersistTopic))
             positionService.create(objectMapper.convertValue(record, PositionRequest.class));
         else if (topic.equalsIgnoreCase(positionUpdateTopic))
             positionService.update(objectMapper.convertValue(record, PositionRequest.class));

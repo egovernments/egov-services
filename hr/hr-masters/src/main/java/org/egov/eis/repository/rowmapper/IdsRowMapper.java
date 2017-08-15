@@ -38,32 +38,20 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository.rowmapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class DepartmentDesignation {
+@Component
+public class IdsRowMapper implements RowMapper<Long> {
 
-	@NotNull
-	private Long id;
-
-	@NotNull
-	@JsonProperty("department")
-	private Long departmentId;
-
-	private Designation designation;
-
-	@NotNull
-	private String tenantId;
-
+	@Override
+	public Long mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+		return (Long) rs.getObject("id");
+	}
 }

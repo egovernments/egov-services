@@ -20,20 +20,18 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoryContractRepository {
 
 	private RestTemplate restTemplate;
-	private String hostUrl;
-	private String searchUrl ;
 	
 	@Autowired
 	private PropertiesManager propertiesManger;
 
 	public CategoryContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
-		this.hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
-		this.searchUrl = propertiesManger.getCategoryServiceSearchPath();
+		
 	}
 
 	public CategoryResponse findByCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getCategoryId() != null) {
@@ -63,7 +61,8 @@ public class CategoryContractRepository {
 	}
 
 	public CategoryResponse findBySubCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getSubCategoryId() != null) {
@@ -94,7 +93,8 @@ public class CategoryContractRepository {
 	}
 
 	public CategoryResponse findBySubCategoryUomId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getSubCategoryId() != null) {

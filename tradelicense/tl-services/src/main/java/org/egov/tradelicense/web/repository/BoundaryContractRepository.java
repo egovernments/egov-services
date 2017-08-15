@@ -5,30 +5,28 @@ import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.requests.BoundaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @Slf4j
 public class BoundaryContractRepository {
 
 	private RestTemplate restTemplate;
-	private String hostUrl;
-	private String searchUrl ;
 	
 	@Autowired
 	private PropertiesManager propertiesManger;
 
 	public BoundaryContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
-		this.hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
-		this.searchUrl = propertiesManger.getLocationServiceSearchPath();
 	}
 
 	public BoundaryResponse findByLocalityId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+		
+		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
+		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getLocalityId() != null) {
@@ -58,7 +56,9 @@ public class BoundaryContractRepository {
 	}
 
 	public BoundaryResponse findByRevenueWardId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+		
+		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
+		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getRevenueWardId() != null) {
@@ -87,7 +87,9 @@ public class BoundaryContractRepository {
 
 	}
 	public BoundaryResponse findByAdminWardId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+		
+		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
+		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getRevenueWardId() != null) {

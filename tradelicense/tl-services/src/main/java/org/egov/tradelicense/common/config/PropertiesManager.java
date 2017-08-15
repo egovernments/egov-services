@@ -26,7 +26,7 @@ public class PropertiesManager {
 	@Value("${egov.services.tl-indexer_v1.license.searchpath}")
 	private String tradeLicenseIndexerLicenseSearchPath;
 	
-	@Value("${adhaar.validation.required}")
+	@Value("${aadhaar.validation.required}")
 	private Boolean adhaarValidation;
 	
 	@Value("${egov.services.tl-indexer_v1.hostname}")

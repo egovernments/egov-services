@@ -1,8 +1,8 @@
 package org.egov.tradelicense.web.repository;
 
 import org.egov.models.PropertyResponse;
-import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,19 +15,18 @@ import lombok.extern.slf4j.Slf4j;
 public class PropertyContractRespository {
 
 	private RestTemplate restTemplate;
-	private String hostUrl;
-	private String searchUrl ;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManger;
 
 	public PropertyContractRespository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
-		this.hostUrl = propertiesManger.getPropertyHostname() + propertiesManger.getPropertyBasepath();
-		this.searchUrl = propertiesManger.getPropertySearchpath();
-	}
-	public PropertyResponse findByAssesmentNo(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 
+	}
+
+	public PropertyResponse findByAssesmentNo(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+		String hostUrl = propertiesManger.getPropertyHostname() + propertiesManger.getPropertyBasepath();
+		String searchUrl = propertiesManger.getPropertySearchpath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (tradeLicense.getLocalityId() != null) {

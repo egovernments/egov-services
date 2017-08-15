@@ -21,25 +21,23 @@ import lombok.extern.slf4j.Slf4j;
 public class DocumentTypeContractRepository {
 
 	private RestTemplate restTemplate;
-	private String hostUrl;
-	private String searchUrl ;
 	
 	@Autowired
 	private PropertiesManager propertiesManger;
 
 	public DocumentTypeContractRepository( RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
-		this.hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
-		this.searchUrl = propertiesManger.getCategoryServiceSearchPath();
 	}
 
 	public DocumentTypeResponse findById(TradeLicense tradeLicense, SupportDocument supportDocument,
 			RequestInfoWrapper requestInfoWrapper) {
 
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getDocumentServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (supportDocument.getDocumentTypeId() != null) {
-			content.append("id=" + supportDocument.getDocumentTypeId());
+			content.append("ids=" + supportDocument.getDocumentTypeId());
 		}
 
 		if (tradeLicense.getTenantId() != null) {

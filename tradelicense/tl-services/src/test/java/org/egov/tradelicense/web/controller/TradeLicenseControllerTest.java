@@ -27,7 +27,7 @@ import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
-import org.egov.tradelicense.web.controller.TradeLicenseController;
+import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,9 @@ public class TradeLicenseControllerTest {
 
 	@MockBean
 	private PropertiesManager propertiesManager;
+	
+	@MockBean
+	private BoundaryContractRepository boundaryContractRepository;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -137,8 +140,8 @@ public class TradeLicenseControllerTest {
 			when(tradeLicenseService.getTradeLicense(any(RequestInfo.class), any(String.class), any(Integer.class),
 					any(Integer.class), any(String.class), any(String.class), any(String.class), any(String.class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
-					any(Integer.class), any(Integer.class), any(String.class), any(String.class), any(String.class),
-					any(Integer.class), any(Integer.class), any(String.class), any(Integer.class)))
+					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(String.class),
+					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(Integer.class)))
 							.thenReturn(tradeLicenseResponse);
 
 			mockMvc.perform(post("/license/v1/_search").param("tenantId", "default")

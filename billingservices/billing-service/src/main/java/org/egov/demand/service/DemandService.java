@@ -156,16 +156,19 @@ public class DemandService {
 	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest)
 	{
 	    BillRequest billRequest=new BillRequest();
-	       System.out.println(receiptRequest!=null ?( !receiptRequest.getReceipt().isEmpty()? receiptRequest.getReceipt():""):"receiptRequest");
+	    if(receiptRequest !=null && receiptRequest.getReceipt() !=null && !receiptRequest.getReceipt().isEmpty()){
 	    billRequest.setRequestInfo(receiptRequest.getRequestInfo());
 	    billRequest.setBills(receiptRequest.getReceipt().get(0).getBill());
-	    System.out.println(billRequest!=null ?( !billRequest.getBills().isEmpty() ? billRequest.getBills().get(0).getBillDetails():""):"billRequest= Before updateDemandFromBill");
+	    }
 	    return updateDemandFromBill(billRequest);
+	    
 	    
 	}
 	
 	
 	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
+	    
+	    if(billRequest !=null && billRequest.getBills()!=null){
 
 		List<Bill> bills = billRequest.getBills();
 		RequestInfo requestInfo = billRequest.getRequestInfo();
@@ -233,8 +236,10 @@ public class DemandService {
 		demandRepository.update(new DemandRequest(requestInfo,demands));
 	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
                 kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandResponse);
-                System.out.println(!demands.isEmpty() ? demands.get(0):"demand is nul in billing servicel");
+                System.out.println(demands);
 		return demandResponse;
+	    }
+            return null;
 	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {
@@ -396,4 +401,5 @@ public class DemandService {
 		auditDetail.setLastModifiedTime(currEpochDate);
 		return auditDetail;
 	}
+	
 }

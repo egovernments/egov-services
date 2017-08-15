@@ -1,13 +1,6 @@
 package org.egov.property.services;
 
-import org.egov.models.PropertyRequest;
-import org.egov.models.PropertyResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.SpecialNoticeRequest;
-import org.egov.models.SpecialNoticeResponse;
-import org.egov.models.TitleTransferRequest;
-import org.egov.models.TitleTransferResponse;
-import org.egov.models.DemandResponse;
+import org.egov.models.*;
 
 public interface PropertyService {
 
@@ -100,5 +93,5 @@ public interface PropertyService {
 	 * @param upicNumber
 	 * @throws Exception
 	 */
-	public DemandResponse getDemandsForProperty(RequestInfo requestInfo, String tenantId, String upicNumber) throws Exception;
+	public DemandResponse getDemandsForProperty(RequestInfoWrapper requestInfo, String tenantId, String upicNumber) throws Exception;
 }

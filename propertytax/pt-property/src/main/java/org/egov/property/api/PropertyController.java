@@ -166,7 +166,7 @@ public class PropertyController {
 									 @RequestParam(value = "upicNumber", required = true) String upicNumber)
 			throws Exception {
 
-		return propertyService.getDemandsForProperty(requestInfo.getRequestInfo(), tenantId, upicNumber);
+		return propertyService.getDemandsForProperty(requestInfo, tenantId, upicNumber);
 	}
 
 }

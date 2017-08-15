@@ -331,7 +331,6 @@ public class DemandService {
 		List<Demand> demands = null;
 
 		if (demandCriteria.getEmail() != null || demandCriteria.getMobileNumber() != null) {
-
 			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
 					.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
 					.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).build();
@@ -341,11 +340,13 @@ public class DemandService {
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
 		} else {
 			demands = demandRepository.getDemands(demandCriteria, null);
-			List<Long> ownerIds = new ArrayList<>(
-					demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
-			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
-					.tenantId(demandCriteria.getTenantId()).id(ownerIds).pageSize(500).build();
-			owners = ownerRepository.getOwners(userSearchRequest);
+			if(!demands.isEmpty()) {
+				List<Long> ownerIds = new ArrayList<>(
+						demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
+				userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+						.tenantId(demandCriteria.getTenantId()).id(ownerIds).pageSize(500).build();
+				owners = ownerRepository.getOwners(userSearchRequest);
+			}
 		}
 		if (demands!=null && !demands.isEmpty())
 			demands = demandEnrichmentUtil.enrichOwners(demands, owners);

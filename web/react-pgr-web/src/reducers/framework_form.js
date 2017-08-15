@@ -83,6 +83,7 @@ export default (state = defaultState, action) => {
               [action.property]: validationDat.errorText
             };
             //Set form valid or not
+            
             currentState.isFormValid = validationDat.isFormValid;
             return currentState;
 

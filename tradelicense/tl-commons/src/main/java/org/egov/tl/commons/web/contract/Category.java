@@ -1,15 +1,15 @@
 package org.egov.tl.commons.web.contract;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 public class Category {
 
 	private Long id = null;
-    
+
 	@Pattern(regexp = ".*[^ ].*")
 	@JsonProperty("tenantId")
 	@NotNull
@@ -43,13 +43,11 @@ public class Category {
 	@NotNull
 	@Size(min = 4, max = 20)
 	private String code = null;
-	
-	
-	
+
 	private Long validityYears = null;
 
 	private Long parentId = null;
-	
+
 	private Boolean active = true;
 
 	private BusinessNatureEnum businessNature = null;

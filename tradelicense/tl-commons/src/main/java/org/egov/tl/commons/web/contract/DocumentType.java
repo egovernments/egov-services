@@ -39,7 +39,7 @@ public class DocumentType {
 	private Boolean mandatory = true;
 
 	private Boolean enabled = true;
-	
+
 	@NotNull
 	private ApplicationTypeEnum applicationType;
 

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AuditDetails {
-	
+
 	@JsonProperty("createdBy")
 	private String createdBy = null;
 

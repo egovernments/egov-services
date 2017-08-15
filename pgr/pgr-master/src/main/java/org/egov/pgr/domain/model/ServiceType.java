@@ -35,6 +35,7 @@ public class ServiceType {
     private Boolean isDay;
     private Boolean active;
     private boolean hasFinancialImpact;
+    private String action;
     @NotNull
     private Long createdBy;
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -132,9 +133,8 @@ public class ServiceType {
      }
      
 
-//    private List<org.egov.pgr.persistence.dto.AttributeDefinition> mapToDtoAttribute(){
-//        return attributes.stream()
-//                .map(AttributeDefinition::toDto)
-//                .collect(Collectors.toList());
-//    }
+    public boolean isUpdate(){
+        return "UPDATE".equalsIgnoreCase(action);
+    }
+
 }

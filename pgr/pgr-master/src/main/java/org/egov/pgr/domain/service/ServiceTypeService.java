@@ -64,6 +64,8 @@ public class ServiceTypeService {
     }
 
     public void update(ServiceType serviceType, ServiceTypeRequest serviceTypeRequest){
+        serviceType.setAction(UPDATE);
+        validate(serviceType);
         serviceTypeMessageQueueRepository.save(serviceTypeRequest, UPDATE);
     }
 

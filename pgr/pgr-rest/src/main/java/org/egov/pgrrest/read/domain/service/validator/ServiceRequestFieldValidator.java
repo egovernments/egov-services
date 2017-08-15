@@ -166,8 +166,6 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         addEmailPattern(model, errorFields);
         addStatusNotPresentValidationErrors(model, errorFields);
         addKeywordsValidationErrors(model, errorFields);
-        addEmailLengthValidationErrors(model, errorFields);
-
     }
 
     private void createValidation(ServiceRequest model, List<ErrorField> errorFields) {
@@ -333,7 +331,10 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
 
     private void addEmailPattern(ServiceRequest model, List<ErrorField> errorFields) {
         if (model.isEmailValid()) {
-            return;
+            {
+                addEmailLengthValidationErrors(model, errorFields);
+                return;
+            }
         }
         final ErrorField errorField = ErrorField.builder()
             .code(EMAIL_PATTERN_CODE)
@@ -456,7 +457,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         List<String> employeeRole = Collections.singletonList(EMPLOYEE);
 
         boolean isRolePresent = model.getAuthenticatedUser().getRoleCodes().stream().anyMatch(employeeRole::contains);
-        if (isRolePresent && !systemRating.isEmpty()) {
+        if (!isRolePresent && !systemRating.isEmpty()) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()
@@ -493,7 +494,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     }
 
     private void addEmailLengthValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (model.emailLength()) {
+        if (!model.emailLength()) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()

@@ -181,7 +181,7 @@ var dat = {
 	"employee.update": {
 		"numCols": 12/3,
 		"searchUrl": "/hr-masters/positions/_search?id={id}",
-		"url":"/hr-masters/positions/{position.id}/_update",
+		"url":"/hr-masters/positions/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Position",

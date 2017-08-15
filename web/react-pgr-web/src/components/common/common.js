@@ -523,6 +523,36 @@ var localationData = {
     "employee.Cancel.Button":"Cancel",
     "employee.addedit.Button":"Add/Edit",
 
+
+
+    "employee.searchEmployee.title":"Search Employee",
+    "employee.searchEmployee.groups.fields.department":"Employee Department",
+    "employee.searchEmployee.groups.fields.code":"Employee Code",
+    "employee.searchEmployee.groups.fields.name":"Employee Name",
+    "employee.searchEmployee.groups.fields.designation":"Employee Designation",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   "tl.create.categorytype.title":"Create License Category",
   "tl.create.groups.categorytype.name":"Name",
   "tl.create.groups.categorytype.code":"Code",

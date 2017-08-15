@@ -2,8 +2,10 @@ package org.egov.pgr.domain.model;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -48,5 +50,15 @@ public class ServiceDefinition {
     
     public boolean isCodeAbsent(){
         return isEmpty(code) || code == null;
+    }
+    
+    
+    public boolean valueDefinMandatoryFieldValidation(ServiceDefinition serviceDefinition) {
+		List<String> attributeServiceCodes = serviceDefinition.getAttributes().stream().map(attribute -> attribute.getServiceCode())
+		.collect(Collectors.toList());
+		List<String> serviceDefinitionCode = Collections.singletonList(code);
+		return !attributeServiceCodes.stream().allMatch(serviceDefinitionCode::contains);
+				
+		
     }
 }

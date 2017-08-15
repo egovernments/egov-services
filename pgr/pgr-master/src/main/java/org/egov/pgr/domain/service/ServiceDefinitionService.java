@@ -49,9 +49,9 @@ public class ServiceDefinitionService {
 	
 	public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request) {
 		createMandatoryFieldValidate(serviceDefinition);
-		attributeMAndatoryFieldValidation(serviceDefinition);
+		attributeMandatoryFieldValidation(serviceDefinition);
 		valueDefinMandatoryFieldValidation(serviceDefinition);
-		
+		matchAttributeAndServiceCode(serviceDefinition);
 		ServiceDefinitionFieldLengthValidate( serviceDefinition);
 		valueDefLengthValidation(serviceDefinition);
 		attributeLengthValidation(serviceDefinition);
@@ -118,7 +118,7 @@ public class ServiceDefinitionService {
 	}
 	
 	
-	private void attributeMAndatoryFieldValidation(ServiceDefinition serviceDefinition) {
+	private void attributeMandatoryFieldValidation(ServiceDefinition serviceDefinition) {
 		serviceDefinition.getAttributes().stream().forEach(attributeDefinition -> 
 		{
 			attributeValidate.stream().filter(validator -> 
@@ -153,6 +153,11 @@ public class ServiceDefinitionService {
 		});
 		
 	}
+	
+	private void matchAttributeAndServiceCode(ServiceDefinition serviceDefinition) {
+		createValidators.stream().filter(validator -> validator.canValidate(serviceDefinition))
+				.forEach(v -> v.matchServiceandAttributeCodes(serviceDefinition));
+	} 
 	
 	private void setAttributes(List<ServiceDefinition> serviceDefinitions) {
 		serviceDefinitions.forEach(serviceDefinition -> serviceDefinition.setAttributes(attributeDefinitionRepository

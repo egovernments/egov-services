@@ -8,5 +8,5 @@ public interface ServiceDefinitionValidator {
     void checkMandatoryField(ServiceDefinition serviceDefinition);
     void checkConstraints(ServiceDefinition serviceDefinition);
     void checkLength(ServiceDefinition serviceDefinition);
-
+    void matchServiceandAttributeCodes(ServiceDefinition serviceDefinition);
 }

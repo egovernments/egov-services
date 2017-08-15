@@ -42,6 +42,20 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 
 			throw new PGRMasterException(error);
 		}
+		
+	}
+	@Override
+	public void matchServiceandAttributeCodes(ServiceDefinition serviceDefinition)
+	{
+		if(serviceDefinition.valueDefinMandatoryFieldValidation(serviceDefinition))
+		{
+			HashMap<String, String> error = new HashMap<>();
+			error.put("code", "DefinitionCode Vaalidator.7");
+			error.put("field", "DefinitionCode.codeMissMatch");
+			error.put("message", "Miss Match in Attribute code And Service code  ");
+
+			throw new PGRMasterException(error);
+		}
 	}
 
 	@Override
@@ -71,6 +85,7 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 			throw new PGRMasterException(error);
 
 		}
+		
 
 	}
 

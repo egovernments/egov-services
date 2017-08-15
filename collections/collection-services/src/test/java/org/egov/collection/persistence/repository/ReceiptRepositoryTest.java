@@ -310,8 +310,7 @@ public class ReceiptRepositoryTest {
 				.channel("567hfghr").consumerType("Known").fund("56").fundSource("78").function("678").boundary("67")
 				.department("78").voucherheader("VOUHEAD").depositedBranch("ICICI").version(1L).createdBy(1L)
 				.lastModifiedBy(1L).tenantId("default").build();
-		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header))
-				.receiptDetails(Arrays.asList(detail1, detail2)).build();
+		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header)).build();
 	}
 
 	private List<ReceiptHeader> getListReceiptHeader() {

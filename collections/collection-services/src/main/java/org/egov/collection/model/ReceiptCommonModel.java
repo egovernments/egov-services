@@ -58,23 +58,13 @@ public class ReceiptCommonModel {
 
 	private List<ReceiptHeader> receiptHeaders;
 
-	private List<ReceiptDetail> receiptDetails;
-
-    private Instrument instrument;
-
 	public List<Receipt> toDomainContract() {
 		List<Receipt> receipts = new ArrayList<>();
 
 		for (ReceiptHeader receiptHeader : receiptHeaders) {
 
-			List<ReceiptDetail> listReceiptDetail = new ArrayList<>();
-			for (ReceiptDetail receiptDetail : receiptDetails) {
-				if (receiptDetail.getReceiptHeader().getId().equals(receiptHeader.getId())) {
-					listReceiptDetail.add(receiptDetail);
-				}
-			}
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
-			for (ReceiptDetail rctDetail : listReceiptDetail) {
+			for (ReceiptDetail rctDetail : receiptHeader.getReceiptDetails()) {
 				if(null != rctDetail.getDramount() ){
 				billAccountDetails.add(BillAccountDetail.builder().isActualDemand(rctDetail.getIsActualDemand())
 						.id(rctDetail.getId().toString()).tenantId(rctDetail.getTenantId())
@@ -124,8 +114,8 @@ public class ReceiptCommonModel {
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
 			Receipt receipt = Receipt.builder().stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).
-                    transactionId(receiptHeader.getTransactionId()).instrument(instrument).build();
-			receipts.add(receipt);
+                    transactionId(receiptHeader.getTransactionId()).instrument(receiptHeader.getReceiptInstrument()).build();
+            receipts.add(receipt);
 		}
 
 		return receipts;

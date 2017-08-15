@@ -40,22 +40,18 @@
 
 package org.egov.collection.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import lombok.EqualsAndHashCode;
+import org.egov.collection.model.ReceiptHeader;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.egov.collection.model.ReceiptDetail;
-import org.egov.collection.model.ReceiptHeader;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-
-import lombok.EqualsAndHashCode;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @EqualsAndHashCode
 @Component
@@ -124,24 +120,6 @@ public class ReceiptRowMapper implements RowMapper<ReceiptHeader> {
 			throw new SQLException("Parse exception while parsing date");
 		}
 
-		ReceiptDetail receiptDetail = new ReceiptDetail();
-		receiptDetail.setId((Long) rs.getObject("rd_id"));
-		receiptDetail.setChartOfAccount(rs.getString("rd_chartOfAccount"));
-		receiptDetail.setDramount((Double) rs.getObject("rd_dramount"));
-		receiptDetail.setActualcramountToBePaid((Double) rs.getObject("rd_actualcramountToBePaid"));
-		receiptDetail.setCramount((Double) rs.getObject("rd_cramount"));
-		receiptDetail.setOrdernumber((Long) rs.getObject("rd_ordernumber"));
-		receiptDetail.setDescription(rs.getString("rd_description"));
-		receiptDetail.setIsActualDemand((Boolean) rs.getObject("rd_isActualDemand"));
-		receiptDetail.setFinancialYear(rs.getString("rd_financialYear"));
-		receiptDetail.setPurpose(rs.getString("rd_purpose"));
-		receiptDetail.setTenantId(rs.getString("rd_tenantId"));
-		ReceiptHeader header = new ReceiptHeader();
-		header.setId((Long) rs.getObject("rh_id"));
-		receiptDetail.setReceiptHeader(header);
-		Set<ReceiptDetail> receiptdetailSet = new HashSet<>();
-		receiptdetailSet.add(receiptDetail);
-		receiptHeader.setReceiptDetails(receiptdetailSet);
 		return receiptHeader;
 	}
 }

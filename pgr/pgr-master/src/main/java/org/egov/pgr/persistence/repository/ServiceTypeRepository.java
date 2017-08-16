@@ -1,7 +1,6 @@
 package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.domain.model.ServiceTypeSearchCriteria;
-import org.egov.pgr.persistence.dto.AttributeDefinition;
 import org.egov.pgr.persistence.dto.ServiceType;
 import org.egov.pgr.persistence.dto.ServiceTypeKeyword;
 import org.egov.pgr.persistence.querybuilder.AttributeDefinitionQueryBuilder;
@@ -56,8 +55,6 @@ public class ServiceTypeRepository {
         List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.buildSearchQuery(serviceTypeSearchCriteria),
                 getSearchNamedQuery(serviceTypeSearchCriteria), new BeanPropertyRowMapper<>(ServiceType.class));
         filterKeywords(serviceTypeSearchCriteria, serviceTypeList);
-        fetchAttributes(serviceTypeList);
-        fetchValueDefinitions(serviceTypeList);
 
         return getServiceTypes(serviceTypeSearchCriteria, serviceTypeList);
     }
@@ -116,14 +113,6 @@ public class ServiceTypeRepository {
                 .collect(Collectors.toList());
     }
 
-    private void fetchValueDefinitions(List<ServiceType> serviceTypeList) {
-        serviceTypeList.forEach(st -> valueDefinitionRepository.setValueDefinition(st));
-    }
-
-    private void fetchAttributes(List<ServiceType> serviceTypeList) {
-        serviceTypeList.forEach(st -> st.setAttributeDefinitions(fetchAttributes(st)));
-    }
-
     private void filterKeywords(ServiceTypeSearchCriteria serviceTypeSearchCriteria, List<ServiceType> serviceTypeList) {
         serviceTypeList.
                 forEach(serviceType -> serviceType.setKeywords(
@@ -142,11 +131,6 @@ public class ServiceTypeRepository {
         return keywordList.stream()
                 .map(ServiceTypeKeyword::getKeyword)
                 .collect(Collectors.toList());
-    }
-
-    private List<AttributeDefinition> fetchAttributes(ServiceType serviceType) {
-        return namedParameterJdbcTemplate.query(attributeDefinitionQueryBuilder.findByServiceCodeAndTenantId(),
-                getAttributesMap(serviceType), new BeanPropertyRowMapper<>(AttributeDefinition.class));
     }
 
     //used for update unique validation
@@ -223,15 +207,6 @@ public class ServiceTypeRepository {
         parametersMap.put("code", serviceType.getCode());
         parametersMap.put("tenantid", serviceType.getTenantId());
         parametersMap.put("keywords", keywords);
-
-        return parametersMap;
-    }
-
-    private HashMap<String, String> getAttributesMap(ServiceType serviceType) {
-        HashMap<String, String> parametersMap = new HashMap<>();
-
-        parametersMap.put("servicecode", serviceType.getCode());
-        parametersMap.put("tenantid", serviceType.getTenantId());
 
         return parametersMap;
     }

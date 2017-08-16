@@ -152,6 +152,14 @@ public class EmployeeRepository {
 		return employeesInfo;
 	}
 
+	public Integer getTotalDBRecords(EmployeeCriteria empCriteria) {
+		Map<String, Object> namedParamsForMatchingRecords = new HashMap<>();
+		String queryStrForMatchingRecords = employeeQueryBuilder.getQuery(empCriteria, namedParamsForMatchingRecords, null);
+		String queryForTotalMatchingRecords = "SELECT count(*) FROM (" + queryStrForMatchingRecords + ") AS emp";
+
+		return namedParameterJdbcTemplate.queryForObject(queryForTotalMatchingRecords, namedParamsForMatchingRecords, Integer.class);
+	}
+
 	@SuppressWarnings("serial")
 	public List<EmployeeDocument> getDocumentsForListOfEmployeeIds(List<Long> employeeIds, String tenantId) {
 		Map<String, Object> namedParameters = new HashMap<String, Object>() {{
@@ -270,5 +278,4 @@ public class EmployeeRepository {
 		String query = DUPLICATE_EXISTS_QUERY.replace("$table", table).replace("$column", column);
 		return jdbcTemplate.queryForObject(query, new Object[] { value, tenantId },	Boolean.class);
 	}
-
 }

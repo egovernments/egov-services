@@ -3210,7 +3210,7 @@ class Employee extends Component {
   				</Tabs>
   				<br/>
           <div style={{textAlign: "center"}}>
-  				  <RaisedButton type="submit" label={translate("ui.framework.submit")} primary={true} disabled={!self.props.isFormValid}/>
+  				  {self.state.screenType != "view" ? <RaisedButton type="submit" label={translate("ui.framework.submit")} primary={true} disabled={!self.props.isFormValid}/> : ""}
           </div>
   			</form>
         <Dialog
@@ -3255,8 +3255,8 @@ const mapDispatchToProps = dispatch => ({
             fieldErrors: {},
             validationData: {
                 required: {
-                    current: isUpdate ? requiredList : ['user.active'],
-                    required: requiredList
+                    current: isUpdate ? Object.assign([], requiredList) : ['user.active'],
+                    required: Object.assign([], requiredList)
                 },
                 pattern: {
                     current: [],

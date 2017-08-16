@@ -187,8 +187,8 @@ var dat = {
           "patternErrMsg": ""
         },
         {
-          "name": "billerService",
-          "jsonPath": "billerService",
+          "name": "businessService",
+          "jsonPath": "businessService",
           "label": "Billing service name",
           "pattern": "",
           "type": "singleValueList",

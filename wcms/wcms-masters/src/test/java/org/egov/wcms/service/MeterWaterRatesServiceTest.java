@@ -135,8 +135,8 @@ public class MeterWaterRatesServiceTest {
         final Slab slab = getSlabDetails();
         slabList.add(slab);
         meterWaterRates.setSlab(slabList);
-        meterWaterRates.setFromDate(new Date());
-        meterWaterRates.setToDate(new Date());
+        meterWaterRates.setFromDate(12245666l);
+        meterWaterRates.setToDate(1234568l);
         meterWaterRates.setActive(true);
         return meterWaterRates;
     }

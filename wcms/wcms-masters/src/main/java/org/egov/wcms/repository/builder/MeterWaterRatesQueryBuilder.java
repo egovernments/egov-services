@@ -52,10 +52,12 @@ public class MeterWaterRatesQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT meterwater.id as meterwater_id,meterwater.code as meterwater_code, meterwater.billingtype as billingtype,meterwater.sourcetypeid "
             + "as meterwater_sourcetypeid, meterwater.usagetypeid as meterwater_usagetypeid,"
-            + "meterwater.pipesizeid as meterwater_pipesizeId,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
-            + "meterwater.active as meterwater_active, "
-            + "meterwater.tenantId as meterwater_tenantId "
-            + " FROM egwtr_meter_water_rates meterwater ";
+            + "meterwater.pipesizeid as meterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
+            + "meterwater.active as meterwater_active, watersource.name as watersource_name,"
+            + "meterwater.tenantId as meterwater_tenantId ,slab.id as slab_id,slab.meterwaterratesid as slab_meterwaterratesid,"
+            + "slab.fromunit as slab_fromunit,slab.tounit as slab_tounit,slab.unitrate as slab_unitrate,slab.tenantId as slab_tenantId"
+            + " FROM egwtr_meter_water_rates meterwater LEFT JOIN egwtr_slab slab ON slab.meterwaterratesid=meterwater.id LEFT JOIN egwtr_pipesize pipesize ON meterwater.pipesizeid = pipesize.id "
+            + " LEFT JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id";
 
     public String getQuery(final MeterWaterRatesGetRequest meterWaterRatesGetRequest,
             @SuppressWarnings("rawtypes") final List preparedStatementValues) {
@@ -145,22 +147,18 @@ public class MeterWaterRatesQueryBuilder {
     public static String insertMeterWaterRatesQuery() {
         return "INSERT INTO egwtr_meter_water_rates(id,code,billingtype,usagetypeid,sourcetypeid,pipesizeid,fromdate,todate,active,"
                 + "createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "(:id,:code,:billingtype,:usagetypeid,:sourcetypeid,:pipesizeid,:fromdate,:todate,:active,"
+                + ":createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String insertSlabQuery() {
         return "INSERT INTO egwtr_slab(id,meterwaterratesid,fromunit,tounit,unitrate,tenantid) values "
-                + "(nextval('seq_egwtr_slab'),?,?,?,?,?)";
-    }
-
-    public static String updateSlabQuery() {
-        return "UPDATE egwtr_slab SET meterwaterratesid=?,fromunit=?,tounit=?,unitrate=? where id=?,tenantid=?";
-
+                + "(nextval('seq_egwtr_slab'),:meterwaterratesid,:fromunit,:tounit,:unitrate,:tenantid)";
     }
 
     public static String updateMeterWaterRatesQuery() {
-        return "UPDATE egwtr_meter_water_rates SET billingtype = ?,usagetypeid = ?,sourcetypeid = ?,pipesizeid = ? ,fromdate = ?"
-                + " , todate = ?,active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?  and tenantid = ?";
+        return "UPDATE egwtr_meter_water_rates SET billingtype = :billingtype,usagetypeid = :usagetypeid,sourcetypeid = :sourcetypeid,pipesizeid = :pipesizeid ,fromdate = :fromdate "
+                + " , todate = :todate ,active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code  and tenantid = :tenantid ";
     }
 
     public static String selectMeterWaterRatesByCodeQuery() {

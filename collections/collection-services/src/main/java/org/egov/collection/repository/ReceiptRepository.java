@@ -190,7 +190,7 @@ public class ReceiptRepository {
             receiptHeader = header;
             receiptHeader.setBusinessDetails(businessDetails.getName());
             receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
-            receiptHeader.setReceiptInstrument(searchInstrumentHeader(receiptHeader.getId(),receiptSearchCriteria.getTenantId(),requestInfo));
+          //  receiptHeader.setReceiptInstrument(searchInstrumentHeader(receiptHeader.getId(),receiptSearchCriteria.getTenantId(),requestInfo));
             receiptHeaders.add(receiptHeader);
 		}
 
@@ -293,6 +293,8 @@ public class ReceiptRepository {
 	}
 
 	public WorkflowDetailsRequest updateReceipt(WorkflowDetailsRequest workFlowDetailsRequest) {
+		logger.info("workFlowDetailsRequest at repo: "+workFlowDetailsRequest.toString());
+		
 		String updateQuery = receiptDetailQueryBuilder.getQueryForUpdate(
 				workFlowDetailsRequest.getStateId(), workFlowDetailsRequest.getStatus(), 
 				workFlowDetailsRequest.getReceiptHeaderId(), workFlowDetailsRequest.getTenantId());

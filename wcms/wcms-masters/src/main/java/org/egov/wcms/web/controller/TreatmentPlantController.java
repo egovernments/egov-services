@@ -100,7 +100,7 @@ public class TreatmentPlantController {
         }
         log.info("Treatment Plant Request::" + treatmentPlantRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest, "");
+        final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -119,7 +119,7 @@ public class TreatmentPlantController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("treatmentPlantRequest::" + treatmentPlantRequest);
-        final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest,"update");
+        final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest,true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 

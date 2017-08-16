@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Property Masters",
-		"_postman_id": "9a6c07d2-0699-d376-7d03-c136cb259393",
+		"_postman_id": "7f080757-1455-fc8b-8b51-4848e5442f1a",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -1258,6 +1258,110 @@
 					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    }\r\n}"
 				},
 				"description": "woodtypes search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-property/property/apartment/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/property/apartment/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"property",
+						"apartment",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10032017\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"0e557f47-d3cb-4d45-8729-127ef0a8f18a\",\n    \"userInfo\": {\n      \"id\": 74,\n      \"userName\": \"manas\",\n      \"name\": \"manas\",\n      \"type\": \"EMPLOYEE\",\n      \"mobileNumber\": \"1234567890\",\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": 2,\n          \"name\": \"Employee\",\n          \"code\": \"EMPLOYEE\",\n          \"tenantId\": \"default\"\n        }\n      ]\n    }\n  },\n  \"apartments\": [\n    {\n      \"tenantId\": \"default\",\n      \"code\": \"1001\",\n      \"name\": \"AAA_APARTMENT\",\n      \"totalBuiltUpArea\": 5555,\n      \"totalProperties\": 145,\n      \"totalFloors\": 19,\n      \"totalOpenSpace\": 10.5,\n      \"liftFacility\": false,\n      \"powerBackUp\": true,\n      \"parkingFacility\": false,\n      \"residtinalProperties\": 10,\n      \"nonResidtinalProperties\": 60,\n      \"sourceOfWater\": \"test\",\n      \"floorDetails\": {\n        \"floorNo\": \"floorNo\",\n        \"units\": [\n          {\n            \"unitNo\": 10,\n            \"unitType\": \"FLAT\",\n            \"units\": [],\n            \"length\": 10,\n            \"width\": 6,\n            \"builtupArea\": 1500,\n            \"assessableArea\": 1300,\n            \"bpaBuiltupArea\": 1700,\n            \"bpaNo\": \"test-bpaNo\",\n            \"bpaDate\": \"2017-08-02\",\n            \"usage\": \"usage\",\n            \"occupancyType\": \"occupancytype\",\n            \"occupierName\": \"occupiername\",\n            \"firmName\": \"firmname\",\n            \"rentCollected\": 45000,\n            \"structure\": \"structure\",\n            \"age\": \"age\",\n            \"exemptionReason\": \"exemption-reason\",\n            \"isStructured\": true,\n            \"occupancyDate\": \"2017-08-02\",\n            \"constCompletionDate\": \"2017-08-02\",\n            \"manualArv\": 100,\n            \"arv\": 50,\n            \"electricMeterNo\": \"12345-E\",\n            \"waterMeterNo\": \"12345-W\",\n            \"isAuthorised\": true\n          }\n        ]\n      }\n    }\n  ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-property/property/apartment/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/property/apartment/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"property",
+						"apartment",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n       \"apiId\": \"emp\",\n       \"ver\": \"1.0\",\n       \"ts\": \"10032017\",\n       \"action\": \"create\",\n       \"did\": \"1\",\n       \"key\": \"abcdkey\",\n       \"msgId\": \"20170310130900\",\n       \"requesterId\": \"rajesh\",\n       \"authToken\": \"0e557f47-d3cb-4d45-8729-127ef0a8f18a\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-property/property/apartment/_update",
+			"request": {
+				"url": "http://localhost:8080/pt-property/property/apartment/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10032017\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"0e557f47-d3cb-4d45-8729-127ef0a8f18a\",\n    \"userInfo\": {\n      \"id\": 74,\n      \"userName\": \"manas\",\n      \"name\": \"manas\",\n      \"type\": \"EMPLOYEE\",\n      \"mobileNumber\": \"1234567890\",\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": 2,\n          \"name\": \"Employee\",\n          \"code\": \"EMPLOYEE\",\n          \"tenantId\": \"default\"\n        }\n      ]\n    }\n  },\n  \"apartments\": [\n    {\n      \"id\":12,\n      \"tenantId\": \"default\",\n      \"code\": \"1000001\",\n      \"name\": \"BB-APARTMENT\",\n      \"totalBuiltUpArea\": 55555,\n      \"totalProperties\": 145,\n      \"totalFloors\": 19,\n      \"totalOpenSpace\": 10.5,\n      \"liftFacility\": false,\n      \"powerBackUp\": false,\n      \"parkingFacility\": true,\n      \"residtinalProperties\": 10,\n      \"nonResidtinalProperties\": 60,\n      \"sourceOfWater\": \"test\",\n      \"floorDetails\": {\n        \"floorNo\": \"floorNo\",\n        \"units\": [\n          {\n            \"unitNo\": 10,\n            \"unitType\": \"FLAT\",\n            \"units\": [],\n            \"length\": 10,\n            \"width\": 10,\n            \"builtupArea\": 1500,\n            \"assessableArea\": 1500,\n            \"bpaBuiltupArea\": 1500,\n            \"bpaNo\": \"test-bpaNo\",\n            \"bpaDate\": \"2017-08-02\",\n            \"usage\": \"usage\",\n            \"occupancyType\": \"occupancytype\",\n            \"occupierName\": \"occupiername\",\n            \"firmName\": \"firmname\",\n            \"rentCollected\": 15000,\n            \"structure\": \"structure\",\n            \"age\": \"age\",\n            \"exemptionReason\": \"exemption-reason\",\n            \"isStructured\": true,\n            \"occupancyDate\": \"2017-08-02\",\n            \"constCompletionDate\": \"2017-08-02\",\n            \"manualArv\": 100,\n            \"arv\": 50,\n            \"electricMeterNo\": \"12345-E\",\n            \"waterMeterNo\": \"12345-W\",\n            \"isAuthorised\": true\n          }\n        ]\n      }\n    }\n  ]\n}"
+				},
+				"description": ""
 			},
 			"response": []
 		}

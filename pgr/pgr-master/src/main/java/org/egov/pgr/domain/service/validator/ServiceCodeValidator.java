@@ -28,7 +28,7 @@ public class ServiceCodeValidator implements ServiceTypeConfigurationValidator {
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "ServiceCodeValidator.2");
 			error.put("field", "serviceTypeConfiguration.serviceCode");
-			error.put("message", "serviceCode mandatory");
+			error.put("message", "serviceCode Required");
 
 			throw new PGRMasterException(error);
 
@@ -61,7 +61,7 @@ public class ServiceCodeValidator implements ServiceTypeConfigurationValidator {
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "ServiceCodeVaalidator.1");
 			error.put("field", "serviceTypeConfiguration.serviceCode");
-			error.put("message", "serviceCode already exists");
+			error.put("message", "Data already exists");
 			throw new PGRMasterException(error);
 		}
 	}

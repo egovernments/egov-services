@@ -123,6 +123,10 @@ public class TradeLicense {
 	@NotNull
 	@JsonProperty("quantity")
 	private Double quantity;
+	
+	@NotNull
+	@JsonProperty("validityYears")
+	private Long validityYears;
 
 	@JsonProperty("remarks")
 	private String remarks;

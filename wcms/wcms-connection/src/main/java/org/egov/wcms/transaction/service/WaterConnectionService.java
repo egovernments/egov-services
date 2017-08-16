@@ -52,16 +52,20 @@ import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EstimationNotice;
+import org.egov.wcms.transaction.model.User;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.RestConnectionService;
+import org.egov.wcms.transaction.web.contract.BoundaryResponse;
 import org.egov.wcms.transaction.web.contract.ProcessInstance;
 import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.Task;
+import org.egov.wcms.transaction.web.contract.UserRequestInfo;
+import org.egov.wcms.transaction.web.contract.UserResponseInfo;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.workflow.service.TransanctionWorkFlowService;
@@ -69,6 +73,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class WaterConnectionService {
@@ -115,13 +120,62 @@ public class WaterConnectionService {
     
     public Connection persistBeforeKafkaPush(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create Connection");
+        Long connectionAddressId = 0L ;
+        Long connectionLocationId = 0L ;
         try {
-            waterConnectionRepository.persistConnection(waterConnectionRequest);
+        	if(waterConnectionRequest.getConnection().getWithProperty()){ 
+        		waterConnectionRepository.persistConnection(waterConnectionRequest);
+        	}
+        	else { 
+        		waterConnectionRepository.persistConnection(waterConnectionRequest);
+        		logger.info("Creating User Id :: " );
+        		createUserId(waterConnectionRequest); 
+        		logger.info("Creating Address Id :: " );
+        		connectionAddressId = waterConnectionRepository.insertConnectionAddress(waterConnectionRequest);
+        		logger.info("Creating Location Id :: " );
+        		connectionLocationId = waterConnectionRepository.insertConnectionLocation(waterConnectionRequest);
+        		logger.info("Updating Water Connection :: " );
+        		waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest, connectionAddressId, connectionLocationId);
+        	}
+        	
         } catch (final Exception e) {
             logger.error("Persisting failed due to db exception", e);
         }
         return waterConnectionRequest.getConnection();
     }
+    
+    private void createUserId(WaterConnectionReq waterConnReq){
+    	
+    	StringBuffer createUrl = new StringBuffer();
+		createUrl.append(configurationManager.getUserHostName());
+		createUrl.append(configurationManager.getUserBasePath());
+		createUrl.append(configurationManager.getUserCreatePath());
+		
+		Connection conn= waterConnReq.getConnection(); 
+    	User user = User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber())
+    			.userName(conn.getConnectionOwner().getUserName())
+    			.name(conn.getConnectionOwner().getName())
+    			.emailId(conn.getConnectionOwner().getEmailId())
+    			.permanentAddress(conn.getConnectionOwner().getPermanentAddress())
+    			.mobileNumber(conn.getConnectionOwner().getMobileNumber())
+    			.gender(conn.getConnectionOwner().getGender())
+    			.isPrimaryOwner(conn.getConnectionOwner().getIsPrimaryOwner())
+    			.isSecondaryOwner(conn.getConnectionOwner().getIsSecondaryOwner())
+    			.active(true)
+    			.build();
+    	UserRequestInfo userRequestInfo = new UserRequestInfo();
+        userRequestInfo.setRequestInfo(waterConnReq.getRequestInfo());
+        user.setPassword(configurationManager.getDefaultPassword());
+        userRequestInfo.setUser(user);
+    	logger.info("UserUtil createUrl ---->> " + createUrl.toString() + " \n userRequestInfo ---->> "
+                + userRequestInfo);
+        UserResponseInfo userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
+                UserResponseInfo.class);
+        logger.info("UserUtil userCreateResponse ---->> " + userCreateResponse);
+        user.setId(userCreateResponse.getUsers().get(0).getId());
+        waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUsers().get(0).getId());
+    }
+    
 
     public Connection create(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for update with initiate workflow Connection");
@@ -384,6 +438,34 @@ public class WaterConnectionService {
          }
          return url.toString();
     	
+    }
+    
+    public Boolean getBoundaryByZone(
+            final WaterConnectionReq waterConnectionReq) {
+        BoundaryResponse boundaryRespose = null;
+        boundaryRespose = restConnectionService.getBoundaryNum(
+        		WcmsConnectionConstants.ZONE,
+        		waterConnectionReq.getConnection().getAddress().getZone(),
+                waterConnectionReq.getConnection().getTenantId());
+        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+    }
+
+    public Boolean getBoundaryByWard(final WaterConnectionReq waterConnectionReq) {
+        BoundaryResponse boundaryRespose = null;
+        boundaryRespose = restConnectionService.getBoundaryNum(
+        		WcmsConnectionConstants.WARD,
+        		waterConnectionReq.getConnection().getAddress().getWard(),
+        		waterConnectionReq.getConnection().getTenantId());
+        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+    }
+
+    public Boolean getBoundaryByLocation(final WaterConnectionReq waterConnectionReq) {
+        BoundaryResponse boundaryRespose = null;
+        boundaryRespose = restConnectionService.getBoundaryNum(
+        		WcmsConnectionConstants.LOCALITY,
+        		waterConnectionReq.getConnection().getAddress().getLocality(),
+        		waterConnectionReq.getConnection().getTenantId());
+        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
     }
     
  }

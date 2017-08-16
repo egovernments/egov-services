@@ -183,6 +183,7 @@ public class TradeLicenseServiceTest {
 		CategoryDetail categoryDetail = CategoryDetail.builder().id(1l).build();
 		categoryDetail.setUomId(1l);
 		categoryDetails.add(categoryDetail);
+		category.setValidityYears(1l);
 		category.setDetails(categoryDetails);
 		categories.add(category);
 		return categories;
@@ -209,7 +210,7 @@ public class TradeLicenseServiceTest {
 				.applicationDate("15/08/2017").emailId("abc@xyz.com").isLegacy(true).oldLicenseNumber("12345")
 				.mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
 				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).categoryId(1l)
-				.subCategoryId(2l).uomId(1l).quantity(10.0).tradeAddress("1-12 kamma street")
+				.subCategoryId(2l).uomId(1l).quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
 				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT)
 				.feeDetails(licenseFeeDetails).supportDocuments(supportDocuments).tradeCommencementDate("15/08/2017")
 				.auditDetails(getAuditDetails()).build();

@@ -1,0 +1,126 @@
+{
+   "tradelicense": {
+      "mappings": {
+         "tradelicense_type": {
+            "properties": {
+               "active": {
+                  "type": "boolean"
+               },
+               "adhaarNumber": {
+                  "type": "string"
+               },
+               "adminWardId": {
+                  "type": "long"
+               },
+               "applicationDate": {
+                  "type": "string"
+               },
+               "applicationNumber": {
+                  "type": "string"
+               },
+               "applicationType": {
+                  "type": "string"
+               },
+               "auditDetails": {
+                  "properties": {
+                     "createdTime": {
+                        "type": "long"
+                     }
+                  }
+               },
+               "categoryId": {
+                  "type": "long"
+               },
+               "emailId": {
+                  "type": "string"
+               },
+               "expiryDate": {
+                  "type": "string"
+               },
+               "fatherSpouseName": {
+                  "type": "string"
+               },
+               "feeDetails": {
+                  "properties": {
+                     "amount": {
+                        "type": "double"
+                     },
+                     "financialYear": {
+                        "type": "string"
+                     },
+                     "id": {
+                        "type": "long"
+                     },
+                     "licenseId": {
+                        "type": "long"
+                     },
+                     "paid": {
+                        "type": "boolean"
+                     }
+                  }
+               },
+               "id": {
+                  "type": "long"
+               },
+               "isLegacy": {
+                  "type": "boolean"
+               },
+               "licenseNumber": {
+                  "type": "string"
+               },
+               "licenseValidFromDate": {
+                  "type": "string"
+               },
+               "localityId": {
+                  "type": "long"
+               },
+               "mobileNumber": {
+                  "type": "string"
+               },
+               "oldLicenseNumber": {
+                  "type": "string"
+               },
+               "ownerAddress": {
+                  "type": "string"
+               },
+               "ownerName": {
+                  "type": "string"
+               },
+               "ownerShipType": {
+                  "type": "string"
+               },
+               "propertyAssesmentNo": {
+                  "type": "string"
+               },
+               "quantity": {
+                  "type": "double"
+               },
+               "revenueWardId": {
+                  "type": "long"
+               },
+               "subCategoryId": {
+                  "type": "long"
+               },
+               "tenantId": {
+                  "type": "string"
+               },
+               "tradeAddress": {
+                  "type": "string"
+               },
+               "tradeCommencementDate": {
+                  "type": "string"
+               },
+               "tradeTitle": {
+                  "type": "string"
+               },
+               "tradeType": {
+                  "type": "string"
+               },
+               "uomId": {
+                  "type": "long"
+               }
+            }
+         }
+      }
+   }
+}

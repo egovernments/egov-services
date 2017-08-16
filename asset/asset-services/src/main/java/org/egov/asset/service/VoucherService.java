@@ -57,6 +57,7 @@ public class VoucherService {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
+        headers.setOrigin("http://kurnool-pilot-services.egovernments.org");
         final String createVoucherUrl = headers.getOrigin() + applicationProperties.getEgfServiceVoucherCreatePath()
                 + "?tenantId=" + tenantId;
         log.debug("Voucher API Request URL :: " + createVoucherUrl);
@@ -153,14 +154,13 @@ public class VoucherService {
             final Boolean isDebit) {
 
         final VouchercreateAccountCodeDetails debitAccountCodeDetail = new VouchercreateAccountCodeDetails();
-        ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
                 + accountId;
         log.debug("Chart of Account URL ::" + url);
         log.debug("Chart of Account Request Info :: " + requestInfo);
-        chartOfAccountContractResponse = restTemplate.postForObject(url, requestInfo,
-                ChartOfAccountContractResponse.class);
+        final ChartOfAccountContractResponse chartOfAccountContractResponse = restTemplate.postForObject(url,
+                requestInfo, ChartOfAccountContractResponse.class);
         log.debug("Chart of Account Response :: " + chartOfAccountContractResponse);
 
         final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
@@ -200,4 +200,12 @@ public class VoucherService {
         log.debug("subledger details response :: " + coAccountDetailContractResponse);
         return coAccountDetailContractResponse.getChartOfAccountDetails();
     }
+
+    public void validateSubLedgerDetails(final List<ChartOfAccountDetailContract> creditableCOA,
+            final List<ChartOfAccountDetailContract> debitableCOA) {
+        log.debug("Validating Sub Ledger Details for Chart of Accounts ");
+        if (creditableCOA != null && debitableCOA != null && !creditableCOA.isEmpty() && !debitableCOA.isEmpty())
+            throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+    }
+
 }

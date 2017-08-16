@@ -130,7 +130,9 @@ class AddDemand extends Component {
     super(props);
     this.state= {
 		taxHeads: [],
-		demands: []
+		demands: [],
+		hasError: false,
+		errorMsg: 'Invalid',
     }
   }
 
@@ -144,7 +146,7 @@ class AddDemand extends Component {
 	initForm();
 
 	var getDemands = {
-		upicNumber: 101200000015
+		upicNumber: this.props.match.params.upicNumber
 	}
 
 	Api.commonApiPost('pt-property/properties/_preparedcb', getDemands, {}, false, true).then((res)=>{
@@ -210,11 +212,61 @@ class AddDemand extends Component {
 
   }
 
-validateCollection = (demandValue, collectionValue) => {
-	console.log(demandValue, collectionValue);
-}
+  
+validateCollection = (index) => {
+	
+	var current = this;
+	
+	var demands = [];
+	var collections = [];
 
+	
+	setTimeout(() => {
+		
+		let {addDemand} = current.props;
+		
+		//console.log(addDemand);
+		
+		for(var key in addDemand) {
+			if(addDemand.hasOwnProperty(key)){
+				if(key.match('collections')) {
+					collections.push(addDemand[key])
+				} else {
+					demands.push(addDemand[key])
+				}
+			}
+		}
+		
+		console.log(collections, demands);
+		
+		for(var i=0; i<collections.length;i++){
+			var count = 0;
+			for (var key in collections[i]){
+				if(collections[i][key] && demands[i]["demand" + count] && Number(collections[i][key]) > Number(demands[i]["demand" + count])){
+					console.log(collections[i][key]);
+					console.log(demands[i]["demand" + count]);
+					current.setState({
+						hasError: true
+					})
+					return false;
+				} else {
+					current.setState({
+						hasError: false
+					})
+				}
+				count++;
+			}
+		}
+	
 
+	}, 100)
+
+	
+	
+	
+	
+}  
+  
 
   render() {
 
@@ -249,8 +301,6 @@ validateCollection = (demandValue, collectionValue) => {
 
     let cThis = this;
 
-	console.log(addDemand);
-
 	const showfields = () => {
 
 		if(this.state.demands.length !=0){
@@ -261,13 +311,30 @@ validateCollection = (demandValue, collectionValue) => {
 				<tr key={index}>
 					<td style={{width:100}} className="lastTdBorder">{new Date(demand.taxPeriodFrom).getFullYear()} - {new Date(demand.taxPeriodTo).getFullYear()}</td>
 						{demand.demandDetails.map((detail, i)=>{
+							
+							if(!addDemand.hasOwnProperty('demands'+index)){
+								var e = {
+									target: {
+										value : detail.taxAmount
+									}
+								}
+								handleChangeNextOne(e ,"demands"+index,"demand"+i, false, '')
+							}
+							
 							if((demand.demandDetails.length-1) == i){
 								return (
 									<td key={i} className="lastTdBorder">
 										<TextField  className="fullWidth"
 										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
+										  type="number"
 										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
-										  onChange={(e) => {handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')}}
+										  onChange={(e) => {
+											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
+												  validateCollection(i)
+											  } else {
+												  validateCollection(i);
+											  }
+											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')}}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
@@ -279,8 +346,14 @@ validateCollection = (demandValue, collectionValue) => {
 									<td key={i}>
 										<TextField  className="fullWidth"
 										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
+										  type="number"
 										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
 										  onChange={(e) => {
+											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
+												  validateCollection(i)
+											  } else {
+												  validateCollection(i);
+											  }
 											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
 										  }}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -293,16 +366,25 @@ validateCollection = (demandValue, collectionValue) => {
 
 						})}
 						{demand.demandDetails.map((detail, i)=>{
+							if(!addDemand.hasOwnProperty('collections'+index)){
+								var e = {
+									target: {
+										value : detail.collectionAmount
+									}
+								}
+								handleChangeNextOne(e ,"collections"+index,"collection"+i, false, '')
+							}
 							return (
 							<td key={i} >
 								<TextField  className="fullWidth"
 								  floatingLabelText={<span style={{fontSize:'14px'}}>Collection</span>}
 								  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
+								  type="number"
 								  onChange={(e) => {
-									  if(addDemand['demands'+index]['demand'+i]) {
-										  validateCollection(addDemand['demands'+index]['demand'+i], e.target.value)
+									  if(addDemand.hasOwnProperty('demands'+index) && addDemand['demands'+index].hasOwnProperty('demand'+i) && addDemand['demands'+index]['demand'+i]) {
+										  validateCollection(i)
 									  } else {
-										  validateCollection('', e.target.value);
+										  validateCollection(i);
 									  }
 
 									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
@@ -328,13 +410,13 @@ validateCollection = (demandValue, collectionValue) => {
 				return (
 				<td key={index} className="lastTdBorder">{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
 					if(e.code == detail.taxHeadMasterCode){
-						return(<span key={i}>{e.name ? e.name : 'NA'}</span>);
+						return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
 					}
 				})}</td>)
 			} else {
 				return (<td key={index}>{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
 					if(e.code == detail.taxHeadMasterCode){
-						return(<span key={i}>{e.name ? e.name : 'NA'}</span>);
+						return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
 					}
 				})}</td>)
 			}
@@ -351,10 +433,12 @@ validateCollection = (demandValue, collectionValue) => {
 					<Grid fluid>
 						<Row>
 							 <Col xs={12}>
+								<h5>Assessment Number : <span style={{fontWeight:400}}>{this.props.match.params.upicNumber}</span></h5>
+								<br/>								
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
 										<tr>
-											<th>Period</th>
+											<th style={{textAlign:'center'}}>Period</th>
 											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>Demand</th>
 											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>Collection</th>
 										</tr>
@@ -375,10 +459,12 @@ validateCollection = (demandValue, collectionValue) => {
 
 			</Card>
 			<div style={{textAlign:'center'}}>
-					<RaisedButton type="button" label="Update"  primary={true} onClick={()=> {
+										{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}><br/>Collection entered should be equal to or less than the Demand<br/></p>}
+
+					<RaisedButton type="button" label="Update" disabled={this.state.hasError}  primary={true} onClick={()=> {
 								this.submitDemand();
 								}
-					}/>
+					}/>	
 				</div>
 				</div>)
   }

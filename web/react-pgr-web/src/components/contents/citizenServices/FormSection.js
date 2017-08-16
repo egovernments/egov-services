@@ -17,6 +17,9 @@ const CONDITION_AT_LEAST_ONE_REQUIRED = 'AT_LEAST_ONE_REQUIRED';
 const styles={
   cardStyle : {
     marginBottom:16
+  },
+  cardTitleStyle: {
+    paddingBottom: 0
   }
 }
 
@@ -48,6 +51,7 @@ class FormSection extends Component{
         return (
           <CardTitle
             title={groupName}
+            style={styles.cardTitleStyle}
             subtitle={this.getSectionValidationInformation(constraint)}
          />
         )
@@ -77,11 +81,13 @@ class FormSection extends Component{
               }
             }
             else if (field.code == constants.CITIZEN_SERVICES_CHECKLIST_CODE){
-              return <CheckList key={index} required={field.required} items={field.attribValues} handler={this.props.handler} values={this.props.values}></CheckList>
+              return <CheckList key={index} errors={this.props.errors} required={field.required} items={field.attribValues} handler={this.props.handler} values={this.props.values}></CheckList>
             }
             else if(field.code == constants.CITIZEN_SERVICES_DOCUMENTS_CODE){
                return <Documents key={index} items={field.attribValues} addFileHandler={this.props.addFile}
                    removeFileHandler={this.props.removeFile}
+                   errors={this.props.errors}
+                   dialogOpener={this.props.dialogOpener}
                    files={this.props.files}></Documents>
             }
           })];
@@ -94,6 +100,8 @@ class FormSection extends Component{
         const fields=this.renderFields(this.props.fields);
         const files=this.renderFiles(this.props.fields);
 
+        console.log('form Name', this.props.name);
+
         return(
           <Card style={styles.cardStyle}>
             {this.getTitle(this.props.name, this.props.constraint)}
@@ -102,10 +110,13 @@ class FormSection extends Component{
                 <Row>
                   {fields}
                 </Row>
-                <br/>
-                <Row>
-                  {files}
-                </Row>
+                {!(files && files.length === 1 && !files[Object.keys(files)])? (
+                  <Row>
+                    <br/>
+                    {files}
+                  </Row>
+                ):null}
+
             </Grid>
            </CardText>
           </Card>

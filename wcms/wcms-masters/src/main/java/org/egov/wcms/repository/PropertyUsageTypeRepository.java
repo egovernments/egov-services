@@ -148,8 +148,10 @@ public class PropertyUsageTypeRepository {
                 usageTypeIds, propUsageTypeGetRequest.getTenantId());
         for (final PropertyTypeUsageType propertyTypeUsageType : propUsageTypes)
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
-                if (propertyResponse.getId().equals(propertyTypeUsageType.getUsageTypeId()))
+                if (propertyResponse.getId().equals(propertyTypeUsageType.getUsageTypeId())){
                     propertyTypeUsageType.setUsageType(propertyResponse.getName());
+                    propertyTypeUsageType.setUsageCode(propertyResponse.getCode());
+                }
         return propUsageTypes;
     }
 

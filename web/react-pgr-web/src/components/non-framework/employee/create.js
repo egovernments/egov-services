@@ -33,7 +33,7 @@ const checkIfNoDup = function(employee, subObject) {
 const validateDates = function(employee, subObject, editIndex) {
     if (subObject.isPrimary == "true" || subObject.isPrimary == true) {
         for (let i = 0; i < employee["assignments"].length; i++) {
-            if (employee["assignments"][i].isPrimary && (editIndex == '' || (editIndex && i != editIndex))) {
+            if (employee["assignments"][i].isPrimary && (editIndex === '' || (editIndex > -1 && i != editIndex))) {
                 var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();
                 var fromDate = new Date(employee["assignments"][i].fromDate.split("/")[1] + "/" + employee["assignments"][i].fromDate.split("/")[0] + "/" + employee["assignments"][i].fromDate.split("/")[2]).getTime();
                 var subToDate = new Date(subObject.toDate.split("/")[1] + "/" + subObject.toDate.split("/")[0] + "/" + subObject.toDate.split("/")[2]).getTime();
@@ -79,7 +79,7 @@ const checkRequiredFields = function(type, object) {
       } else if(!object.position) {
         errorText["assignments.position"] = translate("ui.framework.required");
       } else if((object.hod == true || object.hod == "true") && (!object.mainDepartments || (object.mainDepartments && object.mainDepartments.length == 0))) {
-        
+
         errorText["assignments.mainDepartments"] = translate("ui.framework.required");
       }
       break;
@@ -598,41 +598,47 @@ class Employee extends Component {
         }
       }
     }, function() {
-      if(parent == "assignments" && self.state.subObject[parent].designation && self.state.subObject[parent].department) {
-        if((self.state.subObject[parent].isPrimary == "true" || self.state.subObject[parent].isPrimary == true)) {
-          if(self.state.subObject[parent].fromDate) {
-            Api.commonApiPost("hr-masters/vacantpositions/_search", {
-                    departmentId: self.state.subObject[parent].department,
-                    designationId: self.state.subObject[parent].designation,
-                    asOnDate: self.state.subObject[parent].fromDate,
-                    pageSize: 100
-            }).then(function(res) {
-              self.setState({
-                positionList: res["Position"]
-              })
-            }, function(err) {
-
-            })
-          }
-        } else {
-            Api.commonApiPost("hr-masters/positions/_search", {
-                    departmentId: self.state.subObject[parent].department,
-                    designationId: self.state.subObject[parent].designation,
-                    pageSize: 100
-            }).then(function(res) {
-              self.setState({
-                positionList: res["Position"]
-              })
-            }, function(err) {
-
-            })
-        }
-      }
+      self.vacantposition(parent);
     })
+  }
+
+  vacantposition = (parent) =>{
+    let self = this;
+    if(parent == "assignments" && self.state.subObject[parent].designation && self.state.subObject[parent].department) {
+      if((self.state.subObject[parent].isPrimary == "true" || self.state.subObject[parent].isPrimary == true)) {
+        if(self.state.subObject[parent].fromDate) {
+          Api.commonApiPost("hr-masters/vacantpositions/_search", {
+                  departmentId: self.state.subObject[parent].department,
+                  designationId: self.state.subObject[parent].designation,
+                  asOnDate: self.state.subObject[parent].fromDate,
+                  pageSize: 100
+          }).then(function(res) {
+            self.setState({
+              positionList: res["Position"]
+            })
+          }, function(err) {
+
+          })
+        }
+      } else {
+          Api.commonApiPost("hr-masters/positions/_search", {
+                  departmentId: self.state.subObject[parent].department,
+                  designationId: self.state.subObject[parent].designation,
+                  pageSize: 100
+          }).then(function(res) {
+            self.setState({
+              positionList: res["Position"]
+            })
+          }, function(err) {
+
+          })
+      }
+    }
   }
 
   editModalOpen = (ind, type) => {
     let dat;
+    let self = this;
     switch (type) {
       case 'assignments':
         dat = Object.assign({}, this.props.Employee.assignments[ind]);
@@ -651,6 +657,9 @@ class Employee extends Component {
           subObject: {
             'assignments': dat
           }
+        },function(){
+          console.log(self.state.subObject.assignments);
+          self.vacantposition("assignments");
         })
         break;
       case 'jurisdictions':
@@ -850,7 +859,7 @@ class Employee extends Component {
         if(this.state.editIndex === '')
           jurisdictions.push(jst);
         else
-          jurisdictions[editIndex] = Object.assign({}, jst);
+          jurisdictions[editIndex] = jst;
         this.props.handleChange({target:{value: jurisdictions}}, "jurisdictions", false, '');
         this.setState({
           subObject: {
@@ -997,17 +1006,17 @@ class Employee extends Component {
           <form>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label>Is Primary? *</label>
-                <RadioButtonGroup name={translate("employee.Assignment.fields.prim")} valueSelected={subObject.assignments.isPrimary} onChange={(e, value) => {
+                <label>{translate("employee.Assignment.fields.primary")+ "*"} </label>
+                <RadioButtonGroup name={translate("employee.Assignment.fields.primary")} valueSelected={subObject.assignments.isPrimary} onChange={(e, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "isPrimary")
                 }}>
                   <RadioButton
                     value={true}
-                    label="Yes"
+                    label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
                   />
                   <RadioButton
                     value={false}
-                    label="No"
+                    label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
                   />
                 </RadioButtonGroup>
               </div>
@@ -1074,7 +1083,7 @@ class Employee extends Component {
                 <AutoComplete
                   errorText = {self.state.errorText["assignments.position"]}
                   fullWidth={true}
-                  floatingLabelText={"Position *"}
+                  floatingLabelText={translate("employee.Assignment.fields.position")+"*"}
                   filter={AutoComplete.caseInsensitiveFilter}
                   dataSource={self.state.positionList}
                   dataSourceConfig={this.state.positionListConfig}
@@ -1141,17 +1150,17 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label>If HOD? *</label>
+                <label>{translate("employee.Assignment.fields.hod")+"? *"}</label>
                 <RadioButtonGroup name={translate("employee.Assignment.fields.hod")} valueSelected={subObject.assignments.hod} onChange={(e, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "hod")
                 }}>
                   <RadioButton
                     value={true}
-                    label="Yes"
+                    label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
                   />
                   <RadioButton
                     value={false}
-                    label="No"
+                    label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
                   />
                 </RadioButtonGroup>
               </div>
@@ -1176,7 +1185,7 @@ class Employee extends Component {
                 }}/>
               </div>
               <div className="col-md-6 col-xs-12">
-                <label style={{marginTop:"20px"}}>Document</label>
+                <label style={{marginTop:"20px"}}>{translate("employee.Assignment.fields.documents")}</label>
                 <input type="file"/>
               </div>
             </div>
@@ -1501,21 +1510,21 @@ class Employee extends Component {
   getModalTitle = () => {
     switch(this.state.modal) {
       case 'assignment':
-        return "Assignments Grade";
+        return translate("employee.field.assignments");
       case 'jurisdiction':
-        return "Jurisdiction";
+        return translate("employee.Employee.fields.jurisdictions");
       case 'serviceDet':
-        return "Service History";
+        return translate("employee.ServiceHistory.title");
       case 'probation':
-        return "Probation";
+        return translate("employee.Probation.title");
       case 'regular':
-        return "Regularisation";
+        return translate("employee.Regularisation.title");
       case 'edu':
-        return "Educational Qualification";
+        return translate("employee.EducationalQualification.title");
       case 'tech':
-        return "Technical Qualification";
+        return translate("employee.TechnicalQualification.title");
       case 'dept':
-        return 'Departmental Test';
+        return translate("employee.DepartmentalTest.title");
     }
   }
 
@@ -1939,12 +1948,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>Employee Group</span></label><br/>
+                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.group")}</span></label><br/>
                                 <label>{getNameById(self.state.groups, Employee.group)}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={"Employee Group"} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelText={translate("employee.Employee.fields.group")} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "group", false, '')
                       	}}>
                             {
@@ -2029,7 +2038,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.fields.isUserActive")}?</span></label><br/>
-                                <label>{Employee.user && [true, "true"].indexOf(Employee.user.active) > -1 ? "Yes" : "No" }</label></span>
+                                <label>{Employee.user && [true, "true"].indexOf(Employee.user.active) > -1 ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2") }</label></span>
                             )
                          :
 
@@ -2125,7 +2134,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.motherTongue")}</span></label><br/>
-                                <label>{Employee.motherTongue}</label></span>
+                                <label>{getNameById(self.state.languages, Employee.motherTongue)}</label></span>
                             )
                          :
 
@@ -2146,7 +2155,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.religion")}</span></label><br/>
-                                <label>{Employee.religion}</label></span>
+                                <label>{getNameById(self.state.religions, Employee.religion)}</label></span>
                             )
                          :
 
@@ -2165,7 +2174,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.community")}</span></label><br/>
-                                <label>{Employee.community}</label></span>
+                                <label>{getNameById(self.state.communities, Employee.community)}</label></span>
                             )
                          :
 
@@ -2184,7 +2193,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.category")}</span></label><br/>
-                                <label>{Employee.category}</label></span>
+                                <label>{getNameById(self.state.categories, Employee.category)}</label></span>
                             )
                          :
 
@@ -2203,21 +2212,21 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.physicallyDisabled")}</span></label><br/>
-                                <label>{Employee.physicallyDisabled ? "Yes" : "No"}</label></span>
+                                <label>{translate("employee.Employee.fields.physicallyDisabled") ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</label></span>
                             )
                          :
 
-                        <span><label>Is Physically Handicapped?</label>
+                        <span><label>{translate("employee.Employee.fields.physicallyDisabled")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.physicallyDisabled")} valueSelected={Employee.physicallyDisabled} onChange={(e, value) => {
                       		handleChange({target:{value:value}}, 'physicallyDisabled', false, '')
                       	}}>
           					      <RadioButton
           					        value={true}
-          					        label="Yes"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
           					      />
           					      <RadioButton
           					        value={false}
-          					        label="No"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
           					      />
                 				</RadioButtonGroup></span>
                             }
@@ -2228,21 +2237,21 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.medicalReportProduced")}</span></label><br/>
-                                <label>{Employee.medicalReportProduced ? "Yes" : "No"}</label></span>
+                                <label>{Employee.medicalReportProduced ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</label></span>
                             )
                          :
 
-                        <span><label>Is Medical Report Available?</label>
+                        <span><label>{translate("employee.Employee.fields.medicalReportProduced")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.medicalReportProduced")} valueSelected={Employee.medicalReportProduced} onChange={(e, value) => {
                       		handleChange({target:{value:value}}, 'medicalReportProduced', true, '')
                       	}}>
           					      <RadioButton
           					        value={true}
-          					        label="Yes"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
           					      />
           					      <RadioButton
           					        value={false}
-          					        label="No"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
           					      />
               					</RadioButtonGroup></span>
                         }
@@ -2268,7 +2277,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.pan")} errorText={fieldErrors["user"] && fieldErrors["user"]["pan"]} value={Employee.user ? Employee.user.pan : ""} onChange={(e) => {
+                      	<TextField floatingLabelText={translate("employee.Employee.fields.pan")} hintText="DACPZ2154D" errorText={fieldErrors["user"] && fieldErrors["user"]["pan"]} value={Employee.user ? Employee.user.pan : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'pan', false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/)
                       	}}/>
                       }
@@ -2700,7 +2709,7 @@ class Employee extends Component {
               <td>{getNameById(self.state.departments, val.department)}</td>
               <td>{getNameById(self.state.designations, val.designation)}</td>
               <td>{getNameById(self.state.allPosition, val.position)}</td>
-              <td>{val.isPrimary ? "Yes" : "No"}</td>
+              <td>{val.isPrimary ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</td>
               <td>{getNameById(self.state.funds, val.fund)}</td>
               <td>{getNameById(self.state.functions, val.function)}</td>
               <td>{getNameById(self.state.functionaries, val.functionary)}</td>
@@ -2748,11 +2757,11 @@ class Employee extends Component {
 					</Table>
 					<Row>
             <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-              <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+              {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                 self.setModalOpen('assignment')
               }}>
                 <span className="glyphicon glyphicon-plus"></span>
-              </FloatingActionButton>
+              </FloatingActionButton> : ""}
             </Col>
           </Row>
 				</CardText>
@@ -2781,7 +2790,7 @@ class Employee extends Component {
 						<thead>
 							<th>{translate("employee.jurisdiction.fields.boundaryType")}</th>
 							<th>{translate("employee.jurisdiction.fields.boundary")}</th>
-							<th>Action</th>
+							<th>{translate("employee.Assignment.fields.action")}</th>
 						</thead>
 						<tbody>
 							{renderJurisdictionBody()}
@@ -2789,11 +2798,11 @@ class Employee extends Component {
 					</Table>
 					<Row>
             <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-              <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+              {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                 self.setModalOpen('jurisdiction')
               }}>
                 <span className="glyphicon glyphicon-plus"></span>
-              </FloatingActionButton>
+              </FloatingActionButton> : ""}
             </Col>
           </Row>
 				</CardText>
@@ -2888,11 +2897,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('serviceDet')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : "" }
               </Col>
             </Row>
 					</CardText>
@@ -2916,11 +2925,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('probation')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -2944,11 +2953,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('regular')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -3042,11 +3051,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('edu')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -3069,11 +3078,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('tech')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -3095,11 +3104,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('dept')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -3201,7 +3210,7 @@ class Employee extends Component {
   				</Tabs>
   				<br/>
           <div style={{textAlign: "center"}}>
-  				  <RaisedButton type="submit" label={translate("ui.framework.submit")} primary={true} disabled={!self.props.isFormValid}/>
+  				  {self.state.screenType != "view" ? <RaisedButton type="submit" label={translate("ui.framework.submit")} primary={true} disabled={!self.props.isFormValid}/> : ""}
           </div>
   			</form>
         <Dialog
@@ -3246,8 +3255,8 @@ const mapDispatchToProps = dispatch => ({
             fieldErrors: {},
             validationData: {
                 required: {
-                    current: isUpdate ? requiredList : ['user.active'],
-                    required: requiredList
+                    current: isUpdate ? Object.assign([], requiredList) : ['user.active'],
+                    required: Object.assign([], requiredList)
                 },
                 pattern: {
                     current: [],

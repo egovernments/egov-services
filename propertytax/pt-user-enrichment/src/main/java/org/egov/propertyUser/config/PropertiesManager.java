@@ -60,20 +60,6 @@ public class PropertiesManager {
 	private String serverContextpathConfig;
 
 	private String defaultPassword;
-
-	private String tenantHostName;
-
-	private String tenantBasepath;
-
-	private String tenantSearchpath;
-	
-	private String upicNumberFormat;
-	
-	private String idHostName;
-
-	private String idCreatepath;
-	
-	private String idName;
 	
 	private String channelType;
 	
@@ -156,39 +142,6 @@ public class PropertiesManager {
 		return environment.getProperty("default.password");
 	}
 
-	// #tenantCode
-	public String getTenantHostName() {
-		return environment.getProperty("egov.services.tenant.hostname");
-	}
-
-	public String getTenantBasepath() {
-		return environment.getProperty("egov.services.tenant.basepath");
-	}
-
-	public String getTenantSearchpath() {
-		return environment.getProperty("egov.services.tenant.searchpath");
-	}
-	
-	public String getUpicNumberFormat() {
-		return environment.getProperty("upic.number.format");
-	}
-	
-	public String getIdHostName() {
-		return environment.getProperty("egov.services.egov_idgen.hostname");
-	}
-
-	public String getIdCreatepath() {
-		return environment.getProperty("egov.services.egov_idgen.createpath");
-}
-	
-	public String getIdName() {
-		return environment.getProperty("id.idName");
-	}
-	
-	public String getSuccess() {
-		return environment.getProperty("success");
-	}
-	
 	public String getChannelType() {
 		return environment.getProperty("egov.property.channel.type");
 	}

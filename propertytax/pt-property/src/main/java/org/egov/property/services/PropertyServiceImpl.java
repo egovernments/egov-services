@@ -68,6 +68,9 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Autowired
     PersisterService persisterService;
+    
+    @Autowired
+    UpicNoGeneration upicNoGeneration;
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
 
@@ -91,9 +94,14 @@ public class PropertyServiceImpl implements PropertyService {
             PropertyRequest updatedPropertyRequest = new PropertyRequest();
             updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
             List<Property> updatedPropertyList = new ArrayList<Property>();
+            if ( property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())){
+
+            	String upicNumber = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
+            	property.setUpicNumber(upicNumber);
+
+            }
             updatedPropertyList.add(property);
             updatedPropertyRequest.setProperties(updatedPropertyList);
-
             kafkaTemplate.send(propertiesManager.getCreateValidatedProperty(), updatedPropertyRequest);
         }
         ResponseInfo responseInfo = responseInfoFactory

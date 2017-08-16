@@ -32,6 +32,7 @@ public class AttributeDefinition {
     private String url;
     private String groupCode;
     private String tenantId;
+    private char active;
     private Long createdBy;
     private Date createdDate;
     private Long lastModifiedBy;
@@ -51,6 +52,7 @@ public class AttributeDefinition {
                 .serviceCode(serviceCode)
                 .tenantId(tenantId)
                 .readOnly(isReadOnly())
+                .active(isActive())
                 .valueDefinitions(mapToDomainValueDefinitions())
                 .build();
     }
@@ -65,6 +67,10 @@ public class AttributeDefinition {
 
     private boolean isReadOnly() {
         return variable == YES;
+    }
+
+    private boolean isActive() {
+        return YES == active;
     }
 
     private List mapToDomainValueDefinitions(){

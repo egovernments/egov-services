@@ -134,22 +134,18 @@ public class DisposalService {
                 .getSubledgerDetails(requestInfo, tenantId, assetCategory.getAssetAccount());
         final List<ChartOfAccountDetailContract> subledgerDetailsForAssetSaleAccount = voucherService
                 .getSubledgerDetails(requestInfo, tenantId, disposal.getAssetSaleAccount());
+        voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount, subledgerDetailsForAssetSaleAccount);
 
-        if (subledgerDetailsForAssetAccount != null && subledgerDetailsForAssetSaleAccount != null
-                && !subledgerDetailsForAssetAccount.isEmpty() && !subledgerDetailsForAssetSaleAccount.isEmpty())
-            throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
-        else {
-            final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
-                    requestInfo);
-            log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
+        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
+                requestInfo);
+        log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-            final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, disposal.getFund(),
-                    asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, disposal.getFund(),
+                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
 
-            log.debug("Voucher Request for Disposal :: " + voucherRequest);
+        log.debug("Voucher Request for Disposal :: " + voucherRequest);
 
-            return voucherService.createVoucher(voucherRequest, tenantId, headers);
-        }
+        return voucherService.createVoucher(voucherRequest, tenantId, headers);
 
     }
 

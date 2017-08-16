@@ -6,7 +6,6 @@ import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.User;
 import org.egov.propertyUser.config.PropertiesManager;
-import org.egov.propertyUser.util.UpicNoGeneration;
 import org.egov.propertyUser.util.UserUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +38,6 @@ public class Consumer {
 	
 	@Autowired
 	private UserUtil userUtil;
-	
-	@Autowired
-	private UpicNoGeneration upicNoGeneration;
-
 	
 
 	
@@ -78,8 +73,6 @@ public class Consumer {
 				}
 
 			} else {
-				String upicNo = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
-				propertyRequest.getProperties().get(0).setUpicNumber(upicNo);
 				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
 			}
 		}

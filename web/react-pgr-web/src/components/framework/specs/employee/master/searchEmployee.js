@@ -1,5 +1,5 @@
 var dat = {
-	"employee.searches": {
+	"employee.empsearch": {
 		"numCols": 12/3,
 		"url": "/hr-employee/employees/_search",
 		"tenantIdRequired": true,

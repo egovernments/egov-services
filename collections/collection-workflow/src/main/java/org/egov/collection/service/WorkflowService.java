@@ -72,6 +72,7 @@ public class WorkflowService {
 			
 	
 	public ProcessInstance startWorkflow(WorkflowDetails workflowDetails){
+		logger.info("Persisting workflow details");
 		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
 		try{
 			processInstanceResponse = workflowRepository.startWorkflow(workflowDetails);

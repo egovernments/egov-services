@@ -58,10 +58,6 @@ public class MeterCostService {
 	@Autowired
 	private MeterCostRepository meterCostRepository;
 	
-	public MeterCostReq create(final MeterCostReq meterCostRequest) {
-		return meterCostRepository.persistCreateMeterCost(meterCostRequest);
-	}
-
 	public List<MeterCost> createMeterCostPushToQueue(final MeterCostReq meterCostRequest) {
 		logger.info("Pushing meterCostCreateRequest To Queue");
 		logger.info("MeterCostReq :" + meterCostRequest);

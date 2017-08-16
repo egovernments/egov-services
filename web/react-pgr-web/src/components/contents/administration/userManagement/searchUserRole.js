@@ -38,7 +38,7 @@ class searchUserRole extends Component {
     initForm();
     let tenantId = localStorage.getItem('tenantId') || 'default';
     _this.props.setLoadingStatus('loading');
-    Api.commonApiPost("/user/v1/_search",{userType : 'EMPLOYEE'},{tenantId : tenantId}).then(function(response) {
+    Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, userType : 'EMPLOYEE'}).then(function(response) {
       _this.props.setLoadingStatus('loading');
       _this.setState({users: response.user});
       _this.props.setLoadingStatus('hide');

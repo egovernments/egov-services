@@ -191,6 +191,11 @@ public class TradeLicenseService {
 				if (categoryResponse == null || categoryResponse.getCategories() == null
 						|| categoryResponse.getCategories().size() == 0) {
 					throw new InvalidInputException("Invalid sub category type ");
+				} else {
+					Long validityYears = categoryResponse.getCategories().get(0).getValidityYears();
+					if(Long.valueOf(validityYears) != Long.valueOf(tradeLicense.getValidityYears())){
+						throw new InvalidInputException("Invalid validity years of the subcategory ");
+					}
 				}
 			}
 

@@ -23,10 +23,11 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class MarriageRegnConsumer {
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(MarriageRegnConsumer.class);
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -51,18 +52,18 @@ public class MarriageRegnConsumer {
 			"${kafka.topics.create.marriagedocumenttype}", "${kafka.topics.update.marriagedocumenttype}" })
 	public void processMessage(@Payload Map<String, Object> consumerRecord,
 			@Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-		LOGGER.info("Entered kakfaConsumer ");
+		log.info("Entered kakfaConsumer ");
 
 		if (topic.equals(propertiesManager.getCreateMarriageRegnTopicName())) {
 			try {
-				LOGGER.info("entering create marriageRegn consumer");
+				log.info("entering create marriageRegn consumer");
 				marriageRegnService.create(objectMapper.convertValue(consumerRecord, MarriageRegnRequest.class));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else if (topic.equals(propertiesManager.getUpdateMarriageRegnTopicName())) {
 			try {
-				LOGGER.info("entering update marriageRegn consumer");
+				log.info("entering update marriageRegn consumer");
 				marriageRegnService.update(objectMapper.convertValue(consumerRecord, MarriageRegnRequest.class));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -71,14 +72,14 @@ public class MarriageRegnConsumer {
 
 		if (topic.equals(propertiesManager.getCreateRegistrationUnitTopicName())) {
 			try {
-				LOGGER.info("entering update_RegistrationUnit consumer");
+				log.info("entering update_RegistrationUnit consumer");
 				registrationUnitService.create(objectMapper.convertValue(consumerRecord, RegnUnitRequest.class));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else if (topic.equals(propertiesManager.getUpdateRegistrationUnitTopicName())) {
 			try {
-				LOGGER.info("entering update_RegistrationUnit consumer");
+				log.info("entering update_RegistrationUnit consumer");
 				registrationUnitService.update(objectMapper.convertValue(consumerRecord, RegnUnitRequest.class));
 			} catch (Exception e) {
 				e.printStackTrace();

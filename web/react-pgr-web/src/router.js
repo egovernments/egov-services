@@ -100,7 +100,7 @@ import LegacyLicenseCreate from './components/non-framework/tl/transaction/Legac
 
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
 import Employee from './components/non-framework/employee/create';
-import EmployeeSearch from './components/framework/searches';
+import EmployeeSearch from './components/non-framework/employee/search';
 
 const base = "";
 
@@ -204,7 +204,7 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/mutation-reason'} component={MutationReason}/>
           <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
-		  <Route exact path={base+'/propertyTax/addDemand'} component={AddDemand}/>
+		  <Route exact path={base+'/propertyTax/addDemand/:upicNumber'} component={AddDemand}/>
 		  <Route exact path={base+'/propertyTax/create-dataEntry'} component={DataEntry}/>
 		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
@@ -217,7 +217,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate/:id?'} component={LegacyLicenseCreate}/>
 
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
-      <Route exact path={base + '/searches/:moduleName/:master?/:action'} component={EmployeeSearch}/>
+      <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
 
 
     </Switch>

@@ -207,5 +207,7 @@ public class Connection {
     private WorkflowDetails workflowDetails;
 
     private String createdDate;
+    
+    private Boolean withProperty; 
 
 }

@@ -102,7 +102,8 @@ class PropertyTaxSearch extends Component {
 		 revenueCircle:[],
 		 resultList:[],
 		 usage:[],
-		 propertytypes:[]
+		 propertytypes:[],
+		 showDcb : false
        }
        this.search=this.search.bind(this);
    }
@@ -201,7 +202,15 @@ class PropertyTaxSearch extends Component {
 			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
 		} else {
 			
-			console.log(res.properties[0].channel)
+			if(res.properties[0].channel == 'DATA_ENTRY') {
+				this.setState({
+					showDcb: true
+				})
+			} else {
+				this.setState({
+					showDcb: false
+				})
+			}
 			
 			flag=1;
 			changeButtonText("Search Again");
@@ -317,9 +326,18 @@ class PropertyTaxSearch extends Component {
 					  <td>{item.propertyDetail.category || ''}</td>
 					  <td>
 						<DropdownButton title="Action" id="dropdown-3" pullRight>
-							<MenuItem onClick={()=>{
+							{this.state.showDcb ? 
+							<span><MenuItem onClick={()=>{
 								history.push(`/propertyTax/view-property/${item.id}/view`);
 							}}>View</MenuItem>
+							<MenuItem onClick={()=>{
+								history.push(`/propertyTax/addDemand/${item.upicNumber}`);
+							}}>Add/Edit DCB</MenuItem></span>
+							: 
+							<MenuItem onClick={()=>{
+								history.push(`/propertyTax/view-property/${item.id}/view`);
+							}}>View</MenuItem> }
+							
 						</DropdownButton>
 					  </td>
 					</tr>)

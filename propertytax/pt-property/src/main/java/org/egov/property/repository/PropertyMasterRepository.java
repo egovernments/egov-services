@@ -1545,15 +1545,22 @@ public class PropertyMasterRepository {
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
 		for (Apartment apartment : apartments) {
-
-			Long id = apartment.getId();
-			String codeData = apartment.getCode();
-			String nameData = apartment.getName();
-
-			apartment = gson.fromJson(apartment.getData(), Apartment.class);
-			apartment.setId(id);
-			apartment.setCode(codeData);
-			apartment.setName(nameData);
+			Apartment apartmentData = gson.fromJson(apartment.getData(), Apartment.class);
+			apartment.setId(apartment.getId());
+			apartment.setCode(apartmentData.getCode());
+			apartment.setName(apartmentData.getName());
+			apartment.setTotalBuiltUpArea(apartmentData.getTotalBuiltUpArea());
+			apartment.setTotalProperties(apartmentData.getTotalProperties());
+			apartment.setTotalFloors(apartmentData.getTotalFloors());
+			apartment.setTotalOpenSpace(apartmentData.getTotalOpenSpace());
+			apartment.setLiftFacility(apartmentData.getLiftFacility());
+			apartment.setPowerBackUp(apartmentData.getPowerBackUp());
+			apartment.setParkingFacility(apartmentData.getParkingFacility());
+			apartment.setResidtinalProperties(apartmentData.getResidtinalProperties());
+			apartment.setNonResidtinalProperties(apartmentData.getNonResidtinalProperties());
+			apartment.setSourceOfWater(apartmentData.getSourceOfWater());
+			apartment.setFloor(apartmentData.getFloor());
+			apartment.setAuditDetails(apartmentData.getAuditDetails());
 		}
 
 		return apartments;

@@ -160,7 +160,7 @@ public class BillService {
 		else
 			throw new RuntimeException("No Demands Found for the given criteria");
 
-		if (bills.isEmpty()) {
+		if (bills.get(0).getBillDetails() == null) {
 			return new BillResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.OK), null);
 		} else
 			return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());

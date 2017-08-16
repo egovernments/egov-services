@@ -1,6 +1,5 @@
 package org.egov.workflow.persistence.repository;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.workflow.web.contract.PositionHierarchyResponse;
 import org.egov.workflow.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Value;

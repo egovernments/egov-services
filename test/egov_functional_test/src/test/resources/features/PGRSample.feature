@@ -16,9 +16,9 @@ Feature: Sample Test From PGR
     And citizen on Login screen types on username value 9999999999
     And citizen on Login screen types on password value demo
     And citizen on Login screen clicks on signIn
-    And citizen on Home screen verifies profileName has visible value eGov
+    And citizen on Home screen verifies profileName has visible value 999999999
     And citizen on Home screen clicks on createGrievance
-    And citizen on Grievance screen clicks on grievanceCategory
+    And citizen on CitizenGrievance screen clicks on grievanceCategory
     And citizen on Grievance screen clicks on grievanceCategoryValue value Public Health and Sanitation
 #    And citizen on Grievance screen types on grievanceDetails value kurnoolCity
 #    And citizen on Grievance screen clicks on create

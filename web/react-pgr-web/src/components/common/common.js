@@ -387,7 +387,7 @@ var localization_EN_Data = {
     //employee Object
     "employee.Employee.fields.code": "Code",
     "employee.Employee.fields.pan": "PAN",
-    : "Date Of Appointment",
+    "employee.Employee.fields.dateOfAppointment" : "Date Of Appointment",
     "employee.Employee.fields.dateOfJoining": "Date Of Joining/Deputation",
     "employee.Employee.fields.dateOfRetirement": "Date Of Retirement",
     "employee.Employee.fields.employeeStatus": "Employee Status",
@@ -402,8 +402,7 @@ var localization_EN_Data = {
     "employee.Employee.fields.jurisdictions": "Jurisdictions",
     "employee.Employee.fields.jurisdictionsType": "Jurisdictions Type",
     "employee.Employee.fields.jurisdictionsList": "Jurisdictions List",
-    "employee.Jurisdictions.title": "JUR"employee.Employee.fields.dateOfAppointment"ISDICTION LIST",
-
+    "employee.Jurisdictions.title": "JURISDICTION LIST",
     "employee.Employee.fields.motherTongue": "Mother Tongue",
     "employee.Employee.fields.religion": "Religion",
     "employee.Employee.fields.community": "Community",
@@ -767,7 +766,7 @@ var localization_EN_Data = {
     "employee.error.message.dupAssignment": "Duplicate entry not allowed.",
     "employee.error.message.appDate.retDate": "Appointment Date must be before Retirement Date.",
     "employee.error.message.appDate.terDate": "Appointment Date must be before Termination Date.",
-    "employee.error.message.appDate.regDate": "Appointment Date must be before Resignation Date."
+    "employee.error.message.appDate.regDate": "Appointment Date must be before Resignation Date.",
     "employee.error.message.appDate.joinDate": "Joining Date must be after Appointment Date.",
     "employee.error.message.retDate.joinDate": "Joining Date must be before Retirement Date.",
     "employee.error.message.joinDate.terDate": "Joining Date must be before Termination Date.",
@@ -1568,7 +1567,7 @@ var localization_MR_Data = {
     "employee.error.message.dupAssignment": "Duplicate entry not allowed.-Marathi",
     "employee.error.message.appDate.retDate": "Appointment Date must be before Retirement Date.-Marathi",
     "employee.error.message.appDate.terDate": "Appointment Date must be before Termination Date.-Marathi",
-    "employee.error.message.appDate.regDate": "Appointment Date must be before Resignation Date.-Marathi"
+    "employee.error.message.appDate.regDate": "Appointment Date must be before Resignation Date.-Marathi",
     "employee.error.message.appDate.joinDate": "Joining Date must be after Appointment Date.-Marathi",
     "employee.error.message.retDate.joinDate": "Joining Date must be before Retirement Date.-Marathi",
     "employee.error.message.joinDate.terDate": "Joining Date must be before Termination Date.-Marathi",

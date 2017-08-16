@@ -2039,11 +2039,11 @@ class Employee extends Component {
                       	}}>
           					      <RadioButton
           					        value={true}
-          					        label=translate("employee.createPosition.groups.fields.outsourcepost.value1")
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
           					      />
           					      <RadioButton
           					        value={false}
-          					        label=translate("employee.createPosition.groups.fields.outsourcepost.value2")
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
           					      />
                 				</RadioButtonGroup></span>
                             }

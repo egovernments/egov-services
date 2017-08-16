@@ -32,7 +32,7 @@ class Report extends Component {
     this.state = {
       showResult: false,
       resultList : [],
-      pageSize: 50,
+      pageSize: 10,
       pageCount: 0,
       designationList: [],
       departmentList: [],

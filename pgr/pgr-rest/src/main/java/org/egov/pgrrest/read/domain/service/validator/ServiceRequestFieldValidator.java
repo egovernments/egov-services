@@ -71,11 +71,11 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     private static final String PHONE_NUMBER_MANDATORY_FIELD_NAME = "ServiceRequest.phone";
     private static final String PHONE_NUMBER_MANDATORY_MESSAGE = "Phone is required";
 
-    private static final String EXTERNAL_CRN_MANDATORY_CODE = "pgr.0019";
+    private static final String EXTERNAL_CRN_MANDATORY_CODE = "pgr.0041";
     private static final String EXTERNAL_CRN_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemExternalCRN";
     private static final String EXTERNAL_CRN_MANDATORY_MESSAGE = "External CRN is required when Receiving Mode is Manual";
 
-    private static final String ATTRIBUTE_LOCATION_ID_MANDATORY_CODE = "pgr.0020";
+    private static final String ATTRIBUTE_LOCATION_ID_MANDATORY_CODE = "pgr.042";
     private static final String ATTRIBUTE_LOCATION_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemLocationId";
     private static final String ATTRIBUTE_LOCATION_ID_MANDATORY_MESSAGE = "Location ID is required";
 
@@ -87,15 +87,15 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     private static final String POSITION_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemPositionId";
     private static final String POSITION_ID_MANDATORY_MESSAGE = "Position ID is required";
 
-    private static final String APPROVAL_COMMENTS_MANDATORY_CODE = "pgr.0023";
+    private static final String APPROVAL_COMMENTS_MANDATORY_CODE = "pgr.0043";
     private static final String APPROVAL_COMMENTS_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemApprovalComments";
     private static final String APPROVAL_COMMENTS_MANDATORY_MESSAGE = "Approval Comments is required";
 
-    private static final String RATING_MANDATORY_CODE = "pgr.0024";
+    private static final String RATING_MANDATORY_CODE = "pgr.0030";
     private static final String RATING_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.rating";
     private static final String RATING_MANDATORY_MESSAGE = "Rating is required";
 
-    private static final String RECEIVING_MODE_MANDATORY_CODE = "pgr.0025";
+    private static final String RECEIVING_MODE_MANDATORY_CODE = "pgr.0045";
     private static final String RECEIVING_MODE_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemReceivingMode";
     private static final String RECEIVING_MODE_MANDATORY_MESSAGE = "Receiving Mode is required";
 
@@ -103,11 +103,11 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     private static final String KEYWORD_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.keyword";
     private static final String KEYWORD_MANDATORY_MESSAGE = "Keyword is required";
 
-    private static final String FIRST_NAME_LENGTH_CODE = "pgr.0027";
+    private static final String FIRST_NAME_LENGTH_CODE = "pgr.0044";
     private static final String FIRST_NAME_LENGTH_FIELD = "ServiceRequest.firstName";
     private static final String FIRST_NAME_LENGTH_MESSAGE = "First name must be below 20 characters";
 
-    private static final String STATE_ID_MANDATORY_CODE = "pgr.0027";
+    private static final String STATE_ID_MANDATORY_CODE = "pgr.0029";
     private static final String STATE_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemStateId";
     private static final String STATE_ID_MANDATORY_MESSAGE = "State ID is required";
 

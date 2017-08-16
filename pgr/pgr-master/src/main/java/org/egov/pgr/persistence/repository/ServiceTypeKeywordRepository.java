@@ -26,7 +26,8 @@ public class ServiceTypeKeywordRepository {
     }
 
     public void update(ServiceTypeKeyword serviceTypeKeyword){
-
+        namedParameterJdbcTemplate.update(serviceTypeKeywordQueryBuilder.getUpdateQuery(),
+                getMap(serviceTypeKeyword));
     }
 
 

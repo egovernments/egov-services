@@ -42,6 +42,7 @@ public class ServiceType {
 
     public org.egov.pgr.domain.model.ServiceType toDomain(){
         return org.egov.pgr.domain.model.ServiceType.builder()
+                .id(id)
                 .serviceCode(code)
                 .serviceName(name)
                 .type(type)

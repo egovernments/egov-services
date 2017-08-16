@@ -62,7 +62,7 @@ public class ServiceTypeRepository {
         return getServiceTypes(serviceTypeSearchCriteria, serviceTypeList);
     }
     
-    public List<org.egov.pgr.domain.model.ServiceType> getData(org.egov.pgr.domain.model.ServiceType serviceType) {
+    public List getData(org.egov.pgr.domain.model.ServiceType serviceType) {
 
         List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.getQuery(serviceType),
                 getDetailNamedQuery(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
@@ -149,8 +149,23 @@ public class ServiceTypeRepository {
                 getAttributesMap(serviceType), new BeanPropertyRowMapper<>(AttributeDefinition.class));
     }
 
-    private HashMap<String, java.io.Serializable> getNamedQuery(ServiceType serviceType) {
-        HashMap<String, java.io.Serializable> parametersMap = new HashMap<String, java.io.Serializable>();
+    //used for update unique validation
+    public ServiceType findByCodeAndTenantId(ServiceType serviceType){
+        return namedParameterJdbcTemplate.queryForObject(serviceTypeQueryBuilder.getSearchQueryForUpdateValidation(),
+                    getUpdateValidationMap(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
+    }
+
+    private HashMap getUpdateValidationMap(ServiceType serviceType){
+        HashMap<String, Object> parametersMap = new HashMap<String, Object>();
+
+        parametersMap.put("code", serviceType.getCode());
+        parametersMap.put("tenantid", serviceType.getTenantId());
+
+        return parametersMap;
+    }
+
+    private HashMap<String, Object> getNamedQuery(ServiceType serviceType) {
+        HashMap<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("code", serviceType.getCode());
         parametersMap.put("name", serviceType.getName());
         parametersMap.put("category", serviceType.getCategory());

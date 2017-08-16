@@ -50,7 +50,7 @@ public class ServiceTypeService {
         this.attributeDefinitionRepository = attributeDefinitionRepository;
     }
 
-
+    //When creating service type to push to kafka
     public void create(ServiceType serviceType, ServiceTypeRequest serviceTypeRequest){
     	createMandatoryFieldValidate(serviceType);
     	createLengthValidate(serviceType);
@@ -58,22 +58,26 @@ public class ServiceTypeService {
         serviceTypeMessageQueueRepository.save(serviceTypeRequest, CREATE);
     }
 
+    //Read from consumer and persist to database for create
     public void persistServiceType(ServiceType serviceType){
         serviceTypeRepository.save(serviceType.toDto());
         persistServiceTypeKeywords(serviceType, CREATE);
     }
 
+    //When update service type to push to kafka
     public void update(ServiceType serviceType, ServiceTypeRequest serviceTypeRequest){
         serviceType.setAction(UPDATE);
         validate(serviceType);
         serviceTypeMessageQueueRepository.save(serviceTypeRequest, UPDATE);
     }
 
+    //Read from consumer and persist to database for update
     public void persistForUpdate(ServiceType serviceType){
         serviceTypeRepository.update(serviceType.toDto());
         persistServiceTypeKeywords(serviceType, UPDATE);
     }
 
+    //For search of service type
     public List<ServiceType> search(ServiceTypeSearchCriteria serviceTypeSearchCriteria){
         validateSearch(serviceTypeSearchCriteria);
         return serviceTypeRepository.search(serviceTypeSearchCriteria);

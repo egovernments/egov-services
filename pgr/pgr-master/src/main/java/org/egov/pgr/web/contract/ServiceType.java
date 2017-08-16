@@ -39,6 +39,7 @@ public class ServiceType {
 
     public ServiceType(org.egov.pgr.domain.model.ServiceType serviceType,
                        List<org.egov.pgr.domain.model.AttributeDefinition> attributeDefinitions) {
+        this.id = serviceType.getId();
         this.serviceName = serviceType.getServiceName();
         this.active = serviceType.getActive();
         this.category = serviceType.getCategory();

@@ -25,6 +25,7 @@ public class AttributeDefinition {
     private String groupCode;
     private String tenantId;
     private String serviceCode;
+    private boolean active;
     private List<ValueDefinition> valueDefinitions;
 
     private char requiredToChar() {
@@ -33,6 +34,10 @@ public class AttributeDefinition {
 
     private char readOnlyToChar() {
         return readOnly == true ? 'Y' : 'N';
+    }
+
+    private char activeToChar(){
+        return active ? 'Y' : 'N';
     }
 
     /* field length validation*/
@@ -122,6 +127,7 @@ public class AttributeDefinition {
                 .url(url)
                 .required(requiredToChar())
                 .variable(readOnlyToChar())
+                .active(activeToChar())
                 .createdBy(serviceDefinition.getCreatedBy())
                 .createdDate(serviceDefinition.getCreatedDate())
                 .lastModifiedBy(serviceDefinition.getLastModifiedBy())

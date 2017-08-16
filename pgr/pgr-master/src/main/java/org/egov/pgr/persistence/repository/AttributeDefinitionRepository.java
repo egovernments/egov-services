@@ -96,6 +96,7 @@ public class AttributeDefinitionRepository {
         parametersMap.put("datatypedescription", attributeDefinition.getDataTypeDescription());
         parametersMap.put("ordernum", attributeDefinition.getOrdernum());
         parametersMap.put("description", attributeDefinition.getDescription());
+        parametersMap.put("active", attributeDefinition.getActive());
         parametersMap.put("createddate", attributeDefinition.getCreatedDate());
         parametersMap.put("createdby", attributeDefinition.getCreatedBy());
         parametersMap.put("lastmodifiedby", attributeDefinition.getLastModifiedBy());

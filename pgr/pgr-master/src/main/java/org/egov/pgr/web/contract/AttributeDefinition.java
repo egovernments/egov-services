@@ -24,6 +24,7 @@ public class AttributeDefinition {
     private String groupCode;
     private Integer order;
     private String serviceCode;
+    private boolean active;
     private List<AttributeValueDefinition> attribValues;
 
     public AttributeDefinition(org.egov.pgr.domain.model.AttributeDefinition attributeDefinition) {
@@ -36,6 +37,7 @@ public class AttributeDefinition {
         this.url = attributeDefinition.getUrl();
         this.groupCode = attributeDefinition.getGroupCode();
         this.order = attributeDefinition.getOrder();
+        this.active = attributeDefinition.isActive();
         this.attribValues = mapAttributeValues(attributeDefinition.getValueDefinitions());
     }
 

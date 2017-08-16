@@ -24,7 +24,7 @@ export default class CheckList extends Component{
 
     return this.props.items.map((attribute, index)=>{
          if(attribute.isActive)
-           return (<CheckBoxItem key={index} required={this.props.required} obj={attribute} handler={this.props.handler} value={this.props.values[attribute.key]} />)
+           return (<CheckBoxItem key={index} error={this.props.errors[attribute.key]} obj={attribute} handler={this.props.handler} value={this.props.values[attribute.key]} />)
     });
   }
 
@@ -41,15 +41,20 @@ export default class CheckList extends Component{
 class CheckBoxItem extends Component{
     render() {
         return (
-          <Checkbox
-            ref = {this.props.obj.key}
-            checked={this.props.value? this.props.value : false}
-            onCheck={(e, isChecked)=>{
-              this.props.handler((isChecked? true : ""), this.props.obj.key, this.props.required, '');
-            }}
-            label = {translate(this.props.obj.name) + (this.props.required ? " *":null)}
-            style = {styles.checkbox}
-          />)
+          <div>
+            <Checkbox
+              ref = {this.props.obj.key}
+              checked={this.props.value? this.props.value : false}
+              onCheck={(e, isChecked)=>{
+                this.props.handler((isChecked? true : ""), this.props.obj.key, this.props.obj.required || false, '');
+              }}
+              label = {translate(this.props.obj.name) + (this.props.obj.required ? " *":"")}
+              style = {styles.checkbox}
+            />
+            {this.props.error ? (<span className="errorMsg">{this.props.error}</span>) : null}
+          </div>
+
+        )
     }
 }
 

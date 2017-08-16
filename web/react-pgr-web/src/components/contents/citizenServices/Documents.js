@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 import Checkbox from 'material-ui/Checkbox';
 import {translate} from '../../common/common';
 import PropTypes from 'prop-types';
@@ -23,11 +23,11 @@ export default class Documents extends Component{
      return this.props.items.map((attribute, index)=>{
           var field = this.props.files.find((field) => field.code == attribute.key);
           var files = field ? field.files : [];
-          console.log('field', attribute.code, field);
 
           if(attribute.isActive){
-            return <FileInput key={index} code={attribute.key} name={attribute.name} addFileHandler={this.props.addFileHandler}
-                 removeFileHandler={this.props.removeFileHandler} files={files} />;
+            return (<Col key={index} xs={12} md={4} lg={4}><FileInput code={attribute.key} dialogOpener={this.props.dialogOpener} name={attribute.name} addFileHandler={this.props.addFileHandler}
+                 removeFileHandler={this.props.removeFileHandler} isRequired={attribute.required}
+                 files={files} error={this.props.errors[attribute.key]} /></Col>);
           }
      });
 
@@ -36,9 +36,11 @@ export default class Documents extends Component{
    render(){
       const fileInputs=this.renderFileInputs();
       return(
-       <Row>
-        {fileInputs}
-       </Row>
+        <Col xs={12}>
+          <Row>
+            {fileInputs}
+          </Row>
+       </Col>
       )
    }
 }

@@ -81,6 +81,8 @@ public class TradeLicenseEntity {
 	private Timestamp agreementDate;
 	
 	private Timestamp licenseValidFromDate;
+	
+	private Long status;
 
 	private String agreementNo;
 
@@ -185,6 +187,8 @@ public class TradeLicenseEntity {
 		tradeLicense.setIsLegacy(this.isLegacy);
 
 		tradeLicense.setActive(this.active);
+		
+		tradeLicense.setStatus( this.status);
 
 		if(this.expiryDate != null){
 			tradeLicense.setExpiryDate(TimeStampUtil.getDateFromTimeStamp(this.expiryDate));
@@ -257,7 +261,8 @@ public class TradeLicenseEntity {
 		if(tradeLicense.getTradeType() != null){
 			this.tradeType = tradeLicense.getTradeType().toString();
 		}
-
+		
+		this.status = tradeLicense.getStatus();
 		this.categoryId = tradeLicense.getCategoryId();
 
 		this.subCategoryId = tradeLicense.getSubCategoryId();

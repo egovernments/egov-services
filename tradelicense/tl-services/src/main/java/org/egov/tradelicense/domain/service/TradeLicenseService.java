@@ -279,6 +279,7 @@ public class TradeLicenseService {
 		for (TradeLicense license : tradeLicenses) {
 
 			license.setId(tradeLicenseRepository.getNextSequence());
+			license.setStatus( new Long(1)); // Approved status id 1
 			if (license.getSupportDocuments() != null && license.getSupportDocuments().size() > 0) {
 				for (SupportDocument supportDocument : license.getSupportDocuments()) {
 					supportDocument.setLicenseId(license.getId());

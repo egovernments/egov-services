@@ -94,6 +94,9 @@ public class PropertiesManager {
 
 	@Value("${duplicate.subcategory.code}")
 	private String subCategoryCustomMsg;
+	
+	@Value("${duplicate.subcategory.detail}")
+	private String duplicateSubCategoryDetail;
 
 	@Value("${duplicate.businessnature.code}")
 	private String businessNatureCustomMsg;

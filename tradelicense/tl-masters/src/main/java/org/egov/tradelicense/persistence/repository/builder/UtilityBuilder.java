@@ -55,9 +55,9 @@ public class UtilityBuilder {
 			categoryDetailValidationQuery.append(" AND feeType = '" + feeType + "'");
 		}
 
-		if (rateType != null && !rateType.isEmpty()) {
-			categoryDetailValidationQuery.append(" AND rateType = '" + rateType + "'");
-		}
+//		if (rateType != null && !rateType.isEmpty()) {
+//			categoryDetailValidationQuery.append(" AND rateType = '" + rateType + "'");
+//		}
 
 		if (id != null) {
 			categoryDetailValidationQuery.append(" AND id !=" + id);

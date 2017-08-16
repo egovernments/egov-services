@@ -16,3 +16,7 @@ ALTER COLUMN name TYPE character varying(100);
 ALTER TABLE egtl_mstr_status
 ALTER COLUMN code TYPE character varying(20),
 ALTER COLUMN name TYPE character varying(100);
+
+
+
+

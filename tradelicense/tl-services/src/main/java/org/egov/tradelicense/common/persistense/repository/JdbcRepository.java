@@ -286,6 +286,8 @@ public abstract class JdbcRepository {
 				license.setPropertyAssesmentNo(getString(row.get("propertyAssesmentNo")));
 				license.setLocalityId(Integer.valueOf(getString((row.get("localityId")))));
 				license.setRevenueWardId(Integer.valueOf((getString(row.get("revenueWardId")))));
+				license.setAdminWardId(Integer.valueOf((getString(row.get("revenueWardId")))));
+				license.setStatus(Long.valueOf((getString(row.get("status")))));
 				license.setTradeAddress(getString(row.get("tradeAddress")));
 				license.setOwnerShipType(getString(row.get("ownerShipType")));
 				license.setTradeTitle(getString(row.get("tradeTitle")));

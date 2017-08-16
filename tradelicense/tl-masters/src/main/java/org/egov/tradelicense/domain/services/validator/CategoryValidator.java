@@ -1,6 +1,7 @@
 package org.egov.tradelicense.domain.services.validator;
 
-import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.Category;
@@ -89,10 +90,13 @@ public class CategoryValidator {
 					category.getValidityYears() > 10){
 				throw new InvalidInputException(propertiesManager.getInvalidValidityYears(), requestInfo);
 			}
+			Map<String, Integer> occurrences = new HashMap<String, Integer>();
+
 			for (CategoryDetail categoryDetail : category.getDetails()) {
 
 				Long categoryDetailId = null;
 				Boolean isCategoryDetailDuplicateExists = null;
+				Boolean duplicateFeeType = Boolean.FALSE;
 				if (isNewCategory) {
 
 					isCategoryDetailDuplicateExists = false;
@@ -102,9 +106,13 @@ public class CategoryValidator {
 					isCategoryDetailDuplicateExists = checkWhetherDuplicateCategoryDetailRecordExits(categoryDetail,
 							ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetailId);
 				}
-
-				if (isCategoryDetailDuplicateExists) {
-					throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+				
+				occurrences.put(categoryDetail.getFeeType().toString(), occurrences.containsKey(categoryDetail.getFeeType().toString())
+					    ? occurrences.get(categoryDetail.getFeeType().toString()) + 1 : 1);
+				
+				duplicateFeeType = (occurrences.get( categoryDetail.getFeeType().toString()) >1);
+				if (isCategoryDetailDuplicateExists || duplicateFeeType) {
+					throw new DuplicateIdException(propertiesManager.getDuplicateSubCategoryDetail(), requestInfo);
 				}
 
 				Boolean isUomExists = checkWhetherUomExists(categoryDetail);

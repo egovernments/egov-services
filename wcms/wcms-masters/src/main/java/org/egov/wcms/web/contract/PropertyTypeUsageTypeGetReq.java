@@ -68,6 +68,8 @@ public class PropertyTypeUsageTypeGetReq {
     
     private String usageType;
     
+    private String usageCode;
+    
     private String usageTypeId;
     
     private Boolean active;

@@ -968,9 +968,12 @@ public class PropertyServiceImpl implements PropertyService {
         newDemand.setMinimumAmountPayable(BigDecimal.ONE);
         demandDetailsList = new ArrayList<>();
         for(TaxHeadMaster taxHeadMaster : taxHeadResponse.getTaxHeadMasters()){
-            demandDetail = new DemandDetail();
-            demandDetail.setTaxHeadMasterCode(taxHeadMaster.getCode());
-            demandDetailsList.add(demandDetail);
+            if(!"ADVANCE".equalsIgnoreCase(taxHeadMaster.getCode())){
+                demandDetail = new DemandDetail();
+                demandDetail.setTenantId(tenantId);
+                demandDetail.setTaxHeadMasterCode(taxHeadMaster.getCode());
+                demandDetailsList.add(demandDetail);
+            }
         }
         newDemand.setDemandDetails(demandDetailsList);
         logger.info("Demand fromDate = " + taxPeriod.getFromDate() + " \n toDate = " + taxPeriod.getToDate());

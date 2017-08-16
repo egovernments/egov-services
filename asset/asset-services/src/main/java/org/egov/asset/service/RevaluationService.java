@@ -142,9 +142,6 @@ public class RevaluationService {
             voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount,
                     subledgerDetailsForRevaluationReserverAccount);
 
-            voucherService.validateCOAActiveForPosting(subledgerDetailsForAssetAccount);
-            voucherService.validateCOAActiveForPosting(subledgerDetailsForRevaluationReserverAccount);
-
         } else if (revaluation.getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
             log.info("subledger details check for Type of change DECREASED");
 
@@ -156,8 +153,6 @@ public class RevaluationService {
             voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount,
                     subledgerDetailsForFixedAssetWrittenOffAccount);
 
-            voucherService.validateCOAActiveForPosting(subledgerDetailsForAssetAccount);
-            voucherService.validateCOAActiveForPosting(subledgerDetailsForFixedAssetWrittenOffAccount);
         }
 
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluation, assetCategory,

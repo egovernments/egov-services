@@ -1,0 +1,165 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Service Type Master",
+		"_postman_id": "0ecf1cde-db2f-5694-20dd-ae85d572cebb",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get OAuth key (Login)",
+			"request": {
+				"url": "http://{{host}}:{{port}}/user/oauth/token",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "9999999999",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "demo",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "read",
+							"type": "text"
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Service Type",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/pgr-master/service/v2/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10-08-2017 00:00:00\",\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"1\",\n    \"userInfo\":{\n    \t\"id\": 1\n    }\n  },\n  \"serviceType\": {\n    \"tenantId\" : \"default\",\n    \"serviceCode\" : \"TL3\",\n    \"serviceName\": \"Trade License Test 3\",\n    \"description\": \"new service for trade license test\",\n    \"metadata\": \"true\",\n    \"type\": \"realTime\",\n    \"category\": 1,\n    \"slaHours\": 24,\n    \"days\": true,\n    \"active\": true,\n    \"hasFinancialImpact\": true,\n    \"department\": null,\n    \"keywords\": [\n     \"Deliverable_Service\"\n    ],\n    \"config\": [\n     \"true\"\n    ]\n  }\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "service type update",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/pgr-master/service/v2/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10-08-2017 00:00:00\",\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"1\",\n    \"authToken\":\"8434d1a9-720d-44ef-8d6b-c9fe9df7166d\"\n  },\n  \"serviceType\": {\n  \t\"id\": 195,\n        \"serviceName\": \"Web Portal\",\n        \"serviceCode\": \"WP1\",\n        \"description\": \"new service for web portal\",\n        \"metadata\": true,\n        \"department\": null,\n        \"type\": \"realTime\",\n        \"keywords\": [\n            \"Deliverable_Service\"\n        ],\n        \"category\": 95,\n        \"config\": null,\n        \"slaHours\": 48,\n        \"tenantId\": \"default\",\n        \"days\": true,\n        \"active\": true,\n        \"hasFinancialImpact\": true\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "service type search",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/pgr-master/service/v2/_search?tenantId=default&keywords=Deliverable_Service",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr-master",
+						"service",
+						"v2",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "serviceCode",
+							"value": "TL3",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "keywords",
+							"value": "Deliverable_Service",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "categoryId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\r\n\t   \t\"RequestInfo\": {\r\n\t       \"apiId\" : \"emp\",\r\n\t       \"ver\" : \"1.0\",\r\n\t       \"ts\" : \"10-03-2017 00:00:00\",\r\n\t       \"action\" : \"create\",\r\n\t       \"did\" : \"1\",\r\n\t       \"key\" : \"abcdkey\",\r\n\t       \"msgId\" : \"20170310130900\",\r\n\t       \"requesterId\" : \"rajesh\",\r\n\t       \"authToken\" : \"a391e7bd-34f6-4824-b4ff-fbc49794e079\"\r\n\t   }\r\n\t}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

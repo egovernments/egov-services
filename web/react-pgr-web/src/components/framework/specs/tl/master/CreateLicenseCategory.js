@@ -76,7 +76,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "tl.create.groups.categorytype.code"},{label: "tl.create.groups.categorytype.name"}, {label: "tl.create.groups.categorytype.active"}],
-			"values": ["code","name", "active"],
+			"values": ["applicationNumber","name", "active"],
 			"resultPath": "categories",
 			"rowClickUrlUpdate": "/update/tl/CreateLicenseCategory/{id}",
 			"rowClickUrlView": "/view/tl/CreateLicenseCategory/{id}"

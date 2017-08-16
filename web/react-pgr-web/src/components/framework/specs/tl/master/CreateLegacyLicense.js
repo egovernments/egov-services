@@ -54,23 +54,23 @@ var dat = {
 							"name": "TradeOwnerName",
 							"jsonPath": "licenses[0].ownerName",
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName",
-							"pattern": "^.[a-zA-Z. ]{2,49}$",
+							"pattern": "^.[a-zA-Z. ]{2,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Name"
+							"patternErrMsg": "Enter Valid Trade Owner Name"
 						},
             {
 							"name": "FatherSpouseName",
 							"jsonPath": "licenses[0].fatherSpouseName",
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName",
-							"pattern": "",
+							"pattern": "^.[a-zA-Z. ]{2,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid Father/Spouse Name"
 						},
             {
 							"name": "EmailID",
@@ -125,9 +125,21 @@ var dat = {
 							"patternErrMsg": ""
 						},
             {
-							"name": "Ward",
-							"jsonPath": "licenses[0].wardId",
-							"label": "tl.create.licenses.groups.TradeLocationDetails.Ward",
+							"name": "adminWardId",
+							"jsonPath": "licenses[0].adminWardId",
+							"label": "tl.create.licenses.groups.TradeLocationDetails.adminWardId",
+							"pattern": "",
+							"type": "singleValueList",
+              "url": "",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+            {
+							"name": "revenueWardId",
+							"jsonPath": "licenses[0].revenueWardId",
+							"label": "tl.create.licenses.groups.TradeLocationDetails.revenueWardId",
 							"pattern": "",
 							"type": "singleValueList",
               "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
@@ -229,7 +241,7 @@ var dat = {
 							"label": "tl.create.licenses.groups.TradeDetails.TradeCategory",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?|$..id|$..name",
+              "url": "/tl-masters/category/v1/_create|$..id|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -241,7 +253,7 @@ var dat = {
 							"label": "tl.create.licenses.groups.TradeDetails.TradeSubCategory",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?type=subcategory|$..id|$..name",
+              "url": "/tl-services/license/v1/_search?tenantId=default&tradeSubCategory=1|$..id|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -270,6 +282,17 @@ var dat = {
               "patternErrMsg": ""
             },
             {
+              "name": "validity",
+              "jsonPath": "licenses[0].validity",
+              "label": "tl.create.licenses.groups.TradeDetails.validity",
+              "pattern": "",
+              "type": "text",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
               "name": "Remarks",
               "jsonPath": "licenses[0].remarks",
               "label": "tl.create.licenses.groups.TradeDetails.Remarks",
@@ -284,6 +307,17 @@ var dat = {
               "name": "TradeCommencementDate",
               "jsonPath": "licenses[0].tradeCommencementDate",
               "label": "tl.create.licenses.groups.TradeDetails.TradeCommencementDate",
+              "pattern": "",
+              "type": "datePicker",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "licenseValidFromDate",
+              "jsonPath": "licenses[0].licenseValidFromDate",
+              "label": "tl.create.licenses.groups.TradeDetails.licenseValidFromDate",
               "pattern": "",
               "type": "datePicker",
               "isRequired": true,
@@ -432,7 +466,28 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "defaultValue": [{
+          "key": "",
+          "value": null
+        },
+        {
+          "key": "status1",
+          "value": "status1"
+        },
+        {
+          "key": "status2",
+          "value": "status2"
+        },
+        {
+          "key": "status3",
+          "value": "status3"
+        },
+        {
+          "key": "status4",
+          "value": "status4"
+        }
+        ]
           },
           {
             "name": "licenseNumber",
@@ -462,7 +517,7 @@ var dat = {
             "label": "tl.search.groups.tradeCategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/tl-masters/category/v1/_create|$..id|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -474,7 +529,7 @@ var dat = {
             "label": "tl.search.groups.tradeSubCategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/tl-services/license/v1/_search?tenantId=default&tradeSubCategory=1|$..id|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -492,7 +547,7 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "tradeOwnerName",
+            "name": "ownerName",
             "jsonPath": "ownerName",
             "label": "tl.search.groups.tradeOwnerName",
             "pattern": "",
@@ -531,7 +586,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "tl.search.result.groups.applicationNumber"},{label: "tl.search.result.groups.tlNumber"}, {label: "tl.search.result.groups.oldTLNumber"},{label: "tl.search.result.groups.category"},{label: "tl.search.result.groups.subCategory"},{label: "tl.search.result.groups.titleOfTrade"},{label: "tl.search.result.groups.tradeOwner"},{label: "tl.search.result.groups.mobileNumber"},{label: "tl.search.result.groups.propertyAssessmentNumber"},{label: "tl.search.result.groups.financialYear"},{label: "tl.search.result.groups.applicationStatus"},{label: "tl.search.result.groups.licenseActive"}],
-			"values": ["code","name", "active"],
+			"values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "categoryId", "subCategoryId", "tradeTitle", "mobileNumber", "propertyAssesmentNo", "propertyAssesmentNo", "status", "active"],
 			"resultPath": "licenses",
 			"rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
 			"rowClickUrlView": "/view/tl/CreateLegacyLicense/{id}"

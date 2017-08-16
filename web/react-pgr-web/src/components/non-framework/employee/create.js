@@ -658,6 +658,7 @@ class Employee extends Component {
             'assignments': dat
           }
         },function(){
+          console.log(self.state.subObject.assignments);
           self.vacantposition("assignments");
         })
         break;
@@ -2133,7 +2134,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.motherTongue")}</span></label><br/>
-                                <label>{Employee.motherTongue}</label></span>
+                                <label>{getNameById(self.state.languages, Employee.motherTongue)}</label></span>
                             )
                          :
 
@@ -2154,7 +2155,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.religion")}</span></label><br/>
-                                <label>{Employee.religion}</label></span>
+                                <label>{getNameById(self.state.religions, Employee.religion)}</label></span>
                             )
                          :
 
@@ -2173,7 +2174,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.community")}</span></label><br/>
-                                <label>{Employee.community}</label></span>
+                                <label>{getNameById(self.state.communities, Employee.community)}</label></span>
                             )
                          :
 
@@ -2192,7 +2193,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.category")}</span></label><br/>
-                                <label>{Employee.category}</label></span>
+                                <label>{getNameById(self.state.categories, Employee.category)}</label></span>
                             )
                          :
 
@@ -2756,11 +2757,11 @@ class Employee extends Component {
 					</Table>
 					<Row>
             <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-              <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+              {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                 self.setModalOpen('assignment')
               }}>
                 <span className="glyphicon glyphicon-plus"></span>
-              </FloatingActionButton>
+              </FloatingActionButton> : ""}
             </Col>
           </Row>
 				</CardText>
@@ -2797,11 +2798,11 @@ class Employee extends Component {
 					</Table>
 					<Row>
             <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-              <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+              {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                 self.setModalOpen('jurisdiction')
               }}>
                 <span className="glyphicon glyphicon-plus"></span>
-              </FloatingActionButton>
+              </FloatingActionButton> : ""}
             </Col>
           </Row>
 				</CardText>
@@ -2896,11 +2897,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('serviceDet')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : "" }
               </Col>
             </Row>
 					</CardText>
@@ -2924,11 +2925,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('probation')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -2952,11 +2953,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('regular')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -3050,11 +3051,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('edu')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -3077,11 +3078,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('tech')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>
@@ -3103,11 +3104,11 @@ class Employee extends Component {
 						</Table>
 						<Row>
               <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
-                <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
+                {self.state.screenType != "view" ? <FloatingActionButton style={{marginRight: 0}} mini={true} secondary={true} onClick={() => {
                   self.setModalOpen('dept')
                 }}>
                   <span className="glyphicon glyphicon-plus"></span>
-                </FloatingActionButton>
+                </FloatingActionButton> : ""}
               </Col>
             </Row>
 					</CardText>

@@ -387,7 +387,7 @@ var localization_EN_Data = {
     //employee Object
     "employee.Employee.fields.code": "Code",
     "employee.Employee.fields.pan": "PAN",
-    "employee.Employee.fields.dateOfAppointment": "Date Of Appointment",
+    : "Date Of Appointment",
     "employee.Employee.fields.dateOfJoining": "Date Of Joining/Deputation",
     "employee.Employee.fields.dateOfRetirement": "Date Of Retirement",
     "employee.Employee.fields.employeeStatus": "Employee Status",
@@ -402,7 +402,7 @@ var localization_EN_Data = {
     "employee.Employee.fields.jurisdictions": "Jurisdictions",
     "employee.Employee.fields.jurisdictionsType": "Jurisdictions Type",
     "employee.Employee.fields.jurisdictionsList": "Jurisdictions List",
-    "employee.Jurisdictions.title": "JURISDICTION LIST",
+    "employee.Jurisdictions.title": "JUR"employee.Employee.fields.dateOfAppointment"ISDICTION LIST",
 
     "employee.Employee.fields.motherTongue": "Mother Tongue",
     "employee.Employee.fields.religion": "Religion",
@@ -761,9 +761,20 @@ var localization_EN_Data = {
     "collection.create.arrearLatePayment": "Area of LatePayment",
     "collection.create.currentLatePayment": "Current Late Payment",
     "collection.create.checkLatePayment": "Cheque bounce Penalty  Rebate",
-    "collection.create.total": "Total"
-
-
+    "collection.create.total": "Total",
+    "employee.error.message.date": "From Date should be less than To Date.",
+    "employee.error.message.assignmentDate": "Assignment dates overlapping.",
+    "employee.error.message.dupAssignment": "Duplicate entry not allowed.",
+    "employee.error.message.appDate.retDate": "Appointment Date must be before Retirement Date.",
+    "employee.error.message.appDate.terDate": "Appointment Date must be before Termination Date.",
+    "employee.error.message.appDate.regDate": "Appointment Date must be before Resignation Date."
+    "employee.error.message.appDate.joinDate": "Joining Date must be after Appointment Date.",
+    "employee.error.message.retDate.joinDate": "Joining Date must be before Retirement Date.",
+    "employee.error.message.joinDate.terDate": "Joining Date must be before Termination Date.",
+    "employee.error.message.joinDate.regDate": "Joining Date must be before Resignation Date.",
+    "employee.fields.isUserActive": "Is User Active",
+    "employee.Employee.fields.dateOfBirth": "Date Of Birth",
+    "ui.framework.submit": "Submit"
 };
 
 var localization_MR_Data = {
@@ -1551,9 +1562,20 @@ var localization_MR_Data = {
     "collection.create.arrearLatePayment": "Area of LatePayment-Marathi",
     "collection.create.currentLatePayment": "Current Late Payment-Marathi",
     "collection.create.checkLatePayment": "Cheque bounce Penalty Rebate-Marathi",
-    "collection.create.total": "Total-Marathi"
-
-
+    "collection.create.total": "Total-Marathi",
+    "employee.error.message.date": "From Date should be less than To Date.-Marathi",
+    "employee.error.message.assignmentDate": "Assignment dates overlapping.-Marathi",
+    "employee.error.message.dupAssignment": "Duplicate entry not allowed.-Marathi",
+    "employee.error.message.appDate.retDate": "Appointment Date must be before Retirement Date.-Marathi",
+    "employee.error.message.appDate.terDate": "Appointment Date must be before Termination Date.-Marathi",
+    "employee.error.message.appDate.regDate": "Appointment Date must be before Resignation Date.-Marathi"
+    "employee.error.message.appDate.joinDate": "Joining Date must be after Appointment Date.-Marathi",
+    "employee.error.message.retDate.joinDate": "Joining Date must be before Retirement Date.-Marathi",
+    "employee.error.message.joinDate.terDate": "Joining Date must be before Termination Date.-Marathi",
+    "employee.error.message.joinDate.regDate": "Joining Date must be before Resignation Date.-Marathi",
+    "employee.fields.isUserActive": "Is User Active-Marathi",
+    "employee.Employee.fields.dateOfBirth": "Date Of Birth-Marathi",
+    "ui.framework.submit": "Submit-Marathi"
 }
 
 export function translate(locale_text) {

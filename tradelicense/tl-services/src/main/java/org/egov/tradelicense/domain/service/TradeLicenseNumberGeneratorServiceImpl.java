@@ -1,11 +1,7 @@
 package org.egov.tradelicense.domain.service;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-
-import org.egov.tradelicense.persistence.util.DBSequenceGenerator;
-import org.egov.tradelicense.persistence.util.SequenceNumberGenerator;
-import org.egov.tradelicense.persistence.util.Utils;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -15,37 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 public class TradeLicenseNumberGeneratorServiceImpl implements TradeLicenseNumberGeneratorService {
-    
+
     @Autowired
-    private SequenceNumberGenerator sequenceNumberGenerator;
-    
+    private IdGenService idGenService;
+
     @Autowired
-    private DBSequenceGenerator dbSequenceGenerator;
-    
-    @Autowired
-    private Utils utils;
-    
-    private static final String LICENSE_NUMBER_SEQ_NAME = "egtl_license_number";
-    private static final String LICENSE_NUMBER_FORMAT = "TL/%05d/%s";
-    
+    private PropertiesManager propertiesManager;
+
     /**
-     * Implementation Method to generate Trade License Number
+     * Implementation Method to generate Application Number
      * 
      * @return generated number
      */
-    public String generate() {
-        Serializable sequenceNumber;
-        try {
-            final String currentYear = utils.currentDateToYearFormat();
-            try {
-                sequenceNumber = sequenceNumberGenerator.getNextSequence(LICENSE_NUMBER_SEQ_NAME);
-            } catch (final Exception e) {
-                sequenceNumber = dbSequenceGenerator.createAndGetNextSequence(LICENSE_NUMBER_SEQ_NAME);
-            }
-
-            return String.format(LICENSE_NUMBER_FORMAT, sequenceNumber, currentYear);
-        } catch (final SQLException e) {
-            throw new RuntimeException("Error occurred while generating Trade License Number", e);
-        }
+    public String generate(final String tenantId, final RequestInfo requestInfo) {
+        return idGenService.generate(tenantId,
+                propertiesManager.getIdTLNumberGenNameServiceTopic(),
+                propertiesManager.getIdTLNumberGenFormatServiceTopic(), requestInfo);
     }
 }

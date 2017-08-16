@@ -7,10 +7,11 @@ export default class UiAadharCard extends Component {
        super(props);
    	}
 
-   	renderRadioButtons = (values) => {
-   		return values.map((v, i) => {
+   	renderRadioButtons = (item) => {
+   		return item.values.map((v, i) => {
    			return (
    				<RadioButton
+                 disabled={item.isDisabled}
 			        value={v.value}
 			        label={translate(v.label)}
 			      />
@@ -28,7 +29,7 @@ export default class UiAadharCard extends Component {
 						<RadioButtonGroup name="shipSpeed" valueSelected={this.props.getVal(item.jsonPath)} defaultSelected={item.defaultSelected} onChange={(e, val) => {
 							this.props.handler({target:{value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
 						}}>
-							{this.renderRadioButtons(item.values)}
+							{this.renderRadioButtons(item)}
 						</RadioButtonGroup>
 					</div>
 				)

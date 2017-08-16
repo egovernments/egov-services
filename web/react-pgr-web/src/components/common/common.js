@@ -407,7 +407,7 @@ var localization_EN_Data = {
     "employee.Employee.fields.religion": "Religion",
     "employee.Employee.fields.community": "Community",
     "employee.Employee.fields.category": "Category",
-    "employee.Employee.fields.physicallyDisabled": "Physically Disabled",
+    "employee.Employee.fields.physicallyDisabled": " Is Physically Disabled",
     "employee.Employee.fields.medicalReportProduced": "Medical Report Produced",
     "employee.Employee.fields.languagesKnown": "Languages Known",
     "employee.Employee.fields.maritalStatus": "Marital Status",
@@ -668,6 +668,8 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeLocationDetails": "Trade Location Details",
     "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo": "Property Assessment No",
     "tl.create.licenses.groups.TradeLocationDetails.Locality": "Locality",
+    "tl.create.licenses.groups.TradeLocationDetails.adminWardId": "Admin Ward",
+    "tl.create.licenses.groups.TradeLocationDetails.revenueWardId": "Revenue Ward",
     "tl.create.licenses.groups.TradeLocationDetails.Ward": "Ward",
     "tl.create.licenses.groups.TradeLocationDetails.OwnershipType": "Ownership Type",
     "tl.create.licenses.groups.TradeLocationDetails.TradeAddress": "Trade Address",
@@ -678,9 +680,13 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TradeSubCategory": "Trade Sub-Category",
     "tl.create.licenses.groups.TradeDetails.UOM": "UOM",
     "tl.create.licenses.groups.TradeDetails.TradeAreaPremises": "Trade Area/Weight of Premises (Sq.ft/Tons)",
+    "tl.create.licenses.groups.validity": "Validity",
     "tl.create.licenses.groups.TradeDetails.Remarks": "Remarks",
     "tl.create.licenses.groups.TradeDetails.TradeCommencementDate": "Trade Commencement Date",
+    "tl.create.licenses.groups.TradeDetails.licenseValidFromDate": "License Valid From Date",
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
+    "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
+    "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.licenses.groups.FeeDetails.FinancialYear": "Financial Year",
     "tl.create.licenses.groups.FeeDetails.Amount": "Amount",
@@ -696,8 +702,22 @@ var localization_EN_Data = {
     "tl.search.groups.tradeSubCategory": "Trade Sub-Category",
     "tl.search.groups.tradeTitle": "Trade Title",
     "tl.search.groups.tradeOwnerName": "Trade Owner Name",
+    "tl.search.groups.propertyAssesmentNo": "Property Assesment No",
     "tl.search.groups.propertyAssessmentNo": "Property Assessment No",
     "tl.search.groups.mobileNumber": "Mobile Number",
+
+    "tl.search.result.groups.applicationNumber": "Application Number",
+    "tl.search.result.groups.tlNumber": "License Number",
+    "tl.search.result.groups.oldTLNumber": "Old License Number",
+    "tl.search.result.groups.category": "Category",
+    "tl.search.result.groups.subCategory": "Sub Category",
+    "tl.search.result.groups.titleOfTrade": "Title Of Trade",
+    "tl.search.result.groups.tradeOwner": "Trade Owner",
+    "tl.search.result.groups.mobileNumber": "Mobile Number",
+    "tl.search.result.groups.propertyAssessmentNumber": "Property Assessment Number",
+    "tl.search.result.groups.financialYear": "Financial Year",
+    "tl.search.result.groups.applicationStatus": "Application Status",
+    "tl.search.result.groups.licenseActive": "License Active",
 
     "tl.view.groups.tradeOwnerDetails": "Trade Owner Details",
     "tl.view.groups.aadharNumber": "Aadhar Number",
@@ -710,7 +730,8 @@ var localization_EN_Data = {
     "tl.licenses.view.groups.TradeLocationDetails": "Trade Location Details",
     "tl.licenses.view.groups.PropertyAssessmentNo": "Property Assessment No",
     "tl.licenses.view.groups.Locality": "Locality",
-    "tl.licenses.view.groups.Ward": "Ward",
+    "tl.licenses.view.groups.adminWardId": "Admin Ward",
+    "tl.licenses.view.groups.revenueWardId": "Revenue Ward",
     "tl.licenses.view.groups.OwnershipType": "Ownership Type",
     "tl.licenses.view.groups.TradeAddress": "Trade Address",
     "tl.view.licenses.groups.TradeDetails": "Trade Details",
@@ -720,9 +741,10 @@ var localization_EN_Data = {
     "tl.view.licenses.groups.TradeSubCategory": "Trade Sub-Category",
     "tl.view.licenses.groups.UOM": "UOM",
     "tl.view.licenses.groups.TradeAreaPremises": "Trade Area Premises",
+    "tl.view.licenses.groups.validity": "Validity",
     "tl.view.licenses.groups.Remarks": "Remarks",
     "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date",
-    "tl.view.licenses.groups..TraderOwnerProperty": "Trader Owner Property",
+    "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
 
 
 
@@ -776,7 +798,10 @@ var localization_EN_Data = {
     "employee.Employee.fields.dateOfBirth": "Date Of Birth",
     "ui.framework.submit": "Submit",
     "ui.login.call": "Call",
-    "ui.login.registerGrievance": "to register your grievance"
+    "ui.login.registerGrievance": "to register your grievance",
+    "employee.field.assignments":"Assignments Grade",
+    "employee.Employee.fields.group": "Employee Group",
+    "deshboard.title":"My Tasks"
 };
 
 var localization_MR_Data = {
@@ -1189,8 +1214,8 @@ var localization_MR_Data = {
     "employee.Employee.fields.religion": "Religion-Marathi",
     "employee.Employee.fields.community": "Community-Marathi",
     "employee.Employee.fields.category": "Category-Marathi",
-    "employee.Employee.fields.physicallyDisabled": "Physically Disabled-Marathi",
-    "employee.Employee.fields.medicalReportProduced": "Medical Report Produced-Marathi",
+    "employee.Employee.fields.physicallyDisabled": " Is Physically Disabled-Marathi",
+    "employee.Employee.fields.medicalReportProduced": "Medical Report Available-Marathi",
     "employee.Employee.fields.languagesKnown": "Languages Known-Marathi",
     "employee.Employee.fields.maritalStatus": "Marital Status-Marathi",
     "employee.Employee.fields.passportNo": "Passport No-Marathi",
@@ -1314,6 +1339,9 @@ var localization_MR_Data = {
     "employee.searchEmployee.groups.fields.name": "Employee Name-Marathi",
     "employee.searchEmployee.groups.fields.designation": "Employee Designation-Marathi",
     "employee.searchEmployee.groups.fields.position": "Employee Position-Marathi",
+    "employee.field.assignments":"Assignments Grade-Marathi",
+    "employee.Employee.fields.group": "Employee Group-Marathi",
+    "deshboard.title":"My Tasks-Marathi",
 
 
 
@@ -1481,6 +1509,7 @@ var localization_MR_Data = {
     "tl.create.licenses.groups.TradeDetails.TradeSubCategory": "Trade Sub-Category-Marathi",
     "tl.create.licenses.groups.TradeDetails.UOM": "UOM-Marathi",
     "tl.create.licenses.groups.TradeDetails.TradeAreaPremises": "Trade Area/Weight of Premises (Sq.ft/Tons)-Marathi",
+    "tl.create.licenses.groups.validity": "Validity",
     "tl.create.licenses.groups.TradeDetails.Remarks": "Remarks-Marathi",
     "tl.create.licenses.groups.TradeDetails.TradeCommencementDate": "Trade Commencement Date-Marathi",
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property-Marathi",

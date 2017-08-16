@@ -124,20 +124,26 @@ class updateUserRole extends Component {
   }
 
   removeUserRole = (removekey) => {
+    var index = this.props.updateUserRole.userRoles.indexOf(removekey);
+    if(index !== -1){
+      this.props.updateUserRole.userRoles.splice(index, 1);
+      this.props.handleChange(this.props.updateUserRole.userRoles, "userRoles", false, "");
+      console.log('removed user role:', removekey, index);
+    }
     var filteredPeople = this.state.userRoles.filter((item) => item.code !== removekey);
     this.setState({
       userRoles : filteredPeople
     });
-    var index = this.props.updateUserRole.userRoles.indexOf(removekey);
-    this.props.updateUserRole.userRoles.splice(index, 1);
-    this.props.handleChange(this.props.updateUserRole.userRoles, "userRoles", false, "")
   }
 
   handleRequestDelete = (code) => {
-    this.removeUserRole(code);
     var allRoleIndex = this.props.updateUserRole.allRoles.indexOf(code);
-    this.props.updateUserRole.allRoles.splice(allRoleIndex, 1);
-    this.props.handleChange(this.props.updateUserRole.allRoles, "allRoles", false, "");
+    if(allRoleIndex !== -1){
+      this.props.updateUserRole.allRoles.splice(allRoleIndex, 1);
+      this.props.handleChange(this.props.updateUserRole.allRoles, "allRoles", false, "");
+      console.log('removed all role:', code, allRoleIndex);
+      this.removeUserRole(code);
+    }
   }
 
   handleError = (msg) => {
@@ -226,7 +232,7 @@ class updateUserRole extends Component {
 }
 
 const mapStateToProps = state => {
-  //console.log(JSON.stringify(state.form.form));
+  console.log(JSON.stringify(state.form.form));
   return ({updateUserRole: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 

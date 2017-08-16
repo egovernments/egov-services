@@ -31,7 +31,7 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false) => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false) => {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
@@ -45,7 +45,7 @@ module.exports = {
             }
         }
 
-        if(/_search/.test(context)) {
+        if(/_search/.test(context) && !noPageSize) {
             url += "&pageSize=500";
         }
 
@@ -92,7 +92,7 @@ module.exports = {
             }
         });
     },
-    commonApiGet: (context, queryObject = {}, doNotOverride = false) => {
+    commonApiGet: (context, queryObject = {}, doNotOverride = false, noPageSize = false) => {
         var url = context;
         if (!doNotOverride)
             url += "?tenantId=" + tenantId;
@@ -104,7 +104,7 @@ module.exports = {
             }
         }
 
-        if(/_search/.test(context)) {
+        if(/_search/.test(context) && !noPageSize) {
             url += "&pageSize=500";
         }
         return instance.get(url).then(function(response) {

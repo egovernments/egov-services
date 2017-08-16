@@ -1,15 +1,5 @@
 package org.egov.eis.web.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.TestConfiguration;
@@ -20,6 +10,7 @@ import org.egov.eis.service.EmployeeService;
 import org.egov.eis.utils.FileUtils;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
@@ -32,9 +23,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(EmployeeController.class)
@@ -57,6 +64,9 @@ public class EmployeeControllerTest {
 	private ResponseInfoFactory responseInfoFactory;
 
     @MockBean
+	private ResponseEntityFactory responseEntityFactory;
+
+    @MockBean
 	private EmployeeAssignmentValidator employeeAssignmentValidator;
 
     @MockBean
@@ -69,10 +79,18 @@ public class EmployeeControllerTest {
 	public void testSearch() throws IOException, Exception {
 		List<EmployeeInfo> expectedEmployeesList = getExpectedEmployeesForSearch();
 		ResponseInfo expectedResponseInfo = new ResponseInfo("emp", "1.0", "2017-01-18T07:18:23.130Z", "uief87324", "20170310130900", "200");
+		Map<String, Object> empMap = new HashMap<String, Object>() {{
+			put("ResponseInfo", expectedResponseInfo);
+			put("Employee", expectedEmployeesList);
+		}};
+		ResponseEntity<?> responseEntity = new ResponseEntity<>(empMap, HttpStatus.OK);
+
 		when(employeeService.getEmployees(any(EmployeeCriteria.class), any(RequestInfo.class)))
         .thenReturn(expectedEmployeesList);
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 		.thenReturn(expectedResponseInfo);
+		doReturn(responseEntity).when(responseEntityFactory).getSuccessResponse(anyMapOf(String.class, Object.class), any(RequestInfo.class));
+
 		mockMvc.perform(post("/employees/_search").param("tenantId", "1").param("id", "100")
 				.content(getFileContents("RequestInfo.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
 		.andExpect(status().isOk())

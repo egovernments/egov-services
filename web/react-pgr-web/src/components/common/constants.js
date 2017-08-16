@@ -7,7 +7,8 @@ module.exports = {
     CITIZEN_SERVICES_FILE_TAG : "citizenservices",
     LABEL_SERVICES : "csv.lbl.services",
     LABEL_NO_SERVICS : "csv.lbl.noservices",
-    LABEL_LOADING : "csv.lbl.loading",
+    LABEL_LOADING: "csv.lbl.loading",
     CITIZEN_SERVICES_CHECKLIST_CODE : "CHECKLIST",
-    CITIZEN_SERVICES_DOCUMENTS_CODE : "DOCUMENTS"
+    CITIZEN_SERVICES_DOCUMENTS_CODE : "DOCUMENTS",
+    COMMON_FILE_FORMATS_ALLOWED : ["jpg","jpeg","png","doc","docx","xls","csv","pdf","xlsx"]
 }

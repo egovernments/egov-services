@@ -15,6 +15,7 @@ public class ServiceDefinitionMessageQueueRepository {
 
     public static final Logger logger = LoggerFactory.getLogger(ServiceDefinition.class);
     public static final String CREATE = "CREATE";
+    public static final String UPDATE = "UPDATE";
 
     private PGRProducer producer;
 
@@ -22,13 +23,20 @@ public class ServiceDefinitionMessageQueueRepository {
 
     private String createkey;
 
+    private String updateTopicName;
+
+    private String updateKey;
 
     public ServiceDefinitionMessageQueueRepository(PGRProducer producer,
                                                    @Value("${kafka.topics.servicedefinition.create.name}") String createTopicName,
-                                                   @Value("${kafka.topics.servicedefinition.create.key") String createkey) {
+                                                   @Value("${kafka.topics.servicedefinition.create.key") String createkey,
+                                                   @Value("${kafka.topics.servicedefinition.update.name}") String updateTopicName,
+                                                   @Value("${kafka.topics.servicedefinition.update.key") String updatekey) {
         this.producer = producer;
         this.createTopicName = createTopicName;
         this.createkey = createkey;
+        this.updateTopicName = updateTopicName;
+        this.updateKey = updatekey;
     }
 
     public void save(ServiceDefinitionRequest serviceDefinitionRequest, String action){
@@ -38,6 +46,9 @@ public class ServiceDefinitionMessageQueueRepository {
             String value = mapper.writeValueAsString(serviceDefinitionRequest);
             if(CREATE.equalsIgnoreCase(action))
                 producer.sendMessage(createTopicName, createkey, value);
+
+            if(UPDATE.equalsIgnoreCase(action))
+                producer.sendMessage(updateTopicName, updateKey, value);
         }
         catch (JsonProcessingException e) {
             logger.error("Exception while pushing to kafka queue : " + e);

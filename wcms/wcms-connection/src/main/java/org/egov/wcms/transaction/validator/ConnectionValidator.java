@@ -201,9 +201,10 @@ public class ConnectionValidator {
 			}
 		}
 		
-		if(!waterConnectionRequest.getConnection().isWithProperty()) { 
+		/*if(null != waterConnectionRequest.getConnection().getWithProperty()
+				&& !waterConnectionRequest.getConnection().getWithProperty()) { 
 			validateConnectionLocationDetails(waterConnectionRequest,errorFields);
-		}
+		}*/
 
         if (errorFields.size() > 0)
             return Error.builder().code(HttpStatus.BAD_REQUEST.value())

@@ -41,6 +41,7 @@
 package org.egov.eis.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -58,6 +59,7 @@ import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
@@ -96,6 +98,9 @@ public class EmployeeController {
     private ResponseInfoFactory responseInfoFactory;
 
     @Autowired
+    private ResponseEntityFactory responseEntityFactory;
+
+    @Autowired
     private EmployeeAssignmentValidator employeeAssignmentValidator;
 
     @Autowired
@@ -128,15 +133,15 @@ public class EmployeeController {
             return errorResponseEntity;
 
         // Call service
-        List<EmployeeInfo> employeesList = null;
+        Map<String, Object> employeeMap = null;
         try {
-            employeesList = employeeService.getEmployees(employeeCriteria, requestInfo);
+            employeeMap = employeeService.getPaginatedEmployees(employeeCriteria, requestInfo);
         } catch (Exception exception) {
             log.error("Error while processing request " + employeeCriteria, exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponseForSearch(employeesList, requestInfo);
+        return responseEntityFactory.getSuccessResponse(employeeMap, requestInfo);
     }
 
     /**
@@ -315,7 +320,7 @@ public class EmployeeController {
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         employeeInfoResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<EmployeeInfoResponse>(employeeInfoResponse, HttpStatus.OK);
+        return new ResponseEntity<>(employeeInfoResponse, HttpStatus.OK);
     }
 
     /**

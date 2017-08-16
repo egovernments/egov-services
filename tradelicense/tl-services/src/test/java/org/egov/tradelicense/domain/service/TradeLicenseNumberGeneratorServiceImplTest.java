@@ -5,9 +5,8 @@ import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
 
-import org.egov.tradelicense.persistence.util.DBSequenceGenerator;
-import org.egov.tradelicense.persistence.util.SequenceNumberGenerator;
-import org.egov.tradelicense.persistence.util.Utils;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,42 +19,30 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TradeLicenseNumberGeneratorServiceImplTest {
-    
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    @Mock
+    private IdGenService idGenService;
+
+    @Mock
+    private PropertiesManager propertiesManager;
 
     @InjectMocks
     private TradeLicenseNumberGeneratorService tradeLicenseNumberGeneratorService = new TradeLicenseNumberGeneratorServiceImpl();
 
-    @Mock
-    private SequenceNumberGenerator sequenceNumberGenerator;
-
-    @Mock
-    private DBSequenceGenerator dbSequenceGenerator;
-    
-    @Mock
-    private Utils utils;
-
     @Before
     public void before() throws SQLException {
-        when(sequenceNumberGenerator.getNextSequence(Mockito.anyString())).thenReturn(001);
-        when(dbSequenceGenerator.createAndGetNextSequence(Mockito.anyString())).thenReturn(001);
-        when(utils.currentDateToYearFormat()).thenReturn("2017");
+        when(idGenService.generate(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.any(RequestInfo.class))).thenReturn("TL/00001/2017");
+        when(propertiesManager.getIdApplicationNumberGenNameServiceTopic()).thenReturn("");
+        when(propertiesManager.getIdApplicationNumberGenFormatServiceTopic()).thenReturn("");
     }
 
     @Test
     public void test_tl_number_generator_should_return_number() {
-        final String tlNumber = tradeLicenseNumberGeneratorService.generate();
-
+        final String tlNumber = tradeLicenseNumberGeneratorService.generate("ap.kurnool", new RequestInfo());
         assertEquals("TL/00001/2017", tlNumber);
-    }
-    
-    @SuppressWarnings("unchecked")
-    @Test
-    public void test_tl_number_generator_should_throw_error() throws SQLException {
-        when(sequenceNumberGenerator.getNextSequence(Mockito.anyString())).thenThrow(SQLException.class);
-        when(dbSequenceGenerator.createAndGetNextSequence(Mockito.anyString())).thenThrow(SQLException.class);
-        thrown.expect(RuntimeException.class);
-        tradeLicenseNumberGeneratorService.generate();
     }
 }

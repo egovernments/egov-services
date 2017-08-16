@@ -73,6 +73,9 @@ public class PropertyTypeUsageType {
 
     @NotNull
     private String usageType;
+    
+    @NotNull
+    private String usageCode;
     private String usageTypeId;
 
     private Boolean active;

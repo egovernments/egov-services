@@ -157,8 +157,21 @@ class ShowField extends Component {
 
   }
 
+  checkIfDate = (val, i) => {
+
+    let {reportResult}=this.props;
+    if(reportResult && reportResult.reportHeader && reportResult.reportHeader.length && reportResult.reportHeader[i] && reportResult.reportHeader[i].type == "epoch") {
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+             + _date.getFullYear();
+    } else {
+      return val;
+    }
+  }
+
   render() {
-    let {drillDown}=this
+    let {drillDown,checkIfDate}=this
     let {
       isTableShow,
       metaData,
@@ -206,7 +219,7 @@ class ShowField extends Component {
                         return (
                           <td key={i2} onClick={(e)=>{
                             drillDown(e,i,i2,item,item1)
-                          }}>{item1}</td>
+                          }}>{checkIfDate(item1, i2)}</td>
                         )
                       })}
                     </tr>

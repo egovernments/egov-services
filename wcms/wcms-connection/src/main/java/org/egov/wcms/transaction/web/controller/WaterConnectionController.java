@@ -105,10 +105,11 @@ public class WaterConnectionController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() !=null)
-            waterConnectionRequest.getConnection().setIsLegacy(Boolean.TRUE);
+        
+        if(waterConnectionRequest.getConnection().getWithProperty() !=null)
+            waterConnectionRequest.getConnection().setWithProperty(Boolean.TRUE);
         else
-            waterConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
+            waterConnectionRequest.getConnection().setWithProperty(Boolean.FALSE);
         final List<ErrorResponse> errorResponses = connectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())

@@ -157,41 +157,80 @@ public class EmployeeService {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
+    public List<EmployeeInfo> getEmployees(EmployeeCriteria empCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
         List<User> usersList = null;
         List<Long> ids = null;
         // If roleCodes or userName is present, get users first, as there will be very limited results
-        if (!isEmpty(employeeCriteria.getRoleCodes()) || !isEmpty(employeeCriteria.getUserName())) {
-            usersList = userService.getUsers(employeeCriteria, requestInfo);
+        if (!isEmpty(empCriteria.getRoleCodes()) || !isEmpty(empCriteria.getUserName())) {
+            usersList = userService.getUsers(empCriteria, requestInfo);
             log.debug("usersList returned by UsersService is :: " + usersList);
             if (isEmpty(usersList))
-                return Collections.emptyList();
+                return Collections.EMPTY_LIST;
             ids = usersList.stream().map(user -> user.getId()).collect(Collectors.toList());
-            employeeCriteria.setId(ids);
+            empCriteria.setId(ids);
         }
 
-        List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeCriteria);
+        List<EmployeeInfo> empInfoList = employeeRepository.findForCriteria(empCriteria);
 
-        if (isEmpty(employeeInfoList))
-            return Collections.emptyList();
+        if (isEmpty(empInfoList))
+            return Collections.EMPTY_LIST;
 
         // If roleCodes or userName is not present, get employees first
-        if (isEmpty(employeeCriteria.getRoleCodes()) || isEmpty(employeeCriteria.getUserName())) {
-            ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+        if (isEmpty(empCriteria.getRoleCodes()) || isEmpty(empCriteria.getUserName())) {
+            ids = empInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
             log.debug("Employee ids are :: " + ids);
-            employeeCriteria.setId(ids);
-            usersList = userService.getUsers(employeeCriteria, requestInfo);
+            empCriteria.setId(ids);
+            usersList = userService.getUsers(empCriteria, requestInfo);
             log.debug("usersList returned by UsersService is :: " + usersList);
         }
-        employeeInfoList = employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
+        empInfoList = employeeUserMapper.mapUsersWithEmployees(empInfoList, usersList);
 
         if (!isEmpty(ids)) {
             List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids,
-                    employeeCriteria.getTenantId());
-            employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
+                    empCriteria.getTenantId());
+            employeeHelper.mapDocumentsWithEmployees(empInfoList, employeeDocuments);
         }
 
-        return employeeInfoList;
+        return empInfoList;
+    }
+
+    public Map<String, Object> getPaginatedEmployees(EmployeeCriteria empCriteria, RequestInfo requestInfo)
+            throws CloneNotSupportedException {
+        List<EmployeeInfo> employeeInfos = getEmployees(empCriteria, requestInfo);
+
+        if (isEmpty(employeeInfos))
+            return getResponseForNoRecords(empCriteria.getPageSize(), empCriteria.getPageNumber());
+
+        return getResponseForExistingRecords(empCriteria.getPageSize(), empCriteria.getPageNumber(),
+                employeeInfos.size(), empCriteria, employeeInfos);
+    }
+
+    private Map<String,Object> getResponseForExistingRecords(Integer pageSize, Integer pageNumber, Integer recordsFetched,
+                                                             EmployeeCriteria empCriteria, List<EmployeeInfo> empInfoList) {
+        pageSize = isEmpty(pageSize) ? 0 : pageSize;
+        pageNumber = isEmpty(pageNumber) ? 0 : pageNumber;
+
+        Integer totalDBRecords = employeeRepository.getTotalDBRecords(empCriteria);
+        Integer totalpages = (int) Math.ceil((double) totalDBRecords / pageSize);
+
+        System.err.println("totalResults : " + recordsFetched + " totalPages : " + totalpages + " currentPage : " + pageNumber
+                + " pageNumber : " + pageNumber + " pageSize : " + pageSize);
+        Pagination page = Pagination.builder().totalResults(recordsFetched).totalPages(totalpages).currentPage(pageNumber)
+                .pageNumber(pageNumber).pageSize(pageSize).build();
+
+        return new LinkedHashMap<String, Object>() {{
+            put("Employee", empInfoList);
+            put("Page", page);
+        }};
+    }
+
+    private Map<String,Object> getResponseForNoRecords(Integer pageSize, Integer pageNumber) {
+        Pagination page = Pagination.builder().totalResults(0).totalPages(0).currentPage(0)
+                .pageNumber(pageNumber).pageSize(pageSize).build();
+        return new LinkedHashMap<String, Object>() {{
+            put("Employee", Collections.EMPTY_LIST);
+            put("Page", page);
+        }};
     }
 
     public Employee getEmployee(Long employeeId, String tenantId, RequestInfo requestInfo) {

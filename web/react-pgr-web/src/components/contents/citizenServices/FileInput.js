@@ -13,6 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import ActionQueryBuilder from 'material-ui/svg-icons/action/query-builder';
 import {blue500, yellow600} from 'material-ui/styles/colors';
+const constants = require('../../common/constants');
 
 const styles={
   iconStyle:{
@@ -59,7 +60,7 @@ class FileInput extends Component{
          return;
 
       //validate file input
-      let validationResult = validate_fileupload(files, []);
+      let validationResult = validate_fileupload(files, this.props.fileFormats);
       if(typeof validationResult === "string" || !validationResult){
           if(this.props.dialogOpener)
             this.props.dialogOpener(true, validationResult);
@@ -162,17 +163,18 @@ class FileInput extends Component{
             <div>
               <div className="file-header">
                 <div className="name">{translate(this.props.name)} {this.props.isRequired ? "*":""} {this.props.error ? <span className="errorMsg"><br/>{this.props.error}</span> : null}</div>
-                {!this.props.files || this.props.files.length > 0 ? (
-                  <div>
-                    {files}
-                  </div>
-                ): (
+                {!this.props.files || this.props.files.length === 0 ? (
                   <div>
                     <FileAttachment style={styles.iconStyle} />
                     <span>No Attachments</span>
                   </div>
-                )}
+                ):null}
               </div>
+              {this.props.files && this.props.files.length > 0 ? (
+                <div>
+                  {files}
+                </div>
+              ):null}
             </div>
 
            { !this.props.files || this.props.files.length == 0 || this.props.isMultipleFile ? (
@@ -188,7 +190,8 @@ class FileInput extends Component{
 FileInput.defaultProps = {
   isMultipleFile: false,
   isRequired:false,
-  error:''
+  error:'',
+  fileFormats : constants.COMMON_FILE_FORMATS_ALLOWED
 };
 
 export default FileInput;

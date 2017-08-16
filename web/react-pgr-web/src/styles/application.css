@@ -820,6 +820,8 @@ table thead th {
  	 padding: 5px 5px 10px 5px;
    background: #fcfcfc;
    border: dashed 2px #bcbcbc;
+	 margin-bottom: 16px;
+	 margin-top:10px;
 }
 
 .file-input-container.error{
@@ -890,7 +892,7 @@ span.errorMsg{
 
 .radio-group {
 	margin-top:10px;
-	margin-bottom: 5px;
+	margin-bottom: 16px;
 }
 
 .radio-group .field-title{

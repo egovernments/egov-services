@@ -490,7 +490,7 @@ class Dashboard extends Component {
               </div>
             </SwipeableViews>
           </div>:  <Card className="uiCard">
-              <CardHeader title={< div style = {styles.headerStyle} >My Tasks< /div>} />
+              <CardHeader title={< div style = {styles.headerStyle} >{translate("deshboard.title")}< /div>} />
 				<CardText>
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>

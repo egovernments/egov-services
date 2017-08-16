@@ -110,10 +110,13 @@ public class TradeLicenseService {
 				}
 				// check unique constraint
 				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
-			} else {
-
 			}
-
+			
+			if(tradeLicense.getAgreementNo() != null){
+			
+				tradeLicenseRepository.validateUniqueAgreeMentNumber(tradeLicense);
+			}
+			
 			if (propertiesManager.getPtisValidation()) {
 				
 				if (tradeLicense.getPropertyAssesmentNo() == null){

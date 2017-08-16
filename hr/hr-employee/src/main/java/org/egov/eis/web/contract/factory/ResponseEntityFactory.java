@@ -38,23 +38,42 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.tradelicense.persistence.util;
+package org.egov.eis.web.contract.factory;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.springframework.stereotype.Service;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
-@Service
-public class Utils {
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    private final DateTimeFormatter FORMAT_DATE_TO_YEAR = DateTimeFormat.forPattern("yyyy");
+@Component
+public class ResponseEntityFactory {
 
-    public String currentDateToYearFormat() {
-        return toYearFormat(new LocalDate());
-    }
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
-    private String toYearFormat(final LocalDate date) {
-        return FORMAT_DATE_TO_YEAR.print(date);
-    }
+	/**
+	 * Populate EmployeeResponse object & returns ResponseEntity of type
+	 * EmployeeResponse containing ResponseInfo & Employee objects
+	 *
+	 * @param requestMap 	: Map of String keys & Object values.
+	 *                         It should contain 2 values: Page along with Actual Object eg. Employee or Nominee etc.
+	 * @param requestInfo 	: Required to create ResponseInfo
+	 * @return ResponseEntity<?>
+	 */
+	public ResponseEntity<?> getSuccessResponse(Map<String, Object> requestMap, RequestInfo requestInfo) {
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("ResponseInfo", responseInfo);
+		requestMap.forEach(response::put);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 }

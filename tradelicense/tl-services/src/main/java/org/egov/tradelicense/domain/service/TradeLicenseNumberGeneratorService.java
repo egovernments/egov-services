@@ -1,5 +1,7 @@
 package org.egov.tradelicense.domain.service;
 
+import org.egov.tl.commons.web.contract.RequestInfo;
+
 /**
  * Generator class for Trade License Number
  * 
@@ -12,5 +14,5 @@ public interface TradeLicenseNumberGeneratorService {
      * 
      * @return generated number
      */
-    public String generate();
+    public String generate(final String tenantId, final RequestInfo requestInfo);
 }

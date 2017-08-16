@@ -27,6 +27,12 @@ public class ServiceDefinitionController {
 		return new ServiceDefinitionResponse(null, request.getServiceDefinition());
 	}
 
+	@PostMapping("/v1/_update")
+	public ServiceDefinitionResponse update(@RequestBody ServiceDefinitionRequest request){
+		serviceDefinitionService.update(request.toDomain(), request);
+		return new ServiceDefinitionResponse(null, request.getServiceDefinition());
+	}
+
 	@PostMapping("/v1/_search")
 	public List<ServiceDefinition> search(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
 			@RequestParam(value = "serviceCode", required = false) String serviceCode,

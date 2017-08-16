@@ -12,7 +12,6 @@ import _ from "lodash";
 import AutoComplete from 'material-ui/AutoComplete';
 import Checkbox from 'material-ui/Checkbox';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-const constants = require('constants');
 
 const styles = {
   checkbox: {
@@ -74,7 +73,7 @@ export default class Fields extends Component{
                   {/*this.props.error ? (<span className="errorMsg">{this.props.error}</span>) : null*/}
                   <div className="radio-group">
                     <div className="field-title">
-                      {obj.description}
+                      {obj.description}{obj.required?" *":""}
                       {this.props.error ? (<div><span className="errorMsg">{this.props.error}</span></div>) : null}
                     </div>
                     <RadioButtonGroup name={obj.code} defaultSelected={this.props.value} className="row" onChange={(e, value)=> {this.props.handler(value, obj.code, obj.required, '');}}>
@@ -330,13 +329,14 @@ class CustomSelectField extends Component{
     super();
     this.state={
       attribValues:[],
-      loadingText:translate(constants.LABEL_LOADING),
+      loadingText:"",
       isLoading:true
     }
   }
 
   componentWillMount(){
     this.renderAttributes(this.props.obj);
+    this.setState({loadingText:translate("csv.lbl.loading")});
   }
 
   shouldComponentUpdate(nextProps, nextState){

@@ -381,7 +381,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/propertytype-usagetype/_search",
+			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/propertytype-usagetype/_search?tenantId=default",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},

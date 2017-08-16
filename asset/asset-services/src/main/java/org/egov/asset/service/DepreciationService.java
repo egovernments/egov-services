@@ -139,19 +139,19 @@ public class DepreciationService {
             final List<AssetCurrentValue> assetCurrentValues, final HttpHeaders headers) {
 
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
+        final String tenantId = depreciationCriteria.getTenantId();
         final List<CalculationAssetDetails> calculationAssetDetailList = depreciationRepository
                 .getCalculationAssetDetails(depreciationCriteria);
         final Map<Long, CalculationCurrentValue> calculationCurrentValues = depreciationRepository
                 .getCalculationCurrentvalue(depreciationCriteria).stream()
                 .collect(Collectors.toMap(CalculationCurrentValue::getAssetId, Function.identity()));
-        final Map<Long, BigDecimal> depreciationSumMap = depreciationRepository
-                .getdepreciationSum(depreciationCriteria.getTenantId());
+        final Map<Long, BigDecimal> depreciationSumMap = depreciationRepository.getdepreciationSum(tenantId);
 
         assetDepreciator.depreciateAsset(depreciationRequest, calculationAssetDetailList, calculationCurrentValues,
                 depreciationSumMap, assetCurrentValues, depreciationDetailsMap);
 
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                depreciationCriteria.getTenantId())) {
+                tenantId)) {
             log.info("Commencing voucher generation for depreciation");
             final Map<String, List<CalculationAssetDetails>> voucherMap = new HashMap<>();
             log.debug("Calculation Asset Details ::" + calculationAssetDetailList);
@@ -174,8 +174,6 @@ public class DepreciationService {
                 BigDecimal amt = BigDecimal.ZERO;
                 final List<CalculationAssetDetails> assetDetails = entry.getValue();
                 final CalculationAssetDetails assetDetail = assetDetails.get(0);
-                final Long depExpenxeAcc = assetDetail.getDepreciationExpenseAccount();
-                final Long accumulatedDepAcc = assetDetail.getAccumulatedDepreciationAccount();
 
                 for (final CalculationAssetDetails calculationAssetDetail : assetDetails) {
                     final DepreciationDetail depreciationDetail = depreciationDetailsMap
@@ -189,8 +187,9 @@ public class DepreciationService {
                 }
 
                 if (BigDecimal.ZERO.compareTo(amt) != 0)
-                    createVoucherForDepreciation(assetDetail, depreciationRequest.getRequestInfo(), accumulatedDepAcc,
-                            depExpenxeAcc, amt, depreciationCriteria.getTenantId(), headers);
+                    createVoucherForDepreciation(assetDetail, depreciationRequest.getRequestInfo(),
+                            assetDetail.getAccumulatedDepreciationAccount(),
+                            assetDetail.getDepreciationExpenseAccount(), amt, tenantId, headers);
 
             }
         }
@@ -251,6 +250,7 @@ public class DepreciationService {
         final String depreciationVoucherParams = assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERPARAMS, tenantId);
 
+        log.debug("Depreciation Voucher Parameters :: " + depreciationVoucherParams);
         final TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
         };
 

@@ -773,7 +773,9 @@ var localization_EN_Data = {
     "employee.error.message.joinDate.regDate": "Joining Date must be before Resignation Date.",
     "employee.fields.isUserActive": "Is User Active",
     "employee.Employee.fields.dateOfBirth": "Date Of Birth",
-    "ui.framework.submit": "Submit"
+    "ui.framework.submit": "Submit",
+    "ui.login.call": "Call",
+    "ui.login.registerGrievance": "to register your grievance"
 };
 
 var localization_MR_Data = {
@@ -1574,7 +1576,9 @@ var localization_MR_Data = {
     "employee.error.message.joinDate.regDate": "Joining Date must be before Resignation Date.-Marathi",
     "employee.fields.isUserActive": "Is User Active-Marathi",
     "employee.Employee.fields.dateOfBirth": "Date Of Birth-Marathi",
-    "ui.framework.submit": "Submit-Marathi"
+    "ui.framework.submit": "Submit-Marathi",
+    "ui.login.call": "Call-Marathi",
+    "ui.login.registerGrievance": "to register your grievance-Marathi"
 }
 
 export function translate(locale_text) {

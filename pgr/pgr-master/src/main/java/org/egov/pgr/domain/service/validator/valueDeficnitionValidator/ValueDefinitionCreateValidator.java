@@ -7,8 +7,7 @@ import org.egov.pgr.domain.model.ValueDefinition;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ValueDefinitionCreateValidator implements VAlueDefinitionValidator {
-
+public class ValueDefinitionCreateValidator implements ValueDefinitionValidator {
 
 	@Override
 	public boolean canValidate(ValueDefinition valueDefinition) {
@@ -41,27 +40,24 @@ public class ValueDefinitionCreateValidator implements VAlueDefinitionValidator 
 
 	@Override
 	public void validateLength(ValueDefinition valueDefinition) {
-			
-			if(!valueDefinition.isKeyLengthMatch())	
-			{
+
+		if (!valueDefinition.isKeyLengthMatch()) {
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "valueDefinition Vaalidator.3");
 			error.put("field", "valueDefinition.Key");
 			error.put("message", "key should be >0 and <=50");
 			throw new PGRMasterException(error);
-				
-			}
-			
-			if(!valueDefinition.isNameLengthMatch())	
-			{
-				HashMap<String, String> error = new HashMap<>();
-				error.put("code", "valueDefinition Vaalidator.4");
-				error.put("field", "valueDefinition.Name");
-				error.put("message", "Name should be >0 and <=100");
-				throw new PGRMasterException(error);
-				
-			}	}
 
-	
+		}
+
+		if (!valueDefinition.isNameLengthMatch()) {
+			HashMap<String, String> error = new HashMap<>();
+			error.put("code", "valueDefinition Vaalidator.4");
+			error.put("field", "valueDefinition.Name");
+			error.put("message", "Name should be >0 and <=100");
+			throw new PGRMasterException(error);
+
+		}
+	}
 
 }

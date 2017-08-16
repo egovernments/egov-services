@@ -124,6 +124,7 @@ const getHeadByCode = function(object, code) {
 	})
 }
 
+
 class AddDemand extends Component {
 
   constructor(props) {
@@ -144,37 +145,39 @@ class AddDemand extends Component {
 	initForm();
 
 	var getDemands = {
-		upicNumber: 101200000015
+		executionDate: 1301616000
 	}
 
-	Api.commonApiPost('pt-property/properties/_preparedcb', getDemands, {}, false, true).then((res)=>{
+	Api.commonApiPost('/wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate', getDemands, {}, false, true).then((res)=>{
 
 		console.log('search',res);
 
 		 currentThis.setState({
-			 demands: res.Demands
+			 demands: res.DemandDetailBeans
 		 })
+     console.log(this.state.demands);
 
-		res.Demands.map((demand, index)=>{
-			demand.demandDetails.map((item, i)=>{
-				var query = {
-					service:'PT',
-					code:item.taxHeadMasterCode
-				}
-
-				Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
-						setLoadingStatus('hide');
-					 currentThis.setState({
-						 taxHeads:[
-							...currentThis.state.taxHeads,
-							res.TaxHeadMasters[0]
-						 ]
-					 })
-				}).catch((err)=> {
-					console.log(err)
-				})
-			})
-		})
+		// res.Demands.map((demand, index)=>{
+		// 	demand.demandDetails.map((item, i)=>{
+		// 		var query = {
+		// 			service:'PT',
+		// 			code:item.taxHeadMasterCode
+		// 		}
+    //
+		// 		Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
+		// 				setLoadingStatus('hide');
+    //         console.log("res.TaxHeadMasters[0]",res.TaxHeadMasters[0]);
+		// 			 currentThis.setState({
+		// 				 taxHeads:[
+		// 					...currentThis.state.taxHeads,
+		// 					res.TaxHeadMasters[0]
+		// 				 ]
+		// 			 })
+		// 		}).catch((err)=> {
+		// 			console.log(err)
+		// 		})
+		// 	})
+		// })
 
 	}).catch((err)=> {
 		console.log(err)
@@ -210,11 +213,6 @@ class AddDemand extends Component {
 
   }
 
-validateCollection = (demandValue, collectionValue) => {
-	console.log(demandValue, collectionValue);
-}
-
-
 
   render() {
 
@@ -245,7 +243,7 @@ validateCollection = (demandValue, collectionValue) => {
 	  removeDepandencyFields
     } = this.props;
 
-    let {search, handleDepartment, getTaxHead, validateCollection} = this;
+    let {search, handleDepartment, getTaxHead} = this;
 
     let cThis = this;
 
@@ -254,7 +252,7 @@ validateCollection = (demandValue, collectionValue) => {
 	const showfields = () => {
 
 		if(this.state.demands.length !=0){
-
+      console.log("demand",this.state.demands);
 		return this.state.demands.map((demand, index)=> {
 
 			return(
@@ -280,9 +278,7 @@ validateCollection = (demandValue, collectionValue) => {
 										<TextField  className="fullWidth"
 										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
 										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
-										  onChange={(e) => {
-											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
-										  }}
+										  onChange={(e) => {handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')}}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
@@ -298,15 +294,7 @@ validateCollection = (demandValue, collectionValue) => {
 								<TextField  className="fullWidth"
 								  floatingLabelText={<span style={{fontSize:'14px'}}>Collection</span>}
 								  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
-								  onChange={(e) => {
-									  if(addDemand['demands'+index]['demand'+i]) {
-										  validateCollection(addDemand['demands'+index]['demand'+i], e.target.value)
-									  } else {
-										  validateCollection('', e.target.value);
-									  }
-
-									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
-								  }}
+								  onChange={(e) => {handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')}}
 								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 								  underlineStyle={styles.underlineStyle}
 								  underlineFocusStyle={styles.underlineFocusStyle}
@@ -323,11 +311,15 @@ validateCollection = (demandValue, collectionValue) => {
 
 	const showSubHeading = () => {
 		if(this.state.demands.length !=0){
+      console.log("this.state.demands",this.state.demands);
 			return this.state.demands[0].demandDetails.map((detail, index)=>{
+        console.log("detail",detail);
 			if((this.state.demands[0].demandDetails.length-1) == index){
 				return (
+
 				<td key={index} className="lastTdBorder">{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
-					if(e.code == detail.taxHeadMasterCode){
+          console.log("cThis.state.taxHeads", cThis.state.taxHeads);
+          if(e.code == detail.taxHeadMasterCode){
 						return(<span key={i}>{e.name ? e.name : 'NA'}</span>);
 					}
 				})}</td>)

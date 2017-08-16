@@ -64,6 +64,8 @@ import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/d
 import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
 import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
 
+import AddDemandWc from './components/contents/wc/master/addDemand';
+
 //Property tax
 import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
 import Test from './components/contents/propertyTax/master/Test';
@@ -178,6 +180,8 @@ const Main = () => {
         <Route exact path={base+'/wc/documentType/view'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/edit'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
+
+        <Route exact path={base+'/wc/addDemand'} component={AddDemandWc}/>
 
         <Route exact path={base+'/wc/createDocumentTypeApplicationType'} component={DocumentTypeApplicationTypeCreate}/>
        <Route exact name="createDocumentTypeApplicationType" path={base+'/wc/createDocumentTypeApplicationType/:id?'} component={DocumentTypeApplicationTypeCreate}/>

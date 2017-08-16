@@ -329,13 +329,32 @@ var dat = {
             "name": "numberOfPersons",
             "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
-            "pattern": "",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "depedants":[{
+                "jsonPath":"Connection.numberOfFamily",
+                "type":"textField",
+                "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                "rg":"",
+                "isRequired": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }]
+          },
+          {
+            "name": "numberOfFamily",
+            "jsonPath": "Connection.numberOfFamily",
+            "label": "wc.create.numberOfFamily",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
         ]
       },
       {
@@ -741,12 +760,31 @@ var dat = {
           },
           {
             "name": "numberOfPersons",
-            "jsonPath": "Connection[0].numberOfPersons",
+            "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
-            "pattern": "",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "depedants":[{
+                "jsonPath":"Connection.numberOfFamily",
+                "type":"textField",
+                "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                "rg":"",
+                "isRequired": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }]
+          },
+          {
+            "name": "numberOfFamily",
+            "jsonPath": "Connection.numberOfFamily",
+            "label": "wc.create.numberOfFamily",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }

@@ -941,10 +941,10 @@ public class ValidatorUtils {
     }
 
     public List<ErrorResponse> validateStorageReservoirRequest(final StorageReservoirRequest storageReservoirRequest,
-            final String mode) {
+            final Boolean isUpdate) {
         final ErrorResponse errorResponse = new ErrorResponse();
         final List<ErrorResponse> errorResponseList = new ArrayList<>();
-        final Error error = getError(storageReservoirRequest, mode);
+        final Error error = getError(storageReservoirRequest, isUpdate);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponseList.add(errorResponse);
@@ -952,24 +952,24 @@ public class ValidatorUtils {
 
     }
 
-    private Error getError(final StorageReservoirRequest storageReservoirRequest, final String mode) {
-        final List<ErrorField> errorFiled = getErrorFields(storageReservoirRequest, mode);
+    private Error getError(final StorageReservoirRequest storageReservoirRequest, final Boolean isUpdate) {
+        final List<ErrorField> errorFiled = getErrorFields(storageReservoirRequest, isUpdate);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_STORAGE_RESERVOIR_REQUEST_MESSAGE).errorFields(errorFiled).build();
     }
 
-    private List<ErrorField> getErrorFields(final StorageReservoirRequest storageReservoirRequest, final String mode) {
+    private List<ErrorField> getErrorFields(final StorageReservoirRequest storageReservoirRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
         for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir()) {
-            addStorageReservoirValidationErrors(storageReservoir, errorFields, mode);
+            addStorageReservoirValidationErrors(storageReservoir, errorFields, isUpdate);
             addTenantIdValidationErrors(storageReservoir.getTenantId(), errorFields);
         }
         return errorFields;
     }
 
     private void addStorageReservoirValidationErrors(final StorageReservoir storageReservoir,
-            final List<ErrorField> errorFields, final String mode) {
-        if (StringUtils.isNotBlank(mode))
+            final List<ErrorField> errorFields, final Boolean isUpdate) {
+        if (isUpdate)
             if (storageReservoir.getCode() == null || storageReservoir.getCode().isEmpty()) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
@@ -1026,10 +1026,10 @@ public class ValidatorUtils {
     }
 
     public List<ErrorResponse> validateTreatmentPlantRequest(final TreatmentPlantRequest treatmentPlantRequest,
-            final String mode) {
+            final Boolean isUpdate) {
         final ErrorResponse errorResponse = new ErrorResponse();
         final List<ErrorResponse> errorResponseList = new ArrayList<>();
-        final Error error = getError(treatmentPlantRequest, mode);
+        final Error error = getError(treatmentPlantRequest, isUpdate);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponseList.add(errorResponse);
@@ -1037,24 +1037,24 @@ public class ValidatorUtils {
 
     }
 
-    private Error getError(final TreatmentPlantRequest treatmentPlantRequest, final String mode) {
-        final List<ErrorField> errorFiled = getErrorFields(treatmentPlantRequest, mode);
+    private Error getError(final TreatmentPlantRequest treatmentPlantRequest, final Boolean isUpdate) {
+        final List<ErrorField> errorFiled = getErrorFields(treatmentPlantRequest, isUpdate);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_TREATMENT_PLANT_REQUEST_MESSAGE).errorFields(errorFiled).build();
     }
 
-    private List<ErrorField> getErrorFields(final TreatmentPlantRequest treatmentPlantRequest, final String mode) {
+    private List<ErrorField> getErrorFields(final TreatmentPlantRequest treatmentPlantRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
         for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants()) {
-            addTreatmentPlantValidationErrors(treatmentPlant, errorFields, mode);
+            addTreatmentPlantValidationErrors(treatmentPlant, errorFields, isUpdate);
             addTenantIdValidationErrors(treatmentPlant.getTenantId(), errorFields);
         }
         return errorFields;
     }
 
     private void addTreatmentPlantValidationErrors(final TreatmentPlant treatmentPlant,
-            final List<ErrorField> errorFields, final String mode) {
-        if (StringUtils.isNotBlank(mode))
+            final List<ErrorField> errorFields, final Boolean isUpdate) {
+        if (isUpdate)
             if (treatmentPlant.getCode() == null || treatmentPlant.getCode().isEmpty()) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)

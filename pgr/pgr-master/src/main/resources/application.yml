@@ -952,10 +952,6 @@ ReportDefinitions:
     label: reports.pgr.status.beyondsla
     type: number
     source: seva
-  - name: issla
-    label: reports.pgr.status.issla
-    type: string
-    source: seva
   searchParams:
   - name: fromDate
     label: reports.pgr.datefrom
@@ -986,14 +982,7 @@ ReportDefinitions:
     precision) THEN 1 WHEN (cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,
     'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
     (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double
-    precision) THEN 1 ELSE 0 END) AS beyondsla, CASE WHEN bool_or((cs.status::text
-    = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text,
-    'WITHDRAWN'::character varying::text])) AND (cs.lastmodifieddate - cs.createddate)
-    < ('01:00:00'::interval * ctype.slahours::double precision)) THEN 'Yes'::text
-    WHEN bool_or((cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,
-    'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
-    (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double
-    precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa,
+    precision) THEN 1 ELSE 0 END) AS beyondsla FROM submission cs,submission_attribute sa,
     eg_boundary boundary, egpgr_complainttype ctype WHERE cs.crn = sa.crn and boundary.id = sa.code::integer
     and cs.servicecode = ctype.code and cs.createddate >= $fromDate and cs.createddate
     <= $toDate and sa.key = 'systemLocationId' GROUP BY boundary.name;
@@ -1127,10 +1116,6 @@ ReportDefinitions:
     label: reports.pgr.status.beyondsla
     type: number
     source: seva
-  - name: issla
-    label: reports.pgr.status.issla
-    type: string
-    source: seva
   searchParams:
   - name: fromDate
     label: reports.pgr.datefrom
@@ -1165,14 +1150,7 @@ ReportDefinitions:
     precision) THEN 1 WHEN (cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,
     'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
     (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double
-    precision) THEN 1 ELSE 0 END) AS beyondsla, CASE WHEN bool_or((cs.status::text
-    = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text,
-    'WITHDRAWN'::character varying::text])) AND (cs.lastmodifieddate - cs.createddate)
-    < ('01:00:00'::interval * ctype.slahours::double precision)) THEN 'Yes'::text
-    WHEN bool_or((cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,
-    'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
-    (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double
-    precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa,
+    precision) THEN 1 ELSE 0 END) AS beyondsla FROM submission cs,submission_attribute sa,
     eg_boundary boundary, egpgr_complainttype ctype,eg_department dept WHERE 
     cs.crn = sa.crn and boundary.id = sa.code::integer
      and cs.servicecode = ctype.code and cs.department=dept.id and cs.createddate >= $fromDate and cs.createddate
@@ -1218,10 +1196,6 @@ ReportDefinitions:
     label: reports.pgr.status.beyondsla
     type: number
     source: seva
-  - name: issla
-    label: reports.pgr.status.issla
-    type: string
-    source: seva
   searchParams:
   - name: fromDate
     label: reports.pgr.datefrom
@@ -1260,14 +1234,7 @@ ReportDefinitions:
     precision) THEN 1 WHEN (cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,
     'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
     (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double
-    precision) THEN 1 ELSE 0 END) AS beyondsla, CASE WHEN bool_or((cs.status::text
-    = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text,
-    'WITHDRAWN'::character varying::text])) AND (cs.lastmodifieddate - cs.createddate)
-    < ('01:00:00'::interval * ctype.slahours::double precision)) THEN 'Yes'::text
-    WHEN bool_or((cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,
-    'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
-    (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double
-    precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa,
+    precision) THEN 1 ELSE 0 END) AS beyondsla FROM submission cs,submission_attribute sa,
     eg_boundary boundary, egpgr_complainttype ctype,eg_department dept WHERE 
     cs.crn = sa.crn and boundary.id = sa.code::integer
      and cs.servicecode = ctype.code and cs.department=dept.id and cs.createddate >= $fromDate and cs.createddate
@@ -1312,10 +1279,6 @@ ReportDefinitions:
   - name: beyondsla
     label: reports.pgr.status.beyondsla
     type: number
-    source: seva
-  - name: issla
-    label: reports.pgr.status.issla
-    type: string
     source: seva
   searchParams:
   - name: fromDate
@@ -1364,14 +1327,7 @@ ReportDefinitions:
     precision) THEN 1 WHEN (cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,
     'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
     (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double
-    precision) THEN 1 ELSE 0 END) AS beyondsla, CASE WHEN bool_or((cs.status::text
-    = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text,
-    'WITHDRAWN'::character varying::text])) AND (cs.lastmodifieddate - cs.createddate)
-    < ('01:00:00'::interval * ctype.slahours::double precision)) THEN 'Yes'::text
-    WHEN bool_or((cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,
-    'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
-    (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double
-    precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa,
+    precision) THEN 1 ELSE 0 END) AS beyondsla FROM submission cs,submission_attribute sa,
     eg_boundary boundary, egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass, eg_user us WHERE 
     cs.crn = sa.crn and boundary.id = sa.code::integer and
     cs.servicecode = ctype.code and cs.department=dept.id and cs.positionid = pos.id and cs.createddate >= $fromDate and cs.createddate
@@ -1678,7 +1634,8 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://COMPLETED:COMPLETED,PENDING:PENDING,REJECTED:REJECTED,REGISTERED:REGISTERED'
+        pattern: 'list://COMPLETED:COMPLETED,WITHDRAWN,PENDING:REGISTERED,FORWARDED,PROCESSING,REOPENED,REJECTED:REJECTED'
+
     source: seva
   query: SELECT boundary.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
     - cs.createddate) / 86400::double precision) > 30::double precision THEN 1 ELSE

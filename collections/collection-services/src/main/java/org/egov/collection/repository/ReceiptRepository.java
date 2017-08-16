@@ -293,6 +293,8 @@ public class ReceiptRepository {
 	}
 
 	public WorkflowDetailsRequest updateReceipt(WorkflowDetailsRequest workFlowDetailsRequest) {
+		logger.info("workFlowDetailsRequest at repo: "+workFlowDetailsRequest.toString());
+		
 		String updateQuery = receiptDetailQueryBuilder.getQueryForUpdate(
 				workFlowDetailsRequest.getStateId(), workFlowDetailsRequest.getStatus(), 
 				workFlowDetailsRequest.getReceiptHeaderId(), workFlowDetailsRequest.getTenantId());

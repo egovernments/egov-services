@@ -295,6 +295,9 @@ public class ReceiptService {
 						return receipt;
 					}
 					startWokflow(requestInfo, tenantId, receiptHeaderId);
+				}else{
+					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+							CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 				}
 		}
 		}
@@ -471,7 +474,7 @@ public class ReceiptService {
 	}
 
 	public void updateReceipt(WorkflowDetailsRequest workflowDetails){
-		if(workflowDetails.getStatus().equals("Receipt Created")){
+		if(workflowDetails.getStatus().equals("Created")){
 			workflowDetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 
 			receiptRepository.updateReceipt(workflowDetails);

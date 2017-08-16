@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 
 import OwnerDetails from './propertyTax/OwnerDetails';
@@ -640,7 +641,7 @@ createActivate = () => {
 				  <div style={{textAlign:'center'}} >
 				
 						<br/>
-						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  primary={true} onClick={()=> {
+						<RaisedButton type="button" label={translate('pt.create.button')} disabled={this.createActivate()}  primary={true} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>

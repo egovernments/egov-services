@@ -212,7 +212,7 @@ public class DemandService {
 				}
 					for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
 
-						if (accountDetail.getAccountDescription() != null && accountDetail.getCreditAmount() == null) {
+						if (accountDetail.getAccountDescription() != null && accountDetail.getCreditAmount() != null) {
 							String[] array = accountDetail.getAccountDescription().split("-");
 							log.info("the string array of values--------" + array.toString());
 
@@ -231,7 +231,7 @@ public class DemandService {
 
 									BigDecimal collectedAmount = accountDetail.getCreditAmount();
 									log.info("the credit amt :" + collectedAmount);
-									demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
+									//demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
 									demandDetail.setCollectionAmount(
 											demandDetail.getCollectionAmount().add(collectedAmount));
 									log.info("the setTaxAmount ::: " + demandDetail.getTaxAmount());

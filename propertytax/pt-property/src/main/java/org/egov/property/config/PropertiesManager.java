@@ -759,7 +759,7 @@ public class PropertiesManager {
 		return environment.getProperty("invalid.property.parent.code");
 	}		
 	
-	public String getWorkflowBusinessService() {
+	public String getBusinessService() {
 		return environment.getProperty("business.service");
 	}		
 	
@@ -787,7 +787,4 @@ public class PropertiesManager {
 		return environment.getProperty("invalid.input.unit.age");
 	}
 
-	public String getDemandBusinessService() {
-		return environment.getProperty("businessService");
-	}
 }

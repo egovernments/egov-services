@@ -69,7 +69,7 @@ public class PropertyServiceImpl implements PropertyService {
     @Autowired
     PersisterService persisterService;
 
-    private static final Logger logger = LoggerFactory.getLogger(UpicNoGeneration.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
 
     @Autowired
     DemandRepository demandRepository;
@@ -955,21 +955,25 @@ public class PropertyServiceImpl implements PropertyService {
     private List<Demand> prepareDemands(String tenantId, String upicNumber, Property property,
                                         TaxHeadMasterResponse taxHeadResponse, TaxPeriod taxPeriod,
                                         SimpleDateFormat dateFormat) {
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
         List<Demand> newDemandList = new ArrayList<>();
         Demand newDemand;
         List<DemandDetail> demandDetailsList;
         DemandDetail demandDetail;
         newDemand = new Demand();
         newDemand.setTenantId(tenantId);
-        newDemand.setBusinessService(propertiesManager.getDemandBusinessService());
+        newDemand.setBusinessService(propertiesManager.getBusinessService());
         newDemand.setConsumerType(property.getPropertyDetail().getPropertyType());
         newDemand.setConsumerCode(upicNumber);
         newDemand.setMinimumAmountPayable(BigDecimal.ONE);
         demandDetailsList = new ArrayList<>();
         for(TaxHeadMaster taxHeadMaster : taxHeadResponse.getTaxHeadMasters()){
-            demandDetail = new DemandDetail();
-            demandDetail.setTaxHeadMasterCode(taxHeadMaster.getCode());
-            demandDetailsList.add(demandDetail);
+            if(!"ADVANCE".equalsIgnoreCase(taxHeadMaster.getCode())){
+                demandDetail = new DemandDetail();
+                demandDetail.setTenantId(tenantId);
+                demandDetail.setTaxHeadMasterCode(taxHeadMaster.getCode());
+                demandDetailsList.add(demandDetail);
+            }
         }
         newDemand.setDemandDetails(demandDetailsList);
         logger.info("Demand fromDate = " + taxPeriod.getFromDate() + " \n toDate = " + taxPeriod.getToDate());
@@ -985,7 +989,6 @@ public class PropertyServiceImpl implements PropertyService {
         }
         Owner owner = new Owner();
         owner.setId(property.getOwners().get(0).getId());
-        owner.setId(1l);
         newDemand.setOwner(owner);
         newDemandList.add(newDemand);
         return newDemandList;

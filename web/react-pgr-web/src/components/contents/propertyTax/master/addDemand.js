@@ -124,7 +124,6 @@ const getHeadByCode = function(object, code) {
 	})
 }
 
-
 class AddDemand extends Component {
 
   constructor(props) {
@@ -211,6 +210,10 @@ class AddDemand extends Component {
 	  
   }
   
+validateCollection = (demandValue, collectionValue) => {
+	console.log(demandValue, collectionValue);
+}  
+  
 
   render() {
 	  
@@ -241,7 +244,7 @@ class AddDemand extends Component {
 	  removeDepandencyFields
     } = this.props;
 
-    let {search, handleDepartment, getTaxHead} = this;
+    let {search, handleDepartment, getTaxHead, validateCollection} = this;
 	
     let cThis = this;
 	
@@ -276,7 +279,9 @@ class AddDemand extends Component {
 										<TextField  className="fullWidth"
 										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
 										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
-										  onChange={(e) => {handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')}}
+										  onChange={(e) => {
+											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
+										  }}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
@@ -292,7 +297,15 @@ class AddDemand extends Component {
 								<TextField  className="fullWidth"
 								  floatingLabelText={<span style={{fontSize:'14px'}}>Collection</span>}
 								  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
-								  onChange={(e) => {handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')}}
+								  onChange={(e) => {
+									  if(addDemand['demands'+index]['demand'+i]) {
+										  validateCollection(addDemand['demands'+index]['demand'+i], e.target.value)
+									  } else {
+										  validateCollection('', e.target.value);
+									  }
+									  
+									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
+								  }}
 								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 								  underlineStyle={styles.underlineStyle}
 								  underlineFocusStyle={styles.underlineFocusStyle}

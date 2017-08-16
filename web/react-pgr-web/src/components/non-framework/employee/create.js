@@ -1006,17 +1006,17 @@ class Employee extends Component {
           <form>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label>Is Primary? *</label>
-                <RadioButtonGroup name={translate("employee.Assignment.fields.prim")} valueSelected={subObject.assignments.isPrimary} onChange={(e, value) => {
+                <label>{translate("employee.Assignment.fields.primary")+ "*"} </label>
+                <RadioButtonGroup name={translate("employee.Assignment.fields.primary")} valueSelected={subObject.assignments.isPrimary} onChange={(e, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "isPrimary")
                 }}>
                   <RadioButton
                     value={true}
-                    label="Yes"
+                    label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
                   />
                   <RadioButton
                     value={false}
-                    label="No"
+                    label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
                   />
                 </RadioButtonGroup>
               </div>
@@ -1083,7 +1083,7 @@ class Employee extends Component {
                 <AutoComplete
                   errorText = {self.state.errorText["assignments.position"]}
                   fullWidth={true}
-                  floatingLabelText={"Position *"}
+                  floatingLabelText={translate("employee.Assignment.fields.position")+"*"}
                   filter={AutoComplete.caseInsensitiveFilter}
                   dataSource={self.state.positionList}
                   dataSourceConfig={this.state.positionListConfig}
@@ -1150,17 +1150,17 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label>If HOD? *</label>
+                <label>{translate("employee.Assignment.fields.hod")+"? *"}</label>
                 <RadioButtonGroup name={translate("employee.Assignment.fields.hod")} valueSelected={subObject.assignments.hod} onChange={(e, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "hod")
                 }}>
                   <RadioButton
                     value={true}
-                    label="Yes"
+                    label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
                   />
                   <RadioButton
                     value={false}
-                    label="No"
+                    label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
                   />
                 </RadioButtonGroup>
               </div>
@@ -1185,7 +1185,7 @@ class Employee extends Component {
                 }}/>
               </div>
               <div className="col-md-6 col-xs-12">
-                <label style={{marginTop:"20px"}}>Document</label>
+                <label style={{marginTop:"20px"}}>{translate("employee.Assignment.fields.documents")}</label>
                 <input type="file"/>
               </div>
             </div>
@@ -1510,21 +1510,21 @@ class Employee extends Component {
   getModalTitle = () => {
     switch(this.state.modal) {
       case 'assignment':
-        return "Assignments Grade";
+        return translate("employee.field.assignments");
       case 'jurisdiction':
-        return "Jurisdiction";
+        return translate("employee.Employee.fields.jurisdictions");
       case 'serviceDet':
-        return "Service History";
+        return translate("employee.ServiceHistory.title");
       case 'probation':
-        return "Probation";
+        return translate("employee.Probation.title");
       case 'regular':
-        return "Regularisation";
+        return translate("employee.Regularisation.title");
       case 'edu':
-        return "Educational Qualification";
+        return translate("employee.EducationalQualification.title");
       case 'tech':
-        return "Technical Qualification";
+        return translate("employee.TechnicalQualification.title");
       case 'dept':
-        return 'Departmental Test';
+        return translate("employee.DepartmentalTest.title");
     }
   }
 
@@ -1948,12 +1948,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>Employee Group</span></label><br/>
+                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.group")}</span></label><br/>
                                 <label>{getNameById(self.state.groups, Employee.group)}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={"Employee Group"} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelText={translate("employee.Employee.fields.group")} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "group", false, '')
                       	}}>
                             {
@@ -2038,7 +2038,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.fields.isUserActive")}?</span></label><br/>
-                                <label>{Employee.user && [true, "true"].indexOf(Employee.user.active) > -1 ? "Yes" : "No" }</label></span>
+                                <label>{Employee.user && [true, "true"].indexOf(Employee.user.active) > -1 ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2") }</label></span>
                             )
                          :
 
@@ -2212,21 +2212,21 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.physicallyDisabled")}</span></label><br/>
-                                <label>{Employee.physicallyDisabled ? "Yes" : "No"}</label></span>
+                                <label>{translate("employee.Employee.fields.physicallyDisabled") ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</label></span>
                             )
                          :
 
-                        <span><label>Is Physically Handicapped?</label>
+                        <span><label>{translate("employee.Employee.fields.physicallyDisabled")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.physicallyDisabled")} valueSelected={Employee.physicallyDisabled} onChange={(e, value) => {
                       		handleChange({target:{value:value}}, 'physicallyDisabled', false, '')
                       	}}>
           					      <RadioButton
           					        value={true}
-          					        label="Yes"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
           					      />
           					      <RadioButton
           					        value={false}
-          					        label="No"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
           					      />
                 				</RadioButtonGroup></span>
                             }
@@ -2237,21 +2237,21 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.medicalReportProduced")}</span></label><br/>
-                                <label>{Employee.medicalReportProduced ? "Yes" : "No"}</label></span>
+                                <label>{Employee.medicalReportProduced ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</label></span>
                             )
                          :
 
-                        <span><label>Is Medical Report Available?</label>
+                        <span><label>{translate("employee.Employee.fields.medicalReportProduced")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.medicalReportProduced")} valueSelected={Employee.medicalReportProduced} onChange={(e, value) => {
                       		handleChange({target:{value:value}}, 'medicalReportProduced', true, '')
                       	}}>
           					      <RadioButton
           					        value={true}
-          					        label="Yes"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
           					      />
           					      <RadioButton
           					        value={false}
-          					        label="No"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
           					      />
               					</RadioButtonGroup></span>
                         }
@@ -2709,7 +2709,7 @@ class Employee extends Component {
               <td>{getNameById(self.state.departments, val.department)}</td>
               <td>{getNameById(self.state.designations, val.designation)}</td>
               <td>{getNameById(self.state.allPosition, val.position)}</td>
-              <td>{val.isPrimary ? "Yes" : "No"}</td>
+              <td>{val.isPrimary ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</td>
               <td>{getNameById(self.state.funds, val.fund)}</td>
               <td>{getNameById(self.state.functions, val.function)}</td>
               <td>{getNameById(self.state.functionaries, val.functionary)}</td>
@@ -2790,7 +2790,7 @@ class Employee extends Component {
 						<thead>
 							<th>{translate("employee.jurisdiction.fields.boundaryType")}</th>
 							<th>{translate("employee.jurisdiction.fields.boundary")}</th>
-							<th>Action</th>
+							<th>{translate("employee.Assignment.fields.action")}</th>
 						</thead>
 						<tbody>
 							{renderJurisdictionBody()}

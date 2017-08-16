@@ -407,7 +407,7 @@ var localization_EN_Data = {
     "employee.Employee.fields.religion": "Religion",
     "employee.Employee.fields.community": "Community",
     "employee.Employee.fields.category": "Category",
-    "employee.Employee.fields.physicallyDisabled": "Physically Disabled",
+    "employee.Employee.fields.physicallyDisabled": " Is Physically Disabled",
     "employee.Employee.fields.medicalReportProduced": "Medical Report Produced",
     "employee.Employee.fields.languagesKnown": "Languages Known",
     "employee.Employee.fields.maritalStatus": "Marital Status",
@@ -798,7 +798,10 @@ var localization_EN_Data = {
     "employee.Employee.fields.dateOfBirth": "Date Of Birth",
     "ui.framework.submit": "Submit",
     "ui.login.call": "Call",
-    "ui.login.registerGrievance": "to register your grievance"
+    "ui.login.registerGrievance": "to register your grievance",
+    "employee.field.assignments":"Assignments Grade",
+    "employee.Employee.fields.group": "Employee Group",
+    "deshboard.title":"My Tasks"
 };
 
 var localization_MR_Data = {
@@ -1211,8 +1214,8 @@ var localization_MR_Data = {
     "employee.Employee.fields.religion": "Religion-Marathi",
     "employee.Employee.fields.community": "Community-Marathi",
     "employee.Employee.fields.category": "Category-Marathi",
-    "employee.Employee.fields.physicallyDisabled": "Physically Disabled-Marathi",
-    "employee.Employee.fields.medicalReportProduced": "Medical Report Produced-Marathi",
+    "employee.Employee.fields.physicallyDisabled": " Is Physically Disabled-Marathi",
+    "employee.Employee.fields.medicalReportProduced": "Medical Report Available-Marathi",
     "employee.Employee.fields.languagesKnown": "Languages Known-Marathi",
     "employee.Employee.fields.maritalStatus": "Marital Status-Marathi",
     "employee.Employee.fields.passportNo": "Passport No-Marathi",
@@ -1336,6 +1339,9 @@ var localization_MR_Data = {
     "employee.searchEmployee.groups.fields.name": "Employee Name-Marathi",
     "employee.searchEmployee.groups.fields.designation": "Employee Designation-Marathi",
     "employee.searchEmployee.groups.fields.position": "Employee Position-Marathi",
+    "employee.field.assignments":"Assignments Grade-Marathi",
+    "employee.Employee.fields.group": "Employee Group-Marathi",
+    "deshboard.title":"My Tasks-Marathi",
 
 
 

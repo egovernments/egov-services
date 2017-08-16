@@ -50,7 +50,7 @@ public class ServiceTypeController {
         List<org.egov.pgr.domain.model.ServiceType> serviceTypeList = serviceTypeService.search(serviceTypeSearchCriteria);
 
         return serviceTypeList.stream()
-                .map(serviceType -> new ServiceType(serviceType, serviceType.getAttributes()))
+                .map(serviceType -> new ServiceType(serviceType))
                 .collect(Collectors.toList());
     }
 }

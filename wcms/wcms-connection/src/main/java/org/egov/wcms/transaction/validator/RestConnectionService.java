@@ -55,6 +55,9 @@ import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
+import org.egov.wcms.transaction.web.contract.BoundaryRequestInfo;
+import org.egov.wcms.transaction.web.contract.BoundaryRequestInfoWrapper;
+import org.egov.wcms.transaction.web.contract.BoundaryResponse;
 import org.egov.wcms.transaction.web.contract.CategoryResponseInfo;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.FinYearReq;
@@ -220,7 +223,7 @@ public class RestConnectionService {
         StringBuilder url = new StringBuilder();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
                 .append(configurationManager.getSerachSubUsageType())
-                .append("?parent=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
+                .append("?code=").append(waterConnectionRequest.getConnection().getSubUsageType())
                 .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
         final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
@@ -456,6 +459,37 @@ public class RestConnectionService {
         	return demandList.get(0); 
         }
         return null;
+    }
+    
+    public BoundaryResponse getBoundaryNum(final String boundaryType, final String boundaryNum, final String tenantId) {
+        String url = configurationManager.getLocationServiceBasePathTopic()
+                + configurationManager.getLocationServiceBoundarySearchPathTopic();
+        url = url.replace("{boundaryType}", boundaryType);
+        url = url.replace("{boundaryNum}", boundaryNum);
+        url = url.replace("{tenantId}", tenantId);
+        final BoundaryResponse boundary = getBoundary(url);
+        return boundary;
+    }
+
+    public BoundaryResponse getBoundary(final String url) {
+        final BoundaryRequestInfo requestInfo = BoundaryRequestInfo.builder().build();
+        final BoundaryRequestInfoWrapper wrapper = BoundaryRequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<BoundaryRequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final BoundaryResponse boundary = new RestTemplate().postForObject(url.toString(), request,
+                BoundaryResponse.class);
+        return boundary;
+    }
+    
+    public BoundaryResponse getBoundaryName(final String boundaryType, final String[] boundaryNum, final String tenantId) {
+        String url = configurationManager.getLocationServiceBasePathTopic()
+                + configurationManager.getLocationServiceBoundarySearchPathTopic();
+        final BoundaryRequestInfo requestInfo = BoundaryRequestInfo.builder().build();
+        final BoundaryRequestInfoWrapper wrapper = BoundaryRequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<BoundaryRequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final BoundaryResponse boundary = new RestTemplate().postForObject(url.toString(), request,
+                BoundaryResponse.class,boundaryType, boundaryNum,tenantId);
+        return boundary;
+
     }
     
     public List<ErrorResponse> populateErrors() {

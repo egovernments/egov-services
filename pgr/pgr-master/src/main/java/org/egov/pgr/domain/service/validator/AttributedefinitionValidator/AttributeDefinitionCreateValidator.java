@@ -110,7 +110,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 
 			error.put("code", "AttributeDefinition Vaalidator.9");
 			error.put("field", "AttributeDefinition.tanantId");
-			error.put("message", "tanantId mandatory");
+			error.put("message", "tanantId Required");
 
 			throw new PGRMasterException(error);
 		}
@@ -120,7 +120,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 
 			error.put("code", "AttributeDefinition Vaalidator.10");
 			error.put("field", "AttributeDefinition.code");
-			error.put("message", "Code mandatory ");
+			error.put("message", "AttributeCode Required ");
 
 			throw new PGRMasterException(error);
 		}
@@ -130,7 +130,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 
 			error.put("code", " AttributeDefinition Vaalidator.11");
 			error.put("field", "AttributeDefinition.dataType");
-			error.put("message", "dataType mandatory ");
+			error.put("message", "DataType Required ");
 
 			throw new PGRMasterException(error);
 		}
@@ -140,7 +140,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 
 			error.put("code", "  AttributeDefinition Vaalidator.12");
 			error.put("field", "AttributeDefinition .servicecode");
-			error.put("message", "servicecode mandatory ");
+			error.put("message", "servicecode Required ");
 
 			throw new PGRMasterException(error);
 		}

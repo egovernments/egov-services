@@ -419,13 +419,16 @@ class Login extends Component {
         delete signUpObject.confirmPassword;
         signUpObject.userName = signUpObject.mobileNumber;
         //Generate OTP
+        self.props.setLoadingStatus('loading');
         Api.commonApiPost("user-otp/v1/_send", {}, {"otp": {mobileNumber: signUpObject.mobileNumber, tenantId: localStorage.getItem("tenantId") || "default"}}).then(function(response){
           self.setState({
             signUpErrorMsg: "",
             optSent: true
           })
+          self.props.setLoadingStatus('hide');
         }, function (err){
           self.props.toggleSnackbarAndSetText(true, err.message);
+          self.props.setLoadingStatus('hide');
         })
       }
    }
@@ -437,6 +440,7 @@ class Login extends Component {
           signUpErrorMsg: translate("pgr.lbl.otprqrd")
         })
       } else {
+        self.props.setLoadingStatus('loading');
         Api.commonApiPost("otp/v1/_validate", {}, {
           otp: {
             "tenantId": localStorage.getItem("tenantId") || "default",
@@ -452,6 +456,7 @@ class Login extends Component {
             Api.commonApiPost("user/citizen/_create", {}, {
               User: user
             }).then(function(response){
+              self.props.setLoadingStatus('hide');
               self.setState({
                 open3: false,
                 signUpErrorMsg: "",
@@ -459,9 +464,11 @@ class Login extends Component {
               });
               self.props.toggleDailogAndSetText(true, translate('core.account.created.successfully'));
             }, function(err) {
+              self.props.setLoadingStatus('hide');
               self.props.toggleDailogAndSetText(true, err.message);
             });
         }, function(err) {
+          self.props.setLoadingStatus('hide');
           self.props.toggleDailogAndSetText(true, err.message);
         })
       }
@@ -486,6 +493,16 @@ class Login extends Component {
        return false;
    }
 
+   hasAllFields = () => {
+      let {signUpObject} = this.state;
+      let pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+      if(signUpObject.mobileNumber && signUpObject.name && signUpObject.password && signUpObject.confirmPassword && pattern.test(signUpObject.password) && signUpObject.password == signUpObject.confirmPassword && (!signUpObject.emailId || (signUpObject.emailId && /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(signUpObject.emailId)))){
+        return true;
+      } else {
+        return false;
+      }
+   }
+
    passwordValidation = () => {
      let pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
      if(this.state.signUpObject.password.trim().length > 0 && this.state.signUpObject.confirmPassword.trim().length > 0){
@@ -497,6 +514,19 @@ class Login extends Component {
      }
    }
 
+   handleClearForm = () => {
+      this.setState({
+        signUpObject: {
+          userName: "",
+          mobileNumber: "",
+          password: "",
+          confirmPassword: "",
+          emailId: "",
+          name: ""
+        },
+        signUpErrorMsg: ""
+      })
+   }
    render() {
       //console.log("IN LOGIN");
       let {
@@ -693,7 +723,7 @@ class Login extends Component {
                         </IconButton>
                         <div style={styles.floatLeft}>
                           <h4>{translate('pgr.lbl.grievancecell')}</h4>
-                          <p>{translate('Call '+ tenantInfo.length && tenantInfo[0] && tenantInfo[0].helpLineNumber +' to register your grievance')}</p>
+                          <p>{translate("ui.login.call") + " " + (tenantInfo.length && tenantInfo[0] ? (tenantInfo[0].helpLineNumber || "-") : "-") + " " + translate("ui.login.registerGrievance")}</p>
                         </div>
                       </Col>
                     </Row>
@@ -708,22 +738,22 @@ class Login extends Component {
                         <i className="material-icons">location_on</i>
                       </FontIcon>
                       <p>{tenantInfo.length && tenantInfo[0].address}</p>
-                      <a href="#">Find us on google maps</a>
+                      <a target="_blank" href={"https://www.google.com/maps/preview/@-" + (tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.latitude) + "," + (tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.longitude) + ",8z"}>Find us on google maps</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon   style={styles.iconSize}>
                         <i className="material-icons">phone</i>
                       </FontIcon>
                       <p>{tenantInfo.length && tenantInfo[0].contactNumber}</p>
-                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0] && tenantInfo[0].email} >{tenantInfo.length && tenantInfo[0] && tenantInfo[0].email}</a>
+                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId} >{tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId}</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon style={styles.iconSize}>
                         <i className="material-icons">share</i>
                       </FontIcon>
                       <p>Share us on</p>
-                      <a href="#" ><i className="fa fa-twitter" style={styles.iconSize}></i></a>
-                      <a href="#" ><i className="fa fa-facebook" style={styles.iconSize}></i></a>
+                      <a target="_blank" href={tenantInfo.length && tenantInfo[0] && tenantInfo[0].twitterUrl} ><i className="fa fa-twitter" style={styles.iconSize}></i></a>
+                      <a target="_blank" href={tenantInfo.length && tenantInfo[0] && tenantInfo[0].facebookUrl} ><i className="fa fa-facebook" style={styles.iconSize}></i></a>
                   </Col>
               </Row>
             </Grid>
@@ -789,12 +819,12 @@ class Login extends Component {
                 <FlatButton
                   label={translate('core.lbl.cancel')}
                   primary={false}
-                  onTouchTap={(e) => {handleClose("open3")}}
+                  onTouchTap={(e) => {handleClose("open3"); this.handleClearForm()}}
                 />,
                 <FlatButton
                   label={optSent ? translate('core.lbl.signup') : translate('pgr.lbl.generate.otp')}
                   secondary={true}
-                  disabled={signUpObject.mobileNumberMsg === undefined ? true : signUpObject.mobileNumberMsg ? true : optSent ? !this.isAllFields() : false}
+                  disabled={(signUpObject.mobileNumberMsg === undefined || !this.hasAllFields()) ? true : signUpObject.mobileNumberMsg ? true : optSent ? !this.isAllFields() : false}
                   onTouchTap={(e)=>{!optSent ? generateSignUpOTP() : signUp()}}
                 />
               ]}

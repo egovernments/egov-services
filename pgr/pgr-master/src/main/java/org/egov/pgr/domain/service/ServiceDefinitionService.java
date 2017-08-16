@@ -8,6 +8,7 @@ import org.egov.pgr.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgr.domain.service.validator.AttributedefinitionValidator.AttributeDefinitionCreateValidator;
 import org.egov.pgr.domain.service.validator.serviceDefinitionCreateValidator.ServiceDefinitionCreateValidator;
 import org.egov.pgr.domain.service.validator.valueDeficnitionValidator.ValueDefinitionCreateValidator;
+import org.egov.pgr.domain.service.validatorAttributedefinitionUniqueValidator.AttributeDefinitionUniqueValuesValidator;
 import org.egov.pgr.persistence.dto.AttributeDefinition;
 import org.egov.pgr.persistence.dto.ValueDefinition;
 import org.egov.pgr.persistence.repository.AttributeDefinitionRepository;
@@ -23,6 +24,7 @@ public class ServiceDefinitionService {
 	private List<ServiceDefinitionCreateValidator> createValidators;
 	private List<AttributeDefinitionCreateValidator> attributeValidate;
 	private List<ValueDefinitionCreateValidator> valueDefinitionValidate;
+	private List<AttributeDefinitionUniqueValuesValidator> attribUniqValidate;
 
 	private static final String CREATE = "CREATE";
 	private ServiceDefinitionMessageQueueRepository serviceDefinitionMessageQueueRepository;
@@ -36,7 +38,8 @@ public class ServiceDefinitionService {
 			ValueDefinitionRepository valueDefinitionRepository,
 			List<ServiceDefinitionCreateValidator> createValidators,
 			List<AttributeDefinitionCreateValidator> attributeValidate,
-			List<ValueDefinitionCreateValidator> valueDefinitionValidate) {
+			List<ValueDefinitionCreateValidator> valueDefinitionValidate,
+			List<AttributeDefinitionUniqueValuesValidator> attribUniqValidate) {
 
 		this.serviceDefinitionMessageQueueRepository = serviceDefinitionMessageQueueRepository;
 		this.serviceDefinitionRepository = serviceDefinitionRepository;
@@ -45,6 +48,7 @@ public class ServiceDefinitionService {
 		this.createValidators = createValidators;
 		this.attributeValidate = attributeValidate;
 		this.valueDefinitionValidate = valueDefinitionValidate; 
+		this.attribUniqValidate = attribUniqValidate;
 	}
 	
 	public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request) {
@@ -55,6 +59,8 @@ public class ServiceDefinitionService {
 		ServiceDefinitionFieldLengthValidate( serviceDefinition);
 		valueDefLengthValidation(serviceDefinition);
 		attributeLengthValidation(serviceDefinition);
+		
+		attribUniqueConstraintValidation(serviceDefinition);
 		
 		createUniqueConstraintValidation(serviceDefinition);
 		
@@ -152,6 +158,15 @@ public class ServiceDefinitionService {
 		});
 		});
 		
+	}
+	
+	private void attribUniqueConstraintValidation(ServiceDefinition serviceDefinition) {
+		serviceDefinition.getAttributes().stream().forEach(attributeDefinition -> 
+		{			
+		
+			attribUniqValidate.stream().filter(validator -> validator.canValidate(attributeDefinition))
+				.forEach(v -> v.validateUniqueConstratint(attributeDefinition));
+	});
 	}
 	
 	private void matchAttributeAndServiceCode(ServiceDefinition serviceDefinition) {

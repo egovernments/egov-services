@@ -169,13 +169,14 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,legacyconsumernumber,consumerNumber,executionDate,noOfFlats,numberOfFamily) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?,?,?,?,?)";
+                + ",?,?,?,?,?,"
+                + " ?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {
@@ -200,6 +201,10 @@ public class WaterConnectionQueryBuilder {
         return "UPDATE egwtr_waterconnection SET lastmodifiedtime =?,status =? "
                 + " where acknowledgmentnumber = ?";
     }
+    
+    public static String updateValuesForNoPropertyConnections() { 
+    	return "UPDATE egwtr_waterconnection SET userid = ?, addressid = ? , locationid = ? WHERE acknowledgmentnumber = ? " ; 
+    }
 
     public static String persistEstimationNoticeQuery() {
         return "INSERT INTO egwtr_estimationnotice_audit_log (id, waterconnectionid, tenantid, dateofletter, letternumber, letterto, letterintimationsubject, applicationnumber, applicationdate, applicantname, servicename, waternumber, sladays, chargeDescription1, chargeDescription2, createdby, createdtime) "
@@ -217,6 +222,16 @@ public class WaterConnectionQueryBuilder {
 
     public static String getWaterConnectionByConsumerNumber() {
         return " select * from egwtr_waterconnection connection " + " WHERE  connection.consumernumber = ?";
+    }
+    
+    public static String getWaterConnectionAddressQueryForInsert() { 
+    	return " INSERT INTO egwtr_address (id, tenantid, latitude, longitude, addressId, addressNumber, addressLine1, addressLine2, landmark, doorno, city, pincode, detail, route, street, area, roadname, createdby, createdtime) " 
+    			+" values (nextval('seq_egwtr_address'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  " ;
+    }
+    
+    public static String getWaterConnectionLocationQueryForInsert() { 
+    	return " INSERT INTO egwtr_connectionlocation (id, revenueboundary, locationboundary, adminboundary, createdby, createdtime) " 
+    			+ " VALUES (nextval('seq_egwtr_connectionlocation'), ?, ?, ?, ?, ?) "; 
     }
 
     public static String getConnectionDetails() {

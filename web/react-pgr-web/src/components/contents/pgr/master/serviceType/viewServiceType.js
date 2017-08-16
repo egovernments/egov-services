@@ -173,7 +173,7 @@ class ViewServiceType extends Component {
                     Has Financial Impact
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewServiceType.hasFinancialImpact? 'true' : 'false'}
+                    {viewServiceType.hasFinancialImpact? 'Yes' : 'No'}
                    </Col>
                  </Row>
                </CardText>

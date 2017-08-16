@@ -26,10 +26,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
- 
+
   },
   underlineFocusStyle: {
-  
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -134,38 +134,36 @@ class AddDemand extends Component {
 		hasError: false,
 		errorMsg: 'Invalid',
     }
-  } 
+  }
 
 
  componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
-	
+
 	let {toggleSnackbarAndSetText, initForm, setLoadingStatus} = this.props;
 	setLoadingStatus('loading');
 	initForm();
-	
-	console.log(this.props);
-	
+
 	var getDemands = {
 		upicNumber: this.props.match.params.upicNumber
 	}
-	
+
 	Api.commonApiPost('pt-property/properties/_preparedcb', getDemands, {}, false, true).then((res)=>{
-		
+
 		console.log('search',res);
-		
+
 		 currentThis.setState({
 			 demands: res.Demands
 		 })
-		 
+
 		res.Demands.map((demand, index)=>{
 			demand.demandDetails.map((item, i)=>{
 				var query = {
 					service:'PT',
 					code:item.taxHeadMasterCode
 				}
-							
+
 				Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
 						setLoadingStatus('hide');
 					 currentThis.setState({
@@ -177,20 +175,20 @@ class AddDemand extends Component {
 				}).catch((err)=> {
 					console.log(err)
 				})
-			})																
-		})	
-		 
+			})
+		})
+
 	}).catch((err)=> {
 		console.log(err)
 	})
-  } 
-  
+  }
+
   submitDemand = () => {
-	  
+
 	  var data = this.state.demands;
-	  
+
 	  let { addDemand } = this.props;
-	  
+
 	  data.map((demand, index)=> {
 		  demand.businessService = 'PT'
 		  demand.demandDetails.map((item, i)=> {
@@ -198,21 +196,22 @@ class AddDemand extends Component {
 			  item.collectionAmount = (addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] :  item.collectionAmount)|| item.collectionAmount;
 		  })
 	  })
-	  
+
 	  console.log(data);
-	  
+
 	  var body = {
 		  Demands : data
 	  }
 
-	  
+
 	Api.commonApiPost('billing-service/demand/_update', {}, body, false, true).then((res)=>{
-		
+
 	}).catch((err)=> {
 		console.log(err)
 	})
-	  
+
   }
+
   
 validateCollection = (index) => {
 	
@@ -270,7 +269,7 @@ validateCollection = (index) => {
   
 
   render() {
-	  
+
     const renderOption = function(list,listName="") {
         if(list)
         {
@@ -299,15 +298,15 @@ validateCollection = (index) => {
     } = this.props;
 
     let {search, handleDepartment, getTaxHead, validateCollection} = this;
-	
+
     let cThis = this;
-		
+
 	const showfields = () => {
-		
+
 		if(this.state.demands.length !=0){
-			
+
 		return this.state.demands.map((demand, index)=> {
-			
+
 			return(
 				<tr key={index}>
 					<td style={{width:100}} className="lastTdBorder">{new Date(demand.taxPeriodFrom).getFullYear()} - {new Date(demand.taxPeriodTo).getFullYear()}</td>
@@ -341,7 +340,7 @@ validateCollection = (index) => {
 										  underlineFocusStyle={styles.underlineFocusStyle}
 										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										/>
-									</td>)																	
+									</td>)
 							} else {
 								return (
 									<td key={i}>
@@ -364,7 +363,7 @@ validateCollection = (index) => {
 										/>
 									</td>)
 							}
-							
+
 						})}
 						{demand.demandDetails.map((detail, i)=>{
 							if(!addDemand.hasOwnProperty('collections'+index)){
@@ -387,7 +386,7 @@ validateCollection = (index) => {
 									  } else {
 										  validateCollection(i);
 									  }
-									  
+
 									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
 								  }}
 								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -399,11 +398,11 @@ validateCollection = (index) => {
 						})}
 				</tr>
 			)
-		
+
 		})
 		}
 	}
-	
+
 	const showSubHeading = () => {
 		if(this.state.demands.length !=0){
 			return this.state.demands[0].demandDetails.map((detail, index)=>{
@@ -421,11 +420,11 @@ validateCollection = (index) => {
 					}
 				})}</td>)
 			}
-			
+
 			})
 		}
-		
-		
+
+
 	}
 
     return (<div><Card className="uiCard">
@@ -455,17 +454,17 @@ validateCollection = (index) => {
 								</Table>
 							 </Col>
 						</Row>
-					</Grid>	
+					</Grid>
 				</CardText>
-				
+
 			</Card>
 			<div style={{textAlign:'center'}}>
+										{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}><br/>Collection entered should be equal to or less than the Demand<br/></p>}
+
 					<RaisedButton type="button" label="Update" disabled={this.state.hasError}  primary={true} onClick={()=> {
 								this.submitDemand();
 								}
 					}/>	
-								{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}><br/>Collection entered should be equal to or less than the Demand</p>}
-					
 				</div>
 				</div>)
   }
@@ -582,7 +581,7 @@ const mapDispatchToProps = dispatch => ({
       index
     })
   },
-  
+
   addDepandencyFields: (property) => {
 		dispatch({
 			type: 'ADD_REQUIRED',
@@ -603,7 +602,7 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
-  
+
    setLoadingStatus: (loadingStatus) => {
      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
    },
@@ -614,5 +613,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddDemand);
-
-

@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.model;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -94,9 +93,9 @@ public class MeterWaterRates {
     private Boolean active;
 
     @NotNull
-    private Date fromDate;
+    private Long fromDate;
 
-    private Date toDate;
+    private Long toDate;
 
     private List<Slab> slab;
 

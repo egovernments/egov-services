@@ -27,7 +27,7 @@ public class TenantIdValidator implements ServiceTypeConfigurationValidator {
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "TenantIdValidator.3");
 			error.put("field", "serviceTypeConfiguration.tenantid");
-			error.put("message", "tenantid mandatory");
+			error.put("message", "tenantid Required");
 
 			throw new PGRMasterException(error);
 		}

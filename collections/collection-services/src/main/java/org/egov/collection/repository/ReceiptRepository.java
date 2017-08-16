@@ -65,10 +65,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -186,9 +183,14 @@ public class ReceiptRepository {
             List<ReceiptDetail> receiptDetails = jdbcTemplate.query(
                     receiptDetailsQuery, receiptDetailsPreparedStatementValues.toArray(),
                     receiptDetaiRowMapper);
+            BusinessDetailsRequestInfo businessDetails = businessDetailsRepository.getBusinessDetails(
+                    Arrays.asList(header.getBusinessDetails()), header.getTenantId(), requestInfo)
+                    .getBusinessDetails().get(0);
+            logger.info("BusinessDetails for Receipt" + businessDetails);
             receiptHeader = header;
+            receiptHeader.setBusinessDetails(businessDetails.getName());
             receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
-            receiptHeader.setReceiptInstrument(searchInstrumentHeader(receiptHeader.getId(),receiptSearchCriteria.getTenantId(),requestInfo));
+          //  receiptHeader.setReceiptInstrument(searchInstrumentHeader(receiptHeader.getId(),receiptSearchCriteria.getTenantId(),requestInfo));
             receiptHeaders.add(receiptHeader);
 		}
 

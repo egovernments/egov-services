@@ -1,7 +1,5 @@
 package org.egov.pgr.persistence.repository;
 
-import org.egov.pgr.persistence.dto.AttributeDefinition;
-import org.egov.pgr.persistence.dto.ServiceType;
 import org.egov.pgr.persistence.dto.ValueDefinition;
 import org.egov.pgr.persistence.querybuilder.ValueDefinitionQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -27,14 +25,6 @@ public class ValueDefinitionRepository {
     public void save(ValueDefinition valueDefinition){
         namedParameterJdbcTemplate.update(valueDefinitionQueryBuilder.getInsertQuery(),
                 getInsertMap(valueDefinition));
-    }
-
-    public void setValueDefinition(ServiceType serviceType){
-
-        serviceType.getAttributeDefinitions().stream()
-                .filter(AttributeDefinition::isValueList)
-                .forEach(Attribute -> Attribute.setValueDefinitions(
-                        fetchValueDefinition(serviceType.getCode(),serviceType.getTenantId(), Attribute.getCode())));
     }
 
     public List<ValueDefinition> fetchValueDefinition(String code, String tenantId, String attributeCode){

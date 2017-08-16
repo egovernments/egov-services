@@ -64,6 +64,8 @@ import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/d
 import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
 import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
 
+import AddDemandWc from './components/contents/wc/master/addDemand';
+
 //Property tax
 import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
 import Test from './components/contents/propertyTax/master/Test';
@@ -98,6 +100,7 @@ import LegacyLicenseCreate from './components/non-framework/tl/transaction/Legac
 
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
 import Employee from './components/non-framework/employee/create';
+import EmployeeSearch from './components/non-framework/employee/search';
 
 const base = "";
 
@@ -148,6 +151,7 @@ const Main = () => {
         <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
 
 
+
         <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
         <Route exact name="createCategoryType" path={base+'/wc/createCategoryType/:id?'} component={CategoryTypeCreate}/>
         <Route exact path={base+'/wc/categoryType/view'} component={ViewEditCategoryType}/>
@@ -178,6 +182,8 @@ const Main = () => {
         <Route exact path={base+'/wc/documentType/view'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/edit'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
+
+        <Route exact path={base+'/wc/addDemand'} component={AddDemandWc}/>
 
         <Route exact path={base+'/wc/createDocumentTypeApplicationType'} component={DocumentTypeApplicationTypeCreate}/>
        <Route exact name="createDocumentTypeApplicationType" path={base+'/wc/createDocumentTypeApplicationType/:id?'} component={DocumentTypeApplicationTypeCreate}/>
@@ -211,6 +217,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate/:id?'} component={LegacyLicenseCreate}/>
 
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
+      <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
 
 
     </Switch>

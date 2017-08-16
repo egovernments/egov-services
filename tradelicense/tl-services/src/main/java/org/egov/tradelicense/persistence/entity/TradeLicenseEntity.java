@@ -73,6 +73,8 @@ public class TradeLicenseEntity {
 	private Long uomId;
 
 	private Double quantity;
+	
+	private Long validityYears;
 
 	private String remarks;
 
@@ -167,6 +169,8 @@ public class TradeLicenseEntity {
 		tradeLicense.setUomId(this.uomId);
 
 		tradeLicense.setQuantity(this.quantity);
+		
+		tradeLicense.setValidityYears(this.validityYears);
 
 		tradeLicense.setRemarks(this.remarks);
 
@@ -271,6 +275,8 @@ public class TradeLicenseEntity {
 
 		this.quantity = tradeLicense.getQuantity();
 
+		this.validityYears = tradeLicense.getValidityYears();
+		
 		this.remarks = tradeLicense.getRemarks();
 
 		if(tradeLicense.getTradeCommencementDate() != null){

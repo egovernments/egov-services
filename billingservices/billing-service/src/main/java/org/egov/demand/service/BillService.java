@@ -160,7 +160,10 @@ public class BillService {
 		else
 			throw new RuntimeException("No Demands Found for the given criteria");
 
-		return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
+		if (bills.get(0).getBillDetails() == null) {
+			return new BillResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.OK), null);
+		} else
+			return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
 
 	private List<Bill> prepareBill(List<Demand> demands,String tenantId,RequestInfo requestInfo){
@@ -210,7 +213,7 @@ public class BillService {
 
 					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(demandDetail.getTaxHeadMasterCode());
 					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter(t -> 
-					demand.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand.getTaxPeriodTo().
+					demand2.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand2.getTaxPeriodTo().
 					compareTo(t.getValidTill()) <= 0).findAny().orElse(null);
 					
 					if(taxHeadMaster == null) 
@@ -257,10 +260,12 @@ public class BillService {
 					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).
 					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
 
+			if(billDetail.getTotalAmount().compareTo(BigDecimal.ZERO) > 0)
 			billDetails.add(billDetail);
 
 		}
-		bill.setBillDetails(billDetails);
+		if (!billDetails.isEmpty())
+			bill.setBillDetails(billDetails);
 		bills.add(bill);
 
 		return bills;

@@ -24,7 +24,7 @@ var localization_EN_Data = {
     "wc.create.groups.connectionDetails.propertyType": "Tariff Category",
     "wc.create.groups.connectionDetails.categoryType": "Category Type",
     "wc.create.groups.connectionDetails.usageType": "Usage Type",
-    "wc.create.groups.connectionDetails.hscPipeSizeType": "H.S.C Connection size (Inches)",
+    "wc.create.groups.connectionDetails.hscPipeSizeType": "Connection size (Inches)",
     "wc.create.groups.connectionDetails.fields.sumpCapacity": "Sump Capacity (Litres)",
     "wc.create.groups.connectionDetails.fields.numberOfPersons": "No.of Persons",
     "wc.create.groups.approvalDetails.title": "Approval Details",
@@ -164,7 +164,7 @@ var localization_EN_Data = {
     "wc.search.PropertyPipeSize.title": "Search Tariff Category Connection size",
     "wc.view.PropertyTypePipeSize.title": "View Tariff Category Connection size",
     "wc.update.PropertyTypePipeSize.title": "Update Tariff Category Connection size",
-    "wc.create.groups.applicantDetails.consumerNo": "Consumer Number",
+    "wc.create.groups.applicantDetails.consumerNo": "Old Consumer Number",
     "wc.create.groups.applicantDetails.connectionDate": "Connection Date",
     "wc.create.pipeSize.title": "Create Connection size",
     "wc.search.PipeSize.title": "Search Connection size",
@@ -242,7 +242,7 @@ var localization_EN_Data = {
     "wc.create.groups.fields.amount": "Amount",
     "wc.create.groups.fields.classification": "Classification",
     "wc.create.numberOfFamily": "Number of Family",
-    "wc.create.SpecialDonationCharges": "Special Security Deposit Charges",
+    "wc.create.SpecialDonationCharges": "Security Deposit",
     "wc.create.receiptDate": "Receipt Date",
     "wc.create.receiptNumber": "Receipt Number",
 
@@ -521,6 +521,7 @@ var localization_EN_Data = {
     "employee.Employee.fields.OtherAttachments": "Other Attachment",
     "employee.service.title": "SERVICE SECTION",
     "employee.other.title": "OTHER DETAILS",
+
     "employee.Cancel.Button": "Cancel",
     "employee.addedit.Button": "Add/Edit",
 
@@ -773,7 +774,9 @@ var localization_EN_Data = {
     "employee.error.message.joinDate.regDate": "Joining Date must be before Resignation Date.",
     "employee.fields.isUserActive": "Is User Active",
     "employee.Employee.fields.dateOfBirth": "Date Of Birth",
-    "ui.framework.submit": "Submit"
+    "ui.framework.submit": "Submit",
+    "ui.login.call": "Call",
+    "ui.login.registerGrievance": "to register your grievance"
 };
 
 var localization_MR_Data = {
@@ -1574,7 +1577,10 @@ var localization_MR_Data = {
     "employee.error.message.joinDate.regDate": "Joining Date must be before Resignation Date.-Marathi",
     "employee.fields.isUserActive": "Is User Active-Marathi",
     "employee.Employee.fields.dateOfBirth": "Date Of Birth-Marathi",
-    "ui.framework.submit": "Submit-Marathi"
+    "ui.framework.submit": "Submit-Marathi",
+    "ui.login.call": "Call-Marathi",
+    "ui.login.registerGrievance": "to register your grievance-Marathi"
+
 }
 
 export function translate(locale_text) {

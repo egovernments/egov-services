@@ -66,6 +66,7 @@ import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DemandDetailBean;
 import org.egov.wcms.transaction.model.EstimationCharge;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
+import org.egov.wcms.transaction.web.contract.DemandBeanGetRequest;
 import org.egov.wcms.transaction.web.contract.DemandDetailBeanReq;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
@@ -126,7 +127,7 @@ public class DemandConnectionService {
 
         return demandList;
     }
-    public List<Demand> prepareDemandForLegacy( DemandDetailBeanReq demandDetailBeanReq,final Connection connection,RequestInfo requestInfo) {
+    public List<Demand> prepareDemandForLegacy( DemandDetailBeanReq demandDetailBeanReq,final Connection connection,RequestInfo requestInfo,DemandBeanGetRequest demandBeanGetRequest) {
 
         final List<Demand> demandList = new ArrayList<>();
         final String tenantId = connection.getTenantId();
@@ -134,7 +135,7 @@ public class DemandConnectionService {
         ownerobj.setTenantId(tenantId);
         ownerobj.setId(requestInfo.getUserInfo().getId());
         final Demand demand = new Demand();
-        TaxPeriodResponse taxperiodres=getTaxPeriodByPeriodCycleAndService(tenantId,PeriodCycle.HALFYEAR,new Date().getTime());
+        TaxPeriodResponse taxperiodres=getTaxPeriodByPeriodCycleAndService(tenantId,PeriodCycle.HALFYEAR,demandBeanGetRequest.getExecutionDate());
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
         demand.setConsumerType(connection.getApplicationType());

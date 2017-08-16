@@ -11,6 +11,8 @@
         - Create, Update and Search for SourceType
         - Create, Update and Search for SupplyType
         - Search for ConnectionType
+        - Create, Update and Search for Meter Cost
+        - Create, Update and Search for Meter Status
         - Search for ApplicationType
         - Create, Update and Search for mapping between PropertyType-CategoryType
         - Create, Update and Search for mapping between PropertyType-PipeSize
@@ -972,15 +974,15 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-  #  Meter Cost Master API    
-    /metercosts/_create:  
+  #  Meter Cost Master API            
+    /metercosts/_create:
       post:
-        summary: creates new meter costs.
-        description: API to bulk create meter costs.
+        summary: creates new meter cost.
+        description: API to create meter cost.
         tags:
-          - Meter Costs
+          - MeterCost
         parameters:
-          - name: Meter Costs
+          - name: MeterCost
             in: body
             description: required parameters have to be populated
             required: true
@@ -988,23 +990,25 @@
               $ref: '#/definitions/MeterCostReq'
         responses:
           '201':
-            description: Meter cost created sucessfully.
+            description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/MeterCostRes"
+              $ref: '#/definitions/MeterCostRes'
           '400':
             description: Request failed
             schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-              
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                
     /metercosts/_update:
       post:
-        summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
+        summary: >-
+          while updating in request body code is required and updates existing
+          values based on code.
+        description: updates existing values
         tags:
-          - Meter Costs
+        - MeterCost
         parameters:
-          - name: Meter Costs
+          - name: MeterCost
             in: body
             description: required parameters have to be populated
             required: true
@@ -1014,33 +1018,114 @@
           '200':
             description: Meter Costs updated successfully.
             schema:
-              $ref: "#/definitions/MeterCostRes"
+              $ref: '#/definitions/MeterCostRes'
           '400':
-            description: Update Meter Costs failed.
+            description: Update Meter Cost failed.
             schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                
     /metercosts/_search:
       post:
         summary: searches existing values
         tags:
           - Meter Costs
         parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/sizeInMilimeter"
-          - $ref: "#/parameters/name"
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+          - $ref: '#/parameters/ids'
+          - $ref: '#/parameters/code'
+          - $ref: '#/parameters/pipeSizeInMM'
+          - $ref: '#/parameters/name'
+          - $ref: '#/parameters/active'
         responses:
-          200: 
+          '200':
             description: Successful response
             schema:
               $ref: '#/definitions/MeterCostRes'
-          400:
+          '400':
             description: Invalid input
             schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              $ref: >-
+               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+               
+  # Meter Status Master API            
+    /meterstatus/_create:
+      post:
+        summary: creates new meter status.
+        description: API to create meter status.
+        tags:
+          - Meter Status
+        parameters:
+          - name: Meter Status
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/MeterStatusReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: '#/definitions/MeterStatusRes'
+          '400':
+            description: Request failed
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
+    /meterStatus/_update:
+      post:
+        summary: >-
+          while updating in request body code is required and updates existing
+          values based on code.
+        description: updates existing values
+        tags:
+          - Meter Status
+        parameters:
+          - name: Meter Status
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/MeterStatusReq'
+        responses:
+          '200':
+            description: Meter Status updated successfully.
+            schema:
+              $ref: '#/definitions/MeterStatusRes'
+          '400':
+            description: Update Meter Status failed.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
+    /meterStatus/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Meter Status
+        parameters:
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+          - $ref: '#/parameters/id'
+          - $ref: '#/parameters/code'
+          - $ref: '#/parameters/meterStatus'
+        responses:
+          '200':
+            description: Successful response
+            schema:
+              $ref: '#/definitions/MeterStatusRes'
+          '400':
+            description: Invalid input
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
   parameters:
     id:
       name: id
@@ -1138,7 +1223,28 @@
       description: unique identifier of application type
       required: false
       type: string
-  
+      
+    meterStatus:
+      name: meterStatus
+      in: query
+      description: status of the meter
+      required: false
+      type: string
+      
+    ids:
+      name: ids
+      in: query
+      description: unique identifier of object
+      required: false
+      type: integer
+      format: int64
+      
+    active:
+      name: active
+      in: query
+      description: active status of object
+      required: false
+      type: boolean
 
               
               
@@ -2133,66 +2239,123 @@
         - unitRate
         - tenantId
         
-   # Meter Cost Master definitions
+  # Meter Cost Master definitions
     MeterCostReq:
       type: object
       properties:
         RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        MeterCosts:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        MeterCost:
           $ref: '#/definitions/MeterCost'
       required:
         - RequestInfo
-        - MeterCosts
+        - MeterCost
         
     MeterCostRes:
       type: object
       properties:
-         ResponseInfo:
-           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-         MeterCost:
-           type: array
-           maximum: 20
-           items:
-             $ref: '#/definitions/MeterCost'
-             
+        ResponseInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        MeterCost:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/MeterCost'
+          
+          
     MeterCost:
       type: object
       properties:
         id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
+          type: integer
+          format: int64
+          description: 'Unique identifier, typically defined by system and readonly.'
         code:
-         type: string
-         description : unique code this should be defined by system and readonly.
-         maxLength: 20
-        pipeSize:
-         type: integer
-         format: int64
-         description: h.s.c pipe size
+          type: string
+          description: unique code this should be defined by system and readonly.
+          maxLength: 20
+        pipeSizeInMM:
+          type: number
+          description: h.s.c pipe size in mm
         meterMake:
-         type: string
-         description: Make of the meter
-         maxLength: 100
+          type: string
+          description: Make of the meter
+          maxLength: 100
         amount:
-         type: number
-         description: meter cost
+          type: number
+          description: meter cost amount
         active:
-         type: boolean
-         format: varchar
-         description: TRUE for active and FALSE for inactive.
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
         tenantId:
-         type: string
-         description: Unique Identifier of the tenant
-         maxLength: 250
+          type: string
+          description: Unique Identifier of the tenant
+          maxLength: 250
         auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
       required:
         - code
-        - pipeSize
+        - pipeSizeInMM
         - meterMake
         - amount
         - tenantId
         - active
-        
+      
+    MeterStatusReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        MeterStatus:
+          $ref: '#/definitions/MeterStatus'
+      required:
+        - RequestInfo
+        - MeterStatus 
+    MeterStatusRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        MeterStatus:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/MeterStatus'
+            
+            
+    MeterStatus:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 'Unique identifier, typically defined by system and readonly.'
+        code:
+          type: string
+          description: unique code this should be defined by system and readonly.
+          maxLength: 20
+        meterStatus:
+          type: string
+          description: status of the meter.
+        description:
+          type: string
+          description: description of the meter
+          maxLength: 124
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+          maxLength: 250
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          
+      required:
+        - code 
+        - meterStatus
+        - tenantId
+

@@ -1,5 +1,6 @@
 package org.egov.asset.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,10 +139,11 @@ public class RevaluationService {
             final List<ChartOfAccountDetailContract> subledgerDetailsForRevaluationReserverAccount = voucherService
                     .getSubledgerDetails(requestInfo, tenantId, assetCategory.getRevaluationReserveAccount());
 
-            if (subledgerDetailsForAssetAccount != null && subledgerDetailsForRevaluationReserverAccount != null
-                    && !subledgerDetailsForAssetAccount.isEmpty()
-                    && !subledgerDetailsForRevaluationReserverAccount.isEmpty())
-                throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+            voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount,
+                    subledgerDetailsForRevaluationReserverAccount);
+
+            voucherService.validateCOAActiveForPosting(subledgerDetailsForAssetAccount);
+            voucherService.validateCOAActiveForPosting(subledgerDetailsForRevaluationReserverAccount);
 
         } else if (revaluation.getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
             log.info("subledger details check for Type of change DECREASED");
@@ -151,11 +153,13 @@ public class RevaluationService {
             final List<ChartOfAccountDetailContract> subledgerDetailsForFixedAssetWrittenOffAccount = voucherService
                     .getSubledgerDetails(requestInfo, tenantId, revaluation.getFixedAssetsWrittenOffAccount());
 
-            if (subledgerDetailsForAssetAccount != null && subledgerDetailsForFixedAssetWrittenOffAccount != null
-                    && !subledgerDetailsForAssetAccount.isEmpty()
-                    && !subledgerDetailsForFixedAssetWrittenOffAccount.isEmpty())
-                throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+            voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount,
+                    subledgerDetailsForFixedAssetWrittenOffAccount);
+
+            voucherService.validateCOAActiveForPosting(subledgerDetailsForAssetAccount);
+            voucherService.validateCOAActiveForPosting(subledgerDetailsForFixedAssetWrittenOffAccount);
         }
+
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluation, assetCategory,
                 requestInfo);
 
@@ -174,18 +178,17 @@ public class RevaluationService {
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
         final Long functionId = revaluation.getFunction();
         final String tenantId = revaluation.getTenantId();
+        final BigDecimal amount = revaluation.getRevaluationAmount();
         if (assetCategory != null && revaluation.getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                    revaluation.getRevaluationAmount(), functionId, false, true));
-            accountCodeDetails
-                    .add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getRevaluationReserveAccount(),
-                            revaluation.getRevaluationAmount(), functionId, true, false));
+                    amount, functionId, false, true));
+            accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId,
+                    assetCategory.getRevaluationReserveAccount(), amount, functionId, true, false));
         } else if (assetCategory != null && revaluation.getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
-            accountCodeDetails
-                    .add(voucherService.getGlCodes(requestInfo, tenantId, revaluation.getFixedAssetsWrittenOffAccount(),
-                            revaluation.getRevaluationAmount(), functionId, false, true));
+            accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId,
+                    revaluation.getFixedAssetsWrittenOffAccount(), amount, functionId, false, true));
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                    revaluation.getRevaluationAmount(), functionId, true, false));
+                    amount, functionId, true, false));
 
         }
         return accountCodeDetails;

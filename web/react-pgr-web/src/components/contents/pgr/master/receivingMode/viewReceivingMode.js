@@ -70,7 +70,7 @@ class viewReceivingSet extends Component {
       } = this.props;
 
       let {submitForm} = this;
-
+      console.log(viewReceivingSet.channels);
       return(
         <div className="viewReceivingSet">
           <Grid style={{width:'100%'}}>
@@ -112,7 +112,7 @@ class viewReceivingSet extends Component {
                     {translate('pgr.lbl.channel')}
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewReceivingSet.channels ? viewReceivingSet.channels : ''}
+                    {viewReceivingSet.channels ? viewReceivingSet.channels.join(", ") : ''}
                    </Col>
                  </Row>
                </CardText>

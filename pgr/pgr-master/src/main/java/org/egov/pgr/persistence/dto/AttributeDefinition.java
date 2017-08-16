@@ -1,11 +1,15 @@
 package org.egov.pgr.persistence.dto;
 
-import lombok.*;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter
@@ -28,6 +32,7 @@ public class AttributeDefinition {
     private String url;
     private String groupCode;
     private String tenantId;
+    private char active;
     private Long createdBy;
     private Date createdDate;
     private Long lastModifiedBy;
@@ -44,7 +49,10 @@ public class AttributeDefinition {
                 .description(description)
                 .url(url)
                 .groupCode(groupCode)
+                .serviceCode(serviceCode)
+                .tenantId(tenantId)
                 .readOnly(isReadOnly())
+                .active(isActive())
                 .valueDefinitions(mapToDomainValueDefinitions())
                 .build();
     }
@@ -59,6 +67,10 @@ public class AttributeDefinition {
 
     private boolean isReadOnly() {
         return variable == YES;
+    }
+
+    private boolean isActive() {
+        return YES == active;
     }
 
     private List mapToDomainValueDefinitions(){

@@ -68,7 +68,8 @@ public class PositionRepository {
 			" (id, name, deptDesigId, isPostOutsourced, active, tenantId)" +
 			" VALUES (?,(SELECT ?::TEXT||LPAD((count(id)+1)::TEXT,3,'0') FROM egeis_position WHERE deptdesigid=?),?,?,?,?)";
 
-	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position SET active = ? WHERE id = ? AND tenantId = ?";
+	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position SET active = ?, isPostOutsourced = ?" +
+			" WHERE id = ? AND tenantId = ?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -119,7 +120,7 @@ public class PositionRepository {
 		List<Object[]> batchArgs = new ArrayList<>();
 
 		for (Position position : positionRequest.getPosition()) {
-			Object[] positionRecord = { position.getActive(), position.getId(), position.getTenantId() };
+			Object[] positionRecord = { position.getActive(), position.getIsPostOutsourced(), position.getId(), position.getTenantId() };
 			batchArgs.add(positionRecord);
 		}
 

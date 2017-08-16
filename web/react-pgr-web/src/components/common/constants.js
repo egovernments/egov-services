@@ -1,6 +1,7 @@
 //please use this file for any constant level variable across all components
 module.exports = {
     ROLE_CITIZEN : "CITIZEN",
+    COMPLAINT_KEYWORD : "complaint",
     CITIZEN_SERVICES_KEYWORD : "Deliverable_Service",
     CITIZEN_SERVICES_STATUS_NEW : "DSNEW",
     CITIZEN_SERVICES_FILE_TAG : "citizenservices",

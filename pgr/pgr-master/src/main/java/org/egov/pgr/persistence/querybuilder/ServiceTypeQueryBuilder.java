@@ -19,6 +19,10 @@ public class ServiceTypeQueryBuilder {
                 "hasfinancialimpact = :hasfinancialimpact, tenantid = :tenantid WHERE code = :code AND tenantid = :tenantid";
     }
 
+    public String getSearchQueryForUpdateValidation(){
+        return "SELECT * FROM egpgr_complainttype WHERE code = :code AND tenantid = :tenantid";
+    }
+
     public String buildSearchQuery(ServiceTypeSearchCriteria serviceTypeSearchCriteria){
 
         StringBuilder query = new StringBuilder("SELECT * FROM egpgr_complainttype WHERE tenantid = :tenantid");

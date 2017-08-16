@@ -1,5 +1,6 @@
 package org.egov.asset.service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +30,8 @@ import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
+import org.egov.asset.model.enums.AssetFinancialParams;
+import org.egov.asset.model.enums.DepreciationStatus;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DepreciationRepository;
@@ -39,6 +42,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,6 +83,9 @@ public class DepreciationService {
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @Autowired
     private AssetRepository assetRepository;
@@ -128,23 +139,26 @@ public class DepreciationService {
             final List<AssetCurrentValue> assetCurrentValues, final HttpHeaders headers) {
 
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
+        final String tenantId = depreciationCriteria.getTenantId();
         final List<CalculationAssetDetails> calculationAssetDetailList = depreciationRepository
                 .getCalculationAssetDetails(depreciationCriteria);
         final Map<Long, CalculationCurrentValue> calculationCurrentValues = depreciationRepository
                 .getCalculationCurrentvalue(depreciationCriteria).stream()
                 .collect(Collectors.toMap(CalculationCurrentValue::getAssetId, Function.identity()));
-        final Map<Long, BigDecimal> depreciationSumMap = depreciationRepository
-                .getdepreciationSum(depreciationCriteria.getTenantId());
+        final Map<Long, BigDecimal> depreciationSumMap = depreciationRepository.getdepreciationSum(tenantId);
 
         assetDepreciator.depreciateAsset(depreciationRequest, calculationAssetDetailList, calculationCurrentValues,
                 depreciationSumMap, assetCurrentValues, depreciationDetailsMap);
 
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                depreciationCriteria.getTenantId())) {
+                tenantId)) {
+            log.info("Commencing voucher generation for depreciation");
             final Map<String, List<CalculationAssetDetails>> voucherMap = new HashMap<>();
+            log.debug("Calculation Asset Details ::" + calculationAssetDetailList);
             for (final CalculationAssetDetails cad : calculationAssetDetailList) {
                 final String key = cad.getAccumulatedDepreciationAccount().toString()
                         + cad.getDepreciationExpenseAccount();
+                log.debug("Key :: " + key);
                 final List<CalculationAssetDetails> calculationAssetDetails = voucherMap.get(key);
                 if (calculationAssetDetails != null)
                     calculationAssetDetails.add(cad);
@@ -154,52 +168,65 @@ public class DepreciationService {
                     voucherMap.put(key, newCalcAssetDetails);
                 }
             }
+            log.debug("Voucher Map :: " + voucherMap);
             for (final Map.Entry<String, List<CalculationAssetDetails>> entry : voucherMap.entrySet()) {
-                final BigDecimal amt = BigDecimal.ZERO;
+                log.debug("Voucher Map Entry :: " + entry);
+                BigDecimal amt = BigDecimal.ZERO;
                 final List<CalculationAssetDetails> assetDetails = entry.getValue();
                 final CalculationAssetDetails assetDetail = assetDetails.get(0);
-                final Long depExpenxeAcc = assetDetail.getDepreciationExpenseAccount();
-                final Long accumulatedDepAcc = assetDetail.getAccumulatedDepreciationAccount();
 
-                for (final CalculationAssetDetails calculationAssetDetail : assetDetails)
-                    amt.add(depreciationDetailsMap.get(calculationAssetDetail.getAssetId()).getDepreciationValue());
+                for (final CalculationAssetDetails calculationAssetDetail : assetDetails) {
+                    final DepreciationDetail depreciationDetail = depreciationDetailsMap
+                            .get(calculationAssetDetail.getAssetId());
 
-                createVoucherForDepreciation(assetDetail, depreciationRequest.getRequestInfo(), accumulatedDepAcc,
-                        depExpenxeAcc, amt, depreciationCriteria.getTenantId(), headers);
+                    log.debug("Depreciation Detail :: " + depreciationDetail);
+                    if (DepreciationStatus.SUCCESS.equals(depreciationDetail.getStatus())) {
+                        amt = amt.add(depreciationDetail.getDepreciationValue());
+                        log.debug("Depreciation Value :: " + amt);
+                    }
+                }
 
-                // TODO call method with two acc codes
+                if (BigDecimal.ZERO.compareTo(amt) != 0)
+                    createVoucherForDepreciation(assetDetail, depreciationRequest.getRequestInfo(),
+                            assetDetail.getAccumulatedDepreciationAccount(),
+                            assetDetail.getDepreciationExpenseAccount(), amt, tenantId, headers);
 
             }
         }
-
-        // final Long voucherReference = null;
-        /*
-         * TODO get voucherreference do integration if
-         * (assetConfigurationService.getEnabledVoucherGeneration(
-         * AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-         * depreciationCriteria.getTenantId())) try { // TODO VOUCHER GEN
-         * voucherReference = //
-         * createVoucherForRevaluation(revaluationRequest); } catch (final
-         * Exception e) { throw new RuntimeException(
-         * "Voucher Generation is failed due to :" + e.getMessage()); }
-         */
     }
 
     private void createVoucherForDepreciation(final CalculationAssetDetails cad, final RequestInfo requestInfo,
             final Long aDAccount, final Long dEAccount, final BigDecimal amount, final String tenantId,
             final HttpHeaders headers) {
+        log.debug("Accumulated Depreciation Account :: " + aDAccount);
+        log.debug("Depreciation Expense Account :: " + dEAccount);
         final List<ChartOfAccountDetailContract> subledgerDetailsForAD = voucherService.getSubledgerDetails(requestInfo,
                 tenantId, aDAccount);
         final List<ChartOfAccountDetailContract> subledgerDetailsForDE = voucherService.getSubledgerDetails(requestInfo,
                 tenantId, dEAccount);
 
-        if (subledgerDetailsForAD != null && subledgerDetailsForDE != null && !subledgerDetailsForAD.isEmpty()
-                && !subledgerDetailsForDE.isEmpty())
-            throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+        voucherService.validateSubLedgerDetails(subledgerDetailsForAD, subledgerDetailsForDE);
 
+        voucherService.validateCOAActiveForPosting(subledgerDetailsForAD);
+        voucherService.validateCOAActiveForPosting(subledgerDetailsForDE);
+
+        Map<String, String> voucherParamsMap = new HashMap<>();
+        try {
+            voucherParamsMap = getDepreciationVoucherParamsMap(tenantId);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        log.debug("Voucher Params Map :: " + voucherParamsMap);
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, aDAccount, amount, 94l, false, true));
-        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, dEAccount, amount, 94l, true, false));
+        final Long functionId = Long.valueOf(voucherParamsMap.get(AssetFinancialParams.FUNCTION.toString()));
+        final Long fundId = Long.valueOf(voucherParamsMap.get(AssetFinancialParams.FUND.toString()));
+        log.debug("Function ID for Depreciation Voucher :: " + functionId);
+        log.debug("Fund ID for Depreciation Voucher :: " + fundId);
+        accountCodeDetails
+                .add(voucherService.getGlCodes(requestInfo, tenantId, aDAccount, amount, functionId, false, true));
+        accountCodeDetails
+                .add(voucherService.getGlCodes(requestInfo, tenantId, dEAccount, amount, functionId, true, false));
 
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
@@ -208,15 +235,27 @@ public class DepreciationService {
 
         final Asset asset = assetRepository
                 .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
-        
+
         log.debug("Depreciation Asset :: " + asset);
 
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(cad, 1l,
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(cad, fundId,
                 asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
         log.debug("Voucher Request for Depreciation :: " + voucherRequest);
 
         voucherService.createVoucher(voucherRequest, tenantId, headers);
 
+    }
+
+    private HashMap<String, String> getDepreciationVoucherParamsMap(final String tenantId)
+            throws IOException, JsonParseException, JsonMappingException {
+        final String depreciationVoucherParams = assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERPARAMS, tenantId);
+
+        log.debug("Depreciation Voucher Parameters :: " + depreciationVoucherParams);
+        final TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
+        };
+
+        return mapper.readValue(depreciationVoucherParams, typeRef);
     }
 
     /**

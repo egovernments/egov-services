@@ -68,6 +68,9 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Autowired
     PersisterService persisterService;
+    
+    @Autowired
+    UpicNoGeneration upicNoGeneration;
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
 
@@ -91,9 +94,14 @@ public class PropertyServiceImpl implements PropertyService {
             PropertyRequest updatedPropertyRequest = new PropertyRequest();
             updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
             List<Property> updatedPropertyList = new ArrayList<Property>();
+            if ( property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())){
+
+            	String upicNumber = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
+            	property.setUpicNumber(upicNumber);
+
+            }
             updatedPropertyList.add(property);
             updatedPropertyRequest.setProperties(updatedPropertyList);
-
             kafkaTemplate.send(propertiesManager.getCreateValidatedProperty(), updatedPropertyRequest);
         }
         ResponseInfo responseInfo = responseInfoFactory
@@ -968,9 +976,12 @@ public class PropertyServiceImpl implements PropertyService {
         newDemand.setMinimumAmountPayable(BigDecimal.ONE);
         demandDetailsList = new ArrayList<>();
         for(TaxHeadMaster taxHeadMaster : taxHeadResponse.getTaxHeadMasters()){
-            demandDetail = new DemandDetail();
-            demandDetail.setTaxHeadMasterCode(taxHeadMaster.getCode());
-            demandDetailsList.add(demandDetail);
+            if(!"ADVANCE".equalsIgnoreCase(taxHeadMaster.getCode())){
+                demandDetail = new DemandDetail();
+                demandDetail.setTenantId(tenantId);
+                demandDetail.setTaxHeadMasterCode(taxHeadMaster.getCode());
+                demandDetailsList.add(demandDetail);
+            }
         }
         newDemand.setDemandDetails(demandDetailsList);
         logger.info("Demand fromDate = " + taxPeriod.getFromDate() + " \n toDate = " + taxPeriod.getToDate());

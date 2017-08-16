@@ -151,7 +151,7 @@ class viewOrUpdateReceivingMode extends Component {
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
-                                              <td>{e.channels}</td>
+                                              <td>{e.channels.join(", ")}</td>
                                               <td>{e.active?"Yes":"No"}</td>
                                             </tr>
                                           )

@@ -57,6 +57,7 @@ public class VoucherService {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
+        headers.setOrigin("http://kurnool-pilot-services.egovernments.org");
         final String createVoucherUrl = headers.getOrigin() + applicationProperties.getEgfServiceVoucherCreatePath()
                 + "?tenantId=" + tenantId;
         log.debug("Voucher API Request URL :: " + createVoucherUrl);
@@ -199,5 +200,21 @@ public class VoucherService {
                 requestInfo, ChartOfAccountDetailContractResponse.class);
         log.debug("subledger details response :: " + coAccountDetailContractResponse);
         return coAccountDetailContractResponse.getChartOfAccountDetails();
+    }
+
+    public void validateSubLedgerDetails(final List<ChartOfAccountDetailContract> creditableCOA,
+            final List<ChartOfAccountDetailContract> debitableCOA) {
+        log.debug("Validating Sub Ledger Details for Chart of Accounts ");
+        if (creditableCOA != null && debitableCOA != null && !creditableCOA.isEmpty() && !debitableCOA.isEmpty())
+            throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+    }
+
+    public void validateCOAActiveForPosting(final List<ChartOfAccountDetailContract> coads) {
+        log.debug("Validating Active For Posting for Chart of Accounts ");
+        if (coads != null && !coads.isEmpty()) {
+            final ChartOfAccountContract coa = coads.get(0).getChartOfAccount();
+            if (!coa.getIsActiveForPosting())
+                throw new RuntimeException("Chart of Account " + coa.getName() + " is not active for posting.");
+        }
     }
 }

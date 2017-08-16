@@ -196,14 +196,14 @@ var dat = {
       			"defaultValue": [],
       			"url":'',
             "depedants": [{
-                "jsonPath": "Connection.property.subUsageType",
+                "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
-                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..categoryTypeName|$..categoryTypeName"
+                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..code|$..name"
               }]
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection.property.subUsageType",
+            "jsonPath": "Connection.subUsageType",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -329,13 +329,32 @@ var dat = {
             "name": "numberOfPersons",
             "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
-            "pattern": "",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "depedants":[{
+                "jsonPath":"Connection.numberOfFamily",
+                "type":"textField",
+                "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                "rg":"",
+                "isRequired": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }]
+          },
+          {
+            "name": "numberOfFamily",
+            "jsonPath": "Connection.numberOfFamily",
+            "label": "wc.create.numberOfFamily",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
         ]
       },
       {
@@ -741,12 +760,31 @@ var dat = {
           },
           {
             "name": "numberOfPersons",
-            "jsonPath": "Connection[0].numberOfPersons",
+            "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
-            "pattern": "",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "depedants":[{
+                "jsonPath":"Connection.numberOfFamily",
+                "type":"textField",
+                "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                "rg":"",
+                "isRequired": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }]
+          },
+          {
+            "name": "numberOfFamily",
+            "jsonPath": "Connection.numberOfFamily",
+            "label": "wc.create.numberOfFamily",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }

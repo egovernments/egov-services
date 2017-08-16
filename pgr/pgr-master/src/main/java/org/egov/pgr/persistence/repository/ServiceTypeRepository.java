@@ -1,7 +1,6 @@
 package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.domain.model.ServiceTypeSearchCriteria;
-import org.egov.pgr.persistence.dto.AttributeDefinition;
 import org.egov.pgr.persistence.dto.ServiceType;
 import org.egov.pgr.persistence.dto.ServiceTypeKeyword;
 import org.egov.pgr.persistence.querybuilder.AttributeDefinitionQueryBuilder;
@@ -56,13 +55,11 @@ public class ServiceTypeRepository {
         List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.buildSearchQuery(serviceTypeSearchCriteria),
                 getSearchNamedQuery(serviceTypeSearchCriteria), new BeanPropertyRowMapper<>(ServiceType.class));
         filterKeywords(serviceTypeSearchCriteria, serviceTypeList);
-        fetchAttributes(serviceTypeList);
-        fetchValueDefinitions(serviceTypeList);
 
         return getServiceTypes(serviceTypeSearchCriteria, serviceTypeList);
     }
     
-    public List<org.egov.pgr.domain.model.ServiceType> getData(org.egov.pgr.domain.model.ServiceType serviceType) {
+    public List getData(org.egov.pgr.domain.model.ServiceType serviceType) {
 
         List<ServiceType> serviceTypeList = getServiceList(serviceTypeQueryBuilder.getQuery(serviceType),
                 getDetailNamedQuery(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
@@ -110,18 +107,15 @@ public class ServiceTypeRepository {
     }
 
     private List<org.egov.pgr.domain.model.ServiceType> getServiceTypes(ServiceTypeSearchCriteria serviceTypeSearchCriteria, List<ServiceType> serviceTypeList) {
-        return serviceTypeList.stream()
-                .filter(serviceType -> serviceType.isKeywordPresent(serviceTypeSearchCriteria.getKeywords()))
-                .map(ServiceType::toDomain)
-                .collect(Collectors.toList());
-    }
-
-    private void fetchValueDefinitions(List<ServiceType> serviceTypeList) {
-        serviceTypeList.forEach(st -> valueDefinitionRepository.setValueDefinition(st));
-    }
-
-    private void fetchAttributes(List<ServiceType> serviceTypeList) {
-        serviceTypeList.forEach(st -> st.setAttributeDefinitions(fetchAttributes(st)));
+    	if(serviceTypeSearchCriteria.getKeywords()!=null && !serviceTypeSearchCriteria.getKeywords().isEmpty())
+	        return serviceTypeList.stream()
+	                .filter(serviceType -> serviceType.isKeywordPresent(serviceTypeSearchCriteria.getKeywords()))
+	                .map(ServiceType::toDomain)
+	                .collect(Collectors.toList());
+    	else
+    		return serviceTypeList.stream()
+	                .map(ServiceType::toDomain)
+	                .collect(Collectors.toList());
     }
 
     private void filterKeywords(ServiceTypeSearchCriteria serviceTypeSearchCriteria, List<ServiceType> serviceTypeList) {
@@ -144,13 +138,23 @@ public class ServiceTypeRepository {
                 .collect(Collectors.toList());
     }
 
-    private List<AttributeDefinition> fetchAttributes(ServiceType serviceType) {
-        return namedParameterJdbcTemplate.query(attributeDefinitionQueryBuilder.findByServiceCodeAndTenantId(),
-                getAttributesMap(serviceType), new BeanPropertyRowMapper<>(AttributeDefinition.class));
+    //used for update unique validation
+    public ServiceType findByCodeAndTenantId(ServiceType serviceType){
+        return namedParameterJdbcTemplate.queryForObject(serviceTypeQueryBuilder.getSearchQueryForUpdateValidation(),
+                    getUpdateValidationMap(serviceType), new BeanPropertyRowMapper<>(ServiceType.class));
     }
 
-    private HashMap<String, java.io.Serializable> getNamedQuery(ServiceType serviceType) {
-        HashMap<String, java.io.Serializable> parametersMap = new HashMap<String, java.io.Serializable>();
+    private HashMap getUpdateValidationMap(ServiceType serviceType){
+        HashMap<String, Object> parametersMap = new HashMap<String, Object>();
+
+        parametersMap.put("code", serviceType.getCode());
+        parametersMap.put("tenantid", serviceType.getTenantId());
+
+        return parametersMap;
+    }
+
+    private HashMap<String, Object> getNamedQuery(ServiceType serviceType) {
+        HashMap<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("code", serviceType.getCode());
         parametersMap.put("name", serviceType.getName());
         parametersMap.put("category", serviceType.getCategory());
@@ -208,15 +212,6 @@ public class ServiceTypeRepository {
         parametersMap.put("code", serviceType.getCode());
         parametersMap.put("tenantid", serviceType.getTenantId());
         parametersMap.put("keywords", keywords);
-
-        return parametersMap;
-    }
-
-    private HashMap<String, String> getAttributesMap(ServiceType serviceType) {
-        HashMap<String, String> parametersMap = new HashMap<>();
-
-        parametersMap.put("servicecode", serviceType.getCode());
-        parametersMap.put("tenantid", serviceType.getTenantId());
 
         return parametersMap;
     }

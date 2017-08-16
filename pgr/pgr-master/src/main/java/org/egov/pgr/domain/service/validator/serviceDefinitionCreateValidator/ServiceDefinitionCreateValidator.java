@@ -28,7 +28,7 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 
 			error.put("code", "tanantId Vaalidator.1");
 			error.put("field", "ServiceDefinition.tanantId");
-			error.put("message", "tanantId mandatory");
+			error.put("message", "tanantId Required");
 
 			throw new PGRMasterException(error);
 		}
@@ -38,7 +38,7 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 
 			error.put("code", "DefinitionCode Vaalidator.2");
 			error.put("field", "ServiceDefinition.DefinitionCode");
-			error.put("message", "Code mandatory ");
+			error.put("message", "Code Required ");
 
 			throw new PGRMasterException(error);
 		}
@@ -71,7 +71,7 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "DefinitionCode Vaalidator.3");
 			error.put("field", "DefinitionTypeConfiguration.ServiceCode");
-			error.put("message", "ServiceCode not exist in cmplnttyp table ");
+			error.put("message", "Mapping not exist ");
 			throw new PGRMasterException(error);
 
 		}
@@ -81,7 +81,7 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "DefinitionCode Vaalidator.4");
 			error.put("field", "DefinitionTypeConfiguration.code");
-			error.put("message", "code already exist in definition table ");
+			error.put("message", "Data Exists");
 			throw new PGRMasterException(error);
 
 		}

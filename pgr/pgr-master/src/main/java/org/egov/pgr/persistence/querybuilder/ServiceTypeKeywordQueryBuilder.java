@@ -20,7 +20,7 @@ public class ServiceTypeKeywordQueryBuilder {
 
     public String getUpdateQuery(){
         return "UPDATE servicetype_keyword SET servicecode = :servicecode, keyword = :keyword, tenantid = :tenantid, " +
-                "lastmodifieddate = :lastmodifieddate, lastmodifiedby = :lastmodifiedby WHERE servicecode = :servicecode" +
-                "tenantid = :tenantid AND keyword = :keyword";
+                "lastmodifieddate = :lastmodifieddate, lastmodifiedby = :lastmodifiedby WHERE servicecode = :servicecode AND " +
+                "tenantid = :tenantid";
     }
 }

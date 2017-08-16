@@ -55,9 +55,9 @@ public class InstrumentRepository {
         String baseUri = applicationProperties.getSearchInstrument();
         builder.append(hostname).append(baseUri);
 
-        LOGGER.info("Request to instrument create: "
+        LOGGER.info("Request to instrument search: "
                 + baseUri.toString());
-        LOGGER.info("URI Instrument create: " + builder.toString());
+        LOGGER.info("URI Instrument search: " + builder.toString());
         List<Instrument> instrumentList = restTemplate.postForObject(builder.toString(),
                 requestInfo, InstrumentResponse.class, instrumentHeader,tenantId).getInstruments();
         LOGGER.info("Response from instrument service: " + instrumentList);

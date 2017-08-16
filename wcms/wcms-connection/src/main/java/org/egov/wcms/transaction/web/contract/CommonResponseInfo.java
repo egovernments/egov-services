@@ -50,5 +50,17 @@ public class CommonResponseInfo {
 
     @JsonProperty("id")
     private String id;
+    
+    @JsonProperty("code")
+    private String code;
+    
+    @JsonProperty("name")
+    private String name;
+    
+    @JsonProperty("description")
+    private String description;
+    
+    @JsonProperty("tenantId")
+    private String tenantId; 
         
 }

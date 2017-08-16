@@ -125,8 +125,24 @@ public class ReceiptController {
 		if (requestBodyBindingResult.hasErrors())
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		List<Receipt> receipts = new ArrayList<>();
+		
 		try {
+				if(null != receiptGetRequest.getFromDate() && null != receiptGetRequest.getToDate()){
+					receiptReqValidator.validateSearchReceiptRequest(receiptGetRequest);
+				}
 			receipts = receiptService.getReceipts(searchCriteria,requestInfo).toDomainContract();
+		}catch(ValidationException e){
+			LOGGER.info("Exception Message: "+e.getMessage());
+			Error error = new Error();
+			final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+			error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
+			error.setMessage(e.getMessage());
+			error.setDescription("Validation Exception");
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			errorResponse.setResponseInfo(responseInfo);
+
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
 		} catch (final Exception exception) {
 			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

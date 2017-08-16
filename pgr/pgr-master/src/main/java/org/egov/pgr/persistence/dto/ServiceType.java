@@ -1,16 +1,9 @@
 package org.egov.pgr.persistence.dto;
 
-import java.util.Collections;
+import lombok.*;
+
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Builder
 @Getter
@@ -38,10 +31,10 @@ public class ServiceType {
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
-    private List<AttributeDefinition> attributeDefinitions;
 
     public org.egov.pgr.domain.model.ServiceType toDomain(){
         return org.egov.pgr.domain.model.ServiceType.builder()
+                .id(id)
                 .serviceCode(code)
                 .serviceName(name)
                 .type(type)
@@ -55,7 +48,6 @@ public class ServiceType {
                 .isDay(isday)
                 .tenantId(tenantId)
                 .keywords(keywords)
-                .attributes(mapToDomainAttributes())
                 .build();
     }
 
@@ -63,12 +55,4 @@ public class ServiceType {
         return keywords.stream().anyMatch(keywordsList::contains);
     }
 
-    private List<org.egov.pgr.domain.model.AttributeDefinition> mapToDomainAttributes(){
-    	if(null == attributeDefinitions)
-    		return Collections.EMPTY_LIST;
-    	
-        return attributeDefinitions.stream()
-                .map(AttributeDefinition::toDomain)
-                .collect(Collectors.toList());
-    }
 }

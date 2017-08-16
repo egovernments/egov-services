@@ -22,7 +22,7 @@ public class ValueDefinitionCreateValidator implements ValueDefinitionValidator 
 
 			error.put("code", "valueDefinition Vaalidator.1");
 			error.put("field", "valueDefinition.key");
-			error.put("message", "key mandatory");
+			error.put("message", "key Required");
 
 			throw new PGRMasterException(error);
 		}
@@ -32,7 +32,7 @@ public class ValueDefinitionCreateValidator implements ValueDefinitionValidator 
 
 			error.put("code", "valueDefinition Vaalidator.2");
 			error.put("field", "valueDefinition.Name");
-			error.put("message", "Name mandatory ");
+			error.put("message", "Name Required ");
 
 			throw new PGRMasterException(error);
 		}

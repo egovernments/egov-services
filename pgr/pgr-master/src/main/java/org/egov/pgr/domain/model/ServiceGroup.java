@@ -70,6 +70,8 @@ public class ServiceGroup {
 
 	@NotNull
 	private String description;
+	
+	private Boolean active;
 
 	@NotNull
 	private String tenantId;

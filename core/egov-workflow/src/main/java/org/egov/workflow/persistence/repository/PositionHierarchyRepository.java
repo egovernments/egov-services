@@ -1,6 +1,5 @@
 package org.egov.workflow.persistence.repository;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.workflow.web.contract.PositionHierarchyResponse;
 import org.egov.workflow.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,7 @@ public class PositionHierarchyRepository {
     }
 
     public PositionHierarchyResponse getByPositionByComplaintTypeAndFromPosition(final Long fromPosition, final String serviceCode, final String tenantId) {
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().build()).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(null).build();
         return restTemplate.postForObject(positionHierarchyUrl, wrapper, PositionHierarchyResponse.class, fromPosition, serviceCode, tenantId);
     }
 

@@ -134,22 +134,21 @@ public class DisposalService {
                 .getSubledgerDetails(requestInfo, tenantId, assetCategory.getAssetAccount());
         final List<ChartOfAccountDetailContract> subledgerDetailsForAssetSaleAccount = voucherService
                 .getSubledgerDetails(requestInfo, tenantId, disposal.getAssetSaleAccount());
+        voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount, subledgerDetailsForAssetSaleAccount);
 
-        if (subledgerDetailsForAssetAccount != null && subledgerDetailsForAssetSaleAccount != null
-                && !subledgerDetailsForAssetAccount.isEmpty() && !subledgerDetailsForAssetSaleAccount.isEmpty())
-            throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
-        else {
-            final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
-                    requestInfo);
-            log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
+        voucherService.validateCOAActiveForPosting(subledgerDetailsForAssetAccount);
+        voucherService.validateCOAActiveForPosting(subledgerDetailsForAssetSaleAccount);
 
-            final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, disposal.getFund(),
-                    asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
+        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
+                requestInfo);
+        log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-            log.debug("Voucher Request for Disposal :: " + voucherRequest);
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, disposal.getFund(),
+                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
 
-            return voucherService.createVoucher(voucherRequest, tenantId, headers);
-        }
+        log.debug("Voucher Request for Disposal :: " + voucherRequest);
+
+        return voucherService.createVoucher(voucherRequest, tenantId, headers);
 
     }
 

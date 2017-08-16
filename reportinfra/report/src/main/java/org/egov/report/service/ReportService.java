@@ -73,7 +73,7 @@ public class ReportService {
 			sc.setType(te);
 			sc.setLabel(cd.getLabel());
 			sc.setName(cd.getName());
-			sc.setDefaultValue(cd.getDefaultValue());
+			sc.setDefaultValue(cd.getPattern());
 			searchParams.add(sc);
 
 		}

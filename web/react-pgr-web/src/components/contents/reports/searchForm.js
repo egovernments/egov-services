@@ -114,33 +114,50 @@ class ShowForm extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    if((this.props.metaData.reportDetails && nextProps.metaData.reportDetails) && (nextProps.metaData.reportDetails !== this.props.metaData.reportDetails)){
+      // console.log(nextProps.metaData.reportDetails.reportName, this.props.match.params.moduleName);
+      this.setState({reportName : nextProps.metaData.reportDetails.reportName});
+      this.setState({moduleName : this.props.match.params.moduleName});
+      let {initForm,setForm} = this.props;
+      let {searchParams}=!_.isEmpty(nextProps.metaData)?nextProps.metaData.reportDetails:{searchParams:[]};
+      let required=[];
+      for (var i = 0; i < searchParams.length; i++) {
+        if (searchParams.isMandatory || searchParams.hasOwnProperty("isMandatory")?false:true) {
+          required.push(searchParams.name)
+        }
+      }
+      initForm(required);
+    }
+  }
+
   componentDidMount()
   {
     let {initForm,metaData,setForm} = this.props;
     let {searchParams}=!_.isEmpty(metaData)?metaData.reportDetails:{searchParams:[]};
     let required=[];
+    //console.log(this.props.match.params.reportName, this.props.match.params.moduleName);
+    this.setState({reportName : this.props.match.params.reportName});
+    this.setState({moduleName : this.props.match.params.moduleName});
     for (var i = 0; i < searchParams.length; i++) {
       if (searchParams.isMandatory || searchParams.hasOwnProperty("isMandatory")?false:true) {
         required.push(searchParams.name)
       }
     }
-    initForm();
-    setForm(required);
+    initForm(required);
+    //setForm(required);
   }
-
-
 
   search(e)
   {
     e.preventDefault();
-
-      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams,match}=this.props;
+      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams}=this.props;
       let searchParams=[]
 
 
       for (var variable in searchForm) {
         // console.log(variable);
-        let input=match.params.moduleName=="pgr-master"?(typeof(searchForm[variable])=="object"?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59"):searchForm[variable]):(typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable])
+        let input=this.state.moduleName=="pgr-master"?(typeof(searchForm[variable])=="object"?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59"):searchForm[variable]):(typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable])
         searchParams.push({
           name:variable,
           // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
@@ -158,25 +175,26 @@ class ShowForm extends Component {
       setSearchParams(searchParams);
 
 
-      let response=Api.commonApiPost(match.params.moduleName+"/report/_get",{},{tenantId:"default",reportName:metaData.reportDetails.reportName,searchParams}).then(function(response)
+      let response=Api.commonApiPost(this.state.moduleName+"/report/_get",{},{tenantId:"default",reportName:this.state.reportName,searchParams}).then(function(response)
       {
         // console.log(response)
-        setReportResult(response)
+        setReportResult(response);
+        // console.log("Show Table");
+        showTable(true);
         setFlag(1);
       },function(err) {
           // console.log(err);
+          showTable(false);
           alert("Select all mandatory fields or try again later");
 
       });
-
-      // console.log("Show Table");
 
       changeButtonText("Search Again");
       // this.setState({searchBtnText:'Search Again'})
 
       //call api
       // setReportResult(resForm);
-      showTable(true);
+
   }
 
   render() {
@@ -192,7 +210,7 @@ class ShowForm extends Component {
       metaData
     } = this.props;
     let {search} = this;
-    console.log(metaData);
+    //console.log(metaData);
     // console.log(searchForm);
     return (
       <div className="">
@@ -224,11 +242,12 @@ class ShowForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
+const mapStateToProps = state => {
+  return ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
+}
 
 const mapDispatchToProps = dispatch => ({
   setForm: (required=[],pattern=[]) => {
-    console.log(required);
     dispatch({
       type: "SET_FORM",
       form:{},
@@ -246,17 +265,17 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
-  initForm: () => {
+  initForm: (required=[]) => {
     dispatch({
       type: "RESET_STATE",
       validationData: {
         required: {
           current: [],
-          required: [ ]
+          required: required
         },
         pattern: {
           current: [],
-          required: ["assessmentNo", "oldAssessmentNo", "mobileNo", "aadharNo", "doorNo"]
+          required: []
         }
       }
     });

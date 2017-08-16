@@ -31,7 +31,7 @@ public class CategoryDetail {
 	private RateTypeEnum rateType = null;
 
 	private Long uomId = null;
-	
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 }

@@ -153,6 +153,11 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			preparedStatementValues.add(tradeSubCategory);
 		}
 		
+		if ( status != null ) {
+			searchSql.append(" AND status = ? ");
+			preparedStatementValues.add(status);
+		}
+		
 
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getPageSize());	

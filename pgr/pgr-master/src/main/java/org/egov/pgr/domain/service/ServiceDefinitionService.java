@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.egov.pgr.domain.model.ServiceDefinition;
 import org.egov.pgr.domain.model.ServiceDefinitionSearchCriteria;
-import org.egov.pgr.domain.service.validator.Attributedefinition.validator.AttributeDefinitionCreateValidator;
+import org.egov.pgr.domain.service.validator.AttributedefinitionValidator.AttributeDefinitionCreateValidator;
 import org.egov.pgr.domain.service.validator.serviceDefinitionCreateValidator.ServiceDefinitionCreateValidator;
 import org.egov.pgr.domain.service.validator.valueDeficnitionValidator.ValueDefinitionCreateValidator;
 import org.egov.pgr.persistence.dto.AttributeDefinition;

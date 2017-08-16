@@ -38,13 +38,9 @@ class searchUserRole extends Component {
     initForm();
     let tenantId = localStorage.getItem('tenantId') || 'default';
     _this.props.setLoadingStatus('loading');
-    Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId}).then(function(response) {
+    Api.commonApiPost("/user/v1/_search",{userType : 'EMPLOYEE'},{tenantId : tenantId}).then(function(response) {
       _this.props.setLoadingStatus('loading');
-      //list only employee type users
-      var EMP_USER = response.user.filter(function (el){
-        return el.type !== 'CITIZEN';
-      })
-      _this.setState({users: EMP_USER});
+      _this.setState({users: response.user});
       _this.props.setLoadingStatus('hide');
     }, function(err) {
       _this.props.setLoadingStatus('hide');
@@ -69,7 +65,7 @@ class searchUserRole extends Component {
     return(
       <div className="userRole">
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > User Role< /div>}/>
+          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >User Role Mapping< /div>}/>
             <CardText style={{paddingTop:0}}>
               <Grid>
                 <Row>
@@ -98,8 +94,8 @@ class searchUserRole extends Component {
               </Grid>
             </CardText>
         </Card>
-        <div style={{textAlign: 'center'}}>
-          <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="View" primary={true}/>
+        <div className="text-center">
+          <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label={translate('pgr.lbl.view')} primary={true}/>
         </div>
       </div>
     )
@@ -137,6 +133,7 @@ const mapDispatchToProps = dispatch => ({
     });
   },
   handleAutoCompleteKeyUp : (e, type) => {
+    //Handle USER API call
     dispatch({
       type: "HANDLE_CHANGE",
       property: type,

@@ -31,11 +31,12 @@ public class SearchController {
 			@RequestParam(required = false) String tradeLicenseId,
 			@RequestParam(required = false) String applicationNumber,
 			@RequestParam(required = false) String licenseNumber,
+			@RequestParam(required = false) String oldLicenseNumber,
 			@RequestParam(required = false) String mobileNumber,
 			@RequestParam(required = false) String aadhaarNumber,
 			@RequestParam(required = false) String emailId,
 			@RequestParam(required = false) String propertyAssesmentNo,
-			@RequestParam(required = false) Integer revenueWard,
+			@RequestParam(required = false) Integer adminWard,
 			@RequestParam(required = false) Integer locality,
 			@RequestParam(required = false) String ownerName,
 			@RequestParam(required = false) String tradeTitle,
@@ -45,7 +46,7 @@ public class SearchController {
 			@RequestParam(required = false) String legacy,
 			@RequestParam(required = false) Integer status) throws Exception {
 
-		return searchService.searchFromEs( tenantId, pageSize, pageNumber, sort, active, tradeLicenseId, applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory, legacy, status);
+		return searchService.searchFromEs( tenantId, pageSize, pageNumber, sort, active, tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory, legacy, status);
 	}
 
 }

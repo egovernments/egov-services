@@ -10,12 +10,10 @@ import org.egov.propertyUser.util.UpicNoGeneration;
 import org.egov.propertyUser.util.UserUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,13 +43,7 @@ public class Consumer {
 	@Autowired
 	private UpicNoGeneration upicNoGeneration;
 
-	/*
-	 * This method for creating rest template
-	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+	
 
 	
 

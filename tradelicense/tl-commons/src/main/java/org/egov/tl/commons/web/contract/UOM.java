@@ -27,11 +27,11 @@ public class UOM {
 	private String tenantId = null;
 
 	@NotNull
-	@Size(min = 4, max = 256)
+	@Size(min = 4, max = 100)
 	private String name = null;
 
 	@NotNull
-	@Size(min = 4, max = 50)
+	@Size(min = 4, max = 20)
 	private String code = null;
 
 	private Boolean active = null;

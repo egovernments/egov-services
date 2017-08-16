@@ -611,10 +611,10 @@ class Login extends Component {
                     <Card>
                       <CardText>
                           <Row>
-                              <Col lg={12}>
+                              <Col xs={12} sm={12} md={12} lg={12}>
                               <h4>{translate('core.lbl.signin')}</h4>
 							                <Row>
-                                <Col lg={12}>
+                                <Col xs={12} sm={12} md={12} lg={12}>
                                 <TextField
                                     floatingLabelText={translate('core.lbl.addmobilenumber/login')}
                                     errorText={fieldErrors.username ? fieldErrors.username : ""}
@@ -625,7 +625,7 @@ class Login extends Component {
                                     onChange={(e) => handleChange(e, "username", true, "")}
                                 />
                                 </Col>
-                                <Col lg={12}>
+                                <Col xs={12} sm={12} md={12} lg={12}>
                                 <TextField tabIndex="0"
                                     floatingLabelText={translate('core.lbl.password')}
                                     type="password"
@@ -637,10 +637,10 @@ class Login extends Component {
                                     onChange={(e) => handleChange(e, "password", true, "")}
                                 />
                                 </Col>
-                                <Col lg={12}>
+                                <Col xs={12} sm={12} md={12} lg={12}>
                                   {showError()}
                                 </Col>
-                                <Col lg={12}>
+                                <Col xs={12} sm={12} md={12} lg={12}>
                                   <RaisedButton disabled={!isFormValid} type="submit" label={translate('core.lbl.signin')} style={{width:150,marginTop: 20}}  primary={true} />
                                   <FlatButton label={translate('core.lbl.forgot.password')} labelStyle={{fontSize:12}} style={styles.buttonTopMargin} hoverColor={'#ffffff'} onClick={showPasswordModal}/>
                                 </Col>

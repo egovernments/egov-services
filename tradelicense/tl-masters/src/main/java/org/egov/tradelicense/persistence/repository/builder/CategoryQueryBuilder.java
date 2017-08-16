@@ -15,12 +15,12 @@ public class CategoryQueryBuilder {
 	private static final String categoryDetailTableName = ConstantUtility.CATEGORY_DETAIL_TABLE_NAME;
 
 	public static final String INSERT_CATEGORY_QUERY = "INSERT INTO " + categoryTableName
-			+ " (tenantId, name, code, active ,parentId, businessNature, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(?,?,?,?,?,?,?,?,?,?)";
+			+ " (tenantId, name, code, active ,parentId, businessNature, validityYears, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_CATEGORY_QUERY = "UPDATE " + categoryTableName
 			+ " SET tenantId = ?, name = ?, code = ?, active = ?, parentId = ?, businessNature = ?,"
-			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
+			+ " validityYears =? , lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
 
 	public static final String INSERT_CATEGORY_DETAIL_QUERY = "INSERT INTO " + categoryDetailTableName
 			+ " (categoryId, feeType, rateType, uomId, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
@@ -55,7 +55,8 @@ public class CategoryQueryBuilder {
 	}
 
 	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
-			String type, String businessNature, Integer categoryId, Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
+			String type, String businessNature, Integer categoryId, String rateType, String feeType,
+			Integer uomId, Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + categoryTableName + " where ");
@@ -118,6 +119,31 @@ public class CategoryQueryBuilder {
 			}
 
 		}
+		
+		if( rateType != null || feeType != null || uomId != null){
+			
+			StringBuffer subQuery = new StringBuffer();
+			subQuery.append(" AND  id in ( SELECT categoryId from "+categoryDetailTableName+" WHERE 1=1   ");
+			if( rateType != null ){
+				subQuery.append( " AND rateType = ?");
+				preparedStatementValues.add(rateType);
+			}
+			
+			if( feeType != null ){
+				subQuery.append( " AND feeType = ?");
+				preparedStatementValues.add(feeType);
+			}
+			
+			if( uomId != null ){
+				subQuery.append( " AND uomId = ?");
+				preparedStatementValues.add(uomId);
+			}
+			subQuery.append(")");
+			searchSql.append( subQuery );
+			
+		}
+		
+		
 
 		if (pageSize != null) {
 			searchSql.append(" limit ? ");

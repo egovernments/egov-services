@@ -43,7 +43,8 @@ public interface CategoryService {
 	 * @return CategoryResponse
 	 */
 	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String active, String type, String businessNature, Integer categoryId, Integer pageSize, Integer offSet);
+			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType, Integer uomId,
+			Integer pageSize, Integer offSet);
 
 	/**
 	 * Description : service method for creating category master

@@ -168,7 +168,7 @@ public class DemandService {
 	
 	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
 	    
-		log.debug("THE recieved bill request object------"+billRequest);
+		log.info("THE recieved bill request object------"+billRequest);
 	    if(billRequest !=null && billRequest.getBills()!=null){
 
 		List<Bill> bills = billRequest.getBills();
@@ -181,7 +181,7 @@ public class DemandService {
 		}
 		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).tenantId(tenantId).build();
 		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
-		log.debug("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
+		log.info("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
 		Map<String, Demand> demandIdMap = demands.stream()
 				.collect(Collectors.toMap(Demand::getId, Function.identity()));
 		Map<String, List<Demand>> demandListMap = new HashMap<>();
@@ -210,30 +210,37 @@ public class DemandService {
 							detailsMap.get(demandDetail.getTaxHeadMasterCode()).add(demandDetail);
 					}
 				}
-				for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
+					for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
 
-					List<String> accDescription = Arrays.asList(accountDetail.getAccountDescription().split("-"));
-					String taxHeadCode = accDescription.get(0);
-					Long fromDate = Long.valueOf(accDescription.get(1));
-					Long toDate = Long.valueOf(accDescription.get(2));
+						if (accountDetail.getAccountDescription() != null && accountDetail.getCreditAmount() != null) {
+							String[] array = accountDetail.getAccountDescription().split("-");
+							log.info("the string array of values--------" + array.toString());
 
-					for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
-						log.debug("the current demand detail : " + demandDetail);
-						Demand demand = demandIdMap.get(demandDetail.getDemandId());
-						log.debug("the respective deman"+demand);
-						
-						if (fromDate.equals(demand.getTaxPeriodFrom()) && toDate.equals(demand.getTaxPeriodTo())) {
-							
-							BigDecimal collectedAmount = accountDetail.getCreditAmount();
-							log.debug("the credit amt :"+ collectedAmount);
-							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
-							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
-							log.debug("the setTaxAmount ::: "+demandDetail.getTaxAmount());
-							log.debug("the setCollectionAmount ::: "+demandDetail.getCollectionAmount());
+							List<String> accDescription = Arrays.asList(array);
+							String taxHeadCode = accDescription.get(0);
+							Long fromDate = Long.valueOf(accDescription.get(1));
+							Long toDate = Long.valueOf(accDescription.get(2));
+
+							for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
+								log.info("the current demand detail : " + demandDetail);
+								Demand demand = demandIdMap.get(demandDetail.getDemandId());
+								log.info("the respective deman" + demand);
+
+								if (fromDate.equals(demand.getTaxPeriodFrom())
+										&& toDate.equals(demand.getTaxPeriodTo())) {
+
+									BigDecimal collectedAmount = accountDetail.getCreditAmount();
+									log.info("the credit amt :" + collectedAmount);
+									//demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
+									demandDetail.setCollectionAmount(
+											demandDetail.getCollectionAmount().add(collectedAmount));
+									log.info("the setTaxAmount ::: " + demandDetail.getTaxAmount());
+									log.info("the setCollectionAmount ::: " + demandDetail.getCollectionAmount());
+								}
+							}
 						}
 					}
 				}
-			}
 		}
 		
 		demandRepository.update(new DemandRequest(requestInfo,demands));

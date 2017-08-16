@@ -14,16 +14,15 @@ public class PositionHierarchyRepository {
     private final String positionHierarchyUrl;
 
     public PositionHierarchyRepository(final RestTemplate restTemplate,
-                                       @Value("${egov.services.hrmasters.host}") final String hrMastersServiceHostname,
-                                       @Value("${egov.services.hr_employee.positionhierarchys}") final String url) {
+                                       @Value("${egov.services.pgrmaster.host}") final String hrMastersServiceHostname,
+                                       @Value("${egov.services.pgrmaster.positionhierarchy}") final String url) {
         this.restTemplate = restTemplate;
         this.positionHierarchyUrl = hrMastersServiceHostname + url;
     }
 
-    public PositionHierarchyResponse getByObjectTypeObjectSubTypeAndFromPosition(final String objectType,
-                                                                                 final String objectSubType, final Long fromPosition, final String tenantId) {
+    public PositionHierarchyResponse getByPositionByComplaintTypeAndFromPosition(final Long fromPosition, final String serviceCode, final String tenantId) {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().build()).build();
-        return restTemplate.postForObject(positionHierarchyUrl, wrapper, PositionHierarchyResponse.class, fromPosition, objectType, objectSubType, tenantId);
+        return restTemplate.postForObject(positionHierarchyUrl, wrapper, PositionHierarchyResponse.class, fromPosition, serviceCode, tenantId);
     }
 
 }

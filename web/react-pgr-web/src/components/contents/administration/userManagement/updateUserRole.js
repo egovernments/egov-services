@@ -167,7 +167,7 @@ class updateUserRole extends Component {
     finObj['roles'] = roles;
     Api.commonApiPost("/user/users/"+this.props.match.params.userId+"/_updatenovalidate",{},{user : finObj}).then(function(response) {
       _this.props.setLoadingStatus('hide');
-      _this.handleError('Role mapping updated successfully');
+      _this.handleError('User Role Mapping updated successfully');
     }, function(err) {
       _this.props.setLoadingStatus('hide');
       _this.handleError(err.message);
@@ -217,8 +217,8 @@ class updateUserRole extends Component {
             </CardText>
         </Card>
         <div className="text-center">
-          <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => update(e)} disabled={!isFormValid} label="Update" primary={true}/>
-          <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} label="Search" primary={true}/>
+          <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => update(e)} disabled={!isFormValid} label={translate('pgr.lbl.update')} primary={true}/>
+          <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} label={translate('core.lbl.search')} primary={true}/>
         </div>
       </div>
     )

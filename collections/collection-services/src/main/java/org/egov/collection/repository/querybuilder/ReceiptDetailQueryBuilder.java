@@ -191,7 +191,7 @@ public class ReceiptDetailQueryBuilder {
 		if (searchCriteria.getReceiptNumbers() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
-			selectQuery.append(" rh.receiptNumber IN "
+			selectQuery.append(" rh.receiptNumber ilike any  "
 					+ getNumberQuery(searchCriteria.getReceiptNumbers()));
 		}
 
@@ -281,16 +281,15 @@ public class ReceiptDetailQueryBuilder {
 	}
 
 	private static String getNumberQuery(List<String> receiptNumbersList) {
-		StringBuilder query = new StringBuilder("('");
+		StringBuilder query = new StringBuilder("(array [");
+
 		if (receiptNumbersList.size() >= 1) {
-			query.append(receiptNumbersList.get(0).toString());
-			query.append("'");
+			query.append("'%").append(receiptNumbersList.get(0).toString()).append("%'");
 			for (int i = 1; i < receiptNumbersList.size(); i++) {
-				query.append(", '" + receiptNumbersList.get(i));
-				query.append("'");
+				query.append(", '%" + receiptNumbersList.get(i) + "%'");
 			}
 		}
-		return query.append(")").toString();
+		return query.append("])").toString();
 	}
 
 	public static String getNextSeqForRcptHeader() {

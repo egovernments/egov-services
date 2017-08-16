@@ -1,12 +1,4 @@
-{  
-   "responseInfo":{  
-      "apiId":"1",
-      "ver":"1.0",
-      "ts":null,
-      "resMsgId":"placeholder",
-      "msgId":null,
-      "status":"placeholder"
-   },
+
    "licenses":[  
       {  
          "id":null,
@@ -25,6 +17,7 @@
          "propertyAssesmentNo":null,
          "localityId":null,
          "revenueWardId":null,
+         "adminWardId":null,
          "tradeAddress":null,
          "ownerShipType":null,
          "tradeTitle":null,
@@ -52,12 +45,6 @@
          ],
          "supportDocuments":null,
          "status":null,
-         "auditDetails":{  
-            "createdBy":null,
-            "lastModifiedBy":null,
-            "createdTime":null,
-            "lastModifiedTime":null
-         }
+         "auditDetails":null
       }
    ]
-}

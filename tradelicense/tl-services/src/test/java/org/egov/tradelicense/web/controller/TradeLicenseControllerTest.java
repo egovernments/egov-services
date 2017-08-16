@@ -1,8 +1,10 @@
 package org.egov.tradelicense.web.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -14,51 +16,58 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.utils.RequestJsonReader;
 import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.SupportDocumentContract;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseResponse;
-import org.egov.tradelicense.TlServicesApplication;
-import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.configuration.TestConfiguration;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
-import org.egov.tradelicense.web.repository.BoundaryContractRepository;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(TradeLicenseController.class)
-@ContextConfiguration(classes = { TlServicesApplication.class })
+@Import(TestConfiguration.class)
 public class TradeLicenseControllerTest {
-
-	@MockBean
-	TradeLicenseService tradeLicenseService;
-
-	@MockBean
-	private PropertiesManager propertiesManager;
-	
-	@MockBean
-	private BoundaryContractRepository boundaryContractRepository;
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockBean
-	KafkaTemplate kafkaTemplate;
+	TradeLicenseService tradeLicenseService;
+
+	private RequestJsonReader resources = new RequestJsonReader();
+
+	@Captor
+	private ArgumentCaptor<TradeLicenseRequest> captor;
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
 
 	/**
 	 * Description : Test method for createCategory() method
@@ -66,7 +75,7 @@ public class TradeLicenseControllerTest {
 	 */
 
 	@Test
-	public void testCreateLegacyTrade() throws Exception {
+	public void testCreateLegacyTrade() throws IOException, Exception {
 
 		try {
 
@@ -91,10 +100,15 @@ public class TradeLicenseControllerTest {
 			when(tradeLicenseService.add(anyListOf(TradeLicense.class), any(RequestInfo.class),
 					any(BindingResult.class))).thenReturn(licenses);
 
-			mockMvc.perform(post("/license/v1/_create").contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("legacyTradeCreateRequest.json"))).andExpect(status().isOk())
-					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-					.andExpect(content().json(getFileContents("legacyTradeCreateResponse.json")));
+			mockMvc.perform(post("/license/v1/_create").content(resources.readRequest("legacyTradeCreateRequest.json"))
+					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
+					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+					.andExpect(content().json(resources.readResponse("legacyTradeCreateResponse.json")));
+
+			verify(tradeLicenseService).addToQue(captor.capture());
+
+			final TradeLicenseRequest actualRequest = captor.getValue();
+			assertEquals(true, actualRequest.getLicenses().get(0).getActive());
 
 		} catch (Exception e) {
 

@@ -1,12 +1,16 @@
 package org.egov.egf.voucher.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.web.contract.FinancialConfigurationContract;
+import org.egov.egf.master.web.contract.FinancialConfigurationValueContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
@@ -29,6 +33,7 @@ import org.egov.egf.voucher.web.contract.Boundary;
 import org.egov.egf.voucher.web.contract.DepartmentResponse;
 import org.egov.egf.voucher.web.repository.BoundaryRepository;
 import org.egov.egf.voucher.web.repository.DepartmentRepository;
+import org.egov.egf.voucher.web.util.VoucherConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +81,10 @@ public class VoucherService {
 
 	@Autowired
 	private DepartmentRepository departmentRepository;
+
+	private List<String> mandatoryFields = new ArrayList<String>();
+
+	protected List<String> headerFields = new ArrayList<String>();
 
 	@Transactional
 	public List<Voucher> create(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
@@ -235,9 +244,64 @@ public class VoucherService {
 					voucher.setDepartment(department.getDepartment().get(0));
 				}
 
+				getHeaderMandateFields();
+				
+				validateMandatoryFields(vouchers);
 			}
 
 		return vouchers;
+	}
+
+	private void getHeaderMandateFields() {
+
+		FinancialConfigurationContract financialConfigurationContract = new FinancialConfigurationContract();
+		financialConfigurationContract.setModule(VoucherConstants.CONFIG_MODULE_NAME);
+		financialConfigurationContract.setName(VoucherConstants.DEFAULT_TXN_MIS_ATTRRIBUTES_CONFIG_NAME);
+
+		FinancialConfigurationContract response = financialConfigurationContractRepository
+				.findByModuleAndName(financialConfigurationContract);
+
+		if (response != null)
+			for (FinancialConfigurationValueContract configValue : response.getValues()) {
+				String value = configValue.getValue();
+				final String header = value.substring(0, value.indexOf("|"));
+				headerFields.add(header);
+				final String mandate = value.substring(value.indexOf("|") + 1);
+				if (mandate.equalsIgnoreCase("M"))
+					mandatoryFields.add(header);
+			}
+
+		mandatoryFields.add("voucherdate");
+	}
+
+	protected void validateMandatoryFields(List<Voucher> vouchers) {
+
+		if (vouchers != null)
+			for (Voucher voucher : vouchers) {
+
+				checkMandatoryField("vouchernumber", voucher.getVoucherNumber());
+				checkMandatoryField("voucherdate", voucher.getVoucherDate());
+				checkMandatoryField("fund", voucher.getFund() != null ? voucher.getFund().getId() : null);
+				checkMandatoryField("function", voucher.getFunction() != null ? voucher.getFunction().getId() : null);
+				checkMandatoryField("department",
+						voucher.getDepartment() != null ? voucher.getDepartment().getId() : null);
+				checkMandatoryField("scheme", voucher.getScheme() != null ? voucher.getScheme().getId() : null);
+				checkMandatoryField("subscheme",
+						voucher.getSubScheme() != null ? voucher.getSubScheme().getId() : null);
+				checkMandatoryField("functionary",
+						voucher.getFunctionary() != null ? voucher.getFunctionary().getId() : null);
+				checkMandatoryField("fundsource",
+						voucher.getFundsource() != null ? voucher.getFundsource().getId() : null);
+				checkMandatoryField("field", voucher.getDivision() != null ? voucher.getDivision().getId() : null);
+			}
+
+	}
+
+	protected void checkMandatoryField(final String fieldName, final Object value) {
+
+		if (mandatoryFields.contains(fieldName) && (value == null || StringUtils.isEmpty(value.toString())))
+			throw new InvalidDataException(fieldName, fieldName + ".invalid", " Invalid " + fieldName);
+
 	}
 
 	public Pagination<Voucher> search(VoucherSearch voucherSearch) {

@@ -3,29 +3,40 @@ package org.egov.mr.repository.querybuilder;
 import java.util.List;
 
 import org.egov.mr.web.contract.ServiceConfigurationSearchCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class ServiceConfigurationQueryBuilder {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceConfigurationQueryBuilder.class);
-
 	public final String BASEQUERY = "SELECT ck.keyName as keyName, cv.value as value"
-			+ " FROM egmr_serviceConfigurationkeys ck JOIN egmr_serviceConfigurationValues cv ON ck.id = cv.keyId ";
+			+ " FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId ";
 
 	private StringBuilder selectQuery;
 
-	// Query for _search
+	/**
+	 * @Query for Search
+	 * 
+	 * @param serviceConfigurationSearchCriteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	public String getSelectQuery(ServiceConfigurationSearchCriteria serviceConfigurationSearchCriteria,
 			List<Object> preparedStatementValues) {
 		selectQuery = new StringBuilder(BASEQUERY);
 		addWhereCluase(serviceConfigurationSearchCriteria, preparedStatementValues);
+		log.debug("QueryForSearch: " + selectQuery.toString());
 		return selectQuery.toString();
 	}
 
-	// Helper method
+	/**
+	 * @HelperMethod
+	 * 
+	 * @param serviceConfigurationSearchCriteria
+	 * @param preparedStatementValues
+	 */
 	@SuppressWarnings("unchecked")
 	private void addWhereCluase(ServiceConfigurationSearchCriteria serviceConfigurationSearchCriteria,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
@@ -57,13 +68,16 @@ public class ServiceConfigurationQueryBuilder {
 			selectQuery.append("cv.effectivefrom=? ");
 			preparedStatementValues.add(serviceConfigurationSearchCriteria.getEffectiveFrom());
 		}
-
-		selectQuery.append("ORDER BY ck.createdTime ASC ");
-		selectQuery.append(";");
-		LOGGER.info(selectQuery.toString());
+		selectQuery.append("ORDER BY ck.createdTime ASC;");
 	}
 
-	// Helper method
+	/**
+	 * @HelperMethod
+	 * 
+	 * @param appendAndClauseFlag
+	 * @param queryString
+	 * @return
+	 */
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
 		if (appendAndClauseFlag) {
 			queryString.append("AND ");

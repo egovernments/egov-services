@@ -38,7 +38,7 @@ var dat = {
 						"name": "Position",
 						"jsonPath": "Position[0].noOfPositions",
 						"label": "employee.createPosition.groups.fields.noOfPositions",
-						"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+						"pattern": "^[1-9]\d*$",
 						"type": "number",
 						"isRequired": true,
 						"isDisabled": false,

@@ -1,5 +1,6 @@
 package org.egov.tradelicense.domain.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.egov.tl.commons.web.requests.TradeLicenseResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.InvalidInputException;
+import org.egov.tradelicense.common.util.TimeStampUtil;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -102,6 +104,10 @@ public class TradeLicenseService {
 		for (TradeLicense tradeLicense : tradeLicenses) {
 
 			if (tradeLicense.getIsLegacy()) {
+				
+				if( tradeLicense.getOldLicenseNumber() == null ){
+					throw new InvalidInputException("Old License Number is Mandatory !");
+				}
 				// check unique constraint
 				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
 			} else {
@@ -240,6 +246,19 @@ public class TradeLicenseService {
 
 			}
 			
+			// feeDetails Validation
+			if( tradeLicense.getFeeDetails() != null & tradeLicense.getFeeDetails().size() > 0 ){
+				 String validFrom = tradeLicense.getLicenseValidFromDate();
+				 if( validFrom != null ){
+					 Timestamp validFromDate = TimeStampUtil.getTimeStamp(validFrom);
+					 Timestamp currenDate = new Timestamp(System.currentTimeMillis());
+					 // TODO 
+					 // 1. find how many years between the validFromDate and currentDate
+					 // 2. Figure out how many feeDetails ( including for which year ) based on the category.validityYears
+					 // 3. validate wether input matches with data idenfieid in the step2, if not matching thow InvalidINput exception
+				 }
+			}
+			
 		}
 
 		return tradeLicenses;
@@ -260,6 +279,7 @@ public class TradeLicenseService {
 		for (TradeLicense license : tradeLicenses) {
 
 			license.setId(tradeLicenseRepository.getNextSequence());
+			license.setStatus( new Long(1)); // Approved status id 1
 			if (license.getSupportDocuments() != null && license.getSupportDocuments().size() > 0) {
 				for (SupportDocument supportDocument : license.getSupportDocuments()) {
 					supportDocument.setLicenseId(license.getId());

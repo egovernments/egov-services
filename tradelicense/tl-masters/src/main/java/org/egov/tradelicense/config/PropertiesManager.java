@@ -26,6 +26,9 @@ public class PropertiesManager {
 	@Value("${invalid.input}")
 	private String invalidInput;
 
+	@Value("${invalid.category.validityYears.msg}")
+	private String invalidValidityYears;
+	
 	@Value("${duplicate.code}")
 	private String duplicateCode;
 
@@ -91,6 +94,9 @@ public class PropertiesManager {
 
 	@Value("${duplicate.subcategory.code}")
 	private String subCategoryCustomMsg;
+	
+	@Value("${duplicate.subcategory.detail}")
+	private String duplicateSubCategoryDetail;
 
 	@Value("${duplicate.businessnature.code}")
 	private String businessNatureCustomMsg;

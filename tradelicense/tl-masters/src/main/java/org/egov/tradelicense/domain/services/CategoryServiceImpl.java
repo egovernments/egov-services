@@ -134,14 +134,14 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String active, String type, String businessNature, Integer categoryId, Integer pageSize,
-			Integer offSet) {
+			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType,
+			Integer uomId, Integer pageSize,Integer offSet) {
 
 		CategoryResponse categoryResponse = new CategoryResponse();
 		try {
 
 			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
-					businessNature, categoryId, pageSize, offSet);
+					businessNature, categoryId,rateType, feeType, uomId, pageSize, offSet);
 
 			for (int i = 0; i < categories.size(); i++) {
 

@@ -1,4 +1,4 @@
-package org.egov.pgr.domain.service.validator.Attributedefinition.validator;
+package org.egov.pgr.domain.service.validator.AttributedefinitionValidator;
 
 
 import org.egov.pgr.domain.model.AttributeDefinition;

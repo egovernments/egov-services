@@ -31,7 +31,7 @@ public class FeeMatrixDetail {
 
 	@NotNull
 	private Double amount = null;
-	
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 }

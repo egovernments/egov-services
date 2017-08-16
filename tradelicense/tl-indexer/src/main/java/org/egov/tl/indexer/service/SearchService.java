@@ -36,8 +36,8 @@ public class SearchService {
 	
 	public TradeLicenseResponse searchFromEs(String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
-			String licenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
-			Integer revenueWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
+			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo,
+			Integer adminWard, Integer locality, String ownerName, String tradeTitle, String tradeType,
 			Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status){
 		
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -46,8 +46,8 @@ public class SearchService {
 		List<TradeLicenseContract> tlList = new ArrayList<TradeLicenseContract>();
 		
 		BoolQueryBuilder builder = SearchUtil.buildSearchQuery( tenantId,  active, tradeLicenseId,
-				applicationNumber, licenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo,
-				revenueWard, locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory,
+				applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo,
+				adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory,
 				legacy, status);
 		
 		if(builder != null ){

@@ -1,5 +1,6 @@
 package org.egov.tradelicense.persistence.repository;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -64,11 +65,17 @@ public class CategoryRepository {
 				} else {
 					ps.setString(6, category.getBusinessNature().name());
 				}
-
-				ps.setString(7, auditDetails.getCreatedBy());
-				ps.setString(8, auditDetails.getLastModifiedBy());
-				ps.setLong(9, auditDetails.getCreatedTime());
-				ps.setLong(10, auditDetails.getLastModifiedTime());
+				
+				if( category.getValidityYears() == null ){
+					ps.setLong(7, 0);
+				}else{
+					ps.setLong(7, category.getValidityYears());
+				}
+				
+				ps.setString(8, auditDetails.getCreatedBy());
+				ps.setString(9, auditDetails.getLastModifiedBy());
+				ps.setLong(10, auditDetails.getCreatedTime());
+				ps.setLong(11, auditDetails.getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -143,9 +150,14 @@ public class CategoryRepository {
 				} else {
 					ps.setString(6, category.getBusinessNature().name());
 				}
-				ps.setString(7, category.getAuditDetails().getLastModifiedBy());
-				ps.setLong(8, auditDetails.getLastModifiedTime());
-				ps.setLong(9, category.getId());
+				if( category.getValidityYears() == null ){
+					ps.setLong(7, 0);
+				}else{
+					ps.setLong(7, category.getValidityYears());
+				}
+				ps.setString(8, category.getAuditDetails().getLastModifiedBy());
+				ps.setLong(9, auditDetails.getLastModifiedTime());
+				ps.setLong(10, category.getId());
 
 				return ps;
 			}
@@ -199,7 +211,8 @@ public class CategoryRepository {
 	 * @return List<Category>
 	 */
 	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String active,
-			String type, String businessNature, Integer categoryId, Integer pageSize, Integer offSet) {
+			String type, String businessNature, Integer categoryId, String rateType, String feeType,
+			Integer uomId, Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
 
@@ -211,7 +224,7 @@ public class CategoryRepository {
 		}
 
 		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, type,
-				businessNature, categoryId, pageSize, offSet, preparedStatementValues);
+				businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet, preparedStatementValues);
 		List<Category> categories = getCategories(categorySearchQuery.toString(), preparedStatementValues);
 
 		return categories;
@@ -300,6 +313,7 @@ public class CategoryRepository {
 			} else {
 				category.setParentId(getLong(row.get("parentId")));
 			}
+			category.setValidityYears( getLong( row.get("validityYears")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));

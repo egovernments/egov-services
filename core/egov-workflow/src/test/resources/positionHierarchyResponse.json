@@ -1,13 +1,20 @@
 {
- "PositionHierarchy" : [ {
- "id" : 1,
- "fromPosition" : {
-     "id" : "1",
-     "name" : "position1"
- },
- "toPosition" : {
-     "id" : "2",
-     "name" : "position2"
- }
- }]
+    "escalationHierarchies": [
+        {
+            "fromPosition": 1,
+            "serviceCode": "complaintTypeCode",
+            "toPosition": 2,
+            "tenantId": "default",
+            "department": 2,
+            "designation": 2
+        }
+    ],
+    "responseInfo": {
+        "apiId": "emp",
+        "ver": "1.0",
+        "ts": "Thu Mar 09 18:30:00 GMT 2017",
+        "resMsgId": "uief87324",
+        "msgId": "20170310130900",
+        "status": "200"
+    }
 }

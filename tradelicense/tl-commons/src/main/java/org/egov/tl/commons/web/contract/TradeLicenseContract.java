@@ -43,6 +43,7 @@ public class TradeLicenseContract {
 	@JsonProperty("oldLicenseNumber")
 	private String oldLicenseNumber;
 
+	@NotNull
 	@JsonProperty("applicationDate")
 	private String applicationDate;
 
@@ -85,7 +86,7 @@ public class TradeLicenseContract {
 	@NotNull
 	@JsonProperty("revenueWardId")
 	private Integer revenueWardId;
-	
+
 	@NotNull
 	@JsonProperty("adminWardId")
 	private Integer adminWardId;
@@ -130,6 +131,10 @@ public class TradeLicenseContract {
 	@NotNull
 	@JsonProperty("tradeCommencementDate")
 	private String tradeCommencementDate;
+
+	@NotNull
+	@JsonProperty("licenseValidFromDate")
+	private String licenseValidFromDate;
 
 	@JsonProperty("agreementDate")
 	private String agreementDate;

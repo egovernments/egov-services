@@ -69,69 +69,69 @@ const checkRequiredFields = function(type, object) {
   switch(type) {
     case 'assignment':
       if(!object.fromDate) {
-        errorText["assignments.fromDate"] = "Required";
+        errorText["assignments.fromDate"] = translate("ui.framework.required");
       } else if(!object.toDate) {
-        errorText["assignments.toDate"] = "Required";
+        errorText["assignments.toDate"] = translate("ui.framework.required");
       } else if(!object.department) {
-        errorText["assignments.department"] = "Required";
+        errorText["assignments.department"] = translate("ui.framework.required");
       } else if(!object.designation) {
-        errorText["assignments.designation"] = "Required";
+        errorText["assignments.designation"] = translate("ui.framework.required");
       } else if(!object.position) {
-        errorText["assignments.position"] = "Required";
+        errorText["assignments.position"] = translate("ui.framework.required");
       } else if((object.hod == true || object.hod == "true") && (!object.mainDepartments || (object.mainDepartments && object.mainDepartments.length == 0))) {
         
-        errorText["assignments.mainDepartments"] = "Required";
+        errorText["assignments.mainDepartments"] = translate("ui.framework.required");
       }
       break;
     case 'jurisdiction':
       if(!object.jurisdictionsType) {
-        errorText["jurisdictions.jurisdictionsType"] = "Required";
+        errorText["jurisdictions.jurisdictionsType"] = translate("ui.framework.required");
       } else if(!object.boundary) {
-        errorText["jurisdictions.boundary"] = "Required";
+        errorText["jurisdictions.boundary"] = translate("ui.framework.required");
       }
       break;
     case 'serviceDet':
       if(!object.serviceInfo) {
-        errorText["serviceHistory.serviceInfo"] = "Required";
+        errorText["serviceHistory.serviceInfo"] = translate("ui.framework.required");
       } else if(!object.serviceFrom) {
-        errorText["serviceHistory.serviceFrom"] = "Required";
+        errorText["serviceHistory.serviceFrom"] = translate("ui.framework.required");
       }
       break;
     case 'probation':
       if(!object.designation) {
-        errorText["probation.designation"] = "Required";
+        errorText["probation.designation"] = translate("ui.framework.required");
       } else if(!object.declaredOn) {
-        errorText["probation.declaredOn"] = "Required";
+        errorText["probation.declaredOn"] = translate("ui.framework.required");
       } else if(!object.orderDate) {
-        errorText["probation.orderDate"] = "Required";
+        errorText["probation.orderDate"] = translate("ui.framework.required");
       }
       break;
     case 'regular':
       if(!object.designation) {
-        errorText["regularisation.designation"] = "Required";
+        errorText["regularisation.designation"] = translate("ui.framework.required");
       } else if(!object.declaredOn) {
-        errorText["regularisation.declaredOn"] = "Required";
+        errorText["regularisation.declaredOn"] = translate("ui.framework.required");
       } else if(!object.orderDate) {
-        errorText["regularisation.orderDate"] = "Required";
+        errorText["regularisation.orderDate"] = translate("ui.framework.required");
       }
       break;
     case 'edu':
       if(!object.designation) {
-        errorText["education.qualification"] = "Required";
+        errorText["education.qualification"] = translate("ui.framework.required");
       } else if(!object.declaredOn) {
-        errorText["education.yearOfPassing"] = "Required";
+        errorText["education.yearOfPassing"] = translate("ui.framework.required");
       }
       break;
     case 'tech':
       if(!object.skill) {
-        errorText["technical.skill"] = "Required";
+        errorText["technical.skill"] = translate("ui.framework.required");
       }
       break;
     case 'dept':
       if(!object.skill) {
-        errorText["test.test"] = "Required";
+        errorText["test.test"] = translate("ui.framework.required");
       } else if(!object.skill) {
-        errorText["test.yearOfPassing"] = "Required";
+        errorText["test.yearOfPassing"] = translate("ui.framework.required");
       }
       break;
   }
@@ -806,7 +806,7 @@ class Employee extends Component {
         }
 
         if(self.getDate(this.state.subObject.assignments.fromDate).getTime() > self.getDate(this.state.subObject.assignments.toDate).getTime()) {
-            return self.props.toggleSnackbarAndSetText(true, "From Date should be less than To Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.date"), false, true);
         }
 
         let assignments = Object.assign([], this.props.Employee.assignments || []);
@@ -820,7 +820,7 @@ class Employee extends Component {
 
         delete asst.mainDepartments;
         if(!validateDates(this.props.Employee, asst, editIndex)) {
-            return this.props.toggleSnackbarAndSetText(true, "Assignment dates overlapping.", false, true);
+            return this.props.toggleSnackbarAndSetText(true, translate("employee.error.message.assignmentDate"), false, true);
         }
 
         if(this.state.editIndex === '')
@@ -844,7 +844,7 @@ class Employee extends Component {
         let jurisdictions = Object.assign([], this.props.Employee.jurisdictions || []);
         var jst = this.state.subObject.jurisdictions.boundary;
         if(!checkIfNoDup(this.props.Employee, jst)) {
-            return this.props.toggleSnackbarAndSetText(true, "Duplicate entry not allowed.", false, true);
+            return this.props.toggleSnackbarAndSetText(true, translate("employee.error.message.dupAssignment"), false, true);
         }
 
         if(this.state.editIndex === '')
@@ -1549,7 +1549,7 @@ class Employee extends Component {
                 res.Employee.assignments[i].fromServer = true;
               }
               self.props.setForm(res.Employee, true);
-              if(self.state.screenType == "view" && res.Employee.bank) {
+              if(["view", "update"].indexOf(self.state.screenType) > -1 && res.Employee.bank) {
                 self.loadBranches(res.Employee.bank);
               }
             }, function(err) {
@@ -1732,7 +1732,7 @@ class Employee extends Component {
           var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
           if(date > date1)
-            return self.props.toggleSnackbarAndSetText(true, "Appointment Date must be before Retirement Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.appDate.retDate"), false, true);
         }
 
         if(self.props.Employee.dateOfTermination) {
@@ -1740,7 +1740,7 @@ class Employee extends Component {
           var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
           if(date > date1)
-            return self.props.toggleSnackbarAndSetText(true, "Appointment Date must be before Termination Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.appDate.terDate"), false, true);
         }
 
         if(self.props.Employee.dateOfResignation) {
@@ -1748,7 +1748,7 @@ class Employee extends Component {
           var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
           if(date > date1)
-            return self.props.toggleSnackbarAndSetText(true, "Appointment Date must be before Resignation Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.appDate.regDate"), false, true);
         }
 
         if(self.props.Employee.dateOfJoining) {
@@ -1756,7 +1756,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date > date1)
-            return self.props.toggleSnackbarAndSetText(true, "Joining Date must be after Appointment Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.appDate.joinDate"), false, true);
         }
         break;
       case 'joiningDate':
@@ -1766,7 +1766,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date < date1)
-            return self.props.toggleSnackbarAndSetText(true, "Joining Date must be after Appointment Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.appDate.joinDate"), false, true);
         }
 
         if(self.props.Employee.dateOfRetirement) {
@@ -1774,7 +1774,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date > date1)
-            return self.props.toggleSnackbarAndSetText(true, "Joining Date must be before Retirement Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.retDate.joinDate"), false, true);
         }
 
         if(self.props.Employee.dateOfTermination) {
@@ -1782,7 +1782,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date > date1)
-            return self.props.toggleSnackbarAndSetText(true, "Joining Date must be before Termination Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.joinDate.terDate"), false, true);
         }
 
         if(self.props.Employee.dateOfResignation) {
@@ -1790,7 +1790,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date > date1)
-            return self.props.toggleSnackbarAndSetText(true, "Joining Date must be before Resignation Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.joinDate.regDate"), false, true);
         }
         break;
       case 'retirementDate':
@@ -1800,14 +1800,14 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date < date1)
-            return self.props.toggleSnackbarAndSetText(true, "Appointment Date must be before Retirement Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.appDate.retDate"), false, true);
         }
         if(self.props.Employee.dateOfJoining) {
            var dateParts1 = self.props.Employee.dateOfAppointment.split("/");
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date < date1)
-            return self.props.toggleSnackbarAndSetText(true, "Joining Date must be before Retirement Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.retDate.joinDate"), false, true);
         }
         break;
       case 'terminationDate':
@@ -1817,7 +1817,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date < date1)
-            return self.props.toggleSnackbarAndSetText(true, "Appointment Date must be before Termination Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.appDate.terDate"), false, true);
         }
 
         if(self.props.Employee.dateOfJoining) {
@@ -1825,7 +1825,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date < date1)
-            return self.props.toggleSnackbarAndSetText(true, "Joining Date must be before Termination Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.joinDate.terDate"), false, true);
         }
         break;
       case 'resignationDate':
@@ -1835,7 +1835,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date < date1)
-            return self.props.toggleSnackbarAndSetText(true, "Appointment Date must be before Resignation Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.appDate.regDate"), false, true);
         }
 
         if(self.props.Employee.dateOfJoining) {
@@ -1843,7 +1843,7 @@ class Employee extends Component {
            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
            var date1 = new Date(newDateStr).getTime();
            if(date < date1)
-            return self.props.toggleSnackbarAndSetText(true, "Joining Date must be before Resignation Date.", false, true);
+            return self.props.toggleSnackbarAndSetText(true, translate("employee.error.message.joinDate.regDate"), false, true);
         }
         break;
     }
@@ -1958,7 +1958,7 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>Date Of Birth</span></label><br/>
+                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfBirth")}</span></label><br/>
                                 <label>{Employee.user ? Employee.user.dob : ""}</label></span>
                             )
                          :
@@ -1969,7 +1969,7 @@ class Employee extends Component {
                             return ('0' + date.getDate()).slice(-2) + '/'
                                       + ('0' + (date.getMonth()+1)).slice(-2) + '/'
                                       + date.getFullYear();
-                          }} floatingLabelText="Date Of Birth *" hintText="Date Of Birth *" value={Employee.user ? self.getDate(Employee.user.dob) : ""} onChange={(eve, date) => {
+                          }} floatingLabelText={translate("employee.Employee.fields.dateOfBirth") + " *"} hintText={translate("employee.Employee.fields.dateOfBirth") + " *"} value={Employee.user ? self.getDate(Employee.user.dob) : ""} onChange={(eve, date) => {
                       		handleDateChange('dob', date, true)
                       	}}/>
                       }
@@ -2028,22 +2028,22 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>Is User Active?</span></label><br/>
+                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.fields.isUserActive")}?</span></label><br/>
                                 <label>{Employee.user && [true, "true"].indexOf(Employee.user.active) > -1 ? "Yes" : "No" }</label></span>
                             )
                          :
 
-                        <span><label>Is User Active? *</label>
+                        <span><label>{translate("employee.fields.isUserActive")} *</label>
                       	<RadioButtonGroup name="isActive" valueSelected={Employee.user ? Employee.user.active : ''} onChange={(e, value) => {
                       		handleChangeNextLevel({target:{value:value}}, 'user', 'active', true, '')
                       	}}>
           					      <RadioButton
           					        value={true}
-          					        label="Yes"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value1")}
           					      />
           					      <RadioButton
           					        value={false}
-          					        label="No"
+          					        label={translate("employee.createPosition.groups.fields.outsourcepost.value2")}
           					      />
                 				</RadioButtonGroup></span>
                             }
@@ -3201,7 +3201,7 @@ class Employee extends Component {
   				</Tabs>
   				<br/>
           <div style={{textAlign: "center"}}>
-  				  <RaisedButton type="submit" label="Submit" primary={true} disabled={!self.props.isFormValid}/>
+  				  <RaisedButton type="submit" label={translate("ui.framework.submit")} primary={true} disabled={!self.props.isFormValid}/>
           </div>
   			</form>
         <Dialog

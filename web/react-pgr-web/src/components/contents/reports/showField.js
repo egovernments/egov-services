@@ -85,7 +85,18 @@ export default class ShowField extends Component
         case "epoch" :
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <DatePicker fullWidth={true}  floatingLabelText={description} value={obj.value ? obj.value: ''} onChange={(first, object)=>{
+              <DatePicker fullWidth={true} floatingLabelText={description}
+              value={obj.value ? obj.value: ''}
+              formatDate={(date)=>{
+                let dateObj = new Date(date);
+                let year = dateObj.getFullYear();
+                let month = dateObj.getMonth()+1;
+                let dt = dateObj.getDate();
+                dt =  dt < 10 ? '0' + dt : dt;
+                month = month < 10 ? '0' + month : month;
+                return dt + '-' + month + '-' + year;
+              }}
+              onChange={(first, object)=>{
                 let e={
                   target:{
                     value:object

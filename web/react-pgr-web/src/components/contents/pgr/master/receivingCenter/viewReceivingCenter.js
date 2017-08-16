@@ -122,7 +122,7 @@ class ViewReceivingCenter extends Component {
                      {translate("pgr.lbl.crn")}
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewReceivingCenter.iscrnrequired? "true": 'false'}
+                    {viewReceivingCenter.iscrnrequired? "Yes": 'No'}
                    </Col>
                  </Row>
                  <Row style={styles.addBorderBottom}>

@@ -97,10 +97,18 @@ public class DemandConnectionController {
     public ResponseEntity<?> getDemandDetailForLegacyAddDemandDetail(@ModelAttribute @Valid final DemandBeanGetRequest demandBeanGetRequest,
             @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
-        TaxPeriodResponse taxperiodres=demandConnectionService.getTaxPeriodByPeriodCycleAndService(demandBeanGetRequest.getTenantId(),PeriodCycle.HALFYEAR,demandBeanGetRequest.getExecutionDate());
-        List<TaxPeriod>taxPeriodList=taxperiodres.getTaxPeriods();
         final List<DemandDetailBean> dmdDetailBeanList = new ArrayList<>();
-       
+        Connection waterConn=waterConnectionService.getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNuber());
+        if(waterConn==null){
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Error error = new Error();
+        error.setDescription("Entered ConsumerNumber is not valid");
+        errorResponse.setError(error);
+        }
+        else
+        {
+        TaxPeriodResponse taxperiodres=demandConnectionService.getTaxPeriodByPeriodCycleAndService(demandBeanGetRequest.getTenantId(),PeriodCycle.HALFYEAR,waterConn.getExecutionDate());
+        List<TaxPeriod>taxPeriodList=taxperiodres.getTaxPeriods();
         
         try {
             for (TaxPeriod tax:taxPeriodList)
@@ -112,6 +120,7 @@ public class DemandConnectionController {
         } catch (final Exception exception) {
             
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfoWrapper.getRequestInfo());
+        }
         }
         return getSuccessResponse(dmdDetailBeanList, requestInfoWrapper.getRequestInfo());
     }

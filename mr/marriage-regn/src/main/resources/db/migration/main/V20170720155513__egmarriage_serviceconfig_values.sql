@@ -1,7 +1,7 @@
-CREATE SEQUENCE seq_egmr_serviceConfigurationValues;
-CREATE SEQUENCE seq_egmr_serviceConfiguration;
+CREATE SEQUENCE seq_egmr_serviceconfigurationvalues;
+CREATE SEQUENCE seq_egmr_serviceconfiguration;
 
-CREATE TABLE egmr_serviceConfiguration (
+CREATE TABLE egmr_serviceconfiguration (
 	id BIGINT NOT NULL,
 	keyName CHARACTER VARYING(50),
 	description CHARACTER VARYING(250),
@@ -14,7 +14,7 @@ CREATE TABLE egmr_serviceConfiguration (
 	CONSTRAINT pk_egmr_serviceConfiguration PRIMARY KEY (Id,tenantId)
 );
 
-CREATE TABLE egmr_serviceConfigurationValues (
+CREATE TABLE egmr_serviceconfigurationvalues (
 	id BIGINT NOT NULL,
 	keyId BIGINT NOT NULL,
 	value CHARACTER VARYING(1000) NOT NULL,

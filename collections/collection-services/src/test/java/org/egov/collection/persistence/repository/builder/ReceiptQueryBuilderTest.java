@@ -112,7 +112,7 @@ public class ReceiptQueryBuilderTest {
 				+ "rh.voucherheader as rh_voucherheader,rh.cancellationRemarks as rh_cancellationRemarks,"
 				+ "rh.createdBy as rh_createdBy,rh.createdDate as rh_createdDate,"
 				+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,rh.transactionid as rh_transactionid "
-				+ " from egcl_receiptheader rh  WHERE rh.tenantId = ? AND rh.receiptNumber IN ('RECNO567') AND "
+				+ " from egcl_receiptheader rh  WHERE rh.tenantId = ? AND rh.receiptNumber ilike any  (array ['%RECNO567%']) AND "
 				+ "rh.consumerCode = ? AND rh.status = ? AND rh.createdBy = ? AND"
 				+ " rh.receiptDate >= ? AND rh.receiptDate <= ? AND "
 				+ "rh.businessDetails = ? AND rh.id IN (1) ORDER BY rh.payeename DESC",

@@ -213,7 +213,7 @@ public class BillService {
 
 					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(demandDetail.getTaxHeadMasterCode());
 					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter(t -> 
-					demand.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand.getTaxPeriodTo().
+					demand2.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand2.getTaxPeriodTo().
 					compareTo(t.getValidTill()) <= 0).findAny().orElse(null);
 					
 					if(taxHeadMaster == null) 

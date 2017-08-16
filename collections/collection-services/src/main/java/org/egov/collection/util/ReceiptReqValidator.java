@@ -3,12 +3,15 @@ package org.egov.collection.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.ValidationException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.web.contract.ReceiptSearchGetRequest;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.collection.web.errorhandlers.Error;
@@ -115,5 +118,11 @@ public class ReceiptReqValidator {
 				.field(CollectionServiceConstants.INVALID_RECEIPT_REQUEST).build();
 		errorFields.add(errorField);
 	}
+	}
+	
+	public void validateSearchReceiptRequest(final ReceiptSearchGetRequest receiptGetRequest){
+		if(receiptGetRequest.getFromDate() > receiptGetRequest.getToDate()){
+			throw new ValidationException(CollectionServiceConstants.INVALID_DATE_EXCEPTION_MSG);
+		}
 	}
 }

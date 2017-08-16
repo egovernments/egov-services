@@ -42,25 +42,23 @@ package org.egov.wcms.transaction.web.contract;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class CommonResponseInfo {
+@ToString
+@EqualsAndHashCode
+@Builder
+public class BoundaryRequestInfoWrapper {
 
-    @JsonProperty("id")
-    private String id;
-    
-    @JsonProperty("code")
-    private String code;
-    
-    @JsonProperty("name")
-    private String name;
-    
-    @JsonProperty("description")
-    private String description;
-    
-    @JsonProperty("tenantId")
-    private String tenantId; 
-        
+    @JsonProperty("RequestInfo")
+    private BoundaryRequestInfo requestInfo;
+
 }

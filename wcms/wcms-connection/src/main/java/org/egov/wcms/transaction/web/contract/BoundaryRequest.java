@@ -39,28 +39,20 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+public class BoundaryRequest {
 
-@Getter
-@AllArgsConstructor
-public class CommonResponseInfo {
+    @NotNull
+    @JsonProperty("RequestInfo")
+    private BoundaryRequestInfo requestInfo;
 
-    @JsonProperty("id")
-    private String id;
-    
-    @JsonProperty("code")
-    private String code;
-    
-    @JsonProperty("name")
-    private String name;
-    
-    @JsonProperty("description")
-    private String description;
-    
-    @JsonProperty("tenantId")
-    private String tenantId; 
-        
+    @JsonProperty("Boundary")
+    private final List<Boundary> boundarys = new ArrayList<>();
+
 }

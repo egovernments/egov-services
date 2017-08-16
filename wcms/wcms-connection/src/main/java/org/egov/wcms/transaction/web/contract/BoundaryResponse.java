@@ -39,28 +39,33 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-public class CommonResponseInfo {
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode
+public class BoundaryResponse {
 
-    @JsonProperty("id")
-    private String id;
-    
-    @JsonProperty("code")
-    private String code;
-    
-    @JsonProperty("name")
-    private String name;
-    
-    @JsonProperty("description")
-    private String description;
-    
-    @JsonProperty("tenantId")
-    private String tenantId; 
-        
+    @JsonProperty("ResponseInfo")
+    private BoundaryResponseInfo responseInfo;
+    @JsonProperty("Boundary")
+    private List<Boundary> boundarys = new ArrayList<>();
+
+    public boolean getBoundarySize() {
+        return this.boundarys.size() > 0;
+    }
+
 }

@@ -308,7 +308,25 @@ public class WcmsConnectionConstants {
     public static final String SUBUSAGETYPE_INVALID_CODE = "wcms.0050";
     public static final String SUBUSAGETYPE_INVALID_FIELD_NAME = "SubusageType";
     public static final String SUBUSAGETYPE_INVALID_ERROR_MESSAGE = "Sub Usage Type don't exist ";
+    
+    public static final String BOUNDARY_ZONE_INVALID_CODE = "wcms.0051";
+    public static final String BOUNDARY_ZONE_INVALID_ERROR_MESSAGE = "Please provide valid Zone";
+    public static final String BOUNDARY_ZONE_INVALID_FIELD_NAME = "zone";
+
+    public static final String BOUNDARY_WARD_INVALID_CODE = "wcms.0052";
+    public static final String BOUNDARY_WARD_INVALID_ERROR_MESSAGE = "Please provide valid Ward";
+    public static final String BOUNDARY_WARD_INVALID_FIELD_NAME = "ward";
+
+    public static final String BOUNDARY_LOCATION_INVALID_CODE = "wcms.0053";
+    public static final String BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE = "Please provide valid Location";
+    public static final String BOUNDARY_LOCATION_INVALID_FIELD_NAME = "location";
   
+    public static final String ZONE = "Zone";
+    public static final String REVENUE = "REVENUE";
+    public static final String WARD = "Ward";
+    public static final String LOCALITY = "Locality";
+    public static final String LOCATION = "LOCATION";
+    
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

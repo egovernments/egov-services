@@ -39,28 +39,39 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+
+import org.egov.common.contract.request.User;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class CommonResponseInfo {
+@ToString
+@EqualsAndHashCode
+@Builder
+public class BoundaryRequestInfo {
 
-    @JsonProperty("id")
-    private String id;
-    
-    @JsonProperty("code")
-    private String code;
-    
-    @JsonProperty("name")
-    private String name;
-    
-    @JsonProperty("description")
-    private String description;
-    
-    @JsonProperty("tenantId")
-    private String tenantId; 
-        
+    private String apiId;
+    private String ver;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    private Date ts;
+    private String action;
+    private String did;
+    private String key;
+    private String msgId;
+    private String requesterId;
+    private String correlationId;
+    private String authToken;
+    private User userInfo;
 }

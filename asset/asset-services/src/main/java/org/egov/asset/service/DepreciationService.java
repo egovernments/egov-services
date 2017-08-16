@@ -171,7 +171,7 @@ public class DepreciationService {
             log.debug("Voucher Map :: " + voucherMap);
             for (final Map.Entry<String, List<CalculationAssetDetails>> entry : voucherMap.entrySet()) {
                 log.debug("Voucher Map Entry :: " + entry);
-                final BigDecimal amt = BigDecimal.ZERO;
+                BigDecimal amt = BigDecimal.ZERO;
                 final List<CalculationAssetDetails> assetDetails = entry.getValue();
                 final CalculationAssetDetails assetDetail = assetDetails.get(0);
                 final Long depExpenxeAcc = assetDetail.getDepreciationExpenseAccount();
@@ -183,12 +183,11 @@ public class DepreciationService {
 
                     log.debug("Depreciation Detail :: " + depreciationDetail);
                     if (DepreciationStatus.SUCCESS.equals(depreciationDetail.getStatus())) {
-                        amt.add(depreciationDetail.getDepreciationValue());
+                        amt = amt.add(depreciationDetail.getDepreciationValue());
                         log.debug("Depreciation Value :: " + amt);
                     }
                 }
 
-                log.debug("Depreciation Voucher Amount :: " + amt.longValue());
                 if (BigDecimal.ZERO.compareTo(amt) != 0)
                     createVoucherForDepreciation(assetDetail, depreciationRequest.getRequestInfo(), accumulatedDepAcc,
                             depExpenxeAcc, amt, depreciationCriteria.getTenantId(), headers);

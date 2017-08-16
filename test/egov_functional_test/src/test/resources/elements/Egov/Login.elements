@@ -23,6 +23,12 @@
             "identifier":"xpath",
             "value":"//*[text()='Kurnool'] ",
             "waitFor":"visibility"
+        },
+        {
+        "elementName":"SignInText",
+        "identifier":"xpath",
+        "value":"//h4[text()='Sign In']",
+        "waitFor":"visibility"
         }
     ]
 }

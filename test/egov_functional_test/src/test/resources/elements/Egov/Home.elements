@@ -31,15 +31,21 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"NewGrievance",
+        "elementName":"createGrievance",
         "identifier":"xpath",
-        "value":"//div[text()='New Grievances']",
+        "value":"//div[text()='Create Grievance']",
         "waitFor":"visibility"
         },
         {
         "elementName":"applicationSearch",
         "identifier":"css",
         "value":"[id^='undefined-Search-Search']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"profileName",
+        "identifier":"css",
+        "value":"span[style='color: white;']",
         "waitFor":"visibility"
         }
     ]

@@ -32,7 +32,6 @@ public class GenericSteps extends BaseSteps {
     @And("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)$")
     public void consumerOnScreenPerformsActionOnElement(String consumer, String screen, String action, String element) throws NoSuchEventException, IOException, InterruptedException {
 
-        TimeUnit.SECONDS.sleep(2);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
         tapster().useDriver(pageStore.getDriver())
                 .onScreen(screen)

@@ -8,8 +8,14 @@
         },
         {
         "elementName":"grievanceCategory",
+        "identifier":"css",
+        "value":"[id^=undefined-undefined-GrievanceCategory]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"grievanceCategoryValue",
         "identifier":"xpath",
-        "value":"//span[text()='Public Health/Dengue/Malaria/Gastro-enteritis']",
+        "value":"//div[text()='%s']",
         "waitFor":"visibility"
         },
         {

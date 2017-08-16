@@ -1,0 +1,28 @@
+{
+    "elements":[
+        {
+         "elementName":"grievanceCategory",
+          "identifier":"css",
+          "value":"[id^='undefined-undefined-GrievanceCategory']",
+          "waitFor":"visibility"
+        },
+        {
+        "elementName":"receivingMode",
+        "identifier":"css",
+        "value":"[id^=undefined-undefined-ReceivingMode]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"receivingModeDropdown",
+        "identifier":"xpath",
+        "value":"//*[text()='%s']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"name",
+        "identifier":"css",
+        "value":"[id^=undefined-undefined-Name]",
+        "waitFor":"visibility"
+        }
+    ]
+}

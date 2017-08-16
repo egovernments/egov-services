@@ -159,8 +159,6 @@ class Report extends Component {
         resultList: res.Employee,
         showResult: true,
         pageCount: res.Employee && res.Employee.page ? (res.Employee.page.totalPages || 0) : 1
-      }, function() {
-        
       });
 
       self.props.setFlag(1);

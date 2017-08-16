@@ -552,6 +552,9 @@ calcAssessableArea = (e, type) => {
 																			this.props.addFloorDepandencyFields('flatNo');
 																		} else {
 																			this.props.removeFloorDepandencyFields('flatNo');
+																			if(floorDetails.floor.hasOwnProperty('flatNo')){
+																				delete floorDetails.floor.flatNo;
+																			}
 																		}
 																		
 																		var e = {

@@ -851,7 +851,7 @@ calcAssessableArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'NO' ? true : false) : false}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
 														/>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
@@ -869,7 +869,7 @@ calcAssessableArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'NO' ? true : false) : false}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
 														/>
 													</Col>
 													
@@ -887,7 +887,7 @@ calcAssessableArea = (e, type) => {
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'NO' ? true : false) : false}
 														/>
 													</Col>
 													
@@ -985,6 +985,7 @@ calcAssessableArea = (e, type) => {
 															 this.props.addNestedFormData("floors","floor");
 															
 															 this.props.resetObject("floor", false);
+															  this.props.resetObject("owner", false);
 															 setTimeout(()=>{
 																	_this.createFloorObject();
 																}, 300);
@@ -994,6 +995,8 @@ calcAssessableArea = (e, type) => {
 															<RaisedButton type="button" label="Update Room" disabled={!isFloorValid} primary={true}  onClick={()=> {
 																  this.props.updateObject("floors","floor",  editIndex);
 																  this.props.resetObject("floor", false);
+																  this.props.resetObject("owner", false);
+
 																  isEditIndex(-1);
 																  setTimeout(()=>{
 																	_this.createFloorObject();

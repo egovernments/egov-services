@@ -198,7 +198,7 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/mutation-reason'} component={MutationReason}/>
           <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
-		  <Route exact path={base+'/propertyTax/addDemand'} component={AddDemand}/>
+		  <Route exact path={base+'/propertyTax/addDemand/:upicNumber'} component={AddDemand}/>
 		  <Route exact path={base+'/propertyTax/create-dataEntry'} component={DataEntry}/>
 		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>

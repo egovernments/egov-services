@@ -208,6 +208,6 @@ public class Connection {
 
     private String createdDate;
     
-    private boolean withProperty; 
+    private Boolean withProperty; 
 
 }

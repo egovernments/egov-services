@@ -201,7 +201,7 @@ public class ConnectionValidator {
 			}
 		}
 		
-		if(!waterConnectionRequest.getConnection().isWithProperty()) { 
+		if(!waterConnectionRequest.getConnection().getWithProperty()) { 
 			validateConnectionLocationDetails(waterConnectionRequest,errorFields);
 		}
 

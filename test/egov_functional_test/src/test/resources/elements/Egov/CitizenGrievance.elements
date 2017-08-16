@@ -1,9 +1,9 @@
 {
     "elements":[
         {
-         "elementName":"receivingMode",
-          "identifier":"css",
-          "value":"[id^='undefined-undefined-GrievanceCategory']",
+         "elementName":"createGrievancePage",
+          "identifier":"xpath",
+          "value":"//div[text()='Grievance Information']",
           "waitFor":"visibility"
         },
         {
@@ -19,9 +19,27 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"grievanceType",
+        "identifier":"css",
+        "value":"[id^=undefined-undefined-GrievanceType]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"grievanceTypeValue",
+        "identifier":"xpath",
+        "value":"//div[text()='%s']",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"grievanceDetails",
         "identifier":"css",
         "value":"[id^='undefined-Min10Characters-GrievanceDetails']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"grievanceLocation",
+        "identifier":"css",
+        "value":"[id^='undefined-Typeyourlocationorselectitfrommaps-GrievanceLocation']",
         "waitFor":"visibility"
         },
         {

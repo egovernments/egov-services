@@ -31,12 +31,6 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"createGrievance",
-        "identifier":"xpath",
-        "value":"//div[text()='Create Grievance']",
-        "waitFor":"visibility"
-        },
-        {
         "elementName":"applicationSearch",
         "identifier":"css",
         "value":"[id^='undefined-Search-Search']",

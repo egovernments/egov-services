@@ -2,9 +2,9 @@
   "elements":[
   {
      "elementName":"submitButtonCommon",
-     "identifier":"xpath",
-     "value":"//span[text()='Submit']",
-     "waitFor":"visibility"
+          "identifier":"xpath",
+          "value":"//span[text()='Submit']",
+          "waitFor":"visibility"
   },
   {
      "elementName":"homeButtonCommon",

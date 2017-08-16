@@ -28,6 +28,8 @@ public class GenericSteps extends BaseSteps {
                 .doAction(action)
                 .withValue(value)
                 .serveWithElement(webElement);
+
+        TimeUnit.SECONDS.sleep(5);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)$")
@@ -41,6 +43,8 @@ public class GenericSteps extends BaseSteps {
                 .onElement(element)
                 .doAction(action)
                 .serveWithElement(webElement);
+
+        TimeUnit.SECONDS.sleep(5);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen verifies\\s+(\\w+)\\s+is\\s+(.*)$")

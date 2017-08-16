@@ -110,7 +110,7 @@ public class DemandConnectionController {
         else
         {
         TaxPeriodResponse taxperiodres=demandConnectionService.getTaxPeriodByPeriodCycleAndService(demandBeanGetRequest.getTenantId(),PeriodCycle.HALFYEAR,
-                (waterConn.getExecutionDate()==0? new Date().getTime():waterConn.getExecutionDate()));
+                demandBeanGetRequest.getExecutionDate());
         List<TaxPeriod>taxPeriodList=taxperiodres.getTaxPeriods();
         
         try{

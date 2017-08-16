@@ -135,7 +135,7 @@ public class DemandConnectionService {
         ownerobj.setTenantId(tenantId);
         ownerobj.setId(requestInfo.getUserInfo().getId());
         final Demand demand = new Demand();
-        TaxPeriodResponse taxperiodres=getTaxPeriodByPeriodCycleAndService(tenantId,PeriodCycle.HALFYEAR,connection.getExecutionDate());
+        TaxPeriodResponse taxperiodres=getTaxPeriodByPeriodCycleAndService(tenantId,PeriodCycle.HALFYEAR,demandBeanGetRequest.getExecutionDate());
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
         demand.setConsumerType(connection.getApplicationType());

@@ -207,9 +207,14 @@ public class EmployeeService {
 
     private Map<String,Object> getResponseForExistingRecords(Integer pageSize, Integer pageNumber, Integer recordsFetched,
                                                              EmployeeCriteria empCriteria, List<EmployeeInfo> empInfoList) {
+        pageSize = isEmpty(pageSize) ? 0 : pageSize;
+        pageNumber = isEmpty(pageNumber) ? 0 : pageNumber;
+
         Integer totalDBRecords = employeeRepository.getTotalDBRecords(empCriteria);
         Integer totalpages = (int) Math.ceil((double) totalDBRecords / pageSize);
 
+        System.err.println("totalResults : " + recordsFetched + " totalPages : " + totalpages + " currentPage : " + pageNumber
+                + " pageNumber : " + pageNumber + " pageSize : " + pageSize);
         Pagination page = Pagination.builder().totalResults(recordsFetched).totalPages(totalpages).currentPage(pageNumber)
                 .pageNumber(pageNumber).pageSize(pageSize).build();
 

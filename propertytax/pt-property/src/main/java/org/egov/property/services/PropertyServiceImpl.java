@@ -962,7 +962,7 @@ public class PropertyServiceImpl implements PropertyService {
         DemandDetail demandDetail;
         newDemand = new Demand();
         newDemand.setTenantId(tenantId);
-        newDemand.setBusinessService(propertiesManager.getDemandBusinessService());
+        newDemand.setBusinessService(propertiesManager.getBusinessService());
         newDemand.setConsumerType(property.getPropertyDetail().getPropertyType());
         newDemand.setConsumerCode(upicNumber);
         newDemand.setMinimumAmountPayable(BigDecimal.ONE);

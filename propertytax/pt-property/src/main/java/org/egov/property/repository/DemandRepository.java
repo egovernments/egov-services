@@ -53,7 +53,7 @@ public class DemandRepository {
 		MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
 		requestMap.add("tenantId", tenantId);
 		requestMap.add("consumerCode", upicNo);
-		requestMap.add("businessService", propertiesManager.getWorkflowBusinessService());
+		requestMap.add("businessService", propertiesManager.getBusinessService());
 
 		URI uri = UriComponentsBuilder.fromHttpUrl(demandUrl.toString()).queryParams(requestMap).build().encode()
 				.toUri();

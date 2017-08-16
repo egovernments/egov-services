@@ -283,12 +283,12 @@ var localization_EN_Data = {
 
     "pt.create.groups.assessmentDetails.fields.creationReason": "Reason For Creation",
     "pt.create.groups.assessmentDetails.fields.parentUpicNo": "Parent UPIC No.",
-    "pt.create.groups.assessmentDetails.fields.propertyType": "Tariff Category",
+    "pt.create.groups.assessmentDetails.fields.propertyType": "Property Type",
     "pt.create.groups.assessmentDetails.fields.propertySubType": "Property Sub Type",
     "pt.create.groups.assessmentDetails.fields.usageType": "Usage Type",
     "pt.create.groups.assessmentDetails.fields.usageSubType": "Usage Sub Type",
     "pt.create.groups.assessmentDetails.fields.department": "Department",
-    "pt.create.groups.assessmentDetails.fields.extentOfSite": "Extent Of Site",
+    "pt.create.groups.assessmentDetails.fields.extentOfSite": "Total Area",
     "pt.create.groups.assessmentDetails.fields.sequenceNo": "Sequence No.",
     "pt.create.groups.assessmentDetails.fields.isAuthorized": "Is Authorized?",
 
@@ -1089,12 +1089,12 @@ var localization_MR_Data = {
 
     "pt.create.groups.assessmentDetails.fields.creationReason": "Reason For Creation-Marathi",
     "pt.create.groups.assessmentDetails.fields.parentUpicNo": "Parent UPIC No.-Marathi",
-    "pt.create.groups.assessmentDetails.fields.propertyType": "Tariff Category-Marathi",
+    "pt.create.groups.assessmentDetails.fields.propertyType": "Property Type-Marathi",
     "pt.create.groups.assessmentDetails.fields.propertySubType": "Property Sub Type-Marathi",
     "pt.create.groups.assessmentDetails.fields.usageType": "Usage Type-Marathi",
     "pt.create.groups.assessmentDetails.fields.usageSubType": "Usage Sub Type-Marathi",
     "pt.create.groups.assessmentDetails.fields.department": "Department-Marathi",
-    "pt.create.groups.assessmentDetails.fields.extentOfSite": "Extent Of Site-Marathi",
+    "pt.create.groups.assessmentDetails.fields.extentOfSite": "Total Area-Marathi",
     "pt.create.groups.assessmentDetails.fields.sequenceNo": "Sequence No.-Marathi",
     "pt.create.groups.assessmentDetails.fields.isAuthorized": "Is Authorized?-Marathi",
 

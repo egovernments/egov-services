@@ -76,9 +76,9 @@ public class WaterConnectionQueryBuilder {
 			+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, " 
 			+ " pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId ,propertyuserdetail.property_owner as propertyowner, " 
 			+ " plant.name as watertreatmentname from egwtr_waterconnection connection , egwtr_category category,egwtr_water_source_type watersource,egwtr_supply_type supplytype, "
-			+ " egwtr_pipesize pipesize, (select prop.id as property_id, eguser.name property_owner  from egpt_property prop, egpt_property_owner propowner, eg_user eguser "
+			+ " egwtr_pipesize pipesize, (select prop.id as property_id, prop.upicnumber as prop_upicnumber, eguser.name property_owner  from egpt_property prop, egpt_property_owner propowner, eg_user eguser "
 			+ " where prop.id = propowner.property AND propowner.owner = eguser.id ) propertyuserdetail, egwtr_treatment_plant plant WHERE NULLIF(connection.categorytype, '')::int = category.id AND NULLIF(connection.hscpipesizetype, '')::int=pipesize.id AND " 
-			+ " NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id AND NULLIF(connection.propertyidentifier, '')::int=propertyuserdetail.property_id AND "
+			+ " NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id AND AND connection.propertyidentifier =propertyuserdetail.prop_upicnumber AND "
 			+ " NULLIF(connection.watertreatmentid, '')::int = plant.id" ; 
 			
     public static String insertDocumentQuery() {

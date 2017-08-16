@@ -33,7 +33,7 @@ const checkIfNoDup = function(employee, subObject) {
 const validateDates = function(employee, subObject, editIndex) {
     if (subObject.isPrimary == "true" || subObject.isPrimary == true) {
         for (let i = 0; i < employee["assignments"].length; i++) {
-            if (employee["assignments"][i].isPrimary && (editIndex == '' || (editIndex && i != editIndex))) {
+            if (employee["assignments"][i].isPrimary && (editIndex === '' || (editIndex > -1 && i != editIndex))) {
                 var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();
                 var fromDate = new Date(employee["assignments"][i].fromDate.split("/")[1] + "/" + employee["assignments"][i].fromDate.split("/")[0] + "/" + employee["assignments"][i].fromDate.split("/")[2]).getTime();
                 var subToDate = new Date(subObject.toDate.split("/")[1] + "/" + subObject.toDate.split("/")[0] + "/" + subObject.toDate.split("/")[2]).getTime();
@@ -79,7 +79,7 @@ const checkRequiredFields = function(type, object) {
       } else if(!object.position) {
         errorText["assignments.position"] = translate("ui.framework.required");
       } else if((object.hod == true || object.hod == "true") && (!object.mainDepartments || (object.mainDepartments && object.mainDepartments.length == 0))) {
-        
+
         errorText["assignments.mainDepartments"] = translate("ui.framework.required");
       }
       break;
@@ -598,41 +598,47 @@ class Employee extends Component {
         }
       }
     }, function() {
-      if(parent == "assignments" && self.state.subObject[parent].designation && self.state.subObject[parent].department) {
-        if((self.state.subObject[parent].isPrimary == "true" || self.state.subObject[parent].isPrimary == true)) {
-          if(self.state.subObject[parent].fromDate) {
-            Api.commonApiPost("hr-masters/vacantpositions/_search", {
-                    departmentId: self.state.subObject[parent].department,
-                    designationId: self.state.subObject[parent].designation,
-                    asOnDate: self.state.subObject[parent].fromDate,
-                    pageSize: 100
-            }).then(function(res) {
-              self.setState({
-                positionList: res["Position"]
-              })
-            }, function(err) {
-
-            })
-          }
-        } else {
-            Api.commonApiPost("hr-masters/positions/_search", {
-                    departmentId: self.state.subObject[parent].department,
-                    designationId: self.state.subObject[parent].designation,
-                    pageSize: 100
-            }).then(function(res) {
-              self.setState({
-                positionList: res["Position"]
-              })
-            }, function(err) {
-
-            })
-        }
-      }
+      self.vacantposition(parent);
     })
+  }
+
+  vacantposition = (parent) =>{
+    let self = this;
+    if(parent == "assignments" && self.state.subObject[parent].designation && self.state.subObject[parent].department) {
+      if((self.state.subObject[parent].isPrimary == "true" || self.state.subObject[parent].isPrimary == true)) {
+        if(self.state.subObject[parent].fromDate) {
+          Api.commonApiPost("hr-masters/vacantpositions/_search", {
+                  departmentId: self.state.subObject[parent].department,
+                  designationId: self.state.subObject[parent].designation,
+                  asOnDate: self.state.subObject[parent].fromDate,
+                  pageSize: 100
+          }).then(function(res) {
+            self.setState({
+              positionList: res["Position"]
+            })
+          }, function(err) {
+
+          })
+        }
+      } else {
+          Api.commonApiPost("hr-masters/positions/_search", {
+                  departmentId: self.state.subObject[parent].department,
+                  designationId: self.state.subObject[parent].designation,
+                  pageSize: 100
+          }).then(function(res) {
+            self.setState({
+              positionList: res["Position"]
+            })
+          }, function(err) {
+
+          })
+      }
+    }
   }
 
   editModalOpen = (ind, type) => {
     let dat;
+    let self = this;
     switch (type) {
       case 'assignments':
         dat = Object.assign({}, this.props.Employee.assignments[ind]);
@@ -651,6 +657,8 @@ class Employee extends Component {
           subObject: {
             'assignments': dat
           }
+        },function(){
+          self.vacantposition("assignments");
         })
         break;
       case 'jurisdictions':
@@ -850,7 +858,7 @@ class Employee extends Component {
         if(this.state.editIndex === '')
           jurisdictions.push(jst);
         else
-          jurisdictions[editIndex] = Object.assign({}, jst);
+          jurisdictions[editIndex] = jst;
         this.props.handleChange({target:{value: jurisdictions}}, "jurisdictions", false, '');
         this.setState({
           subObject: {
@@ -2268,7 +2276,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.pan")} errorText={fieldErrors["user"] && fieldErrors["user"]["pan"]} value={Employee.user ? Employee.user.pan : ""} onChange={(e) => {
+                      	<TextField floatingLabelText={translate("employee.Employee.fields.pan")} hintText="DACPZ2154D" errorText={fieldErrors["user"] && fieldErrors["user"]["pan"]} value={Employee.user ? Employee.user.pan : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'pan', false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/)
                       	}}/>
                       }

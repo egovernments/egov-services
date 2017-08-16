@@ -243,7 +243,7 @@ var dat = {
 						"pattern": "",
 						"type": "radio",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}]

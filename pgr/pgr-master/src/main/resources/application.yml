@@ -1350,7 +1350,7 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
-    type: string
+    type: epoch
     source: seva  
   - name: complainantname
     label: reports.pgr.complaint.complainantname

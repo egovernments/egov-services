@@ -67,4 +67,22 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tl-services.pageNumber.default}")
 	private String pageNumber;
+	
+	@Value("${egov.services.id_service.hostname}")
+	private String idGenServiceBasePathTopic;
+
+	@Value("${egov.services.id_service.createpath}")
+	private String idGenServiceCreatePathTopic;
+	
+	@Value("${id.tlnName}")
+	private String idTLNumberGenNameServiceTopic;
+	    
+	@Value("${id.tlnFormat}")
+	private String idTLNumberGenFormatServiceTopic;
+	
+	@Value("${id.anName}")
+        private String idApplicationNumberGenNameServiceTopic;
+            
+        @Value("${id.anFormat}")
+        private String idApplicationNumberGenFormatServiceTopic;
 }

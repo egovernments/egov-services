@@ -21,7 +21,7 @@ public class PositionHierarchyRepository {
     }
 
     public PositionHierarchyResponse getByPositionByComplaintTypeAndFromPosition(final Long fromPosition, final String serviceCode, final String tenantId) {
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().build()).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(null).build();
         return restTemplate.postForObject(positionHierarchyUrl, wrapper, PositionHierarchyResponse.class, fromPosition, serviceCode, tenantId);
     }
 

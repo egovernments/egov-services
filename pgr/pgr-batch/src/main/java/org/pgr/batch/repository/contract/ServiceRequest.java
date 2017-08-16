@@ -35,6 +35,7 @@ public class ServiceRequest {
     private static final String VALUES_DEPARTMENT_ID = "systemDepartmentId";
     private static final String ESCALATION_HOURS = "systemEscalationHours";
     private static final String TRUE = "true";
+    public static final String COMPLAINT_TYPE_CODE = "complaintTypeCode";
 
     private String tenantId;
 
@@ -160,7 +161,7 @@ public class ServiceRequest {
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues();
         valuesToSet.put(PREVIOUS_ASSIGNEE, Attribute.asStringAttr(PREVIOUS_ASSIGNEE, getDynamicSingleValue
                 (VALUES_POSITION_ID)));
-
+        valuesToSet.put(COMPLAINT_TYPE_CODE, Attribute.asStringAttr("complaintTypeCode", complaintTypeCode));
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
                 .assignee(null)
                 .action(WorkflowRequest.Action.forComplaintStatus(getDynamicSingleValue(STATUS)))

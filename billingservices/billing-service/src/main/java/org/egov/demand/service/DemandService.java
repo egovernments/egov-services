@@ -210,33 +210,37 @@ public class DemandService {
 							detailsMap.get(demandDetail.getTaxHeadMasterCode()).add(demandDetail);
 					}
 				}
-				for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
+					for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
 
-					String[] array = accountDetail.getAccountDescription().split("-");
-					log.info("the string array of values--------"+array.toString());
-					
-					List<String> accDescription = Arrays.asList(array);
-					String taxHeadCode = accDescription.get(0);
-					Long fromDate = Long.valueOf(accDescription.get(1));
-					Long toDate = Long.valueOf(accDescription.get(2));
+						if (accountDetail.getAccountDescription() != null && accountDetail.getCreditAmount() == null) {
+							String[] array = accountDetail.getAccountDescription().split("-");
+							log.info("the string array of values--------" + array.toString());
 
-					for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
-						log.info("the current demand detail : " + demandDetail);
-						Demand demand = demandIdMap.get(demandDetail.getDemandId());
-						log.info("the respective deman"+demand);
-						
-						if (fromDate.equals(demand.getTaxPeriodFrom()) && toDate.equals(demand.getTaxPeriodTo())) {
-							
-							BigDecimal collectedAmount = accountDetail.getCreditAmount();
-							log.info("the credit amt :"+ collectedAmount);
-							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
-							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
-							log.info("the setTaxAmount ::: "+demandDetail.getTaxAmount());
-							log.info("the setCollectionAmount ::: "+demandDetail.getCollectionAmount());
+							List<String> accDescription = Arrays.asList(array);
+							String taxHeadCode = accDescription.get(0);
+							Long fromDate = Long.valueOf(accDescription.get(1));
+							Long toDate = Long.valueOf(accDescription.get(2));
+
+							for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
+								log.info("the current demand detail : " + demandDetail);
+								Demand demand = demandIdMap.get(demandDetail.getDemandId());
+								log.info("the respective deman" + demand);
+
+								if (fromDate.equals(demand.getTaxPeriodFrom())
+										&& toDate.equals(demand.getTaxPeriodTo())) {
+
+									BigDecimal collectedAmount = accountDetail.getCreditAmount();
+									log.info("the credit amt :" + collectedAmount);
+									demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
+									demandDetail.setCollectionAmount(
+											demandDetail.getCollectionAmount().add(collectedAmount));
+									log.info("the setTaxAmount ::: " + demandDetail.getTaxAmount());
+									log.info("the setCollectionAmount ::: " + demandDetail.getCollectionAmount());
+								}
+							}
 						}
 					}
 				}
-			}
 		}
 		
 		demandRepository.update(new DemandRequest(requestInfo,demands));

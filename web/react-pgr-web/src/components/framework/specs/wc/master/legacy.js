@@ -225,7 +225,7 @@ var dat = {
             "type": "singleValueList",
             "url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -362,14 +362,32 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "defaultValue": [],
+            "url":'',
+            "depedants": [{
+                "jsonPath": "Connection.property.subUsageType",
+                "type": "dropDown",
+                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..name|$..name"
+              }]
+          },
+          {
+            "name": "subUsageType",
+            "jsonPath": "Connection.property.subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-			"defaultValue": [],
-			"url":""
+      "defaultValue": [],
+      "url":""
           },
-          {
+        {
             "name": "hscPipeSizeType",
             "jsonPath": "Connection.hscPipeSizeType",
             "label": "wc.create.groups.connectionDetails.hscPipeSizeType",

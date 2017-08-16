@@ -88,6 +88,7 @@ var localationData = {
   "wc.create.groups.connectionDetails.supplyType":"Supply Type",
   "wc.create.groups.applicantDetails.acknowledgementNumber":"Acknowledgement Number",
   "wc.create.groups.connectionDetails.supplyType":"Supply Type",
+  "wc.create.groups.connectionDetails.subUsageType":"Sub Usage Type",
   "reports.pgr.locality.name":"Locality Name",
   "reports.pgr.complaint.crn":"CRN",
   "reports.pgr.complaint.createddate":"Registerd Date",

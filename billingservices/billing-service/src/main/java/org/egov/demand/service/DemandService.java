@@ -212,7 +212,7 @@ public class DemandService {
 				}
 					for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
 
-						if (accountDetail.getAccountDescription() != null && accountDetail.getCreditAmount() == null) {
+						if (accountDetail.getAccountDescription() != null && accountDetail.getCreditAmount() != null) {
 							String[] array = accountDetail.getAccountDescription().split("-");
 							log.info("the string array of values--------" + array.toString());
 

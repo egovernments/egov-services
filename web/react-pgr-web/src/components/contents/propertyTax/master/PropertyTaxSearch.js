@@ -202,7 +202,7 @@ class PropertyTaxSearch extends Component {
 			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
 		} else {
 			
-			if(res.properties[0].channel == 'DATA_ENTRY') {
+			if(res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
 				this.setState({
 					showDcb: true
 				})

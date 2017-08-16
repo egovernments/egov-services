@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceDefinitionService {
 
+	public static final String UPDATE = "UPDATE";
 	private List<ServiceDefinitionCreateValidator> createValidators;
 	private List<AttributeDefinitionCreateValidator> attributeValidate;
 	private List<ValueDefinitionCreateValidator> valueDefinitionValidate;
@@ -52,24 +53,21 @@ public class ServiceDefinitionService {
 	}
 	
 	public void create(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request) {
-		createMandatoryFieldValidate(serviceDefinition);
-		attributeMandatoryFieldValidation(serviceDefinition);
-		valueDefinMandatoryFieldValidation(serviceDefinition);
-		matchAttributeAndServiceCode(serviceDefinition);
-		ServiceDefinitionFieldLengthValidate( serviceDefinition);
-		valueDefLengthValidation(serviceDefinition);
-		attributeLengthValidation(serviceDefinition);
-		
-		attribUniqueConstraintValidation(serviceDefinition);
-		
-		createUniqueConstraintValidation(serviceDefinition);
-		
+		validateForCreate(serviceDefinition);
 		serviceDefinitionMessageQueueRepository.save(request, CREATE);
+	}
+
+	public void update(ServiceDefinition serviceDefinition, ServiceDefinitionRequest request){
+		serviceDefinitionMessageQueueRepository.save(request, UPDATE);
 	}
 
 	public void persist(ServiceDefinition serviceDefinition) {
 		serviceDefinitionRepository.save(serviceDefinition.toDto());
 		persistServiceTypeAttributes(serviceDefinition);
+	}
+
+	public void persistForUpdate(ServiceDefinition serviceDefinition){
+
 	}
 
 	public List<ServiceDefinition> search(ServiceDefinitionSearchCriteria serviceDefinitionSearchCriteria) {
@@ -79,6 +77,18 @@ public class ServiceDefinitionService {
 		setAttributes(serviceDefinitionList);
 
 		return serviceDefinitionList;
+	}
+
+	private void validateForCreate(ServiceDefinition serviceDefinition) {
+		createMandatoryFieldValidate(serviceDefinition);
+		attributeMandatoryFieldValidation(serviceDefinition);
+		valueDefinMandatoryFieldValidation(serviceDefinition);
+		matchAttributeAndServiceCode(serviceDefinition);
+		ServiceDefinitionFieldLengthValidate( serviceDefinition);
+		valueDefLengthValidation(serviceDefinition);
+		attributeLengthValidation(serviceDefinition);
+		attribUniqueConstraintValidation(serviceDefinition);
+		createUniqueConstraintValidation(serviceDefinition);
 	}
 
 	private void persistServiceTypeAttributes(ServiceDefinition serviceDefinition) {

@@ -123,8 +123,9 @@ public class PGRConsumer {
 			"${kafka.topics.escalationhierarchy.update.name}", "${kafka.topics.escalationhierarchy.create.name}", "${kafka.topics.servicetypeconfiguration.create.name}",
 			"${kafka.topics.servicetypeconfiguration.update.name}","${kafka.topics.servicetypes.create.name}",
 			"${kafka.topics.servicetypes.create.key}", "${kafka.topics.servicedefinition.create.name}",
-			"${kafka.topics.servicedefinition.create.key", "${kafka.topics.servicetypes.update.name}",
-			"${kafka.topics.servicetypes.update.key}"})
+			"${kafka.topics.servicedefinition.create.key}", "${kafka.topics.servicetypes.update.name}",
+			"${kafka.topics.servicetypes.update.key}", "${kafka.topics.servicedefinition.update.name}",
+			"${kafka.topics.servicedefinition.update.key}"})
 
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("RECORD: " + record.toString());
@@ -195,6 +196,9 @@ public class PGRConsumer {
 			}
 			else if(record.topic().equals(applicationProperties.getCreateServiceDefinitionName())){
 				serviceDefinitionService.persist(objectMapper.readValue(record.value(), ServiceDefinitionRequest.class).toDomain());
+			}
+			else if(record.topic().equals(applicationProperties.getUpdateServiceDefinitionName())){
+				serviceDefinitionService.persistForUpdate(objectMapper.readValue(record.value(), ServiceDefinitionRequest.class).toDomain());
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

@@ -3,14 +3,14 @@ package org.egov.tradelicense.domain.service;
 import org.egov.tl.commons.web.contract.RequestInfo;
 
 /**
- * Generator class for Trade License Number
+ * Generator class for Application Number
  * 
  * @author Manoj Kulkarni
  *
  */
-public interface TradeLicenseNumberGeneratorService {
+public interface ApplicationNumberGeneratorService {
     /**
-     * Method to generate Trade License Number
+     * Method to generate Application Number
      * 
      * @return generated number
      */

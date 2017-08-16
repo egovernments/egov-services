@@ -152,13 +152,15 @@ class Report extends Component {
     }
 
     formData.pageSize = self.state.pageSize;
-    if(pageNumber) formData.pageNumber = pageNumber;
-    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
+    if(typeof pageNumber != undefined) formData.pageNumber = pageNumber;
+    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp, true).then(function(res){
       self.props.setLoadingStatus('hide');
       self.setState({
         resultList: res.Employee,
         showResult: true,
-        pageCount: res.Employee && res.Employee.page ? (res.Employee.page.totalPages || 0) : 1
+        pageCount: res.Page ? (res.Page.totalPages || 1) : 1
+      }, function() {
+        
       });
 
       self.props.setFlag(1);

@@ -5,12 +5,12 @@ import org.egov.tradelicense.common.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Implementation Generator class for Trade License Number
+ * Implementation Generator class for Application Number
  * 
  * @author Manoj Kulkarni
  *
  */
-public class TradeLicenseNumberGeneratorServiceImpl implements TradeLicenseNumberGeneratorService {
+public class ApplicationNumberGeneratorServiceImpl implements ApplicationNumberGeneratorService {
 
     @Autowired
     private IdGenService idGenService;
@@ -25,7 +25,7 @@ public class TradeLicenseNumberGeneratorServiceImpl implements TradeLicenseNumbe
      */
     public String generate(final String tenantId, final RequestInfo requestInfo) {
         return idGenService.generate(tenantId,
-                propertiesManager.getIdTLNumberGenNameServiceTopic(),
-                propertiesManager.getIdTLNumberGenFormatServiceTopic(), requestInfo);
+                propertiesManager.getIdApplicationNumberGenNameServiceTopic(),
+                propertiesManager.getIdApplicationNumberGenFormatServiceTopic(), requestInfo);
     }
 }

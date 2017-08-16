@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TradeLicenseNumberGeneratorServiceImplTest {
+public class ApplicationNumberGeneratorServiceImplTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -30,19 +30,19 @@ public class TradeLicenseNumberGeneratorServiceImplTest {
     private PropertiesManager propertiesManager;
 
     @InjectMocks
-    private TradeLicenseNumberGeneratorService tradeLicenseNumberGeneratorService = new TradeLicenseNumberGeneratorServiceImpl();
+    private ApplicationNumberGeneratorService applicationNumberGeneratorService = new ApplicationNumberGeneratorServiceImpl();
 
     @Before
     public void before() throws SQLException {
         when(idGenService.generate(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-                Mockito.any(RequestInfo.class))).thenReturn("TL/00001/2017");
+                Mockito.any(RequestInfo.class))).thenReturn("12345");
         when(propertiesManager.getIdApplicationNumberGenNameServiceTopic()).thenReturn("");
         when(propertiesManager.getIdApplicationNumberGenFormatServiceTopic()).thenReturn("");
     }
 
     @Test
     public void test_tl_number_generator_should_return_number() {
-        final String tlNumber = tradeLicenseNumberGeneratorService.generate("ap.kurnool", new RequestInfo());
-        assertEquals("TL/00001/2017", tlNumber);
+        final String applicationNumber = applicationNumberGeneratorService.generate("ap.kurnool", new RequestInfo());
+        assertEquals("12345", applicationNumber);
     }
 }

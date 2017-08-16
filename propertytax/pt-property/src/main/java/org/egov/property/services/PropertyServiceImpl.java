@@ -69,7 +69,7 @@ public class PropertyServiceImpl implements PropertyService {
     @Autowired
     PersisterService persisterService;
 
-    private static final Logger logger = LoggerFactory.getLogger(UpicNoGeneration.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
 
     @Autowired
     DemandRepository demandRepository;
@@ -955,6 +955,7 @@ public class PropertyServiceImpl implements PropertyService {
     private List<Demand> prepareDemands(String tenantId, String upicNumber, Property property,
                                         TaxHeadMasterResponse taxHeadResponse, TaxPeriod taxPeriod,
                                         SimpleDateFormat dateFormat) {
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
         List<Demand> newDemandList = new ArrayList<>();
         Demand newDemand;
         List<DemandDetail> demandDetailsList;
@@ -985,7 +986,6 @@ public class PropertyServiceImpl implements PropertyService {
         }
         Owner owner = new Owner();
         owner.setId(property.getOwners().get(0).getId());
-        owner.setId(1l);
         newDemand.setOwner(owner);
         newDemandList.add(newDemand);
         return newDemandList;

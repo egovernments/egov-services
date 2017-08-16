@@ -59,6 +59,11 @@ public class FinancialYearSpecification implements Specification<FinancialYear> 
 				predicates.add(criteriaBuilder.equal(isActiveForPosting, criteria.getIsActiveForPosting()));
 			}
 
+			if (criteria.getAsOnDate() != null) {
+				predicates.add(criteriaBuilder.lessThanOrEqualTo(startingDate, criteria.getAsOnDate()));
+				predicates.add(criteriaBuilder.greaterThanOrEqualTo(endingDate, criteria.getAsOnDate()));
+			}
+			
 			if (criteria.getIsClosed() != null) {
 				predicates.add(criteriaBuilder.equal(isClosed, criteria.getIsClosed()));
 			}

@@ -76,6 +76,8 @@ public class FinancialYearContract extends AuditableContract {
 
 	@NotNull
 	private Date startingDate;
+	
+	private Date asOnDate;
 
 	@NotNull
 	private Date endingDate;

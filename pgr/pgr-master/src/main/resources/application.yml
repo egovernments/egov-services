@@ -121,7 +121,7 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
-    type: string
+    type: epoch
     source: submission
   - name: complainantname
     label: reports.pgr.complaint.complainantname
@@ -179,7 +179,7 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
-    type: string
+    type: epoch
     source: submission
   - name: complainantname
     label: reports.pgr.complaint.complainantname
@@ -240,7 +240,7 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
-    type: string
+    type: epoch
     source: submission
   - name: complainantname
     label: reports.pgr.complaint.complainantname
@@ -406,7 +406,7 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn 
   - name: createddate
     label: reports.pgr.complaint.createddate
-    type: string
+    type: epoch
     source: seva  
   - name: complainantname
     label: reports.pgr.complaint.complainantname
@@ -466,7 +466,7 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
-    type: string
+    type: epoch
     source: seva  
   - name: complainantname
     label: reports.pgr.complaint.complainantname
@@ -529,7 +529,7 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
-    type: string
+    type: epoch
     source: seva  
   - name: complainantname
     label: reports.pgr.complaint.complainantname
@@ -863,7 +863,7 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
-    type: string
+    type: epoch
     source: seva  
   - name: complainantname
     label: reports.pgr.complaint.complainantname
@@ -1586,9 +1586,9 @@ ReportDefinitions:
          sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED') and sub.positionid = $positionId and sub.tenantid = $tenantid order by createdDate desc) 
          union 
          (select type as businesskey, property.id::character varying as comments,createddate as createddate, states.id as id,value as status,natureoftask as natureoftask, extrainfo as details,
-         sendername as sendername,nextaction as action, replace('_url?/propertyTax/update-property/:id', ':id', comments::character varying) as url from EG_WF_STATES states JOIN EGPT_PROPERTYDETAILS property 
-         ON property.stateid::integer = states.id where type = 'Create Property'and owner_pos = $positionId and tenantId=$tenantid and states.status<> 2 order by states.createdDate desc) 
-         union 
+         sendername as sendername,nextaction as action, replace('_url?/propertyTax/update-property/:id', ':id', comments::character varying) as url from EG_WF_STATES states JOIN EGPT_PROPERTYDETAILS property
+         ON property.stateid::integer = states.id where type = 'Create Property'and owner_pos = $positionId and tenantId=$tenantid and states.status<> 2 order by states.createdDate desc)
+         union
          (select type as businesskey, water.acknowledgmentnumber as comments,createddate as createddate, states.id as id,value as status,natureoftask as natureoftask, extrainfo as details,
          sendername as sendername,nextaction as action, replace('_url?/update/wc/:acknum', ':acknum', water.acknowledgmentnumber::character varying) as url from EG_WF_STATES states JOIN 
          egwtr_waterconnection water ON water.stateid = states.id where type = 'WaterConnection'and owner_pos = $positionId and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc);

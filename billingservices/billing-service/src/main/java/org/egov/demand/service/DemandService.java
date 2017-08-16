@@ -232,6 +232,7 @@ public class DemandService {
 									BigDecimal collectedAmount = accountDetail.getCreditAmount();
 									log.info("the credit amt :" + collectedAmount);
 									//demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
+									
 									demandDetail.setCollectionAmount(
 											demandDetail.getCollectionAmount().add(collectedAmount));
 									log.info("the setTaxAmount ::: " + demandDetail.getTaxAmount());
@@ -278,7 +279,7 @@ public class DemandService {
 				DemandDetail demandDetail2 = demandDetailMap.get(demandDetail.getId());
 				BigDecimal tax = demandDetail.getTaxAmount().subtract(demandDetail2.getCollectionAmount());
 				if(tax.doubleValue()>=0){
-				demandDetail.setTaxAmount(tax);
+				//demandDetail.setTaxAmount(tax);
 				demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(demandDetail2.getCollectionAmount()));
 				}
 				

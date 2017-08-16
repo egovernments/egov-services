@@ -1,5 +1,5 @@
 var dat = {
-	"employee.search": {
+	"employee.searches": {
 		"numCols": 12/3,
 		"url": "/hr-employee/employees/_search",
 		"tenantIdRequired": true,
@@ -8,7 +8,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "employee.searchEmployee.title",
-				"name": "businessDetailsType",
+				"name": "EmployeeSearch",
 				"fields": [
 					{
 						"name": "Department",

@@ -100,6 +100,7 @@ import LegacyLicenseCreate from './components/non-framework/tl/transaction/Legac
 
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
 import Employee from './components/non-framework/employee/create';
+import EmployeeSearch from './components/framework/searches';
 
 const base = "";
 
@@ -148,6 +149,7 @@ const Main = () => {
         <Route exact path={base+'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base+'/pgr/createServiceType'} component={ServiceTypeCreate}/>
         <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
+
 
 
         <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
@@ -215,6 +217,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate/:id?'} component={LegacyLicenseCreate}/>
 
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
+      <Route exact path={base + '/searches/:moduleName/:master?/:action'} component={EmployeeSearch}/>
 
 
     </Switch>

@@ -70,18 +70,18 @@ public class ServiceGroupService {
 		logger.info("Persisting service group record");
 		return categoryRepository.persistCreateServiceGroup(serviceGroupRequest);
 	}
-	
+
 	public ServiceGroupRequest update(final ServiceGroupRequest serviceGroupRequest) {
 		logger.info("Updating service group record");
 		return categoryRepository.persistUpdateServiceGroup(serviceGroupRequest);
 	}
-
 
 	public ServiceGroup createCategory(final String topic, final String key,
 			final ServiceGroupRequest serviceGroupRequest) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String serviceGroupValue = null;
 		try {
+			enableCategoryIfActiveIsNull(serviceGroupRequest);
 			logger.info("ServiceGroupRequest::" + serviceGroupRequest);
 			serviceGroupValue = mapper.writeValueAsString(serviceGroupRequest);
 			logger.info("Value being pushed on the Queue, ServiceGroupValue::" + serviceGroupValue);
@@ -97,12 +97,20 @@ public class ServiceGroupService {
 		logger.info("Producer successfully posted the request to Queue");
 		return serviceGroupRequest.getServiceGroup();
 	}
-	
+
+	private void enableCategoryIfActiveIsNull(ServiceGroupRequest serviceGroupRequest) {
+		if (serviceGroupRequest != null && serviceGroupRequest.getServiceGroup() != null
+				&& serviceGroupRequest.getServiceGroup().getActive() == null)
+			serviceGroupRequest.getServiceGroup().setActive(true);
+
+	}
+
 	public ServiceGroup updateCategory(final String topic, final String key,
 			final ServiceGroupRequest serviceGroupRequest) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String serviceGroupValue = null;
 		try {
+			enableCategoryIfActiveIsNull(serviceGroupRequest);
 			logger.info("ServiceGroupRequest::" + serviceGroupRequest);
 			serviceGroupValue = mapper.writeValueAsString(serviceGroupRequest);
 			logger.info("Value being pushed on the Queue, ServiceGroupValue::" + serviceGroupValue);
@@ -118,19 +126,19 @@ public class ServiceGroupService {
 		logger.info("Producer successfully posted the request to Queue");
 		return serviceGroupRequest.getServiceGroup();
 	}
-	
-	public List<ServiceGroup> getAllServiceGroup(ServiceGroupGetRequest serviceGroupGetRequest){
+
+	public List<ServiceGroup> getAllServiceGroup(ServiceGroupGetRequest serviceGroupGetRequest) {
 		return categoryRepository.getAllServiceGroup(serviceGroupGetRequest);
 	}
-	
-	public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest) { 
+
+	public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest) {
 		return categoryRepository.verifyRequestUniqueness(serviceGroupRequest);
 	}
-	
-	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) { 
+
+	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) {
 		return categoryRepository.verifyIfNameAlreadyExists(serviceGroupRequest, action);
 	}
-	
+
 	private List<org.egov.pgr.web.contract.ServiceGroup> convertModelToContract(List<ServiceGroup> modelList) {
 		List<org.egov.pgr.web.contract.ServiceGroup> contractList = new ArrayList<>();
 		for (int i = 0; i < modelList.size(); i++) {
@@ -142,9 +150,7 @@ public class ServiceGroupService {
 			group.setTenantId(modelList.get(i).getTenantId());
 			contractList.add(group);
 		}
-		return contractList; 
+		return contractList;
 	}
-	
-	
 
 }

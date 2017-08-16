@@ -107,10 +107,15 @@ public class ServiceTypeRepository {
     }
 
     private List<org.egov.pgr.domain.model.ServiceType> getServiceTypes(ServiceTypeSearchCriteria serviceTypeSearchCriteria, List<ServiceType> serviceTypeList) {
-        return serviceTypeList.stream()
-                .filter(serviceType -> serviceType.isKeywordPresent(serviceTypeSearchCriteria.getKeywords()))
-                .map(ServiceType::toDomain)
-                .collect(Collectors.toList());
+    	if(serviceTypeSearchCriteria.getKeywords()!=null && !serviceTypeSearchCriteria.getKeywords().isEmpty())
+	        return serviceTypeList.stream()
+	                .filter(serviceType -> serviceType.isKeywordPresent(serviceTypeSearchCriteria.getKeywords()))
+	                .map(ServiceType::toDomain)
+	                .collect(Collectors.toList());
+    	else
+    		return serviceTypeList.stream()
+	                .map(ServiceType::toDomain)
+	                .collect(Collectors.toList());
     }
 
     private void filterKeywords(ServiceTypeSearchCriteria serviceTypeSearchCriteria, List<ServiceType> serviceTypeList) {

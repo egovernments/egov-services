@@ -68,7 +68,7 @@ public class PositionRepository {
 			" (id, name, deptDesigId, isPostOutsourced, active, tenantId)" +
 			" VALUES (?,(SELECT ?::TEXT||LPAD((count(id)+1)::TEXT,3,'0') FROM egeis_position WHERE deptdesigid=?),?,?,?,?)";
 
-	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position SET active = ? AND isPostOutsourced = ?" +
+	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position SET active = ?, isPostOutsourced = ?" +
 			" WHERE id = ? AND tenantId = ?";
 
 	@Autowired

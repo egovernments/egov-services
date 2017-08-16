@@ -190,7 +190,7 @@ public class ReceiptRepository {
             receiptHeader = header;
             receiptHeader.setBusinessDetails(businessDetails.getName());
             receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
-            receiptHeader.setReceiptInstrument(searchInstrumentHeader(receiptHeader.getId(),receiptSearchCriteria.getTenantId(),requestInfo));
+          //  receiptHeader.setReceiptInstrument(searchInstrumentHeader(receiptHeader.getId(),receiptSearchCriteria.getTenantId(),requestInfo));
             receiptHeaders.add(receiptHeader);
 		}
 

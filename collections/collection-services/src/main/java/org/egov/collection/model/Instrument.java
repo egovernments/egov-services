@@ -53,6 +53,8 @@ import org.egov.collection.web.contract.BankAccountContract;
 import org.egov.collection.web.contract.BankContract;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -87,6 +89,7 @@ public class Instrument{
 	 * date. for DD it is DD date
 	 */
 	@NotNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date transactionDate;
 
 	/*

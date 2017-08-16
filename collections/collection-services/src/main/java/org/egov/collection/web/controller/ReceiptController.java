@@ -127,7 +127,9 @@ public class ReceiptController {
 		List<Receipt> receipts = new ArrayList<>();
 		
 		try {
-			receiptReqValidator.validateSearchReceiptRequest(receiptGetRequest);
+				if(null != receiptGetRequest.getFromDate() && null != receiptGetRequest.getToDate()){
+					receiptReqValidator.validateSearchReceiptRequest(receiptGetRequest);
+				}
 			receipts = receiptService.getReceipts(searchCriteria,requestInfo).toDomainContract();
 		}catch(ValidationException e){
 			LOGGER.info("Exception Message: "+e.getMessage());

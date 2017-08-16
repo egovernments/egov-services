@@ -459,7 +459,8 @@ validateCollection = (index) => {
 
 			</Card>
 			<div style={{textAlign:'center'}}>
-										{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}><br/>Collection entered should be equal to or less than the Demand<br/></p>}
+					<br/>
+					{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}>Collection entered should be equal to or less than the Demand<br/></p>}
 
 					<RaisedButton type="button" label="Update" disabled={this.state.hasError}  primary={true} onClick={()=> {
 								this.submitDemand();

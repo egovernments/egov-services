@@ -37,6 +37,7 @@ public class InstrumentService {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
@@ -113,6 +114,26 @@ public class InstrumentService {
 		return instrumentRepository.update(instruments, requestInfo);
 
 	}
+	
+	@Transactional
+	public List<Instrument> delete(List<Instrument> instruments, BindingResult errors, RequestInfo requestInfo) {
+
+		try {
+
+			validate(instruments, ACTION_DELETE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return instrumentRepository.delete(instruments, requestInfo);
+
+	}
 
 	private BindingResult validate(List<Instrument> instruments, String method, BindingResult errors) {
 
@@ -130,6 +151,12 @@ public class InstrumentService {
 				break;
 			case ACTION_UPDATE:
 				Assert.notNull(instruments, "Instruments to update must not be null");
+				for (Instrument instrument : instruments) {
+					validator.validate(instrument, errors);
+				}
+				break;
+			case ACTION_DELETE:
+				Assert.notNull(instruments, "Instruments to delete must not be null");
 				for (Instrument instrument : instruments) {
 					validator.validate(instrument, errors);
 				}
@@ -215,6 +242,11 @@ public class InstrumentService {
 	@Transactional
 	public Instrument update(Instrument instrument) {
 		return instrumentRepository.update(instrument);
+	}
+	
+	@Transactional
+	public Instrument delete(Instrument instrument) {
+		return instrumentRepository.delete(instrument);
 	}
 
 	public List<Instrument> deposit(InstrumentRequest instrumentDepositRequest, BindingResult errors,

@@ -110,6 +110,14 @@ public class RestWaterExternalMasterService {
         return usageType;
     }
 
+    public UsageTypeResponse getUsageIdFromPTModuleByCode(final String usageTypeCode, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByNamePathTopic();
+        url = url.replace("{code}", usageTypeCode);
+        url = url.replace("{tenantId}", tenantId);
+        final UsageTypeResponse usageType = getUsageTypes(url);
+        return usageType;
+    }
     public UsageTypeResponse getUsageNameFromPTModule(final Integer[] usageTypeId, final String tenantId) {
         String url = propertiesManager.getPropertTaxServiceBasePathTopic()
                 + propertiesManager.getPropertyTaxServiceUsageTypeSearchByIdPathTopic();

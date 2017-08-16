@@ -84,6 +84,7 @@ import CreateProperty from './components/contents/propertyTax/master/CreatePrope
 import DataEntry from './components/contents/propertyTax/master/DataEntry';
 import ViewProperty from './components/contents/propertyTax/master/viewProperty';
 import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
+import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
 
 
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
@@ -208,6 +209,7 @@ const Main = () => {
 		  <Route exact path={base+'/propertyTax/create-dataEntry'} component={DataEntry}/>
 		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
+		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>
 		  <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
         {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>

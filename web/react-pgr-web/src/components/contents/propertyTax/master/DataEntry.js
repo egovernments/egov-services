@@ -376,6 +376,7 @@ dataEntryTax = () => {
 				"tenantId": "default",
 				"oldUpicNumber": dataEntry.oldUpicNumber,
 				"vltUpicNumber": null,
+				"sequenceNo": dataEntry.sequenceNo || null,
 				"creationReason": dataEntry.reasonForCreation || null,
 				"address": {
 					"tenantId": "default",
@@ -384,7 +385,7 @@ dataEntryTax = () => {
 					"addressLine1": dataEntry.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "secundrabad",
+					"city": "Roha",
 					"pincode": dataEntry.pin || null,
 					"detail": null,
 					"auditDetails": {
@@ -521,8 +522,8 @@ dataEntryTax = () => {
 							currentThis.setState({
 								ack: res.properties.applicationNo
 							});
-							localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-							this.props.history.push('acknowledgement');
+							localStorage.setItem('upicNumber', res.properties[0].upicNumber);
+							this.props.history.push('dataEntry-acknowledgement');
 							setLoadingStatus('hide');
 						  }).catch((err)=> {
 							console.log(err)
@@ -541,8 +542,8 @@ dataEntryTax = () => {
 				currentThis.setState({
 					ack: res.properties.applicationNo
 				});
-				localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-				this.props.history.push('acknowledgement');
+				localStorage.setItem('upicNumber', res.properties[0].upicNumber);
+				this.props.history.push('dataEntry-acknowledgement');
 				setLoadingStatus('hide');
 			  }).catch((err)=> {
 				console.log(err)

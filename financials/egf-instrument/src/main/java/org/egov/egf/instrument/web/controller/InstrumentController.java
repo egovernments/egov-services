@@ -33,6 +33,7 @@ public class InstrumentController {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String PLACEHOLDER = "placeholder";
 
 	@Autowired
@@ -93,6 +94,38 @@ public class InstrumentController {
 		}
 
 		instruments = instrumentService.update(instruments, errors, instrumentRequest.getRequestInfo());
+
+		for (Instrument i : instruments) {
+			contract = mapper.toContract(i);
+			instrumentContracts.add(contract);
+		}
+
+		instrumentResponse.setInstruments(instrumentContracts);
+
+		return instrumentResponse;
+	}
+	
+	@PostMapping("/_delete")
+	@ResponseStatus(HttpStatus.CREATED)
+	public InstrumentResponse delete(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
+
+		InstrumentMapper mapper = new InstrumentMapper();
+		instrumentRequest.getRequestInfo().setAction(ACTION_DELETE);
+		InstrumentResponse instrumentResponse = new InstrumentResponse();
+		List<Instrument> instruments = new ArrayList<>();
+		instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
+		Instrument instrument;
+		InstrumentContract contract;
+		List<InstrumentContract> instrumentContracts = new ArrayList<>();
+
+		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
+			instrument = mapper.toDomain(instrumentContract);
+			instrument.setLastModifiedBy(instrumentRequest.getRequestInfo().getUserInfo());
+			instrument.setLastModifiedDate(new Date());
+			instruments.add(instrument);
+		}
+
+		instruments = instrumentService.delete(instruments, errors, instrumentRequest.getRequestInfo());
 
 		for (Instrument i : instruments) {
 			contract = mapper.toContract(i);

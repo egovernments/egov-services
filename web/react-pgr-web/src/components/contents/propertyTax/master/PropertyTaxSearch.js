@@ -202,7 +202,7 @@ class PropertyTaxSearch extends Component {
 			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
 		} else {
 			
-			if(res.properties[0].channel == 'DATA_ENTRY') {
+			if(res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
 				this.setState({
 					showDcb: true
 				})
@@ -370,13 +370,13 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.houseNoBldgApt
                           ? fieldErrors.houseNoBldgApt
-                          : ""} id="houseNoBldgApt" value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, /^\d{1,10}$/g)} hintText="eg:-3233312323" floatingLabelText="Door number" />
+                          : ""} id="houseNoBldgApt" value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, /^\d{1,10}$/g)} hintText="654654" floatingLabelText="Door number" />
                       </Col>
 
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.upicNumber
                           ? fieldErrors.upicNumber
-                          : ""} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^\d{3,15}$/g)} hintText="eg:-123456789123456" floatingLabelText="Assessment number"/>
+                          : ""} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^\d{3,15}$/g)} hintText="1000120015" floatingLabelText="Assessment number"/>
                       </Col>
                     </Row>
 
@@ -390,7 +390,7 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.aadhaarNumber
                           ? fieldErrors.aadhaarNumber
-                          : ""} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText="Aadhar number " floatingLabelText="Aadhar number " />
+                          : ""} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText="Aadhaar number " floatingLabelText="Aadhaar number " />
                       </Col>
                     </Row>
                   </Grid>

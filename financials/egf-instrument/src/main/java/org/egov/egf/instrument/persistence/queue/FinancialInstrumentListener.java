@@ -136,6 +136,23 @@ public class FinancialInstrumentListener {
 			mastersMap.put("instrument_persisted", request);
 			financialProducer.sendMessage(completedTopic, instrumentCompletedKey, mastersMap);
 		}
+		
+		if (mastersMap.get("instrument_delete") != null)
+
+		{
+
+			InstrumentRequest request = objectMapper.convertValue(mastersMap.get("instrument_delete"),
+					InstrumentRequest.class);
+
+			for (InstrumentContract instrumentContract : request.getInstruments()) {
+				Instrument domain = instrumentMapper.toDomain(instrumentContract);
+				instrumentService.delete(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("instrument_deleted", request);
+			financialProducer.sendMessage(completedTopic, instrumentCompletedKey, mastersMap);
+		}
 
 		if (mastersMap.get("instrumenttype_create") != null) {
 

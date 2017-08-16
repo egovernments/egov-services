@@ -199,7 +199,6 @@ public class UserService {
 		userGetRequest.setId(employeeCriteria.getId());
 		userGetRequest.setRoleCodes(employeeCriteria.getRoleCodes());
 		userGetRequest.setTenantId(employeeCriteria.getTenantId());
-		userGetRequest.setPageNumber(employeeCriteria.getPageNumber());
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setActive(employeeCriteria.getActive());
 

@@ -1546,6 +1546,7 @@ ReportDefinitions:
     label: reports.common.id
     type: number
     source: common
+    showColumn: false
   - name: status
     label: reports.common.status
     type: string

@@ -40,6 +40,8 @@
 
 package org.egov.collection;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -60,6 +62,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 @Import({TracerConfiguration.class})
 public class CollectionServicesApplication {
+
+    private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 
 	@Value("${app.timezone}")
 	private String timeZone;
@@ -87,6 +91,7 @@ public class CollectionServicesApplication {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
 		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;

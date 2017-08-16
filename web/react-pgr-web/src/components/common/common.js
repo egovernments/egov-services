@@ -246,9 +246,7 @@ var localationData = {
   "wc.create.receiptDate":"Receipt Date",
   "wc.create.receiptNumber":"Receipt Number",
 
-
-
-
+  "pt.create.button":"Create Property",
   "pt.create.groups.ownerDetails.fields.aadhaarNumber": "Aadhaar Number",
   "pt.create.groups.ownerDetails.fields.phoneNumber":"Phone Number",
   "pt.create.groups.ownerDetails.fields.ownerName":"Owner Name",

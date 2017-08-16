@@ -200,6 +200,9 @@ class PropertyTaxSearch extends Component {
 		if(res.hasOwnProperty('Errors')){
 			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
 		} else {
+			
+			console.log(res.properties[0].channel)
+			
 			flag=1;
 			changeButtonText("Search Again");
 			this.setState({

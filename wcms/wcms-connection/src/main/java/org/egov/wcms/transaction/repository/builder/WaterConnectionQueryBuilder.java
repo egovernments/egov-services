@@ -221,7 +221,7 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String getWaterConnectionByConsumerNumber() {
-        return " select * from egwtr_waterconnection connection " + " WHERE  connection.consumernumber = ?";
+        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.consumernumber = ?";
     }
     
     public static String getWaterConnectionAddressQueryForInsert() { 

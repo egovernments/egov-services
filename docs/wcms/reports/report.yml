@@ -1,5 +1,85 @@
 ---
 ReportDefinitions:
+
+- reportName: BaseRegisterReport
+  summary: Base Register Report
+  version: 1.0.0
+  sourceColumns:
+  - name: consumerNo
+    label: reports.wcms.consumerno
+    type: string
+    source: wcms
+  - name: oldConsumerNo
+    label: reports.wcms.oldconsumerno
+    type: number
+    source: wcms
+  - name: assementNo
+    label: reports.wcms.assesmentno
+    type: number
+    source: wcms
+  - name: ownerName
+    label: reports.wcms.ownername
+    type: number
+    source: wcms
+  - name: categoryType
+    label: reports.wcms.category
+    type: number
+    source: wcms
+  - name: connectionType
+    label: reports.wcms.connectiontype
+    type: number
+    source: seva
+  - name: waterSource
+    label: reports.wcms.watersource
+    type: number
+    source: seva
+  - name: pipeSize
+    label: reports.wcms.pipesize
+    type: number
+    source: seva
+  - name: monthlyRate
+    label: reports.wcms.monthlyrate
+    type: number
+    source: seva
+  - name: arr_demand
+    label: reports.wcms.arraydemand
+    type: number
+    source: seva
+  - name: curr_demand
+    label: reports.wcms.currentdemand
+    type: number
+    source: seva
+  - name: arr_coll
+    label: reports.wcms.arraycollection
+    type: number
+    source: seva
+  - name: curr_coll
+    label: reports.wcms.currentcollection
+    type: number
+    source: seva
+  - name: arr_balance
+    label: reports.wcms.arraybalance
+    type: number
+    source: seva
+  - name: curr_balance
+    label: reports.wcms.currentbalance
+    type: number
+    source: seva
+  searchParams:
+  - name: revenueboundary
+    label: reports.wcms.revenueboundary
+    type: singlevaluelist
+    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
+    source: seva
+  query: select dcbinfo.hscno as "consumerNo", dcbinfo.oldhscno as "oldConsumerNo", dcbinfo.propertyid as "assementNo", dcbinfo.username as 
+         "ownerName",dcbinfo.categorytype as "categoryType", dcbinfo.connectiontype as "connectionType" ,dcbinfo.waterSource as "waterSource" ,
+         dcbinfo.pipesize as "pipeSize" , 0 as "monthlyRate",cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_coll) 
+         as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll, cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance
+         from egwtr_connection_view dcbinfo,eg_boundary boundary, egwtr_water_source_type wt, egwtr_pipesize ps,egwtr_category  cat
+         where  dcbinfo.wardid=boundary.id    and dcbinfo.connectionstatus = 'ACTIVE' and  wt.name=dcbinfo.watersource and ps.sizeinmilimeter=dcbinfo.pipesize  and dcbinfo.categorytype = cat.name and 
+         dcbinfo.wardid in ($wardid) group by dcbinfo.wardid,boundary.name,dcbinfo.hscno,dcbinfo.oldhscno ,dcbinfo.propertyid,dcbinfo.username,dcbinfo.categorytype ,dcbinfo.connectiontype,
+         dcbinfo.waterSource,dcbinfo.pipesize order by boundary.name;
+         
 - reportName: NumberofConnection
   summary: Number of Connection Report Details
   version: 1.0.0

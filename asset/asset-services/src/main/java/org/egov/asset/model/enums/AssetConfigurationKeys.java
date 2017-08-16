@@ -14,7 +14,8 @@ public enum AssetConfigurationKeys {
                                                     "AssetMinimumValue"), DEPRECIATIONSEPARATIONDATE(
                                                             "DepreciationSeparationDate"), DEPRECIATIONVOUCHERNAME(
                                                                     "AssetDepreciationVoucherName"), DEPRECIATIONVOUCHERDESCRIPTION(
-                                                                            "AssetDepreciationVoucherDescription");
+                                                                            "AssetDepreciationVoucherDescription"), DEPRECIATIONVOUCHERPARAMS(
+                                                                                    "DepreciationVoucherParams");
 
     private String value;
 

@@ -201,7 +201,8 @@ public class ConnectionValidator {
 			}
 		}
 		
-		if(!waterConnectionRequest.getConnection().getWithProperty()) { 
+		if(null != waterConnectionRequest.getConnection().getWithProperty()
+				&& !waterConnectionRequest.getConnection().getWithProperty()) { 
 			validateConnectionLocationDetails(waterConnectionRequest,errorFields);
 		}
 

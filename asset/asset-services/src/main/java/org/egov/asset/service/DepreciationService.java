@@ -205,9 +205,10 @@ public class DepreciationService {
         final List<ChartOfAccountDetailContract> subledgerDetailsForDE = voucherService.getSubledgerDetails(requestInfo,
                 tenantId, dEAccount);
 
-        if (subledgerDetailsForAD != null && subledgerDetailsForDE != null && !subledgerDetailsForAD.isEmpty()
-                && !subledgerDetailsForDE.isEmpty())
-            throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+        voucherService.validateSubLedgerDetails(subledgerDetailsForAD, subledgerDetailsForDE);
+
+        voucherService.validateCOAActiveForPosting(subledgerDetailsForAD);
+        voucherService.validateCOAActiveForPosting(subledgerDetailsForDE);
 
         Map<String, String> voucherParamsMap = new HashMap<>();
         try {

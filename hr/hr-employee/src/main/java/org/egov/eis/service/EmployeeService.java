@@ -43,6 +43,7 @@ package org.egov.eis.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.*;
@@ -160,6 +161,8 @@ public class EmployeeService {
     public List<EmployeeInfo> getEmployees(EmployeeCriteria empCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
         List<User> usersList = null;
         List<Long> ids = null;
+        List<Long> idSearchCriteria = isEmpty(empCriteria.getId()) ? null : empCriteria.getId();
+
         // If roleCodes or userName is present, get users first, as there will be very limited results
         if (!isEmpty(empCriteria.getRoleCodes()) || !isEmpty(empCriteria.getUserName())) {
             usersList = userService.getUsers(empCriteria, requestInfo);
@@ -167,13 +170,15 @@ public class EmployeeService {
             if (isEmpty(usersList))
                 return Collections.EMPTY_LIST;
             ids = usersList.stream().map(user -> user.getId()).collect(Collectors.toList());
+            log.debug("User ids are :: " + ids);
             empCriteria.setId(ids);
         }
 
         List<EmployeeInfo> empInfoList = employeeRepository.findForCriteria(empCriteria);
 
-        if (isEmpty(empInfoList))
+        if (isEmpty(empInfoList)) {
             return Collections.EMPTY_LIST;
+        }
 
         // If roleCodes or userName is not present, get employees first
         if (isEmpty(empCriteria.getRoleCodes()) || isEmpty(empCriteria.getUserName())) {
@@ -191,6 +196,7 @@ public class EmployeeService {
             employeeHelper.mapDocumentsWithEmployees(empInfoList, employeeDocuments);
         }
 
+        empCriteria.setId(idSearchCriteria);
         return empInfoList;
     }
 
@@ -213,8 +219,6 @@ public class EmployeeService {
         Integer totalDBRecords = employeeRepository.getTotalDBRecords(empCriteria);
         Integer totalpages = (int) Math.ceil((double) totalDBRecords / pageSize);
 
-        System.err.println("totalResults : " + recordsFetched + " totalPages : " + totalpages + " currentPage : " + pageNumber
-                + " pageNumber : " + pageNumber + " pageSize : " + pageSize);
         Pagination page = Pagination.builder().totalResults(recordsFetched).totalPages(totalpages).currentPage(pageNumber)
                 .pageNumber(pageNumber).pageSize(pageSize).build();
 

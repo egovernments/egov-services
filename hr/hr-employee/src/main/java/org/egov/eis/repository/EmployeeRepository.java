@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
@@ -64,6 +65,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 public class EmployeeRepository {
 
@@ -155,8 +157,8 @@ public class EmployeeRepository {
 	public Integer getTotalDBRecords(EmployeeCriteria empCriteria) {
 		Map<String, Object> namedParamsForMatchingRecords = new HashMap<>();
 		String queryStrForMatchingRecords = employeeQueryBuilder.getQuery(empCriteria, namedParamsForMatchingRecords, null);
-		String queryForTotalMatchingRecords = "SELECT count(*) FROM (" + queryStrForMatchingRecords + ") AS emp";
-
+		String queryForTotalMatchingRecords = "SELECT count(DISTINCT e_id) FROM (" + queryStrForMatchingRecords + ") AS emp";
+		log.debug("queryForTotalMatchingRecords :: " + queryForTotalMatchingRecords);
 		return namedParameterJdbcTemplate.queryForObject(queryForTotalMatchingRecords, namedParamsForMatchingRecords, Integer.class);
 	}
 

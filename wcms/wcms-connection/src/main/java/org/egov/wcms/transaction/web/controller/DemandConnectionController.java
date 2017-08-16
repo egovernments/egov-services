@@ -40,6 +40,7 @@
 package org.egov.wcms.transaction.web.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -98,6 +99,7 @@ public class DemandConnectionController {
             @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final List<DemandDetailBean> dmdDetailBeanList = new ArrayList<>();
+        if(demandBeanGetRequest!=null && demandBeanGetRequest.getConsumerNuber()!=null){
         Connection waterConn=waterConnectionService.getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNuber());
         if(waterConn==null){
         final ErrorResponse errorResponse = new ErrorResponse();
@@ -107,10 +109,11 @@ public class DemandConnectionController {
         }
         else
         {
-        TaxPeriodResponse taxperiodres=demandConnectionService.getTaxPeriodByPeriodCycleAndService(demandBeanGetRequest.getTenantId(),PeriodCycle.HALFYEAR,waterConn.getExecutionDate());
+        TaxPeriodResponse taxperiodres=demandConnectionService.getTaxPeriodByPeriodCycleAndService(demandBeanGetRequest.getTenantId(),PeriodCycle.HALFYEAR,
+                (waterConn.getExecutionDate()==0? new Date().getTime():waterConn.getExecutionDate()));
         List<TaxPeriod>taxPeriodList=taxperiodres.getTaxPeriods();
         
-        try {
+        try{
             for (TaxPeriod tax:taxPeriodList)
             {
                 dmdDetailBeanList.add(createDemandDeatils(demandBeanGetRequest.getTenantId(),WcmsConnectionConstants.WATERDEMANDREASONNAME+"#"+tax.getFinancialYear(), tax.getFinancialYear(),
@@ -120,6 +123,7 @@ public class DemandConnectionController {
         } catch (final Exception exception) {
             
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfoWrapper.getRequestInfo());
+        }
         }
         }
         return getSuccessResponse(dmdDetailBeanList, requestInfoWrapper.getRequestInfo());

@@ -31,7 +31,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
             HashMap<String, String> error = new HashMap<>();
             error.put("code", "servicetype Validator.1");
             error.put("field", "serviceType.tenantId");
-            error.put("message", "TenantId mandatory ");
+            error.put("message", "TenantId Required ");
             throw new PGRMasterException(error);
         }
 
@@ -39,7 +39,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
             HashMap<String, String> error = new HashMap<>();
             error.put("code", "servicetype Validator.2");
             error.put("field", "serviceType.serviceCode");
-            error.put("message", "ServiceCode mandatory ");
+            error.put("message", "ServiceCode Required ");
             throw new PGRMasterException(error);
         }
 
@@ -47,7 +47,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
             HashMap<String, String> error = new HashMap<>();
             error.put("code", "servicetype Vaalidator.3");
             error.put("field", "serviceType.serviceName");
-            error.put("message", "ServiceName mandatory ");
+            error.put("message", "ServiceName Required ");
             throw new PGRMasterException(error);
         }
         
@@ -55,7 +55,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
             HashMap<String, String> error = new HashMap<>();
             error.put("code", "servicetype Vaalidator.4");
             error.put("field", "serviceType.keyWord");
-            error.put("message", "KeyWord mandatory ");
+            error.put("message", "KeyWord Required ");
             throw new PGRMasterException(error);
         }
         
@@ -64,7 +64,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
         	 HashMap<String, String> error = new HashMap<>();
              error.put("code", "servicetype Vaalidator.5");
              error.put("field", "serviceType.keyWord");
-             error.put("message", "Not a valid keyword ");
+             error.put("message", "Not a valid Required ");
              throw new PGRMasterException(error);
         	
         }
@@ -84,7 +84,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
             HashMap<String, String> error = new HashMap<>();
             error.put(CODE, "ServiceCodeValidator.");
             error.put(FIELD, "serviceTypeConfiguration.category");
-            error.put(MESSAGE, "Category data not exist");
+            error.put(MESSAGE, "Mapping Not Presentt");
             throw new PGRMasterException(error);
         }
 
@@ -94,7 +94,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
             HashMap<String, String> error = new HashMap<>();
             error.put(CODE, "ServiceCodeValidator.4");
             error.put(FIELD, "serviceTypeConfiguration.serviceCode");
-            error.put(MESSAGE, "ServiceCode already exists");
+            error.put(MESSAGE, "Data already exists");
             throw new PGRMasterException(error);
         }
 
@@ -106,7 +106,7 @@ public class ServiceCodeCreateValidator implements ServiceTypeCreateValidator {
             HashMap<String, String> error = new HashMap<>();
             error.put(CODE, "ServiceCodeValidator.5");
             error.put(FIELD, "serviceTypeConfiguration.serviceCode");
-            error.put(MESSAGE, "ServiceCode already exists");
+            error.put(MESSAGE, "Data already exists");
             throw new PGRMasterException(error);
         }
 

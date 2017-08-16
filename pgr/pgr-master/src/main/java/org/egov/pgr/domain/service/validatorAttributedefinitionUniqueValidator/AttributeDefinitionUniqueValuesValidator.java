@@ -36,7 +36,7 @@ public class AttributeDefinitionUniqueValuesValidator implements AttributeDefini
 	            HashMap<String, String> error = new HashMap<>();
 	            error.put(CODE, "AttributeDefinition.1");
 	            error.put(FIELD, "AttributeDefinition.AttribCode");
-	            error.put(MESSAGE, "Code, ServiceCode and tenantid Combination already exists");
+	            error.put(MESSAGE, "Data Already Exist");
 	            throw new PGRMasterException(error);
 	        }
 

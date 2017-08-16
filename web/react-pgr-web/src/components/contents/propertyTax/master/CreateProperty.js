@@ -384,7 +384,7 @@ createPropertyTax = () => {
 					"addressLine1": createProperty.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "secundrabad",
+					"city": "Roha",
 					"pincode": createProperty.pin || null,
 					"detail": null,
 					"auditDetails": {

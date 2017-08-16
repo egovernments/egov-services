@@ -248,7 +248,8 @@ var localization_EN_Data = {
 
 
 
-
+	
+	"pt.create.button": "Forward",
     "pt.create.groups.ownerDetails.fields.aadhaarNumber": "Aadhaar Number",
     "pt.create.groups.ownerDetails.fields.phoneNumber": "Phone Number",
     "pt.create.groups.ownerDetails.fields.ownerName": "Owner Name",
@@ -1054,7 +1055,7 @@ var localization_MR_Data = {
 
 
 
-
+	"pt.create.button": "Forward-Marathi",
     "pt.create.groups.ownerDetails.fields.aadhaarNumber": "Aadhaar Number-Marathi",
     "pt.create.groups.ownerDetails.fields.phoneNumber": "Phone Number-Marathi",
     "pt.create.groups.ownerDetails.fields.ownerName": "Owner Name-Marathi",

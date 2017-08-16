@@ -385,7 +385,7 @@ dataEntryTax = () => {
 					"addressLine1": dataEntry.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "secundrabad",
+					"city": "Roha",
 					"pincode": dataEntry.pin || null,
 					"detail": null,
 					"auditDetails": {

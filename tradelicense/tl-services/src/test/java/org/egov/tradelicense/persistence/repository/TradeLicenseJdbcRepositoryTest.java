@@ -81,17 +81,19 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setOwnerShipType(tradeLicense.getOwnerShipType().toString());
 		tradeLicenseEntity.setPropertyAssesmentNo(tradeLicense.getPropertyAssesmentNo());
 		tradeLicenseEntity.setQuantity(tradeLicense.getQuantity());
+		tradeLicenseEntity.setValidityYears(tradeLicense.getValidityYears());
 		tradeLicenseEntity.setRemarks(tradeLicense.getRemarks());
 		tradeLicenseEntity.setRevenueWardId(tradeLicense.getRevenueWardId());
 		tradeLicenseEntity.setSubCategoryId(tradeLicense.getSubCategoryId());
 		tradeLicenseEntity.setTenantId(tradeLicense.getTenantId());
 		tradeLicenseEntity.setTradeAddress(tradeLicense.getTradeAddress());
-		tradeLicenseEntity.setTradeCommencementDate(TimeStampUtil.getTimeStamp(tradeLicense.getTradeCommencementDate()));
+		tradeLicenseEntity
+				.setTradeCommencementDate(TimeStampUtil.getTimeStamp(tradeLicense.getTradeCommencementDate()));
 		tradeLicenseEntity.setTradeTitle(tradeLicense.getTradeTitle());
 		tradeLicenseEntity.setTradeType(tradeLicense.getTradeType().toString());
 		tradeLicenseEntity.setUomId(tradeLicense.getUomId());
-		tradeLicenseEntity.setStatus( tradeLicense.getStatus());
-		
+		tradeLicenseEntity.setStatus(tradeLicense.getStatus());
+
 		return tradeLicenseEntity;
 	}
 
@@ -124,6 +126,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setOwnerShipType(OwnerShipType.RENTED);
 		tradeLicense.setPropertyAssesmentNo(null);
 		tradeLicense.setQuantity(10.0);
+		tradeLicense.setValidityYears(1l);
 		tradeLicense.setRemarks("remarks");
 		tradeLicense.setRevenueWardId(22);
 		tradeLicense.setStatus(null);

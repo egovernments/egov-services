@@ -757,12 +757,8 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
     public TaxCalculation getTaxCalculationForVacantLand(Property property, TaxperiodWrapper taxPeriodWrapper,
             Double annaualRentalValue) throws Exception {
-        List<TaxRates> taxRates = taxPeriodWrapper.getUnits().get(0).getTaxRates();
 
-        String usage = property.getPropertyDetail().getUsage();
-        if (usage == null) {
-            usage = propertiesManager.getUsage();
-        }
+        List<TaxRates> taxRates = taxPeriodWrapper.getUnits().get(0).getTaxRates();
         List<HeadWiseTax> headWiseTaxes = getHeadWiseTaxesForVacantLand(property, annaualRentalValue, taxPeriodWrapper, taxRates);
         CommonTaxDetails commonTaxDetails = new CommonTaxDetails();
         commonTaxDetails.setCalculatedARV(annaualRentalValue);

@@ -136,7 +136,7 @@ public class CollectionServiceConstants {
 
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     
-    public static final String INVALID_DATE_EXCEPTION_MSG="from-date is larger than to-date";
+    public static final String INVALID_DATE_EXCEPTION_MSG="From Date is greater than To Date";
 
     
 

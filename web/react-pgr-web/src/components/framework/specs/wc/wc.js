@@ -196,14 +196,14 @@ var dat = {
       			"defaultValue": [],
       			"url":'',
             "depedants": [{
-                "jsonPath": "Connection.property.subUsageType",
+                "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
                 "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..code|$..name"
               }]
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection.property.subUsageType",
+            "jsonPath": "Connection.subUsageType",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",

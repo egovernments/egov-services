@@ -138,24 +138,24 @@ public class MasterServiceImpl implements Masterservice {
 	public FloorTypeResponse updateFloorType(FloorTypeRequest floorTypeRequest) throws Exception {
 
 		for (FloorType floorType : floorTypeRequest.getFloorTypes()) {
-			
+
 			AuditDetails auditDetails = getUpdatedAuditDetails(floorTypeRequest.getRequestInfo(),
 					ConstantUtility.FLOOR_TYPE_TABLE_NAME, floorType.getId());
 			floorType.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(floorType.getTenantId(),
 					floorType.getCode(), ConstantUtility.FLOOR_TYPE_TABLE_NAME, floorType.getId());
-			
+
 			if (isExists)
 				throw new DuplicateIdException(floorTypeRequest.getRequestInfo());
-			
+
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(floorType);
-			
+
 			try {
-				
+
 				propertyMasterRepository.updateFloorType(floorType, data);
 			} catch (Exception e) {
-				
+
 				throw new InvalidInputException(floorTypeRequest.getRequestInfo());
 			}
 		}
@@ -164,7 +164,7 @@ public class MasterServiceImpl implements Masterservice {
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(floorTypeRequest.getRequestInfo(), true);
 		floorTypeResponse.setResponseInfo(responseInfo);
-		
+
 		return floorTypeResponse;
 	}
 
@@ -236,10 +236,10 @@ public class MasterServiceImpl implements Masterservice {
 			String data = gson.toJson(woodType);
 
 			try {
-				
+
 				propertyMasterRepository.updateWoodType(woodType, data);
 			} catch (Exception e) {
-				
+
 				throw new InvalidInputException(woodTypeRequest.getRequestInfo());
 			}
 		}
@@ -248,7 +248,7 @@ public class MasterServiceImpl implements Masterservice {
 				.createResponseInfoFromRequestInfo(woodTypeRequest.getRequestInfo(), true);
 		woodTypeResponse.setWoodTypes(woodTypeRequest.getWoodTypes());
 		woodTypeResponse.setResponseInfo(responseInfo);
-		
+
 		return woodTypeResponse;
 	}
 
@@ -307,7 +307,7 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	@Transactional
 	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest) throws Exception {
-		
+
 		for (RoofType roofType : roofTypeRequest.getRoofTypes()) {
 
 			AuditDetails auditDetails = getUpdatedAuditDetails(roofTypeRequest.getRequestInfo(),
@@ -322,10 +322,10 @@ public class MasterServiceImpl implements Masterservice {
 			String data = gson.toJson(roofType);
 
 			try {
-				
+
 				propertyMasterRepository.updateRoofType(roofType, data);
 			} catch (Exception e) {
-				
+
 				throw new InvalidInputException(roofTypeRequest.getRequestInfo());
 			}
 		}
@@ -334,7 +334,7 @@ public class MasterServiceImpl implements Masterservice {
 				.createResponseInfoFromRequestInfo(roofTypeRequest.getRequestInfo(), true);
 		roofTypeResponse.setRoofTypes(roofTypeRequest.getRoofTypes());
 		roofTypeResponse.setResponseInfo(responseInfo);
-		
+
 		return roofTypeResponse;
 	}
 
@@ -396,7 +396,7 @@ public class MasterServiceImpl implements Masterservice {
 		DepartmentResponseInfo departmentResponse = new DepartmentResponseInfo();
 		departmentResponse.setDepartments(departmentRequest.getDepartments());
 		departmentResponse.setResponseInfo(responseInfo);
-		
+
 		return departmentResponse;
 	}
 
@@ -468,7 +468,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(occuapancyMaster.getTenantId(),
 					occuapancyMaster.getCode(), ConstantUtility.OCCUPANCY_TABLE_NAME, occuapancyMaster.getId());
-			
+
 			if (isExists)
 				throw new DuplicateIdException(occuapancyRequest.getRequestInfo());
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
@@ -480,7 +480,7 @@ public class MasterServiceImpl implements Masterservice {
 		OccuapancyMasterResponse occuapancyResponse = new OccuapancyMasterResponse();
 		occuapancyResponse.setOccuapancyMasters(occuapancyRequest.getOccuapancyMasters());
 		occuapancyResponse.setResponseInfo(responseInfo);
-		
+
 		return occuapancyResponse;
 	}
 
@@ -563,7 +563,7 @@ public class MasterServiceImpl implements Masterservice {
 		PropertyTypeResponse propertyTypeResponse = new PropertyTypeResponse();
 		propertyTypeResponse.setPropertyTypes(propertyTypeRequest.getPropertyTypes());
 		propertyTypeResponse.setResponseInfo(responseInfo);
-		
+
 		return propertyTypeResponse;
 	}
 
@@ -639,7 +639,7 @@ public class MasterServiceImpl implements Masterservice {
 	public UsageMasterResponse updateUsageMaster(UsageMasterRequest usageMasterRequest) {
 
 		for (UsageMaster usageMaster : usageMasterRequest.getUsageMasters()) {
-			
+
 			AuditDetails auditDetails = getUpdatedAuditDetails(usageMasterRequest.getRequestInfo(),
 					ConstantUtility.USAGE_TYPE_TABLE_NAME, usageMaster.getId());
 			usageMaster.setAuditDetails(auditDetails);
@@ -676,7 +676,7 @@ public class MasterServiceImpl implements Masterservice {
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(usageMasterRequest.getRequestInfo(), true);
 		usageMasterResponse.setResponseInfo(responseInfo);
-		
+
 		return usageMasterResponse;
 	}
 
@@ -717,7 +717,7 @@ public class MasterServiceImpl implements Masterservice {
 			try {
 				wallType.setAuditDetails(auditDetails);
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-				String data = gson.toJson(wallType);				
+				String data = gson.toJson(wallType);
 				Long id = propertyMasterRepository.saveWallTypes(wallType, data);
 				wallType.setId(id);
 			} catch (Exception e) {
@@ -752,7 +752,7 @@ public class MasterServiceImpl implements Masterservice {
 				throw new DuplicateIdException(wallTypeRequest.getRequestInfo());
 
 			try {
-				
+
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(wallType);
 				propertyMasterRepository.updateWallTypes(wallType, data);
@@ -1154,23 +1154,24 @@ public class MasterServiceImpl implements Masterservice {
 
 			if (isExists)
 				throw new DuplicateIdException(apartmentRequest.getRequestInfo());
-
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(apartment);
 			apartment.setAuditDetails(auditDetails);
+			apartment.getFloor().setAuditDetails(auditDetails);
+
 			for (Unit unit : apartment.getFloor().getUnits()) {
 
 				if (unit.getUnits() != null) {
-					for (Unit innerUnit : apartment.getFloor().getUnits()) {
-						innerUnit.setAuditDetails(auditDetails);
+					if (unit.getUnits().size() > 0) {
+						for (Unit room : unit.getUnits()) {
+							room.setAuditDetails(auditDetails);
+						}
 					}
-				} else {
-					unit.setAuditDetails(auditDetails);
 				}
+				unit.setAuditDetails(auditDetails);
 			}
 
 			try {
-
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(apartment);
 				Long id = propertyMasterRepository.createApartment(apartment, data);
 				apartment.setId(id);
 			} catch (Exception e) {
@@ -1197,16 +1198,18 @@ public class MasterServiceImpl implements Masterservice {
 			AuditDetails auditDetails = getUpdatedAuditDetails(apartmentRequest.getRequestInfo(),
 					ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
 			apartment.setAuditDetails(auditDetails);
+			apartment.getFloor().setAuditDetails(auditDetails);
 
 			for (Unit unit : apartment.getFloor().getUnits()) {
 
 				if (unit.getUnits() != null) {
-					for (Unit innerUnit : apartment.getFloor().getUnits()) {
-						innerUnit.setAuditDetails(auditDetails);
+					if (unit.getUnits().size() > 0) {
+						for (Unit room : unit.getUnits()) {
+							room.setAuditDetails(auditDetails);
+						}
 					}
-				} else {
-					unit.setAuditDetails(auditDetails);
 				}
+				unit.setAuditDetails(auditDetails);
 			}
 
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(apartment.getTenantId(),
@@ -1216,11 +1219,9 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(apartmentRequest.getRequestInfo());
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(apartment);
-
 			try {
-
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(apartment);
 				propertyMasterRepository.updateApartment(apartment, data);
 
 			} catch (Exception e) {

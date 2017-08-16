@@ -90,6 +90,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setTradeTitle(tradeLicense.getTradeTitle());
 		tradeLicenseEntity.setTradeType(tradeLicense.getTradeType().toString());
 		tradeLicenseEntity.setUomId(tradeLicense.getUomId());
+		tradeLicenseEntity.setStatus( tradeLicense.getStatus());
 		
 		return tradeLicenseEntity;
 	}
@@ -134,6 +135,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setTradeTitle("tradeTitle");
 		tradeLicense.setTradeType(BusinessNature.PERMANENT);
 		tradeLicense.setUomId(1l);
+		tradeLicense.setStatus(1L);
 
 		return tradeLicense;
 	}

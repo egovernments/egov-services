@@ -56,15 +56,16 @@ public class CommonMasterService {
 	}
 
 	// Language
-	public List<Language> getLanguages(List<Long> id, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+	public List<Language> getLanguages(List<Long> ids, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+		String idsAsCSV = getIdsAsCSV(ids);
 
 		URI url = null;
 		LanguageResponse languageResponse = null;
 		try {
 			url = new URI(propertiesManager.getEgovCommonMastersServiceHost()
 					+ propertiesManager.getEgovCommonMastersServiceBasepath()
-					+ propertiesManager.getEgovCommonMastersServiceLanguageSearchPath() + "?id=" + id + "&tenantId="
-					+ tenantId);
+					+ propertiesManager.getEgovCommonMastersServiceLanguageSearchPath()
+					+ "?id=" + idsAsCSV + "&tenantId=" + tenantId);
 			LOGGER.debug(url.toString());
 			languageResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
 					LanguageResponse.class);
@@ -138,6 +139,10 @@ public class CommonMasterService {
 			return null;
 		}
 		return departmentResponse.getDepartment().get(0);
+	}
+
+	private String getIdsAsCSV(List<Long> ids) {
+		return ids.toString().replace("[", "").replace("]", "");
 	}
 
 	private HttpEntity<RequestInfoWrapper> getRequestInfoAsHttpEntity(RequestInfoWrapper requestInfoWrapper) {

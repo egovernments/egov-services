@@ -200,9 +200,7 @@ public class WaterMasterConsumer {
             } else if (applicationProperties.getUpdateMeterCostTopicName().equals(topic)) {
                 log.info("Consuming MeterCostUpdate Request");
                 meterCostService.updateMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
-            } else if (applicationProperties.getCreateMeterCostTopicName().equals(topic))
-                meterCostService.create(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
-            else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
+            }else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.create(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getUpdateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.update(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));

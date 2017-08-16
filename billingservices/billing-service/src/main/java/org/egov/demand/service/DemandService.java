@@ -71,7 +71,6 @@ import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
-import org.egov.demand.web.contract.DemandUpdateMisResponse;
 import org.egov.demand.web.contract.ReceiptRequest;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;

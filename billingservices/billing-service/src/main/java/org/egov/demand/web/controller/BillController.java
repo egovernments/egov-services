@@ -95,19 +95,19 @@ public class BillController {
 			return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
 		} else {
 			Error error = new Error();
-			error.setCode(200);
+			error.setCode(400);
 			error.setMessage("The due to be paid is zero");
 			error.setDescription(
 					"bill Cannot be generated because the amount to be collected on the respective bill is zero");
 			List<ErrorField> errorFields = new ArrayList<>();
 			error.setFields(errorFields);
 
-			ErrorField errorField = new ErrorField(HttpStatus.CREATED.toString(), error.getMessage(), "");
+			ErrorField errorField = new ErrorField(HttpStatus.BAD_REQUEST.toString(), error.getMessage(), "");
 			error.getFields().add(errorField);
 			errorFields.add(errorField);
 			ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfoWrapper.getRequestInfo(),
-					HttpStatus.CREATED);
-			return new ResponseEntity<>(new ErrorResponse(responseInfo, error), HttpStatus.CREATED);
+					HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ErrorResponse(responseInfo, error), HttpStatus.BAD_REQUEST);
 		}
 	}
 

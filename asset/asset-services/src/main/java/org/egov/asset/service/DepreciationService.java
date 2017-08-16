@@ -182,8 +182,7 @@ public class DepreciationService {
                             .get(calculationAssetDetail.getAssetId());
 
                     log.debug("Depreciation Detail :: " + depreciationDetail);
-                    log.debug("Depreciation Status :: " + depreciationDetail.getStatus());
-                    if (DepreciationStatus.SUCCESS.toString().equals(depreciationDetail.getStatus())) {
+                    if (DepreciationStatus.SUCCESS.equals(depreciationDetail.getStatus())) {
                         amt.add(depreciationDetail.getDepreciationValue());
                         log.debug("Depreciation Value :: " + amt);
                     }
@@ -196,18 +195,6 @@ public class DepreciationService {
 
             }
         }
-
-        // final Long voucherReference = null;
-        /*
-         * TODO get voucherreference do integration if
-         * (assetConfigurationService.getEnabledVoucherGeneration(
-         * AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-         * depreciationCriteria.getTenantId())) try { // TODO VOUCHER GEN
-         * voucherReference = //
-         * createVoucherForRevaluation(revaluationRequest); } catch (final
-         * Exception e) { throw new RuntimeException(
-         * "Voucher Generation is failed due to :" + e.getMessage()); }
-         */
     }
 
     private void createVoucherForDepreciation(final CalculationAssetDetails cad, final RequestInfo requestInfo,

@@ -79,9 +79,11 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     private static final String ATTRIBUTE_LOCATION_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemLocationId";
     private static final String ATTRIBUTE_LOCATION_ID_MANDATORY_MESSAGE = "Location ID is required";
 
+/*
     private static final String CHILD_LOCATION_ID_MANDATORY_CODE = "pgr.0021";
     private static final String CHILD_LOCATION_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemChildLocationId";
     private static final String CHILD_LOCATION_ID_MANDATORY_MESSAGE = "Child Location ID is required";
+*/
 
     private static final String POSITION_ID_MANDATORY_CODE = "pgr.0022";
     private static final String POSITION_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemPositionId";
@@ -117,7 +119,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String EXTERNAL_CRN = "systemExternalCRN";
     public static final String SYSTEM_RECEIVING_MODE = "systemReceivingMode";
     public static final String SYSTEM_LOCATION_ID = "systemLocationId";
-    public static final String SYSTEM_CHILD_LOCATION_ID = "systemChildLocationId";
+ //   public static final String SYSTEM_CHILD_LOCATION_ID = "systemChildLocationId";
     public static final String SYSTEM_POSITION_ID = "systemPositionId";
     public static final String SYSTEM_APPROVAL_COMMENTS = "systemApprovalComments";
     public static final String SYSTEM_RATING = "systemRating";
@@ -173,7 +175,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         if (model.isModifyServiceRequest()) {
             addCRNValidationErrors(model, errorFields);
             addLocationIdPresentValidationErrors(model, errorFields);
-            addChildLocationIdPresentValidationErrors(model, errorFields);
+            //addChildLocationIdPresentValidationErrors(model, errorFields);
             addAssigneeIdPresentValidationErrors(model, errorFields);
             addCommentsPresentValidationErrors(model, errorFields);
             addSystemRatingCitizenPresentValidationErrors(model, errorFields);
@@ -369,7 +371,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         errorFields.add(errorField);
     }
 
-    private void addChildLocationIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
+   /* private void addChildLocationIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         List<AttributeEntry> childLocationId = model.getAttributeValueByKey(SYSTEM_CHILD_LOCATION_ID);
         if (!childLocationId.isEmpty()) {
             return;
@@ -382,7 +384,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
             .build();
         errorFields.add(errorField);
     }
-
+*/
     private void addAssigneeIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         List<AttributeEntry> assigneeId = model.getAttributeValueByKey(SYSTEM_POSITION_ID);
         if (!assigneeId.isEmpty()) {

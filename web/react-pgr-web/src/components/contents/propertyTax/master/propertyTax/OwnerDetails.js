@@ -379,6 +379,7 @@ constructor(props) {
                             <RaisedButton type="button" label={translate('pt.create.groups.ownerDetails.fields.add')} disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 this.props.addNestedFormData("owners","owner");
                                 this.props.resetObject("owner", false);
+								 this.props.resetObject("floor", false);
                               }
                             }/>
                           }
@@ -386,6 +387,7 @@ constructor(props) {
                             <RaisedButton type="button" label={translate('pt.create.groups.ownerDetails.fields.save')} disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 this.props.updateObject("owners","owner",  editIndex);
                                 this.props.resetObject("owner", false);
+								 this.props.resetObject("floor", false);
                                 isEditIndex(-1);
                               }
                             }/>
@@ -430,6 +432,7 @@ constructor(props) {
                                     <td>
 										<i className="material-icons" style={styles.iconFont} onClick={ () => {
 											editObject("owner",i, true);
+											cThis.props.setForm();
 											isEditIndex(index);
 										 }}>mode_edit</i>
 										<i className="material-icons" style={styles.iconFont} onClick={ () => {
@@ -462,6 +465,23 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+	
+setForm: () => {
+    dispatch({
+      type: "SET_OWNER_STATE",
+	   validatePropertyOwner: {
+        required: {
+          current: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender'],
+          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      },
+	
+    });
+  },	
 
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});

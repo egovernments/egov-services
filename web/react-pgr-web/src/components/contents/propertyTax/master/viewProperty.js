@@ -353,7 +353,7 @@ class ViewProperty extends Component {
 		
 		
 		var tQuery = {
-			businessService :'Property Tax',
+			businessService :'PT',
 			consumerCode:'AP-PT-2017/07/26-000230-12'
 		}		
 		

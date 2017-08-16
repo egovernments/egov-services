@@ -375,6 +375,7 @@ createPropertyTax = () => {
 				"tenantId": "default",
 				"oldUpicNumber": null,
 				"vltUpicNumber": null,
+				"sequenceNo": createProperty.sequenceNo || null,
 				"creationReason": createProperty.reasonForCreation || null,
 				"address": {
 					"tenantId": "default",

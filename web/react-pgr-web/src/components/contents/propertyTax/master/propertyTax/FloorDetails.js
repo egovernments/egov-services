@@ -1077,6 +1077,7 @@ calcAssessableArea = (e, type) => {
 																i.isStructured = 'NO'
 															}
 															editObject("floor",i, true);
+															cThis.props.setForm();
 															toggleSnackbarAndSetText(true, 'Edit room details and update.')
 															isEditIndex(index);
                                                          }}>mode_edit</i>
@@ -1119,19 +1120,20 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: () => {
+ setForm: () => {
     dispatch({
-      type: "RESET_STATE",
-      validationData: {
+      type: "SET_FLOOR_STATE",
+	   validatePropertyFloor: {
         required: {
-          current: [],
-          required: []
+          current: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost'],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
         },
         pattern: {
           current: [],
           required: []
         }
       }
+	
     });
   },
   handleChange: (e, property, isRequired, pattern) => {

@@ -22,7 +22,8 @@ class Inbox extends Component {
     super(props);
 	this.state = {
 		searchResult : [],
-		buttons : []
+		buttons : [],
+		employee : []
 	}
   }
   

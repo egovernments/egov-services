@@ -362,7 +362,7 @@ export default(state = defaultState, action) => {
             [action.objectName]:action.object
           },
 		  isOwnerValid: action.isSectionValid,
-				isFloorValid: action.isSectionValid
+		  isFloorValid: action.isSectionValid
         }
     break;
 
@@ -398,6 +398,18 @@ export default(state = defaultState, action) => {
         isFormValid: action.isFormValid
       }
     break;
+	
+	case "SET_OWNER_STATE": 
+		return {
+			...state,
+			validatePropertyOwner: action.validatePropertyOwner
+		}
+		
+	case "SET_FLOOR_STATE": 
+		return {
+			...state,
+			validatePropertyFloor: action.validatePropertyFloor
+		}
 
     case "HANDLE_CHANGE":
       validationData = undefined;

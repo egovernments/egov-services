@@ -1,19 +1,16 @@
 package org.egov.pgr.domain.model;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Builder
 @Getter
@@ -43,8 +40,6 @@ public class ServiceType {
     private Long lastModifiedBy;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
-    private List<AttributeDefinition> attributes;
-
 
     public org.egov.pgr.persistence.dto.ServiceType toDto(){
         return org.egov.pgr.persistence.dto.ServiceType.builder()

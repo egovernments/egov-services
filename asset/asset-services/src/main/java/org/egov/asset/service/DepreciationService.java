@@ -154,6 +154,7 @@ public class DepreciationService {
                 depreciationCriteria.getTenantId())) {
             log.info("Commencing voucher generation for depreciation");
             final Map<String, List<CalculationAssetDetails>> voucherMap = new HashMap<>();
+            log.debug("Calculation Asset Details ::" + calculationAssetDetailList);
             for (final CalculationAssetDetails cad : calculationAssetDetailList) {
                 final String key = cad.getAccumulatedDepreciationAccount().toString()
                         + cad.getDepreciationExpenseAccount();
@@ -169,6 +170,7 @@ public class DepreciationService {
             }
             log.debug("Voucher Map :: " + voucherMap);
             for (final Map.Entry<String, List<CalculationAssetDetails>> entry : voucherMap.entrySet()) {
+                log.debug("Voucher Map Entry :: " + entry);
                 final BigDecimal amt = BigDecimal.ZERO;
                 final List<CalculationAssetDetails> assetDetails = entry.getValue();
                 final CalculationAssetDetails assetDetail = assetDetails.get(0);
@@ -178,15 +180,19 @@ public class DepreciationService {
                 for (final CalculationAssetDetails calculationAssetDetail : assetDetails) {
                     final DepreciationDetail depreciationDetail = depreciationDetailsMap
                             .get(calculationAssetDetail.getAssetId());
-                    if (DepreciationStatus.SUCCESS.compareTo(depreciationDetail.getStatus()) == 0)
+
+                    log.debug("Depreciation Detail :: " + depreciationDetail);
+                    log.debug("Depreciation Status :: " + depreciationDetail.getStatus());
+                    if (DepreciationStatus.SUCCESS.toString().equals(depreciationDetail.getStatus())) {
                         amt.add(depreciationDetail.getDepreciationValue());
+                        log.debug("Depreciation Value :: " + amt);
+                    }
                 }
 
-                if (BigDecimal.ZERO.compareTo(amt) != 0) {
-                    log.debug("Depreciation Voucher Amount :: " + amt.longValue());
+                log.debug("Depreciation Voucher Amount :: " + amt.longValue());
+                if (BigDecimal.ZERO.compareTo(amt) != 0)
                     createVoucherForDepreciation(assetDetail, depreciationRequest.getRequestInfo(), accumulatedDepAcc,
                             depExpenxeAcc, amt, depreciationCriteria.getTenantId(), headers);
-                }
 
             }
         }

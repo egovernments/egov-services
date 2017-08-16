@@ -220,7 +220,7 @@ public class RestConnectionService {
         StringBuilder url = new StringBuilder();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
                 .append(configurationManager.getSerachSubUsageType())
-                .append("?name=").append(waterConnectionRequest.getConnection().getSubUsageType())
+                .append("?code=").append(waterConnectionRequest.getConnection().getSubUsageType())
                 .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
         final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();

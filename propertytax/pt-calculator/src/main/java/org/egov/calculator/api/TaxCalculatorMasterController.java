@@ -242,10 +242,10 @@ public class TaxCalculatorMasterController {
     public TaxPeriodResponse getTaxPeriod(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) String validDate,
 			@RequestParam(required = false) String code, @RequestParam(required = true) String fromDate,
-			@RequestParam(required = true) String toDate) throws Exception {
+			@RequestParam(required = true) String toDate, @RequestParam(required = false) String sortTaxPeriod) throws Exception {
 
 		return taxCalculationMasterService.getTaxPeriod(requestInfo.getRequestInfo(), tenantId, validDate, code,
-				fromDate, toDate);
+				fromDate, toDate, sortTaxPeriod);
 
 	}
 }

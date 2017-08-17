@@ -225,7 +225,7 @@ public class DepreciationService {
                         else {
                             deAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, dEAccount, amount,
                                     function, true, false);
-                            ledgerMap.put(aDAccount, deAccountCodeDetails);
+                            ledgerMap.put(dEAccount, deAccountCodeDetails);
                         }
                     }
                 }

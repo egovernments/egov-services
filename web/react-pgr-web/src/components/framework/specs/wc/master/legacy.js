@@ -828,7 +828,7 @@ var dat = {
       }
     ]
   },
-  "wc.viewLegacy": {
+  "wc.view": {
     "numCols": 12 / 3,
     "version": "v1",
     "url": "/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}",

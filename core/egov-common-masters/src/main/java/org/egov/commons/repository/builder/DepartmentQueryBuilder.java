@@ -78,7 +78,7 @@ public class DepartmentQueryBuilder {
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 								DepartmentGetRequest departmentGetRequest) {
 
-		if (departmentGetRequest.getIds() == null && departmentGetRequest.getName() == null
+		if (departmentGetRequest.getId() == null && departmentGetRequest.getName() == null
 				&& departmentGetRequest.getCode() == null && departmentGetRequest.getActive() == null
 				&& departmentGetRequest.getTenantId() == null)
 			return;
@@ -92,9 +92,9 @@ public class DepartmentQueryBuilder {
 			preparedStatementValues.add(departmentGetRequest.getTenantId());
 		}
 
-		if (departmentGetRequest.getIds() != null) {
+		if (departmentGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ids IN " + getIdQuery(departmentGetRequest.getIds()));
+			selectQuery.append(" id IN " + getIdQuery(departmentGetRequest.getId()));
 		}
 
 		if (departmentGetRequest.getName() != null) {

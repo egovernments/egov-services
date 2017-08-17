@@ -176,7 +176,7 @@ public class InstrumentRepository {
 
 			for (Instrument iac : instruments) {
 
-				resultList.add(update(iac));
+				resultList.add(delete(iac));
 			}
 
 			InstrumentRequest request = new InstrumentRequest();

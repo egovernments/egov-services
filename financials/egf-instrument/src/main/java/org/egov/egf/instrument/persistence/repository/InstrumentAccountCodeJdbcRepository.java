@@ -44,6 +44,11 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 		return entity;
 
 	}
+	
+	public InstrumentAccountCodeEntity delete(InstrumentAccountCodeEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
+	}
 
 	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch domain) {
 		InstrumentAccountCodeSearchEntity instrumentAccountCodeSearchEntity = new InstrumentAccountCodeSearchEntity();

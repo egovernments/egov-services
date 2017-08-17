@@ -89,19 +89,17 @@ public class ReportApp implements EnvironmentAware {
 	FileReader fr = null;
 	try {
     //Local Testing
-	Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
-	
+	/*Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
 	File file = resource.getFile();
+	fr = new FileReader(file);
+	br = new BufferedReader(fr);*/
 	
 	//Dev Testing
-	 URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/ReportEnhancements/docs/reportinfra/report/reportFileLocations.txt");
+	 URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocations.txt");
 	 URLConnection urlConnection = url.openConnection();
 	 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	 
 	try {
-
-		fr = new FileReader(file);
-		br = new BufferedReader(fr);
 
 		String yamlLocation;
 		//while ((yamlLocation = br.readLine()) != null) {
@@ -117,8 +115,8 @@ public class ReportApp implements EnvironmentAware {
 				} else if(yamlLocation.startsWith("file://")){
 					LOGGER.info("Coming in to the file loop");
 					LOGGER.info("The Yaml Location is : "+yamlLocation);
-					resource = resourceLoader.getResource(yamlLocation.toString());
-					file = resource.getFile();
+					Resource resource = resourceLoader.getResource(yamlLocation.toString());
+					File file = resource.getFile();
 					rd = mapper.readValue(file, ReportDefinitions.class);
 					localrd.addAll(rd.getReportDefinitions());
 					

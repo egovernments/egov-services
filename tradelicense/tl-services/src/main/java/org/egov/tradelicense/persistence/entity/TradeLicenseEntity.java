@@ -89,6 +89,8 @@ public class TradeLicenseEntity {
 	private String agreementNo;
 
 	private Boolean isLegacy = false;
+	
+	private Boolean isTradeOwner = false;
 
 	private Boolean active = true;
 
@@ -190,6 +192,7 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setIsLegacy(this.isLegacy);
 
+		tradeLicense.setIsTradeOwner( this.isTradeOwner);
 		tradeLicense.setActive(this.active);
 		
 		tradeLicense.setStatus( this.status);
@@ -294,6 +297,8 @@ public class TradeLicenseEntity {
 		this.agreementNo = tradeLicense.getAgreementNo();
 
 		this.isLegacy = tradeLicense.getIsLegacy();
+		
+		this.isTradeOwner = tradeLicense.getIsTradeOwner();
 
 		this.active = tradeLicense.getActive();
 

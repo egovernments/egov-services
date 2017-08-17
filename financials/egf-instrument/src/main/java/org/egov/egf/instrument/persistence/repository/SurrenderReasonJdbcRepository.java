@@ -44,6 +44,11 @@ public class SurrenderReasonJdbcRepository extends JdbcRepository {
 		return entity;
 
 	}
+	
+	public SurrenderReasonEntity delete(SurrenderReasonEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
+	}
 
 	public Pagination<SurrenderReason> search(SurrenderReasonSearch domain) {
 		SurrenderReasonSearchEntity surrenderReasonSearchEntity = new SurrenderReasonSearchEntity();

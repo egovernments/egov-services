@@ -105,22 +105,29 @@ public class TradeLicenseService {
 
 			if (tradeLicense.getIsLegacy()) {
 				
-				if( tradeLicense.getOldLicenseNumber() == null ){
-					throw new InvalidInputException("Old License Number is Mandatory !");
+				if( tradeLicense.getOldLicenseNumber() == null || tradeLicense.getOldLicenseNumber().trim().isEmpty() ){
+					throw new InvalidInputException("Old License Number is Required Please enter Valid Old License No");
 				}
 				// check unique constraint
 				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
 			}
 			
-			if(tradeLicense.getAgreementNo() != null){
-			
-				tradeLicenseRepository.validateUniqueAgreeMentNumber(tradeLicense);
+			if( tradeLicense.getIsTradeOwner() ){
+				if( ( tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty() ) ){
+					throw new InvalidInputException("Agreement No is Required Please enter Valid Agreement No");
+				}
+				if( tradeLicense.getAgreementDate() == null || tradeLicense.getAgreementDate().trim().isEmpty() ){
+					throw new InvalidInputException("Agreement Date is Required  Please enter valid date in dd/mm/yyyy");
+				}
+				
+				
+				
 			}
 			
 			if (propertiesManager.getPtisValidation()) {
 				
 				if (tradeLicense.getPropertyAssesmentNo() == null){
-					throw new InvalidInputException("Property assesment number is mandatory!");
+					throw new InvalidInputException("Property assesment  is Required Please enter valid Property Assesment Number");
 				}
 				else{
 					PropertyResponse propertyResponse = propertyContractRepository.findByAssesmentNo(tradeLicense,
@@ -128,14 +135,14 @@ public class TradeLicenseService {
 
 					if (propertyResponse == null || propertyResponse.getProperties() == null
 							|| propertyResponse.getProperties().size() == 0) {
-						throw new InvalidInputException("Invalid sub category type ");
+						throw new InvalidInputException("Property assesment  is Required Please enter valid Property Assesment Number");
 					}
 				}
 			}
 			
 			if( propertiesManager.getAdhaarValidation() ){
 				if (tradeLicense.getAdhaarNumber() == null){
-					throw new InvalidInputException("AdhaarNumber number is mandatory!");
+					throw new InvalidInputException("AdhaarNumber  is Required Please enter valid AdhaarNumber Number");
 				}
 			}
 			
@@ -146,7 +153,7 @@ public class TradeLicenseService {
 
 				if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 						|| boundaryResponse.getBoundarys().size() == 0) {
-					throw new InvalidInputException("Invalid trade locality ");
+					throw new InvalidInputException("Trade Locality  is Required Please enter valid Trade Locality ");
 				}
 
 			}
@@ -158,7 +165,7 @@ public class TradeLicenseService {
 
 				if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 						|| boundaryResponse.getBoundarys().size() == 0) {
-					throw new InvalidInputException("Invalid location ward ");
+					throw new InvalidInputException("Trade Revenue Ward  is Required Please enter valid Trade Revenue Ward ");
 				}
 
 			}
@@ -170,7 +177,7 @@ public class TradeLicenseService {
 
 					if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 							|| boundaryResponse.getBoundarys().size() == 0) {
-						throw new InvalidInputException("Invalid location Admin ward ");
+						throw new InvalidInputException("Trade Admin Ward  is Required Please enter valid Trade Admin Ward ");
 					}
 
 				}
@@ -182,7 +189,7 @@ public class TradeLicenseService {
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
 						|| categoryResponse.getCategories().size() == 0) {
-					throw new InvalidInputException("Invalid category type ");
+					throw new InvalidInputException("Category is required ,  please enter Valid Category");
 				}
 			}
 
@@ -193,11 +200,11 @@ public class TradeLicenseService {
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
 						|| categoryResponse.getCategories().size() == 0) {
-					throw new InvalidInputException("Invalid sub category type ");
+					throw new InvalidInputException("Sub Category is required ,  please enter Valid Sub Category");
 				} else {
 					Long validityYears = categoryResponse.getCategories().get(0).getValidityYears();
 					if(Long.valueOf(validityYears) != Long.valueOf(tradeLicense.getValidityYears())){
-						throw new InvalidInputException("Invalid validity years of the subcategory ");
+						throw new InvalidInputException("ValidityYears is required ,  please enter Valid years of SubCategory");
 					}
 				}
 			}
@@ -217,7 +224,7 @@ public class TradeLicenseService {
 
 					if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
 							|| documentTypeResponse.getDocumentTypes().size() == 0) {
-						throw new InvalidInputException("Invalid document type ");
+						throw new InvalidInputException("Document Type is required ,  please enter Valid Document Type");
 					}
 				}
 
@@ -231,13 +238,13 @@ public class TradeLicenseService {
 				if (categoryResponse == null || categoryResponse.getCategories() == null
 						|| categoryResponse.getCategories().size() == 0) {
 
-					throw new InvalidInputException("Invalid Uom");
+					throw new InvalidInputException("UOM is required ,  please enter Valid UOM");
 				} else {
 
 					for (Category category : categoryResponse.getCategories()) {
 
 						if (category.getDetails() == null && category.getDetails().size() == 0) {
-							throw new InvalidInputException("Invalid Uom");
+							throw new InvalidInputException("UOM is required ,  please enter Valid UOM");
 						} else {
 							Boolean isExists = false;
 							for (CategoryDetail categoryDetail : category.getDetails()) {
@@ -246,7 +253,7 @@ public class TradeLicenseService {
 								}
 							}
 							if (!isExists) {
-								throw new InvalidInputException("Invalid Uom");
+								throw new InvalidInputException("UOM is required ,  please enter Valid UOM");
 							}
 						}
 					}

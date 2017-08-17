@@ -65,7 +65,7 @@ import ViewEditDocumentTypeApplicationType from './components/contents/wc/master
 import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
 
 import AddDemandWc from './components/contents/wc/master/addDemand';
-import ViewLegacy from './components/framework/view';
+import ViewLegacy from './components/non-framework/wc/viewLegacy';
 import AddDemand from './components/contents/propertyTax/master/addDemand';
 
 //Property tax
@@ -223,7 +223,7 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
-      <Route exact path={base+'/legacyView/:moduleName/:master?/:id'} component={ViewLegacy}/>
+      <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
       <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
 
 

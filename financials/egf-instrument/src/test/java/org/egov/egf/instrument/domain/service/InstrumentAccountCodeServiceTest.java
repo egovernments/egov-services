@@ -98,6 +98,21 @@ public class InstrumentAccountCodeServiceTest {
 		assertEquals(expextedResult, actualResult);
 
 	}
+	
+	@Test
+	public final void test_delete_() {
+
+		List<InstrumentAccountCode> expextedResult = getInstrumentAccountCodes();
+
+		when(instrumentAccountCodeRepository.delete(any(List.class), any(RequestInfo.class)))
+				.thenReturn(expextedResult);
+
+		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.delete(expextedResult, errors,
+				requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
 
 	@Test(expected = CustomBindException.class)
 	public final void test_update_with_null_req() {
@@ -112,7 +127,7 @@ public class InstrumentAccountCodeServiceTest {
 		assertEquals(expextedResult, actualResult);
 
 	}
-
+	
 	@Test
 	public final void test_search() {
 
@@ -150,6 +165,18 @@ public class InstrumentAccountCodeServiceTest {
 		when(instrumentAccountCodeRepository.update(any(InstrumentAccountCode.class))).thenReturn(expextedResult);
 
 		InstrumentAccountCode actualResult = instrumentAccountCodeService.update(expextedResult);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	@Test
+	public final void test_delete() {
+
+		InstrumentAccountCode expextedResult = getInstrumentAccountCodes().get(0);
+
+		when(instrumentAccountCodeRepository.delete(any(InstrumentAccountCode.class))).thenReturn(expextedResult);
+
+		InstrumentAccountCode actualResult = instrumentAccountCodeService.delete(expextedResult);
 
 		assertEquals(expextedResult, actualResult);
 	}

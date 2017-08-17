@@ -298,7 +298,7 @@ class Report extends Component {
 
 
 
-    let x=5,y=5,w=200,h=90,rectGap=10,originalX=5,originalY=5,dublicateX=5,dublicateY=5,triplicateX=5,triplicateY=5;
+    let x=5,y=5,w=200,h=90,rectGap=10,originalX=5,originalY=10,dublicateX=5,dublicateY=5,triplicateX=5,triplicateY=5;
 
       var doc = new jsPDF();
       // doc.rect(x, y, w, h)
@@ -306,104 +306,107 @@ class Report extends Component {
       // doc.rect(x, (h*2)+rectGap+5, w, h)
       doc.setFontSize(14);
       doc.setFontType("bold");
-      doc.text(originalX+100, originalY+5, "Receipt"+" Original" , 'center');
+      doc.text(originalX+100, originalY+5,translate(tenantInfo[0].city.name), 'center');
+      doc.text(originalX+170, originalY+5,"Original");
       doc.setFontType("normal");
-      doc.text(originalX+100, originalY+10,translate(tenantInfo[0].city.name), 'center');
       doc.setFontSize(10);
+      doc.text(originalX+100, originalY+10, "Receipt", 'center');
 
       var elem = document.getElementById("basic-table1");
       var res = doc.autoTableHtmlToJson(elem);
-      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: 17,columnStyles: {
-            "Payee Name": {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
-        }});
-
-      elem = document.getElementById("basic-table2");
-      res = doc.autoTableHtmlToJson(elem);
-      doc.autoTable(res.columns, res.data, {startY: 47,theme: "striped"});
-
-      doc.setFontSize(14);
-      doc.setFontType("bold");
-      doc.text(originalX+100, doc.autoTable.previous.finalY+25, "Receipt"+" Duplicate" , 'center');
-      doc.setFontType("normal");
-      doc.text(originalX+100, doc.autoTable.previous.finalY+30,translate(tenantInfo[0].city.name), 'center');
-      doc.setFontSize(10);
-
-      var elem = document.getElementById("basic-table1");
-      var res = doc.autoTableHtmlToJson(elem);
-      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY+37,columnStyles: {
-            "Payee Name": {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
-        }});
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: originalY+12});
 
       elem = document.getElementById("basic-table2");
       res = doc.autoTableHtmlToJson(elem);
       doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "striped"});
 
+      elem = document.getElementById("basic-table3");
+      res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY});
 
-      //duplicate
+      doc.setLineWidth(0.5)
+      doc.line(doc.autoTable.previous.finalX+12.5, 25, 210, 25)
+
       doc.setFontSize(14);
       doc.setFontType("bold");
-      doc.text(originalX+100, doc.autoTable.previous.finalY+25, "Receipt"+" Triplicate" , 'center');
+      doc.text(originalX+100, doc.autoTable.previous.finalY+25,translate(tenantInfo[0].city.name), 'center');
+      doc.text(originalX+170, doc.autoTable.previous.finalY+25,"Duplicate");
       doc.setFontType("normal");
-      doc.text(originalX+100, doc.autoTable.previous.finalY+30,translate(tenantInfo[0].city.name), 'center');
       doc.setFontSize(10);
+      doc.text(originalX+100, doc.autoTable.previous.finalY+30, "Receipt", 'center');
 
       var elem = document.getElementById("basic-table1");
       var res = doc.autoTableHtmlToJson(elem);
-      doc.autoTable(res.columns, res.data, {showHeader:"never",startY:doc.autoTable.previous.finalY+ 37,columnStyles: {
-            "Payee Name": {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
-        }});
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY+32});
 
       elem = document.getElementById("basic-table2");
       res = doc.autoTableHtmlToJson(elem);
-      doc.autoTable(res.columns, res.data, {startY:doc.autoTable.previous.finalY,theme: "striped"});
+      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "striped"});
 
-      // doc.autoTable(columns, rows, {
-      //       theme: 'grid',
-      //       startY: 75,
-      //       drawRow: function (row, data) {
-      //           // Colspan
-      //           doc.setFontStyle('bold');
-      //           doc.setFontSize(10);
-      //           if (row.index === billDetails.length) {
-      //               // doc.setTextColor(200, 0, 0);
-      //               doc.rect(data.settings.margin.left, row.y, data.table.width, 20, 'S');
-      //               doc.autoTableText(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails).toString(), data.settings.margin.left + data.table.width / 2, row.y + row.height / 2, {
-      //                   halign: 'right',
-      //                   valign: 'middle'
-      //               });
-      //               data.cursor.y += 20;
-      //           } else if (row.index === 5) {
-      //               doc.rect(data.settings.margin.left, row.y, data.table.width, 20, 'S');
-      //               doc.autoTableText("Other Groups", data.settings.margin.left + data.table.width / 2, row.y + row.height / 2, {
-      //                   halign: 'center',
-      //                   valign: 'middle'
-      //               });
-      //               data.cursor.y += 20;
-      //           }
+      elem = document.getElementById("basic-table3");
+      res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY});
+
+      doc.setLineWidth(0.5)
+      doc.line(doc.autoTable.previous.finalX+12.5, 25, 210, 25)
+
+      doc.setFontSize(14);
+      doc.setFontType("bold");
+      doc.text(originalX+100, doc.autoTable.previous.finalY+25,translate(tenantInfo[0].city.name), 'center');
+      doc.text(originalX+170, doc.autoTable.previous.finalY+25,"Triplicate");
+      doc.setFontType("normal");
+      doc.setFontSize(10);
+      doc.text(originalX+100, doc.autoTable.previous.finalY+30, "Receipt", 'center');
+
+      var elem = document.getElementById("basic-table1");
+      var res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY+32});
+
+      elem = document.getElementById("basic-table2");
+      res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "striped"});
+
+      elem = document.getElementById("basic-table3");
+      res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY});
+
+      // doc.setFontSize(14);
+      // doc.setFontType("bold");
+      // doc.text(originalX+100, doc.autoTable.previous.finalY+25, "Receipt"+" Duplicate" , 'center');
+      // doc.setFontType("normal");
+      // doc.text(originalX+100, doc.autoTable.previous.finalY+30,translate(tenantInfo[0].city.name), 'center');
+      // doc.setFontSize(10);
       //
-      //           // if (row.index % 5 === 0) {
-      //           //     var posY = row.y + row.height * 6 + data.settings.margin.bottom;
-      //           //     if (posY > doc.internal.pageSize.height) {
-      //           //         data.addPage();
-      //           //     }
-      //           // }
-      //       },
-      //       // drawCell: function (cell, data) {
-      //       //     // Rowspan
-      //       //     if (data.column.dataKey === 'id') {
-      //       //         if (data.row.index % 5 === 0) {
-      //       //             doc.rect(cell.x, cell.y, data.table.width, cell.height * 5, 'S');
-      //       //             doc.autoTableText(data.row.index / 5 + 1 + '', cell.x + cell.width / 2, cell.y + cell.height * 5 / 2, {
-      //       //                 halign: 'center',
-      //       //                 valign: 'middle'
-      //       //             });
-      //       //         }
-      //       //         return false;
-      //       //     }
-      //       // }
-      //   });
+      // var elem = document.getElementById("basic-table1");
+      // var res = doc.autoTableHtmlToJson(elem);
+      // doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY+37,columnStyles: {
+      //       "Payee Name": {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
+      //   }});
       //
-      //   doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
+      // elem = document.getElementById("basic-table2");
+      // res = doc.autoTableHtmlToJson(elem);
+      // doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "striped"});
+      //
+      //
+      // //duplicate
+      // doc.setFontSize(14);
+      // doc.setFontType("bold");
+      // doc.text(originalX+100, doc.autoTable.previous.finalY+25, "Receipt"+" Triplicate" , 'center');
+      // doc.setFontType("normal");
+      // doc.text(originalX+100, doc.autoTable.previous.finalY+30,translate(tenantInfo[0].city.name), 'center');
+      // doc.setFontSize(10);
+      //
+      // var elem = document.getElementById("basic-table1");
+      // var res = doc.autoTableHtmlToJson(elem);
+      // doc.autoTable(res.columns, res.data, {showHeader:"never",startY:doc.autoTable.previous.finalY+ 37,columnStyles: {
+      //       "Payee Name": {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
+      //   }});
+      //
+      // elem = document.getElementById("basic-table2");
+      // res = doc.autoTableHtmlToJson(elem);
+      // doc.autoTable(res.columns, res.data, {startY:doc.autoTable.previous.finalY,theme: "striped"});
+
+
 
        doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
   }
@@ -430,36 +433,41 @@ class Report extends Component {
 
                     <Row className="show-grid" style={{display:"none"}}>
 
-                    <Table s responsive id="basic-table1" >
+                    <Table responsive id="basic-table1" >
                     <thead>
                       <tr>
 
 
 
-                            <th>Payee Name</th>
-                              <th>Receipt Date</th>
-                              <th>Address</th>
-                              <th>Transaction Id</th>
+                            <th>Key</th>
+                              <th>Value</th>
+                              {/*<th>Address</th>
+                              <th>Transaction Id</th>*/}
 
 
                       </tr>
-                    </thead>}
+                    </thead>
                     <tbody>
                         <tr>
-                          <td><strong>Payee Name</strong> - {getVal("Receipt[0].Bill[0].paidBy")}</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
+                        <td><strong>Transaction Id</strong> - {getVal("Receipt[0].transactionId")}</td>
+
+                          <td><strong>Receipt Date</strong> - { getVal("Receipt[0].instrument.transactionDate")}</td>
+
+                          {/*<td></td>
+                          <td></td>*/}
 
                         </tr>
                         <tr>
-                            <td><strong>Receipt Date</strong> - {getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                        <td><strong>Payee Name</strong> - {getVal("Receipt[0].Bill[0].paidBy")}</td>
+
+                        <td><strong>Address</strong> - {getVal("Receipt[0].Bill[0].payeeAddress")}</td>
+
+
+                            {/*<td></td>
+                            <td></td>*/}
 
                         </tr>
-                        <tr>
+                      {/*  <tr>
                             <td><strong>Address</strong> - {getVal("Receipt[0].Bill[0].payeeAddress")}</td>
                             <td> </td>
                             <td></td>
@@ -473,7 +481,7 @@ class Report extends Component {
                             <td></td>
                             <td></td>
 
-                        </tr>
+                        </tr>*/}
                     </tbody>
                     </Table>
 
@@ -556,26 +564,7 @@ class Report extends Component {
                               {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
                               <td><strong>{getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)}</strong></td>
                           </tr>
-                          <tr>
-                              <td>Amount in words</td>
-                              <td></td>
-                              <td></td>
-                              {/*<td></td>*/}
-                              {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              <td><strong>{int_to_words(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)).toUpperCase()+" ONLY"}</strong></td>
-                          </tr>
 
-                          {formData.Receipt[0].instrument && formData.Receipt[0].instrument.instrumentType.name!="Cash" && <tr>
-                              <td colSpan={5}>Cheque/DD No <strong>{formData.Receipt[0].instrument.transactionNumber}</strong> drawn on <strong>{formData.Receipt[0].instrument.bank.name}</strong>, <strong>{formData.Receipt[0].instrument.branchName}</strong> Dated <strong>{formData.Receipt[0].instrument.transactionDate}</strong><br/>
-                                Cheque/DD payments are subject to realisation</td>
-                          </tr>}
                           {/*resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
                             return (
                               <tr key={i} onClick={() => {rowClickHandler(i)}}>
@@ -593,8 +582,24 @@ class Report extends Component {
 
                     </tbody>
                   </Table>}
-                  </Col>
-                    </Row>
+                  {showResult && <Table responsive id="basic-table3">
+                    <thead style={{display:"none"}}>
+                        <tr>
+                          <th>key</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amount in words - <strong>{int_to_words(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)).toUpperCase()+" ONLY"}</strong></td>
+                        </tr>
+                        {formData.Receipt[0].instrument && formData.Receipt[0].instrument.instrumentType.name!="Cash" && <tr>
+                            <td >Cheque/DD No <strong>{formData.Receipt[0].instrument.transactionNumber}</strong> drawn on <strong>{formData.Receipt[0].instrument.bank.name}</strong>, <strong>{formData.Receipt[0].instrument.branchName}</strong> Dated <strong>{formData.Receipt[0].instrument.transactionDate}</strong><br/>
+                              Cheque/DD payments are subject to realisation</td>
+                        </tr>}
+                    </tbody>
+                  </Table>}
+               </Col>
+              </Row>
 
 
 
@@ -749,3 +754,51 @@ export default connect(mapStateToProps, mapDispatchToProps)(Report);
     // doc.text(originalX+10, originalY+20,"Address:");
     // doc.setFontType("normal");
     // doc.text(originalX+25, originalY+20,getVal("Receipt[0].Bill[0].payeeAddress"));
+
+    // doc.autoTable(columns, rows, {
+    //       theme: 'grid',
+    //       startY: 75,
+    //       drawRow: function (row, data) {
+    //           // Colspan
+    //           doc.setFontStyle('bold');
+    //           doc.setFontSize(10);
+    //           if (row.index === billDetails.length) {
+    //               // doc.setTextColor(200, 0, 0);
+    //               doc.rect(data.settings.margin.left, row.y, data.table.width, 20, 'S');
+    //               doc.autoTableText(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails).toString(), data.settings.margin.left + data.table.width / 2, row.y + row.height / 2, {
+    //                   halign: 'right',
+    //                   valign: 'middle'
+    //               });
+    //               data.cursor.y += 20;
+    //           } else if (row.index === 5) {
+    //               doc.rect(data.settings.margin.left, row.y, data.table.width, 20, 'S');
+    //               doc.autoTableText("Other Groups", data.settings.margin.left + data.table.width / 2, row.y + row.height / 2, {
+    //                   halign: 'center',
+    //                   valign: 'middle'
+    //               });
+    //               data.cursor.y += 20;
+    //           }
+    //
+    //           // if (row.index % 5 === 0) {
+    //           //     var posY = row.y + row.height * 6 + data.settings.margin.bottom;
+    //           //     if (posY > doc.internal.pageSize.height) {
+    //           //         data.addPage();
+    //           //     }
+    //           // }
+    //       },
+    //       // drawCell: function (cell, data) {
+    //       //     // Rowspan
+    //       //     if (data.column.dataKey === 'id') {
+    //       //         if (data.row.index % 5 === 0) {
+    //       //             doc.rect(cell.x, cell.y, data.table.width, cell.height * 5, 'S');
+    //       //             doc.autoTableText(data.row.index / 5 + 1 + '', cell.x + cell.width / 2, cell.y + cell.height * 5 / 2, {
+    //       //                 halign: 'center',
+    //       //                 valign: 'middle'
+    //       //             });
+    //       //         }
+    //       //         return false;
+    //       //     }
+    //       // }
+    //   });
+    //
+    //   doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');

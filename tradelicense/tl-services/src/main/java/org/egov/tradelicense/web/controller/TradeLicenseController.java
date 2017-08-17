@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
@@ -17,7 +19,10 @@ import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,11 +37,30 @@ public class TradeLicenseController {
 	
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private SmartValidator validator;
 
+	private BindingResult validate(List<TradeLicenseContract> tradeLicenses, BindingResult errors) {
+
+		try {
+			Assert.notNull(tradeLicenses, "tradeLicenses to create must not be null");
+			for (TradeLicenseContract tradeLicense : tradeLicenses) {
+				validator.validate(tradeLicense, errors);
+			}
+		} catch (IllegalArgumentException e) {
+			errors.addError(new ObjectError("Missing data", e.getMessage()));
+		}
+
+		return errors;
+
+	}
+	
 	@RequestMapping(path = "/license/v1/_create", method = RequestMethod.POST)
-	public TradeLicenseResponse createTradelicense(@RequestBody TradeLicenseRequest tradeLicenseRequest,
+	public TradeLicenseResponse createTradelicense(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
 			BindingResult errors) throws Exception {
 
+//		validate(tradeLicenseRequest.getLicenses(), errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}

@@ -1,7 +1,7 @@
 var localization_EN_Data = {
   "deshboard.title":"Dashboard",
   "ui.framework.required": "Required",
-  "ui.framework.patternMessage": "Match the above pattern",
+  "ui.framework.patternMessage": "Invalid pattern",
   "reports.pgr.complaintcategorytype": "Complaint Category Type",
   "reports.pgr.positiontype": "Position Type",
   "reports.pgr.wardtype": "Ward Type",
@@ -529,7 +529,7 @@ var localization_EN_Data = {
   "employee.Employee.fields.identification": "Identification Mark",
   "employee.Employee.fields.permanentAddress": "Permanent Address",
   "employee.Employee.fields.correspondenceAddress": "Correspondence Address",
-  "employee.Employee.fields.parmanentPinNumber": "Correspondence Pin Number",
+  "employee.Employee.fields.parmanentPinNumber": "Permanent Pin Number",
   "employee.Employee.fields.correspondencePinNumber": "Correspondence Pin Number",
   "employee.Employee.fields.city": "City",
   "employee.Employee.fields.EmployeePhoto": "Employee Photo",

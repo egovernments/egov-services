@@ -23,7 +23,9 @@ import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 
 public class SevaRequest {
 
+	
     public final static String SERVICE_REQUEST = "serviceRequest";
+    public final static String WF_TYPE_SERVICE_REQUEST = "Service Request";
     public final static String REQUEST_INFO = "RequestInfo";
     public static final String VALUES_POSITION_ID = "systemPositionId";
     public static final String STATE_ID = "stateId";
@@ -41,11 +43,11 @@ public class SevaRequest {
     public static final String VALUES_LOCATION_ID = "systemLocationId";
     public static final String VALUES_APPROVAL_COMMENT = "systemApprovalComments";
     public static final String VALUES_ACTION = "systemAction";
-    public static final String VALUES_BUSINESS_KEY = "systemBusinessKey";
     public static final String VALUES_KEYWORD = "keyword";
     public static final String VALUES_SENDER_NAME = "systemSenderName";
     public static final String VALUES_EXTRA_INFO = "systemExtraInfo";
     public static final String VALUES_DEPARTMENT_NAME = "systemDepartmentName";
+    public static final String VALUES_NATUREOFTASK = "natureOfTask";
     public static final String USER_ROLE = "userRole";
     private static final String SERVICE_REQUEST_ID = "serviceRequestId";
     public static final String DEPARTMENT_ID = "systemDepartmentId";
@@ -129,8 +131,8 @@ public class SevaRequest {
     	ProcessInstanceRequest request = new ProcessInstanceRequest();
         ProcessInstance processInstance = new ProcessInstance();
         
-		processInstance.setBusinessKey(getBusinessKey());
-		processInstance.setType(getServiceName());
+		processInstance.setBusinessKey(getServiceName());
+		processInstance.setType(WF_TYPE_SERVICE_REQUEST);
 		processInstance.setComments(getApprovalComments());
 		processInstance.setTenantId(getTenantId());
 		processInstance.setAssignee(new org.egov.pgr.employee.enrichment.repository.contract.Position());
@@ -139,6 +141,8 @@ public class SevaRequest {
 		processInstance.setDetails(getExtraInfo());
 		processInstance.setStatus(getStatus());
 		processInstance.getAttributes().put(SERVICE_CATEGORY_NAME, Attribute.asStringAttr(SERVICE_CATEGORY_NAME, getServiceCategoryName()));
+		processInstance.getAttributes().put(VALUES_NATUREOFTASK, Attribute.asStringAttr(VALUES_NATUREOFTASK, getServiceName()));
+		
 		
 		request.setRequestInfo(getRequestInfo());
 		request.setProcessInstance(processInstance);
@@ -152,8 +156,8 @@ public class SevaRequest {
         
         task.getAttributes().put(STATE_ID, Attribute.asStringAttr(STATE_ID, getCurrentStateId()));
 		task.setId(getCurrentStateId());
-		task.setBusinessKey(getBusinessKey());
-		task.setType(getServiceName());
+		task.setBusinessKey(getServiceName());
+		task.setType(WF_TYPE_SERVICE_REQUEST);
 		task.setComments(getApprovalComments());
 		task.setAction(getAction());
 		task.setStatus(getStatus());
@@ -203,10 +207,6 @@ public class SevaRequest {
     
     public String getServiceName() {
         return (String) getServiceRequest().get(SERVICE_NAME);
-    }
-    
-    public String getBusinessKey() {
-        return getDynamicSingleValue(VALUES_BUSINESS_KEY);
     }
     
     public String getApprovalComments() {

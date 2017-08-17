@@ -1451,7 +1451,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://COMPLETED:COMPLETED,PENDING:PENDING,REJECTED:REJECTED'
+    pattern: 'list://(COMPLETED,REGISTERED):COMPLETED,PENDING:PENDING,REJECTED:REJECTED'
     source: seva
   query: SELECT dept.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
     - cs.createddate) / 86400::double precision) > 30::double precision THEN 1 ELSE
@@ -1471,7 +1471,7 @@ ReportDefinitions:
     / 86400::double precision) <= 2::double precision THEN 1 ELSE NULL::integer END)
     AS lsthn2 FROM egpgr_complainttype ctype, submission cs, eg_department dept WHERE
     dept.id = cs.department and cs.servicecode = ctype.code and cs.createddate >=
-    $fromDate and cs.createddate <= $toDate and cs.status = $grievancestatustype and cs.tenantid = $tenantid GROUP BY
+    $fromDate and cs.createddate <= $toDate and cs.status IN $grievancestatustype and cs.tenantid = $tenantid GROUP BY
     dept.name;
     
 - reportName: RouterEscalation

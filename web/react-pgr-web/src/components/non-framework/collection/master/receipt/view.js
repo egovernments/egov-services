@@ -292,161 +292,127 @@ class Report extends Component {
   }
 
   generatePdf=()=>{
-    // const input = document.getElementById('receipt');
-    // html2canvas(input)
-    //   .then((canvas) => {
-    //     const imgData = canvas.toDataURL('image/jpeg');
-    //     const pdf = new jsPDF();
-    //     pdf.addImage(imgData, 'JPEG', 0, 0, 210,130);
-    //     pdf.save("receipt.pdf");
-    //   });
-    let {tenantInfo}=this.props;
-    let {getVal}=this;
-    //
-    //
-    //
-    // var doc = new jsPDF()
 
-    var columns = [
-	{ title: "A", dataKey: "A" },
-	{ title: "B", dataKey: "B" },
-	{ title: "C", dataKey: "C" }
-];
-
-var rows = [
-	{ A: "A", B: "B", C: "C" },
-	{ A: "A", B: "B", C: "C" }
-];
-
-var doc = new jsPDF('p', 'pt');
-  doc.setFontSize(20);
-  doc.setTextColor(40);
-  doc.setFontStyle('normal');
-  doc.text("YOLO", 10, 20);
-  doc.text("YOLO2", 10, 50);
-
-  doc.autoTable(columns, rows, {
-    startY: doc.autoTableEndPosY() + 70,
-    margin: { horizontal: 10 },
-    styles: { overflow: 'linebreak' },
-    bodyStyles: { valign: 'top' },
-    columnStyles: { email: { columnWidth: 'wrap' } },
-    theme: "grid"
-  });
-
-  // doc.autoTable(columns, rows);
-  // doc.save('repro.pdf');
-
-
-// let x=5,y=5,w=200,h=90,rectGap=10,originalX=5,originalY=5,originalX=5,originalY=5,dublicateX=5,dublicateY=5,triplicateX=5,triplicateY=5;
-// doc.rect(x, y, w, h)
-// doc.rect(x, (h*1)+rectGap, w, h)
-// doc.rect(x, (h*2)+rectGap+5, w, h)
-// doc.setFontSize(14);
-// doc.setFontType("bold");
-// doc.text(originalX+100, y+5, "Receipt"+" Original" , 'center');
-// doc.text(originalX+100, y+10,"kurnool", 'center');
-// doc.setFontType("bold");
-// doc.text(originalX+10, y+20,"Payee Name:");
-// doc.setFontType("normal");
-// doc.text(originalX+41, y+20,"name");
-// doc.setFontType("bold");
-// doc.text(originalX+60, y+20,"Receipt Date:");
-// doc.setFontType("normal");
-// doc.text(originalX+92, y+20,"Date");
-// doc.setFontType("bold");
-// doc.text(originalX+110, y+20,"Address:");
-// doc.setFontType("normal");
-// doc.text(originalX+132, y+20,"Bangalore");
-//
+    let {tenantInfo,formData}=this.props;
+    let {getVal,getGrandTotal,getTotal,getPurposeTotal}=this;
 
 
 
+    let x=5,y=5,w=200,h=90,rectGap=10,originalX=5,originalY=5,dublicateX=5,dublicateY=5,triplicateX=5,triplicateY=5;
+
+      var doc = new jsPDF();
+      // doc.rect(x, y, w, h)
+      // doc.rect(x, (h*1)+rectGap, w, h)
+      // doc.rect(x, (h*2)+rectGap+5, w, h)
+      doc.setFontSize(14);
+      doc.setFontType("bold");
+      doc.text(originalX+100, originalY+5, "Receipt"+" Original" , 'center');
+      doc.setFontType("normal");
+      doc.text(originalX+100, originalY+10,translate(tenantInfo[0].city.name), 'center');
+      doc.setFontSize(10);
+
+      var elem = document.getElementById("basic-table1");
+      var res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: 17,columnStyles: {
+            "Payee Name": {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
+        }});
+
+      elem = document.getElementById("basic-table2");
+      res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {startY: 47,theme: "striped"});
+
+      doc.setFontSize(14);
+      doc.setFontType("bold");
+      doc.text(originalX+100, doc.autoTable.previous.finalY+25, "Receipt"+" Duplicate" , 'center');
+      doc.setFontType("normal");
+      doc.text(originalX+100, doc.autoTable.previous.finalY+30,translate(tenantInfo[0].city.name), 'center');
+      doc.setFontSize(10);
+
+      var elem = document.getElementById("basic-table1");
+      var res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY+37,columnStyles: {
+            "Payee Name": {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
+        }});
+
+      elem = document.getElementById("basic-table2");
+      res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "striped"});
 
 
+      //duplicate
+      doc.setFontSize(14);
+      doc.setFontType("bold");
+      doc.text(originalX+100, doc.autoTable.previous.finalY+25, "Receipt"+" Triplicate" , 'center');
+      doc.setFontType("normal");
+      doc.text(originalX+100, doc.autoTable.previous.finalY+30,translate(tenantInfo[0].city.name), 'center');
+      doc.setFontSize(10);
 
+      var elem = document.getElementById("basic-table1");
+      var res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {showHeader:"never",startY:doc.autoTable.previous.finalY+ 37,columnStyles: {
+            "Payee Name": {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
+        }});
 
-        // doc.setLineWidth(0.5);
-      //   doc.line(15, 38, 195, 38);
-      //   doc.text(15, 47, 'Lease details: ');
-      //   doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
-      //   doc.text(15, 57, 'Lease Name: ' + noticeData.allotteeName);
-      //   doc.text(110, 57, 'Asset No: ' + noticeData.assetNo);
-      //   doc.text(15, 67, (noticeData.allotteeMobileNumber ? noticeData.allotteeMobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allotteeAddress ? noticeData.allotteeAddress + ", " : "") + tenantId.split(".")[1] + ".");
-       //
+      elem = document.getElementById("basic-table2");
+      res = doc.autoTableHtmlToJson(elem);
+      doc.autoTable(res.columns, res.data, {startY:doc.autoTable.previous.finalY,theme: "striped"});
+
+      // doc.autoTable(columns, rows, {
+      //       theme: 'grid',
+      //       startY: 75,
+      //       drawRow: function (row, data) {
+      //           // Colspan
+      //           doc.setFontStyle('bold');
+      //           doc.setFontSize(10);
+      //           if (row.index === billDetails.length) {
+      //               // doc.setTextColor(200, 0, 0);
+      //               doc.rect(data.settings.margin.left, row.y, data.table.width, 20, 'S');
+      //               doc.autoTableText(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails).toString(), data.settings.margin.left + data.table.width / 2, row.y + row.height / 2, {
+      //                   halign: 'right',
+      //                   valign: 'middle'
+      //               });
+      //               data.cursor.y += 20;
+      //           } else if (row.index === 5) {
+      //               doc.rect(data.settings.margin.left, row.y, data.table.width, 20, 'S');
+      //               doc.autoTableText("Other Groups", data.settings.margin.left + data.table.width / 2, row.y + row.height / 2, {
+      //                   halign: 'center',
+      //                   valign: 'middle'
+      //               });
+      //               data.cursor.y += 20;
+      //           }
       //
-      //   doc.setFontType("normal");
-      //   doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be ' ));
-      //   doc.setFontType("bold");
-      //   doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.agreementPeriod * 12 + ' '));
-      //   doc.setFontType("normal");
-      //   doc.text(93, 77, doc.splitTextToSize('months commencing from'));
-      //   doc.setFontType("bold");
-      //   doc.text(15, 83, doc.splitTextToSize(' ' + commencementDate + ' '));
-      //   doc.setFontType("normal");
-      //   doc.text(42, 83, doc.splitTextToSize('(dd/mm/yyyy) to' ));
-      //   doc.setFontType("bold");
-      //   doc.text(77, 83, doc.splitTextToSize(' ' + expiryDate + ' '));
-      //   doc.setFontType("normal");
-      //   doc.text(104, 83, doc.splitTextToSize('(dd/mm/yyyy).', (210 - 15 - 15)));
-      //   doc.text(15, 91, doc.splitTextToSize('2.    The property leased is shop No'));
-      //   doc.setFontType("bold");
-      //   doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.assetNo + ' '));
-      //   doc.setFontType("normal");
-      //   doc.text(101, 91, doc.splitTextToSize('and shall be leased for a sum of '));
-      //   doc.setFontType("bold");
-      //   doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- (' + noticeData.rentInWord + ')'));
-      //   doc.setFontType("normal");
-      //   doc.text(111, 97, doc.splitTextToSize('per month exclusive of the payment'));
-      //   doc.text(15, 103, doc.splitTextToSize('of electricity and other charges.', (210 - 15 - 15)));
-      //   doc.text(15, 112, doc.splitTextToSize('3.   The lessee has paid a sum of '));
-      //   doc.setFontType("bold");
-      //   doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- (' + noticeData.securityDepositInWord + ')'));
-      //   doc.setFontType("normal");
-      //   doc.text(15, 118, doc.splitTextToSize('as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
-      //   doc.text(15, 143, doc.splitTextToSize('4.   The rent for every month shall be payable on or before'));
-      //   doc.setFontType("bold");
-      //   doc.text(143, 143, doc.splitTextToSize(' ' + rentPayableDate + ' '));
-      //   doc.setFontType("normal");
-      //   doc.text(169, 143, doc.splitTextToSize('of the'));
-      //   doc.text(15, 149, doc.splitTextToSize('succeeding month.', (210 - 15 - 15)));
-      //   doc.text(15, 158, doc.splitTextToSize('5.   The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
-      //   doc.text(15, 172, doc.splitTextToSize('6.   The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
-      //   doc.text(15, 187, doc.splitTextToSize('7.   The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
-      //   doc.text(15, 214, doc.splitTextToSize('8.    The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
-      //   doc.text(15, 229, doc.splitTextToSize('9.    The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
-      //   doc.text(15, 244, doc.splitTextToSize('10.   The lessee on the expiry of the lease period of'));
-      //   doc.setFontType("bold");
-      //   doc.text(128, 244, doc.splitTextToSize(' ' + expiryDate + ' '));
-      //   doc.setFontType("normal");
-      //   doc.text(156, 244, doc.splitTextToSize('months'));
-      //   doc.text(15, 250, doc.splitTextToSize('shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
-      //  doc.text(15, 266, noticeData.commissionerName?noticeData.commissionerName:"");
-      //  doc.text(160, 266, 'LESSEE');
-      //  doc.text(15, 274, 'Signature:   ');
-      //   doc.text(160, 274, 'Signature:  ');
-      //   doc.setFontType("bold");
-      //   doc.text(15, 282, tenantId.split(".")[1]);
+      //           // if (row.index % 5 === 0) {
+      //           //     var posY = row.y + row.height * 6 + data.settings.margin.bottom;
+      //           //     if (posY > doc.internal.pageSize.height) {
+      //           //         data.addPage();
+      //           //     }
+      //           // }
+      //       },
+      //       // drawCell: function (cell, data) {
+      //       //     // Rowspan
+      //       //     if (data.column.dataKey === 'id') {
+      //       //         if (data.row.index % 5 === 0) {
+      //       //             doc.rect(cell.x, cell.y, data.table.width, cell.height * 5, 'S');
+      //       //             doc.autoTableText(data.row.index / 5 + 1 + '', cell.x + cell.width / 2, cell.y + cell.height * 5 / 2, {
+      //       //                 halign: 'center',
+      //       //                 valign: 'middle'
+      //       //             });
+      //       //         }
+      //       //         return false;
+      //       //     }
+      //       // }
+      //   });
       //
-      //
-      //
-      //
-      //
-       //
-      //
-      //
-      //
-      //
-        doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
-       //
+      //   doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
 
+       doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
   }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid,tenantInfo} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,getPurposeTotal,getTotal,getGrandTotal,int_to_words,print,generatePdf} = this;
     let {showResult, resultList} = this.state;
-    console.log(tenantInfo);
+    // console.log(tenantInfo);
     // console.log(formData);
     return (
       <div className="SearchResult" >
@@ -463,19 +429,70 @@ var doc = new jsPDF('p', 'pt');
 
                     <br/>
 
-                    <Row className="show-grid">
-                      <Col xs={12} md={3}><strong>Payee Name - </strong>{getVal("Receipt[0].Bill[0].payeeName")} </Col>
-                      <Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>
-                      <Col xs={12} md={3}><strong>Address - </strong>{getVal("Receipt[0].Bill[0].payeeAddress")} </Col>
-                      <Col xs={12} md={3}><strong>Transaction Id - </strong>{getVal("Receipt[0].transactionId")} </Col>
+                    <Row className="show-grid" style={{display:"none"}}>
 
+                    <Table s responsive id="basic-table1" >
+                    <thead>
+                      <tr>
+
+
+
+                            <th>Payee Name</th>
+                              <th>Receipt Date</th>
+                              <th>Address</th>
+                              <th>Transaction Id</th>
+
+
+                      </tr>
+                    </thead>}
+                    <tbody>
+                        <tr>
+                          <td><strong>Payee Name</strong> - {getVal("Receipt[0].Bill[0].payeeName")}</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+
+                        </tr>
+                        <tr>
+                            <td><strong>Receipt Date</strong> - {getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong> - {getVal("Receipt[0].Bill[0].payeeAddress")}</td>
+                            <td> </td>
+                            <td></td>
+                            <td></td>
+
+
+                        </tr>
+                        <tr>
+                            <td><strong>Transaction Id</strong> - {getVal("Receipt[0].transactionId")}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                    </tbody>
+                    </Table>
+
+
+
+                    </Row>
+                    <Row>
+                    <Col xs={12} md={3}><strong>Payee Name - </strong>{getVal("Receipt[0].Bill[0].payeeName")} </Col>
+                    <Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>
+                    <Col xs={12} md={3}><strong>Address - </strong>{getVal("Receipt[0].Bill[0].payeeAddress")} </Col>
+                    <Col xs={12} md={3}><strong>Transaction Id - </strong>{getVal("Receipt[0].transactionId")} </Col>
                     </Row>
                     <br/>
 
 
                     <Row >
                     <Col className="text-center" xs={12} md={12}>
-                    {showResult && <Table bordered condensed responsive className="table-striped">
+                    {showResult && <Table bordered condensed responsive id="basic-table2" className="table-striped">
                     <thead>
                       <tr>
                         <th>{translate("collection.create.serviceType")}</th>
@@ -525,12 +542,34 @@ var doc = new jsPDF('p', 'pt');
                               )
                           })}
                           <tr>
-                              <td colSpan={5}></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
                               <td><strong>{getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)}</strong></td>
                           </tr>
                           <tr>
-                              <td colSpan={3}>Amount in words</td>
-                              <td colSpan={3}><strong>{int_to_words(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)).toUpperCase()+" ONLY"}</strong></td>
+                              <td>Amount in words</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
+                              <td><strong>{int_to_words(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)).toUpperCase()+" ONLY"}</strong></td>
                           </tr>
 
                           {formData.Receipt[0].instrument && formData.Receipt[0].instrument.instrumentType.name!="Cash" && <tr>
@@ -643,3 +682,70 @@ export default connect(mapStateToProps, mapDispatchToProps)(Report);
 //     {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
 //   </div>
 // </form>
+
+// const input = document.getElementById('receipt');
+// html2canvas(input)
+//   .then((canvas) => {
+//     const imgData = canvas.toDataURL('image/jpeg');
+//     const pdf = new jsPDF();
+//     pdf.addImage(imgData, 'JPEG', 0, 0, 210,130);
+//     pdf.save("receipt.pdf");
+//   });
+
+
+//manual row priting machnisam
+
+
+    //
+    //
+    //
+    //
+    // var columns = [];
+    //
+    // columns.push({title:translate("collection.create.serviceType"),dataKey:translate("collection.create.serviceType")});
+    // columns.push({title:translate("collection.create.receiptNumber"),dataKey:translate("collection.create.receiptNumber")})
+    // columns.push({title:translate("collection.create.consumerCode"),dataKey:translate("collection.create.consumerCode")})
+    // columns.push({title:translate("collection.search.period"),dataKey:translate("collection.search.period")})
+    // getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && columns.push({title:translate("collection.search.arrears"),dataKey:translate("collection.search.arrears")})
+    // getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && columns.push({title:translate("collection.search.current"),dataKey:translate("collection.search.current")})
+    // getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 && columns.push({title:translate("collection.search.interest"),dataKey:translate("collection.search.interest")})
+    // getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 && columns.push({title:translate("collection.search.rebate"),dataKey:translate("collection.search.rebate")})
+    // getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && columns.push({title:translate("collection.create.advance"),dataKey:translate("collection.create.advance")})
+    // getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 && columns.push({title:translate("collection.create.arrearLatePayment"),dataKey:translate("collection.create.arrearLatePayment")})
+    // getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 && columns.push({title:translate("collection.create.currentLatePayment"),dataKey:translate("collection.create.currentLatePayment")})
+    // getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 && columns.push({title:translate("collection.create.checkLatePayment"),dataKey:translate("collection.create.checkLatePayment")})
+    // columns.push({title:translate("collection.create.total"),dataKey:translate("collection.create.total")})
+    //
+    // var rows = [];
+    // var billDetails=formData.Receipt[0].Bill[0].billDetails;
+    // for (var i = 0; i < billDetails.length; i++) {
+    //   let temp={};
+    //   temp[translate("collection.create.serviceType")]=billDetails[i].businessService;
+    //   temp[translate("collection.create.receiptNumber")]=billDetails[i].receiptNumber;
+    //   temp[translate("collection.create.consumerCode")]=billDetails[i].consumerCode;
+    //   temp[translate("collection.search.period")]=billDetails[i].period;
+    //   if(getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0) temp[translate("collection.search.arrears")]=getPurposeTotal("ARREAR_AMOUNT",billDetails[i].billAccountDetails);
+    //   if(getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0) temp[translate("collection.search.current")]=getPurposeTotal("CURRENT_AMOUNT",billDetails[i].billAccountDetails);
+    //   if(getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0) temp[translate("collection.search.interest")]=getPurposeTotal("OTHERS",billDetails[i].billAccountDetails);
+    //   if(getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0) temp[translate("collection.search.rebate")]=getPurposeTotal("REBATE",billDetails[i].billAccountDetails);
+    //   if(getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0) temp[translate("collection.create.advance")]=getPurposeTotal("ADVANCE_AMOUNT",billDetails[i].billAccountDetails);
+    //   if(getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0) temp[translate("collection.create.arrearLatePayment")]=getPurposeTotal("ARREAR_LATEPAYMENT_CHARGES",billDetails[i].billAccountDetails);
+    //   if(getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0) temp[translate("collection.create.currentLatePayment")]=getPurposeTotal("CURRENT_LATEPAYMENT_CHARGES",billDetails[i].billAccountDetails);
+    //   if(getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0) temp[translate("collection.create.checkLatePayment")]=getPurposeTotal("CHEQUE_BOUNCE_PENALTY",billDetails[i].billAccountDetails);
+    //   temp[translate("collection.create.total")]=getTotal(billDetails[i].billAccountDetails);
+    //   rows.push(temp);
+    // }
+    // rows.push({});
+
+    // doc.setFontType("bold");
+    // doc.text(originalX+10, originalY+16,"Payee Name:");
+    // doc.setFontType("normal");
+    // doc.text(originalX+32, originalY+16,getVal("Receipt[0].Bill[0].payeeName"));
+    // // doc.setFontType("bold");
+    // doc.text(originalX+148, originalY+16,"Receipt Date:");
+    // doc.setFontType("normal");
+    // doc.text(originalX+170, originalY+16,getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]);
+    // // doc.setFontType("bold");
+    // doc.text(originalX+10, originalY+20,"Address:");
+    // doc.setFontType("normal");
+    // doc.text(originalX+25, originalY+20,getVal("Receipt[0].Bill[0].payeeAddress"));

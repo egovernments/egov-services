@@ -3162,7 +3162,7 @@ class Employee extends Component {
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, (self.state.screenType == "update" ? "Employee updated successfully." : "Employee created successfully."));
             setTimeout(function() {
-                self.props.setRoute("/search/employee/searchEmployee/view");
+                self.props.setRoute("/empSearch/view");
             }, 1500);
           }, function(err) {
             self.props.setLoadingStatus('hide');

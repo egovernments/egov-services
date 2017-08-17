@@ -46,43 +46,22 @@ public class ServiceConfigurationQueryBuilder {
 				&& serviceConfigurationSearchCriteria.getEffectiveFrom() == null) {
 			return;
 		}
-		selectQuery.append("WHERE ");
-		boolean addappendAndClauseFlag = false;
-
-		addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
-		selectQuery.append("ck.tenantId=? ");
+		selectQuery.append("WHERE ck.tenantId=? ");
 		preparedStatementValues.add(serviceConfigurationSearchCriteria.getTenantId());
+		
 		if (serviceConfigurationSearchCriteria.getName() != null
 				&& serviceConfigurationSearchCriteria.getName() != "") {
-			addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
-			selectQuery.append("keyName=? ");
+			selectQuery.append("AND keyName=? ");
 			preparedStatementValues.add(serviceConfigurationSearchCriteria.getName());
 		}
 		if (serviceConfigurationSearchCriteria.getId() != null && serviceConfigurationSearchCriteria.getId() != 0) {
-			addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
-			selectQuery.append("ck.id=? ");
+			selectQuery.append("AND ck.id=? ");
 			preparedStatementValues.add(serviceConfigurationSearchCriteria.getId());
 		}
 		if (serviceConfigurationSearchCriteria.getEffectiveFrom() != null) {
-			addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
-			selectQuery.append("cv.effectivefrom=? ");
+			selectQuery.append("AND cv.effectivefrom=? ");
 			preparedStatementValues.add(serviceConfigurationSearchCriteria.getEffectiveFrom());
 		}
-		selectQuery.append("ORDER BY ck.createdTime ASC;");
+		selectQuery.append("ORDER BY ck.keyName ASC,cv.effectivefrom DESC;");
 	}
-
-	/**
-	 * @HelperMethod
-	 * 
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return
-	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag) {
-			queryString.append("AND ");
-		}
-		return true;
-	}
-
 }

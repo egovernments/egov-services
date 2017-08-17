@@ -330,8 +330,9 @@ public class DemandValidator implements Validator {
 									&& demand.getTaxPeriodTo().compareTo(t.getValidTill()) <= 0)
 							.findAny().orElse(null);
 					if (taxHeadMaster == null)
-						errors.rejectValue("Demands", "", "the given code value '" + code
-								+ "'of teaxheadmaster in DemandDetail.code is invalid, please give a valid code");
+						errors.rejectValue("Demands", "", " No TaxHeadMaster found for given code value '" + code
+								+ "' and from date'"+demand.getTaxPeriodFrom()
+								+ "' and To date '"+demand.getTaxPeriodTo()+"', please give valid code and period");
 				}
 			}
 		}

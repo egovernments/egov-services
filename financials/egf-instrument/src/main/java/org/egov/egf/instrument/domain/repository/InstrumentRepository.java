@@ -148,6 +148,53 @@ public class InstrumentRepository {
 		}
 
 	}
+	
+	@Transactional
+	public List<Instrument> delete(List<Instrument> instruments, RequestInfo requestInfo) {
+
+		InstrumentMapper mapper = new InstrumentMapper();
+
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+
+			InstrumentRequest request = new InstrumentRequest();
+			request.setRequestInfo(requestInfo);
+			request.setInstruments(new ArrayList<>());
+
+			for (Instrument iac : instruments) {
+
+				request.getInstruments().add(mapper.toContract(iac));
+
+			}
+
+			instrumentQueueRepository.addToQue(request);
+
+			return instruments;
+		} else {
+
+			List<Instrument> resultList = new ArrayList<Instrument>();
+
+			for (Instrument iac : instruments) {
+
+				resultList.add(update(iac));
+			}
+
+			InstrumentRequest request = new InstrumentRequest();
+			request.setRequestInfo(requestInfo);
+			request.setInstruments(new ArrayList<>());
+
+			for (Instrument iac : resultList) {
+
+				request.getInstruments().add(mapper.toContract(iac));
+
+			}
+
+			instrumentQueueRepository.addToSearchQue(request);
+
+			return resultList;
+		}
+
+	}
 
 	@Transactional
 	public Instrument save(Instrument instrument) {
@@ -158,6 +205,12 @@ public class InstrumentRepository {
 	@Transactional
 	public Instrument update(Instrument instrument) {
 		InstrumentEntity entity = instrumentJdbcRepository.update(new InstrumentEntity().toEntity(instrument));
+		return entity.toDomain();
+	}
+	
+	@Transactional
+	public Instrument delete(Instrument instrument) {
+		InstrumentEntity entity = instrumentJdbcRepository.delete(new InstrumentEntity().toEntity(instrument));
 		return entity.toDomain();
 	}
 

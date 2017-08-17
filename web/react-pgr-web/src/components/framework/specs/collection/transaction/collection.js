@@ -46,7 +46,7 @@ var chequeOrDD = {
       },
       {
         "name": "chequeOrDDDate",
-        "jsonPath": "Receipt[0].instrument.transactionDate",
+        "jsonPath": "Receipt[0].instrument.transactionDateInput",
         "label": "Cheque/DD Date",
         "pattern": "",
         "type": "datePicker",

@@ -24,6 +24,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class ServiceRequest {
     private static final String DRAFT_ID = "draftId";
     private static final String SERVICE_STATUS = "systemStatus";
+    public static final String COMPLAINT = "Complaint";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -209,11 +210,7 @@ public class ServiceRequest {
         return getAttributesWithKey(attributeCode).size() > 1;
     }
 
-/*    public void validateFields() {
-       throw new InvalidServiceRequestException(this);
-    }*/
-
-    public boolean isAttributePresent(String key) {
+    public boolean isAttributeAbsent(String key) {
         List<AttributeEntry> attributeValueByKey = getAttributeValueByKey(key);
         return attributeValueByKey.isEmpty();
     }
@@ -222,5 +219,10 @@ public class ServiceRequest {
         return attributeEntries.stream()
             .filter(attributeEntry -> key.equalsIgnoreCase(attributeEntry.getKey()))
             .collect(Collectors.toList());
+    }
+
+    public boolean isKeywordComplaint(String key) {
+        List<AttributeEntry> attributeValueByKey = getAttributeValueByKey(key);
+        return !attributeValueByKey.isEmpty() && attributeValueByKey.get(0).getCode().equalsIgnoreCase(COMPLAINT);
     }
 }

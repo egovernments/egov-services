@@ -1,5 +1,7 @@
 package org.egov.egf.master.web.contract;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,4 +17,5 @@ public class FinancialYearSearchContract extends FinancialYearContract {
 	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
+	private Date asOnDate;
 }

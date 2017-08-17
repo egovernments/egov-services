@@ -113,9 +113,9 @@ public class PropertyUsageTypeService {
 
         }
         //TODO: changing as per new requirement in Connection need to enhance API
-        if (propUsageTypeGetRequest.getUsageType() != null) {
+        if (propUsageTypeGetRequest.getUsageCode() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                    propUsageTypeGetRequest.getUsageType(), propUsageTypeGetRequest.getTenantId());
+                    propUsageTypeGetRequest.getUsageCode(), propUsageTypeGetRequest.getTenantId());
             if (usageType.getUsageTypesSize())
                 propUsageTypeGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 

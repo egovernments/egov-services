@@ -89,8 +89,13 @@ public class Instrument{
 	 * date. for DD it is DD date
 	 */
 	@NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date transactionDate;
+
+    /**
+     * Transaction date as long comes from UI in case of cheque and DD
+     */
+    private Long transactionDateInput;
 
 	/*
 	 * amount is the instrument amount. For cheque type it is cheque amount.

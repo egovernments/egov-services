@@ -2,7 +2,7 @@
     "_all": {
         "enabled": true
     },
-    "connections": {
+    "properties": {
     	"id": {
             "type": "long"
         },

@@ -42,6 +42,7 @@ package org.egov.collection.service;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -250,10 +251,16 @@ public class ReceiptService {
 			try{
 				instrument.setTransactionType(TransactionType.Debit);
                 instrument.setTenantId(tenantId);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 if(instrument.getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH)) {
-                    instrument.setTransactionDate(new Date());
+                    String transactionDate = simpleDateFormat.format(new Date());
+                    instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
                     instrument.setTransactionNumber(transactionId);
+                } else {
+                    String transactionDate = simpleDateFormat.format(new Date(instrument.getTransactionDateInput()));
+                    instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
                 }
+
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){

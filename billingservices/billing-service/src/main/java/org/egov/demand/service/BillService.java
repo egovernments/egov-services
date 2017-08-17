@@ -64,6 +64,7 @@ import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.GlCodeMasterCriteria;
+import org.egov.demand.model.Owner;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
@@ -177,10 +178,12 @@ public class BillService {
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
 		Set<String> businessServices = map.keySet();
 		Map<String,BusinessServiceDetail> businessServiceMap = getBusinessService(businessServices,tenantId,requestInfo);
-		log.debug("prepareBill map:" +map);
+		log.info("prepareBill map:" +map);
 		Demand demand = demands.get(0);
-		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
-				payeeEmail(demand.getOwner().getEmailId()).payeeName(demand.getOwner().getName()).tenantId(tenantId).build();
+		Owner owner = demand.getOwner();
+		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(owner.getPermanentAddress()).
+				payeeEmail(owner.getEmailId()).payeeName(owner.getName()).mobileNumber(owner.getMobileNumber())
+				.tenantId(tenantId).build();
 
 		List<BillDetail> billDetails = new ArrayList<>();
 
@@ -201,7 +204,7 @@ public class BillService {
 
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
-				log.debug("prepareBill demandDetails:" +demandDetails);
+				log.info("prepareBill demandDetails:" +demandDetails);
 				log.info("prepareBill demand2:" +demand2);
 
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
@@ -218,7 +221,8 @@ public class BillService {
 					
 					if(taxHeadMaster == null) 
 						throw new RuntimeException(
-								"No TaxHead Found for demandDetail with taxcode :"+demandDetail.getTaxHeadMasterCode());
+								"No TaxHead Found for demandDetail with taxcode :"+demandDetail.getTaxHeadMasterCode()
+								+"  and fromdate : --"+demand2.getTaxPeriodFrom() + "  and todate-----"+demand2.getTaxPeriodTo());
 
 					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
 

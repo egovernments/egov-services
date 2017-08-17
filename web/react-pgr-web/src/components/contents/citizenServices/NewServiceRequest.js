@@ -132,11 +132,11 @@ class NewServiceRequest extends Component{
       }
       //pushing checklists
       if(checkLists && checkLists.length > 0){
-        formSections.push({fields:checkLists, name:"Checklist"});
+        formSections.push({fields:checkLists, name:constants.LABEL_CHECKLIST});
       }
       //pushing documents
       if(documents && documents.length > 0){
-        formSections.push({fields:documents, name:"Documents"});
+        formSections.push({fields:documents, name:constants.LABEL_DOCUMENTS});
       }
 
       let requiredFields = [...formFields.filter((field)=> field.required),
@@ -222,8 +222,12 @@ class NewServiceRequest extends Component{
     }
 
     getAttribValuesFromFields = (form)=>{
-      let attribValues=[];
-      attribValues.push({key:"systemStatus", name:constants.CITIZEN_SERVICES_STATUS_NEW});
+      //setting default attribValues
+      let attribValues=[
+        {key:"systemStatus", name:constants.CITIZEN_SERVICES_STATUS_NEW},
+        {key:"keyword", name:constants.CITIZEN_SERVICES_KEYWORD}
+      ];
+
       Object.keys(this.props.form).map((key)=>{
         var name=this.props.form[key];
         if(name instanceof Array){
@@ -246,7 +250,9 @@ class NewServiceRequest extends Component{
         serviceRequest['serviceCode'] = this.props.match.params.serviceCode;
         serviceRequest["attribValues"]=this.getAttribValuesFromFields(this.props.form);
 
-        if(userType === 'CITIZEN'){
+        console.log('serviceRequest', serviceRequest);
+
+        if(userType === constants.ROLE_CITIZEN){
           var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
           var userRequest={};
           userRequest['id']=[localStorage.getItem('id')];

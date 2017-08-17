@@ -483,9 +483,8 @@ public class ReceiptService {
 	public void updateReceipt(WorkflowDetailsRequest workflowDetails){
 		if(workflowDetails.getStatus().equals("Created")){
 			workflowDetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
-
-			receiptRepository.updateReceipt(workflowDetails);
 		}
+		receiptRepository.updateReceipt(workflowDetails);
 	}
 
 	public List<BusinessDetailsRequestInfo> getBusinessDetails(

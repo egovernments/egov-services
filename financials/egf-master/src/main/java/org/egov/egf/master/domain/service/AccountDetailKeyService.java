@@ -50,6 +50,7 @@ public class AccountDetailKeyService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(accountdetailkeys, "AccountDetailKeys to update must not be null");
 				for (AccountDetailKey accountDetailKey : accountdetailkeys) {
+				        Assert.notNull(accountDetailKey.getId(), "Account Detail Key ID to update must not be null");
 					validator.validate(accountDetailKey, errors);
 				}
 				break;

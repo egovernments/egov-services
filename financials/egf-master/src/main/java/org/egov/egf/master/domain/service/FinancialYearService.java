@@ -45,6 +45,7 @@ public class FinancialYearService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(financialyears, "FinancialYears to update must not be null");
 				for (FinancialYear financialYear : financialyears) {
+				        Assert.notNull(financialYear.getId(), "FinancialYear ID to update must not be null");
 					validator.validate(financialYear, errors);
 				}
 				break;

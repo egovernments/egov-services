@@ -53,6 +53,7 @@ public class SupplierService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(suppliers, "Suppliers to update must not be null");
 				for (Supplier supplier : suppliers) {
+                                        Assert.notNull(supplier.getId(), "Supplier ID to update must not be null");
 					validator.validate(supplier, errors);
 				}
 				break;

@@ -105,7 +105,7 @@ public class BankBranchServiceTest {
     }
 
     private BankBranch getBankBranch() {
-        BankBranch bankBranch = BankBranch.builder().code("code").build();
+        BankBranch bankBranch = BankBranch.builder().id("1").code("code").build();
         bankBranch.setTenantId("default");
         bankBranch.setBank(getBank());
         return bankBranch;

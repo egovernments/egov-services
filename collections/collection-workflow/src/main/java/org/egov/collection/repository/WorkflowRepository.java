@@ -165,13 +165,7 @@ public class WorkflowRepository {
         task.setTenantId(workflowDetails.getTenantId());
         task.setDetails("Receipt Create : " + workflowDetails.getReceiptNumber());
         
-        task.setAction(workflowDetails.getAction());
-        
-       /* if ("Approve".equalsIgnoreCase(workflowDetails.getAction()))
-            task.setStatus(ReceiptStatus.APPROVED.toString());
-        else if ("Reject".equalsIgnoreCase(workflowDetails.getAction()))
-            task.setStatus(ReceiptStatus.REJECTED.toString());*/
-        
+        task.setAction(workflowDetails.getAction());      
         task.setStatus(workflowDetails.getStatus());
         //logic based on dml and current state
         

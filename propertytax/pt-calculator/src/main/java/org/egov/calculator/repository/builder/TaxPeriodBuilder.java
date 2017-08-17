@@ -25,7 +25,7 @@ public class TaxPeriodBuilder {
 			+ " WHERE tenantId =?";
 
 	public static String getSearchQuery(String tenantId, String validDate, String code, String fromDate, String toDate,
-			List<Object> preparedStatementValues) {
+			String sortTaxPeriod, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append(BASE_SEARCH_QUERY);
@@ -35,20 +35,26 @@ public class TaxPeriodBuilder {
 			searchSql.append(" AND code =?");
 			preparedStatementValues.add(code);
 		}
-		
-		if(validDate != null && !validDate.isEmpty()){
+
+		if (validDate != null && !validDate.isEmpty()) {
 			searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
-			preparedStatementValues.add(validDate);	
+			preparedStatementValues.add(validDate);
 		}
-		if((fromDate != null && !fromDate.isEmpty()) && (toDate != null && !toDate.isEmpty())) {
-			searchSql.append(" AND (fromdate::date >= (SELECT fromdate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' " +
-					"AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date)) and todate::date<=" +
-					"(SELECT todate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' AND (to_date(?,'dd/MM/yyyy') " +
-					"BETWEEN fromdate::date AND  todate::date)))");
+		if ((fromDate != null && !fromDate.isEmpty()) && (toDate != null && !toDate.isEmpty())) {
+			searchSql
+					.append(" AND (fromdate::date >= (SELECT fromdate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' "
+							+ "AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date)) and todate::date<="
+							+ "(SELECT todate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' AND (to_date(?,'dd/MM/yyyy') "
+							+ "BETWEEN fromdate::date AND  todate::date)))");
 			preparedStatementValues.add(fromDate);
 			preparedStatementValues.add(toDate);
 		}
-		
+		if (sortTaxPeriod != null) {
+			searchSql.append(" ORDER BY " + sortTaxPeriod);
+		} else {
+			searchSql.append(" ORDER BY fromdate ASC");
+		}
+
 		return searchSql.toString();
 	}
 

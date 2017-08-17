@@ -75,6 +75,7 @@ public class ServiceDefinitionService {
 	}
 
 	public void persistForUpdate(ServiceDefinition serviceDefinition){
+        serviceDefinitionRepository.update(serviceDefinition.toDto());
 
 	}
 

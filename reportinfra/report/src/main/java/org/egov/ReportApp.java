@@ -95,7 +95,7 @@ public class ReportApp implements EnvironmentAware {
 	br = new BufferedReader(fr);*/
 	
 	//Dev Testing
-	 URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/ReportEnhancements/docs/reportinfra/report/reportFileLocations.txt");
+	 URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocations.txt");
 	 URLConnection urlConnection = url.openConnection();
 	 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	 

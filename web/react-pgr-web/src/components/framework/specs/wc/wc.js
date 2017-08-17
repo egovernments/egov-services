@@ -198,7 +198,7 @@ var dat = {
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
-                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..code|$..name"
+                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..name|$..name"
               }]
           },
           {

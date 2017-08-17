@@ -40,8 +40,8 @@
 
 package org.egov.pgr.service;
 
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pgr.domain.model.ReceivingModeType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ReceivingModeTypeRepository;
@@ -52,62 +52,63 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 @Service
 public class ReceivingModeTypeService {
 
-	public static final Logger logger = LoggerFactory.getLogger(ReceivingCenterTypeService.class);
+    public static final Logger logger = LoggerFactory.getLogger(ReceivingCenterTypeService.class);
 
-	@Autowired
-	private ReceivingModeTypeRepository receivingModeRepository;
+    @Autowired
+    private ReceivingModeTypeRepository receivingModeRepository;
 
-	@Autowired
-	private PGRProducer pgrProducer;
+    @Autowired
+    private PGRProducer pgrProducer;
 
-	public ReceivingModeTypeReq create(final ReceivingModeTypeReq modeTypeReq) {
-		return receivingModeRepository.persistReceivingModeType(modeTypeReq);
-	}
-
-	public ReceivingModeTypeReq update(final ReceivingModeTypeReq modeTypeReq) {
-		return receivingModeRepository.persistModifyReceivingModeType(modeTypeReq);
-	}
-
-	public List<ReceivingModeType> getAllReceivingModeTypes(final ReceivingModeTypeGetReq modeTypeGetRequest) {
-		return receivingModeRepository.getAllReceivingModeTypes(modeTypeGetRequest);
-
-	}
-	
-    public boolean checkReceivingModeTypeByNameAndCode(final String code,final String name, final String tenantId) {
-        return receivingModeRepository.checkReceivingModeTypeByNameAndCode(code,name,tenantId);
+    public ReceivingModeTypeReq create(final ReceivingModeTypeReq modeTypeReq) {
+        return receivingModeRepository.persistReceivingModeType(modeTypeReq);
     }
-    
-    public boolean checkReceivingModeTypeByName(final String code,final String name, final String tenantId) {
-        return receivingModeRepository.checkReceivingModeTypeByName(code,name,tenantId);
+
+    public ReceivingModeTypeReq update(final ReceivingModeTypeReq modeTypeReq) {
+        return receivingModeRepository.persistModifyReceivingModeType(modeTypeReq);
     }
-    
-    
-	
 
-	public ReceivingModeType sendMessage(String topic, String key, final ReceivingModeTypeReq modeTypeRequest) {
+    public List<ReceivingModeType> getAllReceivingModeTypes(final ReceivingModeTypeGetReq modeTypeGetRequest) {
+        return receivingModeRepository.getAllReceivingModeTypes(modeTypeGetRequest);
 
-		final ObjectMapper mapper = new ObjectMapper();
-		String receivingModeValue = null;
+    }
 
-		try {
-			logger.info("createReceivingCModeType Request::" + modeTypeRequest);
-			receivingModeValue = mapper.writeValueAsString(modeTypeRequest);
-			logger.info("receivingModeValue::" + receivingModeValue);
-		} catch (final JsonProcessingException e) {
-			logger.error("Exception Encountered : " + e);
-		}
-		try {
-			pgrProducer.sendMessage(topic, key, receivingModeValue);
-		} catch (final Exception ex) {
-			logger.error("Exception Encountered : " + ex);
-		}
-		return modeTypeRequest.getModeType();
-	}
+    public boolean checkReceivingModeTypeByNameAndCode(final String code, final String name, final String tenantId, String mode) {
+        return receivingModeRepository.checkReceivingModeTypeByNameAndCode(code, name, tenantId, mode);
+    }
+
+    public boolean checkReceivingModeTypeByName(final String code, final String name, final String tenantId, final String mode) {
+        return receivingModeRepository.checkReceivingModeTypeByName(code, name, tenantId, mode);
+    }
+
+    public boolean checkReceivingModeTypeByCode(final String code, final String tenantId, final String mode) {
+        return receivingModeRepository.checkReceivingModeTypeByCode(code, tenantId, mode);
+    }
+
+
+    public ReceivingModeType sendMessage(String topic, String key, final ReceivingModeTypeReq modeTypeRequest) {
+
+        final ObjectMapper mapper = new ObjectMapper();
+        String receivingModeValue = null;
+
+        try {
+            logger.info("createReceivingCModeType Request::" + modeTypeRequest);
+            receivingModeValue = mapper.writeValueAsString(modeTypeRequest);
+            logger.info("receivingModeValue::" + receivingModeValue);
+        } catch (final JsonProcessingException e) {
+            logger.error("Exception Encountered : " + e);
+        }
+        try {
+            pgrProducer.sendMessage(topic, key, receivingModeValue);
+        } catch (final Exception ex) {
+            logger.error("Exception Encountered : " + ex);
+        }
+        return modeTypeRequest.getModeType();
+    }
 
 }

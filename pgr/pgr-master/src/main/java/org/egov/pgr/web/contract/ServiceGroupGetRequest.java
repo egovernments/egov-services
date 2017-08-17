@@ -68,7 +68,9 @@ public class ServiceGroupGetRequest {
 	private String name;
 
 	private String description;
-
+	
+	private Boolean active;
+	
 	@NotNull
 	private String tenantId;
 

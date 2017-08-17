@@ -21,6 +21,7 @@ import org.egov.egf.instrument.domain.model.TransactionType;
 import org.egov.egf.instrument.domain.service.InstrumentService;
 import org.egov.egf.instrument.utils.RequestJsonReader;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -124,11 +125,49 @@ public class InstrumentControllerTest {
 
 	}
 
+	@Test
+	public void test_deposit_instrument() throws IOException, Exception {
+		List<Instrument> instruments = getInstrumentsForDeposit();
+		instruments.get(0).setId("726bb79942b24a75815fc11172cef45e");
+		when(instrumentService.deposit(any(InstrumentRequest.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(instruments);
+
+		mockMvc.perform(post("/instruments/_deposit")
+				.content(resources.readRequest("instrument/instrument_deposit_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(resources.readResponse("instrument/instrument_deposit_valid_response.json")));
+	}
+	
+	@Test
+	public void test_dishonor_instrument() throws IOException, Exception {
+		List<Instrument> instruments = getInstrumentsForDeposit();
+		instruments.get(0).setId("726bb79942b24a75815fc11172cef45e");
+		when(instrumentService.dishonor(any(InstrumentRequest.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(instruments);
+
+		mockMvc.perform(post("/instruments/_dishonor")
+				.content(resources.readRequest("instrument/instrument_dishonor_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(resources.readResponse("instrument/instrument_dishonor_valid_response.json")));
+	}
+	
 	private List<Instrument> getInstruments() {
 		List<Instrument> instruments = new ArrayList<Instrument>();
 		Instrument instrument = Instrument.builder().transactionNumber("transactionNumber").amount(BigDecimal.ONE)
 				.transactionType(TransactionType.Credit).serialNo("serialNo")
 				.instrumentType(InstrumentType.builder().active(true).name("instrumenttype").build()).build();
+		instrument.setTenantId("default");
+		instruments.add(instrument);
+		return instruments;
+	}
+	
+	private List<Instrument> getInstrumentsForDeposit() {
+		List<Instrument> instruments = new ArrayList<Instrument>();
+		Instrument instrument = Instrument.builder().transactionNumber("transactionNumber").amount(BigDecimal.ONE)
+				.transactionType(TransactionType.Debit).serialNo("serialNo")
+				.financialStatus(FinancialStatusContract.builder().id("a167095b-5a73-4e61-b489-af31f053c4e1").moduleType("Instrument").code("Deposited").build()).build();
 		instrument.setTenantId("default");
 		instruments.add(instrument);
 		return instruments;

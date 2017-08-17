@@ -10,8 +10,10 @@ import org.egov.egf.instrument.domain.model.SurrenderReasonSearch;
 import org.egov.egf.instrument.persistence.entity.SurrenderReasonEntity;
 import org.egov.egf.instrument.persistence.queue.repository.SurrenderReasonQueueRepository;
 import org.egov.egf.instrument.persistence.repository.SurrenderReasonJdbcRepository;
+import org.egov.egf.instrument.web.contract.SurrenderReasonSearchContract;
 import org.egov.egf.instrument.web.mapper.SurrenderReasonMapper;
 import org.egov.egf.instrument.web.requests.SurrenderReasonRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,13 +28,21 @@ public class SurrenderReasonRepository {
 
 	private String persistThroughKafka;
 
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
+	private SurrenderReasonESRepository surrenderReasonESRepository;
+
 	@Autowired
 	public SurrenderReasonRepository(SurrenderReasonJdbcRepository surrenderReasonJdbcRepository,
 			SurrenderReasonQueueRepository surrenderReasonQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka) {
+			@Value("${persist.through.kafka}") String persistThroughKafka,
+			FinancialConfigurationContractRepository financialConfigurationContractRepository,
+			SurrenderReasonESRepository surrenderReasonESRepository) {
 		this.surrenderReasonJdbcRepository = surrenderReasonJdbcRepository;
 		this.surrenderReasonQueueRepository = surrenderReasonQueueRepository;
 		this.persistThroughKafka = persistThroughKafka;
+		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+		this.surrenderReasonESRepository = surrenderReasonESRepository;
 
 	}
 
@@ -156,17 +166,19 @@ public class SurrenderReasonRepository {
 
 	public Pagination<SurrenderReason> search(SurrenderReasonSearch domain) {
 
-		// if() {
-		// SurrenderReasonSearchContract surrenderReasonSearchContract = new
-		// SurrenderReasonSearchContract();
-		// ModelMapper mapper = new ModelMapper();
-		// mapper.map(domain,surrenderReasonSearchContract );
-		// Pagination<SurrenderReason> surrenderreasons =
-		// surrenderReasonESRepository.search(surrenderReasonSearchContract);
-		// return surrenderreasons;
-		// }
+		if (financialConfigurationContractRepository.fetchDataFrom() != null
+				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
-		return surrenderReasonJdbcRepository.search(domain);
+			SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+			SurrenderReasonSearchContract surrenderReasonSearchContract = new SurrenderReasonSearchContract();
+			surrenderReasonSearchContract = mapper.toSearchContract(domain);
+
+			return surrenderReasonESRepository.search(surrenderReasonSearchContract);
+
+		} else {
+
+			return surrenderReasonJdbcRepository.search(domain);
+		}
 
 	}
 

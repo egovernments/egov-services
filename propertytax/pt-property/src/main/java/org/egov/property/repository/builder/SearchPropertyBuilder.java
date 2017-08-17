@@ -8,10 +8,10 @@ import java.util.Map;
 import org.egov.models.RequestInfo;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
+import org.egov.property.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,7 +28,7 @@ public class SearchPropertyBuilder {
 	JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -39,9 +39,9 @@ public class SearchPropertyBuilder {
 			+ "JOIN egpt_property_owner puser on puser.property = prop.id where";
 
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
-			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
-			String ownerName, int demandFrom, int demandTo, String propertyId, String applicationNo,
+			String upicNo, Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
+			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
+			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo,
 			List<Object> preparedStatementValues) {// TODO remove unused
 													// argument [Pranav]
 
@@ -63,9 +63,9 @@ public class SearchPropertyBuilder {
 		userSearchRequestInfo.put("RequestInfo", requestInfo);
 
 		StringBuffer userSearchUrl = new StringBuffer();
-		userSearchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-		userSearchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-		userSearchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
+		userSearchUrl.append(propertiesManager.getUserHostname());
+		userSearchUrl.append(propertiesManager.getUserBasepath());
+		userSearchUrl.append(propertiesManager.getUserSearchpath());
 
 		UserResponseInfo userResponse = null;
 
@@ -75,7 +75,7 @@ public class SearchPropertyBuilder {
 			logger.info("SearchpropertyBuilder userSearchRequestInfo:: " + userSearchRequestInfo);
 			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
-			logger.info("SearchpropertyBuilder userResponse ::" +userResponse);
+			logger.info("SearchpropertyBuilder userResponse ::" + userResponse);
 		}
 		String Ids = "";
 
@@ -171,11 +171,11 @@ public class SearchPropertyBuilder {
 		// then we need to put the default page size and page number
 		//
 
-		if (pageNumber == -1 || pageNumber == 0)
-			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
+		if (pageNumber == null || pageNumber == 0)
+			pageNumber = Integer.valueOf(propertiesManager.getDefaultPageNumber().trim());
 
-		if (pageSize == -1)
-			pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+		if (pageSize == null)
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
 
 		int offset = 0;
 		int limit = pageNumber * pageSize;
@@ -243,11 +243,11 @@ public class SearchPropertyBuilder {
 
 		searchQuery.append(" ORDER BY upicnumber");
 
-		if (pageNumber == -1 || pageNumber == 0)
-			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
+		if (pageNumber == null || pageNumber == 0)
+			pageNumber = Integer.valueOf(propertiesManager.getDefaultPageNumber().trim());
 
-		if (pageSize == -1)
-			pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+		if (pageSize == null)
+			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
 
 		int offset = 0;
 		int limit = pageNumber * pageSize;

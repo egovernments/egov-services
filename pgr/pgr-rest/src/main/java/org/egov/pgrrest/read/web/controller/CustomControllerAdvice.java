@@ -34,6 +34,12 @@ public class CustomControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidServiceRequestFieldException.class)
+    public ErrorResponse handleInvalidComplaintException(InvalidServiceRequestFieldException ex) {
+        return new SevaRequestFieldErrorAdapter().adapt(ex.getErrorFields());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ServiceDefinitionNotFoundException.class)
     public ErrorResponse handleInvalidServiceDefinitionCode() {
         return new ServiceDefinitionNotFoundExceptionAdapter().adapt(null);
@@ -146,5 +152,11 @@ public class CustomControllerAdvice {
     @ExceptionHandler(GroupConstraintViolationException.class)
     public ErrorResponse handleGroupConstraintViolationException(GroupConstraintViolationException ex) {
         return new GroupConstraintViolationExceptionAdapter().adapt(ex.getGroupCode());
+    }
+    
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidLongAttributeEntryException.class)
+    public ErrorResponse handleGroupConstraintViolationException(InvalidLongAttributeEntryException ex) {
+        return new InvalidcLongAttributeEntryExceptionAdapter().adapt(ex.getAttributeCode());
     }
 }

@@ -73,14 +73,8 @@ public class ReceiptQueryBuilderTest {
 				+ " as rh_depositedBranch,rh.tenantId as rh_tenantId,rh.displayMsg as rh_displayMsg,"
 				+ "rh.voucherheader as rh_voucherheader,rh.cancellationRemarks as rh_cancellationRemarks,"
 				+ "rh.createdBy as rh_createdBy,rh.createdDate as rh_createdDate,"
-				+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,"
-				+ "rd.id as rd_id,rd.receiptHeader as rh_id,"
-				+ "rd.dramount as rd_dramount,rd.cramount as rd_cramount,rd.actualcramountToBePaid as "
-				+ "rd_actualcramountToBePaid,rd.ordernumber as rd_ordernumber,"
-				+ "rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd.isActualDemand"
-				+ " as rd_isActualDemand,rd.financialYear as rd_financialYear,rd.purpose as rd_purpose,"
-				+ "rd.tenantId as rd_tenantId" + " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
-				+ " rh.id=rd.receiptHeader ORDER BY rh.receiptDate DESC",
+				+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,rh.transactionid as rh_transactionid "
+                 + " from egcl_receiptheader rh  ORDER BY rh.receiptDate DESC",
 				receiptQueryBuilder.getQuery(receiptCriteria, new ArrayList<>()));
 	}
 
@@ -91,8 +85,8 @@ public class ReceiptQueryBuilderTest {
 		receiptCriteria.setBusinessCode("TL");
 		receiptCriteria.setCollectedBy("1");
 		receiptCriteria.setConsumerCode("CONSUMER123");
-		receiptCriteria.setFromDate("2016-12-22 00:00:00");
-		receiptCriteria.setToDate("2017-12-22 00:00:00");
+		receiptCriteria.setFromDate(1502272932389L);
+		receiptCriteria.setToDate(1502280236077L);
 		receiptCriteria.setStatus("CREATED");
 		receiptCriteria.setTenantId("default");
 		receiptCriteria.setSortBy("payeename");
@@ -117,14 +111,8 @@ public class ReceiptQueryBuilderTest {
 				+ " as rh_depositedBranch,rh.tenantId as rh_tenantId,rh.displayMsg as rh_displayMsg,"
 				+ "rh.voucherheader as rh_voucherheader,rh.cancellationRemarks as rh_cancellationRemarks,"
 				+ "rh.createdBy as rh_createdBy,rh.createdDate as rh_createdDate,"
-				+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,"
-				+ "rd.id as rd_id,rd.receiptHeader as rh_id,"
-				+ "rd.dramount as rd_dramount,rd.cramount as rd_cramount,rd.actualcramountToBePaid as "
-				+ "rd_actualcramountToBePaid,rd.ordernumber as rd_ordernumber,"
-				+ "rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd.isActualDemand"
-				+ " as rd_isActualDemand,rd.financialYear as rd_financialYear,rd.purpose as rd_purpose,"
-				+ "rd.tenantId as rd_tenantId" + " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
-				+ " rh.id=rd.receiptHeader WHERE rh.tenantId = ? AND rh.receiptNumber IN ('RECNO567') AND "
+				+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,rh.transactionid as rh_transactionid "
+				+ " from egcl_receiptheader rh  WHERE rh.tenantId = ? AND rh.receiptNumber ilike any  (array ['%RECNO567%']) AND "
 				+ "rh.consumerCode = ? AND rh.status = ? AND rh.createdBy = ? AND"
 				+ " rh.receiptDate >= ? AND rh.receiptDate <= ? AND "
 				+ "rh.businessDetails = ? AND rh.id IN (1) ORDER BY rh.payeename DESC",

@@ -301,7 +301,7 @@ public class PgrWorkflowTest {
         valuesMap.put(STATE_ID, attributeStateId);
         valuesMap.put(STATE_DETAILS, attributeStateDetails);
         valuesMap.put("approvalComments", attributeComments);
-        valuesMap.put("previousAssignee",attributePreviousAssignee);
+        valuesMap.put("systemPreviousAssignee",attributePreviousAssignee);
 
         Task task = Task.builder().attributes(valuesMap).assignee(null).id("2").sender("narasappa").status("PROCESSING")
             .requestInfo(requestInfo).createdDate(new Date()).build();

@@ -40,11 +40,11 @@
 package org.egov.collection.repository.querybuilder;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import lombok.EqualsAndHashCode;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class ReceiptDetailQueryBuilder {
 	public static final Logger logger = LoggerFactory
 			.getLogger(ReceiptDetailQueryBuilder.class);
 
-	private static final String BASE_QUERY = "Select rh.id as rh_id,rh.payeename as rh_payeename,"
+	private static final String RECEIPT_HEADER_QUERY = "Select rh.id as rh_id,rh.payeename as rh_payeename,"
 			+ "rh.payeeAddress as rh_payeeAddress,rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy,"
 			+ "rh.referenceNumber as rh_referenceNumber,rh.referenceDate as rh_referenceDate,"
 			+ "rh.receiptType as rh_receiptType,rh.receiptNumber as rh_receiptNumber,rh.receiptDate"
@@ -75,15 +75,15 @@ public class ReceiptDetailQueryBuilder {
 			+ " as rh_depositedBranch,rh.tenantId as rh_tenantId,rh.displayMsg as rh_displayMsg,"
 			+ "rh.voucherheader as rh_voucherheader,rh.cancellationRemarks as rh_cancellationRemarks,"
 			+ "rh.createdBy as rh_createdBy,rh.createdDate as rh_createdDate,"
-			+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,"
-			+ "rd.id as rd_id,rd.receiptHeader as rh_id,"
-			+ "rd.dramount as rd_dramount,rd.cramount as rd_cramount,rd.actualcramountToBePaid as "
-			+ "rd_actualcramountToBePaid,rd.ordernumber as rd_ordernumber,"
-			+ "rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd.isActualDemand"
-			+ " as rd_isActualDemand,rd.financialYear as rd_financialYear,rd.purpose as rd_purpose,"
-			+ "rd.tenantId as rd_tenantId"
-			+ " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
-			+ " rh.id=rd.receiptHeader";
+			+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,rh.transactionid as rh_transactionid "
+			+ " from egcl_receiptheader rh ";
+
+    private static final String RECEIPT_DETAILS_QUERY = "select rd.id as rd_id,rd.receiptHeader as rh_id, " +
+            " rd.dramount as rd_dramount,rd.cramount as rd_cramount,rd.actualcramountToBePaid as " +
+            " rd_actualcramountToBePaid,rd.ordernumber as rd_ordernumber, " +
+            " rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd.isActualDemand " +
+            " as rd_isActualDemand,rd.financialYear as rd_financialYear,rd.purpose as rd_purpose, " +
+            " rd.tenantId as rd_tenantId from egcl_receiptdetails rd WHERE rd.tenantId = ? and rd.receiptheader = ?";
 
 	private static final String UPDATE_QUERY = "Update egcl_receiptheader set";
 
@@ -148,14 +148,20 @@ public class ReceiptDetailQueryBuilder {
 	@SuppressWarnings("rawtypes")
 	public String getQuery(ReceiptSearchCriteria searchCriteria,
 			List preparedStatementValues) throws ParseException {
-		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		StringBuilder selectQuery = new StringBuilder(RECEIPT_HEADER_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
 		addOrderByClause(selectQuery, searchCriteria);
 
-		logger.debug("Query : " + selectQuery);
+		logger.debug("RECEIPT HEADER Query : " + selectQuery);
 		return selectQuery.toString();
 	}
+
+    public String getReceiptDetailByReceiptHeader() {
+        StringBuilder selectQuery = new StringBuilder(RECEIPT_DETAILS_QUERY);
+        logger.debug("RECEIPT DETAILS Query : " + selectQuery);
+        return selectQuery.toString();
+    }
 
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	private void addWhereClause(StringBuilder selectQuery,
@@ -168,35 +174,42 @@ public class ReceiptDetailQueryBuilder {
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (searchCriteria.getTenantId() != null) {
+		if (StringUtils.isNotBlank(searchCriteria.getTenantId())) {
 			isAppendAndClause = true;
 			selectQuery.append(" rh.tenantId = ?");
 			preparedStatementValues.add(searchCriteria.getTenantId());
 
 		}
 
+        if(StringUtils.isNotBlank(searchCriteria.getPaymentType())) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                    selectQuery);
+            selectQuery.append(" rh.collmodesnotallwd like ?");
+            preparedStatementValues.add("%" + searchCriteria.getPaymentType() + "%");
+        }
+
 		if (searchCriteria.getReceiptNumbers() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
-			selectQuery.append(" rh.receiptNumber IN "
+			selectQuery.append(" rh.receiptNumber ilike any  "
 					+ getNumberQuery(searchCriteria.getReceiptNumbers()));
 		}
 
-		if (searchCriteria.getConsumerCode() != null) {
+		if (StringUtils.isNotBlank(searchCriteria.getConsumerCode())) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.consumerCode = ?");
 			preparedStatementValues.add(searchCriteria.getConsumerCode());
 		}
 
-		if (searchCriteria.getStatus() != null) {
+		if (StringUtils.isNotBlank(searchCriteria.getStatus())) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.status = ?");
 			preparedStatementValues.add(searchCriteria.getStatus());
 		}
 
-		if (searchCriteria.getCollectedBy() != null) {
+		if (StringUtils.isNotBlank(searchCriteria.getCollectedBy())) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.createdBy = ?");
@@ -205,24 +218,20 @@ public class ReceiptDetailQueryBuilder {
 		}
 
 		if (searchCriteria.getFromDate() != null) {
-			java.util.Date fromDate = new SimpleDateFormat("dd-MM-yyyy")
-					.parse(searchCriteria.getFromDate());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.receiptDate >= ?");
-			preparedStatementValues.add(fromDate.getTime());
+			preparedStatementValues.add(searchCriteria.getFromDate());
 		}
 
 		if (searchCriteria.getToDate() != null) {
-			java.util.Date toDate = new SimpleDateFormat("dd-MM-yyyy")
-					.parse(searchCriteria.getToDate());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.receiptDate <= ?");
-			preparedStatementValues.add(toDate.getTime());
+			preparedStatementValues.add(searchCriteria.getToDate());
 		}
 
-		if (searchCriteria.getBusinessCode() != null) {
+		if (StringUtils.isNotBlank(searchCriteria.getBusinessCode())) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.businessDetails = ?");
@@ -235,6 +244,13 @@ public class ReceiptDetailQueryBuilder {
 			selectQuery.append(" rh.id IN "
 					+ getIdQuery(searchCriteria.getIds()));
 		}
+
+        if(StringUtils.isNotBlank(searchCriteria.getTransactionId())) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                    selectQuery);
+            selectQuery.append(" rh.transactionid = ? ");
+            preparedStatementValues.add(searchCriteria.getTransactionId());
+        }
 	}
 
 	private static String getIdQuery(List<Long> idList) {
@@ -265,16 +281,15 @@ public class ReceiptDetailQueryBuilder {
 	}
 
 	private static String getNumberQuery(List<String> receiptNumbersList) {
-		StringBuilder query = new StringBuilder("('");
+		StringBuilder query = new StringBuilder("(array [");
+
 		if (receiptNumbersList.size() >= 1) {
-			query.append(receiptNumbersList.get(0).toString());
-			query.append("'");
+			query.append("'%").append(receiptNumbersList.get(0).toString()).append("%'");
 			for (int i = 1; i < receiptNumbersList.size(); i++) {
-				query.append(", '" + receiptNumbersList.get(i));
-				query.append("'");
+				query.append(", '%" + receiptNumbersList.get(i) + "%'");
 			}
 		}
-		return query.append(")").toString();
+		return query.append("])").toString();
 	}
 
 	public static String getNextSeqForRcptHeader() {
@@ -289,13 +304,13 @@ public class ReceiptDetailQueryBuilder {
 				+ "collmodesnotallwd, consumercode, channel, fund, fundsource, function, boundary, department, voucherheader, "
 				+ "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
 				+ "manualreceiptnumber, manualreceiptdate, reference_ch_id, stateid, location, isreconciled, "
-				+ "status) "
+				+ "status, transactionid) "
 				+ "VALUES (:id, :payeename, :payeeaddress, :payeeemail, :paidby, :referencenumber, :receipttype, "
 				+ ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
 				+ ":collmodesnotallwd, :consumercode, :channel, :fund, :fundsource, :function, :boundary, :department, :voucherheader, "
 				+ ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, :referencedesc, "
 				+ ":manualreceiptnumber, :manualreceiptdate, :reference_ch_id, :stateid, :location, :isreconciled, "
-				+ ":status)";
+				+ ":status, :transactionid)";
 	}
 
 	public static String insertReceiptDetails() {
@@ -341,4 +356,9 @@ public class ReceiptDetailQueryBuilder {
 	public String insertInstrumentId() {
 		return "insert into egcl_receiptinstrument(instrumentheader, receiptheader, tenantId) values (?,?,?)";
 	}
+
+    public String searchReceiptInstrument() {
+        return "select instrumentheader from egcl_receiptinstrument where receiptheader = ? and tenantId = ? ";
+    }
+
 }

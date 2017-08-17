@@ -60,7 +60,6 @@ import lombok.ToString;
 @Builder
 public class FinancialStatus extends Auditable {
 
-	@NotNull
 	private String id;
 
 	@NotNull

@@ -40,8 +40,8 @@
 
 package org.egov.wcms.repository;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +53,8 @@ import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -70,31 +72,76 @@ public class DocumentTypeApplicationTypeRepository {
     @Autowired
     private DocumentTypeApplicationTypeMapper documentTypeApplicationTypeRowMapper;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public DocumentTypeApplicationTypeReq persistCreateDocTypeApplicationType(
             final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
 
         log.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
-        final String docNameInsert = DocumentTypeApplicationTypeQueryBuilder.insertDocNameQuery();
-        final DocumentTypeApplicationType docApplication = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
-        final String documentQuery = DocumentTypeApplicationTypeQueryBuilder.getDocumentTypeIdQuery();
-        Long documentId = 0L;
-        try {
-            documentId = jdbcTemplate.queryForObject(documentQuery,
-                    new Object[] { docApplication.getDocumentType(), docApplication.getTenantId() }, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            log.info("EmptyResultDataAccessException: Query returned empty result set");
-        }
-        if (documentId == null)
-            log.info("Invalid input.");
-        final Object[] obj = new Object[] { docApplication.getApplicationType(), documentId,
-                docApplication.getMandatory(), docApplication.getActive(),
-                Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                docApplication.getTenantId() };
+        final String docNameInsert = DocumentTypeApplicationTypeQueryBuilder.insertDocumentApplicationQuery();
+        final List<DocumentTypeApplicationType> docApplicationList = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(docApplicationList.size());
+        for (final DocumentTypeApplicationType docApplication : docApplicationList) {
 
-        jdbcTemplate.update(docNameInsert, obj);
+            final String documentQuery = DocumentTypeApplicationTypeQueryBuilder.getDocumentTypeIdQuery();
+            Long documentId = 0L;
+            try {
+                documentId = jdbcTemplate.queryForObject(documentQuery,
+                        new Object[] { docApplication.getDocumentType(), docApplication.getTenantId() }, Long.class);
+            } catch (final EmptyResultDataAccessException e) {
+                log.info("EmptyResultDataAccessException: Query returned empty result set");
+            }
+            if (documentId == null)
+                log.info("Invalid input.");
+
+            batchValues.add(new MapSqlParameterSource("id", Long.valueOf(docApplication.getCode()))
+                    .addValue("code", docApplication.getCode())
+                    .addValue("applicationtype", docApplication.getApplicationType()).addValue("documenttypeid", documentId)
+                    .addValue("mandatory", docApplication.getMandatory()).addValue("active", docApplication.getActive())
+                    .addValue("createdby", Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifiedby", Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("createddate", new Date(new java.util.Date().getTime()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                    .addValue("tenantid", docApplication.getTenantId())
+                    .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(docNameInsert, batchValues.toArray(new Map[docApplicationList.size()]));
+
         return docTypeAppliTypeRequest;
+    }
+
+    public DocumentTypeApplicationTypeReq persistModifyDocTypeApplicationType(
+            final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
+        log.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
+        final String documentTypeApplicationTypeUpdate = DocumentTypeApplicationTypeQueryBuilder
+                .updateDocumentTypeApplicationTypeQuery();
+        final List<DocumentTypeApplicationType> docApplicationList = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(docApplicationList.size());
+        for (final DocumentTypeApplicationType docApplication : docApplicationList) {
+            final String documentQuery = DocumentTypeApplicationTypeQueryBuilder.getDocumentTypeIdQuery();
+            Long documentId = 0L;
+            try {
+                documentId = jdbcTemplate.queryForObject(documentQuery,
+                        new Object[] { docApplication.getDocumentType(), docApplication.getTenantId() }, Long.class);
+            } catch (final EmptyResultDataAccessException e) {
+                log.info("EmptyResultDataAccessException: Query returned empty result set");
+            }
+            if (documentId == null)
+                log.info("Invalid input.");
+            batchValues.add(new MapSqlParameterSource("applicationtype", docApplication.getApplicationType())
+                    .addValue("documenttypeid", documentId)
+                    .addValue("mandatory", docApplication.getMandatory()).addValue("active", docApplication.getActive())
+                    .addValue("lastmodifiedby", Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                    .addValue("code", docApplication.getCode())
+                    .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(documentTypeApplicationTypeUpdate,
+                batchValues.toArray(new Map[docApplicationList.size()]));
+
+        return docTypeAppliTypeRequest;
+
     }
 
     public List<DocumentTypeApplicationType> findForCriteria(
@@ -118,32 +165,7 @@ public class DocumentTypeApplicationTypeRepository {
         return docTypeAppliTypes;
     }
 
-    public DocumentTypeApplicationTypeReq persistModifyDocTypeApplicationType(
-            final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
-        log.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
-        final String documentTypeApplicationTypeUpdate = DocumentTypeApplicationTypeQueryBuilder
-                .updateDocumentTypeApplicationTypeQuery();
-        final DocumentTypeApplicationType docApplication = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
-        final String documentQuery = DocumentTypeApplicationTypeQueryBuilder.getDocumentTypeIdQuery();
-        Long documentId = 0L;
-        try {
-            documentId = jdbcTemplate.queryForObject(documentQuery,
-                    new Object[] { docApplication.getDocumentType(), docApplication.getTenantId() }, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            log.info("EmptyResultDataAccessException: Query returned empty result set");
-        }
-        if (documentId == null)
-            log.info("Invalid input.");
-        final Object[] obj = new Object[] { docApplication.getApplicationType(), documentId,
-                docApplication.getMandatory(), docApplication.getActive(),
-                Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), docApplication.getId() };
-        jdbcTemplate.update(documentTypeApplicationTypeUpdate, obj);
-        return docTypeAppliTypeRequest;
-
-    }
-
-    public boolean checkDocumentTypeApplicationTypeExist(final Long id, final String applicationType,
+    public boolean checkDocumentTypeApplicationTypeExist(final String code, final String applicationType,
             final String documentType, final String tenantId) {
 
         final List<Object> preparedStatementValues = new ArrayList<>();
@@ -153,11 +175,11 @@ public class DocumentTypeApplicationTypeRepository {
         preparedStatementValues.add(applicationType);
         preparedStatementValues.add(documentId);
         preparedStatementValues.add(tenantId);
-        String query = null;
-        if (id == null)
+        final String query;
+        if (code == null)
             query = DocumentTypeApplicationTypeQueryBuilder.selectDocumentApplicationIdQuery();
         else {
-            preparedStatementValues.add(id);
+            preparedStatementValues.add(code);
             query = DocumentTypeApplicationTypeQueryBuilder.selectDocumentApplicationIdNotInQuery();
         }
         final List<Map<String, Object>> appDocs = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
@@ -167,14 +189,14 @@ public class DocumentTypeApplicationTypeRepository {
         return true;
     }
 
-    public boolean checkDocumentTypeExists(final String DocumentType, final String tenantId) {
+    public boolean checkDocumentTypeExists(final String documentType, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(DocumentType);
+        preparedStatementValues.add(documentType);
         preparedStatementValues.add(tenantId);
         final String query = DocumentTypeApplicationTypeQueryBuilder.getDocumentTypeIdQuery();
-        final List<Map<String, Object>> documentType = jdbcTemplate.queryForList(query,
+        final List<Map<String, Object>> documentTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
-        if (!documentType.isEmpty())
+        if (!documentTypes.isEmpty())
             return false;
 
         return true;

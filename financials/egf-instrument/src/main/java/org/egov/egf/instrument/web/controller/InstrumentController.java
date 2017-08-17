@@ -33,6 +33,7 @@ public class InstrumentController {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String PLACEHOLDER = "placeholder";
 
 	@Autowired
@@ -103,6 +104,36 @@ public class InstrumentController {
 
 		return instrumentResponse;
 	}
+	
+	@PostMapping("/_delete")
+	@ResponseStatus(HttpStatus.CREATED)
+	public InstrumentResponse delete(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
+
+		InstrumentMapper mapper = new InstrumentMapper();
+		instrumentRequest.getRequestInfo().setAction(ACTION_DELETE);
+		InstrumentResponse instrumentResponse = new InstrumentResponse();
+		List<Instrument> instruments = new ArrayList<>();
+		instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
+		Instrument instrument;
+		InstrumentContract contract;
+		List<InstrumentContract> instrumentContracts = new ArrayList<>();
+
+		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
+			instrument = mapper.toDomain(instrumentContract);
+			instruments.add(instrument);
+		}
+
+		instruments = instrumentService.delete(instruments, errors, instrumentRequest.getRequestInfo());
+
+		for (Instrument i : instruments) {
+			contract = mapper.toContract(i);
+			instrumentContracts.add(contract);
+		}
+
+		instrumentResponse.setInstruments(instrumentContracts);
+
+		return instrumentResponse;
+	}
 
 	@PostMapping("/_search")
 	@ResponseBody
@@ -130,6 +161,56 @@ public class InstrumentController {
 
 		return response;
 
+	}
+	
+	@PostMapping("/_deposit")
+	@ResponseStatus(HttpStatus.CREATED)
+	public InstrumentResponse depositInstrument(@RequestBody InstrumentRequest instrumentDepositRequest, BindingResult errors) {
+
+		InstrumentMapper mapper = new InstrumentMapper();
+		InstrumentResponse instrumentResponse = new InstrumentResponse();
+		instrumentResponse.setResponseInfo(getResponseInfo(instrumentDepositRequest.getRequestInfo()));
+		List<Instrument> instruments = new ArrayList<>();
+		List<InstrumentContract> instrumentContracts = new ArrayList<>();
+		InstrumentContract contract;
+
+		instrumentDepositRequest.getRequestInfo().setAction(ACTION_UPDATE);
+
+		instruments = instrumentService.deposit(instrumentDepositRequest, errors, instrumentDepositRequest.getRequestInfo());
+
+		for (Instrument i : instruments) {
+			contract = mapper.toContract(i);
+			instrumentContracts.add(contract);
+		}
+
+		instrumentResponse.setInstruments(instrumentContracts);
+
+		return instrumentResponse;
+	}
+	
+	@PostMapping("/_dishonor")
+	@ResponseStatus(HttpStatus.CREATED)
+	public InstrumentResponse dishonorInstrument(@RequestBody InstrumentRequest instrumentDepositRequest, BindingResult errors) {
+
+		InstrumentMapper mapper = new InstrumentMapper();
+		InstrumentResponse instrumentResponse = new InstrumentResponse();
+		instrumentResponse.setResponseInfo(getResponseInfo(instrumentDepositRequest.getRequestInfo()));
+		List<Instrument> instruments = new ArrayList<>();
+		List<InstrumentContract> instrumentContracts = new ArrayList<>();
+		InstrumentContract contract;
+
+		instrumentDepositRequest.getRequestInfo().setAction(ACTION_UPDATE);
+
+		instruments = instrumentService.dishonor(instrumentDepositRequest, errors, instrumentDepositRequest.getRequestInfo());
+
+		for (Instrument i : instruments) {
+			contract = mapper.toContract(i);
+			instrumentContracts.add(contract);
+		}
+
+		instrumentResponse.setInstruments(instrumentContracts);
+
+		return instrumentResponse;
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {

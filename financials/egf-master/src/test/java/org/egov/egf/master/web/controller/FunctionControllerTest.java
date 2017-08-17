@@ -131,7 +131,7 @@ public class FunctionControllerTest {
 
 	private List<Function> getFunctions() {
 		List<Function> functions = new ArrayList<Function>();
-		Function function = Function.builder().name("function").code("002").level(1).active(true).isParent(false)
+		Function function = Function.builder().name("function").code("002").level(1).active(true)
 				.parentId(parentFunction()).build();
 		function.setTenantId("default");
 		functions.add(function);
@@ -140,7 +140,7 @@ public class FunctionControllerTest {
 
 	private List<Function> updateFunctions() {
 		List<Function> functions = new ArrayList<Function>();
-		Function function = Function.builder().name("functionU").code("003").level(1).active(true).isParent(false)
+		Function function = Function.builder().name("functionU").code("003").level(1).active(true)
 				.parentId(parentFunction()).id("2").build();
 		function.setTenantId("default");
 		functions.add(function);
@@ -148,7 +148,7 @@ public class FunctionControllerTest {
 	}
 
 	private Function parentFunction() {
-		Function function = Function.builder().name("parent").code("001").level(0).active(true).isParent(true).id("1")
+		Function function = Function.builder().name("parent").code("001").level(0).active(true).id("1")
 				.build();
 		return function;
 	}

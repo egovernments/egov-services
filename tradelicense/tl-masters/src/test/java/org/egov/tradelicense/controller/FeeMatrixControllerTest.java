@@ -13,53 +13,35 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.FeeMatrix;
-import org.egov.models.FeeMatrixDetail;
-import org.egov.models.FeeMatrixRequest;
-import org.egov.models.FeeMatrixResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.FeeMatrix;
+import org.egov.tl.commons.web.contract.FeeMatrixDetail;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.FeeMatrixRequest;
+import org.egov.tl.commons.web.requests.FeeMatrixResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.services.CategoryService;
-import org.egov.tradelicense.services.DocumentTypeService;
-import org.egov.tradelicense.services.FeeMatrixService;
-import org.egov.tradelicense.services.LicenseStatusService;
-import org.egov.tradelicense.services.PenaltyRateService;
-import org.egov.tradelicense.services.UOMService;
+import org.egov.tradelicense.domain.services.FeeMatrixService;
+import org.egov.tradelicense.web.controller.FeeMatrixController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(TradeLicenseMasterController.class)
+@WebMvcTest(FeeMatrixController.class)
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 public class FeeMatrixControllerTest {
 
 	@MockBean
-	private CategoryService categoryService;
-
-	@MockBean
 	FeeMatrixService feeMatrixService;
-
-	@MockBean
-	private UOMService uomService;
-
-	@MockBean
-	private PenaltyRateService penaltyRateService;
-
-	@MockBean
-	DocumentTypeService documentTypeService;
-	
-	@MockBean
-	LicenseStatusService licenseStatusService;
 
 	@MockBean
 	private PropertiesManager propertiesManager;
@@ -67,7 +49,9 @@ public class FeeMatrixControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	
+	@MockBean
+	KafkaTemplate kafkaTemplate;
+
 	/**
 	 * Description : Test method for createFeeMatrix() method
 	 */
@@ -94,12 +78,10 @@ public class FeeMatrixControllerTest {
 
 		try {
 
-			when(feeMatrixService.createFeeMatrixMaster(any(String.class), any(FeeMatrixRequest.class)))
-					.thenReturn(feeMatrixResponse);
+			when(feeMatrixService.createFeeMatrixMaster(any(FeeMatrixRequest.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/tradelicense/feematrix/_create").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("feeMatrixCreateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/tl-masters/feematrix/v1/_create").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("feeMatrixCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("feeMatrixCreateResponse.json")));
 
@@ -111,7 +93,6 @@ public class FeeMatrixControllerTest {
 		assertTrue(Boolean.TRUE);
 	}
 
-	
 	/**
 	 * Description : Test method for updateFeeMatrix() method
 	 */
@@ -140,9 +121,8 @@ public class FeeMatrixControllerTest {
 
 			when(feeMatrixService.updateFeeMatrixMaster(any(FeeMatrixRequest.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/tradelicense/feematrix/_update").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("feeMatrixUpdateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/tl-masters/feematrix/v1/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("feeMatrixUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("feeMatrixUpdateResponse.json")));
 
@@ -154,7 +134,6 @@ public class FeeMatrixControllerTest {
 		assertTrue(Boolean.TRUE);
 	}
 
-	
 	/**
 	 * Description : Test method for searchFeeMatrix() method
 	 */
@@ -185,7 +164,7 @@ public class FeeMatrixControllerTest {
 					any(Integer.class), any(Integer.class), any(String.class), any(String.class), any(String.class),
 					any(Integer.class), any(Integer.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/tradelicense/feematrix/_search").param("tenantId", "default")
+			mockMvc.perform(post("/tl-masters/feematrix/v1/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("feeMatrixSearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

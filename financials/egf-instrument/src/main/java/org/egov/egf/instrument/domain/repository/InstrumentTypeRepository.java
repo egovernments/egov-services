@@ -10,8 +10,10 @@ import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.persistence.entity.InstrumentTypeEntity;
 import org.egov.egf.instrument.persistence.queue.repository.InstrumentTypeQueueRepository;
 import org.egov.egf.instrument.persistence.repository.InstrumentTypeJdbcRepository;
+import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentTypeMapper;
 import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,13 +28,21 @@ public class InstrumentTypeRepository {
 
 	private String persistThroughKafka;
 
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
+	private InstrumentTypeESRepository instrumentTypeESRepository;
+
 	@Autowired
 	public InstrumentTypeRepository(InstrumentTypeJdbcRepository instrumentTypeJdbcRepository,
 			InstrumentTypeQueueRepository instrumentTypeQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka) {
+			@Value("${persist.through.kafka}") String persistThroughKafka,
+			FinancialConfigurationContractRepository financialConfigurationContractRepository,
+			InstrumentTypeESRepository instrumentTypeESRepository) {
 		this.instrumentTypeJdbcRepository = instrumentTypeJdbcRepository;
 		this.instrumentTypeQueueRepository = instrumentTypeQueueRepository;
 		this.persistThroughKafka = persistThroughKafka;
+		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+		this.instrumentTypeESRepository = instrumentTypeESRepository;
 
 	}
 
@@ -156,17 +166,20 @@ public class InstrumentTypeRepository {
 
 	public Pagination<InstrumentType> search(InstrumentTypeSearch domain) {
 
-		// if() {
-		// InstrumentTypeSearchContract instrumentTypeSearchContract = new
-		// InstrumentTypeSearchContract();
-		// ModelMapper mapper = new ModelMapper();
-		// mapper.map(domain,instrumentTypeSearchContract );
-		// Pagination<InstrumentType> instrumenttypes =
-		// instrumentTypeESRepository.search(instrumentTypeSearchContract);
-		// return instrumenttypes;
-		// }
+		if (financialConfigurationContractRepository.fetchDataFrom() != null
+				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
-		return instrumentTypeJdbcRepository.search(domain);
+			InstrumentTypeSearchContract instrumentTypeSearchContract = new InstrumentTypeSearchContract();
+			InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+			instrumentTypeSearchContract = mapper.toSearchContract(domain);
+			Pagination<InstrumentType> instrumenttypes = instrumentTypeESRepository
+					.search(instrumentTypeSearchContract);
+
+			return instrumenttypes;
+
+		} else {
+			return instrumentTypeJdbcRepository.search(domain);
+		}
 
 	}
 

@@ -6,6 +6,7 @@ import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
 import org.egov.egf.master.domain.model.BankBranch;
@@ -108,6 +109,7 @@ public class BankAccountService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(BankAccount b:bankaccounts)b.setId(bankAccountRepository.getNextSequence());
 		return bankaccounts;
 
 	}

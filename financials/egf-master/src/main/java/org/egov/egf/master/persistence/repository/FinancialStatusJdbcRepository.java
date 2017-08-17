@@ -70,6 +70,13 @@ public class FinancialStatusJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (financialStatusSearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", financialStatusSearchEntity.getTenantId());
+                }
 		if (financialStatusSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

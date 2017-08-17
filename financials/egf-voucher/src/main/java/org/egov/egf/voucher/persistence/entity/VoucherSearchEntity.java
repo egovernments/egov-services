@@ -14,6 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class VoucherSearchEntity extends VoucherEntity {
+	private String ids;
+	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
 
@@ -27,6 +29,8 @@ public class VoucherSearchEntity extends VoucherEntity {
 		super.toEntity((Voucher) voucherSearch);
 		this.pageSize = voucherSearch.getPageSize();
 		this.offset = voucherSearch.getOffset();
+		this.sortBy = voucherSearch.getSortBy();
+		this.ids = voucherSearch.getIds();
 		return this;
 	}
 

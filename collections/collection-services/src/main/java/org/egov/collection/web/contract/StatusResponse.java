@@ -43,6 +43,7 @@ package org.egov.collection.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Setter;
+import org.egov.collection.model.EnumData;
 import org.egov.common.contract.response.ResponseInfo;
 
 import java.util.List;
@@ -56,5 +57,5 @@ public class StatusResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("status")
-    private List<String> status;
+    private List<EnumData> status;
 }

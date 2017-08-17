@@ -107,16 +107,16 @@ public class ApplicationProperties {
     private String updateReceivingModeTopicKey;
     
     @Value("${kafka.topics.servicetype.create.name}")
-    private String createServiceTypeTopicName;
+    private String createGrievanceTypeTopicName;
     
     @Value("${kafka.topics.servicetype.create.key}")
-    private String createServiceTypeTopicKey;
+    private String createGrievanceTypeTopicKey;
     
     @Value("${kafka.topics.servicetype.update.key}")
-    private String updateServiceTypeTopickey; 
+    private String updateGrievanceTypeTopickey;
     
     @Value("${kafka.topics.servicetype.update.name}")
-    private String updateServiceTypeTopicName;
+    private String updateGrievanceTypeTopicName;
 
     @Value("${kafka.topics.escalationtimetype.create.name}")
     private String createEscalationTimeTypeName;
@@ -153,7 +153,43 @@ public class ApplicationProperties {
     
 	@Value("${kafka.topics.escalationhierarchy.update.key}")
     private String updateEscalationHierarchyKey;
+
+	@Value("${kafka.topics.servicetypeconfiguration.create.name}") 
+    String createtopicName;
     
+    @Value("${kafka.topics.servicetypeconfiguration.create.key}") 
+    String createkey;
+    
+    @Value("${kafka.topics.servicetypeconfiguration.update.name}") 
+    private String updateTopicname;
+    
+    @Value("${kafka.topics.servicetypeconfiguration.update.key}") 
+    private String updatekey;
+    
+	@Value("${kafka.topics.servicetypes.create.name}")
+	private String createServiceTypeTopicName;
+
+	@Value("${kafka.topics.servicetypes.create.key}")
+	private String createServiceTypeTopicKey;
+
+	@Value("${kafka.topics.servicetypes.update.name}")
+	private String updateServiceTypeTopicName;
+
+	@Value("${kafka.topics.servicetypes.update.key}")
+	private String updateServiceTypeTopicKey;
+
+	@Value("${kafka.topics.servicedefinition.create.name}")
+	private String createServiceDefinitionName;
+
+	@Value("${kafka.topics.servicedefinition.create.key}")
+	private String createServiceDefinitionKey;
+
+	@Value("${kafka.topics.servicedefinition.update.name}")
+	private String updateServiceDefinitionName;
+
+	@Value("${kafka.topics.servicedefinition.update.key}")
+	private String updateServiceDefinitionKey;
+
 	public String getUpdateEscalationTimeTypeName() {
 		return updateEscalationTimeTypeName;
 	}
@@ -210,11 +246,11 @@ public class ApplicationProperties {
 		return updateReceivingModeTopicName;
 	}
 	
-	public String getCreateServiceTypeTopicName(){
-		return createServiceTypeTopicName;
+	public String getCreateGrievanceTypeTopicName(){
+		return createGrievanceTypeTopicName;
 	}
-	public String getCreateServiceTypeTopicKey(){
-		return createServiceTypeTopicKey;
+	public String getCreateGrievanceTypeTopicKey(){
+		return createGrievanceTypeTopicKey;
 	}
     public String getUpdateServiceGroupTopicName() {
 		return updateServiceGroupTopicName;
@@ -224,12 +260,12 @@ public class ApplicationProperties {
 		return updateServiceGroupTopicKey;
 	}
 	
-	public String getUpdateServiceTypeTopicName(){
-		return updateServiceTypeTopicName;
+	public String getUpdateGrievanceTypeTopicName(){
+		return updateGrievanceTypeTopicName;
 	}
 	
-	public String getUpdateServiceTypeTopicKey(){
-		return updateServiceTypeTopickey;
+	public String getUpdateGrievanceTypeTopicKey(){
+		return updateGrievanceTypeTopickey;
 
 	}
     public String getCreateEscalationTimeTypeName() {
@@ -283,5 +319,52 @@ public class ApplicationProperties {
 	public String sevaSearchPageSizeMax() {
 		return SEVA_MASTERS_SEARCH_PAGESIZE_MAX;
 	}
+
+	public String servicetypeconfigurationCreateTopic() {
+		return createtopicName;
+	}
 	
+	public String servicetypeconfigurationCreateKeyName() {
+		return createkey;
+	}
+	
+	public String servicetypeconfigurationUpdateTopic() {
+		return updateTopicname;
+	}
+	
+	public String servicetypeconfigurationUpdateKeyName() {
+		return updatekey;
+	}
+
+	public String getCreateServiceTypeTopicName() {
+		return createServiceTypeTopicName;
+	}
+
+	public String getCreateServiceTypeTopicKey() {
+		return createServiceTypeTopicKey;
+	}
+
+	public String getCreateServiceDefinitionName() {
+		return createServiceDefinitionName;
+	}
+
+	public String getCreateServiceDefinitionKey() {
+		return createServiceDefinitionKey;
+	}
+
+	public String getUpdateServiceTypeTopicName() {
+		return updateServiceTypeTopicName;
+	}
+
+	public String getUpdateServiceTypeTopicKey() {
+		return updateServiceTypeTopicKey;
+	}
+
+	public String getUpdateServiceDefinitionName() {
+		return updateServiceDefinitionName;
+	}
+
+	public String getUpdateServiceDefinitionKey() {
+		return updateServiceDefinitionKey;
+	}
 }

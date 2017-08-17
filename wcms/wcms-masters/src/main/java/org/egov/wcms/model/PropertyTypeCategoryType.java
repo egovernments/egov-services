@@ -65,6 +65,10 @@ public class PropertyTypeCategoryType {
     private Long id;
 
     @NotNull
+    @Size(min = 3, max = 20)
+    private String code;
+    
+    @NotNull
     private String propertyTypeId;
 
     @NotNull

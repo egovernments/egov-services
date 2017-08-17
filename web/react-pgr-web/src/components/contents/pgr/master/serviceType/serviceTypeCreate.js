@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -17,8 +14,6 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-
-var flag = 0;
 const styles = {
   headerStyle : {
     color: 'rgb(90, 62, 27)',
@@ -27,29 +22,8 @@ const styles = {
   marginStyle:{
     margin: '15px'
   },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
+  setTopMargin: {
+    marginTop: 34
   }
 };
 
@@ -93,8 +67,6 @@ class ServiceTypeCreate extends Component {
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id, keywords : 'complaint'},body).then(function(response){
-                console.log("response",response);
-                  console.log("response object",response.Service[0]);
                 current.setState({data:response.Service})
                 setForm(response.Service[0])
             }, function(err) {
@@ -110,7 +82,6 @@ class ServiceTypeCreate extends Component {
     componentDidMount() {
         let self = this;
       Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword:'complaint'}).then(function(response) {
-        console.log("response",response);
           self.setState({
             category: response.ServiceGroups
           })
@@ -276,9 +247,8 @@ class ServiceTypeCreate extends Component {
           //if( (createServiceType.attribute.datatype=="Single value list" || createServiceType.attribute.datatype == "Multi select") && (createServiceType.attribute.dataType!=undefined)) {
           return (
               <div>
-                <div className="clearfix"></div>
                   <Row>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
                             floatingLabelText="Key"
@@ -288,27 +258,27 @@ class ServiceTypeCreate extends Component {
                             id="attributesKey"
                         />
                     </Col>
-                    <Col xs={12} md={3} sm={6}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
-                            floatingLabelText="Name"
+                            floatingLabelText={translate('core.lbl.add.name')}
                             value={createServiceType.dataType ? createServiceType.dataType.attributesName : ""}
                             errorText={fieldErrors.dataType ? fieldErrors.dataType.attributesName : ""}
                               onChange={(e) => handleChangeNextOne(e,"dataType" ,"attributesName", false, "")}
                             id="attributesName"
                         />
                     </Col>
-                    <Col xs={12} md={3} sm={3} style={styles.textRight}>
+                    <Col xs={12} sm={4} md={3} lg={3} style={styles.textRight}>
                     <br/>
                     { (editIndex == -1 || editIndex == undefined ) &&
-                      <RaisedButton type="button" label="Add" primary="true" onClick={()=> {
+                      <RaisedButton type="button" label={translate('pgr.lbl.add')} primary="true" onClick={()=> {
                           _this.props.addNestedFormData("dataTypes","dataType");
                           _this.props.resetObject("dataType");
                           }
                       }/>
                     }
                     { (editIndex > -1) &&
-                      <RaisedButton type="button" label="Save"    onClick={()=> {
+                      <RaisedButton type="button" label={translate('core.lbl.save')}   onClick={()=> {
                             this.props.updateObject("owners","owner",  editIndex);
                             this.props.resetObject("owner");
                             isEditIndex(-1);
@@ -359,8 +329,7 @@ class ServiceTypeCreate extends Component {
       const showAddNewBtn = function() {
 
           return (
-
-              <RaisedButton style={{margin:'15px 5px'}} type="button" primary="true"  onClick={()=>{showCustomFieldForm(true)}} float="right"  label={translate('pgr.lbl.create')} labelColor={white}/>
+              <RaisedButton style={{margin:'15px 5px'}} type="button" primary="true"  onClick={()=>{showCustomFieldForm(true)}} float="right"  label={translate('pgr.lbl.create')}/>
             )
 
       }
@@ -369,7 +338,6 @@ class ServiceTypeCreate extends Component {
 
       const  promotionFunc =function() {
           if(createServiceType.metadata=="true"||createServiceType.metadata==true){
-            console.log("hi");
             return (
               <div className="form-section">
                 <h3 style = {styles.headerStyle} >Attributes</h3>
@@ -434,17 +402,17 @@ class ServiceTypeCreate extends Component {
             {
               return (
                 <div>
-                  <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText={translate('core.lbl.code')}
                           value={createServiceType.attribute ? createServiceType.attribute.code : ""}
                           errorText={fieldErrors.attribute ? fieldErrors.attribute.code : ""}
-                            onChange={(e) => handleChangeNextOne(e,"attribute" ,"code", false, "")}
+                          onChange={(e) => handleChangeNextOne(e,"attribute" ,"code", false, "")}
                           id="attributesName"
                       />
                   </Col>
-                  <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText="Group Code"
@@ -454,7 +422,7 @@ class ServiceTypeCreate extends Component {
                           id="groupCode"
                       />
                   </Col>
-                  <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText="Datatype Description"
@@ -464,7 +432,7 @@ class ServiceTypeCreate extends Component {
                           id="datatypeDescription"
                       />
                   </Col>
-                  <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText={translate('core.lbl.description')}
@@ -475,7 +443,7 @@ class ServiceTypeCreate extends Component {
                       />
                   </Col>
 
-                  <Col  xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText={translate('core.error.required')}
                            fullWidth={true}
@@ -497,7 +465,7 @@ class ServiceTypeCreate extends Component {
                       </SelectField>
                   </Col>
 
-                  <Col  xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText="Variable"
                            fullWidth={true}
@@ -518,7 +486,7 @@ class ServiceTypeCreate extends Component {
 
                       </SelectField>
                   </Col>
-                  <Col  xs={12} md={3} sm={6}>
+                  <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
                            floatingLabelText="Data Type"
                            fullWidth={true}
@@ -591,58 +559,59 @@ class ServiceTypeCreate extends Component {
         <div className="createServiceType">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Grievance Type' : 'Create Grievance Type'} < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')} {translate('pgr.lbl.grievance.type')}< /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
-                              <Col xs={12} md={3} sm={6}>
-                                  <TextField
-                                      fullWidth={true}
-                                      floatingLabelText={translate('core.lbl.code') +" *"}
-                                      value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
-                                      errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
-                                        onChange={(e) => handleChange(e, "serviceCode", true, '')}
-                                      id="serviceCode"
-                                      disabled={this.state.id ? true : false }
-                                  />
-                              </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.add.name")+" *"}
                                       value={createServiceType.serviceName? createServiceType.serviceName : ""}
                                       errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
-                                      onChange={(e) => handleChange(e, "serviceName", true, '')}
+                                      maxLength="100"
+                                      onChange={(e) => handleChange(e, "serviceName", true, /^[a-zA-Z\s'_.]{0,100}$/, 'Please use only alphabets, space and special characters')}
                                       id="serviceName"
 
                                   />
                               </Col>
-
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText={translate('core.lbl.code') +" *"}
+                                      value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
+                                      errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
+                                      maxLength="20"
+                                      onChange={(e) => handleChange(e, "serviceCode", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
+                                      id="serviceCode"
+                                      disabled={this.state.id ? true : false }
+                                  />
+                              </Col>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createServiceType.description? createServiceType.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
-                                      onChange={(e) => handleChange(e, "description", false, '')}
+                                      maxLength="250"
+                                      onChange={(e) => handleChange(e, "description", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
                                       multiLine={true}
                                       id="description"
                                   />
                               </Col>
-
-
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="SLA Hours *"
+                                      floatingLabelText={translate('pgr.lbl.slahour')+" *"}
                                       value={createServiceType.slaHours? createServiceType.slaHours : ""}
                                       errorText={fieldErrors.slaHours ? fieldErrors.slaHours : ""}
-                                      onChange={(e) => handleChange(e, "slaHours", true, '')}
+                                      maxLength="4"
+                                      onChange={(e) => handleChange(e, "slaHours", true, /^\d{0,4}$/g, 'Please use only numbers')}
                                       multiLine={true}
                                       id="slaHours"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                     <SelectField
                                        floatingLabelText={translate("core.category")+" *"}
                                        fullWidth={true}
@@ -666,14 +635,10 @@ class ServiceTypeCreate extends Component {
                                       ))}
                                       </SelectField>
                               </Col>
-
-                              <div className="clearfix"></div>
-
-                              <Col xs={12} md={3} sm={6}>
-
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
-                                    style={styles.active}
+                                    style={styles.setTopMargin}
                                     checked = {createServiceType.active || false}
                                     onCheck = {(e, i, v) => { console.log(createServiceType.active, i);
 
@@ -687,11 +652,10 @@ class ServiceTypeCreate extends Component {
                                     id="active"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
-
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox
-                                    label="Has Financial Impact"
-                                    style={styles.hasFinancialImpact}
+                                    label={translate('pgr.lbl.finimpact')}
+                                    style={styles.setTopMargin}
                                     checked = {createServiceType.hasFinancialImpact || false}
                                     onCheck = {(e, i, v) => { console.log(createServiceType.hasFinancialImpact, i);
 
@@ -723,7 +687,6 @@ class ServiceTypeCreate extends Component {
                                                                    id="metadata"
                                                                  />
                                                              </Col>*/}
-                              <div className="clearfix"></div>
                                 {/*promotionFunc()*/}
 
                           </Row>
@@ -731,11 +694,11 @@ class ServiceTypeCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" primary="true" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" primary="true" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
               </div>
           </form>
           <Dialog
-               title={this.state.id != '' ? "Grievance Type Updated Successfully" : "Grievance Type Created Successfully"}
+               title={translate("pgr.lbl.success")}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
@@ -745,6 +708,7 @@ class ServiceTypeCreate extends Component {
                open={this.state.open}
                onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
              >
+            {translate('pgr.lbl.grievance.type')} {this.state.id != '' ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
          </Dialog>
         </div>)
     }
@@ -811,14 +775,14 @@ const mapDispatchToProps = dispatch => ({
       })
     },
 
-  handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
+  handleChange: (e, property, isRequired, pattern,errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern,
+      errorMsg
     });
   },
   isEditIndex: (index) => {
@@ -829,8 +793,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   addNestedFormData: (formArray, formData) => {
-    console.log(formArray);
-    console.log(formData);
     dispatch({
       type: "PUSH_ONE",
       formArray,

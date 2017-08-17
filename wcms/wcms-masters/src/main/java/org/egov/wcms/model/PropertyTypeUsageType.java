@@ -62,6 +62,10 @@ public class PropertyTypeUsageType {
     public static final String SEQ_PROPERTYUSAGETYPE = "seq_egwtr_property_usage_type";
 
     private Long id;
+    
+    @NotNull
+    @Size(min = 3, max = 20)
+    private String code;
 
     @NotNull
     private String propertyType;
@@ -69,6 +73,9 @@ public class PropertyTypeUsageType {
 
     @NotNull
     private String usageType;
+    
+    @NotNull
+    private String usageCode;
     private String usageTypeId;
 
     private Boolean active;

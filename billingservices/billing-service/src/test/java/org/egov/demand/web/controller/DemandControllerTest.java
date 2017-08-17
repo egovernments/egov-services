@@ -18,6 +18,7 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
@@ -142,6 +143,36 @@ public class DemandControllerTest {
 				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("demandDetailsResponse.json")));
+		
+	}
+	
+	@Test
+	public void testShouldUpdateMIS() throws IOException, Exception{
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(null);
+		demandResponse.setResponseInfo(new ResponseInfo());
+		
+		when(demandService.updateMISAsync(any(DemandUpdateMisRequest.class))).thenReturn(new DemandResponse(getResponseInfo(getRequestInfo()),null));
+		
+		mockMvc.perform(post("/demand/_updatemis").param("tenantId", "ap.kurnool").param("id","1").param("consumerCode", "consumerCode1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isCreated())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("UpdatemisResponse.json")));
+		
+	}
+	
+	@Test
+	public void testShouldUpdateMISWithException() throws IOException, Exception{
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(null);
+		demandResponse.setResponseInfo(new ResponseInfo());
+		
+		when(demandService.updateMISAsync(any(DemandUpdateMisRequest.class))).thenReturn(new DemandResponse(getResponseInfo(getRequestInfo()),null));
+		
+		mockMvc.perform(post("/demand/_updatemis").param("tenantId", "ap.kurnool")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest());
 		
 	}
 	

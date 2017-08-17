@@ -188,6 +188,8 @@ public class SurrenderReasonJdbcRepositoryTest {
 
 	private SurrenderReasonSearch getSurrenderReasonSearch() {
 		SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
+		surrenderReasonSearch.setId("1");
+		surrenderReasonSearch.setIds("1");
 		surrenderReasonSearch.setName("name");
 		surrenderReasonSearch.setDescription("description");
 		surrenderReasonSearch.setPageSize(500);

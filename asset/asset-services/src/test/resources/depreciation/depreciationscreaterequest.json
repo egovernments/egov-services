@@ -1,0 +1,29 @@
+ {
+ 	"RequestInfo" : {
+		"apiId" : null,
+		"ver" : "1.0",
+		"action" : "create",
+		"did" : "1",
+		"key" : "abcdkey",
+		"msgId" : "20170310130900",
+		"requesterId" : "rajesh",
+		"authToken" : "f0ef30f6-85f6-4d49-8336-def1dd96668f",
+		"userInfo" : {
+			"id" : 1,
+			"userName" : "testUser",
+			"name" : "test user",
+			"type" : "type",
+			"mobileNumber" : "9999999999",
+			"emailId" : "test.user@gmail.com",
+			"roles" : null
+		}
+	},
+  "Depreciation": {
+  	
+    "tenantId": "ap.kurnool",
+    "financialYear": "2017",
+    "fromDate": 0,
+    "toDate": 0,
+    "assetIds": null
+  }
+}

@@ -20,31 +20,31 @@ import lombok.Setter;
 
 @Builder
 public class FinancialConfigurationValueEntity extends AuditableEntity {
-	public static final String TABLE_NAME = "egf_financialconfigurationvalue";
-	private String id;
-	private String financialConfigurationId;
-	private String value;
-	private Date effectiveFrom;
+    public static final String TABLE_NAME = "egf_financialconfigurationvalues";
+    private String id;
+    private String financialConfigurationId;
+    private String value;
+    private Date effectiveFrom;
 
-	public FinancialConfigurationValue toDomain() {
-		FinancialConfigurationValue financialConfigurationValue = new FinancialConfigurationValue();
-		super.toDomain(financialConfigurationValue);
-		financialConfigurationValue.setId(this.id);
-		financialConfigurationValue
-				.setFinancialConfiguration(FinancialConfiguration.builder().id(financialConfigurationId).build());
-		financialConfigurationValue.setValue(this.value);
-		financialConfigurationValue.setEffectiveFrom(this.effectiveFrom);
-		return financialConfigurationValue;
-	}
+    public FinancialConfigurationValue toDomain() {
+        FinancialConfigurationValue financialConfigurationValue = new FinancialConfigurationValue();
+        super.toDomain(financialConfigurationValue);
+        financialConfigurationValue.setId(this.id);
+        financialConfigurationValue
+                .setFinancialConfiguration(FinancialConfiguration.builder().id(financialConfigurationId).build());
+        financialConfigurationValue.setValue(this.value);
+        financialConfigurationValue.setEffectiveFrom(this.effectiveFrom);
+        return financialConfigurationValue;
+    }
 
-	public FinancialConfigurationValueEntity toEntity(FinancialConfigurationValue financialConfigurationValue) {
-		super.toEntity((Auditable) financialConfigurationValue);
-		this.id = financialConfigurationValue.getId();
-		this.financialConfigurationId = financialConfigurationValue.getFinancialConfiguration() != null
-				? financialConfigurationValue.getFinancialConfiguration().getId() : null;
-		this.value = financialConfigurationValue.getValue();
-		this.effectiveFrom = financialConfigurationValue.getEffectiveFrom();
-		return this;
-	}
+    public FinancialConfigurationValueEntity toEntity(FinancialConfigurationValue financialConfigurationValue) {
+        super.toEntity((Auditable) financialConfigurationValue);
+        this.id = financialConfigurationValue.getId();
+        this.financialConfigurationId = financialConfigurationValue.getFinancialConfiguration() != null
+                ? financialConfigurationValue.getFinancialConfiguration().getId() : null;
+        this.value = financialConfigurationValue.getValue();
+        this.effectiveFrom = financialConfigurationValue.getEffectiveFrom();
+        return this;
+    }
 
 }

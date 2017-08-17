@@ -49,7 +49,7 @@ import org.springframework.validation.Validator;
 
 @Component
 public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValidator implements Validator {
-	
+
 	@Autowired
 	private EmployeeRepository employeeRepository;
 

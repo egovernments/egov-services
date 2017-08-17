@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/sourcetype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "SourceTypes[0].code",
 		"objectName": "SourceType",
 		"groups": [
 			{
@@ -11,34 +12,35 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SourceType.name",
+							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "SourceType.description",
+							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SourceType.active",
+							"jsonPath": "SourceType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
+							"defaultValue":true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -61,12 +63,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "name",
 							"label": "wc.create.sourceType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "Active",
@@ -153,29 +155,29 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SourceType.name",
+							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "SourceType.description",
+							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SourceType.active",
+							"jsonPath": "SourceType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

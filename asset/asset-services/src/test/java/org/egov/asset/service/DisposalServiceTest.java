@@ -17,6 +17,7 @@ import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
@@ -26,6 +27,7 @@ import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.TransactionType;
+import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.asset.util.FileUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -40,6 +42,7 @@ import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +53,9 @@ public class DisposalServiceTest {
 
     @Mock
     private DisposalRepository disposalRepository;
+    
+    @Mock
+    private AssetRepository assetRepository;
 
     @Mock
     private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
@@ -62,9 +68,6 @@ public class DisposalServiceTest {
 
     @Mock
     private ApplicationProperties applicationProperties;
-
-    @Mock
-    private AssetCurrentAmountService assetCurrentAmountService;
 
     @Mock
     private RestTemplate restTemplate;
@@ -106,7 +109,8 @@ public class DisposalServiceTest {
     public void testCreateAsync() throws NumberFormatException, Exception {
 
         final DisposalService mock = PowerMockito.mock(DisposalService.class);
-        PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForDisposal", any(DisposalRequest.class));
+        PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForDisposal", any(DisposalRequest.class),
+                any(HttpHeaders.class));
 
         final DisposalRequest disposalRequest = new DisposalRequest();
         disposalRequest.setDisposal(getDisposalForCreateAsync());
@@ -122,15 +126,17 @@ public class DisposalServiceTest {
             fail();
         }
 
-        when(assetCurrentAmountService.getAsset(any(Long.class), any(String.class), any(RequestInfo.class)))
-                .thenReturn(get_Asset());
+        List<Asset> assets = new ArrayList<>();
+		assets.add(get_Asset());
+		when(assetRepository.findForCriteria(any(AssetCriteria.class)))
+				.thenReturn(assets);
         when(applicationProperties.getCreateAssetDisposalTopicName()).thenReturn("kafka.topics.save.disposal");
         when(disposalRepository.getNextDisposalId()).thenReturn(15);
 
         assertTrue(disposalResponse.getDisposals().get(0).getId().equals(Long.valueOf("15")));
         // doNothing().when(logAwareKafkaTemplate).send(Matchers.anyString(),
         // Matchers.anyString(), Matchers.anyObject());
-        mock.createAsync(disposalRequest);
+        mock.createAsync(disposalRequest, new HttpHeaders());
 
         assertEquals(disposalResponse.getDisposals().get(0).getVoucherReference(),
                 disposalRequest.getDisposal().getVoucherReference());

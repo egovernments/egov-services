@@ -45,8 +45,8 @@ import javax.validation.Valid;
 
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
-import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.service.WorkflowService;
+import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.egov.collection.web.errorhandlers.Error;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/receipts-workflow/v1")
+@RequestMapping("/receipts-workflow")
 public class WorkflowController {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(ReceiptController.class);
@@ -74,7 +74,7 @@ public class WorkflowController {
 	@PostMapping("/_start")
 	@ResponseBody
 	public ResponseEntity<?> startWorkflow(
-			@RequestBody @Valid final WorkflowDetails workflowDetails, BindingResult errors) {
+			@RequestBody @Valid final WorkflowDetailsRequest workflowDetails, BindingResult errors) {
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -97,7 +97,7 @@ public class WorkflowController {
 			LOGGER.error("Positions not found for the given user.");
 			workflowDetails.setAssignee(0L);
 		}
-		WorkflowDetails workflowDetailsObj = workflowService.start(workflowDetails);
+		WorkflowDetailsRequest workflowDetailsObj = workflowService.start(workflowDetails);
 				
 		if(null == workflowDetailsObj){
 			LOGGER.info("Service returned null");
@@ -116,7 +116,7 @@ public class WorkflowController {
 	@PostMapping("/_update")
 	@ResponseBody
 	public ResponseEntity<?> updateWorkflow(
-			@RequestBody @Valid final WorkflowDetails workflowDetails, BindingResult errors) {
+			@RequestBody @Valid final WorkflowDetailsRequest workflowDetails, BindingResult errors) {
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -132,7 +132,7 @@ public class WorkflowController {
 			
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		WorkflowDetails workflowDetailsObj = workflowService.update(workflowDetails);
+		WorkflowDetailsRequest workflowDetailsObj = workflowService.update(workflowDetails);
 				
 		if(null == workflowDetailsObj){
 			LOGGER.info("Service returned null");

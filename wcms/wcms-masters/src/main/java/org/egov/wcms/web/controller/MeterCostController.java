@@ -40,7 +40,6 @@
 
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -48,77 +47,112 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.service.MeterCostService;
 import org.egov.wcms.util.ValidatorUtils;
-import org.egov.wcms.web.contract.MeterCostRequest;
-import org.egov.wcms.web.contract.MeterCostResponse;
+import org.egov.wcms.web.contract.MeterCostGetRequest;
+import org.egov.wcms.web.contract.MeterCostReq;
+import org.egov.wcms.web.contract.MeterCostRes;
+import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
+import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RestController
-@Slf4j
-@RequestMapping("/metercost")
+@RequestMapping("/metercosts")
 public class MeterCostController {
 
-    @Autowired
-    private MeterCostService meterCostService;
+	private static final Logger logger = LoggerFactory.getLogger(MeterCostController.class);
+	@Autowired
+	private MeterCostService meterCostService;
 
-    @Autowired
-    private ResponseInfoFactory responseInfoFactory;
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
+	@Autowired
+	private ValidatorUtils validatorUtils;
 
-    @Autowired
-    private ValidatorUtils validatorUtils;
+	@Autowired
+	private ErrorHandler errHandler;
 
-    @PostMapping(value = "/_create")
-    @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final MeterCostRequest meterCostRequest,
-            final BindingResult errors) {
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-        }
-        log.info("meterCostRequest::" + meterCostRequest);
+	@PostMapping(value = "/_create")
+	@ResponseBody
+	public ResponseEntity<?> createMeterCost(@RequestBody @Valid final MeterCostReq meterCostRequest,
+			final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("meterCostRequest::" + meterCostRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterCostRequest(meterCostRequest);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+		final List<ErrorResponse> errorResponses = validatorUtils.validateMeterCostRequest(meterCostRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final MeterCost meterCost = meterCostService.createMeterCost(
-                applicationProperties.getCreateMeterCostTopicName(), "metercost-create", meterCostRequest);
-        final List<MeterCost> meterCosts = new ArrayList<>();
-        meterCosts.add(meterCost);
-        return getSuccessResponse(meterCosts, "Created", meterCostRequest.getRequestInfo());
+		final List<MeterCost> meterCosts = meterCostService.createMeterCostPushToQueue(meterCostRequest);
 
-    }
+		return getSuccessResponse(meterCosts, "Created", meterCostRequest.getRequestInfo());
+	}
 
-    private ResponseEntity<?> getSuccessResponse(final List<MeterCost> meterCostList, final String mode,
-            final RequestInfo requestInfo) {
-        final MeterCostResponse meterCostResponse = new MeterCostResponse();
-        meterCostResponse.setMeterCost(meterCostList);
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        if (StringUtils.isNotBlank(mode))
-            responseInfo.setStatus(HttpStatus.CREATED.toString());
-        else
-            responseInfo.setStatus(HttpStatus.OK.toString());
-        meterCostResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(meterCostResponse, HttpStatus.OK);
+	@PostMapping(value = "/_update")
+	@ResponseBody
+	public ResponseEntity<?> updateMeterCost(@RequestBody @Valid final MeterCostReq meterCostRequest,
+			final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("meterCostRequest::" + meterCostRequest);
 
-    }
+		final List<ErrorResponse> errorResponses = validatorUtils.validateMeterCostRequest(meterCostRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		final List<MeterCost> meterCosts = meterCostService.updateMeterCostPushToQueue(meterCostRequest);
+
+		return getSuccessResponse(meterCosts, null, meterCostRequest.getRequestInfo());
+	}
+
+	@PostMapping(value = "/_search")
+	@ResponseBody
+	public ResponseEntity<?> searchMeterCost(@ModelAttribute @Valid final MeterCostGetRequest meterCostGetRequest,
+			final BindingResult modelAttributeBindingResult,
+			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			final BindingResult requestBodyBindingResult) {
+		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		if (modelAttributeBindingResult.hasErrors())
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		if (requestBodyBindingResult.hasErrors())
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+		List<MeterCost> meterCosts = meterCostService.getMeterCostByCriteria(meterCostGetRequest);
+		return getSuccessResponse(meterCosts, null, requestInfo);
+
+	}
+
+	private ResponseEntity<?> getSuccessResponse(final List<MeterCost> meterCostList, final String mode,
+			final RequestInfo requestInfo) {
+		final MeterCostRes meterCostResponse = new MeterCostRes();
+		meterCostResponse.setMeterCost(meterCostList);
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		if (StringUtils.isNotBlank(mode))
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+		else
+			responseInfo.setStatus(HttpStatus.OK.toString());
+		meterCostResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<>(meterCostResponse, HttpStatus.OK);
+
+	}
 
 }

@@ -52,13 +52,13 @@ public class FactorRepository {
 				ps.setString(1, calculationFactor.getTenantId());
 				ps.setString(2, calculationFactor.getFactorCode());
 				ps.setString(3, calculationFactor.getFactorType().toString());
-				ps.setDouble(4, calculationFactor.getFactorValue());
+				ps.setDouble(4, getDouble(calculationFactor.getFactorValue()));
 				ps.setTimestamp(5, TimeStampUtil.getTimeStamp(calculationFactor.getFromDate()));
 				ps.setTimestamp(6, TimeStampUtil.getTimeStamp(calculationFactor.getToDate()));
 				ps.setString(7, calculationFactor.getAuditDetails().getCreatedBy());
 				ps.setString(8, calculationFactor.getAuditDetails().getLastModifiedBy());
-				ps.setLong(9, calculationFactor.getAuditDetails().getCreatedTime());
-				ps.setLong(10, calculationFactor.getAuditDetails().getLastModifiedTime());
+				ps.setLong(9, getLong(calculationFactor.getAuditDetails().getCreatedTime()));
+				ps.setLong(10, getLong(calculationFactor.getAuditDetails().getLastModifiedTime()));
 				return ps;
 			}
 		};
@@ -91,12 +91,12 @@ public class FactorRepository {
 				ps.setString(1, calculationFactor.getTenantId());
 				ps.setString(2, calculationFactor.getFactorCode());
 				ps.setObject(3, calculationFactor.getFactorType().toString());
-				ps.setDouble(4, calculationFactor.getFactorValue());
+				ps.setDouble(4, getDouble(calculationFactor.getFactorValue()));
 				ps.setTimestamp(5, TimeStampUtil.getTimeStamp(calculationFactor.getFromDate()));
 				ps.setTimestamp(6, TimeStampUtil.getTimeStamp(calculationFactor.getToDate()));
 				ps.setString(7, calculationFactor.getAuditDetails().getLastModifiedBy());
-				ps.setLong(8, calculationFactor.getAuditDetails().getLastModifiedTime());
-				ps.setLong(9, calculationFactor.getId());
+				ps.setLong(8, getLong(calculationFactor.getAuditDetails().getLastModifiedTime()));
+				ps.setLong(9, getLong(calculationFactor.getId()));
 				return ps;
 			}
 		};
@@ -222,4 +222,14 @@ public class FactorRepository {
 		return object == null ? 0 : Long.parseLong(object.toString());
 	}
 
+	public void getCreatedAuditDetails(AuditDetails auditDetails, String tableName, Long id) {
+
+		String query = FactorQueryBuilder.getCreatedAuditDetails(tableName, id);
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
+
+		for (Map<String, Object> row : rows) {
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+		}
+	}
 }

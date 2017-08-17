@@ -39,6 +39,10 @@ public class FiscalPeriodRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return fiscalPeriodJdbcRepository.getSequence(FiscalPeriodEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public FiscalPeriod save(FiscalPeriod fiscalPeriod) {

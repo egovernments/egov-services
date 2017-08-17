@@ -2,9 +2,9 @@
  	[
         {
             "id": "1",
-            "name": "MunicipalFund",
-            "code": "001",
-            "identifier": "M",
+            "name": "name",
+            "code": "code",
+            "identifier": "I",
             "tenantId": "default"
         }
     ],

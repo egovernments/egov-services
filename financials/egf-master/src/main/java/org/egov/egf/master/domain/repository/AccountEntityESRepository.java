@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.persistence.repository.ESRepository;
 import org.egov.egf.master.domain.model.AccountEntity;
+import org.egov.egf.master.persistence.entity.AccountEntityEntity;
 import org.egov.egf.master.web.contract.AccountEntitySearchContract;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -20,9 +22,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class AccountEntityESRepository {
+public class AccountEntityESRepository extends ESRepository {
 
-	private static final String DEFAULT_SORT_FIELD = "name";
 	private TransportClient esClient;
 	private ElasticSearchQueryFactory elasticSearchQueryFactory;
 
@@ -73,9 +74,24 @@ public class AccountEntityESRepository {
 	}
 
 	private SearchRequestBuilder getSearchRequest(AccountEntitySearchContract criteria) {
+	    List<String> orderByList = new ArrayList<>();
+	        if (criteria.getSortBy() != null && !criteria.getSortBy().isEmpty()) {
+	            validateSortByOrder(criteria.getSortBy());
+	            validateEntityFieldName(criteria.getSortBy(), AccountEntityEntity.class);
+	            orderByList = elasticSearchQueryFactory.prepareOrderBys(criteria.getSortBy());
+	        }
+
 		final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchAccountEntity(criteria);
-		final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(AccountEntity.class.getSimpleName().toLowerCase()).setTypes(AccountEntity.class.getSimpleName().toLowerCase())
-				.addSort(DEFAULT_SORT_FIELD, SortOrder.ASC).setQuery(boolQueryBuilder);
+		SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(AccountEntity.class.getSimpleName().toLowerCase()).setTypes(AccountEntity.class.getSimpleName().toLowerCase())
+				;
+	        if (!orderByList.isEmpty()) {
+	            for (String orderBy : orderByList) {
+	                searchRequestBuilder = searchRequestBuilder.addSort(orderBy.split(" ")[0],
+	                        orderBy.split(" ")[1].equalsIgnoreCase("asc") ? SortOrder.ASC : SortOrder.DESC);
+	            }
+	        }
+
+	        searchRequestBuilder.setQuery(boolQueryBuilder);
 		return searchRequestBuilder;
 	}
 

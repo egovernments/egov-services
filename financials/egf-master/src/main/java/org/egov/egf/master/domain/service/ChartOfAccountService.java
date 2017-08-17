@@ -7,6 +7,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
 import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
@@ -95,6 +96,7 @@ public class ChartOfAccountService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(ChartOfAccount b:chartofaccounts)b.setId(chartOfAccountRepository.getNextSequence());
 		return chartofaccounts;
 
 	}

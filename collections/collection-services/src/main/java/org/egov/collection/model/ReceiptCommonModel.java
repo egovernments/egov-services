@@ -58,21 +58,13 @@ public class ReceiptCommonModel {
 
 	private List<ReceiptHeader> receiptHeaders;
 
-	private List<ReceiptDetail> receiptDetails;
-
 	public List<Receipt> toDomainContract() {
 		List<Receipt> receipts = new ArrayList<>();
 
 		for (ReceiptHeader receiptHeader : receiptHeaders) {
 
-			List<ReceiptDetail> listReceiptDetail = new ArrayList<>();
-			for (ReceiptDetail receiptDetail : receiptDetails) {
-				if (receiptDetail.getReceiptHeader().getId().equals(receiptHeader.getId())) {
-					listReceiptDetail.add(receiptDetail);
-				}
-			}
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
-			for (ReceiptDetail rctDetail : listReceiptDetail) {
+			for (ReceiptDetail rctDetail : receiptHeader.getReceiptDetails()) {
 				if(null != rctDetail.getDramount() ){
 				billAccountDetails.add(BillAccountDetail.builder().isActualDemand(rctDetail.getIsActualDemand())
 						.id(rctDetail.getId().toString()).tenantId(rctDetail.getTenantId())
@@ -85,7 +77,7 @@ public class ReceiptCommonModel {
 					billAccountDetails.add(BillAccountDetail.builder().isActualDemand(rctDetail.getIsActualDemand())
 							.id(rctDetail.getId().toString()).tenantId(rctDetail.getTenantId())
 							.billDetail(rctDetail.getReceiptHeader().getId().toString())
-							.creditAmount(BigDecimal.valueOf(rctDetail.getCramount()))
+							.creditAmount(rctDetail.getCramount() != null ? BigDecimal.valueOf(rctDetail.getCramount()) : BigDecimal.ZERO)
 							.glcode(rctDetail.getChartOfAccount())
 							.purpose(Purpose.valueOf(rctDetail.getPurpose())).build());
 				}
@@ -105,9 +97,11 @@ public class ReceiptCommonModel {
 					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(receiptHeader.getReceiptType())
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
 					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
-					.reasonForCancellation(receiptHeader.getReasonForCancellation()).
-					cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus()).
-					billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDate().getTime()).build();
+					.reasonForCancellation(receiptHeader.getReasonForCancellation())
+					.cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus())
+					.billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDate().getTime())
+				    .billDescription(receiptHeader.getReferenceDesc())
+                    .amountPaid(receiptHeader.getTotalAmount() != null ? BigDecimal.valueOf(receiptHeader.getTotalAmount()) : BigDecimal.ZERO).build();
 			if(null != receiptHeader.getMinimumAmount()){
 				billDetail.setMinimumAmount(BigDecimal.valueOf(receiptHeader.getMinimumAmount()));
 			}
@@ -119,8 +113,9 @@ public class ReceiptCommonModel {
 					.payeeAddress(receiptHeader.getPayeeAddress()).payeeEmail(receiptHeader.getPayeeEmail())
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
-			Receipt receipt = Receipt.builder().stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).build();
-			receipts.add(receipt);
+			Receipt receipt = Receipt.builder().id(receiptHeader.getId().toString()).stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).
+                    transactionId(receiptHeader.getTransactionId()).instrument(receiptHeader.getReceiptInstrument()).build();
+            receipts.add(receipt);
 		}
 
 		return receipts;

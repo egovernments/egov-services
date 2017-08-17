@@ -16,6 +16,7 @@ import org.egov.egf.instrument.persistence.entity.SurrenderReasonEntity;
 import org.egov.egf.instrument.persistence.queue.repository.SurrenderReasonQueueRepository;
 import org.egov.egf.instrument.persistence.repository.SurrenderReasonJdbcRepository;
 import org.egov.egf.instrument.web.requests.SurrenderReasonRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,209 +28,216 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class SurrenderReasonRepositoryTest {
 
-	@Mock
-	private SurrenderReasonJdbcRepository surrenderReasonJdbcRepository;
+    @Mock
+    private SurrenderReasonJdbcRepository surrenderReasonJdbcRepository;
 
-	private SurrenderReasonRepository surrenderReasonRepositoryWithKafka;
+    private SurrenderReasonRepository surrenderReasonRepositoryWithKafka;
 
-	private SurrenderReasonRepository surrenderReasonRepositoryWithOutKafka;
+    private SurrenderReasonRepository surrenderReasonRepositoryWithOutKafka;
 
-	@Mock
-	private SurrenderReasonQueueRepository surrenderReasonQueueRepository;
+    @Mock
+    private SurrenderReasonQueueRepository surrenderReasonQueueRepository;
 
-	@Captor
-	private ArgumentCaptor<SurrenderReasonRequest> captor;
+    @Captor
+    private ArgumentCaptor<SurrenderReasonRequest> captor;
 
-	private RequestInfo requestInfo = new RequestInfo();
+    private RequestInfo requestInfo = new RequestInfo();
 
-	@Before
-	public void setup() {
-		surrenderReasonRepositoryWithKafka = new SurrenderReasonRepository(surrenderReasonJdbcRepository,
-				surrenderReasonQueueRepository, "yes");
+    @Mock
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-		surrenderReasonRepositoryWithOutKafka = new SurrenderReasonRepository(surrenderReasonJdbcRepository,
-				surrenderReasonQueueRepository, "no");
-	}
+    @Mock
+    private SurrenderReasonESRepository surrenderReasonESRepository;
 
-	@Test
-	public void test_find_by_id() {
-		SurrenderReasonEntity entity = getSurrenderReasonEntity();
-		SurrenderReason expectedResult = entity.toDomain();
+    @Before
+    public void setup() {
+        surrenderReasonRepositoryWithKafka = new SurrenderReasonRepository(surrenderReasonJdbcRepository,
+                surrenderReasonQueueRepository, "yes", financialConfigurationContractRepository, surrenderReasonESRepository);
 
-		when(surrenderReasonJdbcRepository.findById(any(SurrenderReasonEntity.class))).thenReturn(entity);
+        surrenderReasonRepositoryWithOutKafka = new SurrenderReasonRepository(surrenderReasonJdbcRepository,
+                surrenderReasonQueueRepository, "no", financialConfigurationContractRepository, surrenderReasonESRepository);
+    }
 
-		SurrenderReason actualResult = surrenderReasonRepositoryWithKafka.findById(getSurrenderReasonDomin());
+    @Test
+    public void test_find_by_id() {
+        SurrenderReasonEntity entity = getSurrenderReasonEntity();
+        SurrenderReason expectedResult = entity.toDomain();
 
-		assertEquals(expectedResult.getName(), actualResult.getName());
-		assertEquals(expectedResult.getDescription(), actualResult.getDescription());
-		assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
-	}
+        when(surrenderReasonJdbcRepository.findById(any(SurrenderReasonEntity.class))).thenReturn(entity);
 
-	@Test
-	public void test_find_by_id_return_null() {
-		SurrenderReasonEntity entity = getSurrenderReasonEntity();
+        SurrenderReason actualResult = surrenderReasonRepositoryWithKafka.findById(getSurrenderReasonDomin());
 
-		when(surrenderReasonJdbcRepository.findById(null)).thenReturn(entity);
+        assertEquals(expectedResult.getName(), actualResult.getName());
+        assertEquals(expectedResult.getDescription(), actualResult.getDescription());
+        assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
+    }
 
-		SurrenderReason actualResult = surrenderReasonRepositoryWithKafka.findById(getSurrenderReasonDomin());
+    @Test
+    public void test_find_by_id_return_null() {
+        SurrenderReasonEntity entity = getSurrenderReasonEntity();
 
-		assertEquals(null, actualResult);
-	}
+        when(surrenderReasonJdbcRepository.findById(null)).thenReturn(entity);
 
-	@Test
-	public void test_save_with_kafka() {
+        SurrenderReason actualResult = surrenderReasonRepositoryWithKafka.findById(getSurrenderReasonDomin());
 
-		List<SurrenderReason> expectedResult = getSurrenderReasons();
+        assertEquals(null, actualResult);
+    }
 
-		surrenderReasonRepositoryWithKafka.save(expectedResult, requestInfo);
+    @Test
+    public void test_save_with_kafka() {
 
-		verify(surrenderReasonQueueRepository).addToQue(captor.capture());
+        List<SurrenderReason> expectedResult = getSurrenderReasons();
 
-		final SurrenderReasonRequest actualRequest = captor.getValue();
+        surrenderReasonRepositoryWithKafka.save(expectedResult, requestInfo);
 
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getSurrenderReasons().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
+        verify(surrenderReasonQueueRepository).addToQue(captor.capture());
 
-	}
+        final SurrenderReasonRequest actualRequest = captor.getValue();
 
-	@Test
-	public void test_save_with_out_kafka() {
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getSurrenderReasons().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
 
-		List<SurrenderReason> expectedResult = getSurrenderReasons();
+    }
 
-		SurrenderReasonEntity entity = new SurrenderReasonEntity().toEntity(expectedResult.get(0));
+    @Test
+    public void test_save_with_out_kafka() {
 
-		when(surrenderReasonJdbcRepository.create(any(SurrenderReasonEntity.class))).thenReturn(entity);
+        List<SurrenderReason> expectedResult = getSurrenderReasons();
 
-		surrenderReasonRepositoryWithOutKafka.save(expectedResult, requestInfo);
+        SurrenderReasonEntity entity = new SurrenderReasonEntity().toEntity(expectedResult.get(0));
 
-		verify(surrenderReasonQueueRepository).addToSearchQue(captor.capture());
+        when(surrenderReasonJdbcRepository.create(any(SurrenderReasonEntity.class))).thenReturn(entity);
 
-		final SurrenderReasonRequest actualRequest = captor.getValue();
+        surrenderReasonRepositoryWithOutKafka.save(expectedResult, requestInfo);
 
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getSurrenderReasons().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
-	}
+        verify(surrenderReasonQueueRepository).addToSearchQue(captor.capture());
 
-	@Test
-	public void test_update_with_kafka() {
+        final SurrenderReasonRequest actualRequest = captor.getValue();
 
-		List<SurrenderReason> expectedResult = getSurrenderReasons();
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getSurrenderReasons().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
+    }
 
-		surrenderReasonRepositoryWithKafka.update(expectedResult, requestInfo);
+    @Test
+    public void test_update_with_kafka() {
 
-		verify(surrenderReasonQueueRepository).addToQue(captor.capture());
+        List<SurrenderReason> expectedResult = getSurrenderReasons();
 
-		final SurrenderReasonRequest actualRequest = captor.getValue();
+        surrenderReasonRepositoryWithKafka.update(expectedResult, requestInfo);
 
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getSurrenderReasons().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
-	}
+        verify(surrenderReasonQueueRepository).addToQue(captor.capture());
 
-	@Test
-	public void test_update_with_out_kafka() {
+        final SurrenderReasonRequest actualRequest = captor.getValue();
 
-		List<SurrenderReason> expectedResult = getSurrenderReasons();
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getSurrenderReasons().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
+    }
 
-		SurrenderReasonEntity entity = new SurrenderReasonEntity().toEntity(expectedResult.get(0));
+    @Test
+    public void test_update_with_out_kafka() {
 
-		when(surrenderReasonJdbcRepository.update(any(SurrenderReasonEntity.class))).thenReturn(entity);
+        List<SurrenderReason> expectedResult = getSurrenderReasons();
 
-		surrenderReasonRepositoryWithOutKafka.update(expectedResult, requestInfo);
+        SurrenderReasonEntity entity = new SurrenderReasonEntity().toEntity(expectedResult.get(0));
 
-		verify(surrenderReasonQueueRepository).addToSearchQue(captor.capture());
+        when(surrenderReasonJdbcRepository.update(any(SurrenderReasonEntity.class))).thenReturn(entity);
 
-		final SurrenderReasonRequest actualRequest = captor.getValue();
+        surrenderReasonRepositoryWithOutKafka.update(expectedResult, requestInfo);
 
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getSurrenderReasons().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
-	}
+        verify(surrenderReasonQueueRepository).addToSearchQue(captor.capture());
 
-	@Test
-	public void test_save() {
+        final SurrenderReasonRequest actualRequest = captor.getValue();
 
-		SurrenderReasonEntity entity = getSurrenderReasonEntity();
-		SurrenderReason expectedResult = entity.toDomain();
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getSurrenderReasons().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
+    }
 
-		when(surrenderReasonJdbcRepository.create(any(SurrenderReasonEntity.class))).thenReturn(entity);
+    @Test
+    public void test_save() {
 
-		SurrenderReason actualResult = surrenderReasonRepositoryWithKafka.save(getSurrenderReasonDomin());
+        SurrenderReasonEntity entity = getSurrenderReasonEntity();
+        SurrenderReason expectedResult = entity.toDomain();
 
-		assertEquals(expectedResult.getName(), actualResult.getName());
-		assertEquals(expectedResult.getDescription(), actualResult.getDescription());
-		assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
+        when(surrenderReasonJdbcRepository.create(any(SurrenderReasonEntity.class))).thenReturn(entity);
 
-	}
+        SurrenderReason actualResult = surrenderReasonRepositoryWithKafka.save(getSurrenderReasonDomin());
 
-	@Test
-	public void test_update() {
+        assertEquals(expectedResult.getName(), actualResult.getName());
+        assertEquals(expectedResult.getDescription(), actualResult.getDescription());
+        assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
 
-		SurrenderReasonEntity entity = getSurrenderReasonEntity();
-		SurrenderReason expectedResult = entity.toDomain();
+    }
 
-		when(surrenderReasonJdbcRepository.update(any(SurrenderReasonEntity.class))).thenReturn(entity);
+    @Test
+    public void test_update() {
 
-		SurrenderReason actualResult = surrenderReasonRepositoryWithKafka.update(getSurrenderReasonDomin());
+        SurrenderReasonEntity entity = getSurrenderReasonEntity();
+        SurrenderReason expectedResult = entity.toDomain();
 
-		assertEquals(expectedResult.getName(), actualResult.getName());
-		assertEquals(expectedResult.getDescription(), actualResult.getDescription());
-		assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
-	}
+        when(surrenderReasonJdbcRepository.update(any(SurrenderReasonEntity.class))).thenReturn(entity);
 
-	@Test
-	public void test_search() {
+        SurrenderReason actualResult = surrenderReasonRepositoryWithKafka.update(getSurrenderReasonDomin());
 
-		Pagination<SurrenderReason> expectedResult = new Pagination<>();
-		expectedResult.setPageSize(500);
-		expectedResult.setOffset(0);
+        assertEquals(expectedResult.getName(), actualResult.getName());
+        assertEquals(expectedResult.getDescription(), actualResult.getDescription());
+        assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
+    }
 
-		when(surrenderReasonJdbcRepository.search(any(SurrenderReasonSearch.class))).thenReturn(expectedResult);
+    @Test
+    public void test_search() {
 
-		Pagination<SurrenderReason> actualResult = surrenderReasonRepositoryWithKafka
-				.search(getSurrenderReasonSearch());
+        Pagination<SurrenderReason> expectedResult = new Pagination<>();
+        expectedResult.setPageSize(500);
+        expectedResult.setOffset(0);
 
-		assertEquals(expectedResult, actualResult);
+        when(financialConfigurationContractRepository.fetchDataFrom()).thenReturn("db");
+        when(surrenderReasonJdbcRepository.search(any(SurrenderReasonSearch.class))).thenReturn(expectedResult);
 
-	}
+        Pagination<SurrenderReason> actualResult = surrenderReasonRepositoryWithKafka
+                .search(getSurrenderReasonSearch());
 
-	private SurrenderReason getSurrenderReasonDomin() {
-		SurrenderReason surrenderReasonDetail = new SurrenderReason();
-		surrenderReasonDetail.setName("name");
-		surrenderReasonDetail.setDescription("description");
-		surrenderReasonDetail.setTenantId("default");
-		return surrenderReasonDetail;
-	}
+        assertEquals(expectedResult, actualResult);
 
-	private SurrenderReasonEntity getSurrenderReasonEntity() {
-		SurrenderReasonEntity entity = new SurrenderReasonEntity();
-		entity.setName("name");
-		entity.setDescription("description");
-		entity.setTenantId("default");
-		return entity;
-	}
+    }
 
-	private SurrenderReasonSearch getSurrenderReasonSearch() {
-		SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
-		surrenderReasonSearch.setPageSize(500);
-		surrenderReasonSearch.setOffset(0);
-		return surrenderReasonSearch;
+    private SurrenderReason getSurrenderReasonDomin() {
+        SurrenderReason surrenderReasonDetail = new SurrenderReason();
+        surrenderReasonDetail.setName("name");
+        surrenderReasonDetail.setDescription("description");
+        surrenderReasonDetail.setTenantId("default");
+        return surrenderReasonDetail;
+    }
 
-	}
+    private SurrenderReasonEntity getSurrenderReasonEntity() {
+        SurrenderReasonEntity entity = new SurrenderReasonEntity();
+        entity.setName("name");
+        entity.setDescription("description");
+        entity.setTenantId("default");
+        return entity;
+    }
 
-	private List<SurrenderReason> getSurrenderReasons() {
-		List<SurrenderReason> surrenderReasons = new ArrayList<SurrenderReason>();
-		SurrenderReason surrenderReason = SurrenderReason.builder().name("name").description("description").build();
-		surrenderReason.setTenantId("default");
-		surrenderReasons.add(surrenderReason);
-		return surrenderReasons;
-	}
+    private SurrenderReasonSearch getSurrenderReasonSearch() {
+        SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
+        surrenderReasonSearch.setPageSize(500);
+        surrenderReasonSearch.setOffset(0);
+        return surrenderReasonSearch;
+
+    }
+
+    private List<SurrenderReason> getSurrenderReasons() {
+        List<SurrenderReason> surrenderReasons = new ArrayList<SurrenderReason>();
+        SurrenderReason surrenderReason = SurrenderReason.builder().name("name").description("description").build();
+        surrenderReason.setTenantId("default");
+        surrenderReasons.add(surrenderReason);
+        return surrenderReasons;
+    }
 
 }

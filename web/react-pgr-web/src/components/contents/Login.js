@@ -23,6 +23,11 @@ import IconButton from 'material-ui/IconButton';
 import $ from 'jquery';
 var axios = require('axios');
 
+const hideAutoFillColorStyle = {
+  WebkitBoxShadow: '0 0 0 1000px white inset'
+};
+const hintStyle = { zIndex: '1' };
+
 const styles = {
     errorStyle: {
       color: red500,
@@ -125,9 +130,6 @@ class Login extends Component {
        this.signUp = this.signUp.bind(this);
    }
 
-   componentWillMount() {
-
-   }
 
    componentDidMount() {
      let {initForm, setLoadingStatus, setHome} = this.props;
@@ -137,17 +139,6 @@ class Login extends Component {
      this.handleLocaleChange(this.state.locale);
    }
 
-   componentWillUnmount() {
-
-   }
-
-   componentWillUpdate() {
-
-   }
-
-   componentDidUpdate(prevProps, prevState) {
-
-   }
 
    handleLocaleChange = (value) => {
      //console.log(value);
@@ -162,12 +153,13 @@ class Login extends Component {
        setLoadingStatus("hide");
      },function(err) {
         self.props.toggleSnackbarAndSetText(true, err.message);
+        setLoadingStatus("hide");
      });
    }
 
    loginRequest (e) {
-	var current = this;
-    this.props.setLoadingStatus('loading');
+	    var current = this;
+      this.props.setLoadingStatus('loading');
 	   e.preventDefault();
       var self = this, props = this.props;
       let {setActionList}=this.props;
@@ -213,10 +205,10 @@ class Login extends Component {
                   var list = JSON.parse(res);
                   if(list.length == 0) {
                     for(var i=0; i<actions.length; i++) {
-                      if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
-                        actions.splice(i, 1);
-                        break;
-                      }
+                      // if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
+                      //   actions.splice(i, 1);
+                      //   break;
+                      // }
                     }
                   }
                   localStorage.setItem("actions", JSON.stringify(actions));
@@ -427,13 +419,16 @@ class Login extends Component {
         delete signUpObject.confirmPassword;
         signUpObject.userName = signUpObject.mobileNumber;
         //Generate OTP
+        self.props.setLoadingStatus('loading');
         Api.commonApiPost("user-otp/v1/_send", {}, {"otp": {mobileNumber: signUpObject.mobileNumber, tenantId: localStorage.getItem("tenantId") || "default"}}).then(function(response){
           self.setState({
             signUpErrorMsg: "",
             optSent: true
           })
+          self.props.setLoadingStatus('hide');
         }, function (err){
           self.props.toggleSnackbarAndSetText(true, err.message);
+          self.props.setLoadingStatus('hide');
         })
       }
    }
@@ -445,6 +440,7 @@ class Login extends Component {
           signUpErrorMsg: translate("pgr.lbl.otprqrd")
         })
       } else {
+        self.props.setLoadingStatus('loading');
         Api.commonApiPost("otp/v1/_validate", {}, {
           otp: {
             "tenantId": localStorage.getItem("tenantId") || "default",
@@ -460,6 +456,7 @@ class Login extends Component {
             Api.commonApiPost("user/citizen/_create", {}, {
               User: user
             }).then(function(response){
+              self.props.setLoadingStatus('hide');
               self.setState({
                 open3: false,
                 signUpErrorMsg: "",
@@ -467,13 +464,16 @@ class Login extends Component {
               });
               self.props.toggleDailogAndSetText(true, translate('core.account.created.successfully'));
             }, function(err) {
+              self.props.setLoadingStatus('hide');
               self.props.toggleDailogAndSetText(true, err.message);
             });
         }, function(err) {
+          self.props.setLoadingStatus('hide');
           self.props.toggleDailogAndSetText(true, err.message);
         })
       }
    }
+
    openAnonymousComplaint = () => {
      let {setRoute, setHome} = this.props;
      setRoute('/pgr/createGrievance');
@@ -493,17 +493,40 @@ class Login extends Component {
        return false;
    }
 
+   hasAllFields = () => {
+      let {signUpObject} = this.state;
+      let pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+      if(signUpObject.mobileNumber && signUpObject.name && signUpObject.password && signUpObject.confirmPassword && pattern.test(signUpObject.password) && signUpObject.password == signUpObject.confirmPassword && (!signUpObject.emailId || (signUpObject.emailId && /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(signUpObject.emailId)))){
+        return true;
+      } else {
+        return false;
+      }
+   }
+
    passwordValidation = () => {
      let pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
      if(this.state.signUpObject.password.trim().length > 0 && this.state.signUpObject.confirmPassword.trim().length > 0){
        if(pattern.test(this.state.signUpObject.password) && (this.state.signUpObject.password === this.state.signUpObject.confirmPassword)){
          return '';
        }else{
-         return 'Password should match';
+         return translate('pgr.lbl.pswdmatch');
        }
      }
    }
 
+   handleClearForm = () => {
+      this.setState({
+        signUpObject: {
+          userName: "",
+          mobileNumber: "",
+          password: "",
+          confirmPassword: "",
+          emailId: "",
+          name: ""
+        },
+        signUpErrorMsg: ""
+      })
+   }
    render() {
       //console.log("IN LOGIN");
       let {
@@ -611,45 +634,45 @@ class Login extends Component {
                       </SelectField>
                   </Col>
               </Row>
-              <Row style={styles.marginTop}>
+              <Row  style={styles.marginTop}>
                   <Col xs={12} md={6} mdPush={6} style={styles.marginBottom}>
-					<form autoComplete="off" onSubmit={(e) => {
+					<form  autoComplete="off" onSubmit={(e) => {
 					loginRequest(e)}}>
                     <Card>
                       <CardText>
                           <Row>
-                              <Col lg={12}>
+                              <Col xs={12} sm={12} md={12} lg={12}>
                               <h4>{translate('core.lbl.signin')}</h4>
-							  <Row>
-                                <Col lg={12}>
+							                <Row>
+                                <Col xs={12} sm={12} md={12} lg={12}>
                                 <TextField
                                     floatingLabelText={translate('core.lbl.addmobilenumber/login')}
                                     errorText={fieldErrors.username ? fieldErrors.username : ""}
                                     id="username"
                                     fullWidth={true}
-                                    autocomplete="off"
+                                    autoComplete="off"
                                     value={credential.username?credential.username:""}
                                     onChange={(e) => handleChange(e, "username", true, "")}
                                 />
                                 </Col>
-                                <Col lg={12}>
-                                <TextField tabindex="0"
+                                <Col xs={12} sm={12} md={12} lg={12}>
+                                <TextField tabIndex="0"
                                     floatingLabelText={translate('core.lbl.password')}
                                     type="password"
                                     fullWidth={true}
-                                    autocomplete="new-password"
+                                    autoComplete="new-password"
                                     errorText={fieldErrors.password ? fieldErrors.password : ""}
                                     id="password"
                                     value={credential.password?credential.password:""}
                                     onChange={(e) => handleChange(e, "password", true, "")}
                                 />
                                 </Col>
-                                <Col lg={12}>
+                                <Col xs={12} sm={12} md={12} lg={12}>
                                   {showError()}
                                 </Col>
-                                <Col lg={12}>
+                                <Col xs={12} sm={12} md={12} lg={12}>
                                   <RaisedButton disabled={!isFormValid} type="submit" label={translate('core.lbl.signin')} style={{width:150,marginTop: 20}}  primary={true} />
-                                  <FlatButton label={translate('core.lbl.forgot.password')} labelStyle={{fontSize:12}} style={styles.buttonTopMargin} hoverColor={{color:'#ffffff'}} onClick={showPasswordModal}/>
+                                  <FlatButton label={translate('core.lbl.forgot.password')} labelStyle={{fontSize:12}} style={styles.buttonTopMargin} hoverColor={'#ffffff'} onClick={showPasswordModal}/>
                                 </Col>
 									  </Row>
                               </Col>
@@ -672,7 +695,7 @@ class Login extends Component {
                       </Col>
 
                       <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
-                        <IconButton  style={styles.floatingIconButton}  primary={true}>
+                        <IconButton  style={styles.floatingIconButton} >
                             <i className="material-icons">mode_edit</i>
                         </IconButton>
                         <div style={{"float": "left", "cursor": "pointer"}}>
@@ -700,7 +723,7 @@ class Login extends Component {
                         </IconButton>
                         <div style={styles.floatLeft}>
                           <h4>{translate('pgr.lbl.grievancecell')}</h4>
-                          <p>{translate('Call '+ tenantInfo.length && tenantInfo[0] && tenantInfo[0].helpLineNumber +' to register your grievance')}</p>
+                          <p>{translate("ui.login.call") + " " + (tenantInfo.length && tenantInfo[0] ? (tenantInfo[0].helpLineNumber || "-") : "-") + " " + translate("ui.login.registerGrievance")}</p>
                         </div>
                       </Col>
                     </Row>
@@ -715,22 +738,22 @@ class Login extends Component {
                         <i className="material-icons">location_on</i>
                       </FontIcon>
                       <p>{tenantInfo.length && tenantInfo[0].address}</p>
-                      <a href="#">Find us on google maps</a>
+                      <a target="_blank" href={"https://www.google.com/maps/preview/@-" + (tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.latitude) + "," + (tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.longitude) + ",8z"}>Find us on google maps</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon   style={styles.iconSize}>
                         <i className="material-icons">phone</i>
                       </FontIcon>
                       <p>{tenantInfo.length && tenantInfo[0].contactNumber}</p>
-                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0] && tenantInfo[0].email} >{tenantInfo.length && tenantInfo[0] && tenantInfo[0].email}</a>
+                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId} >{tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId}</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon style={styles.iconSize}>
                         <i className="material-icons">share</i>
                       </FontIcon>
                       <p>Share us on</p>
-                      <a href="#" ><i className="fa fa-twitter" style={styles.iconSize}></i></a>
-                      <a href="#" ><i className="fa fa-facebook" style={styles.iconSize}></i></a>
+                      <a target="_blank" href={tenantInfo.length && tenantInfo[0] && tenantInfo[0].twitterUrl} ><i className="fa fa-twitter" style={styles.iconSize}></i></a>
+                      <a target="_blank" href={tenantInfo.length && tenantInfo[0] && tenantInfo[0].facebookUrl} ><i className="fa fa-facebook" style={styles.iconSize}></i></a>
                   </Col>
               </Row>
             </Grid>
@@ -791,17 +814,17 @@ class Login extends Component {
             />
             <Dialog
               title={translate('pgr.title.create.account')}
-              autoScrollBodyContent="true"
+              autoScrollBodyContent={true}
               actions={[
                 <FlatButton
                   label={translate('core.lbl.cancel')}
                   primary={false}
-                  onTouchTap={(e) => {handleClose("open3")}}
+                  onTouchTap={(e) => {handleClose("open3"); this.handleClearForm()}}
                 />,
                 <FlatButton
                   label={optSent ? translate('core.lbl.signup') : translate('pgr.lbl.generate.otp')}
                   secondary={true}
-                  disabled={signUpObject.mobileNumberMsg === undefined ? true : signUpObject.mobileNumberMsg ? true : optSent ? !this.isAllFields() : false}
+                  disabled={(signUpObject.mobileNumberMsg === undefined || !this.hasAllFields()) ? true : signUpObject.mobileNumberMsg ? true : optSent ? !this.isAllFields() : false}
                   onTouchTap={(e)=>{!optSent ? generateSignUpOTP() : signUp()}}
                 />
               ]}
@@ -810,16 +833,16 @@ class Login extends Component {
               onRequestClose={(e) => {handleClose("open3")}}
               contentStyle={{"maxWidth": "500px"}}
             >
-                <Row>
+                <Row className="formcontainer">
                   <Col xs={12} md={12}>
                     <TextField
                         floatingLabelText={translate('core.lbl.mobilenumber')}
                         fullWidth={true}
-                        autocomplete="off"
+                        autoComplete="off"
                         value={signUpObject.mobileNumber}
                         disabled={optSent}
                         errorText={signUpObject.mobileNumberMsg ? signUpObject.mobileNumberMsg : ""}
-                        onChange={(e) => handleStateChange(e, "signUpObject.mobileNumber", /^\d{10}$/g, 'Enter valid 10 digit mobile number')}
+                        onChange={(e) => handleStateChange(e, "signUpObject.mobileNumber", /^\d{10}$/g, translate('pgr.lbl.mobnum'))}
                     />
                   </Col>
                   <Col xs={12} md={12}>
@@ -827,10 +850,11 @@ class Login extends Component {
                         floatingLabelText={translate('core.lbl.password')}
                         fullWidth={true}
                         value={signUpObject.password}
-                        autocomplete="new-password"
+
+                        autoComplete="off"
                         type="password"
                         errorText={signUpObject.passwordMsg ? signUpObject.passwordMsg : ""}
-                        onChange={(e) => handleStateChange(e, "signUpObject.password", /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/, 'Should be combination of alphabet, special characters and numbers. Atleast 8 - 20 characters')}
+                        onChange={(e) => handleStateChange(e, "signUpObject.password", /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/, translate('pgr.lbl.btwncharacter'))}
                     />
                   </Col>
                   <Col xs={12} md={12}>
@@ -838,7 +862,7 @@ class Login extends Component {
                         floatingLabelText={translate('core.lbl.confirm.password')}
                         fullWidth={true}
                         value={signUpObject.confirmPassword}
-                        autocomplete="new-password"
+                        autoComplete="off"
                         type="password"
                         errorText={!signUpObject.passwordMsg ? this.passwordValidation() : '' }
                         onChange={(e) => handleStateChange(e, "signUpObject.confirmPassword")}
@@ -859,7 +883,7 @@ class Login extends Component {
                         fullWidth={true}
                         value={signUpObject.emailId}
                         errorText={signUpObject.emailId ? signUpObject.emailIdMsg ? signUpObject.emailIdMsg : "" : ''}
-                        onChange={(e) => handleStateChange(e, "signUpObject.emailId", /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}
+                        onChange={(e) => handleStateChange(e, "signUpObject.emailId", /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, translate('pgr.lbl.validemailid'))}
                     />
                   </Col>
                   <Col xs={12} md={12}>

@@ -44,7 +44,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,9 +60,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
+@WebMvcTest(CategoryTypeRepository.class)
 public class CategoryTypeRepositoryTest {
 
     @Mock
@@ -77,45 +79,45 @@ public class CategoryTypeRepositoryTest {
 
     @InjectMocks
     private CategoryTypeRepository categoryTypeRepository;
+    
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Test
-    public void test_Should_Create_ConnectionCategory_Valid() {
-        final CategoryTypeRequest categoryRequest = getConnectionCategoryRequest();
-        final CategoryType category = categoryRequest.getCategoryType();
-        Long.valueOf(category.getCode());
-        category.getCode();
-        category.getName();
-        category.getDescription();
-        category.getActive();
-        Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId());
-        Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId());
-        new Date(new java.util.Date().getTime());
-        new Date(new java.util.Date().getTime());
-        category.getTenantId();
+    public void test_Should_Create_Category_Valid() {
+        final CategoryTypeRequest categoryRequest = new CategoryTypeRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        categoryRequest.setRequestInfo(requestInfo);
+        final List<CategoryType> categoryList = new ArrayList<>();
+        final CategoryType categoryType = getCategory();
+        categoryList.add(categoryType);
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(categoryRequest.equals(categoryTypeRepository.persistCreateCategory(categoryRequest)));
     }
 
+   
     @Test
-    public void test_Should_Create_ConnectionCategory_Invalid() {
-        final CategoryTypeRequest categoryRequest = getConnectionCategoryRequest();
-        final CategoryType category = categoryRequest.getCategoryType();
-        Long.valueOf(category.getCode());
-        category.getCode();
-        category.getName();
-        category.getDescription();
-        category.getActive();
-        Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId());
-        Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId());
-        new Date(new java.util.Date().getTime());
-        new Date(new java.util.Date().getTime());
-        category.getTenantId();
+    public void test_Should_Update_Category_Valid() {
+        final CategoryTypeRequest categoryRequest = new CategoryTypeRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        categoryRequest.setRequestInfo(requestInfo);
+        final List<CategoryType> categoryList = new ArrayList<>();
+        final CategoryType categoryType = getCategory();
+        categoryList.add(categoryType);
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(!category.equals(categoryTypeRepository.persistCreateCategory(categoryRequest)));
+        assertTrue(categoryRequest.equals(categoryTypeRepository.persistModifyCategory(categoryRequest)));
     }
 
+   
+
     @Test
-    public void test_Should_Find_ConnectionCategory_Valid() {
+    public void test_Should_Find_CategoryType_Valid() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final CategoryTypeGetRequest categoryGetRequest = Mockito.mock(CategoryTypeGetRequest.class);
         final String queryString = "MyQuery";
@@ -128,19 +130,12 @@ public class CategoryTypeRepositoryTest {
                 connectionCategories.equals(categoryTypeRepository.findForCriteria(categoryGetRequest)));
     }
 
-    private CategoryTypeRequest getConnectionCategoryRequest() {
-        final CategoryTypeRequest categoryRequest = new CategoryTypeRequest();
+    private CategoryType getCategory() {
         final CategoryType category = new CategoryType();
         category.setCode("23");
         category.setName("New Category");
         category.setDescription("New Category of Connection");
         category.setActive(true);
-        final RequestInfo requestInfo = new RequestInfo();
-        final User newUser = new User();
-        newUser.setId(2L);
-        requestInfo.setUserInfo(newUser);
-        categoryRequest.setRequestInfo(requestInfo);
-        categoryRequest.setCategoryType(category);
-        return categoryRequest;
+        return category;
     }
 }

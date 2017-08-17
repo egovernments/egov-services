@@ -1,12 +1,17 @@
 package org.egov.demand.web.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.GenerateBillCriteria;
-import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.service.BillService;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -75,7 +80,7 @@ public class BillController {
 	@PostMapping("_generate")
 	@ResponseBody
 	public ResponseEntity<?> genrateBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute GenerateBillCriteria generateBillCriteria, BindingResult bindingResult){
+			@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria, BindingResult bindingResult){
 		log.debug("genrateBill generateBillCriteria : "+generateBillCriteria);
 		log.debug("genrateBill requestInfoWrapper : "+requestInfoWrapper);
 		
@@ -86,8 +91,26 @@ public class BillController {
 		//billValidator.validateBillRequest(billRequest);
 		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
 		
-		return new ResponseEntity<>(billResponse,HttpStatus.CREATED);
+		if (billResponse.getBill() != null) {
+			return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
+		} else {
+			Error error = new Error();
+			error.setCode(400);
+			error.setMessage("The due to be paid is zero");
+			error.setDescription(
+					"bill Cannot be generated because the amount to be collected on the respective bill is zero");
+			List<ErrorField> errorFields = new ArrayList<>();
+			error.setFields(errorFields);
+
+			ErrorField errorField = new ErrorField(HttpStatus.BAD_REQUEST.toString(), error.getMessage(), "");
+			error.getFields().add(errorField);
+			errorFields.add(errorField);
+			ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfoWrapper.getRequestInfo(),
+					HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ErrorResponse(responseInfo, error), HttpStatus.BAD_REQUEST);
+		}
 	}
+
 	
 	@PostMapping("_apportion")
 	@ResponseBody

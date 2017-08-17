@@ -457,6 +457,18 @@ paths:
           required: true
           type: string
           format: date
+        - name: fromDate
+          in: query
+          description: If fromDate is given then toDate also mandatory. All the periods from where fromDate is fall in the period to till periods where toDate is fall in the period.
+          required: true
+          type: string
+          format: date
+        - name: toDate
+          in: query
+          description: If fromDate is given then toDate also mandatory. All the periods from where fromDate is fall in the period to till periods where toDate is fall in the period.
+          required: true
+          type: string
+          format: date
         - name: code
           in: query
           description: code for the tax period

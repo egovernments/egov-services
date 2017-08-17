@@ -132,7 +132,7 @@ public class RoleActionRepository {
 			SqlRowSet sqlrowset = namedParameterJdbcTemplate.queryForRowSet(CHECK_UNIQUE_VALIDATION_FOR_ROLEACTIONS,
 					parametersMap);
 
-			if (sqlrowset.next()) {
+			if (sqlrowset != null && sqlrowset.next()) {
 
 				String rolecode = sqlrowset.getString("rolecode");
 

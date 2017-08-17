@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReissueCertAppl {
 	
-	
 	private String id;
 
 	private String regnNo;

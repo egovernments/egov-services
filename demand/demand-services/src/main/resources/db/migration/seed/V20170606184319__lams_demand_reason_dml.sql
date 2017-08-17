@@ -4,4 +4,4 @@ Insert into EG_DEMAND_REASON (ID,ID_DEMAND_REASON_MASTER,ID_INSTALLMENT,PERCENTA
 
 Insert into EG_DEMAND_REASON (ID,ID_DEMAND_REASON_MASTER,ID_INSTALLMENT,PERCENTAGE_BASIS,ID_BASE_REASON,create_date,modified_date,GLCODE, tenantid) select nextval('seq_eg_demand_reason'), (select id from eg_demand_reason_master where reasonmaster='Goodwill Amount' and module='Leases And Agreements' and tenantid='default'), inst.id, null, null, current_timestamp, current_timestamp, '43110', 'default' from eg_installment_master inst where inst.module='Leases And Agreements' and inst.tenantid='default' and start_date>='2018-04-01';
 
-select microservice.migratedemandreason();
+

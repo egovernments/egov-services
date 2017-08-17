@@ -91,19 +91,21 @@ public class SupplyTypeServiceTest {
     @Test
     public void test_throwException_Push_To_Producer_SupplyType() {
 
-        final SupplyType supplyType = getSupplyType();
+        final List<SupplyType> supplyTypeList = new ArrayList<>();
+        supplyTypeList.add(getSupplyType());
         final SupplyTypeRequest supplyTypeRequest = new SupplyTypeRequest();
-        supplyTypeRequest.setSupplyType(supplyType);
-        assertTrue(supplyType.equals(supplyTypeService.createSupplyType("topic", "key",
+        supplyTypeRequest.setSupplyType(supplyTypeList);
+        assertTrue(supplyTypeList.equals(supplyTypeService.createSupplyType("topic", "key",
                 supplyTypeRequest)));
     }
 
     @Test
     public void test_throwException_Create_WaterSource() {
 
-        final SupplyType supplyType = getSupplyType();
+        final List<SupplyType> supplyTypeList =  new ArrayList<>();
+        supplyTypeList.add(getSupplyType());
         final SupplyTypeRequest supplyTypeRequest = new SupplyTypeRequest();
-        supplyTypeRequest.setSupplyType(supplyType);
+        supplyTypeRequest.setSupplyType(supplyTypeList);
         when(supplyTypeService.createSupplyType(any(SupplyTypeRequest.class)))
                 .thenReturn(supplyTypeRequest);
         assertTrue(supplyTypeRequest.equals(supplyTypeService.createSupplyType(supplyTypeRequest)));

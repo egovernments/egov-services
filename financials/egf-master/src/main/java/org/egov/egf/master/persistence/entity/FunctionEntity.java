@@ -18,12 +18,12 @@ import lombok.Setter;
 @Builder
 public class FunctionEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_function";
+	public static final String SEQUENCE_NAME = "seq_egf_function";
 	private String id;
 	private String name;
 	private String code;
 	private Integer level;
 	private Boolean active;
-	private Boolean isParent;
 	private String parentId;
 
 	public Function toDomain() {
@@ -34,7 +34,6 @@ public class FunctionEntity extends AuditableEntity {
 		function.setCode(this.code);
 		function.setLevel(this.level);
 		function.setActive(this.active);
-		function.setIsParent(this.isParent);
 		function.setParentId(Function.builder().id(parentId).build());
 		return function;
 	}
@@ -46,7 +45,6 @@ public class FunctionEntity extends AuditableEntity {
 		this.code = function.getCode();
 		this.level = function.getLevel();
 		this.active = function.getActive();
-		this.isParent = function.getIsParent();
 		this.parentId = function.getParentId() != null ? function.getParentId().getId() : null;
 		return this;
 	}

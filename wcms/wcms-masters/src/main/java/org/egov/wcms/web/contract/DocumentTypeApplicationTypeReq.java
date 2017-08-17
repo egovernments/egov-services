@@ -40,6 +40,9 @@
 
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -67,6 +70,6 @@ public class DocumentTypeApplicationTypeReq {
     private RequestInfo requestInfo;
     
     @JsonProperty("DocumentTypeApplicationType")
-    private DocumentTypeApplicationType documentTypeApplicationType;
+    private List<DocumentTypeApplicationType> documentTypeApplicationType=new ArrayList<>();
 
 }

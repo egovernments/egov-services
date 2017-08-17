@@ -20,9 +20,6 @@ public class BusinessDetailsRowMapper implements RowMapper<BusinessDetails> {
 	@Override
 	public BusinessDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		BusinessCategory businessCategory = new BusinessCategory();
-		businessCategory.setId(rs.getLong("id"));
-
 		BusinessDetails businessDetails = new BusinessDetails();
 		businessDetails.setId(rs.getLong("id"));
 		businessDetails.setBusinessType(rs.getString("businessType"));
@@ -43,12 +40,12 @@ public class BusinessDetailsRowMapper implements RowMapper<BusinessDetails> {
 		try {
 			Date date = isEmpty(rs.getDate("voucherCutOffDate")) ? null
 					: sdf.parse(sdf.format(rs.getDate("voucherCutOffDate")));
-			businessDetails.setVoucherCutoffDate(date);
+			businessDetails.setVoucherCutoffDate(date.getTime());
 			date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
-			businessDetails.setCreatedDate(date);
+			businessDetails.setCreatedDate(date.getTime());
 			date = isEmpty(rs.getDate("lastModifiedDate")) ? null
 					: sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
-			businessDetails.setLastModifiedDate(date);
+			businessDetails.setLastModifiedDate(date.getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");
@@ -57,7 +54,7 @@ public class BusinessDetailsRowMapper implements RowMapper<BusinessDetails> {
 		businessDetails.setCreatedBy(rs.getLong("createdBy"));
 		businessDetails.setLastModifiedBy(rs.getLong("lastModifiedBy"));
 
-		businessDetails.setBusinessCategory(businessCategory);
+		businessDetails.setBusinessCategory(rs.getLong("id"));
 		return businessDetails;
 	}
 }

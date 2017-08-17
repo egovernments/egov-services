@@ -1,7 +1,9 @@
 package org.egov.id;
 
+import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 
 /**
  * Description : This is initialization class for pt-idGeneration module
@@ -10,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
-//@Import({TracerConfiguration.class})
+@Import({TracerConfiguration.class})
 public class PtIdGenerationApplication {
 
 	public static void main(String[] args) {

@@ -45,7 +45,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
-  /_search:
+  /connection/_search:
     post:
       summary: Retrieve water connection
       description: Searchs water connection details based upon acknowledgment number, HSC consumer number or legacy consumer number. In case multiple parameterts are passed user will be searched as an AND combination of all the parameters.
@@ -56,6 +56,7 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/legacyConsumerNumber"
         - $ref: "#/parameters/acknowledgmentNumber"
+        - $ref: "#/parameters/stateId"
         - $ref: "#/parameters/consumerNumber"
         - $ref: "#/parameters/assigneeId"
         - $ref: "#/parameters/name"
@@ -342,7 +343,7 @@ definitions:
         type: string
         description: Zone or Word of the Applicant.
         
-  Asset:
+  ConnectionOwner:
     type: object
     properties:
       address: 
@@ -480,7 +481,11 @@ definitions:
       meterCost:
         type: integer
         format : int64
-        description: company name of the meter.  
+        description: company name of the meter.
+      meterSlNo:
+        type: integer
+        format: int64
+        description: Meter SerialNumber.
       initialMeterReading: 
         type: string
         description: intial reading of the meter.
@@ -508,10 +513,9 @@ definitions:
         type: integer
         format: int64
         description: unique identifier of Meter object
-      meterSlNo:
-        type: integer
-        format: int64
-        description: Meter SerialNumber.
+      readingDate:
+       type : integer
+       description: readingDate of Every Month
       reading:
         type: integer
         format: long
@@ -524,6 +528,101 @@ definitions:
         description: Unique Identifier of the tenant
     required:
       - reading
+      
+  Address:
+    type: object
+    description: Captures address of a connection
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the address.
+      latitude: 
+        type: integer
+        description: latitude.
+        readOnly: true
+      longitude:
+        type: string
+        description: longitude
+      addressId:
+        type: string
+        description: Applicant addressId
+      addressNumber:
+        type: string
+        description: Applicant addressNumber
+      addressLine1:
+        type: string
+        description: Applicany addressLine1.
+      addressLine2:
+        type: string
+        description: Applicany addressLine2.
+      roadName :
+        type: string
+        description: Name of Road.
+      city :
+        type: string
+        description: City.
+      landMark :
+        type: string
+        description: landMark.
+      pinCode :
+        type: string
+        description: pinCode.
+      area :
+        type: string
+        description: Area.
+      detail :
+        type: string
+        description: Details of the Applicant.
+      route :
+        type: string
+        description: Route.
+      street :
+        type: string
+        description: Street.
+      locality:
+        type: string
+        description: Applicant Locality.
+      zone/word/block:
+        type: string
+        description: Zone or Word of the Applicant.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+        
+  ConnectionLocation:
+    type: object
+    description: Captures Location of a connection
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the address.
+      revenueBoundary: 
+        $ref: '#/definitions/Boundary'
+      locationBoundary:
+        $ref: '#/definitions/Boundary'
+      adminBoundary:
+        $ref: '#/definitions/Boundary'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+        
+  Boundary:
+    type: object
+    description: This object the boundary info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the Boundary.
+      name:
+        type: string
+        description: Name of the boundary.
+   
+      
 
   Connection:
     type: object
@@ -577,6 +676,13 @@ definitions:
           - ACTIVE
           - INACTIVE
           - INPROGRESS
+      manualReceiptDate:
+        type: integer
+        format: long
+        description: receipt date of special donation charges for legacy connection.
+      manualReceiptNumber:
+        type: string
+        description: receipt number of specia donation charges for legacy connection.
       sumpCapacity: 
         type: number
         description: Capacity of the sump.
@@ -600,8 +706,7 @@ definitions:
         type: integer
         description: holds identifier of previous connection if current connection request is for additional water connection.
       legacyConsumerNumber:
-        type: integer
-        format: int64
+        type: string
         description: legacy connection consumer number for existing consumer.
       acknowledgmentNumber:
         type: string
@@ -609,6 +714,22 @@ definitions:
       estimationNumber:
         type: string
         description: estimation Number generated.
+      executionDate:
+        type: integer
+        description: executiondate of connection
+      noOfFlats:
+        type: integer
+        description: If user select PropertyType as Residential/Non-Residential required No of flats.
+      numberOfFamily:
+        type: integer
+        description: readonly field and autocalculate noofpersons/4+1 .
+      subUsageType:
+        type: string 
+        description: This field holds pre-defined value of supported  sub usageType.check
+         master API to look at supported values your ULB.
+      stateId:
+        type: integer
+        description: Work flow ref id.
       workOrderNumber:
         type: string
         description: workOrderNumber generated once Officer submits Generate WOrkorder .
@@ -625,8 +746,12 @@ definitions:
           $ref: "#/definitions/Timeline"
       property:
         $ref: '#/definitions/Property'
-      asset:
-        $ref: '#/definitions/Asset'
+      address:
+        $ref: '#/definitions/Address'
+      connectionOwner:
+        $ref: '#/definitions/ConnectionOwner'
+      connectionLocation:
+        $ref: '#/definitions/ConnectionLocation'
       estimationCharge: 
         type: array
         items:
@@ -838,6 +963,13 @@ parameters:
     description: door number
     required: false
     type: string
+    
+  stateId:
+    name: stateId
+    in: query
+    description:  Work flow ref id.
+    required: false
+    type: integer
   
   pageSize:
     name: pageSize
@@ -872,4 +1004,3 @@ parameters:
       pattern: '[-+](name|mobileNumber|locality|consumerNumber)'
     default:
       - +name
-

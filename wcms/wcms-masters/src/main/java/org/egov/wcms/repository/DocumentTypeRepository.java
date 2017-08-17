@@ -39,8 +39,8 @@
  */
 package org.egov.wcms.repository;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +52,8 @@ import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -69,29 +71,42 @@ public class DocumentTypeRepository {
     @Autowired
     private DocumentTypeRowMapper documentTypeRowMapper;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public DocumentTypeReq persistCreateDocumentType(final DocumentTypeReq documentTypeReq) {
         log.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeInsert = DocumentTypeQueryBuilder.insertDocumentTypeQuery();
-        final DocumentType documentType = documentTypeReq.getDocumentType();
-        final Object[] obj = new Object[] { documentType.getCode(), documentType.getName(),
-                documentType.getDescription(), documentType.getActive(),
-                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                documentType.getTenantId() };
-
-        jdbcTemplate.update(documentTypeInsert, obj);
+        final List<DocumentType> documentTypeList = documentTypeReq.getDocumentType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(documentTypeList.size());
+        for (final DocumentType documentType : documentTypeList)
+            batchValues.add(
+                    new MapSqlParameterSource("id", Long.valueOf(documentType.getCode())).addValue("code", documentType.getCode())
+                            .addValue("name", documentType.getName()).addValue("description", documentType.getDescription())
+                            .addValue("active", documentType.getActive())
+                            .addValue("createdby", Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifiedby", Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()))
+                            .addValue("createddate", new Date(new java.util.Date().getTime()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("tenantid", documentType.getTenantId())
+                            .getValues());
+        namedParameterJdbcTemplate.batchUpdate(documentTypeInsert, batchValues.toArray(new Map[documentTypeList.size()]));
         return documentTypeReq;
     }
 
     public DocumentTypeReq persistModifyDocumentType(final DocumentTypeReq documentTypeReq) {
         log.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeUpdate = DocumentTypeQueryBuilder.updateDocumentTypeQuery();
-        final DocumentType documentType = documentTypeReq.getDocumentType();
-        final Object[] obj = new Object[] { documentType.getName(), documentType.getDescription(),
-                documentType.getActive(), Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), documentType.getCode() };
-        jdbcTemplate.update(documentTypeUpdate, obj);
+        final List<DocumentType> documentTypeList = documentTypeReq.getDocumentType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(documentTypeList.size());
+        for (final DocumentType documentType : documentTypeList)
+            batchValues.add(new MapSqlParameterSource("name", documentType.getName())
+                    .addValue("description", documentType.getDescription())
+                    .addValue("active", documentType.getActive())
+                    .addValue("lastmodifiedby", Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime())).addValue("code", documentType.getCode())
+                    .getValues());
+        namedParameterJdbcTemplate.batchUpdate(documentTypeUpdate, batchValues.toArray(new Map[documentTypeList.size()]));
         return documentTypeReq;
 
     }

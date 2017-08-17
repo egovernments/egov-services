@@ -21,9 +21,4 @@ public class DocumentBuilder {
 
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_document where id= ?";
-
-	public static final String INSERT_DOCUMENTHISTORY_QUERY = "INSERT INTO egpt_document_history ("
-			+ "fileStore, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
-			+ "propertydetails, id, documenttype) VALUES(?,?,?,?,?,?,?,?)";
-
 }

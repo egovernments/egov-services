@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -33,8 +32,6 @@ public class FundJdbcRepository extends JdbcRepository {
 	}
 
 	public FundEntity create(FundEntity entity) {
-
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}
@@ -69,6 +66,13 @@ public class FundJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+	        if (fundSearchEntity.getTenantId() != null) {
+	              if (params.length() > 0) {
+	                  params.append(" and ");
+	              }
+	              params.append("tenantId =:tenantId");
+	              paramValues.put("tenantId", fundSearchEntity.getTenantId());
+	        }
 		if (fundSearchEntity.getId() != null) {
                     if (params.length() > 0) {
                             params.append(" and ");

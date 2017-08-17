@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
@@ -42,8 +43,8 @@ public class BusinessCategoryServiceTest {
 
 	@Test
 	public void test_should_create_businessCategory() {
-		businessCategoryService.create(getBusinessCategoryModel());
-		verify(businessCategoryRepository).create(getBusinessCategoryModel());
+		businessCategoryService.create(getListOfModelBusinessCategories());
+		verify(businessCategoryRepository).create(getListOfModelBusinessCategories());
 	}
 
 	@Test
@@ -55,8 +56,8 @@ public class BusinessCategoryServiceTest {
 
 	@Test
 	public void test_should_update_businessCategory() {
-		businessCategoryService.update(getBusinessCategoryModelForUpdate());
-		verify(businessCategoryRepository).update(getBusinessCategoryModelForUpdate());
+		businessCategoryService.update(getListOfModelBusinessCategories());
+		verify(businessCategoryRepository).update(getListOfModelBusinessCategories());
 	}
 
 	@Test
@@ -149,12 +150,19 @@ public class BusinessCategoryServiceTest {
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
 				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		org.egov.commons.web.contract.BusinessCategory category = org.egov.commons.web.contract.BusinessCategory
-				.builder().id(1L).code("TLM").name("Trade Licence").active(true).tenantId("default").build();
-		return BusinessCategoryRequest.builder().requestInfo(requestInfo).businessCategoryInfo(category).build();
+        return BusinessCategoryRequest.builder().requestInfo(requestInfo).businessCategory(getBusinessCategory()).build();
 	}
 
-	private BusinessCategory getBusinessCategoryModelForUpdate() {
+    private List<org.egov.commons.web.contract.BusinessCategory> getBusinessCategory() {
+        List<org.egov.commons.web.contract.BusinessCategory> categories = new ArrayList<org.egov.commons.web.contract.BusinessCategory>();
+        org.egov.commons.web.contract.BusinessCategory businessCategory1 = org.egov.commons.web.contract.BusinessCategory
+                    .builder().id(1L).code("TLM").name("Trade Licence").active(true).tenantId("default").build();
+        org.egov.commons.web.contract.BusinessCategory businessCategory2 = org.egov.commons.web.contract.BusinessCategory
+                .builder().id(2L).code("PT").name("Property Tax").active(true).tenantId("default").build();
+        return Arrays.asList(businessCategory1,businessCategory2);
+    }
+
+    private BusinessCategory getBusinessCategoryModelForUpdate() {
 		BusinessCategory category = BusinessCategory.builder().id(1L).code("TLM").name("Trade Licence").isactive(true)
 				.tenantId("default").build();
 		return category;
@@ -164,9 +172,7 @@ public class BusinessCategoryServiceTest {
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
 				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		org.egov.commons.web.contract.BusinessCategory category = org.egov.commons.web.contract.BusinessCategory
-				.builder().id(1L).code("TL").name("Trade Licence").active(true).tenantId("default").build();
-		return BusinessCategoryRequest.builder().requestInfo(requestInfo).businessCategoryInfo(category).build();
+		return BusinessCategoryRequest.builder().requestInfo(requestInfo).businessCategory(getBusinessCategory()).build();
 	}
 
 	private List<BusinessCategory> getListOfModelBusinessCategories() {

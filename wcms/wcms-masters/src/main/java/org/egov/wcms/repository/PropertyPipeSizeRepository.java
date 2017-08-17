@@ -56,6 +56,8 @@ import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -76,30 +78,42 @@ public class PropertyPipeSizeRepository {
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public PropertyTypePipeSizeRequest persistCreatePropertyPipeSize(
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         log.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
         final String propertyPipeSizeInsert = PropertyPipeSizeQueryBuilder.insertPropertyPipeSizeQuery();
-        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyTypePipeSize();
-        final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
-        Long pipesizeId = 0L;
-        try {
-            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery,
-                    new Object[] { propertyPipeSize.getPipeSize(), propertyPipeSize.getTenantId() },
-                    Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            log.info("EmptyResultDataAccessException: Query returned empty result set");
-        }
-        if (pipesizeId == null)
-            log.info("Invalid input.");
+        final List<PropertyTypePipeSize> propertyPipeSizeList = propertyPipeSizeRequest.getPropertyTypePipeSize();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(propertyPipeSizeList.size());
+        for (final PropertyTypePipeSize propertyPipeSize : propertyPipeSizeList) {
+            final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+            Long pipesizeId = 0L;
+            try {
+                pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                        new Object[] { propertyPipeSize.getPipeSize(), propertyPipeSize.getTenantId() },
+                        Long.class);
+            } catch (final EmptyResultDataAccessException e) {
+                log.info("EmptyResultDataAccessException: Query returned empty result set");
+            }
+            if (pipesizeId == null)
+                log.info("Invalid input.");
 
-        final Object[] obj = new Object[] { pipesizeId, propertyPipeSizeRequest.getPropertyTypePipeSize().getPropertyTypeId(),
-                propertyPipeSize.getActive(),
-                Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                propertyPipeSize.getTenantId() };
-        jdbcTemplate.update(propertyPipeSizeInsert, obj);
+            batchValues.add(
+                    new MapSqlParameterSource("id", Long.valueOf(propertyPipeSize.getCode()))
+                            .addValue("code", propertyPipeSize.getCode())
+                            .addValue("pipesizeid", pipesizeId).addValue("propertytypeid", propertyPipeSize.getPropertyTypeId())
+                            .addValue("active", propertyPipeSize.getActive())
+                            .addValue("createdby", Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifiedby",
+                                    Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("createddate", new Date(new java.util.Date().getTime()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("tenantid", propertyPipeSize.getTenantId())
+                            .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(propertyPipeSizeInsert, batchValues.toArray(new Map[propertyPipeSizeList.size()]));
         return propertyPipeSizeRequest;
     }
 
@@ -107,24 +121,32 @@ public class PropertyPipeSizeRepository {
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         log.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
         final String propertyPipeSizeUpdate = PropertyPipeSizeQueryBuilder.updatePropertyPipeSizeQuery();
-        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyTypePipeSize();
-        final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
-        Long pipesizeId = 0L;
-        try {
-            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery,
-                    new Object[] { propertyPipeSize.getPipeSize(), propertyPipeSize.getTenantId() },
-                    Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            log.info("EmptyResultDataAccessException: Query returned empty result set while update");
-        }
-        if (pipesizeId == null)
-            log.info("Invalid input.");
+        final List<PropertyTypePipeSize> propertyPipeSizeList = propertyPipeSizeRequest.getPropertyTypePipeSize();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(propertyPipeSizeList.size());
+        for (final PropertyTypePipeSize propertyPipeSize : propertyPipeSizeList) {
+            final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+            Long pipesizeId = 0L;
+            try {
+                pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                        new Object[] { propertyPipeSize.getPipeSize(), propertyPipeSize.getTenantId() },
+                        Long.class);
+            } catch (final EmptyResultDataAccessException e) {
+                log.info("EmptyResultDataAccessException: Query returned empty result set while update");
+            }
+            if (pipesizeId == null)
+                log.info("Invalid input.");
 
-        final Object[] obj = new Object[] { pipesizeId, propertyPipeSize.getPropertyTypeId(),
-                propertyPipeSize.getActive(),
-                Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), propertyPipeSize.getId() };
-        jdbcTemplate.update(propertyPipeSizeUpdate, obj);
+            batchValues.add(
+                    new MapSqlParameterSource("pipesizeid", pipesizeId)
+                            .addValue("propertytypeid", propertyPipeSize.getPropertyTypeId())
+                            .addValue("active", propertyPipeSize.getActive())
+                            .addValue("lastmodifiedby",
+                                    Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("code", propertyPipeSize.getCode())
+                            .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(propertyPipeSizeUpdate, batchValues.toArray(new Map[propertyPipeSizeList.size()]));
         return propertyPipeSizeRequest;
     }
 
@@ -147,7 +169,7 @@ public class PropertyPipeSizeRepository {
         return propertyPipeSizes;
     }
 
-    public boolean checkPropertyByPipeSize(final Long id, final String propertyTypeId, final Double pipeSize,
+    public boolean checkPropertyByPipeSize(final String code, final String propertyTypeId, final Double pipeSize,
             final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
@@ -165,10 +187,10 @@ public class PropertyPipeSizeRepository {
         preparedStatementValues.add(pipesizeId);
         preparedStatementValues.add(tenantId);
         final String query;
-        if (id == null)
+        if (code == null)
             query = PropertyPipeSizeQueryBuilder.selectPropertyByPipeSizeQuery();
         else {
-            preparedStatementValues.add(id);
+            preparedStatementValues.add(code);
             query = PropertyPipeSizeQueryBuilder.selectPropertyByPipeSizeNotInQuery();
         }
         final List<Map<String, Object>> propertyPipeSizes = jdbcTemplate.queryForList(query,

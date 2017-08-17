@@ -92,11 +92,14 @@ public class PropertiesManager {
     @Value("${egov.services.hr_masters_service.hostname}")
     private String hrMastersServiceHostName;
 
-    @Value("${egov.services.hr_masters_service.positions.basepath}")
-    private String hrMastersServicePositionsBasePath;
+    @Value("${egov.services.hr_masters_service.basepath}")
+    private String hrMastersServiceBasePath;
 
     @Value("${egov.services.hr_masters_service.positions.searchpath}")
     private String hrMastersServicePositionsSearchPath;
+
+    @Value("${egov.services.hr_masters_service.hr_configurations.searchpath}")
+    private String hrMastersServiceHRConfigurationsSearchPath;
 
     @Value("${kafka.topics.assignment.update.name}")
     private String updateAssignmentTopic;

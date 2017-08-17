@@ -53,6 +53,7 @@ public class CollectionServiceConstants {
 	public static final String INVALID_BD = "Fund, FundSource, Function, Department or glcode may be invalid.";
 	public static final String RECEIPT_FAIL = "Receipt persistence failed due to internal error";
 	public static final String RECEIPT_FAIL_DESC = "Receipt persistence failed due to an error while persistence or due to error in other dependent services";
+	public static final String BUSINESS_KEY="ReceiptHeader";
 
 
 
@@ -98,9 +99,12 @@ public class CollectionServiceConstants {
 	public static final String COLL_MODES_NOT_ALLWD_MISSING_MESSAGE = "Collection Modes Not Allowed is mising";
 
 	public static final String COLL_ID_NAME = "collection.receiptno";
-	public static final String COLL_ID_FORMAT = "[cy:MM]/[fy:yyyy-yy]/[SEQ_COLL_RCPT_NUM]"; 
+	public static final String COLL_ID_FORMAT = "[cy:MM]/[fy:yyyy-yy]/[SEQ_COLL_RCPT_NUM]";
 
-	public static final String STATUS_MISSING_CODE = "egcl_011";
+    public static final String COLL_TRANSACTION_ID_NAME = "collection.transactionno";
+    public static final String COLL_TRANSACTION_FORMAT = "[CITY.CODE][d{10}]";
+
+    public static final String STATUS_MISSING_CODE = "egcl_011";
 	public static final String STATUS_MISSING_MESSAGE = "status";
 	public static final String STATUS_MISSING_FIELD = "Status is missing";
 
@@ -111,5 +115,29 @@ public class CollectionServiceConstants {
     public static final String AMT_PAID_NOT_NULL_CODE = "egcl_013";
     public static final String AMT_PAID_NOT_NULL_FIELD = "amountPaid";
     public static final String AMT_PAID_NOT_NULL_MESSAGE = "Amount paid cannot be null";
+    
+    public static final String INSTRUMENT_EXCEPTION_MSG="Instrument couldn't be fetched";
+    public static final String INSTRUMENT_EXCEPTION_DESC="ISE while trying to fetch instrument id, creation of instrument failed!";
+    
+    public static final String RCPTNO_EXCEPTION_MSG="Receipt Number couldn't be generated";
+    public static final String RCPTNO_EXCEPTION_DESC="ISE while trying to generate receipt no, id gen service failed to return receipt no";
+
+    public static final String BUSINESSDETAILS_EXCEPTION_MSG="Businessdetails couldn't be fetched";
+    public static final String BUSINESSDETAILS_EXCEPTION_DESC="ISE while trying to fetch buisness details, common masters failed to return fund, function, department and fundsource";
+
+    public static final String KAFKA_PUSH_EXCEPTION_MSG="Data couldn't be pushed on the kafka queue";
+    public static final String KAFKA_PUSH_EXCEPTION_DESC="ISE while pushing to the queue, check if the kafka server is running";
+    
+    public static final String POSITION_EXCEPTION_MSG="Positions couldn't be fetched";
+    public static final String POSITION_EXCEPTION_DESC="ISE while fetching positions for asignee and initator, hr-employees failed to return values";
+    
+    public static final String ACCOUNT_CODE_EXCEPTION_MSG="glcode couldn't be fetched";
+    public static final String ACCOUNT_CODE_EXCEPTION_DESC="ISE while fetching glcode for instrument type, instrument service failed to return values";
+
+    public  static final String INSTRUMENT_TYPE_CASH = "Cash";
+    
+    public static final String INVALID_DATE_EXCEPTION_MSG="From Date is greater than To Date";
+
+    
 
 }

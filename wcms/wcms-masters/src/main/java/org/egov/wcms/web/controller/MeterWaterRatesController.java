@@ -100,7 +100,7 @@ public class MeterWaterRatesController {
         }
         log.info("Meter Water Rates Request::" + meterWaterRatesRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterWaterRatesRequest(meterWaterRatesRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterWaterRatesRequest(meterWaterRatesRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -120,7 +120,7 @@ public class MeterWaterRatesController {
         }
         log.info("MeterWaterRatesRequest::" + meterWaterRatesRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterWaterRatesRequest(meterWaterRatesRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterWaterRatesRequest(meterWaterRatesRequest,true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -130,7 +130,7 @@ public class MeterWaterRatesController {
         return getSuccessResponse(meterWaterRates, null, meterWaterRatesRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(
             @ModelAttribute @Valid final MeterWaterRatesGetRequest meterWaterRatesGetRequest,

@@ -22,7 +22,7 @@ public class ServiceRequestRepository {
     @Autowired
     public ServiceRequestRepository(ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository,
                                     SubmissionRepository submissionRepository, ServiceRequestESRepository
-                                            serviceRequestESRepository) {
+                                        serviceRequestESRepository) {
         this.serviceRequestMessageQueueRepository = serviceRequestMessageQueueRepository;
         this.submissionRepository = submissionRepository;
         this.serviceRequestESRepository = serviceRequestESRepository;
@@ -38,7 +38,7 @@ public class ServiceRequestRepository {
 
     public List<ServiceRequest> find(ServiceRequestSearchCriteria searchCriteria) {
         final List<String> serviceRequestIds = serviceRequestESRepository.getMatchingServiceRequestIds(searchCriteria);
-        if(CollectionUtils.isEmpty(serviceRequestIds)) {
+        if (CollectionUtils.isEmpty(serviceRequestIds)) {
             return Collections.emptyList();
         }
         return submissionRepository.findBy(serviceRequestIds, searchCriteria.getTenantId());
@@ -54,4 +54,7 @@ public class ServiceRequestRepository {
         this.serviceRequestMessageQueueRepository.save(sevaRequest);
     }
 
+    public List<ServiceRequest> findFromDb(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        return submissionRepository.find(serviceRequestSearchCriteria);
+    }
 }

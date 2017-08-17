@@ -110,6 +110,14 @@ public class RestWaterExternalMasterService {
         return usageType;
     }
 
+    public UsageTypeResponse getUsageIdFromPTModuleByCode(final String usageTypeCode, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByNamePathTopic();
+        url = url.replace("{code}", usageTypeCode);
+        url = url.replace("{tenantId}", tenantId);
+        final UsageTypeResponse usageType = getUsageTypes(url);
+        return usageType;
+    }
     public UsageTypeResponse getUsageNameFromPTModule(final Integer[] usageTypeId, final String tenantId) {
         String url = propertiesManager.getPropertTaxServiceBasePathTopic()
                 + propertiesManager.getPropertyTaxServiceUsageTypeSearchByIdPathTopic();
@@ -139,6 +147,18 @@ public class RestWaterExternalMasterService {
         final BoundaryResponse boundary = restTemplate.postForObject(url.toString(), request,
                 BoundaryResponse.class);
         return boundary;
+    }
+    
+    public BoundaryResponse getBoundaryName(final String boundaryType, final String[] boundaryNum, final String tenantId) {
+        String url = propertiesManager.getLocationServiceBasePathTopic()
+                + propertiesManager.getLocationServiceBoundarySearchPathTopic();
+        final BoundaryRequestInfo requestInfo = BoundaryRequestInfo.builder().build();
+        final BoundaryRequestInfoWrapper wrapper = BoundaryRequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<BoundaryRequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final BoundaryResponse boundary = restTemplate.postForObject(url.toString(), request,
+                BoundaryResponse.class,boundaryType, boundaryNum,tenantId);
+        return boundary;
+
     }
 
 }

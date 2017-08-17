@@ -39,6 +39,9 @@
  */
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -66,6 +69,6 @@ public class PropertyTypePipeSizeRequest {
     private RequestInfo requestInfo;
     
     @JsonProperty("PropertyTypePipeSize")
-    private PropertyTypePipeSize propertyTypePipeSize;
+    private List<PropertyTypePipeSize> propertyTypePipeSize = new ArrayList<>();
 
 }

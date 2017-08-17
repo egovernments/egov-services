@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.voucher.web.contract;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,37 +59,40 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","orderId","chartOfAccount","glcode","debitAmount","creditAmount","function","ledgerDetails"})
+@JsonPropertyOrder({ "id", "orderId", "chartOfAccount", "glcode", "debitAmount", "creditAmount", "function",
+		"ledgerDetails" })
 public class LedgerContract extends AuditableContract {
-	
-	
-    private String id = null;
-    private Integer orderId;
-    
-    @NotNull
-    private ChartOfAccountContract chartOfAccount;
-    @NotNull
-    @Length(max=16)
-    private String glcode;
-    @NotNull
-    @Min(value=0)
-    @Max(value=999999999)
-    private BigDecimal debitAmount;
-    @NotNull
-    @Min(value=0)
-    @Max(value=999999999)
-    private BigDecimal creditAmount;
-    private FunctionContract function;
-   
-    //@DrillDownTable
-    private Set<LedgerDetailContract> ledgerDetails = new HashSet<LedgerDetailContract>();
 
-   
-     
+	private String id;
+
+	private Integer orderId;
+
+	@NotNull
+	private ChartOfAccountContract chartOfAccount;
+
+	@NotNull
+	@Length(max = 16)
+	private String glcode;
+
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal debitAmount;
+
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal creditAmount;
+
+	private FunctionContract function;
+
+	private Set<LedgerDetailContract> ledgerDetails = new HashSet<LedgerDetailContract>();
+
 }

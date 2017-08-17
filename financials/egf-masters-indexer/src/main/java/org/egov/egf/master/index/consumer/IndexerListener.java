@@ -16,46 +16,8 @@ import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.instrument.web.requests.SurrenderReasonRequest;
 import org.egov.egf.master.index.persistence.repository.ElasticSearchRepository;
-import org.egov.egf.master.web.contract.AccountCodePurposeContract;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
-import org.egov.egf.master.web.contract.AccountEntityContract;
-import org.egov.egf.master.web.contract.BankAccountContract;
-import org.egov.egf.master.web.contract.BankBranchContract;
-import org.egov.egf.master.web.contract.BankContract;
-import org.egov.egf.master.web.contract.BudgetGroupContract;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
-import org.egov.egf.master.web.contract.ChartOfAccountDetailContract;
-import org.egov.egf.master.web.contract.FinancialStatusContract;
-import org.egov.egf.master.web.contract.FinancialYearContract;
-import org.egov.egf.master.web.contract.FiscalPeriodContract;
-import org.egov.egf.master.web.contract.FunctionContract;
-import org.egov.egf.master.web.contract.FunctionaryContract;
-import org.egov.egf.master.web.contract.FundContract;
-import org.egov.egf.master.web.contract.FundsourceContract;
-import org.egov.egf.master.web.contract.SchemeContract;
-import org.egov.egf.master.web.contract.SubSchemeContract;
-import org.egov.egf.master.web.contract.SupplierContract;
-import org.egov.egf.master.web.requests.AccountCodePurposeRequest;
-import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
-import org.egov.egf.master.web.requests.AccountDetailTypeRequest;
-import org.egov.egf.master.web.requests.AccountEntityRequest;
-import org.egov.egf.master.web.requests.BankAccountRequest;
-import org.egov.egf.master.web.requests.BankBranchRequest;
-import org.egov.egf.master.web.requests.BankRequest;
-import org.egov.egf.master.web.requests.BudgetGroupRequest;
-import org.egov.egf.master.web.requests.ChartOfAccountDetailRequest;
-import org.egov.egf.master.web.requests.ChartOfAccountRequest;
-import org.egov.egf.master.web.requests.FinancialStatusRequest;
-import org.egov.egf.master.web.requests.FinancialYearRequest;
-import org.egov.egf.master.web.requests.FiscalPeriodRequest;
-import org.egov.egf.master.web.requests.FunctionRequest;
-import org.egov.egf.master.web.requests.FunctionaryRequest;
-import org.egov.egf.master.web.requests.FundRequest;
-import org.egov.egf.master.web.requests.FundsourceRequest;
-import org.egov.egf.master.web.requests.SchemeRequest;
-import org.egov.egf.master.web.requests.SubSchemeRequest;
-import org.egov.egf.master.web.requests.SupplierRequest;
+import org.egov.egf.master.web.contract.*;
+import org.egov.egf.master.web.requests.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -91,6 +53,7 @@ public class IndexerListener {
     private static final String INSTRUMENT_OBJECT_TYPE = "instrument";
     private static final String INSTRUMENTACCOUNTCODE_OBJECT_TYPE = "instrumentaccountcode";
     private static final String SURRENDERREASON_OBJECT_TYPE = "surrenderreason";
+    private static final String RECOVERYCONTRACT_OBJECT_TYPE = "recovery";
 
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -502,6 +465,56 @@ public class IndexerListener {
                 }
         }
 
+        if (financialContractRequestMap.get("recovery_persisted") != null) {
+
+            final RecoveryRequest request = objectMapper.convertValue(
+                    financialContractRequestMap.get("recovery_persisted"),
+                    RecoveryRequest.class);
+
+            if (request.getRecoverys() != null && !request.getRecoverys().isEmpty())
+                for (final RecoveryContract recoveryContract : request.getRecoverys()) {
+                    final HashMap<String, Object> indexObj = getRecoveryContractIndexObject(recoveryContract);
+                    elasticSearchRepository.index(RECOVERYCONTRACT_OBJECT_TYPE,
+                            recoveryContract.getTenantId() + "-" + recoveryContract.getName(), indexObj);
+                }
+        }
+
+    }
+
+    private HashMap<String, Object> getRecoveryContractIndexObject(
+            final RecoveryContract recoveryContract) {
+
+        final HashMap<String, Object> indexObj = new HashMap<String, Object>();
+        indexObj.put("id", recoveryContract.getId());
+        indexObj.put("name", recoveryContract.getName());
+        indexObj.put("accountNumber", recoveryContract.getAccountNumber());
+        indexObj.put("tenantId", recoveryContract.getTenantId());
+        indexObj.put("code", recoveryContract.getCode());
+        indexObj.put("chartOfAccount", recoveryContract.getChartOfAccount());
+        indexObj.put("type", recoveryContract.getType());
+        indexObj.put("flat", recoveryContract.getFlat());
+        indexObj.put("percentage", recoveryContract.getPercentage());
+        indexObj.put("remitted", recoveryContract.getRemitted());
+        indexObj.put("active", recoveryContract.getActive());
+        indexObj.put("ifscCode", recoveryContract.getIfscCode());
+        indexObj.put("mode", recoveryContract.getMode());
+        indexObj.put("remittanceMode", recoveryContract.getRemittanceMode());
+        indexObj.put("ifscCode", recoveryContract.getIfscCode());
+
+
+        indexObj.put("createdBy", recoveryContract.getCreatedBy());
+        indexObj.put("lastModifiedBy", recoveryContract.getLastModifiedBy());
+
+        if (recoveryContract.getCreatedDate() != null)
+            indexObj.put("createdDate", formatter.format(recoveryContract.getCreatedDate()));
+        else
+            indexObj.put("createdDate", null);
+        if (recoveryContract.getLastModifiedDate() != null)
+            indexObj.put("lastModifiedDate", formatter.format(recoveryContract.getLastModifiedDate()));
+        else
+            indexObj.put("lastModifiedDate", null);
+
+        return indexObj;
     }
 
     private HashMap<String, Object> getInstrumentAccountContractIndexObject(
@@ -694,7 +707,6 @@ public class IndexerListener {
         indexObj.put("active", fundContract.getActive());
         indexObj.put("createdBy", fundContract.getCreatedBy());
         indexObj.put("identifier", fundContract.getIdentifier());
-        indexObj.put("isParent", fundContract.getIsParent());
         indexObj.put("lastModifiedBy", fundContract.getLastModifiedBy());
         indexObj.put("level", fundContract.getLevel());
         indexObj.put("parent", fundContract.getParent());
@@ -747,7 +759,6 @@ public class IndexerListener {
         indexObj.put("level", functionContract.getLevel());
         indexObj.put("createdBy", functionContract.getCreatedBy());
         indexObj.put("parentId", functionContract.getParentId());
-        indexObj.put("isParent", functionContract.getIsParent());
         indexObj.put("lastModifiedBy", functionContract.getLastModifiedBy());
         indexObj.put("tenantId", functionContract.getTenantId());
 
@@ -1062,7 +1073,7 @@ public class IndexerListener {
         indexObj.put("id", fundsourceContract.getId());
         indexObj.put("code", fundsourceContract.getCode());
         indexObj.put("name", fundsourceContract.getName());
-        indexObj.put("fundSource", fundsourceContract.getFundSource());
+        indexObj.put("fundSource", fundsourceContract.getParent());
         indexObj.put("type", fundsourceContract.getType());
         indexObj.put("llevel", fundsourceContract.getLlevel());
         indexObj.put("active", fundsourceContract.getActive());

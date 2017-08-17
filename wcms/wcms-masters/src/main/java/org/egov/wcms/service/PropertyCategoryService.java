@@ -40,11 +40,13 @@
 
 package org.egov.wcms.service;
 
+import java.util.List;
+
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +66,24 @@ public class PropertyCategoryService {
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
 
-    public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key,
+    @Autowired
+    private CodeGeneratorService codeGeneratorService;
+
+    public List<PropertyTypeCategoryType> createPropertyCategory(final String topic, final String key,
+            final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+        for (final PropertyTypeCategoryType propertyCategory : propertyCategoryRequest.getPropertyTypeCategoryType()) {
+            propertyCategory.setCode(codeGeneratorService.generate(PropertyTypeCategoryType.SEQ_PROPERTY_CATEGORY));
+        }
+
+        try {
+            kafkaTemplate.send(topic, key, propertyCategoryRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
+        return propertyCategoryRequest.getPropertyTypeCategoryType();
+    }
+
+    public List<PropertyTypeCategoryType> updatePropertyCategory(final String topic, final String key,
             final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
 
         try {
@@ -72,7 +91,7 @@ public class PropertyCategoryService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return propertyCategoryRequest;
+        return propertyCategoryRequest.getPropertyTypeCategoryType();
     }
 
     public PropertyTypeCategoryTypeReq create(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
@@ -83,7 +102,7 @@ public class PropertyCategoryService {
         return propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest);
     }
 
-    public PropertyTypeCategoryTypesRes getPropertyCategories(
+    public List<PropertyTypeCategoryType> getPropertyCategories(
             final PropertyCategoryGetRequest propertyCategoryGetRequest) {
         if (propertyCategoryGetRequest.getPropertyTypeName() != null) {
             final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
@@ -95,22 +114,22 @@ public class PropertyCategoryService {
 
     }
 
-    public boolean checkIfMappingExists(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
-        getPropertyTypeByName(propertyCategoryRequest);
-        return propertyCategoryRepository.checkIfMappingExists(propertyCategoryRequest.getPropertyTypeCategoryType().getId(),
-                propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeId(),
-                propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName(),
-                propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
+    public boolean checkIfMappingExists(final PropertyTypeCategoryType propertyCategory) {
+        getPropertyTypeByName(propertyCategory);
+        return propertyCategoryRepository.checkIfMappingExists(propertyCategory.getCode(),
+                propertyCategory.getPropertyTypeId(),
+                propertyCategory.getCategoryTypeName(),
+                propertyCategory.getTenantId());
     }
 
-    public Boolean getPropertyTypeByName(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+    public Boolean getPropertyTypeByName(final PropertyTypeCategoryType propertyCategory) {
         Boolean isValidProperty = Boolean.FALSE;
         final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
-                propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName(),
-                propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
+                propertyCategory.getPropertyTypeName(),
+                propertyCategory.getTenantId());
         if (propertyTypes.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
-            propertyCategoryRequest.getPropertyTypeCategoryType().setPropertyTypeId(
+            propertyCategory.setPropertyTypeId(
                     propertyTypes.getPropertyTypes() != null && propertyTypes.getPropertyTypes().get(0) != null
                             ? propertyTypes.getPropertyTypes().get(0).getId() : "");
 

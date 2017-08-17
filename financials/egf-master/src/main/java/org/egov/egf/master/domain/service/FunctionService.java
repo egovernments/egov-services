@@ -41,6 +41,7 @@ public class FunctionService {
 				Assert.notNull(functions, "Functions to create must not be null");
 				for (Function function : functions) {
 					validator.validate(function, errors);
+					
 				}
 				break;
 			case Constants.ACTION_UPDATE:
@@ -82,6 +83,11 @@ public class FunctionService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		for(Function b:functions){
+		    //this is hack to support kafka based persist
+		    b.setId(functionRepository.getNextSequence());
+		    b.add();
+		}
 		return functions;
 
 	}
@@ -93,6 +99,9 @@ public class FunctionService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+	        for(Function b:functions){
+	              b.update();
+	        }
 		return functions;
 
 	}

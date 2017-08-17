@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton, Table ,ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -12,16 +11,13 @@ import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-
-const buttons = require('datatables.net-buttons-bs');
-
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
 const styles = {
@@ -30,30 +26,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -85,7 +57,6 @@ const getNameById = function(object, id, property = "") {
 
 
 const getNameByServiceCode = function(object, id, property = "") {
-	console.log(id)
   if (id == "" || id == null) {
         return "";
     }
@@ -137,10 +108,7 @@ class SearchEscalation extends Component {
       $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+         bDestroy: true
     });
 
       initForm()
@@ -154,7 +122,6 @@ class SearchEscalation extends Component {
 
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
         setLoadingStatus('hide');
-          console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
           })
@@ -165,7 +132,6 @@ class SearchEscalation extends Component {
       });
 
       Api.commonApiPost("/hr-masters/designations/_search").then(function(response) {
-          console.log(response);
           self.setState({
             designationSource: response.Designation
           })
@@ -183,23 +149,20 @@ class SearchEscalation extends Component {
      .DataTable()
      .destroy(true);
  };
- 
+
  componentWillUpdate() {
 	  $('#searchTable').dataTable().fnDestroy();
  }
-  
+
 
 
  componentDidUpdate() {
        $('#searchTable').DataTable({
-         dom: 'lBfrtip',
-         buttons: [],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+          dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+          buttons: ['excel', 'pdf'],
+          bDestroy: true
     });
-    
+
   }
 
   submitForm = (e) => {
@@ -221,22 +184,19 @@ class SearchEscalation extends Component {
          }
 
       } else if(searchEscalation.serviceType){
-         
+
            query = {
           serviceId:searchEscalation.serviceType.id
            }
       } else if(searchEscalation.designation) {
-      
+
         query = {
           designation:searchEscalation.designation.id
         }
       } else {}
 
-      console.log(query)
-	
       Api.commonApiPost("/workflow/escalation-hours/v1/_search",query,{}).then(function(response){
           setLoadingStatus('hide');
-          console.log(response);
           flag = 1;
           current.setState({
             resultList: response.EscalationTimeType,
@@ -254,7 +214,7 @@ class SearchEscalation extends Component {
   }
 
     render() {
-		
+
       var current = this;
 
       let {
@@ -285,7 +245,7 @@ class SearchEscalation extends Component {
       const viewTable = function() {
       	  if(isSearchClicked)
       		return (
-   	        <Card>
+   	        <Card style={styles.marginStyle}>
    	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -307,67 +267,71 @@ class SearchEscalation extends Component {
 
       return(<div className="searchEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
-          <Card  style={styles.marginStyle}>
+          <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >{translate('pgr.lbl.escalationtime')}< /div>} />
               <CardText>
-                  <Card>
-                      <CardText>
-                          <Grid>
-                              <Row>
-                                  <Col xs={12} md={6}>
-                                        <AutoComplete
-                                          floatingLabelText={translate("pgr.lbl.grievance.type")}
-                                          fullWidth={true}
-                                          filter={function filter(searchText, key) {
-                                                    return key.toLowerCase().includes(searchText.toLowerCase());
-                                                 }}
-                                          dataSource={this.state.grievanceTypeSource}
-                                          dataSourceConfig={this.state.serviceDataSourceConfig}
-                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "grievanceType")}}
-                                          value={searchEscalation.serviceType ? searchEscalation.serviceType : ""}
-                                          onNewRequest={(chosenRequest, index) => {
-                  	                        var e = {
-                  	                          target: {
-                  	                            value: chosenRequest
-                  	                          }
-                  	                        };
-                  	                        handleChange(e, "serviceType", false, "");
-                  	                       }}
-                                        />
-                                  </Col>
-                                  <Col xs={12} md={6}>
-                                        <AutoComplete
-                                          floatingLabelText={translate("pgr.lbl.designation")}
-                                          fullWidth={true}
-                                          filter={function filter(searchText, key) {
-                                                    return key.toLowerCase().includes(searchText.toLowerCase());
-                                                 }}
-                                          dataSource={this.state.designationSource}
-                                          dataSourceConfig={this.state.designationDataSourceConfig}
-                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "designation")}}
-                                          value={searchEscalation.designation ? searchEscalation.designation : ""}
-                                          onNewRequest={(chosenRequest, index) => {
-                  	                        var e = {
-                  	                          target: {
-                  	                            value: chosenRequest
-                  	                          }
-                  	                        };
-                  	                        handleChange(e, "designation", false, "");
-                  	                       }}
-                                        />
-                                  </Col>
-                              </Row>
-                          </Grid>
-                      </CardText>
-                  </Card>
-                  <div style={{textAlign:'center'}}>
-
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit"  label={translate("core.lbl.search")} primary={true}/>
-
-                  </div>
-                  {viewTable()}
+                  <Grid>
+                      <Row>
+                          <Col xs={12} sm={6} md={6} lg={6}>
+                                <AutoComplete
+                                  floatingLabelText={translate("pgr.lbl.grievance.type")}
+                                  fullWidth={true}
+                                  filter={function filter(searchText, key) {
+                                            return key.toLowerCase().includes(searchText.toLowerCase());
+                                         }}
+                                  dataSource={this.state.grievanceTypeSource}
+                                  dataSourceConfig={this.state.serviceDataSourceConfig}
+                                  onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "grievanceType")}}
+                                  value={searchEscalation.serviceType ? searchEscalation.serviceType : ""}
+                                  ref="serviceType"
+                                  onNewRequest={(chosenRequest, index) => {
+                                    if(index === -1){
+                                      this.refs['serviceType'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest
+                                        }
+                                      };
+                                      handleChange(e, "serviceType", false, "");
+                                    }
+          	                       }}
+                                />
+                          </Col>
+                          <Col xs={12} sm={6} md={6} lg={6}>
+                                <AutoComplete
+                                  floatingLabelText={translate("pgr.lbl.designation")}
+                                  fullWidth={true}
+                                  filter={function filter(searchText, key) {
+                                            return key.toLowerCase().includes(searchText.toLowerCase());
+                                         }}
+                                  dataSource={this.state.designationSource}
+                                  dataSourceConfig={this.state.designationDataSourceConfig}
+                                  onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "designation")}}
+                                  value={searchEscalation.designation ? searchEscalation.designation : ""}
+                                  ref="designation"
+                                  onNewRequest={(chosenRequest, index) => {
+                                    if(index === -1){
+                                      this.refs['designation'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest
+                                        }
+                                      };
+                                      handleChange(e, "designation", false, "");
+                                    }
+          	                       }}
+                                />
+                          </Col>
+                      </Row>
+                  </Grid>
               </CardText>
           </Card>
+          <div style={{textAlign:'center'}}>
+              <RaisedButton style={{margin:'15px 5px'}} type="submit"  label={translate("core.lbl.search")} primary={true}/>
+          </div>
+          {viewTable()}
           </form>
       </div>)
     }
@@ -396,7 +360,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,

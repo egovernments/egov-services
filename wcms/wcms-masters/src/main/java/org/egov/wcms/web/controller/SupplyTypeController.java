@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -63,7 +62,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,39 +100,35 @@ public class SupplyTypeController {
             return new ResponseEntity(errRes, HttpStatus.BAD_REQUEST);
         }
 
-        final List<ErrorResponse> errorRespList = validatorUtils.validateSupplyType(supplyTypeRequest);
+        final List<ErrorResponse> errorRespList = validatorUtils.validateSupplyType(supplyTypeRequest,false);
         if (!errorRespList.isEmpty())
             return new ResponseEntity(errorRespList, HttpStatus.BAD_REQUEST);
 
-        final SupplyType supplytypeobj = supplyTypeService.createSupplyType(
+        final List<SupplyType> supplyTypes = supplyTypeService.createSupplyType(
                 applicationProperties.getCreateSupplyTypeTopicName(), "supplytype-create", supplyTypeRequest);
-        final List<SupplyType> supplyTypes = new ArrayList<>();
-        supplyTypes.add(supplytypeobj);
+
         return getSuccessResponse(supplyTypes, "Created", supplyTypeRequest.getRequestInfo());
     }
 
-    @PostMapping(value = "/{code}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final SupplyTypeRequest supplyTypeRequest,
-            final BindingResult errors, @PathVariable("code") final String code) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        supplyTypeRequest.getSupplyType().setCode(code);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateSupplyType(supplyTypeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateSupplyType(supplyTypeRequest,true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
-        final SupplyType supplyType = supplyTypeService.updateSupplyType(
+        final List<SupplyType> supplyTypes = supplyTypeService.updateSupplyType(
                 applicationProperties.getUpdateSupplyTypeTopicName(), "supplyType-update", supplyTypeRequest);
-        final List<SupplyType> supplyTypes = new ArrayList<>();
-        supplyTypes.add(supplyType);
+
         return getSuccessResponse(supplyTypes, null, supplyTypeRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final SupplyTypeGetRequest supplyGetRequest,
             final BindingResult modelAttributeBindingResult,

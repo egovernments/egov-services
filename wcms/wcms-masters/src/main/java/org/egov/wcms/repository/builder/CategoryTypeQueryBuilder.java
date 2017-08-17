@@ -163,12 +163,12 @@ public class CategoryTypeQueryBuilder {
 
     public static String insertCategoryQuery() {
         return "INSERT INTO egwtr_category(id,code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(?,?,?,?,?,?,?,?,?,?)";
+                + "(:id,:code,:name,:description,:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updateCategoryQuery() {
-        return "UPDATE egwtr_category SET name = ?,description = ?,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
+        return "UPDATE egwtr_category SET name = :name,description = :description,"
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code";
     }
 
     public static String selectCategoryByNameAndCodeQuery() {

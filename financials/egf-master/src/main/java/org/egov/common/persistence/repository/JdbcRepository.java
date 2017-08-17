@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.LongStream;
 
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -314,7 +315,18 @@ public abstract class JdbcRepository {
 				batchValues.toArray(new Map[batchValues.size()]));
 		return ob;
 	}
+	
+	@Transactional
+	public void delete(String tableName, String id) {
+	    String delQuery = "delete from " + tableName + " where id = '" + id + "'";
+	    jdbcTemplate.execute(delQuery);
+	}
 
+	public String getSequence(String seqName) {
+	    String seqQuery = "select nextval('" + seqName + "')";
+	    return String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class)+1);
+	}
+	
 	public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
 		String countQuery = "select count(*) from (" + searchQuery + ") as x";
 		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);

@@ -60,6 +60,11 @@ public class PropertiesManager {
 	private String serverContextpathConfig;
 
 	private String defaultPassword;
+	
+	private String channelType;
+	
+	private String createWorkflow;
+
 
 	public String getCreatePropertyValidator() {
 		return environment.getProperty("egov.propertytax.create.property.validated");
@@ -113,11 +118,11 @@ public class PropertiesManager {
 		return environment.getProperty("server.contextPath");
 	}
 
-	public String getCreatePropertyTitletransferValidator() {
+	public String getCreateTitletransferValidator() {
 		return environment.getProperty("egov.propertytax.create.property.titletransfer.validated");
 	}
 
-	public String getUpdatePropertyTitletransferValidator() {
+	public String getUpdateTitletransferValidator() {
 		return environment.getProperty("egov.propertytax.update.property.titletransfer.validated");
 	}
 
@@ -135,5 +140,13 @@ public class PropertiesManager {
 
 	public String getDefaultPassword() {
 		return environment.getProperty("default.password");
+	}
+
+	public String getChannelType() {
+		return environment.getProperty("egov.property.channel.type");
+	}
+	
+	public String getCreateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.create.workflow.started");
 	}
 }

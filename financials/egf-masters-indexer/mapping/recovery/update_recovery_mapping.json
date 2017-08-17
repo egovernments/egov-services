@@ -1,0 +1,63 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "chartOfAccount": {
+            "type": "object"
+        },
+        "type": {
+            "type": "keyword"
+        },
+        "flat": {
+            "type": "double"
+        },
+        "active": {
+            "type": "boolean"
+        },
+        "percentage": {
+            "type": "double"
+        },
+	"remitted": {
+            "type": "keyword"
+        },
+        "ifscCode": {
+            "type": "keyword"
+        },
+        "mode": {
+            "type": "keyword"
+        },
+        "remittanceMode": {
+            "type": "keyword"
+        },
+	"accountNumber": {
+            "type": "keyword"
+        },
+        "createdBy": {
+            "type": "object"
+        },
+        "lastModifiedBy": {
+            "type": "object"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

@@ -11,28 +11,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleActionService {
 
-	
 	private RoleActionRepository roleActionRepository;
-	
-    @Autowired
-    public RoleActionService(RoleActionRepository roleActionRepository) {
-        this.roleActionRepository = roleActionRepository;
-       
-    }
+
+	@Autowired
+	public RoleActionService(RoleActionRepository roleActionRepository) {
+		this.roleActionRepository = roleActionRepository;
+
+	}
 
 	public List<RoleAction> createRoleActions(final RoleActionsRequest rolActionRequest) {
 
 		return roleActionRepository.createRoleActions(rolActionRequest);
 	}
 
-	public boolean checkActionNamesAreExistOrNot(final RoleActionsRequest rolActionRequest) {
+	public boolean checkActionNamesAreExistOrNot(final RoleActionsRequest roleActionRequest) {
 
-		return roleActionRepository.checkActionNamesAreExistOrNot(rolActionRequest);
+		return roleActionRepository.checkActionNamesAreExistOrNot(roleActionRequest);
 	}
 
 	public boolean addUniqueValidationForTenantAndRoleAndAction(final RoleActionsRequest rolActionRequest) {
 
-		
 		return roleActionRepository.addUniqueValidationForTenantAndRoleAndAction(rolActionRequest);
 	}
 }

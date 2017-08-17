@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-import Divider from 'material-ui/Divider';
 import {Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {List, ListItem} from 'material-ui/List';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -52,7 +48,6 @@ class viewReceivingSet extends Component {
                 current.setState({data:response.ReceivingModeType})
                 setForm(response.ReceivingModeType[0])
             }).catch((error)=>{
-                console.log(error);
             })
         }
     }
@@ -74,10 +69,8 @@ class viewReceivingSet extends Component {
         buttonText
       } = this.props;
 
-      console.log(viewReceivingSet);
-
       let {submitForm} = this;
-
+      console.log(viewReceivingSet.channels);
       return(
         <div className="viewReceivingSet">
           <Grid style={{width:'100%'}}>
@@ -111,15 +104,15 @@ class viewReceivingSet extends Component {
                      {translate("pgr.lbl.active")}
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewReceivingSet.active? "True" : "False"}
+                    {viewReceivingSet.active? "Yes" : "No"}
                    </Col>
                  </Row>
                  <Row style={styles.addBorderBottom}>
                    <Col xs={6} md={3}>
-                    Channel
+                    {translate('pgr.lbl.channel')}
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewReceivingSet.channels ? viewReceivingSet.channels : ''}
+                    {viewReceivingSet.channels ? viewReceivingSet.channels.join(", ") : ''}
                    </Col>
                  </Row>
                </CardText>

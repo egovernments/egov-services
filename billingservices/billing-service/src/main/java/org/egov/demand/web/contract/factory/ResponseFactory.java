@@ -40,6 +40,7 @@
 package org.egov.demand.web.contract.factory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.Error;
@@ -74,10 +75,12 @@ public class ResponseFactory {
 		error.setCode(400);
 		error.setMessage("Mandatory Fields Missing");
 		error.setDescription("exception occurred");
-		error.setFields(new ArrayList<ErrorField>());
+		List<ErrorField> errorFields =  new ArrayList<>();
+		error.setFields(errorFields);
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			ErrorField errorField = new ErrorField(fieldError.getCode(), fieldError.getDefaultMessage(),fieldError.getField());
 			error.getFields().add(errorField);
+			errorFields.add(errorField);
 		}
 		return new ErrorResponse(getResponseInfo(requestInfo, HttpStatus.BAD_REQUEST), error);
 	}

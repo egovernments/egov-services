@@ -38,6 +38,10 @@ public class BudgetGroupRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return budgetGroupJdbcRepository.getSequence(BudgetGroupEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public BudgetGroup save(BudgetGroup budgetGroup) {

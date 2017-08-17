@@ -1,0 +1,14 @@
+{
+  "responseInfo": null,
+  "serviceTypeConfiguration": {
+    "tenantId" : "default",
+    "serviceCode" : "NOC",
+    "applicationFeesEnabled": false,
+    "notificationEnabled": true,
+    "slaEnabled": true,
+    "glCode":"gl",
+    "source":"abc",
+    "online":true,
+    "url":"url"
+  }
+}

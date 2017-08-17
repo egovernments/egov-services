@@ -41,11 +41,14 @@ package org.egov.wcms.repository;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
@@ -63,6 +66,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -93,9 +97,12 @@ public class PropertyTypeCategoryTypeRepositoryTest {
 
     @InjectMocks
     private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
-    
+
     @Mock
     private RestWaterExternalMasterService restExternalMasterService;
+    
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Test
     public void test_Should_Find_PropertyCategory() throws Exception {
@@ -103,13 +110,14 @@ public class PropertyTypeCategoryTypeRepositoryTest {
         final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
         final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
         propertyCategory.setActive(true);
+        propertyCategory.setCode("2");
         propertyCategory.setCategoryTypeName("category");
         propertyCategory.setPropertyTypeName("property");
         propertyCategory.setTenantId("1");
         propertyCategories.add(propertyCategory);
 
         final PropertyCategoryGetRequest propertyCategoryRequest = Mockito.mock(PropertyCategoryGetRequest.class);
-       // when(propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues)).thenReturn("query");
+        // when(propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues)).thenReturn("query");
         when(jdbcTemplate.query("query", preparedStatementValues.toArray(), propertyCategoryRowMapper))
                 .thenReturn(propertyCategories);
 
@@ -122,6 +130,7 @@ public class PropertyTypeCategoryTypeRepositoryTest {
         final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
         final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
         propertyCategory.setActive(true);
+        propertyCategory.setCode("2");
         propertyCategory.setCategoryTypeName("category");
         propertyCategory.setPropertyTypeName("property");
         propertyCategory.setTenantId("1");
@@ -136,42 +145,54 @@ public class PropertyTypeCategoryTypeRepositoryTest {
         assertTrue(!propertyCategories.equals(propertyCategoryRepository.findForCriteria(propertyCategoryRequest)));
     }
 
-    @Test(expected = Exception.class) // check
-    public void test_Should_Create_PropertyCategory() throws Exception {
-        final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
+    @Test
+    public void test_Should_Create_PropertyCategory() {
+
+        final PropertyTypeCategoryTypeReq propertyTypeCategoryTypeReq = new PropertyTypeCategoryTypeReq();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        propertyTypeCategoryTypeReq.setRequestInfo(requestInfo);
+        final List<PropertyTypeCategoryType> propertyTypeCategoryList = new ArrayList<>();
         final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
         propertyCategory.setActive(true);
+        propertyCategory.setCode("2");
         propertyCategory.setCategoryTypeName("category");
         propertyCategory.setPropertyTypeName("property");
         propertyCategory.setTenantId("1");
 
-        propertyCategories.add(propertyCategory);
+        propertyTypeCategoryList.add(propertyCategory);
+        propertyTypeCategoryTypeReq.setPropertyTypeCategoryType(propertyTypeCategoryList);
 
-        final Object[] obj = new Object[] {};
-
-        final PropertyTypeCategoryTypeReq propertyCategoryRequest = Mockito.mock(PropertyTypeCategoryTypeReq.class);
-        when(jdbcTemplate.update("query", obj)).thenReturn(1);
-
-        assertNotNull(propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest));
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(propertyTypeCategoryTypeReq
+                .equals(propertyCategoryRepository.persistCreatePropertyCategory(propertyTypeCategoryTypeReq)));
     }
 
-    @Test(expected = Exception.class)
-    public void test_Should_Update_PropertyCategory() throws Exception {
-        final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
+    @Test
+    public void test_Should_Update_PropertyCategory() {
+
+        final PropertyTypeCategoryTypeReq propertyTypeCategoryTypeReq = new PropertyTypeCategoryTypeReq();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        propertyTypeCategoryTypeReq.setRequestInfo(requestInfo);
+        final List<PropertyTypeCategoryType> propertyTypeCategoryList = new ArrayList<>();
         final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
         propertyCategory.setActive(true);
+        propertyCategory.setCode("2");
         propertyCategory.setCategoryTypeName("category");
         propertyCategory.setPropertyTypeName("property");
         propertyCategory.setTenantId("1");
 
-        propertyCategories.add(propertyCategory);
+        propertyTypeCategoryList.add(propertyCategory);
+        propertyTypeCategoryTypeReq.setPropertyTypeCategoryType(propertyTypeCategoryList);
 
-        final Object[] obj = new Object[] {};
-
-        final PropertyTypeCategoryTypeReq propertyCategoryRequest = Mockito.mock(PropertyTypeCategoryTypeReq.class);
-        when(jdbcTemplate.update("query", obj)).thenReturn(1);
-
-        assertNotNull(propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest));
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(propertyTypeCategoryTypeReq
+                .equals(propertyCategoryRepository.persistUpdatePropertyCategory(propertyTypeCategoryTypeReq)));
     }
 
 }

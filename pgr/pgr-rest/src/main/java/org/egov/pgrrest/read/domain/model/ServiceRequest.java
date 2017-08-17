@@ -24,6 +24,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class ServiceRequest {
     private static final String DRAFT_ID = "draftId";
     private static final String SERVICE_STATUS = "systemStatus";
+    public static final String COMPLAINT = "Complaint";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -74,6 +75,10 @@ public class ServiceRequest {
 
     public boolean isRequesterAbsent() {
         return requester.isAbsent();
+    }
+
+    public boolean isValidMobileNumber() {
+        return requester.isMobileNumberValid();
     }
 
     public boolean isComplainantPhoneAbsent() {
@@ -138,7 +143,25 @@ public class ServiceRequest {
     }
 
     public boolean descriptionLength() {
-        return description.length() < 10 || description.length() > 500;
+        return description.length() >= 10 && description.length() <= 1000;
+    }
+
+    public boolean firstNameLength() {
+        return requester.getFirstName().length() > 0 && requester.getFirstName().length() <= 100;
+    }
+
+    public boolean emailLength() {
+        if (isEmpty(requester.getEmail()))
+            return false;
+        else
+            return requester.getEmail().length() > 0 && requester.getEmail().length() <= 100;
+    }
+
+    public boolean tenantIdLength() {
+        if (isEmpty(tenantId))
+            return false;
+        else
+            return tenantId.length() > 0 && tenantId.length() <= 256;
     }
 
     public boolean isEmailValid() {
@@ -177,7 +200,7 @@ public class ServiceRequest {
 
     public AttributeEntry getAttributeWithKey(String attributeDefinitionCode) {
         final List<AttributeEntry> matchingAttributes = getAttributesWithKey(attributeDefinitionCode);
-        if(CollectionUtils.isEmpty(matchingAttributes)) {
+        if (CollectionUtils.isEmpty(matchingAttributes)) {
             return null;
         }
         return matchingAttributes.get(0);
@@ -185,5 +208,21 @@ public class ServiceRequest {
 
     public boolean isMultipleAttributeEntriesPresent(String attributeCode) {
         return getAttributesWithKey(attributeCode).size() > 1;
+    }
+
+    public boolean isAttributeAbsent(String key) {
+        List<AttributeEntry> attributeValueByKey = getAttributeValueByKey(key);
+        return attributeValueByKey.isEmpty();
+    }
+
+    public List<AttributeEntry> getAttributeValueByKey(String key) {
+        return attributeEntries.stream()
+            .filter(attributeEntry -> key.equalsIgnoreCase(attributeEntry.getKey()))
+            .collect(Collectors.toList());
+    }
+
+    public boolean isKeywordComplaint(String key) {
+        List<AttributeEntry> attributeValueByKey = getAttributeValueByKey(key);
+        return !attributeValueByKey.isEmpty() && attributeValueByKey.get(0).getCode().equalsIgnoreCase(COMPLAINT);
     }
 }

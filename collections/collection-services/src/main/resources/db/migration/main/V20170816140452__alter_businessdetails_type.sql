@@ -1,0 +1,1 @@
+ALTER TABLE egcl_receiptheader ALTER COLUMN businessdetails TYPE character varying(32);

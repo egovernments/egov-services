@@ -4,10 +4,13 @@ import org.egov.calculator.exception.InvalidTaxCalculationDataException;
 import org.egov.calculator.service.TaxCalculatorService;
 import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
+import org.egov.models.LatePaymentPenaltyResponse;
+import org.egov.models.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -34,6 +37,25 @@ public class TaxCalculatorController {
             throw new InvalidTaxCalculationDataException(ex.getMessage(), calculationRequest.getRequestInfo(), ex.getMessage());
         }
         return calculationResponse;
+    }
+    
+    /**
+     * Description : This will calculate the late payment penalty
+     * parameter
+     * 
+     * @param tenantId
+     * @param upicNo
+     * @param requestInfo
+     * @return {@link LatePaymentPenaltyResponse}
+     * @throws Exception
+     */
+    @RequestMapping(path = "/latepaymentpenalty/_calculate", method = RequestMethod.POST)
+    public LatePaymentPenaltyResponse getLatePaymentPenalty(@RequestBody RequestInfoWrapper requestInfo,
+                    @RequestParam(required = true) String tenantId, @RequestParam(required = true) String upicNo)
+                                    throws Exception {
+
+            return taxCalculatorService.getLatePaymentPenalty(requestInfo, tenantId, upicNo);
+
     }
 
 }

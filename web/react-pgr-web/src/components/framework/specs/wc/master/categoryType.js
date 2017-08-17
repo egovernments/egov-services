@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/categorytype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "CategoryTypes[0].code",
 		"objectName": "CategoryType",
 		"groups": [
 			{
@@ -11,33 +12,34 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType.name",
+							"jsonPath": "CategoryType[0].name",
 							"label": "wc.create.categorytype",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryType.description",
+							"jsonPath": "CategoryType[0].description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType.active",
+							"jsonPath": "CategoryType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
+							"defaultValue":true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -61,12 +63,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "name",
 							"label": "wc.create.categorytype",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"requiredErrMsg": "^[\s.]*([^\s.][\s.]*){0,100}",
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "Active",
@@ -141,11 +143,10 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/categorytype/_search?id={id}",
-		"url":"/wcms/masters/categorytype/{CategoryType.code}/_update",
-		"isResponseArray":true,
+		"url":"/wcms/masters/categorytype/{CategoryTypes.code}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "CategoryTypes",
 		"groups": [
 			{
 				"label": "wc.update.categorytype.title",
@@ -153,29 +154,29 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType.name",
+							"jsonPath": "CategoryTypes[0].name",
 							"label": "wc.create.categorytype",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryType.description",
+							"jsonPath": "CategoryTypes[0].description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType.active",
+							"jsonPath": "CategoryTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

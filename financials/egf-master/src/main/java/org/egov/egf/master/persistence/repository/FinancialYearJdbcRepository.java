@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -28,8 +27,6 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 	}
 
 	public FinancialYearEntity create(FinancialYearEntity entity) {
-
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}
@@ -37,7 +34,6 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 	public FinancialYearEntity update(FinancialYearEntity entity) {
 		super.update(entity);
 		return entity;
-
 	}
 
 	public Pagination<FinancialYear> search(FinancialYearSearch domain) {
@@ -64,6 +60,13 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 		}
 
 		// implement jdbc specfic search
+		if (financialYearSearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", financialYearSearchEntity.getTenantId());
+                }
 		if (financialYearSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -119,6 +122,13 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 			}
 			params.append("transferClosingBalance =:transferClosingBalance");
 			paramValues.put("transferClosingBalance", financialYearSearchEntity.getTransferClosingBalance());
+		}
+		if (financialYearSearchEntity.getAsOnDate() != null) {
+		    if (params.length() > 0) {
+		        params.append(" and ");
+		    }
+		    params.append("startingDate <=:asOnDate and endingDate >= :asOnDate");
+		    paramValues.put("asOnDate", financialYearSearchEntity.getAsOnDate());
 		}
 
 		Pagination<FinancialYear> page = new Pagination<>();

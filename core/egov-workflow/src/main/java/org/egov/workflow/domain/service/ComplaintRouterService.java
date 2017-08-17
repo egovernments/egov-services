@@ -134,7 +134,7 @@ public class ComplaintRouterService {
                 final ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode, tenantId);
                 complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                 if (null == complaintRouter)
-                    complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");
+                    complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION", tenantId);
             }
             if (complaintRouter != null)
                 positionResponse = positionRepository.getById(complaintRouter.getPosition(), tenantId);
@@ -142,9 +142,8 @@ public class ComplaintRouterService {
                 throw new ApplicationRuntimeException("PGR.001");
         } else
             try {
-                positionHierarchies = positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint",
-                    complaintTypeCode, assigneeId, tenantId);
-                if (positionHierarchies.getPositionHierarchy().isEmpty() || positionHierarchies.getPositionHierarchy().contains(null)) {
+                positionHierarchies = positionHierarchyRepository.getByPositionByComplaintTypeAndFromPosition(assigneeId, complaintTypeCode, tenantId);
+                if (positionHierarchies.getEscalationHierarchies().isEmpty() || positionHierarchies.getEscalationHierarchies().contains(null)) {
                     final List<Employee> employees = employeeRepository.getByRoleCode("GRO", tenantId);
                     if (!employees.isEmpty())
                         employeeResponse = employees.iterator().next();
@@ -153,7 +152,9 @@ public class ComplaintRouterService {
                         positionResponse = positionRepository.getById(employeeResponse.getAssignments().get(0).getPosition(), tenantId);
                     }
                 } else
-                    positionResponse = positionHierarchies.getPositionHierarchy().iterator().next().getToPosition();
+                    positionResponse = PositionResponse.builder()
+                        .id(positionHierarchies.getEscalationHierarchies().iterator().next().getToPosition())
+                        .build();
             } catch (final EscalationException e) {
                 // Ignoring and logging exception since exception will cause
                 // multi city scheduler to fail for all remaining cities.

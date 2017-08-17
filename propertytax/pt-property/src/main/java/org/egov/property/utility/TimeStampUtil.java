@@ -13,7 +13,7 @@ public class TimeStampUtil {
 			return null;
 		} else {
 			DateTimeFormatter[] formatter = new DateTimeFormatter[] { DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") };
+					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"), DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S") };
 			for (int i = 0; i < formatter.length; i++) {
 				try {
 					LocalDateTime time = LocalDateTime.from(LocalDate.parse(date, formatter[i]).atStartOfDay());

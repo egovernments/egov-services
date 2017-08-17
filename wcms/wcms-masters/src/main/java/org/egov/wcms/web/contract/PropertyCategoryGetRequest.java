@@ -57,6 +57,7 @@ import lombok.ToString;
 public class PropertyCategoryGetRequest {
 
     private List<Long> id;
+    private String code;
     private String propertyTypeName;
     private String categoryTypeName;
     private String propertyTypeId;

@@ -1,66 +1,49 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
 import Api from '../../../api/api';
 import SearchForm from './searchForm';
 import ReportResult from './reportResult';
 import $ from 'jquery';
 
-
-
-
-
 class Report extends Component {
 
-  initData()
-  {
-    let {setMetaData,setFlag,showTable,setForm}=this.props;
+  componentWillReceiveProps(nextProps){
+    if(nextProps.match.params.reportName !== this.props.match.params.reportName){
+      this.initData(nextProps.match.params.moduleName, nextProps.match.params.reportName);
+    }
+  }
 
-    let response=Api.commonApiPost("pgr-master/report/metadata/_get",{},{tenantId:"default",reportName:this.props.match.params.reportName}).then(function(response)
+  componentDidMount(){
+    this.initData(this.props.match.params.moduleName, this.props.match.params.reportName);
+  }
+
+  initData = (moduleName, reportName) => {
+    var _this = this;
+    let {setMetaData,setFlag,showTable,setForm,setReportResult}=this.props;
+    Api.commonApiPost(moduleName+"/report/metadata/_get",{},{tenantId:"default",reportName:reportName}).then(function(response)
     {
-
+      //console.log(moduleName, reportName);
       setFlag(1);
       showTable(false);
-      setMetaData(response)
+      setReportResult({});
+      setMetaData(response);
+      // console.log('hide the loader');
       // setForm();
-    },function(err) {
+      },function(err) {
         // console.log(err);
-        alert("Try again later");
+        alert('Try again later');
+        //_this.props.setLoadingStatus('hide');
+        // _this.props.toggleDailogAndSetText(true, 'Try again later');
     });
-  }
-
-  // componentWillMount()
-  // {
-  //     this.initData();
-  // }
-
-
-  componentDidUpdate()
-  {
-      this.initData();
-  }
-
-  componentDidMount()
-  {
-    this.initData();
-  }
-
-
-
-
+  };
 
   render() {
-    const viewTabel=()=>
-    {
-      return (
-          <ReportResult />
-        )
-    }
+    let {match}=this.props;
     return (
-      <div className="Report">
-        <SearchForm />
+      <div className="">
+        <SearchForm match={match}/>
 
-        <ReportResult />
+        <ReportResult match={match}/>
       </div>
     );
   }
@@ -78,6 +61,16 @@ const mapDispatchToProps = dispatch => ({
   showTable:(state)=>
   {
     dispatch({type:"SHOW_TABLE",state});
+  },
+  setReportResult:(reportResult)=>
+  {
+    dispatch({type:"SHOW_TABLE",reportResult});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleDailogAndSetText: (dailogState,msg) => {
+    dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
   },
   setForm: (required=[],pattern=[]) => {
     console.log(required);

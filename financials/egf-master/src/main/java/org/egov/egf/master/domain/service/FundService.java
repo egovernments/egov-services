@@ -6,6 +6,7 @@ import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.domain.repository.FundRepository;
@@ -40,6 +41,10 @@ public class FundService {
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
             }
+            for(Fund b:funds) {
+                b.setId(fundRepository.getNextSequence());
+                b.add();
+            }
 
         } catch (CustomBindException e) {
 
@@ -62,6 +67,9 @@ public class FundService {
 
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
+            }
+            for(Fund b:funds) {
+                b.update();
             }
 
         } catch (CustomBindException e) {

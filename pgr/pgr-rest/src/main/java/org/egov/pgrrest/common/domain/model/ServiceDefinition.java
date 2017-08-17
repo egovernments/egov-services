@@ -73,6 +73,10 @@ public class ServiceDefinition {
     public List<AttributeDefinition> getNonComputedIntegerAttributes() {
         return getAttributesOfType(AttributeDataType.INTEGER);
     }
+    
+    public List<AttributeDefinition> getNonComputedLongAttributes() {
+        return getAttributesOfType(AttributeDataType.LONG);
+    }
 
     public List<AttributeDefinition> getNonComputedDoubleAttributes() {
         return getAttributesOfType(AttributeDataType.DOUBLE);

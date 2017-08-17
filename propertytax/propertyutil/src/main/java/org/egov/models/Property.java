@@ -100,5 +100,9 @@ public class Property {
 
 	@JsonProperty("demands")
 	private List<Demand> demands = null;
+	
+	@JsonProperty("sequenceNo")
+	@NotNull
+	private Integer sequenceNo = null; 
 
 }

@@ -101,14 +101,14 @@ public class RoleActionRepositoryTest {
 		assertThat(roleActions.size()).isEqualTo(2);
 
 	}
-	
+
 	@Test(expected = NullPointerException.class)
 	@Sql(scripts = { "/sql/clearRole.sql", "/sql/clearAction.sql", "/sql/insertRoleData.sql",
 			"/sql/insertActionData.sql" })
 	public void testShouldNotCreateRoleActionsWithoutActions() {
 
 		RoleActionsRequest roleRequest = new RoleActionsRequest();
-		
+
 		Role role = Role.builder().code("CITIZEN").build();
 
 		roleRequest.setTenantId("default");
@@ -116,22 +116,22 @@ public class RoleActionRepositoryTest {
 		roleRequest.setRequestInfo(getRequestInfo());
 
 		roleRequest.setRole(role);
-		
+
 		List<RoleAction> roleActions = roleActionRepository.createRoleActions(roleRequest);
 
 		assertThat(roleActions.size()).isEqualTo(2);
 
 	}
-	
+
 	@Test(expected = BadSqlGrammarException.class)
 	@Sql(scripts = { "/sql/clearRole.sql", "/sql/clearAction.sql", "/sql/insertRoleData.sql",
 			"/sql/insertActionData.sql" })
 	public void testShouldNotCreateRoleActionsWithEmptyActions() {
 
 		RoleActionsRequest roleRequest = new RoleActionsRequest();
-		
+
 		List<Action> actions = new ArrayList<Action>();
-		
+
 		Role role = Role.builder().code("CITIZEN").build();
 
 		roleRequest.setTenantId("default");
@@ -139,13 +139,83 @@ public class RoleActionRepositoryTest {
 		roleRequest.setRequestInfo(getRequestInfo());
 
 		roleRequest.setRole(role);
-		
+
 		roleRequest.setActions(actions);
-		
+
 		List<RoleAction> roleActions = roleActionRepository.createRoleActions(roleRequest);
 
 		assertThat(roleActions.size()).isEqualTo(2);
 
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearRole.sql", "/sql/clearAction.sql", "/sql/insertRoleData.sql",
+			"/sql/insertActionData.sql" })
+	public void testCheckActionNamesAreExist() {
+
+		RoleActionsRequest roleActionRequest = new RoleActionsRequest();
+
+		Action action1 = Action.builder().name("Get all ReceivingMode").build();
+		Action action2 = Action.builder().name("Get all CompaintTypeCategory").build();
+
+		List<Action> list = new ArrayList<Action>();
+
+		list.add(action1);
+		list.add(action2);
+
+		roleActionRequest.setActions(list);
+
+		boolean exist = roleActionRepository.checkActionNamesAreExistOrNot(roleActionRequest);
+
+		assertThat(exist == true);
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearRole.sql", "/sql/clearAction.sql", "/sql/insertRoleData.sql",
+			"/sql/insertActionData.sql" })
+	public void testCheckActionNamesAreNotExist() {
+
+		RoleActionsRequest roleActionRequest = new RoleActionsRequest();
+
+		Action action1 = Action.builder().name("testActionOne").build();
+		Action action2 = Action.builder().name("testActionTWo").build();
+
+		List<Action> list = new ArrayList<Action>();
+
+		list.add(action1);
+		list.add(action2);
+
+		roleActionRequest.setActions(list);
+
+		boolean exist = roleActionRepository.checkActionNamesAreExistOrNot(roleActionRequest);
+
+		assertThat(exist == false);
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearRole.sql", "/sql/clearAction.sql", "/sql/insertRoleData.sql",
+			"/sql/insertActionData.sql" })
+	public void testAddUniqueValidationForTenantAndRoleAndAction() {
+
+		RoleActionsRequest roleActionRequest = new RoleActionsRequest();
+
+		Role role = Role.builder().code("PGR").build();
+
+		Action action1 = Action.builder().name("Get all ReceivingMode").build();
+		Action action2 = Action.builder().name("Get all CompaintTypeCategory").build();
+
+		List<Action> list = new ArrayList<Action>();
+
+		list.add(action1);
+		list.add(action2);
+
+		roleActionRequest.setActions(list);
+
+		roleActionRequest.setRole(role);
+
+		boolean exist = roleActionRepository.addUniqueValidationForTenantAndRoleAndAction(roleActionRequest);
+
+		assertThat(exist == true);
 	}
 
 	private RequestInfo getRequestInfo() {

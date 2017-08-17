@@ -18,6 +18,7 @@ import lombok.Setter;
 @Builder
 public class AccountCodePurposeEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_accountcodepurpose";
+	public static final String SEQUENCE_NAME = "seq_egf_accountcodepurpose";
 	private String id;
 	private String name;
 

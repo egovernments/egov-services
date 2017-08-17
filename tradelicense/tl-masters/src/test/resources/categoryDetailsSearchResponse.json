@@ -17,8 +17,8 @@
                 {
                     "id": 5,
                     "categoryId": 10,
-                    "feeType": "License",
-                    "rateType": "Flat_By_Percentage",
+                    "feeType": "LICENSE",
+                    "rateType": "FLAT_BY_PERCENTAGE",
                     "uomId": 1
                 }],
             "auditDetails": {

@@ -1,0 +1,1369 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Property Masters",
+		"_postman_id": "7f080757-1455-fc8b-8b51-4848e5442f1a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8098/pt-property/property/usages/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/usages/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"usages",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"0fb32bf5-1d1a-4243-a8c8-4638fa9413e4\"\n\n    },\n  \"usageMasters\": [\n    {\n      \"tenantId\": \"default\",\n      \"name\": \"Test_586798\",\n      \"code\": \"TEST_Usage\",\n      \"nameLocal\": \"Testing_586798\",\n      \"parent\" : null,\n      \"description\": \"creating 4 master\",\n      \"active\": true,\n      \"isResidential\": true,\n      \"orderNumber\": 1,\n      \"auditDetails\":{\n        \"createdBy\":\"user\",\n        \"lastModifiedBy\":\"user\"\n      }\n    }\n  ]\n}"
+				},
+				"description": "Usage master Create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/usages/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/usages/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"0fb32bf5-1d1a-4243-a8c8-4638fa9413e4\"\n\n    },\n  \"usageMasters\": [\n    {\n      \"id\":160,\n      \"tenantId\": \"default\",\n      \"name\": \"Test_586798\",\n      \"code\": \"TEST_Usage\",\n      \"nameLocal\": \"Testing_586798\",\n      \"parent\": null,\n      \"description\": \"Updating master\",\n      \"active\": true,\n      \"isResidential\": true,\n      \"orderNumber\": 1,\n      \"auditDetails\":{\n         \"createdBy\":\"user\",\n        \"lastModifiedBy\":\"user\"\n      }\n    }\n  ]\n}"
+				},
+				"description": "Usage master update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/usages/_search?tenantId=default&parent=0",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/usages/_search?tenantId=default&parent=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"usages",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "parent",
+							"value": "0",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"0fb32bf5-1d1a-4243-a8c8-4638fa9413e4\"\n\n    }\n}"
+				},
+				"description": "usage master search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/depreciations/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/depreciations/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"depreciations",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\n    },\n    \"depreciations\":[{\n      \"tenantId\":\"default\",\n      \"code\":\"TEST_Depreciation\",\n      \"fromYear\":2017,\n      \"toYear\":2016,\n      \"description\":\"intial\",\n         \"auditDetails\":{\n        \"createdBy\":\"1\",\n        \"lastModifiedBy\":\"1\"\n      }\n    }]\n}"
+				},
+				"description": "property deperciation master create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/depreciations/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/depreciations/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\n    },\n    \"depreciations\":[{\n      \"id\":\"4\",\n      \"tenantId\":\"default\",\n      \"code\":\"TEST_Depreciation\",\n      \"fromYear\":2017,\n      \"toYear\":2016,\n      \"description\":\"Update Depreciation\",\n         \"auditDetails\":{\n        \"createdBy\":\"1\",\n        \"lastModifiedBy\":\"1\"\n      }\n    }]\n}"
+				},
+				"description": "Property Depreciation Master update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/depreciations/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/depreciations/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"depreciations",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\n    }\n}"
+				},
+				"description": "Property Depriciations master Search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/departments/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/departments/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"departments",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n  \"departments\": [{\r\n    \"tenantId\": \"default\",\r\n    \"category\": \"TEST_department\",\r\n    \"name\": \"kumar\",\r\n    \"code\": \"0345\",\r\n    \"auditDetails\": {\r\n      \"createdBy\": \"1\",\r\n      \"lastModifiedBy\": \"1\",\r\n      \"createdTime\": null,\r\n      \"lastModifiedTime\": null\r\n    }\r\n  }]\r\n}"
+				},
+				"description": "Department Master Create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/departments/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/departments/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"8cc68381-569c-4035-9442-0bb3bed63f55\"\r\n    },\r\n    \"departments\": [{\r\n      \"id\":117,\r\n        \"tenantId\": \"default\",\r\n        \"category\":\"TEST_department\",\r\n        \"name\": \"kumar Test\",\r\n        \"code\": \"0345\",\r\n       \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": null,\r\n                \"lastModifiedTime\": null\r\n            }\r\n    }]\r\n}\r\n"
+				},
+				"description": "Department master update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/departments/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/departments/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"departments",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"8cc68381-569c-4035-9442-0bb3bed63f55\"\r\n    }\r\n}"
+				},
+				"description": "Department Master search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/walltypes/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/walltypes/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"walltypes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"8cc68381-569c-4035-9442-0bb3bed63f55\"\r\n    },\r\n    \"wallTypes\": [{\r\n      \"tenantId\": \"default\",\r\n      \"name\": \"create_walltype\",\r\n      \"code\": \"code_walltype\",\r\n      \"nameLocal\": \"nameLocal_walltype\",\r\n      \"description\": \"Wall type description!!\",\r\n      \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": null,\r\n                \"lastModifiedTime\": null\r\n            }\r\n    }]\r\n  }"
+				},
+				"description": "Walltype Property Master create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/walltypes/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/walltypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n\"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"8cc68381-569c-4035-9442-0bb3bed63f55\"\r\n    },\r\n    \"wallTypes\": [{\r\n      \"id\":44,\r\n      \"tenantId\": \"default\",\r\n      \"name\":\"create_walltype\",\r\n      \"code\": \"code_walltype\",\r\n      \"nameLocal\": \"nameLocal_walltype\",\r\n      \"description\":\"walltype update\",\r\n      \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": null,\r\n                \"lastModifiedTime\": null\r\n            }\r\n    }]\r\n  }"
+				},
+				"description": "Walltype Update masters"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/walltypes/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/walltypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"walltypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"8cc68381-569c-4035-9442-0bb3bed63f55\"\n    }\n}"
+				},
+				"description": "walltypes search masters"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/mutationmasters/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/mutationmasters/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"mutationmasters",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"cf92ed10-eb66-4f7c-9ae6-91c523ab5082\"\r\n    },\r\n    \"mutationMasters\":[{\r\n      \"tenantId\":\"default\",\r\n      \"code\":\"test_mutation\",\r\n      \"name\":\"mutation\",\r\n       \"nameLocal\": null,\r\n          \"description\": \"mutation master\",\r\n         \"auditDetails\":{\r\n        \"createdBy\":null,\r\n        \"lastModifiedBy\":null\r\n      }\r\n    }]\r\n}"
+				},
+				"description": "Mutation Master create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/mutationmasters/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/mutationmasters/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"cf92ed10-eb66-4f7c-9ae6-91c523ab5082\"\r\n    },\r\n    \"mutationMasters\":[{\r\n      \"id\": 21,\r\n      \"tenantId\":\"default\",\r\n      \"code\":\"test_mutation\",\r\n      \"name\":\"mutation\",\r\n       \"nameLocal\": null,\r\n          \"description\": \"update mutation master\",\r\n         \"auditDetails\":{\r\n        \"createdBy\":null,\r\n        \"lastModifiedBy\":null\r\n      }\r\n    }]\r\n}"
+				},
+				"description": "Mutation master update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/mutationmasters/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/mutationmasters/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"mutationmasters",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"82430c82-9f85-4003-b656-7c65f2e9574f\"\r\n    }\r\n}"
+				},
+				"description": "mutation master search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/documenttypes/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/documenttypes/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"documenttypes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n  \"documentType\":[{\r\n    \"tenantId\":\"default\",\r\n    \"name\": \"username\",\r\n    \"code\":\"Test_Document\",\r\n    \"application\": \"BIFURCATION\",\r\n   \"auditDetails\":{\r\n     \"createdBy\":null,\r\n     \"lastModifiedBy\":null\r\n    }\r\n  }]\r\n}"
+				},
+				"description": "Property Document Type masters create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/documenttypes/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/documenttypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n  \"documentType\":[{\r\n  \"id\" : 4,\r\n  \"tenantId\":\"default\",\r\n  \"name\": \"username\",\r\n  \"code\": \"Test_update_Document\",\r\n  \"application\": \"BIFURCATION\",\r\n   \"auditDetails\":{\r\n    \"createdBy\": \"1\",\r\n    \"lastModifiedBy\": \"1\"\r\n    }\r\n  }]\r\n}"
+				},
+				"description": "Property Document Types update master"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/documenttypes/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/documenttypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"documenttypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\n    }\n}"
+				},
+				"description": "Property Documnet Types search Master"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/floortypes/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/floortypes/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"floortypes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n   \"floorTypes\": [\r\n    {\r\n      \"tenantId\": \"default\",\r\n      \"name\": \"Test_FloorType\",\r\n      \"code\": \"FloorSection123\",\r\n      \"nameLocal\": \"Test_FloorType\",\r\n      \"description\": \"Test_FloorType\",\r\n      \"auditDetails\": {\r\n        \"createdBy\": null,\r\n        \"lastModifiedBy\": null,\r\n        \"createdTime\": null,\r\n        \"lastModifiedTime\": null\r\n      }\r\n    }\r\n  ]\r\n}\r\n\r\n"
+				},
+				"description": "FloorType Property Master Create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/floortypes/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/floortypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n  \"floorTypes\": [{\r\n     \"id\": 30,\r\n    \"tenantId\": \"default\",\r\n    \"name\": \"Test_FloorType\",\r\n    \"code\": \"FloorSection123\",\r\n    \"nameLocal\": \"Test_FloorType\",\r\n    \"description\": \"Update_FloorType\",\r\n    \"auditDetails\": {\r\n      \"createdBy\": null,\r\n      \"lastModifiedBy\": null,\r\n      \"createdTime\": null,\r\n      \"lastModifiedTime\": null\r\n    }\r\n  }]\r\n\r\n}"
+				},
+				"description": "Property FloorTypes Update masters"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/floortypes/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/floortypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"floortypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"userInfo\" :{\n          \"id\" :1\n        },\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\n    }\n}"
+				},
+				"description": "Property Floortypes Masters Search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/propertytypes/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/propertytypes/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"propertytypes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n    \"propertyTypes\": [{\r\n        \"tenantId\": \"default\",\r\n        \"name\": \"property_type\",\r\n        \"code\": \"test_123\",\r\n       \"auditDetails\": {\r\n      \"createdBy\": null,\r\n      \"lastModifiedBy\": null,\r\n      \"createdTime\": null,\r\n      \"lastModifiedTime\": null\r\n    }\r\n    }]\r\n}\r\n"
+				},
+				"description": "property type create master"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/propertytypes/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/propertytypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n    \"propertyTypes\": [{\r\n      \"id\":41,\r\n        \"tenantId\": \"default\",\r\n        \"name\": \"update_property_type\",\r\n        \"code\": \"test_123\",\r\n       \"auditDetails\": {\r\n      \"createdBy\": null,\r\n      \"lastModifiedBy\": null,\r\n      \"createdTime\": null,\r\n      \"lastModifiedTime\": null\r\n    }\r\n    }]\r\n}\r\n"
+				},
+				"description": "property types update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/propertytypes/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/propertytypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"propertytypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    }\r\n}\r\n"
+				},
+				"description": "property types search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/occuapancies/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/occuapancies/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"occuapancies",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n    \r\n  \"occuapancyMasters\": [\r\n    {\r\n      \"tenantId\": \"default\",\r\n      \"name\": \"test_occupancytype\",\r\n      \"code\": \"Occupancy_SECTOR\",\r\n      \"nameLocal\":null,\r\n      \"description\": null,\r\n      \"auditDetails\": {\r\n        \"createdBy\": null,\r\n        \"lastModifiedBy\": null,\r\n        \"createdTime\": null,\r\n        \"lastModifiedTime\": null\r\n      }\r\n    }\r\n  ]\r\n}\r\n"
+				},
+				"description": "occupancy master create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/occuapancies/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/occuapancies/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n    \r\n  \"occuapancyMasters\": [\r\n    {\r\n      \"id\":24,\r\n      \"tenantId\": \"default\",\r\n      \"name\": \"test_occupancytype\",\r\n      \"code\": \"UpdateOccupancy_SECTOR\",\r\n      \"nameLocal\":null,\r\n      \"description\": null,\r\n      \"auditDetails\": {\r\n        \"createdBy\": null,\r\n        \"lastModifiedBy\": null,\r\n        \"createdTime\": null,\r\n        \"lastModifiedTime\": null\r\n      }\r\n    }\r\n  ]\r\n}\r\n"
+				},
+				"description": "occupancy master update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/occuapancies/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/occuapancies/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"occuapancies",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    }\r\n}"
+				},
+				"description": "occuapncies search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/structureclasses/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/structureclasses/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"structureclasses",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n      \"structureClasses\":[  \r\n         {  \r\n            \"tenantId\":\"default\",\r\n            \"name\":\"structureclasses\",\r\n            \"code\":\"test_structure\",\r\n            \"nameLocal\":null,\r\n            \"description\":null,\r\n            \"active\":null,\r\n            \"orderNumber\":null,\r\n            \"auditDetails\" : {\r\n              \"createdBy\": null,\r\n              \"lastModifiedBy\": null,\r\n              \"createdTime\": null,\r\n              \"lastModifiedTime\": null\r\n            }\r\n         }\r\n      ]\r\n}"
+				},
+				"description": "structure classes create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/structureclasses/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/structureclasses/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n      \"structureClasses\":[  \r\n         {  \r\n           \"id\":31,\r\n            \"tenantId\":\"default\",\r\n            \"name\":\"structureclasses\",\r\n            \"code\":\"test_structure\",\r\n            \"nameLocal\":null,\r\n            \"description\":\"Updatestructureclasses\",\r\n            \"active\":null,\r\n            \"orderNumber\":null,\r\n            \"auditDetails\" : {\r\n              \"createdBy\": null,\r\n              \"lastModifiedBy\": null,\r\n              \"createdTime\": null,\r\n              \"lastModifiedTime\": null\r\n            }\r\n         }\r\n      ]\r\n}"
+				},
+				"description": "structure classes update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/structureclasses/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/structureclasses/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"structureclasses",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    }\r\n}"
+				},
+				"description": "structure classes search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/rooftypes/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/rooftypes/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"rooftypes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n   \"roofTypes\": [\r\n    {\r\n      \"tenantId\": \"default\",\r\n      \"name\": \"roofTypes\",\r\n      \"code\": \"Roof_Unique\",\r\n      \"nameLocal\": \"Mansard KKL\",\r\n      \"description\": \"Imported from USA\",\r\n      \"auditDetails\": {\r\n        \"createdBy\": null,\r\n        \"lastModifiedBy\": null,\r\n        \"createdTime\": null,\r\n        \"lastModifiedTime\": null\r\n      }\r\n    }\r\n  ]\r\n}\r\n\r\n"
+				},
+				"description": "rooftypes create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/rooftypes/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/rooftypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n   \"roofTypes\": [\r\n    {\r\n      \"id\":22,\r\n      \"tenantId\": \"default\",\r\n      \"name\": \"roofTypes\",\r\n      \"code\": \"Roof_Unique\",\r\n      \"nameLocal\": \"Mansard KKL\",\r\n      \"description\": \"Imported from INDIA\",\r\n      \"auditDetails\": {\r\n        \"createdBy\": null,\r\n        \"lastModifiedBy\": null,\r\n        \"createdTime\": null,\r\n        \"lastModifiedTime\": null\r\n      }\r\n    }\r\n  ]\r\n}\r\n\r\n"
+				},
+				"description": "roof types update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/rooftypes/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/rooftypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"rooftypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    }\r\n}"
+				},
+				"description": "roof types search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/woodtypes/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/woodtypes/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"woodtypes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n    \"woodTypes\": [\r\n    {\r\n      \"tenantId\": \"default\",\r\n      \"name\": \"Wood Type\",\r\n      \"code\": \"TEST_woodtype\",\r\n      \"nameLocal\":null,\r\n      \"description\": \"Imported from USA\",\r\n      \"auditDetails\": {\r\n        \"createdBy\": null,\r\n        \"lastModifiedBy\": null,\r\n        \"createdTime\": null,\r\n        \"lastModifiedTime\": null\r\n      }\r\n    }\r\n  ]\r\n}\r\n\r\n"
+				},
+				"description": "wood types create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/woodtypes/_update",
+			"request": {
+				"url": "http://localhost:8098/pt-property/property/woodtypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    },\r\n    \"woodTypes\": [\r\n    {\r\n      \"id\": 45,\r\n      \"tenantId\": \"default\",\r\n      \"name\": \"Wood Type\",\r\n      \"code\": \"TEST_MWTT\",\r\n      \"nameLocal\":null,\r\n      \"description\": \"Imported from INDIA\",\r\n      \"auditDetails\": {\r\n        \"createdBy\": null,\r\n        \"lastModifiedBy\": null,\r\n        \"createdTime\": null,\r\n        \"lastModifiedTime\": null\r\n      }\r\n    }\r\n  ]\r\n}\r\n\r\n"
+				},
+				"description": "wood types update"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8098/pt-property/property/woodtypes/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8098/pt-property/property/woodtypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"pt-property",
+						"property",
+						"woodtypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"emp\",\r\n        \"ver\": \"1.0\",\r\n        \"ts\": \"10032017\",\r\n        \"action\": \"create\",\r\n        \"did\": \"1\",\r\n        \"userInfo\" :{\r\n          \"id\" :1\r\n        },\r\n        \"key\": \"abcdkey\",\r\n        \"msgId\": \"20170310130900\",\r\n        \"requesterId\": \"rajesh\",\r\n        \"authToken\": \"c71e763f-7fc8-4044-98f4-e08dd08cbcd6\"\r\n    }\r\n}"
+				},
+				"description": "woodtypes search"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-property/property/apartment/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/property/apartment/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"property",
+						"apartment",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10032017\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"0e557f47-d3cb-4d45-8729-127ef0a8f18a\",\n    \"userInfo\": {\n      \"id\": 74,\n      \"userName\": \"manas\",\n      \"name\": \"manas\",\n      \"type\": \"EMPLOYEE\",\n      \"mobileNumber\": \"1234567890\",\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": 2,\n          \"name\": \"Employee\",\n          \"code\": \"EMPLOYEE\",\n          \"tenantId\": \"default\"\n        }\n      ]\n    }\n  },\n  \"apartments\": [\n    {\n      \"tenantId\": \"default\",\n      \"code\": \"1001\",\n      \"name\": \"AAA_APARTMENT\",\n      \"totalBuiltUpArea\": 5555,\n      \"totalProperties\": 145,\n      \"totalFloors\": 19,\n      \"totalOpenSpace\": 10.5,\n      \"liftFacility\": false,\n      \"powerBackUp\": true,\n      \"parkingFacility\": false,\n      \"residtinalProperties\": 10,\n      \"nonResidtinalProperties\": 60,\n      \"sourceOfWater\": \"test\",\n      \"floorDetails\": {\n        \"floorNo\": \"floorNo\",\n        \"units\": [\n          {\n            \"unitNo\": 10,\n            \"unitType\": \"FLAT\",\n            \"units\": [],\n            \"length\": 10,\n            \"width\": 6,\n            \"builtupArea\": 1500,\n            \"assessableArea\": 1300,\n            \"bpaBuiltupArea\": 1700,\n            \"bpaNo\": \"test-bpaNo\",\n            \"bpaDate\": \"2017-08-02\",\n            \"usage\": \"usage\",\n            \"occupancyType\": \"occupancytype\",\n            \"occupierName\": \"occupiername\",\n            \"firmName\": \"firmname\",\n            \"rentCollected\": 45000,\n            \"structure\": \"structure\",\n            \"age\": \"age\",\n            \"exemptionReason\": \"exemption-reason\",\n            \"isStructured\": true,\n            \"occupancyDate\": \"2017-08-02\",\n            \"constCompletionDate\": \"2017-08-02\",\n            \"manualArv\": 100,\n            \"arv\": 50,\n            \"electricMeterNo\": \"12345-E\",\n            \"waterMeterNo\": \"12345-W\",\n            \"isAuthorised\": true\n          }\n        ]\n      }\n    }\n  ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-property/property/apartment/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/property/apartment/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"property",
+						"apartment",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n       \"apiId\": \"emp\",\n       \"ver\": \"1.0\",\n       \"ts\": \"10032017\",\n       \"action\": \"create\",\n       \"did\": \"1\",\n       \"key\": \"abcdkey\",\n       \"msgId\": \"20170310130900\",\n       \"requesterId\": \"rajesh\",\n       \"authToken\": \"0e557f47-d3cb-4d45-8729-127ef0a8f18a\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-property/property/apartment/_update",
+			"request": {
+				"url": "http://localhost:8080/pt-property/property/apartment/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10032017\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"0e557f47-d3cb-4d45-8729-127ef0a8f18a\",\n    \"userInfo\": {\n      \"id\": 74,\n      \"userName\": \"manas\",\n      \"name\": \"manas\",\n      \"type\": \"EMPLOYEE\",\n      \"mobileNumber\": \"1234567890\",\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": 2,\n          \"name\": \"Employee\",\n          \"code\": \"EMPLOYEE\",\n          \"tenantId\": \"default\"\n        }\n      ]\n    }\n  },\n  \"apartments\": [\n    {\n      \"id\":12,\n      \"tenantId\": \"default\",\n      \"code\": \"1000001\",\n      \"name\": \"BB-APARTMENT\",\n      \"totalBuiltUpArea\": 55555,\n      \"totalProperties\": 145,\n      \"totalFloors\": 19,\n      \"totalOpenSpace\": 10.5,\n      \"liftFacility\": false,\n      \"powerBackUp\": false,\n      \"parkingFacility\": true,\n      \"residtinalProperties\": 10,\n      \"nonResidtinalProperties\": 60,\n      \"sourceOfWater\": \"test\",\n      \"floorDetails\": {\n        \"floorNo\": \"floorNo\",\n        \"units\": [\n          {\n            \"unitNo\": 10,\n            \"unitType\": \"FLAT\",\n            \"units\": [],\n            \"length\": 10,\n            \"width\": 10,\n            \"builtupArea\": 1500,\n            \"assessableArea\": 1500,\n            \"bpaBuiltupArea\": 1500,\n            \"bpaNo\": \"test-bpaNo\",\n            \"bpaDate\": \"2017-08-02\",\n            \"usage\": \"usage\",\n            \"occupancyType\": \"occupancytype\",\n            \"occupierName\": \"occupiername\",\n            \"firmName\": \"firmname\",\n            \"rentCollected\": 15000,\n            \"structure\": \"structure\",\n            \"age\": \"age\",\n            \"exemptionReason\": \"exemption-reason\",\n            \"isStructured\": true,\n            \"occupancyDate\": \"2017-08-02\",\n            \"constCompletionDate\": \"2017-08-02\",\n            \"manualArv\": 100,\n            \"arv\": 50,\n            \"electricMeterNo\": \"12345-E\",\n            \"waterMeterNo\": \"12345-W\",\n            \"isAuthorised\": true\n          }\n        ]\n      }\n    }\n  ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

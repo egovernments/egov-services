@@ -45,6 +45,8 @@ import org.egov.eis.repository.DepartmentDesignationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DepartmentDesignationService {
 
@@ -55,8 +57,8 @@ public class DepartmentDesignationService {
 		return departmentDesignationRepository.findForId(id);
 	}
 
-	public DepartmentDesignation getByDepartmentAndDesignation(Long department, Long designation) {
-		return departmentDesignationRepository.findByDepartmentAndDesignation(department, designation);
+	public DepartmentDesignation getByDepartmentAndDesignation(Long department, Long designation, String tenantId) {
+		return departmentDesignationRepository.findByDepartmentAndDesignation(department, designation, tenantId);
 	}
 
 	public void create(DepartmentDesignation departmentDesignation) {

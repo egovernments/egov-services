@@ -1,18 +1,12 @@
 package org.egov.commons.model;
 
-import java.util.Date;
-import java.util.List;
+import lombok.*;
+import org.egov.common.contract.request.User;
 
 import javax.validation.constraints.NotNull;
-
-import org.egov.commons.web.contract.BusinessDetailsRequestInfo;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Builder
@@ -38,7 +32,7 @@ public class BusinessDetails {
 
 	private String businessUrl;
 
-	private Date voucherCutoffDate;
+	private Long voucherCutoffDate;
 
 	private Integer ordernumber;
 
@@ -58,7 +52,7 @@ public class BusinessDetails {
 	private Boolean callBackForApportioning;
 
 	@NotNull
-	private BusinessCategory businessCategory;
+	private Long businessCategory;
 
 	@NotNull
 	private String function;
@@ -69,16 +63,16 @@ public class BusinessDetails {
 	@NotNull
 	private Long createdBy;
 
-	private Date createdDate;
+	private Long createdDate;
 
 	private List<BusinessAccountDetails> accountDetails;
 
 	@NotNull
 	private Long lastModifiedBy;
 
-	private Date lastModifiedDate;
+	private Long lastModifiedDate;
 
-	public BusinessDetails(BusinessDetailsRequestInfo detailsInfo, BusinessCategory modelCategory,AuthenticatedUser user) {
+	public BusinessDetails(org.egov.commons.web.contract.BusinessDetails detailsInfo,User user) {
 		id = detailsInfo.getId();
 		name = detailsInfo.getName();
 		isEnabled = detailsInfo.getActive();
@@ -93,22 +87,27 @@ public class BusinessDetails {
 		department = detailsInfo.getDepartment();
 		fundSource = detailsInfo.getFundSource();
 		functionary = detailsInfo.getFunctionary();
-		businessCategory = modelCategory;
+		businessCategory = detailsInfo.getBusinessCategory();
 		function = detailsInfo.getFunction();
 		tenantId = detailsInfo.getTenantId();
 		createdBy=user.getId();
 		lastModifiedBy=user.getId();
 		callBackForApportioning=detailsInfo.getCallBackForApportioning();
+        accountDetails = new BusinessAccountDetails().getAccountDetails(detailsInfo.getAccountDetails());
 	}
 
 	public BusinessDetails toDomainModel() {
-		BusinessCategory category = BusinessCategory.builder().id(businessCategory.getId()).build();
-		return BusinessDetails.builder().id(id).name(name).isEnabled(isEnabled).code(code).businessType(businessType)
+		return org.egov.commons.model.BusinessDetails.builder().id(id).name(name).isEnabled(isEnabled).code(code).businessType(businessType)
 				.businessUrl(businessUrl).voucherCreation(voucherCreation).isVoucherApproved(isVoucherApproved)
 				.voucherCutoffDate(voucherCutoffDate).ordernumber(ordernumber).function(function).fund(fund)
 				.functionary(functionary).fundSource(fundSource).tenantId(tenantId).department(department)
                 .callBackForApportioning(callBackForApportioning)
-                .businessCategory(category).build();
+                .businessCategory(businessCategory).build();
 	}
+
+    public List<BusinessDetails> getDomainList(List<org.egov.commons.web.contract.BusinessDetails> detailsList,User user) {
+        return detailsList.stream().map(businessDetails -> new BusinessDetails(businessDetails, user))
+                .collect(Collectors.toList());
+    }
 
 }

@@ -29,22 +29,20 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 class ShowField extends Component {
   constructor(props) {
        super(props);
-
    }
 
-
-
-   componentWillMount()
-   {
-     $('#searchTable').DataTable({
-       dom: 'lBfrtip',
-       buttons: [],
-        bDestroy: true,
-        language: {
-           "emptyTable": "No Records"
-        }
-      });
-   }
+  //  componentWillMount()
+  //  {
+  //    console.log('will mount');
+  //    $('#searchTable').DataTable({
+  //      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+  //      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+  //       bDestroy: true,
+  //       language: {
+  //          "emptyTable": "No Records"
+  //       }
+  //     });
+  //  }
 
   componentWillUnmount()
   {
@@ -53,10 +51,8 @@ class ShowField extends Component {
      .destroy(true);
   }
 
-
-
-
   componentWillUpdate() {
+    // console.log('will update');
     let {flag}=this.props;
     if(flag == 1) {
       flag = 0;
@@ -64,20 +60,24 @@ class ShowField extends Component {
     }
   }
 
-  componentDidUpdate() {
-          $('#reportTable').DataTable({
-            dom: 'lBfrtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
-             ],
-             ordering: false,
-             bDestroy: true,
+  componentWillReceiveProps(nextprops){
+  }
 
-          });
+  componentDidUpdate() {
+    // console.log('did update');
+    $('#reportTable').DataTable({
+      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      buttons: [
+               'copy', 'csv', 'excel', 'pdf', 'print'
+       ],
+       ordering: false,
+       bDestroy: true,
+
+    });
   }
 
   drillDown=(e,i,i2,item,item1)=>{
-     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute} = this.props;
+     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute,match} = this.props;
      let object=reportResult.reportHeader[i2];
 
     //  console.log(object);
@@ -135,7 +135,7 @@ class ShowField extends Component {
         // console.log(queryString);
         // console.log(splitArray[0].split("=")[1]);
 
-        let response=Api.commonApiPost("pgr-master/report/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
+        let response=Api.commonApiPost(match.params.moduleName+"/report/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
         {
           // console.log(response)
           setReportResult(response)
@@ -157,8 +157,21 @@ class ShowField extends Component {
 
   }
 
+  checkIfDate = (val, i) => {
+
+    let {reportResult}=this.props;
+    if(reportResult && reportResult.reportHeader && reportResult.reportHeader.length && reportResult.reportHeader[i] && reportResult.reportHeader[i].type == "epoch") {
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+             + _date.getFullYear();
+    } else {
+      return val;
+    }
+  }
+
   render() {
-    let {drillDown}=this
+    let {drillDown,checkIfDate}=this
     let {
       isTableShow,
       metaData,
@@ -206,7 +219,7 @@ class ShowField extends Component {
                         return (
                           <td key={i2} onClick={(e)=>{
                             drillDown(e,i,i2,item,item1)
-                          }}>{item1}</td>
+                          }}>{checkIfDate(item1, i2)}</td>
                         )
                       })}
                     </tr>

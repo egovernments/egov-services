@@ -52,6 +52,7 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
     @Override
     public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         final Connection connection = new Connection();	
+        connection.setId(rs.getLong("conn_id"));
         connection.setTenantId(rs.getString("conn_tenant")); 
         connection.setConnectionType(rs.getString("conn_connType")); 
         connection.setBillingType(rs.getString("conn_billtype")); 
@@ -68,7 +69,8 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         connection.setPipesizeId(rs.getString("pipesize_id")); 
         connection.setSourceTypeId(rs.getString("watersource_id")); 
         connection.setSourceType(rs.getString("watersource_name"));
-        connection.setNumberOfPersons(rs.getInt("conn_noofperson"));  
+        connection.setNumberOfPersons(rs.getInt("conn_noofperson")); 
+        connection.setStateId(rs.getLong("conn_stateid")); 
         connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
         connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
         connection.setWaterTreatment((null!=rs.getString("watertreatmentname") && rs.getString("watertreatmentname")!="")? rs.getString("watertreatmentname")  : "" );
@@ -79,9 +81,7 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         connection.setPropertyIdentifier(rs.getString("conn_propid"));  
         connection.setCreatedDate(rs.getString("createdtime"));
         Property prop = new Property();
-        prop.setUsageType(rs.getString("usagetypecode")); 
         prop.setUsageTypeId(rs.getString("conn_usgtype"));
-        prop.setPropertyType(rs.getString("propertytypecode")); 
         prop.setPropertyTypeId(rs.getString("conn_proptype"));
         prop.setAddress(rs.getString("conn_propaddress"));  
         prop.setPropertyidentifier(rs.getString("conn_propid"));
@@ -89,9 +89,6 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
         	prop.setNameOfApplicant(rs.getString("propertyowner"));
         }
         connection.setProperty(prop);
-   /*     connection.setAssetIdentifier(rs.getString("assetidentifier"));
-        connection.setStatus(rs.getString("status"));
-        connection.setStateId(rs.getLong("stateid"));*/
         return connection;
     }
 }

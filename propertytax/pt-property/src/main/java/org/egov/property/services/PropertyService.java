@@ -1,12 +1,6 @@
 package org.egov.property.services;
 
-import org.egov.models.PropertyRequest;
-import org.egov.models.PropertyResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.SpecialNoticeRequest;
-import org.egov.models.SpecialNoticeResponse;
-import org.egov.models.TitleTransferRequest;
-import org.egov.models.TitleTransferResponse;
+import org.egov.models.*;
 
 public interface PropertyService {
 
@@ -75,10 +69,29 @@ public interface PropertyService {
 	public TitleTransferResponse updateTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception;
 	
 	/**
+	 * Save property history and update property
+	 * 
+	 * @param titleTransferRequest
+	 * @throws Exception
+	 */
+	public PropertyRequest savePropertyHistoryandUpdateProperty(TitleTransferRequest titleTransferRequest)
+			throws Exception;
+
+	
+	/**
 	 * This Api will generate the special based on the given special notice request
 	 * @param specialNoticeRequest
 	 * @return {@link SpecialNoticeResponse}
 	 * @throws Exception
 	 */
 	public SpecialNoticeResponse generateSpecialNotice(SpecialNoticeRequest specialNoticeRequest) throws Exception;
+
+	/**
+	 * API prepares DCB data for Add/Edit DCB feature
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param upicNumber
+	 * @throws Exception
+	 */
+	public DemandResponse getDemandsForProperty(RequestInfoWrapper requestInfo, String tenantId, String upicNumber) throws Exception;
 }

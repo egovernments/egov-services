@@ -1,4 +1,4 @@
-CREATE SEQUENCE seq_registartionunit_id;
+CREATE SEQUENCE seq_registartion_unit;
 
 CREATE TABLE egmr_registartion_unit(
 		id BIGINT NOT NULL, 

@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/propertytype-pipesize/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "PropertyTypePipeSizes[0].code",
 		"useTimestamp": true,
 		"objectName": "PropertyTypePipeSize",
 		"groups": [
@@ -12,37 +13,37 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypePipeSize.propertyTypeName",
+						"jsonPath": "PropertyTypePipeSize[0].propertyTypeName",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
 					{
 						"name": "pipeSize",
-						"jsonPath": "PropertyTypePipeSize.pipeSize",
+						"jsonPath": "PropertyTypePipeSize[0].pipeSize",
 						"label": "wc.create.pipeSize",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
-						"isRequired": false,
+						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypePipeSize.active",
+							"jsonPath": "PropertyTypePipeSize[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
-							"default": true,
+							"defaultValue":true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -67,7 +68,7 @@ var dat = {
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -79,7 +80,7 @@ var dat = {
 						"label": "wc.create.pipeSize",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -160,9 +161,8 @@ var dat = {
 		"searchUrl": "/wcms/masters/propertytype-pipesize/_search?id={id}",
 		"url":"/wcms/masters/propertytype-pipesize/{PropertyTypePipeSize.id}/_update",
 		"tenantIdRequired": true,
-		"isResponseArray":true,
 		"useTimestamp": true,
-		"objectName": "PropertyTypePipeSize",
+		"objectName": "PropertyTypePipeSizes",
 		"groups": [
 			{
 				"label": "wc.update.PropertyTypePipeSize.title",
@@ -170,7 +170,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypePipeSize.propertyTypeName",
+						"jsonPath": "PropertyTypePipeSizes[0].propertyTypeName",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -182,11 +182,11 @@ var dat = {
 					},
 					{
 						"name": "pipeSize",
-						"jsonPath": "PropertyTypePipeSize.pipeSize",
+						"jsonPath": "PropertyTypePipeSizes[0].pipeSize",
 						"label": "wc.create.pipeSize",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -194,7 +194,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypePipeSize.active",
+							"jsonPath": "PropertyTypePipeSizes[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

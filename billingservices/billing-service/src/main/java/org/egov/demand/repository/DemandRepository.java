@@ -42,6 +42,7 @@ package org.egov.demand.repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
 import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.demand.repository.rowmapper.DemandRowMapper;
@@ -60,6 +62,7 @@ import org.egov.demand.web.contract.DemandRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -250,6 +253,19 @@ public class DemandRepository {
 			@Override
 			public int getBatchSize() {
 				return oldDemandDetails.size();
+			}
+		});
+	}
+	//update mis method for updating consumer code
+	public void updateMIS(DemandUpdateMisRequest demandRequest) {
+
+		jdbcTemplate.update(demandQueryBuilder.getDemandUpdateMisQuery(demandRequest), new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+				ps.setString(1, demandRequest.getConsumerCode());
+				ps.setString(2, demandRequest.getRequestInfo().getDid());
+				ps.setLong(3, new Date().getTime());
+				ps.setString(4, demandRequest.getTenantId());
 			}
 		});
 	}

@@ -44,7 +44,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.egov.pgr.domain.model.AuditDetails;
-import org.egov.pgr.domain.model.ServiceType;
+import org.egov.pgr.domain.model.GrievanceType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,7 +65,7 @@ public class RouterType {
 
 	private Long id;
 	
-	private List<ServiceType> services;
+	private List<GrievanceType> services;
 	
 	private List<BoundaryIdType> boundary;
 	

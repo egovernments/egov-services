@@ -55,6 +55,9 @@ import lombok.ToString;
 @ToString
 public class ApplicationProperties {
 
+	@Value("${kafka.topics.updateMIS.demand}")
+	private String updateMISTopicName;
+	
 	@Value("${egov.services.user_service.hostname}")
 	private String userServiceHostName;
 
@@ -143,8 +146,11 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.update.demand}")
 	private String updateDemandTopic;
 	
-	@Value("{kafka.topics.receipt.update.demand}")
+	@Value("${kafka.topics.receipt.update.demand}")
 	private String updateDemandFromReceipt;
+	
+	@Value("${kafka.topics.demandBill.update.name}")
+	private String updateDemandBillTopicName;
 
 	@Value("${bs.demand.seq.name}")
 	private String demandSeqName;

@@ -1,15 +1,17 @@
 package org.egov.mr.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.AssertTrue;
-
-import static org.mockito.Mockito.when;
+import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.MarriageCertificate;
@@ -20,25 +22,25 @@ import org.egov.mr.model.ReissueCertAppl;
 import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.CertificateType;
 import org.egov.mr.repository.MarriageCertRepository;
+import org.egov.mr.util.SequenceIdGenService;
 import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageCertCriteria;
-import org.egov.mr.web.contract.RegnUnitResponse;
+import org.egov.mr.web.contract.ReissueCertRequest;
 import org.egov.mr.web.contract.ReissueCertResponse;
 import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ResponseInfoFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import static org.mockito.Matchers.any;
+import org.springframework.kafka.support.SendResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ch.qos.logback.core.boolex.Matcher;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MarriageCertServiceTest {
@@ -51,6 +53,15 @@ public class MarriageCertServiceTest {
 
 	@InjectMocks
 	private MarriageCertService marriageCertService;
+
+	@Mock
+	private SequenceIdGenService sequenceGenUtil;
+
+	@Mock
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
+	@Mock
+	private PropertiesManager propertiesManager;
 
 	@Test
 	public void testForGetMarriageCerts() {
@@ -66,21 +77,67 @@ public class MarriageCertServiceTest {
 
 		MarriageCertCriteria marriageCertCriteria = MarriageCertCriteria.builder().tenantId("ap.kurnool").build();
 		when(marriageCertRepository.findForCriteria(any(MarriageCertCriteria.class)))
-				.thenReturn(getReissueCertApplFromDB().get(0).getReissueApplications());
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class), Matchers.anyBoolean()))
-				.thenReturn(reissueCertResponse.getResponseInfo());
+				.thenReturn(getReissueCertApplFromDB());
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
+				Matchers.anyBoolean())).thenReturn(reissueCertResponse.getResponseInfo());
 		ReissueCertResponse actualReissueCertAppl = marriageCertService.getMarriageCerts(marriageCertCriteria,
 				new RequestInfo());
 		ReissueCertResponse expectedReissueCertAppl = reissueCertResponse;
 		assertEquals(actualReissueCertAppl.toString(), expectedReissueCertAppl.toString());
 	}
 
+	@Test
+	public void testForSuccessResponse() {
+
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("uief87324").resMsgId("String").status("200")
+				.key("successful").ts("string").ver("string").tenantId("ap.kurnool").build();
+
+		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
+				.build();
+
+		ReissueCertResponse reissueCertResponse = ReissueCertResponse.builder()
+				.reissueApplications(getReissueCertApplFromDB()).page(page).responseInfo(responseInfo).build();
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
+				Matchers.anyBoolean())).thenReturn(responseInfo);
+
+	}
+
+	@Test
+	public void testForcreateAsync() {
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("uief87324").resMsgId("String").status("200")
+				.key("successful").ts("string").ver("string").tenantId("ap.kurnool").build();
+
+		ReissueCertResponse reissueCertResp = ReissueCertResponse.builder()
+				.reissueApplications(getReissueCertApplFromDB()).responseInfo(null).page(null).build();
+		System.err.println("reissueCertResp"+reissueCertResp);
+
+		ReissueCertRequest reissueRequest = ReissueCertRequest.builder()
+				.reissueApplication(reissueCertResp.getReissueApplications().get(0)).requestInfo(new RequestInfo())
+				.build();
+		List<String> ids = new ArrayList<>();
+		ids.add("1");
+		when(sequenceGenUtil.getIds(Matchers.any(int.class), Matchers.any(String.class))).thenReturn(ids);
+
+		when(kafkaTemplate.send(Matchers.any(String.class), Matchers.any(String.class), Matchers.any(Object.class)))
+				.thenReturn(new SendResult<>(null, null));
+		System.err.println("marriageCertService.createAsync(reissueRequest)"+marriageCertService.createAsync(reissueRequest));
+		assertTrue(reissueCertResp.equals(marriageCertService.createAsync(reissueRequest)));
+
+	}
+	
+	public void testForCreate(){
+		doNothing().when(marriageCertRepository).createReissue(any(ReissueCertRequest.class));
+		doNothing().when(marriageCertRepository).createDoc(any(ReissueCertRequest.class));
+}
+	
+	
+
 	private ReissueCertResponse getMarriageCertResponse(String filePath) throws IOException {
 		String reissueCertJson = new FileUtils().getFileContents(filePath);
 		return new ObjectMapper().readValue(reissueCertJson, ReissueCertResponse.class);
 	}
 
-	public List<ReissueCertResponse> getReissueCertApplFromDB() {
+	public List<ReissueCertAppl> getReissueCertApplFromDB() {
 
 		List<Long> demandList = new ArrayList<>();
 		demandList.add(1496430744825L);
@@ -112,13 +169,19 @@ public class MarriageCertServiceTest {
 				.approvalDetails(approvalDetails).applicantInfo(reissueApplicantInfo).build();
 
 		reissueCertApplList.add(reissueCertAppl);
-		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
-				.build();
-		ReissueCertResponse reissueCertResponse = ReissueCertResponse.builder().reissueApplications(reissueCertApplList)
-				.page(page).build();
-		List<ReissueCertResponse> responselist = new ArrayList<>();
-		responselist.add(reissueCertResponse);
-		return responselist;
+		/*
+		 * Page page =
+		 * null;Page.builder().totalResults(1).currentPage(null).pageSize(null).
+		 * totalPages(null).offSet(null) .build();
+		 */
+		/*
+		 * ReissueCertResponse reissueCertResponse =
+		 * ReissueCertResponse.builder().reissueApplications(
+		 * reissueCertApplList) .page(page).build();
+		 */
+		/* List<ReissueCertResponse> responselist = new ArrayList<>(); */
+
+		return reissueCertApplList;
 
 	}
 

@@ -66,6 +66,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -96,6 +97,9 @@ public class SourceTypeRepositoryTest {
 
     @InjectMocks
     private SourceTypeRepository waterSourceTypeRepository;
+    
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Test
     public void test_Should_Create_WaterSource() {
@@ -106,8 +110,9 @@ public class SourceTypeRepositoryTest {
         user.setId(1l);
         requestInfo.setUserInfo(user);
         waterSourceTypeRequest.setRequestInfo(requestInfo);
-        final SourceType waterSource = getWaterSourceType();
-        waterSourceTypeRequest.setSourceType(waterSource);
+        final List<SourceType> waterSourceList = new ArrayList<>();
+        waterSourceList.add(getWaterSourceType());
+        waterSourceTypeRequest.setSourceType(waterSourceList);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(waterSourceTypeRequest
@@ -123,8 +128,9 @@ public class SourceTypeRepositoryTest {
         user.setId(1l);
         requestInfo.setUserInfo(user);
         waterSourceTypeRequest.setRequestInfo(requestInfo);
-        final SourceType waterSource = getWaterSourceType();
-        waterSourceTypeRequest.setSourceType(waterSource);
+        final List<SourceType> waterSourceList = new ArrayList<>();
+        waterSourceList.add(getWaterSourceType());
+        waterSourceTypeRequest.setSourceType(waterSourceList);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(waterSourceTypeRequest

@@ -1,23 +1,18 @@
 package org.egov.notificationConsumer;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.PropertyRequest;
 import org.egov.notification.config.PropertiesManager;
 import org.egov.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,125 +25,73 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class Consumer {
-    @Autowired
-    PropertiesManager propertiesManager;
+	@Autowired
+	PropertiesManager propertiesManager;
 
-    @Autowired
-    NotificationService notificationService;
+	@Autowired
+	NotificationService notificationService;
 
-    @Autowired
-    KafkaTemplate<String, Object> kafkaTemplate;
+	@Autowired
+	KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Autowired
-    Producer producer;
+	/**
+	 * This is receive method for consuming record from Kafka server
+	 * 
+	 * @param consumerRecord
+	 */
+	@KafkaListener(topics = { "#{propertiesManager.getDemandAcknowledgement()}",
+			"#{propertiesManager.getDemandApprove()}", "#{propertiesManager.getDemandTransferfee()}",
+			"#{propertiesManager.getDemandReject()}", "#{propertiesManager.getPropertyAcknowledgement()}",
+			"#{propertiesManager.getApproveProperty()}", "#{propertiesManager.getRejectProperty()}",
+			"#{propertiesManager.getRevisionPetitionAcknowledgement()}",
+			"#{propertiesManager.getRevisionPetitionHearing()}",
+			"#{propertiesManager.getRevisionPetitionEndorsement()}",
+			"#{propertiesManager.getPropertyAlterationAcknowledgement()}",
+			"#{propertiesManager.getApprovePropertyAlteration()}",
+			"#{propertiesManager.getRejectPropertyAlteration()}" })
+	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
+		log.info("consumer topic value is: " + topic + " consumer value is" + consumerRecord);
+		if (topic.equalsIgnoreCase(propertiesManager.getDemandAcknowledgement())) {
 
-    /**
-     * This method for getting consumer configuration bean
-     */
-    @Bean
-    public Map<String, Object> consumerConfig() {
-        Map<String, Object> consumerProperties = new HashMap<String, Object>();
-        consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-        		propertiesManager.getAutoOffsetReset());
-        consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-        		propertiesManager.getBootstrapServer());
-        consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, propertiesManager.getGroupName());
-        return consumerProperties;
-    }
+			notificationService.demandAcknowledgement(propertyRequest);
+		} else if (topic.equalsIgnoreCase(propertiesManager.getDemandApprove())) {
 
-    /**
-     * This method will return the consumer factory bean based on consumer configuration
-     */
-    @Bean
-    public ConsumerFactory<String, PropertyRequest> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-                new JsonDeserializer<>(PropertyRequest.class));
-    }
+			notificationService.demandApprove(propertyRequest);
+		} else if (topic.equalsIgnoreCase(propertiesManager.getDemandTransferfee())) {
 
-    /**
-     * This bean will return kafka listner object based on consumer factory
-     */
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
-        factory.setConsumerFactory(consumerFactory());
-        return factory;
-    }
+			notificationService.demandTransferFee(propertyRequest);
+		} else if (topic.equalsIgnoreCase(propertiesManager.getDemandReject())) {
 
-    /**
-     * This is receive method for consuming record from Kafka server
-     * 
-     * @param consumerRecord
-     */
-    @KafkaListener(topics = { "#{propertiesManager.getDemandAcknowledgement()}",
-            "#{propertiesManager.getDemandApprove()}",
-            "#{propertiesManager.getDemandTransferfee()}",
-            "#{propertiesManager.getDemandReject()}",
-            "#{propertiesManager.getPropertyAcknowledgement()}",
-            "#{propertiesManager.getApproveProperty()}",
-            "#{propertiesManager.getRejectProperty()}",
-            "#{propertiesManager.getRevisionPetitionAcknowledgement()}",
-            "#{propertiesManager.getRevisionPetitionHearing()}",
-            "#{propertiesManager.getRevisionPetitionEndorsement()}",
-            "#{propertiesManager.getPropertyAlterationAcknowledgement()}",
-            "#{propertiesManager.getApprovePropertyAlteration()}",
-            "#{propertiesManager.getRejectPropertyAlteration()}" })
-    public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) {
-        log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
-        if (consumerRecord.topic()
-                .equalsIgnoreCase(propertiesManager.getDemandAcknowledgement())) {
+			notificationService.demandReject(propertyRequest);
+		} else if (topic.equalsIgnoreCase(propertiesManager.getPropertyAcknowledgement())) {
 
-            notificationService.demandAcknowledgement(consumerRecord.value());
-        } else if (consumerRecord.topic()
-                .equalsIgnoreCase(propertiesManager.getDemandApprove())) {
+			notificationService.propertyAcknowledgement(propertyRequest.getProperties());
+		} else if (topic.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
 
-            notificationService.demandApprove(consumerRecord.value());
-        } else if (consumerRecord.topic()
-                .equalsIgnoreCase(propertiesManager.getDemandTransferfee())) {
+			notificationService.propertyApprove(propertyRequest.getProperties());
+		} else if (topic.equalsIgnoreCase(propertiesManager.getRejectProperty())) {
 
-            notificationService.demandTransferFee(consumerRecord.value());
-        } else if (consumerRecord.topic()
-                .equalsIgnoreCase(propertiesManager.getDemandReject())) {
+			notificationService.propertyReject(propertyRequest.getProperties());
+		} else if (topic.equalsIgnoreCase(propertiesManager.getRevisionPetitionAcknowledgement())) {
 
-            notificationService.demandReject(consumerRecord.value());
-        } else if (consumerRecord.topic().equalsIgnoreCase(
-        		propertiesManager.getPropertyAcknowledgement())) {
+			notificationService.revisionPetitionAcknowldgement(propertyRequest.getProperties());
+		} else if (topic.equalsIgnoreCase(propertiesManager.getRevisionPetitionHearing())) {
 
-            notificationService.propertyAcknowledgement(consumerRecord.value().getProperties());
-        } else if (consumerRecord.topic()
-                .equalsIgnoreCase(propertiesManager.getApproveProperty())) {
+			notificationService.revisionPetitionHearing(propertyRequest.getProperties());
+		} else if (topic.equalsIgnoreCase(propertiesManager.getRevisionPetitionEndorsement())) {
 
-            notificationService.propertyApprove(consumerRecord.value().getProperties());
-        } else if (consumerRecord.topic()
-                .equalsIgnoreCase(propertiesManager.getRejectProperty())) {
+			notificationService.revisionPetitionEndorsement(propertyRequest.getProperties());
+		} else if (topic.equalsIgnoreCase(propertiesManager.getPropertyAlterationAcknowledgement())) {
 
-            notificationService.propertyReject(consumerRecord.value().getProperties());
-        } else if (consumerRecord.topic().equalsIgnoreCase(
-        		propertiesManager.getRevisionPetitionAcknowledgement())) {
+			notificationService.alterationAcknowledgement(propertyRequest.getProperties());
+		} else if (topic.equalsIgnoreCase(propertiesManager.getApprovePropertyAlteration())) {
 
-            notificationService.revisionPetitionAcknowldgement(consumerRecord.value().getProperties());
-        } else if (consumerRecord.topic().equalsIgnoreCase(
-        		propertiesManager.getRevisionPetitionHearing())) {
+			notificationService.approvePropertyAlteration(propertyRequest.getProperties());
+		} else if (topic.equalsIgnoreCase(propertiesManager.getRejectPropertyAlteration())) {
 
-            notificationService.revisionPetitionHearing(consumerRecord.value().getProperties());
-        } else if (consumerRecord.topic().equalsIgnoreCase(
-        		propertiesManager.getRevisionPetitionEndorsement())) {
-
-            notificationService.revisionPetitionEndorsement(consumerRecord.value().getProperties());
-        }  else if (consumerRecord.topic().equalsIgnoreCase(
-        		propertiesManager.getPropertyAlterationAcknowledgement())) {
-			
-			notificationService.alterationAcknowledgement(consumerRecord.value().getProperties());
-		} else if (consumerRecord.topic().equalsIgnoreCase(
-				propertiesManager.getApprovePropertyAlteration())) {
-			
-			notificationService.approvePropertyAlteration(consumerRecord.value().getProperties());
-		} else if (consumerRecord.topic().equalsIgnoreCase(
-				propertiesManager.getRejectPropertyAlteration())) {
-			
-			notificationService.rejectPropertyAlteration(consumerRecord.value().getProperties());
+			notificationService.rejectPropertyAlteration(propertyRequest.getProperties());
 		}
-    }
+	}
 }

@@ -65,7 +65,7 @@ public class Bill {
 
 	private Boolean isCancelled;
 
-    @JsonProperty("BillDetail")
+    @JsonProperty("billDetails")
 	private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service
 	
 	private String tenantId;

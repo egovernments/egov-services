@@ -1595,7 +1595,7 @@ ReportDefinitions:
 - reportName: RouterEscalation
   summary: Router Escalation Report
   version: 1.0.0
-  moduleName: pgr
+  moduleName: PGR
   sourceColumns:
   - name: ctname
     label: reports.pgr.complainttype.name
@@ -1664,3 +1664,70 @@ ReportDefinitions:
         LEFT JOIN egeis_position p ON r."position" = p.id where cc.id=$complaintcategorytype and ct.code=$complainttype and r.tenantid=$tenantid 
   groupBy : ORDER BY r.complainttypeid;
 
+- reportName: CommonInbox
+  summary: Common Inbox
+  version: 1.0.0
+  sourceColumns:
+  - name: businesskey
+    label: reports.common.businesskey
+    type: string
+    source: common
+  - name: comments
+    label: reports.common.comments
+    type: string
+    source: common
+  - name: createddate
+    label: reports.common.createddate
+    type: epoch
+    source: common
+  - name: id
+    label: reports.common.id
+    type: number
+    source: common
+    showColumn: false
+  - name: status
+    label: reports.common.status
+    type: string
+    source: common
+  - name: natureoftask
+    label: reports.common.natureoftask
+    type: string
+    source: common
+  - name: details
+    label: reports.common.details
+    type: string
+    source: common
+  - name: sendername
+    label: reports.common.sendername
+    type: string
+    source: egpgr_router
+  - name: action
+    label: reports.common.action
+    type: string
+    source: common
+  - name: url
+    label: reports.common.url
+    type: string
+    source: common
+  
+  searchParams:
+  - name: positionId
+    label: reports.pgr.complaintcategorytype
+    type: number
+    source: seva
+  - name: complainttype
+    label: reports.pgr.complainttype
+    type: number
+    source: seva
+  query: (select 'Grievance' as businesskey, sub.crn as comments ,sub.createddate as createddate ,0 as id ,sub_a.code as status, 'Grievance' as natureoftask , 'Complaint No.'|| sub.crn||' regarding '||
+         (select name from egpgr_complainttype where code =sub.servicecode AND tenantid=sub.tenantid) ||' in '|| sub_a.code as details,sub.name as senderName, '' as action,
+         replace('_url?/pgr/viewGrievance/:srn',':srn',sub.crn::character varying) as url from submission sub inner join submission_attribute sub_a on  sub.crn = sub_a.crn where 
+         sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED') and sub.positionid = $positionId and sub.tenantid = $tenantid order by createdDate desc) 
+         union 
+         (select type as businesskey, property.id::character varying as comments,createddate as createddate, states.id as id,value as status,natureoftask as natureoftask, extrainfo as details,
+         sendername as sendername,nextaction as action, replace('_url?/propertyTax/update-property/:id', ':id', comments::character varying) as url from EG_WF_STATES states JOIN EGPT_PROPERTYDETAILS property
+         ON property.stateid::integer = states.id where type = 'Create Property'and owner_pos = $positionId and tenantId=$tenantid and states.status<> 2 order by states.createdDate desc)
+         union
+         (select type as businesskey, water.acknowledgmentnumber as comments,createddate as createddate, states.id as id,value as status,natureoftask as natureoftask, extrainfo as details,
+         sendername as sendername,nextaction as action, replace('_url?/update/wc/:acknum', ':acknum', water.acknowledgmentnumber::character varying) as url from EG_WF_STATES states JOIN 
+         egwtr_waterconnection water ON water.stateid = states.id where type = 'WaterConnection'and owner_pos = $positionId and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc);

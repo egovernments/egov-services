@@ -16,6 +16,9 @@ var specifications={};
 
 let reqRequired = [];
 class Report extends Component {
+  state={
+    pathname:""
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -47,8 +50,25 @@ class Report extends Component {
     }
   }
 
+  setDefaultValues (groups, dat) {
+    for(var i=0; i<groups.length; i++) {
+      for(var j=0; j<groups[i].fields.length; j++) {
+        if(typeof groups[i].fields[j].defaultValue == 'string' || typeof groups[i].fields[j].defaultValue == 'number' || typeof groups[i].fields[j].defaultValue == 'boolean') {
+          //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
+        }
+
+        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
+          for(var k=0; k<groups[i].fields[j].children.length; k++) {
+            this.setDefaultValues(groups[i].fields[j].children[k].groups);
+          }
+        }
+      }
+    }
+  }
+
   getVal = (path) => {
-    return _.get(this.props.formData, path) || "";
+    return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
   }
 
   initData() {
@@ -64,18 +84,31 @@ class Report extends Component {
         specifications = require(`./specs/${hash[2]}/transaction/${hash[3]}`).default;
       }
     } catch(e) {}
-    let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    reqRequired = [];
     this.setLabelAndReturnRequired(obj);
-    initForm(reqRequired, []);
+    initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
+    var formData = {};
+    if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
+    setFormData(formData);
+    this.setState({
+      pathname:this.props.history.location.pathname
+    })
   }
 
   componentDidMount() {
       this.initData();
+  }
+  componentWillReceiveProps(nextProps)
+  {
+    if (this.state.pathname!=nextProps.history.location.pathname) {
+      this.initData();
+    }
   }
 
   search = (e) => {
@@ -84,7 +117,7 @@ class Report extends Component {
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
     for(var key in formData) {
-      if(!formData[key])
+      if(formData[key] !== "" && typeof formData[key] == "undefined")
         delete formData[key];
     }
 
@@ -136,7 +169,7 @@ class Report extends Component {
   }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
 
@@ -145,10 +178,10 @@ class Report extends Component {
         <form onSubmit={(e) => {
           search(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit"}} ui="google"/>
+            <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
             <br/>
             {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
           </div>
@@ -165,23 +198,15 @@ const mapStateToProps = state => ({
   actionName:state.framework.actionName,
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
-  flag: state.report.flag
+  flag: state.report.flag,
+  isFormValid: state.frameworkForm.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: (reqRequired, patRequired) => {
+  initForm: (requiredFields) => {
     dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: reqRequired
-        },
-        pattern: {
-          current: [],
-          required: patRequired
-        }
-      }
+      type: "SET_REQUIRED_FIELDS",
+      requiredFields
     });
   },
   setMetaData: (metaData) => {
@@ -197,7 +222,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_ACTION_NAME", actionName})
   },
   handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
-    dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
+    dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
@@ -208,6 +233,9 @@ const mapDispatchToProps = dispatch => ({
   setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
   setFlag: (flag) => {
     dispatch({type:"SET_FLAG", flag})
+  },
+  setFormData: (data) => {
+    dispatch({type: "SET_FORM_DATA", data});
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

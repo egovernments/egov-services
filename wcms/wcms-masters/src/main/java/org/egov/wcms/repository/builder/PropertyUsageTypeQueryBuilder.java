@@ -53,12 +53,13 @@ public class PropertyUsageTypeQueryBuilder {
     private static final String BASE_QUERY = "SELECT * FROM egwtr_property_usage_type proUseType";
 
     public String getPersistQuery() {
-        return "INSERT into egwtr_property_usage_type (id,propertytypeid, usagetypeid, active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) values (nextval('seq_egwtr_property_usage_type'),?,?,?,?,?,?,?,?) ";
+        return "INSERT into egwtr_property_usage_type (id,code,propertytypeid, usagetypeid, active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) "
+                + "values (:id,:code,:propertytypeid, :usagetypeid, :active, :tenantid, :createdby,:lastmodifiedby,:createddate,:lastmodifieddate )";
     }
 
     public static String updatePropertyUsageQuery() {
-        return "UPDATE egwtr_property_usage_type SET propertytypeid = ?,usagetypeid = ?,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
+        return "UPDATE egwtr_property_usage_type SET propertytypeid = :propertytypeid,usagetypeid = :usagetypeid,"
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code ";
     }
 
     @SuppressWarnings("rawtypes")
@@ -136,11 +137,11 @@ public class PropertyUsageTypeQueryBuilder {
     }
 
     public static String selectPropertyByUsageTypeQuery() {
-        return " select id FROM egwtr_property_usage_type where propertytypeid = ? and usagetypeid = ? and tenantId = ?";
+        return " select code FROM egwtr_property_usage_type where propertytypeid = ? and usagetypeid = ? and tenantId = ?";
     }
 
     public static String selectPropertyByUsageTypeNotInQuery() {
-        return " select id from egwtr_property_usage_type where propertytypeid = ? and usagetypeid = ? and tenantId = ? and id != ? ";
+        return " select code from egwtr_property_usage_type where propertytypeid = ? and usagetypeid = ? and tenantId = ? and code != ? ";
     }
 
 }

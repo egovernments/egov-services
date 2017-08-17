@@ -1,9 +1,7 @@
 package org.egov.user.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
 
 import java.util.Collections;
@@ -12,6 +10,8 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserSearchRequest {
 
 	@JsonProperty("RequestInfo")
@@ -49,10 +49,10 @@ public class UserSearchRequest {
 	private String tenantId;
 
 	@JsonProperty("pageSize")
-	private int pageSize = 20;
+	private Integer pageSize = 20;
 
 	@JsonProperty("pageNumber")
-	private int pageNumber = 0;
+	private Integer pageNumber = 0;
 
 	@JsonProperty("sort")
 	private List<String> sort = Collections.singletonList("name");

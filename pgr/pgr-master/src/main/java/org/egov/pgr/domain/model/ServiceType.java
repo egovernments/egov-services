@@ -1,109 +1,135 @@
-/*
- * eGov suite of products aim to improve the internal efficiency,transparency,
- *    accountability and the service delivery of the government  organizations.
- *
- *     Copyright (C) <2015>  eGovernments Foundation
- *
- *     The updated version of eGov suite of products as by eGovernments Foundation
- *     is available at http://www.egovernments.org
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program. If not, see http://www.gnu.org/licenses/ or
- *     http://www.gnu.org/licenses/gpl.html .
- *
- *     In addition to the terms of the GPL license to be adhered to in using this
- *     program, the following additional terms are to be complied with:
- *
- *         1) All versions of this program, verbatim or modified must carry this
- *            Legal Notice.
- *
- *         2) Any misrepresentation of the origin of the material is prohibited. It
- *            is required that all modified versions of this material be marked in
- *            reasonable ways as different from the original version.
- *
- *         3) This license does not grant any rights to any user of the program
- *            with regards to rights under trademark law for use of the trade names
- *            or trademarks of eGovernments Foundation.
- *
- *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */
 package org.egov.pgr.domain.model;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
-import org.hibernate.validator.constraints.Length;
+import static org.springframework.util.StringUtils.isEmpty;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
 @Builder
+@Getter
+@Setter
 public class ServiceType {
 
-    public static final String SEQ_CATEGORY = "SEQ_EGPGR_GRIEVANCETYPE";
-    private Long id; 
-    @Length(max = 250)
-    @NotNull
-    private String tenantId;
-    
-    @NotNull
-    private String serviceCode;
-    
-    @NotNull
+    private Long id;
     private String serviceName;
-    
+    private String serviceCode;
     private String description;
-    
+    private Integer department;
     private boolean metadata;
-    
-    private Boolean active;
-    
     private String type;
-    
     private List<String> keywords;
-    
-    private String group;
-    
-    @NotNull
     private Integer category;
-
     private List<String> config;
-    
-    @NotNull
     private Integer slaHours;
-   
-    private AuditDetails auditDeatils;
-
-    private List<Attribute> attributes;
-    
+    private String tenantId;
+    private Boolean isDay;
+    private Boolean active;
     private boolean hasFinancialImpact;
+    private String action;
+    @NotNull
+    private Long createdBy;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date createdDate;
+    private Long lastModifiedBy;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date lastModifiedDate;
 
-    private Boolean days;
+    public org.egov.pgr.persistence.dto.ServiceType toDto(){
+        return org.egov.pgr.persistence.dto.ServiceType.builder()
+                .id(id)
+                .name(serviceName.trim())
+                .code(serviceCode.trim())
+                .description(description)
+                .department(department)
+                .metadata(metadata)
+                .type(type)
+                .keywords(keywords)
+                .category(category)
+                .slaHours(slaHours)
+                .tenantId(tenantId.trim())
+                .isday(isDay)
+                .isactive(active)
+                .hasfinancialimpact(hasFinancialImpact)
+                .createdDate(createdDate)
+                .createdBy(createdBy)
+                .lastModifiedDate(lastModifiedDate)
+                .lastModifiedBy(lastModifiedBy)
+                .build();
+    }
+   
+    	/*Length validation*/
+    public boolean isTenantIdLengthMatch(){
+    	
+        return (!tenantId.isEmpty() && (tenantId.length() > 0 && tenantId.length() <= 256));
+    }
     
+    public boolean isCodeLengthMatch(){
+    	if(serviceCode != null){
+        return (serviceCode.length() > 0 && serviceCode.length() <= 20);
+    	}
+    	return true;
+    }
+    
+    public boolean isDescriptionLengthMatch(){
+    	if(description != null){
+        return (description.length() > 0 && description.length() <= 250);
+    	}
+    	return true;
+    }
+    
+    public boolean isTypeLengthMatch(){
+    	if(type != null){
+
+        return (type.length() >0 &&  type.length() <= 50);
+    	}
+    	return true;
+    }
+    
+    public boolean isnameLengthMatch(){
+    	if(serviceName != null){
+        return (serviceName.length() > 0 && serviceName.length() <= 150);
+    	}
+    	return true;
+    }
+
+    public boolean isTenantIdAbsent(){
+        return isEmpty(tenantId) || tenantId == null;
+    }
+    
+    public boolean isServiceCodeAbsent(){
+        return isEmpty(serviceCode) || serviceCode == null;
+    }
+    
+    public boolean isServiceNameAbsent(){
+        return isEmpty(serviceName) || serviceName == null;
+    }
+    
+    public boolean isCategoryAbsent(){
+        return isEmpty(category) || category == null;
+    }
+    
+     public boolean isKeywordAbsent()
+     {
+    	 return (!keywords.isEmpty() && keywords.get(0).isEmpty() || keywords.size() == 0) ;
+     }
+     
+     public boolean isKeywordValid()
+     {
+    	 List<String> keywordsExpected = Arrays.asList("Deliverable_Service","Complaint");
+
+    	   return (!keywords.isEmpty() && (!keywordsExpected.stream().anyMatch(keywords::contains)));
+     }
+     
+
+    public boolean isUpdate(){
+        return "UPDATE".equalsIgnoreCase(action);
+    }
+
 }
-
-
-
-

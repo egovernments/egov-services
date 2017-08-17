@@ -108,7 +108,6 @@ public class BaseRepositoryTest {
 		assertEquals(currDate, actions.get(0).getLastModifiedDate().toString());
 		assertEquals("PgrComp", actions.get(0).getParentModule());
 		assertEquals("PGR", actions.get(0).getServiceCode());
-	
 
 	}
 }

@@ -57,37 +57,38 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"chartOfAccount","function"},callSuper=false)
-
+@EqualsAndHashCode(exclude = { "chartOfAccount", "function" }, callSuper = false)
 
 public class Ledger extends Auditable {
-	
-	
-    private String id = null;
-    private Integer orderId;
-    
-    @NotNull
-    private ChartOfAccountContract chartOfAccount;
-    @NotNull
-    @Length(max=16)
-    private String glcode;
-    @NotNull
-    @Min(value=0)
-    @Max(value=999999999)
-    private BigDecimal debitAmount;
-    @NotNull
-    @Min(value=0)
-    @Max(value=999999999)
-    private BigDecimal creditAmount;
-    private FunctionContract function;
-   
-    //@DrillDownTable
-    private Set<LedgerDetail> ledgerDetails = new HashSet<LedgerDetail>();
 
-   
-     
+	private String id;
+
+	private Integer orderId;
+
+	@NotNull
+	private ChartOfAccountContract chartOfAccount;
+
+	@NotNull
+	@Length(max = 16)
+	private String glcode;
+
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal debitAmount;
+
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal creditAmount;
+
+	private FunctionContract function;
+
+	private Set<LedgerDetail> ledgerDetails = new HashSet<LedgerDetail>();
+
 }

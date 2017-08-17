@@ -100,10 +100,13 @@ public class AgreementNotificationAdapter {
 		}
 
 		try {
-			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(),
-					propertiesManager.getSmsNotificationTopicKey(), smsRequest);
-			kafkaTemplate.send(propertiesManager.getEmailNotificationTopic(),
-					propertiesManager.getSmsNotificationTopicKey(), emailRequest);
+			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(), smsRequest);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+
+			kafkaTemplate.send(propertiesManager.getEmailNotificationTopic(), emailRequest);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -141,13 +144,15 @@ public class AgreementNotificationAdapter {
 			log.info("cancelApprovalSMS------------" + smsRequest);
 		}
 		try {
-			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(),
-					propertiesManager.getSmsNotificationTopicKey(), smsRequest);
-			kafkaTemplate.send(propertiesManager.getEmailNotificationTopic(),
-					propertiesManager.getSmsNotificationTopicKey(), emailRequest);
+			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(), smsRequest);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		try {
+		kafkaTemplate.send(propertiesManager.getEmailNotificationTopic(), emailRequest);
+	    } catch (Exception ex) {
+		ex.printStackTrace();
+	  }
 	}
 
 	public void sendRejectedNotification(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
@@ -184,13 +189,14 @@ public class AgreementNotificationAdapter {
 			log.info("cancelRejectedSMS------------" + smsRequest);
 		}
 		try {
-			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(),
-					propertiesManager.getSmsNotificationTopicKey(), smsRequest);
-			kafkaTemplate.send(propertiesManager.getEmailNotificationTopic(),
-					propertiesManager.getSmsNotificationTopicKey(), smsRequest);
-
+			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(), smsRequest);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		try {
+		kafkaTemplate.send(propertiesManager.getEmailNotificationTopic(), emailRequest);
+		} catch (Exception ex) {
+		ex.printStackTrace();
+	}
 	}
 }

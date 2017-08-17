@@ -13,60 +13,44 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.UOM;
-import org.egov.models.UOMRequest;
-import org.egov.models.UOMResponse;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.contract.UOM;
+import org.egov.tl.commons.web.requests.UOMRequest;
+import org.egov.tl.commons.web.requests.UOMResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.services.CategoryService;
-import org.egov.tradelicense.services.DocumentTypeService;
-import org.egov.tradelicense.services.FeeMatrixService;
-import org.egov.tradelicense.services.LicenseStatusService;
-import org.egov.tradelicense.services.PenaltyRateService;
-import org.egov.tradelicense.services.UOMService;
+import org.egov.tradelicense.domain.services.UOMService;
+import org.egov.tradelicense.web.controller.UOMController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(TradeLicenseMasterController.class)
+@WebMvcTest(UOMController.class)
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 public class UOMControllerTest {
-
-	@MockBean
-	private CategoryService categoryService;
-	
-	@MockBean
-	FeeMatrixService feeMatrixService;
 
 	@MockBean
 	private UOMService uomService;
 
 	@MockBean
-	private PenaltyRateService penaltyRateService;
-	
-	@MockBean
-	DocumentTypeService documentTypeService;
-	
-	@MockBean
-	LicenseStatusService licenseStatusService;
-	
-	@MockBean
 	private PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	private MockMvc mockMvc;
 
-	
+	@MockBean
+	KafkaTemplate kafkaTemplate;
+
 	/**
 	 * Description : Test method for createUom() method
 	 */
@@ -88,11 +72,10 @@ public class UOMControllerTest {
 
 		try {
 
-			when(uomService.createUomMaster( any(UOMRequest.class))).thenReturn(uomResponse);
+			when(uomService.createUomMaster(any(UOMRequest.class))).thenReturn(uomResponse);
 
-			mockMvc.perform(post("/tradelicense/uom/_create").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomCreateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/tl-masters/uom/v1/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomCreateResponse.json")));
 
@@ -105,7 +88,6 @@ public class UOMControllerTest {
 
 	}
 
-	
 	/**
 	 * Description : Test method for updateUom() method
 	 */
@@ -128,9 +110,8 @@ public class UOMControllerTest {
 		try {
 
 			when(uomService.updateUomMaster(any(UOMRequest.class))).thenReturn(uomResponse);
-			mockMvc.perform(post("/tradelicense/uom/_update").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomUpdateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/tl-masters/uom/v1/_update").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomUpdateResponse.json")));
 
@@ -169,9 +150,8 @@ public class UOMControllerTest {
 					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(uomResponse);
 
-			mockMvc.perform(post("/tradelicense/uom/_search").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomSearchRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/tl-masters/uom/v1/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomSearchResponse.json")));
 

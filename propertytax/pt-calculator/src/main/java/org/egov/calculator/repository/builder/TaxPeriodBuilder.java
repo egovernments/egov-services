@@ -24,7 +24,7 @@ public class TaxPeriodBuilder {
 	public static final String BASE_SEARCH_QUERY = "SELECT * FROM " + ConstantUtility.TAXPERIODS_TABLE_NAME
 			+ " WHERE tenantId =?";
 
-	public static String getSearchQuery(String tenantId, String validDate, String code,
+	public static String getSearchQuery(String tenantId, String validDate, String code, String fromDate, String toDate,
 			List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -35,10 +35,20 @@ public class TaxPeriodBuilder {
 			searchSql.append(" AND code =?");
 			preparedStatementValues.add(code);
 		}
-
-		searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
-		preparedStatementValues.add(validDate);
-
+		
+		if(validDate != null && !validDate.isEmpty()){
+			searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
+			preparedStatementValues.add(validDate);	
+		}
+		if((fromDate != null && !fromDate.isEmpty()) && (toDate != null && !toDate.isEmpty())) {
+			searchSql.append(" AND (fromdate::date >= (SELECT fromdate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' " +
+					"AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date)) and todate::date<=" +
+					"(SELECT todate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' AND (to_date(?,'dd/MM/yyyy') " +
+					"BETWEEN fromdate::date AND  todate::date)))");
+			preparedStatementValues.add(fromDate);
+			preparedStatementValues.add(toDate);
+		}
+		
 		return searchSql.toString();
 	}
 

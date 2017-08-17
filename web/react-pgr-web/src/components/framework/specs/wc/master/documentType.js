@@ -3,6 +3,8 @@ var dat = {
 		"numCols": 12/3,
 		"url":  "/wcms/masters/documenttype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "DocumentTypes[0].code",
+		"useTimestamp": true,
 		"objectName": "documentType",
 		"groups": [
 			{
@@ -11,33 +13,34 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "documentType.name",
+							"jsonPath": "documentType[0].name",
 							"label": "wc.create.documentType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length minimum is 3 and maximum is 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "documentType.description",
+							"jsonPath": "documentType[0].description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "documentType.active",
+							"jsonPath": "documentType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
+							"defaultValue":true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -59,18 +62,18 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "DocumentType.name",
+							"jsonPath": "name",
 							"label": "wc.create.documentType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "DocumentType.active",
+							"jsonPath": "active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -144,8 +147,7 @@ var dat = {
 		"url":"/wcms/masters/documenttype/{DocumentType.code}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"isResponseArray":true,
-		"objectName": "DocumentType",
+		"objectName": "DocumentTypes",
 		"groups": [
 			{
 				"label": "wc.update.DocumentTypes.title",
@@ -153,29 +155,29 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "DocumentType.name",
+							"jsonPath": "DocumentTypes[0].name",
 							"label": "wc.create.documentType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "DocumentType.description",
+							"jsonPath": "DocumentTypes[0].description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "DocumentType.active",
+							"jsonPath": "DocumentTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

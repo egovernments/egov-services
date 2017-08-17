@@ -60,12 +60,15 @@ import lombok.ToString;
 public class PropertyTypeUsageTypeGetReq {
 
     private List<Long> id;
+    private String code;
     
     private String propertyType;
     
     private String propertyTypeId;
     
     private String usageType;
+    
+    private String usageCode;
     
     private String usageTypeId;
     

@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -53,6 +54,9 @@ public class TaxCalculatorMasterControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@MockBean
+	private KafkaTemplate kafkaTemplate;
 
 	@Test
 	public void testShouldCreateFactor() {
@@ -383,11 +387,12 @@ public class TaxCalculatorMasterControllerTest {
 		taxPeriodResponse.setTaxPeriods(taxPeriods);
 
 		try {
-			when(taxCalculatorMasterService.getTaxPeriod(any(RequestInfo.class), anyString(), anyString(), anyString()))
-					.thenReturn(taxPeriodResponse);
+			when(taxCalculatorMasterService.getTaxPeriod(any(RequestInfo.class), anyString(), anyString(), anyString(),
+					anyString(), anyString())).thenReturn(taxPeriodResponse);
 
 			mockMvc.perform(post("/properties/taxes/taxperiods/_search").param("tenantId", "1234")
-					.param("validDate", "02/02/2017").param("code", "ganesha").contentType(MediaType.APPLICATION_JSON)
+					.param("validDate", "02/02/2017").param("code", "ganesha").param("fromDate", "01/02/2017")
+					.param("toDate", "01/03/2017").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchTaxPeriodRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("searchTaxPeriodResponse.json")));
@@ -475,35 +480,34 @@ public class TaxCalculatorMasterControllerTest {
 	 * 
 	 */
 	@Test
-	public void testShouldSearchTaxRates() throws Exception {
+        public void testShouldSearchTaxRates() throws Exception {
 
-		TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
-		TaxRates taxRates = new TaxRates();
-		taxRates.setTenantId("default");
-		List<TaxRates> listOfTaxRates = new ArrayList<>();
-		listOfTaxRates.add(taxRates);
-		taxRatesResponse.setResponseInfo(new ResponseInfo());
-		taxRatesResponse.setTaxRates(listOfTaxRates);
+                TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
+                TaxRates taxRates = new TaxRates();
+                taxRates.setTenantId("default");
+                List<TaxRates> listOfTaxRates = new ArrayList<>();
+                listOfTaxRates.add(taxRates);
+                taxRatesResponse.setResponseInfo(new ResponseInfo());
+                taxRatesResponse.setTaxRates(listOfTaxRates);
 
-		try {
+                try {
 
-			when(taxCalculatorMasterService.getTaxRate(any(RequestInfo.class), any(String.class), any(String.class),
-					any(String.class), any(Double.class), any(String.class))).thenReturn(taxRatesResponse);
+                        when(taxCalculatorMasterService.getTaxRate(any(RequestInfo.class), any(String.class), any(String.class),
+                                        any(String.class), any(Double.class), any(String.class),any(String.class),any(String.class))).thenReturn(taxRatesResponse);
 
-			mockMvc.perform(post("/properties/taxes/taxrates/_search").param("tenantId", "default")
-					.param("taxHead", "taxHead-C").param("validDate", "04/06/2017").param("validARVAmount", "1100")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("taxratesSearchRequest.json")))
-					.andExpect(status().isOk())
-					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-					.andExpect(content().json(getFileContents("taxratesSearchResponse.json")));
-		} catch (Exception e) {
+                        mockMvc.perform(post("/properties/taxes/taxrates/_search").param("tenantId", "default")
+                                        .param("taxHead", "taxHead-C").param("validDate", "04/06/2017").param("validARVAmount", "1100")
+                                        .contentType(MediaType.APPLICATION_JSON).content(getFileContents("taxratesSearchRequest.json")))
+                                        .andExpect(status().isOk())
+                                        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                                        .andExpect(content().json(getFileContents("taxratesSearchResponse.json")));
+                } catch (Exception e) {
 
-			assertTrue(Boolean.FALSE);
-			e.printStackTrace();
-		}
-		assertTrue(Boolean.TRUE);
-	}
-
+                        assertTrue(Boolean.FALSE);
+                        e.printStackTrace();
+                }
+                assertTrue(Boolean.TRUE);
+        }
 	/**
 	 *
 	 * @param fileName

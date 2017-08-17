@@ -53,6 +53,7 @@ public class PropertyCategoryRowMapper implements RowMapper<PropertyTypeCategory
 
         final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
         propertyCategory.setId(rs.getLong("propcategory_id"));
+        propertyCategory.setCode(rs.getString("propcategory_code"));
         propertyCategory.setPropertyTypeId(rs.getString("propertyTypeId"));
         propertyCategory.setCategoryTypeId(rs.getLong("categoryTypeId"));
         propertyCategory.setActive(rs.getBoolean("propcategory_active"));

@@ -40,37 +40,54 @@
 
 package org.egov.wcms.service;
 
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import java.util.List;
+
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.repository.MeterCostRepository;
-import org.egov.wcms.web.contract.MeterCostRequest;
+import org.egov.wcms.web.contract.MeterCostGetRequest;
+import org.egov.wcms.web.contract.MeterCostReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class MeterCostService {
+	public static final Logger logger = LoggerFactory.getLogger(MeterCostService.class);
 
-    @Autowired
-    private MeterCostRepository meterCostRepository;
+	@Autowired
+	private MeterCostRepository meterCostRepository;
+	
+	public List<MeterCost> createMeterCostPushToQueue(final MeterCostReq meterCostRequest) {
+		logger.info("Pushing meterCostCreateRequest To Queue");
+		logger.info("MeterCostReq :" + meterCostRequest);
+		return meterCostRepository.pushCreateMeterCostReqToQueue(meterCostRequest);
+	}
 
-    @Autowired
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	public MeterCostReq createMeterCost(MeterCostReq meterCostRequest) {
+		logger.info("MeterCostReq :" + meterCostRequest);
+		return meterCostRepository.persistCreateMeterCost(meterCostRequest);
+	}
 
-    public MeterCostRequest create(final MeterCostRequest meterCostRequest) {
-        return meterCostRepository.persistCreateMeterCost(meterCostRequest);
-    }
+	public List<MeterCost> updateMeterCostPushToQueue(MeterCostReq meterCostRequest) {
+		logger.info("Pushing meterCostUpdateRequest To Queue");
+		logger.info("MeterCostReq :" + meterCostRequest);
+		return meterCostRepository.pushUpdateMeterCostReqToQueue(meterCostRequest);
+	}
 
-    public MeterCost createMeterCost(final String topic, final String key, final MeterCostRequest meterCostRequest) {
+	public MeterCostReq updateMeterCost(MeterCostReq meterCostRequest) {
+		logger.info("MeterCostReq :" + meterCostRequest);
+		return meterCostRepository.persistUpdateMeterCost(meterCostRequest);
 
-        try {
-            kafkaTemplate.send(topic, key, meterCostRequest);
-        } catch (final Exception ex) {
-            log.error("Exception Encountered : " + ex);
-        }
-        return meterCostRequest.getMeterCost();
-    }
+	}
+
+	public List<MeterCost> getMeterCostByCriteria(MeterCostGetRequest meterCostGetRequest) {
+		return meterCostRepository.searchMeterCostByCriteria(meterCostGetRequest);
+	}
+
+	public boolean checkMeterMakeAlreadyExists(MeterCost meterCost) {
+		return meterCostRepository.checkMeterMakeAlreadyExistsInDB(meterCost);
+
+	}
 
 }

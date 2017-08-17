@@ -1,10 +1,10 @@
 package org.egov.egf.instrument.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -34,7 +34,7 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 
 	public InstrumentEntity create(InstrumentEntity entity) {
 
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
+	//	entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}
@@ -43,6 +43,11 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 		super.update(entity);
 		return entity;
 
+	}
+	
+	public InstrumentEntity delete(InstrumentEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
 	}
 
 	public Pagination<Instrument> search(InstrumentSearch domain) {
@@ -69,6 +74,13 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (instrumentSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", instrumentSearchEntity.getTenantId());
+		}
 		if (instrumentSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -132,6 +144,13 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 			params.append("financialStatusid =:financialStatus");
 			paramValues.put("financialStatus", instrumentSearchEntity.getFinancialStatusId());
 		}
+		if (instrumentSearchEntity.getRemittanceVoucherId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("remittanceVoucherId =:remittanceVoucherId");
+			paramValues.put("remittanceVoucherId", instrumentSearchEntity.getRemittanceVoucherId());
+		}
 		if (instrumentSearchEntity.getTransactionType() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -172,8 +191,30 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("ids =:ids");
-			paramValues.put("ids", instrumentSearchEntity.getIds());
+			params.append("id in (:ids)");
+			paramValues.put("ids", new ArrayList<String>(Arrays.asList(instrumentSearchEntity.getIds().split(","))));
+		}
+		if (instrumentSearchEntity.getFinancialStatuses() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("financialStatusId in (:financialStatuses)");
+			paramValues.put("financialStatuses", new ArrayList<String>(Arrays.asList(instrumentSearchEntity.getFinancialStatuses().split(","))));
+		}
+		if (instrumentSearchEntity.getInstrumentTypes() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("instrumentTypeId in (:instrumentTypes)");
+			paramValues.put("instrumentTypes", new ArrayList<String>(Arrays.asList(instrumentSearchEntity.getInstrumentTypes().split(","))));
+		}
+		if (instrumentSearchEntity.getTransactionFromDate() != null && instrumentSearchEntity.getTransactionToDate() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("transactionDate >= :fromDate and transactionDate <= :toDate");
+			paramValues.put("fromDate", instrumentSearchEntity.getTransactionFromDate());
+			paramValues.put("toDate", instrumentSearchEntity.getTransactionToDate());
 		}
 
 		Pagination<Instrument> page = new Pagination<>();

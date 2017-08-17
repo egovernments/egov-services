@@ -39,13 +39,13 @@
  */
 
 package org.egov.egf.master.web.contract;
+
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -54,27 +54,31 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","name","description","values"})
+@JsonPropertyOrder({ "id", "name", "description", "values" })
 public class FinancialConfigurationContract extends AuditableContract {
 
-	@NotNull
-	private String id;
+    @NotNull
+    private String id;
 
-	
-	@Size(min = 3, max = 50)
-	private String name;
+    @Size(min = 3, max = 50)
+    private String name;
 
-	@NotNull
-	@Size(min = 3, max = 250)
-	private String description;
+    @NotNull
+    @Size(min = 3, max = 250)
+    private String description;
 
-	@NotNull
-		private List<FinancialConfigurationValueContract> values;
+    @NotNull
+    @Size(min = 3, max = 250)
+    private String module;
+
+    @NotNull
+    private List<FinancialConfigurationValueContract> values;
 
 }

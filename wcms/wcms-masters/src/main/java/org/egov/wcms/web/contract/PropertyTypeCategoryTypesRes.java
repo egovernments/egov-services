@@ -40,6 +40,7 @@
 
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
@@ -66,6 +67,6 @@ public class PropertyTypeCategoryTypesRes {
     public ResponseInfo responseInfo;
 
     @JsonProperty("PropertyTypeCategoryTypes")
-    public List<PropertyTypeCategoryType> propertyTypeCategoryTypes;
+    public List<PropertyTypeCategoryType> propertyTypeCategoryTypes=new ArrayList<>();
 
 }

@@ -40,8 +40,8 @@
 
 package org.egov.wcms.repository;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,11 +51,12 @@ import org.egov.wcms.repository.rowmapper.PropertyCategoryRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -75,33 +76,45 @@ public class PropertyTypeCategoryTypeRepository {
 
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public PropertyTypeCategoryTypeReq persistCreatePropertyCategory(
             final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         log.info("PropertyCategoryRequest::" + propertyCategoryRequest);
         final String propertyCategoryInsert = PropertyTypeCategoryTypeQueryBuilder.insertPropertyCategoryQuery();
+        final List<PropertyTypeCategoryType> propertyCategoryList = propertyCategoryRequest.getPropertyTypeCategoryType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(propertyCategoryList.size());
+        for (final PropertyTypeCategoryType propertyCategory : propertyCategoryList) {
 
-        final PropertyTypeCategoryType propertyCategory = propertyCategoryRequest.getPropertyTypeCategoryType();
-
-        final String categoryQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryId();
-        Long categoryId = 0L;
-        try {
-            categoryId = jdbcTemplate.queryForObject(categoryQuery,
-                    new Object[] { propertyCategory.getCategoryTypeName(), propertyCategory.getTenantId() },
-                    Long.class);
-            log.info("Category Id: " + categoryId);
-        } catch (final EmptyResultDataAccessException e) {
-            log.info("EmptyResultDataAccessException: Query returned empty result set");
+            final String categoryQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryId();
+            Long categoryId = 0L;
+            try {
+                categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                        new Object[] { propertyCategory.getCategoryTypeName(), propertyCategory.getTenantId() },
+                        Long.class);
+                log.info("Category Id: " + categoryId);
+            } catch (final EmptyResultDataAccessException e) {
+                log.info("EmptyResultDataAccessException: Query returned empty result set");
+            }
+            if (categoryId == null)
+                log.info("Invalid input.");
+            batchValues.add(
+                    new MapSqlParameterSource("id", Long.valueOf(propertyCategory.getCode()))
+                            .addValue("code", propertyCategory.getCode())
+                            .addValue("propertytypeid", propertyCategory.getPropertyTypeId())
+                            .addValue("categorytypeid", categoryId)
+                            .addValue("active", propertyCategory.getActive())
+                            .addValue("createdby", Long.valueOf(propertyCategoryRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifiedby",
+                                    Long.valueOf(propertyCategoryRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("createddate", new Date(new java.util.Date().getTime()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("tenantid", propertyCategory.getTenantId())
+                            .getValues());
+                           
         }
-        if (categoryId == null)
-            log.info("Invalid input.");
-        final Object[] obj = new Object[] { propertyCategory.getPropertyTypeId(), categoryId,
-                propertyCategory.getActive(), propertyCategory.getTenantId(), new Date(new java.util.Date().getTime()),
-                Long.valueOf(propertyCategoryRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()),
-                Long.valueOf(propertyCategoryRequest.getRequestInfo().getUserInfo().getId()) };
-
-        jdbcTemplate.update(propertyCategoryInsert, obj);
+        namedParameterJdbcTemplate.batchUpdate(propertyCategoryInsert, batchValues.toArray(new Map[propertyCategoryList.size()]));
 
         return propertyCategoryRequest;
     }
@@ -110,29 +123,38 @@ public class PropertyTypeCategoryTypeRepository {
             final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         log.info("PropertyCategoryRequest::" + propertyCategoryRequest);
         final String propertyCategoryUpdate = PropertyTypeCategoryTypeQueryBuilder.updatePropertyCategoryQuery();
-        final PropertyTypeCategoryType propertyCategory = propertyCategoryRequest.getPropertyTypeCategoryType();
-        final String categoryQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryId();
-        Long categoryId = 0L;
-        try {
-            categoryId = jdbcTemplate.queryForObject(categoryQuery,
-                    new Object[] { propertyCategory.getCategoryTypeName(), propertyCategory.getTenantId() },
-                    Long.class);
-            log.info("Category Id: " + categoryId);
-        } catch (final EmptyResultDataAccessException e) {
-            log.info("EmptyResultDataAccessException: Query returned empty result set");
-        }
-        if (categoryId == null)
-            log.info("Invalid input.");
-        final Object[] obj = new Object[] { propertyCategory.getPropertyTypeId(), categoryId,
-                propertyCategory.getActive(),
+        final List<PropertyTypeCategoryType> propertyCategoryList = propertyCategoryRequest.getPropertyTypeCategoryType();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(propertyCategoryList.size());
+        for (final PropertyTypeCategoryType propertyCategory : propertyCategoryRequest.getPropertyTypeCategoryType()) {
+            final String categoryQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryId();
+            Long categoryId = 0L;
+            try {
+                categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                        new Object[] { propertyCategory.getCategoryTypeName(), propertyCategory.getTenantId() },
+                        Long.class);
+                log.info("Category Id: " + categoryId);
+            } catch (final EmptyResultDataAccessException e) {
+                log.info("EmptyResultDataAccessException: Query returned empty result set");
+            }
+            if (categoryId == null)
+                log.info("Invalid input.");
+            batchValues.add(
+                    new MapSqlParameterSource("propertytypeid", propertyCategory.getPropertyTypeId())
+                            .addValue("categorytypeid", categoryId)
+                            .addValue("active", propertyCategory.getActive())
 
-                Long.valueOf(propertyCategoryRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), propertyCategory.getId() };
-        jdbcTemplate.update(propertyCategoryUpdate, obj);
+                            .addValue("lastmodifiedby",
+                                    Long.valueOf(propertyCategoryRequest.getRequestInfo().getUserInfo().getId()))
+
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("code", propertyCategory.getCode())
+                            .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(propertyCategoryUpdate, batchValues.toArray(new Map[propertyCategoryList.size()]));
         return propertyCategoryRequest;
     }
 
-    public PropertyTypeCategoryTypesRes findForCriteria(final PropertyCategoryGetRequest propertyCategoryRequest) {
+    public List<PropertyTypeCategoryType> findForCriteria(final PropertyCategoryGetRequest propertyCategoryRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final List<Integer> propertyTypeIdsList = new ArrayList<>();
         final String queryStr = propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues);
@@ -152,12 +174,10 @@ public class PropertyTypeCategoryTypeRepository {
             });
         });
         log.info("PropertyCategoryList: " + propertyCategories.toString());
-        final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
-        propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);
-        return propertyCategoryResponse;
+        return propertyCategories;
     }
 
-    public boolean checkIfMappingExists(final Long id, final String propertyTypeId, final String categoryType,
+    public boolean checkIfMappingExists(final String code, final String propertyTypeId, final String categoryType,
             final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String categoryQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryId();
@@ -175,10 +195,10 @@ public class PropertyTypeCategoryTypeRepository {
         preparedStatementValues.add(categoryId);
         preparedStatementValues.add(tenantId);
         final String query;
-        if (id == null)
+        if (code == null)
             query = PropertyTypeCategoryTypeQueryBuilder.selectPropertyByCategoryQuery();
         else {
-            preparedStatementValues.add(id);
+            preparedStatementValues.add(code);
             query = PropertyTypeCategoryTypeQueryBuilder.selectPropertyByCategoryNotInQuery();
         }
         final List<Map<String, Object>> propertyCategory = jdbcTemplate.queryForList(query,

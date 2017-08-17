@@ -42,9 +42,9 @@
 package org.egov.pgr.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.ReceivingCenterType;
 import org.egov.pgr.service.ReceivingCenterTypeService;
 import org.egov.pgr.util.PgrMasterConstants;
@@ -67,6 +67,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -74,6 +75,9 @@ import java.util.List;
 public class ReceivingCenterTypeController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReceivingCenterTypeController.class);
+    public static final String CODE = "code";
+    public static final String MESSAGE = "message";
+    public static final String FIELD = "field";
 
     @Autowired
     private ReceivingCenterTypeService receivingCenterService;
@@ -87,6 +91,9 @@ public class ReceivingCenterTypeController {
     @Autowired
     private ErrorHandler errHandler;
 
+    HashMap<String, String> receivingCenterException = new HashMap<>();
+
+
     @PostMapping(value = "/v1/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final ReceivingCenterTypeReq centerTypeRequest,
@@ -97,9 +104,8 @@ public class ReceivingCenterTypeController {
         }
         logger.info("ReceivingCenterType Create : Request::" + centerTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest, true);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        validateReceivingCenterRequest(centerTypeRequest, true, "create");
+
 
         final ReceivingCenterType ReceivingCenter = receivingCenterService.sendMessage(applicationProperties.getCreateReceivingCenterTopicName(), applicationProperties.getCreateReceivingCenterTopicKey(), centerTypeRequest);
         final List<ReceivingCenterType> ReceivingCenters = new ArrayList<>();
@@ -117,9 +123,8 @@ public class ReceivingCenterTypeController {
         }
         logger.info("ReceivingCenterType Update : Request::" + centerTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest, false);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        validateReceivingCenterRequest(centerTypeRequest, false, "update");
+
 
         final ReceivingCenterType documentType = receivingCenterService.sendMessage(applicationProperties.getUpdateReceivingCenterTopicName(),
                 applicationProperties.getUpdateReceivingCenterTopicKey(), centerTypeRequest);
@@ -157,14 +162,10 @@ public class ReceivingCenterTypeController {
     }
 
 
-    private List<ErrorResponse> validateReceivingCenterRequest(final ReceivingCenterTypeReq receivingCenterRequest, boolean flag) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(receivingCenterRequest, flag);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-        return errorResponses;
+    private void validateReceivingCenterRequest(final ReceivingCenterTypeReq receivingCenterRequest, boolean flag, String mode) {
+        addReceivingCenterNameAndCodeValidationErrors(receivingCenterRequest, flag, mode);
+        checkReceivingCenterNameUniqueness(receivingCenterRequest, mode);
+        addTenantIdValidationErrors(receivingCenterRequest);
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {
@@ -180,69 +181,56 @@ public class ReceivingCenterTypeController {
         return errRes;
     }
 
-    private List<ErrorField> getErrorFields(final ReceivingCenterTypeReq categoryRequest, boolean flag) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-        addReceivingCenterNameAndCodeValidationErrors(categoryRequest, errorFields, flag);
-        checkReceivingCenterNameUniqueness(categoryRequest, errorFields, flag);
-        addTeanantIdValidationErrors(categoryRequest, errorFields);
-        return errorFields;
-    }
-
-    private void addReceivingCenterNameAndCodeValidationErrors(final ReceivingCenterTypeReq receivingCenterRequest,
-                                                               final List<ErrorField> errorFields, boolean flag) {
+    private void addReceivingCenterNameAndCodeValidationErrors(final ReceivingCenterTypeReq receivingCenterRequest, boolean flag, String mode) {
         final ReceivingCenterType receivingCenter = receivingCenterRequest.getCenterType();
         if (receivingCenter.getName() == null || receivingCenter.getName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGCENTER_NAME_MANDATORY_CODE)
-                    .message(PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
+            receivingCenterException.put(CODE, PgrMasterConstants.RECEIVINGCENTER_NAME_MANDATORY_CODE);
+            receivingCenterException.put(MESSAGE, PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE);
+            receivingCenterException.put(FIELD, PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(receivingCenterException);
         }
         if (receivingCenter.getCode() == null || receivingCenter.getCode().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGCENTER_CODE_MANDATORY_CODE)
-                    .message(PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (flag && !receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(), receivingCenter.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGMODE_CODE_UNIQUE_CODE)
-                    .message(PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGMODE_CODE_UNQ_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else
-            return;
+            receivingCenterException.put(CODE, PgrMasterConstants.RECEIVINGCENTER_CODE_MANDATORY_CODE);
+            receivingCenterException.put(MESSAGE, PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_ERROR_MESSAGE);
+            receivingCenterException.put(FIELD, PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(receivingCenterException);
+        }
+
+        if (receivingCenterService.checkReceivingCenterCodeName(receivingCenter.getCode(), receivingCenter.getName(), receivingCenter.getTenantId(), mode)) {
+            receivingCenterException.put(CODE, PgrMasterConstants.CODENAME_UNIQUE_CODE);
+            receivingCenterException.put(MESSAGE, PgrMasterConstants.CODENAME_UNIQUE_ERROR_MESSAGE);
+            receivingCenterException.put(FIELD, PgrMasterConstants.CODENAME_UNIQUE_FIELD_NAME);
+            throw new PGRMasterException(receivingCenterException);
+        }
+
+        if (flag && !receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(), receivingCenter.getTenantId())) {
+            receivingCenterException.put(CODE, PgrMasterConstants.RECEIVINGCENTER_CODE_EXISTS_CODE);
+            receivingCenterException.put(MESSAGE, PgrMasterConstants.RECEIVINGCENTER_CODE_EXISTS_ERROR_MESSAGE);
+            receivingCenterException.put(FIELD, PgrMasterConstants.RECEIVINGCENTER_CODE_EXISTS_FIELD_NAME);
+            throw new PGRMasterException(receivingCenterException);
+        }
+
     }
 
-    private void checkReceivingCenterNameUniqueness(final ReceivingCenterTypeReq receivingCenterRequest,
-                                                    final List<ErrorField> errorFields, boolean flag) {
+    private void checkReceivingCenterNameUniqueness(final ReceivingCenterTypeReq receivingCenterRequest, String mode) {
         final ReceivingCenterType receivingCenter = receivingCenterRequest.getCenterType();
-        if (receivingCenterService.checkReceivingCenterNameExists(receivingCenter, flag)) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE)
-                    .message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();
-            errorFields.add(errorField);
+        if (receivingCenterService.checkReceivingCenterNameExists(receivingCenter, mode)) {
+            receivingCenterException.put(CODE, PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE);
+            receivingCenterException.put(MESSAGE, PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE);
+            receivingCenterException.put(FIELD, PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME);
+            throw new PGRMasterException(receivingCenterException);
         }
     }
 
-    private void addTeanantIdValidationErrors(final ReceivingCenterTypeReq receivingCenterRequest,
-                                              final List<ErrorField> errorFields) {
+    private void addTenantIdValidationErrors(final ReceivingCenterTypeReq receivingCenterRequest) {
         final ReceivingCenterType receivingCenter = receivingCenterRequest.getCenterType();
         if (receivingCenter.getTenantId() == null || receivingCenter.getTenantId().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
-                    .message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else
-            return;
-    }
+            receivingCenterException.put(CODE, PgrMasterConstants.TENANTID_MANDATORY_CODE);
+            receivingCenterException.put(MESSAGE, PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE);
+            receivingCenterException.put(FIELD, PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(receivingCenterException);
+        }
 
-    private Error getError(final ReceivingCenterTypeReq centerTypeRequest, boolean flag) {
-        centerTypeRequest.getCenterType();
-        final List<ErrorField> errorFields = getErrorFields(centerTypeRequest, flag);
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(PgrMasterConstants.INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE).errorFields(errorFields)
-                .build();
     }
 
     private ResponseEntity<?> getSuccessResponse(final List<ReceivingCenterType> centerList,

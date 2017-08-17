@@ -38,6 +38,10 @@ public class AccountCodePurposeRepository {
 		return entity.toDomain();
 
 	}
+	
+	public String getNextSequence(){
+	    return accountCodePurposeJdbcRepository.getSequence(AccountCodePurposeEntity.SEQUENCE_NAME);
+	}
 
 	@Transactional
 	public AccountCodePurpose save(AccountCodePurpose accountCodePurpose) {

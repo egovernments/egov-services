@@ -78,7 +78,8 @@ public class RoleRepository {
 		parametersMap.put("name", roleName);
 		SqlRowSet sqlRowSet = namedParameterJdbcTemplate.queryForRowSet(query, parametersMap);
 
-		if (sqlRowSet.next() && sqlRowSet.getString("code") != null && sqlRowSet.getString("code") != "") {
+		if (sqlRowSet != null && sqlRowSet.next() && sqlRowSet.getString("code") != null
+				&& sqlRowSet.getString("code") != "") {
 
 			return true;
 		}

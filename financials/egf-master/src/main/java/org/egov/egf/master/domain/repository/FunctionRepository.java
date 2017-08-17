@@ -38,6 +38,10 @@ public class FunctionRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return functionJdbcRepository.getSequence(FunctionEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public Function save(Function function) {
@@ -65,7 +69,7 @@ public class FunctionRepository {
     public Pagination<Function> search(FunctionSearch domain) {
 
         if (!financialConfigurationService.fetchDataFrom().isEmpty()
-                && !financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+                && financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
             FunctionSearchContract functionSearchContract = new FunctionSearchContract();
             ModelMapper mapper = new ModelMapper();
             mapper.map(domain, functionSearchContract);

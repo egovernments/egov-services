@@ -40,7 +40,6 @@
 
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -64,7 +63,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,37 +101,34 @@ public class DocumentTypeController {
         }
         log.info("documentTypeRequest::" + documentTypeReq);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentTypeRequest(documentTypeReq);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentTypeRequest(documentTypeReq,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentType documentType = documentTypeService.sendMessage(
+        final List<DocumentType> documentTypes = documentTypeService.createDocumentType(
                 applicationProperties.getCreateDocumentTypeTopicName(), "documenttype-create", documentTypeReq);
-        final List<DocumentType> documentTypes = new ArrayList<>();
-        documentTypes.add(documentType);
+
         return getSuccessResponse(documentTypes, "Created", documentTypeReq.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/{code}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeReq documentTypeReq,
-            final BindingResult errors, @PathVariable("code") final String code) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("documentTypeRequest::" + documentTypeReq);
-        documentTypeReq.getDocumentType().setCode(code);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentTypeRequest(documentTypeReq);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentTypeRequest(documentTypeReq, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentType documentType = documentTypeService.sendMessage(
+        final List<DocumentType> documentTypes = documentTypeService.updateDocumentType(
                 applicationProperties.getUpdateDocumentTypeTopicName(), "documenttype-update", documentTypeReq);
-        final List<DocumentType> documentTypes = new ArrayList<>();
-        documentTypes.add(documentType);
+
         return getSuccessResponse(documentTypes, null, documentTypeReq.getRequestInfo());
     }
 

@@ -10,7 +10,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/receipts/v1'
+basePath: '/receipts'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths: 
@@ -86,6 +86,14 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
+        - name: transactionId
+          in: query
+          required: false
+          description: Unique tansaction id for multiple receipts created in one transaction. This is 14 digit code with first 4 digit as city code and 10 digit random number.
+          type: string
+          minLength: 0
+          maxLength: 64
+     
       responses:
         200:
           description: Successful response
@@ -99,6 +107,32 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Receipt
+        
+  /receipts/_view:
+    post:
+      summary: Get the receipt(s) info for the receipt numbers.
+      description: This API returns list of receipts created for the given servicecode and list of billNumbers/instrument numbers/receipt numbers.
+      parameters:
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+  
+        - name: receiptNumbers
+          in: query
+          required: false
+          description: List of receipt numbers.
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Receipt'
+      tags:
+        - Receipt      
+        
+  
   
   /_create:
     post:
@@ -293,7 +327,7 @@ definitions:
         type: string
         description: Tenant Id.
       auditDetails:
-          $ref: '#/definitions/AuditDetails'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       billDetails:
         type: array
         items:
@@ -465,42 +499,78 @@ definitions:
         type: string
         description: Unique id of tenant.
         format: varchar
-      bank:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Bank'
-      bankAccount:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/BankAccount'
-      instrumentType:
-        description: Instrument Type need to refer from Financials.
-        items:
-          type: string
-      instrumentHeader:
-        description: Instrument Header need to refer from Financials.
-        items:
-          type: string
+      transactionId:
+        type: string
+        description: Unique tansaction id for multiple receipts created in one transaction. This is 14 digit code with first 4 digit as city code and 10 digit random number.
+        format: varchar
+      id:
+        type: string
+        description: Receipt Header Id which needs to be set during search and the same will be used for update also.
+      instrument:
+        type: string
+        description: Instrument needs to be referred from financials.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       billInfo:
         $ref: '#/definitions/BillInfo'
+      workflowDetails:
+        $ref: '#/definitions/WorkflowDetails'
         
         
-  AuditDetails:
+  WorkflowDetails:
     type: object
-    description: Collection of audit related fields used by most models
-    readOnly: true
-    properties:
-      createdBy: 
-        type: number
-        description: userid of the user that created the object
-      lastModifiedBy: 
-        type: number
-        description: userid of the user that last modified the object
-      createdTime:
-        type: number
-        format: long
-        description: epoch or timestamp of the time object is created
-      lastModifiedTime:
-        type: number
-        format: long
-        description: epoch or timestamp of the time object is last modified
+    description: workflow details related to connection
+    properties: 
+      department: 
+        type: integer
+        description: ID to define the Department .
+        minLength: 1
+        maxLength: 100
+      designation: 
+        type: integer
+        description: ID to define the Designation.
+        minLength: 1
+        maxLength: 100
+      approver: 
+        type: integer
+        description: ID to define the Approver ID.
+        minLength: 1
+        maxLength: 100
+      initiatorPosition:
+        type: integer
+        description: ID of the User who initiates the workflow.
+        minLength: 1
+        maxLength: 100
+      assignee:
+        type: integer
+        description: assignee of the Task
+        minLength: 1
+        maxLength: 100
+      action:
+        type: string
+        description: action of the Task
+        maxLength: 128
+      comments: 
+        type: string
+        description: Notes that has been added by the clerk or engineer.
+        minLength: 1
+        maxLength: 100
+      status:
+        type: string
+        description: Enumeration of Connection Request statuses.
+        enum:
+          - ACTIVE
+          - INPROGRESS
+          - DISCONNECTED
+          - HOLDING
+          - CLOSED
+          - INACTIVE            
+    required:
+     - department
+     - designation
+     - approver
   
+        
 parameters:
   pageSize:
     name: pageSize

@@ -56,7 +56,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","name","code","level","active","isParent","parentId"})
+@JsonPropertyOrder({ "id","name","code","level","active","parentId"})
 public class FunctionContract extends AuditableContract {
 
 	private String id;
@@ -74,10 +74,6 @@ public class FunctionContract extends AuditableContract {
 
 	@NotNull
 	private Boolean active;
-
-	// is this required?
-	@NotNull
-	private Boolean isParent;
 
 	private FunctionContract parentId;
 

@@ -1,9 +1,17 @@
 package org.egov.mr.web.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.egov.mr.model.MarriageCertificate;
+import org.egov.mr.model.MarriageRegn;
+import org.egov.mr.model.ReissueCertAppl;
 import org.egov.mr.service.MarriageCertService;
+import org.egov.mr.service.MarriageRegnService;
 import org.egov.mr.web.contract.MarriageCertCriteria;
+import org.egov.mr.web.contract.MarriageRegnCriteria;
+import org.egov.mr.web.contract.ReissueCertRequest;
 import org.egov.mr.web.contract.ReissueCertResponse;
 import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
@@ -31,7 +39,7 @@ public class MarriageCertController {
 
 	@Autowired
 	private ErrorHandler errorHandler;
-
+	
 	@PostMapping("/_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid MarriageCertCriteria marriageCertCriteria,
@@ -57,5 +65,42 @@ public class MarriageCertController {
 		}
 		return new ResponseEntity<ReissueCertResponse>(reissueCertResponse, HttpStatus.OK);
 	}
+	
+	@PostMapping("_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody @Valid final ReissueCertRequest reissueCertRequest,
+			final BindingResult bindingResult) {
+	
+		RequestInfo requestInfo = reissueCertRequest.getRequestInfo();
+		
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+				bindingResult);
 
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+		log.info("Request in controller::"+reissueCertRequest);
+		ReissueCertResponse reIssueCertAppResponse=marriageCertService.createAsync(reissueCertRequest);
+		
+		return new ResponseEntity<>(reIssueCertAppResponse, HttpStatus.CREATED);
+		
+	}
+	
+	@PostMapping("_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid final ReissueCertRequest reissueCertRequest,
+			final BindingResult bindingResult) {
+	
+		RequestInfo requestInfo = reissueCertRequest.getRequestInfo();
+		ReissueCertAppl reissueApplication=reissueCertRequest.getReissueApplication();
+		
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+				bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+		log.info("Request in controller::"+reissueCertRequest);
+		ReissueCertResponse reIssueCertAppResponse=marriageCertService.updateAsync(reissueCertRequest);
+		
+		return new ResponseEntity<>(reIssueCertAppResponse,HttpStatus.CREATED);
+	}
+ 
 }

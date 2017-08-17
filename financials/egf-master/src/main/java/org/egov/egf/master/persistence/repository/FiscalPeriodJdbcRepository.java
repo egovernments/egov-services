@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -34,8 +33,6 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 	}
 
 	public FiscalPeriodEntity create(FiscalPeriodEntity entity) {
-
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}
@@ -70,6 +67,13 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (fiscalPeriodSearchEntity.getTenantId() != null) {
+                    if (params.length() > 0) {
+                        params.append(" and ");
+                    }
+                    params.append("tenantId =:tenantId");
+                    paramValues.put("tenantId", fiscalPeriodSearchEntity.getTenantId());
+                }
 		if (fiscalPeriodSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

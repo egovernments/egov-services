@@ -1,79 +1,111 @@
 {
-"tenantId": "default",
-"RequestInfo": {
-  "apiId": "emp",
-  "ver": "1.0",
-  "ts": "10-03-2017 00:00:00",
-  "action": "create",
-  "did": "1",
-  "key": "abcdkey",
-  "msgId": "20170310130900",
-  "requesterId": "rajesh",
-  "correlationId" : "",
-  "authToken": "a9199e9b-a472-4dc2-9a5f-9dd7705c56ae",
-  "userInfo": {
-    "id": "1"
-  }
-},
-"Receipt": [{
-  "tenantId": "default",
-  "BankAccount": {
-    "BankBranch": {
-      "name": "SBI"
-    },
-    "ChartOfAccount": {
-      "name": "chartOfAccount"
+  "Receipt": [
+    {
+      "Bill": [
+        {
+          "id": "17",
+          "payeeName": "R Krishna Reddy",
+          "payeeAddress": null,
+          "payeeEmail": null,
+          "isActive": true,
+          "isCancelled": false,
+          "billDetails": [
+            {
+              "id": "17",
+              "tenantId": "default",
+              "bill": "17",
+              "businessService": "WC",
+              "billNumber": "17",
+              "billDate": 1502365191113,
+              "consumerCode": "1016000001",
+              "consumerType": "PRIVATE",
+              "billDescription": "Property Tax Consumer Code: 1016000001",
+              "displayMessage": "Property Tax Consumer Code: 1016000001",
+              "minimumAmount": 1,
+              "totalAmount": 1948,
+              "collectionModesNotAllowed": [
+                ""
+              ],
+              "callBackForApportioning": true,
+              "partPaymentAllowed": true,
+              "billAccountDetails": [
+                {
+                  "id": "48",
+                  "tenantId": "default",
+                  "billDetail": "17",
+                  "glcode": "3503002",
+                  "order": 1,
+                  "accountDescription": "EDU_CESS-1490985000000-1506796199000",
+                  "crAmountToBePaid": 418,
+                  "creditAmount": null,
+                  "debitAmount": null,
+                  "isActualDemand": true,
+                  "purpose": "CURRENT_AMOUNT"
+                },
+                {
+                  "id": "49",
+                  "tenantId": "default",
+                  "billDetail": "17",
+                  "glcode": "1100101",
+                  "order": 0,
+                  "accountDescription": "PT_TAX-1490985000000-1506796199000",
+                  "crAmountToBePaid": 1500,
+                  "creditAmount": null,
+                  "debitAmount": null,
+                  "isActualDemand": true,
+                  "purpose": "CURRENT_AMOUNT"
+                },
+                {
+                  "id": "50",
+                  "tenantId": "default",
+                  "billDetail": "17",
+                  "glcode": "3503002",
+                  "order": 1,
+                  "accountDescription": "LIB_CESS-1490985000000-1506796199000",
+                  "crAmountToBePaid": 30,
+                  "creditAmount": null,
+                  "debitAmount": null,
+                  "isActualDemand": true,
+                  "purpose": "CURRENT_AMOUNT"
+                }
+              ],
+              "amountPaid": "1000"
+            }
+          ],
+          "tenantId": "default",
+          "auditDetail": null,
+          "paidBy": "murali"
+        }
+      ],
+      "tenantId": "default",
+      "instrument": {
+        "transactionNumber": "1232356543",
+        "transactionDate":"2017-06-08T22:03:59.947",
+        "amount": 100,
+        "instrumentType": {
+          "name": "Cash",
+          "tenantId": "default"
+        },
+        "branchName":"Bangalore",
+        "bank": {
+          "id": "1",
+          "tenantId": "default"
+        }
+      }
     }
-  },
-  "Bill" : 
-       [{
-           "id": "2",
-           "payeeName": "System",
-           "paidBy" : "Parvati",
-           "payeeAddress": null,
-           "payeeEmail": "system@gmail.com",
-           "isActive": true,
-           "isCancelled": false,
-           "BillDetail": [
-               {
-                   "id": "2",
-                   "tenantId": "default",
-                   "bill": "2",
-                   "businessService": "TL",
-                   "billNumber": "2",
-                   "billDate": 1500461751586,
-                   "consumerCode": "consumercode2",
-                   "receiptType" : "C",
-                   "consumerType": "consumertype1",
-                   "billDescription": "Water Charge Consumer Code: consumercode2",
-                   "displayMessage": "Water Charge Consumer Code: consumercode2",
-                   "minimumAmount": 10,
-                   "totalAmount": 900,
-                   "amountPaid" : 200,
-                   "collectionModesNotAllowed": [
-                       null
-                   ],
-                   "callBackForApportioning": false,
-                   "partPaymentAllowed": false,
-                   "BillAccountDetail": [
-                       {
-                           "id": "2",
-                           "tenantId": "default",
-                           "billDetail": "2",
-                           "glcode": "1405014",
-                           "order": 1,
-                           "accountDescription": "ESTIMATIONCHARGES-1491004800-1499990400",
-                           "crAmountToBePaid": 900,
-                           "creditAmount": null,
-                           "debitAmount": null,
-                           "isActualDemand": true,
-                           "purpose": "OTHERS"
-                       }
-                   ]
-               }
-           ],
-           "tenantId": "default",
-           "auditDetail": null
-       }]
-   }
-   ]}
+  ],
+  "RequestInfo": {
+    "apiId": "org.egov.pt",
+    "ver": "1.0",
+    "ts": 1502365223899,
+    "action": "asd",
+    "did": "4354648646",
+    "key": "xyz",
+    "msgId": "654654",
+    "requesterId": "61",
+    "authToken": "019e4e9b-0605-43a3-8527-e3ff8181cb63",
+    "userInfo":{
+    	"id":1
+    }
+  }
+}

@@ -10,6 +10,7 @@ import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
@@ -19,18 +20,19 @@ import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Status;
+import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-@Service
-public class DisposalService {
+import lombok.extern.slf4j.Slf4j;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(DisposalService.class);
+@Service
+@Slf4j
+public class DisposalService {
 
     @Autowired
     private DisposalRepository disposalRepository;
@@ -42,13 +44,13 @@ public class DisposalService {
     private ApplicationProperties applicationProperties;
 
     @Autowired
-    private AssetCurrentAmountService assetCurrentAmountService;
-
-    @Autowired
     private VoucherService voucherService;
 
     @Autowired
     private AssetService assetService;
+
+    @Autowired
+    private AssetRepository assetRepository;
 
     @Autowired
     private AssetMasterService assetMasterService;
@@ -56,13 +58,16 @@ public class DisposalService {
     @Autowired
     private AssetConfigurationService assetConfigurationService;
 
+    @Autowired
+    private AssetCommonService assetCommonService;
+
     public DisposalResponse search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
         List<Disposal> disposals = null;
 
         try {
             disposals = disposalRepository.search(disposalCriteria);
         } catch (final Exception ex) {
-            LOGGER.info("DisposalService:", ex);
+            log.info("DisposalService:", ex);
             throw new RuntimeException(ex);
         }
         return getResponse(disposals, requestInfo);
@@ -74,8 +79,12 @@ public class DisposalService {
     }
 
     public void setStatusOfAssetToDisposed(final DisposalRequest disposalRequest) {
-        final Asset asset = assetCurrentAmountService.getAsset(disposalRequest.getDisposal().getAssetId(),
-                disposalRequest.getDisposal().getTenantId(), disposalRequest.getRequestInfo());
+
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(disposalRequest.getDisposal().getAssetId());
+        final Asset asset = assetRepository.findForCriteria(
+                AssetCriteria.builder().tenantId(disposalRequest.getDisposal().getTenantId()).id(assetIds).build())
+                .get(0);
         final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(AssetStatusObjectName.ASSETMASTER,
                 Status.DISPOSED, disposalRequest.getDisposal().getTenantId());
         asset.setStatus(assetStatuses.get(0).getStatusValues().get(0).getCode());
@@ -84,73 +93,69 @@ public class DisposalService {
         assetService.update(assetRequest);
     }
 
-    public DisposalResponse createAsync(final DisposalRequest disposalRequest) {
+    public DisposalResponse createAsync(final DisposalRequest disposalRequest, final HttpHeaders headers) {
+        final Disposal disposal = disposalRequest.getDisposal();
 
-        disposalRequest.getDisposal().setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
+        disposal.setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
 
-        if (disposalRequest.getDisposal().getAuditDetails() == null)
-            disposalRequest.getDisposal()
-                    .setAuditDetails(assetCurrentAmountService.getAuditDetails(disposalRequest.getRequestInfo()));
+        if (disposal.getAuditDetails() == null)
+            disposal.setAuditDetails(assetCommonService.getAuditDetails(disposalRequest.getRequestInfo()));
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                disposalRequest.getDisposal().getTenantId()))
+                disposal.getTenantId()))
             try {
-                LOGGER.info("Commencing Voucher Generation for Asset Sale/Disposal");
-                final Long voucherId = createVoucherForDisposal(disposalRequest);
+                log.info("Commencing Voucher Generation for Asset Sale/Disposal");
+                final Long voucherId = createVoucherForDisposal(disposalRequest, headers);
                 if (voucherId != null)
-                    disposalRequest.getDisposal().setVoucherReference(voucherId);
+                    disposal.setVoucherReference(voucherId);
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
 
         logAwareKafkaTemplate.send(applicationProperties.getCreateAssetDisposalTopicName(),
                 KafkaTopicName.SAVEDISPOSAL.toString(), disposalRequest);
+
         final List<Disposal> disposals = new ArrayList<Disposal>();
-        disposals.add(disposalRequest.getDisposal());
+        disposals.add(disposal);
         return getResponse(disposals, disposalRequest.getRequestInfo());
     }
 
-    private Long createVoucherForDisposal(final DisposalRequest disposalRequest) {
-        final Asset asset = assetCurrentAmountService.getAsset(disposalRequest.getDisposal().getAssetId(),
-                disposalRequest.getDisposal().getTenantId(), disposalRequest.getRequestInfo());
+    private Long createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
+        final Disposal disposal = disposalRequest.getDisposal();
+        final RequestInfo requestInfo = disposalRequest.getRequestInfo();
+        final List<Long> assetIds = new ArrayList<>();
+        final String tenantId = disposal.getTenantId();
+        assetIds.add(disposal.getAssetId());
+        final Asset asset = assetRepository
+                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
 
         final AssetCategory assetCategory = asset.getAssetCategory();
 
-        final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService.getSubledgerDetails(
-                disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
-                assetCategory.getAssetAccount());
+        final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
+                .getSubledgerDetails(requestInfo, tenantId, assetCategory.getAssetAccount());
         final List<ChartOfAccountDetailContract> subledgerDetailsForAssetSaleAccount = voucherService
-                .getSubledgerDetails(disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
-                        disposalRequest.getDisposal().getAssetSaleAccount());
+                .getSubledgerDetails(requestInfo, tenantId, disposal.getAssetSaleAccount());
+        voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount, subledgerDetailsForAssetSaleAccount);
 
-        if (subledgerDetailsForAssetAccount != null && subledgerDetailsForAssetSaleAccount != null
-                && !subledgerDetailsForAssetAccount.isEmpty() && !subledgerDetailsForAssetSaleAccount.isEmpty())
-            throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
-        else {
-            final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposalRequest,
-                    assetCategory);
-            LOGGER.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
+        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
+                requestInfo);
+        log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-            final VoucherRequest voucherRequest = voucherService.createVoucherRequestForDisposal(disposalRequest, asset,
-                    accountCodeDetails);
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, disposal.getFund(),
+                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
 
-            LOGGER.debug("Voucher Request for Disposal :: " + voucherRequest);
+        log.debug("Voucher Request for Disposal :: " + voucherRequest);
 
-            return voucherService.createVoucher(voucherRequest, disposalRequest.getDisposal().getTenantId());
-        }
+        return voucherService.createVoucher(voucherRequest, tenantId, headers);
 
     }
 
-    private List<VouchercreateAccountCodeDetails> getAccountDetails(final DisposalRequest disposalRequest,
-            final AssetCategory assetCategory) {
+    private List<VouchercreateAccountCodeDetails> getAccountDetails(final Disposal disposal,
+            final AssetCategory assetCategory, final RequestInfo requestInfo) {
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-        accountCodeDetails.add(voucherService.getGlCodes(disposalRequest.getRequestInfo(),
-                disposalRequest.getDisposal().getTenantId(), disposalRequest.getDisposal().getAssetSaleAccount(),
-                disposalRequest.getDisposal().getSaleValue(), disposalRequest.getDisposal().getFunction(), false,
-                true));
-        accountCodeDetails.add(
-                voucherService.getGlCodes(disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
-                        assetCategory.getAssetAccount(), disposalRequest.getDisposal().getSaleValue(),
-                        disposalRequest.getDisposal().getFunction(), true, false));
+        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, disposal.getTenantId(),
+                disposal.getAssetSaleAccount(), disposal.getSaleValue(), disposal.getFunction(), false, true));
+        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, disposal.getTenantId(),
+                assetCategory.getAssetAccount(), disposal.getSaleValue(), disposal.getFunction(), true, false));
         return accountCodeDetails;
     }
 

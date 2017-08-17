@@ -1,6 +1,14 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
 import {translate} from './common';
 
 const styles = {
@@ -13,6 +21,10 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
+  },
+  customColumnStyle : {
+    wordWrap: 'break-word',
+    whiteSpace: 'normal'
   }
 };
 
@@ -26,26 +38,14 @@ const workflow = ({workflowdetails}) => {
           department = Object.values(workflow.values.department.values[k])[1];
         }
         return (
-          <Row style={styles.addBorderBottom} key={index}>
-            <Col xs={12} md={2}>
-              {workflow.last_updated}
-            </Col>
-            <Col xs={12} md={2}>
-              {workflow.sender_name}
-            </Col>
-            <Col xs={12} md={2}>
-              {workflow.status}
-            </Col>
-            <Col xs={12} md={2}>
-              {workflow.owner}
-            </Col>
-            <Col xs={12} md={2}>
-              {department}
-            </Col>
-            <Col xs={12} md={2}>
-              {workflow.comments}
-            </Col>
-          </Row>
+          <TableRow selectable={false} key={index}>
+            <TableRowColumn>{workflow.last_updated}</TableRowColumn>
+            <TableRowColumn className="hidden-xs">{workflow.sender_name}</TableRowColumn>
+            <TableRowColumn>{workflow.status}</TableRowColumn>
+            <TableRowColumn>{workflow.owner}</TableRowColumn>
+            <TableRowColumn className="hidden-xs">{department}</TableRowColumn>
+            <TableRowColumn style={styles.customColumnStyle}>{workflow.comments}</TableRowColumn>
+          </TableRow>
         )
       });
     }
@@ -57,27 +57,21 @@ const workflow = ({workflowdetails}) => {
          {translate('core.lbl.history')}
         < /div>}/>
         <CardText style={{padding:'8px 16px 0'}}>
-          <Row style={styles.addBorderBottom}>
-            <Col xs={12} md={2}>
-              {translate('core.lbl.date')}
-            </Col>
-            <Col xs={12} md={2}>
-              {translate('pgr.lbl.updatedby')}
-            </Col>
-            <Col xs={12} md={2}>
-              {translate('core.lbl.status')}
-            </Col>
-            <Col xs={12} md={2}>
-              {translate('pgr.lbl.currentowner')}
-            </Col>
-            <Col xs={12} md={2}>
-              {translate('core.lbl.department')}
-            </Col>
-            <Col xs={12} md={2}>
-              {translate('core.lbl.comments')}
-            </Col>
-          </Row>
-          {renderWorkflow()}
+          <Table>
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+              <TableRow>
+                <TableHeaderColumn>{translate('core.lbl.date')}</TableHeaderColumn>
+                <TableHeaderColumn className="hidden-xs">{translate('pgr.lbl.updatedby')}</TableHeaderColumn>
+                <TableHeaderColumn>{translate('core.lbl.status')}</TableHeaderColumn>
+                <TableHeaderColumn>{translate('pgr.lbl.currentowner')}</TableHeaderColumn>
+                <TableHeaderColumn className="hidden-xs">{translate('core.lbl.department')}</TableHeaderColumn>
+                <TableHeaderColumn>{translate('core.lbl.comments')}</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody displayRowCheckbox={false}>
+              {renderWorkflow()}
+            </TableBody>
+          </Table>
         </CardText>
       </Card>
     </Grid>

@@ -17,7 +17,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class PositionHierarchyRepositoryTest {
 
     private static final String HOST = "http://host";
-    private static final String POSITIONHIERARCHIES_BY_ID_URL = "/positionhierarchies/_search?fromPosition=1&objectType=Complaint&objectSubType=complaintTypeCode&tenantId=default";
+    private static final String POSITIONHIERARCHIES_BY_ID_URL = "/escalation-hierarchy/v1/_searchfromPosition=1&serviceCode=complaintTypeCode&tenantId=default";
 
     private PositionHierarchyRepository positionHierarchyRepository;
     private MockRestServiceServer server;
@@ -32,15 +32,15 @@ public class PositionHierarchyRepositoryTest {
     @Test
     public void test_should_get_positionhierarchies_by_id() {
         server.expect(once(), requestTo(
-                "http://host/positionhierarchies/_search?fromPosition=1&objectType=Complaint&objectSubType=complaintTypeCode&tenantId=default"))
-                .andExpect(method(HttpMethod.POST))
-                .andRespond(withSuccess(new Resources().getFileContents("positionHierarchyResponse.json"),
-                        MediaType.APPLICATION_JSON_UTF8));
+            "http://host/escalation-hierarchy/v1/_searchfromPosition=1&serviceCode=complaintTypeCode&tenantId=default"))
+            .andExpect(method(HttpMethod.POST))
+            .andRespond(withSuccess(new Resources().getFileContents("positionHierarchyResponse.json"),
+                MediaType.APPLICATION_JSON_UTF8));
 
         final PositionHierarchyResponse positionResponse = positionHierarchyRepository
-                .getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "complaintTypeCode", 1l,"default");
+            .getByPositionByComplaintTypeAndFromPosition(1l, "complaintTypeCode", "default");
         server.verify();
-        assertEquals(1, positionResponse.getPositionHierarchy().size());
+        assertEquals(1, positionResponse.getEscalationHierarchies().size());
     }
 
 }

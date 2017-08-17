@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -68,27 +67,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
   }
 };
 
@@ -171,11 +149,8 @@ class routerGeneration extends Component {
   	$('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          ordering: false,
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+         ordering: false,
+         bDestroy: true
     });
   }
 
@@ -355,10 +330,8 @@ class routerGeneration extends Component {
    		if(isSearchClicked && isFormValid) {
    			return (
    				<div style={{textAlign: 'center'}}>
-
 	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.save")} primary={true} onClick={(e) => {save(e)}}/>
 	   			</div>
-
    			)
    		}
    }
@@ -381,7 +354,7 @@ class routerGeneration extends Component {
    const viewTable = function() {
    	  if(isSearchClicked)
    		return (
-	        <Card>
+	        <Card style={styles.marginStyle}>
 	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
 	          <CardText>
 		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -407,11 +380,11 @@ class routerGeneration extends Component {
     <div className="routerGeneration">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Create Grievance Router </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {translate('pgr.lbl.create.router')} </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.grievance.category") + " *"} errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadGrievanceType(val);
@@ -421,7 +394,7 @@ class routerGeneration extends Component {
 			                            ))}
                      </SelectField>
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                     <SelectField
                       fullWidth={true}
                       floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
@@ -441,7 +414,7 @@ class routerGeneration extends Component {
 			                       ))}
                     </SelectField>
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype") + " *"} errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
@@ -451,7 +424,7 @@ class routerGeneration extends Component {
 			                            ))}
                      </SelectField>
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                     <SelectField
                       fullWidth={true}
                       floatingLabelText={translate("pgr.lbl.boundary") + " *"}
@@ -473,7 +446,7 @@ class routerGeneration extends Component {
                    </Col>
                    </Row>
                    <Row>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={4} md={3} lg={3}>
                     	<AutoComplete
                         hintText=""
                         floatingLabelText={translate("pgr.lbl.position") + " *"}
@@ -485,14 +458,19 @@ class routerGeneration extends Component {
                         onKeyUp={handleAutoCompleteKeyUp}
                         errorText={fieldErrors.position || ""} value={routerCreateSet.position}
                         searchText={searchTextPos}
+                        ref="position"
                         onNewRequest={(chosenRequest, index) => {
-                          searchTextPos = chosenRequest.name;
-	                        var e = {
-	                          target: {
-	                            value: chosenRequest.id
-	                          }
-	                        };
-	                        handleChange(e, "position", true, "");
+                          if(index === -1){
+                            this.refs['position'].setState({searchText:''});
+                          }else{
+                            searchTextPos = chosenRequest.name;
+  	                        var e = {
+  	                          target: {
+  	                            value: chosenRequest.id
+  	                          }
+  	                        };
+  	                        handleChange(e, "position", true, "");
+                          }
 	                       }}
 	                      />
                    </Col>
@@ -502,7 +480,6 @@ class routerGeneration extends Component {
            </Card>
            <div style={{textAlign: 'center'}}>
              <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} disabled={!isFormValid} primary={true}/>
-
            </div>
            {viewTable()}
            {showSaveButton()}
@@ -511,7 +488,7 @@ class routerGeneration extends Component {
           title="Confirm"
           actions={
           	[<FlatButton
-				        label="Close"
+				        label={translate('core.lbl.close')}
 				        primary={false}
 				        onTouchTap={handleOpenNClose}
 				      />, <FlatButton

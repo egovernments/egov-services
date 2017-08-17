@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.egov.calculator.exception.InvalidTaxCalculationDataException;
 import org.egov.calculator.models.TaxCalculationWrapper;
 import org.egov.calculator.models.TaxperiodWrapper;
 import org.egov.calculator.models.UnitWrapper;
+import org.egov.calculator.repository.DemandRepository;
 import org.egov.calculator.repository.FactorRepository;
 import org.egov.calculator.repository.TaxPeriodRespository;
 import org.egov.calculator.repository.TaxRatesRepository;
@@ -26,10 +28,17 @@ import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
 import org.egov.models.CommonTaxDetails;
+import org.egov.models.Demand;
+import org.egov.models.DemandDetail;
+import org.egov.models.DemandResponse;
 import org.egov.models.Floor;
 import org.egov.models.GuidanceValueResponse;
 import org.egov.models.HeadWiseTax;
+import org.egov.models.LatePaymentPenaltyResponse;
+import org.egov.models.Penalty;
+import org.egov.models.Property;
 import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.TaxCalculation;
 import org.egov.models.TaxPeriod;
@@ -55,6 +64,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@SuppressWarnings("unused")
 public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
     @Autowired
@@ -71,12 +81,15 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
     @Autowired
     TaxPeriodRespository taxPeriodRespository;
-    
+
     @Autowired
-	PropertiesManager propertiesManager;
+    PropertiesManager propertiesManager;
 
     @Autowired
     ServletContext context;
+
+    @Autowired
+    DemandRepository demandRepository;
 
     /**
      * Description: this method will get all factors based on tenantId and valid date
@@ -123,33 +136,38 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
     public CalculationResponse calculatePropertyTax(CalculationRequest calculationRequest) throws Exception {
         CalculationResponse calculationResponse = new CalculationResponse();
         // TODO Auto-generated method stub
-
-        List<UnitWrapper> roomsList = new ArrayList<UnitWrapper>();
-        for (Floor floor : calculationRequest.getProperty().getPropertyDetail().getFloors()) {
-            for (Unit unit : floor.getUnits()) {
-                if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
-                        && unit.getUnits() != null) {
-                    for (Unit room : unit.getUnits()) {
+        TaxCalculationWrapper taxWrapper = new TaxCalculationWrapper();
+        if (!calculationRequest.getProperty().getPropertyDetail().getPropertyType()
+                .equalsIgnoreCase(propertiesManager.getVacantland())) {
+            List<UnitWrapper> roomsList = new ArrayList<UnitWrapper>();
+            for (Floor floor : calculationRequest.getProperty().getPropertyDetail().getFloors()) {
+                for (Unit unit : floor.getUnits()) {
+                    if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
+                            && unit.getUnits() != null) {
+                        for (Unit room : unit.getUnits()) {
+                            UnitWrapper unitWrapper = new UnitWrapper();
+                            unitWrapper.setUnit(room);
+                            unitWrapper.setFloorNo(floor.getFloorNo());
+                            roomsList.add(unitWrapper);
+                        }
+                    } else {
                         UnitWrapper unitWrapper = new UnitWrapper();
-                        unitWrapper.setUnit(room);
-                        unitWrapper.setFloorNo(floor.getFloorNo());
+                        unitWrapper.setUnit(unit);
+                        unitWrapper.setFloorNo(floor.getFloorNo().toString());
                         roomsList.add(unitWrapper);
                     }
-                } else {
-                    UnitWrapper unitWrapper = new UnitWrapper();
-                    unitWrapper.setUnit(unit);
-                    unitWrapper.setFloorNo(floor.getFloorNo().toString());
-                    roomsList.add(unitWrapper);
                 }
-            }
 
+            }
+            List<TaxperiodWrapper> taxPeriods = getTaxPeriods(roomsList, calculationRequest.getProperty().getTenantId());
+            taxPeriods = getDataForTaxCalculation(taxPeriods, calculationRequest.getProperty().getTenantId(),
+                    calculationRequest);
+
+            taxWrapper.setProperty(calculationRequest.getProperty());
+            taxWrapper.setTaxPeriods(taxPeriods);
+        } else {
+            taxWrapper = getTaxWrapperForVacantLand(calculationRequest);
         }
-        List<TaxperiodWrapper> taxPeriods = getTaxPeriods(roomsList, calculationRequest.getProperty().getTenantId());
-        taxPeriods = getDataForTaxCalculation(taxPeriods, calculationRequest.getProperty().getTenantId(),
-                calculationRequest);
-        TaxCalculationWrapper taxWrapper = new TaxCalculationWrapper();
-        taxWrapper.setProperty(calculationRequest.getProperty());
-        taxWrapper.setTaxPeriods(taxPeriods);
 
         KieSession kieSession = kieSession(calculationRequest.getProperty().getTenantId(),
                 calculationRequest.getRequestInfo());
@@ -164,7 +182,6 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
     public List<TaxperiodWrapper> getDataForTaxCalculation(List<TaxperiodWrapper> taxperiods, String tenantId,
             CalculationRequest calculationRequest) throws Exception {
-
         for (TaxperiodWrapper taxWrapper : taxperiods) {
             for (UnitWrapper wrapper : taxWrapper.getUnits()) {
                 Unit unit = wrapper.getUnit();
@@ -202,9 +219,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
             throws IOException, InvalidTaxCalculationDataException {
         KieServices kieServices = KieServices.Factory.get();
         KieFileSystem kfs = kieServices.newKieFileSystem();
-
         File file = null;
-
         String filepath = context.getRealPath(tenantId + ".drl");
         file = new File(filepath);
 
@@ -403,7 +418,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
      */
 
     public UnitTax calculateUnitTax(UnitWrapper unitWrapper, TaxPeriod taxPeriod, Double rentForMonth,
-            Double agePercentage, Double grossPercentage) throws ParseException {
+            Double agePercentage, Double grossPercentage, Property property) throws ParseException {
 
         Double depreciation = rentForMonth * (agePercentage / 100);
         depreciation = Math.ceil(depreciation);
@@ -426,13 +441,15 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         }
 
         List<TaxRates> independentTaxes = unitWrapper.getTaxRates().stream()
-                .filter(taxRate -> taxRate.getDependentTaxHead() == null || taxRate.getDependentTaxHead().isEmpty())
+                .filter(taxRate -> ((taxRate.getDependentTaxHead() == null || taxRate.getDependentTaxHead().isEmpty())
+                        && (taxRate.getPropertyType() == null || taxRate.getPropertyType().isEmpty())))
                 .collect(Collectors.toList());
         List<HeadWiseTax> headWiseTaxes = new ArrayList<HeadWiseTax>();
         Map<String, List<TaxRates>> independentTaxesMap = independentTaxes.stream()
                 .collect(Collectors.groupingBy(taxRate -> taxRate.getTaxHead()));
         List<TaxRates> dependentTaxes = unitWrapper.getTaxRates().stream()
-                .filter(taxRate -> taxRate.getDependentTaxHead() != null && !taxRate.getDependentTaxHead().isEmpty())
+                .filter(taxRate -> ((taxRate.getDependentTaxHead() != null && !taxRate.getDependentTaxHead().isEmpty())
+                        && (taxRate.getPropertyType() == null || taxRate.getPropertyType().isEmpty())))
                 .collect(Collectors.toList());
         Map<String, List<TaxRates>> depenentTaxesMap = dependentTaxes.stream()
                 .collect(Collectors.groupingBy(taxRate -> taxRate.getTaxHead()));
@@ -600,4 +617,203 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         String formatedEffectivedate = simpleDateFormat.format(efiectivedate);
         return formatedEffectivedate;
     }
+
+    @Override
+    public LatePaymentPenaltyResponse getLatePaymentPenalty(RequestInfoWrapper requestInfo, String tenantId, String upicNo)
+            throws Exception {
+
+        DemandResponse demandResponse = demandRepository.getDemands(upicNo, tenantId, requestInfo);
+        if (demandResponse != null) {
+            List<Penalty> penalityList = new ArrayList<Penalty>();
+            List<Demand> demands = demandResponse.getDemands();
+            for (Demand demand : demands) {
+                Double totalTax = 0.0;
+                Double collectedAmount = 0.0;
+                for (DemandDetail demandDetail : demand.getDemandDetails()) {
+                    totalTax += demandDetail.getTaxAmount().doubleValue();
+                    collectedAmount += demandDetail.getCollectionAmount().doubleValue();
+                }
+                if (totalTax != collectedAmount) {
+                    Double penaltyAmount = totalTax - collectedAmount;
+                    List<Penalty> penalties = getPenalty(demand, penaltyAmount);
+                    penalityList.addAll(penalties);
+                }
+            }
+            LatePaymentPenaltyResponse latePaymentResponse = new LatePaymentPenaltyResponse();
+            latePaymentResponse.setPenalty(penalityList);
+            latePaymentResponse
+                    .setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), true));
+
+            return latePaymentResponse;
+        }
+        return new LatePaymentPenaltyResponse();
+    }
+
+    /**
+     * Description: This method will return list of penalty objects
+     * @param demand
+     * @param penaltyAmount
+     * @return penaltyList
+     */
+
+    private List<Penalty> getPenalty(Demand demand, Double penaltyAmount) {
+        List<Penalty> penaltyList = new ArrayList<Penalty>();
+        Calendar fromDate = Calendar.getInstance();
+        fromDate.setTimeInMillis(demand.getTaxPeriodFrom());
+        Calendar toDate = Calendar.getInstance();
+        toDate.setTimeInMillis(demand.getTaxPeriodTo());
+        int monthsDiff = toDate.get(Calendar.MONTH) - fromDate.get(Calendar.MONTH) + 1;
+        int penalitymonths = monthsDiff - propertiesManager.getNonPenaltyMonths();
+        Calendar startDate = Calendar.getInstance();
+        startDate.setTimeInMillis(demand.getTaxPeriodFrom());
+        startDate.add(Calendar.MONTH, propertiesManager.getNonPenaltyMonths());
+        for (int i = 0; i < penalitymonths; i++) {
+            Penalty penalty = new Penalty();
+            if (i != 0)
+                startDate.add(Calendar.MONTH, 1);
+            String description = new SimpleDateFormat("MMM yyyy").format(startDate.getTime());
+            penalty.setDescription(description);
+            double penalatyForDemand = (Math.ceil((penaltyAmount * propertiesManager.getPenalityPercentage()) / 100));
+            penalty.setAmount(penalatyForDemand);
+            penalty.setAuditDetails(demand.getAuditDetail());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String fromDateFormat = sdf.format(new Date(demand.getTaxPeriodFrom()));
+            String toDateFormat = sdf.format(new Date(demand.getTaxPeriodTo()));
+            String period = fromDateFormat + "-" + toDateFormat;
+            penalty.setPeriod(period);
+            penaltyList.add(penalty);
+        }
+
+        return penaltyList;
+
+    }
+
+    /**
+     * Description:This method will construct requried data for calculating tax for vacantland
+     * @param calculationRequest
+     * @return taxCalculationWrapper
+     * @throws Exception
+     */
+
+    private TaxCalculationWrapper getTaxWrapperForVacantLand(CalculationRequest calculationRequest) throws Exception {
+        Property property = calculationRequest.getProperty();
+        List<TaxperiodWrapper> taxWrapperList = getTaxPeriodsForVacantLand(property);
+        TaxCalculationWrapper taxCalculationWrapper = new TaxCalculationWrapper();
+        taxCalculationWrapper.setProperty(property);
+        taxCalculationWrapper.setTaxPeriods(taxWrapperList);
+        return taxCalculationWrapper;
+
+    }
+
+    /**
+     * Description : this method will return list of tax periods for vacantLand
+     * @param property
+     * @return taxPeriodWrapperList
+     * @throws Exception
+     */
+
+    private List<TaxperiodWrapper> getTaxPeriodsForVacantLand(Property property) throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(propertiesManager.getInputDateFormat());
+        Date todayDate = new Date();
+        String currentDate = simpleDateFormat.format(todayDate);
+        DateFormat dateFormat = new SimpleDateFormat(propertiesManager.getDateFormat());
+        TaxPeriod taxperiod = taxPeriodRespository.getToDateForTaxCalculation(property.getTenantId(), currentDate);
+        Date toDate = dateFormat.parse(taxperiod.getToDate());
+        String currentFinincialYear = simpleDateFormat.format(toDate);
+        TaxPeriod taxperiodForFrom = taxPeriodRespository.getToDateForTaxCalculation(property.getTenantId(),
+                property.getOccupancyDate());
+
+        Date occupancy = dateFormat.parse(taxperiodForFrom.getFromDate());
+        String date = simpleDateFormat.format(occupancy);
+        List<TaxPeriod> taxPeriodsList = getTaxPeriodsByTenantIdAndDate(property.getTenantId(), date, currentFinincialYear);
+        List<TaxperiodWrapper> taxPeriodWrapperList = new ArrayList<TaxperiodWrapper>();
+        PropertiesManager properties = new PropertiesManager();
+
+        for (TaxPeriod taxPeriod : taxPeriodsList) {
+            TaxperiodWrapper taxPeriodWrapper = new TaxperiodWrapper();
+            List<UnitWrapper> unitWrapperList = new ArrayList<UnitWrapper>();
+            UnitWrapper unitWrapper = new UnitWrapper();
+            Date fromDate = dateFormat.parse(taxperiod.getFromDate());
+            String fromDateFormated = new SimpleDateFormat(propertiesManager.getInputDateFormat()).format(fromDate);
+            List<TaxRates> taxRates = getTaxRateByTenantAndDate(property.getTenantId(), fromDateFormated);
+            unitWrapper.setTaxRates(taxRates);
+            unitWrapperList.add(unitWrapper);
+            taxPeriodWrapper.setTaxPeriod(taxPeriod);
+            taxPeriodWrapper.setUnits(unitWrapperList);
+            taxPeriodWrapperList.add(taxPeriodWrapper);
+        }
+
+        return taxPeriodWrapperList;
+    }
+
+    /**
+     * Description: this method will return tax calculation
+     * @param property
+     * @param taxPeriodWrapper
+     * @param annaualRentalValue
+     * @return taxCalculation
+     * @throws Exception
+     */
+
+    public TaxCalculation getTaxCalculationForVacantLand(Property property, TaxperiodWrapper taxPeriodWrapper,
+            Double annaualRentalValue) throws Exception {
+
+        List<TaxRates> taxRates = taxPeriodWrapper.getUnits().get(0).getTaxRates();
+        List<HeadWiseTax> headWiseTaxes = getHeadWiseTaxesForVacantLand(property, annaualRentalValue, taxPeriodWrapper, taxRates);
+        CommonTaxDetails commonTaxDetails = new CommonTaxDetails();
+        commonTaxDetails.setCalculatedARV(annaualRentalValue);
+        commonTaxDetails.setEffectiveDate(getFormatedDate(taxPeriodWrapper.getTaxPeriod().getFromDate()));
+        commonTaxDetails.setManualARV(property.getVacantLand().getCapitalValue());
+        commonTaxDetails.setHeadWiseTaxes(headWiseTaxes);
+        commonTaxDetails.setOccupancyDate(property.getOccupancyDate());
+        Double totalTax = headWiseTaxes.stream().filter(HeadWiseTax -> HeadWiseTax.getTaxValue() >= 0.0)
+                .mapToDouble(HeadWiseTax -> HeadWiseTax.getTaxValue()).sum();
+        commonTaxDetails.setTotalTax(totalTax);
+        TaxCalculation taxCalculation = new TaxCalculation();
+        taxCalculation.setPropertyTaxes(commonTaxDetails);
+        String formatedEffectivedate = getFormatedDate(taxPeriodWrapper.getTaxPeriod().getFromDate());
+        String formatedTodate = getFormatedDate(taxPeriodWrapper.getTaxPeriod().getToDate());
+        taxCalculation.setFromDate(formatedEffectivedate);
+        taxCalculation.setEffectiveDate(formatedEffectivedate);
+        taxCalculation.setToDate(formatedTodate);
+        return taxCalculation;
+
+    }
+
+    /**
+     * Description: This method will get all tax heads for vacantLand
+     * @param property
+     * @param annaualRentalValue
+     * @param taxPeriodWrapper
+     * @param date
+     * @return headWiseTaxList
+     * @throws Exception
+     */
+
+    private List<HeadWiseTax> getHeadWiseTaxesForVacantLand(Property property, Double annaualRentalValue,
+            TaxperiodWrapper taxPeriodWrapper, List<TaxRates> taxRates) throws Exception {
+
+        List<TaxRates> independentTaxes = taxRates.stream()
+                .filter(taxRate -> ((taxRate.getDependentTaxHead() == null || taxRate.getDependentTaxHead().isEmpty())
+                        && property.getPropertyDetail().getPropertyType().equalsIgnoreCase(taxRate.getPropertyType())))
+                .collect(Collectors.toList());
+        List<HeadWiseTax> headWiseTaxes = new ArrayList<HeadWiseTax>();
+        Map<String, List<TaxRates>> independentTaxesMap = independentTaxes.stream()
+                .collect(Collectors.groupingBy(taxRate -> taxRate.getTaxHead()));
+        List<TaxRates> dependentTaxes = taxRates.stream()
+                .filter(taxRate -> ((taxRate.getDependentTaxHead() != null && !taxRate.getDependentTaxHead().isEmpty())
+                        && property.getPropertyDetail().getPropertyType().equalsIgnoreCase(taxRate.getPropertyType())))
+                .collect(Collectors.toList());
+        Map<String, List<TaxRates>> depenentTaxesMap = dependentTaxes.stream()
+                .collect(Collectors.groupingBy(taxRate -> taxRate.getTaxHead()));
+
+        List<HeadWiseTax> parentHeadWiseTaxes = getTaxHead(independentTaxesMap, annaualRentalValue, null,
+                taxPeriodWrapper.getTaxPeriod());
+        headWiseTaxes.addAll(parentHeadWiseTaxes);
+        List<HeadWiseTax> dependentHeadWiseTaxes = getTaxHead(depenentTaxesMap, annaualRentalValue, headWiseTaxes,
+                taxPeriodWrapper.getTaxPeriod());
+        headWiseTaxes.addAll(dependentHeadWiseTaxes);
+        return headWiseTaxes;
+    }
+
 }

@@ -156,36 +156,40 @@ public class ReceivingModeTypeRepository {
         return receivingModeList;
     }
 
-    public boolean checkReceivingModeTypeByNameAndCode(final String code, final String name, final String tenantId) {
+    public boolean checkReceivingModeTypeByNameAndCode(final String code, final String name, final String tenantId, final String mode) {
         final List<Object> preparedStatementValues = new ArrayList<>();
 
         preparedStatementValues.add(tenantId);
         String query = "";
-        if (code != null && code != "") {
+        if (code != null && code != "" && name != null && name != "") {
 
             preparedStatementValues.add(code);
+            preparedStatementValues.add(name);
             query = ReceivingModeTypeQueryBuilder.checkReceivinModeTypeByNameAndCode();
 
         }
         final List<Map<String, Object>> centerTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
-        if (!centerTypes.isEmpty()) {
+        if (!centerTypes.isEmpty() && "update".equalsIgnoreCase(mode)) {
             String codeFromDB = (String) centerTypes.get(0).get("code");
-            if (codeFromDB.equalsIgnoreCase(code))
+            if (!codeFromDB.equalsIgnoreCase(code))
                 return true;
+        }
+        if (!centerTypes.isEmpty() && "create".equalsIgnoreCase(mode)) {
+            return true;
         }
         return false;
 
     }
 
-    public boolean checkReceivingModeTypeByName(final String code, final String name, final String tenantId) {
+    public boolean checkReceivingModeTypeByName(final String code, final String name, final String tenantId, final String mode) {
         final List<Object> preparedStatementValues = new ArrayList<>();
 
         preparedStatementValues.add(tenantId);
         String query = "";
         if (null != name && name != "") {
 
-            preparedStatementValues.add(name.toUpperCase());
+            preparedStatementValues.add(name.toUpperCase().trim());
             query = ReceivingModeTypeQueryBuilder.checkReceivinModeTypeByName();
 
         }
@@ -193,10 +197,41 @@ public class ReceivingModeTypeRepository {
         final List<Map<String, Object>> centerTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
 
-        if (!centerTypes.isEmpty()) {
-            String codeFromDb = (String) centerTypes.get(0).get("code");
-            if (!codeFromDb.equalsIgnoreCase(code))
+        if (!centerTypes.isEmpty() && "update".equalsIgnoreCase(mode)) {
+            String codeFromDB = (String) centerTypes.get(0).get("code");
+            if (!codeFromDB.equalsIgnoreCase(code))
                 return true;
+        }
+        if (!centerTypes.isEmpty() && "create".equalsIgnoreCase(mode)) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public boolean checkReceivingModeTypeByCode(final String code, final String tenantId, final String mode) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+
+        preparedStatementValues.add(tenantId);
+        String query = "";
+        if (null != code && code != "") {
+
+            preparedStatementValues.add(code.toUpperCase().trim());
+            query = ReceivingModeTypeQueryBuilder.checkReceivingModeTypeByCode();
+
+        }
+
+        final List<Map<String, Object>> centerTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+
+        if (!centerTypes.isEmpty() && "update".equalsIgnoreCase(mode)) {
+            String codeFromDB = (String) centerTypes.get(0).get("code");
+            if (!codeFromDB.equalsIgnoreCase(code))
+                return true;
+        }
+        if (!centerTypes.isEmpty() && "create".equalsIgnoreCase(mode)) {
+            return true;
         }
 
         return false;

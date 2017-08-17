@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.egov.models.WorkFlowDetails;
+import org.egov.propertyWorkflow.config.PropertiesManager;
 import org.egov.propertyWorkflow.models.Position;
 import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.ProcessInstanceRequest;
@@ -16,7 +17,6 @@ import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,10 +37,7 @@ public class WorkFlowUtil {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	Environment environment;
-
-	@Autowired
-	WorkflowProducer workflowProducer;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	TitleTransferConsumer titleTransferConsumer;
@@ -55,9 +52,9 @@ public class WorkFlowUtil {
 			String type, String comment) {
 
 		StringBuilder workFlowStartUrl = new StringBuilder();
-		workFlowStartUrl.append(environment.getProperty("egov.services.egov-common-workflows.hostname"));
-		workFlowStartUrl.append(environment.getProperty("egov.services.egov-common-workflows.basepath"));
-		workFlowStartUrl.append(environment.getProperty("egov.services.egov-common-workflows.startpath"));
+		workFlowStartUrl.append(propertiesManager.getWorkflowHostName());
+		workFlowStartUrl.append(propertiesManager.getWorkflowBasepath());
+		workFlowStartUrl.append(propertiesManager.getWorkflowStartpath());
 		String url = workFlowStartUrl.toString();
 		url = url.replace("{tenantId}", workflowDetailsRequestInfo.getTenantId());
 		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo,
@@ -84,14 +81,14 @@ public class WorkFlowUtil {
 	 * @return TaskResponse
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String stateId)
+	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String stateId, String businessKey)
 			throws JsonProcessingException {
 
-		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
+		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo,businessKey );
 		StringBuilder workFlowUpdateUrl = new StringBuilder();
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.hostname"));
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.basepath"));
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.updatepath"));
+		workFlowUpdateUrl.append(propertiesManager.getWorkflowHostName());
+		workFlowUpdateUrl.append(propertiesManager.getWorkflowBasepath());
+		workFlowUpdateUrl.append(propertiesManager.getWorkflowUpdatepath());
 		String url = workFlowUpdateUrl.toString();
 
 		Map<String, String> uriParams = new HashMap<String, String>();
@@ -133,7 +130,7 @@ public class WorkFlowUtil {
 		assignee.setId((long) workflowDetails.getAssignee());
 		// TODO temporary fix for required fields of processInstance and need to
 		// replace with actual values
-		processInstance.setState(environment.getProperty("state"));
+		processInstance.setState(propertiesManager.getState());
 		processInstance.setTenantId(workflowDetailsRequest.getTenantId());
 		processInstance.setBusinessKey(businessKey);
 		processInstance.setType(type);
@@ -151,14 +148,14 @@ public class WorkFlowUtil {
 	 * @param WorkflowDetailsRequestInfo
 	 * @return TaskRequest
 	 */
-	private TaskRequest getTaskRequest(WorkflowDetailsRequestInfo workflowDetailsRequest) {
+	private TaskRequest getTaskRequest(WorkflowDetailsRequestInfo workflowDetailsRequest,String businessKey) {
 		WorkFlowDetails workflowDetails = workflowDetailsRequest.getWorkflowDetails();
 		RequestInfo requestInfo = workflowDetailsRequest.getRequestInfo();
 		TaskRequest taskRequest = new TaskRequest();
 		Task task = new Task();
 		Position assignee = new Position();
 		taskRequest.setRequestInfo(requestInfo);
-		task.setBusinessKey(environment.getProperty("businessKey"));
+		task.setBusinessKey(businessKey);
 		task.setAction(workflowDetails.getAction());
 		task.setStatus(workflowDetails.getStatus());
 		task.setTenantId(workflowDetailsRequest.getTenantId());

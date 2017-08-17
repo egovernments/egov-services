@@ -28,4 +28,17 @@ public class SequenceIdGenService {
 		}
 		return ids;
 	}
+	
+	public List<String> getIds(int rsSize, String seqName) {
+
+		String query = "SELECT NEXTVAL('" + seqName + "') FROM GENERATE_SERIES(1,?)";
+		List<String> ids = null;
+		try {
+			ids = jdbcTemplate.queryForList(query, new Object[] { rsSize }, String.class);
+			log.debug("Generated Ids:: " + ids + " for Sequence: " + seqName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ids;
+	}
 }

@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 
 import OwnerDetails from './propertyTax/OwnerDetails';
@@ -28,8 +29,7 @@ import FloorDetails from './propertyTax/FloorDetails';
 import DocumentUpload from './propertyTax/DocumentUpload';
 import Workflow from './propertyTax/Workflow';
 import VacantLand from './propertyTax/vacantLand';
-
-
+import PropertyFactors from './propertyTax/PropertyFactors';
 
 var flag = 0;
 const styles = {
@@ -375,16 +375,16 @@ createPropertyTax = () => {
 				"tenantId": "default",
 				"oldUpicNumber": null,
 				"vltUpicNumber": null,
+				"sequenceNo": createProperty.sequenceNo || null,
 				"creationReason": createProperty.reasonForCreation || null,
 				"address": {
 					"tenantId": "default",
-					 "latitude": null,
 					"longitude": null,
 					"addressNumber": createProperty.doorNo || null,
 					"addressLine1": createProperty.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "secundrabad",
+					"city": "Roha",
 					"pincode": createProperty.pin || null,
 					"detail": null,
 					"auditDetails": {
@@ -549,12 +549,7 @@ createPropertyTax = () => {
 				setLoadingStatus('hide');
 				toggleSnackbarAndSetText(true, err.message);
 			  })
-		  }
-		  
-	 
-			  
-		
-		
+		  }	
 	}	  
 		  
 	
@@ -627,16 +622,18 @@ createActivate = () => {
 		  <div className="createProperty">
 				<h3 style={{padding:15}}>Create New Property</h3>
 			  <form onSubmit={(e) => {search(e)}}>
+			
 				  <OwnerDetails />
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
-				
-				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> :
-					<div>
-						<Amenities />                  
-						<ConstructionTypes/>				  
-						<FloorDetails/>
-					</div>}
+					<PropertyFactors/>
+				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ?                  
+						<div>
+							<VacantLand/> 
+						</div>:
+						<div>                 
+							<FloorDetails/>
+						</div>}
 				  <DocumentUpload />
 				  <Workflow />
 				  
@@ -645,7 +642,7 @@ createActivate = () => {
 				  <div style={{textAlign:'center'}} >
 				
 						<br/>
-						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  primary={true} onClick={()=> {
+						<RaisedButton type="button" label={translate('pt.create.button')} disabled={this.createActivate()}  primary={true} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>
@@ -675,7 +672,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
+          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo']
         },
         pattern: {
           current: [],
@@ -685,7 +682,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
         },
         pattern: {
           current: [],
@@ -695,7 +692,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
         },
         pattern: {
           current: [],
@@ -761,10 +758,30 @@ const mapDispatchToProps = dispatch => ({
     })
   },
 
-  resetObject: (object) => {
+   resetObject: (object) => {
     dispatch({
       type: "RESET_OBJECT",
-      object
+      object,
+	    validatePropertyOwner: {
+        required: {
+          current: [],
+          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      },
+	   validatePropertyFloor: {
+        required: {
+          current: [],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
     })
   },
 

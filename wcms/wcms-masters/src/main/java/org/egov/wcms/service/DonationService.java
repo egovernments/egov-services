@@ -66,6 +66,9 @@ public class DonationService {
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
 
+    @Autowired
+    private CodeGeneratorService codeGeneratorService;
+
     public DonationRequest create(final DonationRequest donationRequest) {
         return donationRepository.persistDonationDetails(donationRequest);
     }
@@ -74,7 +77,19 @@ public class DonationService {
         return donationRepository.persistModifyDonationDetails(donationRequest);
     }
 
-    public Donation sendMessage(final String topic, final String key, final DonationRequest donationRequest) {
+    public List<Donation> createDonation(final String topic, final String key, final DonationRequest donationRequest) {
+        for (final Donation donation : donationRequest.getDonation()){
+            donation.setCode(codeGeneratorService.generate(Donation.SEQ_DONATION));
+        }
+        try {
+            kafkaTemplate.send(topic, key, donationRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
+        return donationRequest.getDonation();
+    }
+
+    public List<Donation> updateDonation(final String topic, final String key, final DonationRequest donationRequest) {
         try {
             kafkaTemplate.send(topic, key, donationRequest);
         } catch (final Exception ex) {
@@ -87,12 +102,12 @@ public class DonationService {
         if (donationGetRequest.getPropertyType() != null) {
             final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                     donationGetRequest.getPropertyType(), donationGetRequest.getTenantId());
-            if (propertyType != null  &&  propertyType.getPropertyTypesSize())
+            if (propertyType != null && propertyType.getPropertyTypesSize())
                 donationGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
 
         }
         if (donationGetRequest.getUsageType() != null) {
-            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
+            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
                     donationGetRequest.getUsageType(), donationGetRequest.getTenantId());
             if (usageType != null && usageType.getUsageTypesSize())
                 donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
@@ -101,15 +116,15 @@ public class DonationService {
         return donationRepository.findForCriteria(donationGetRequest);
     }
 
-    public Boolean getPropertyTypeByName(final DonationRequest donationRequest) {
+    public Boolean getPropertyTypeByName(final Donation donation) {
         Boolean isValidProperty = Boolean.FALSE;
 
         final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
-                donationRequest.getDonation().getPropertyType(),
-                donationRequest.getDonation().getTenantId());
+                donation.getPropertyType(),
+                donation.getTenantId());
         if (propertyType.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
-            donationRequest.getDonation().setPropertyTypeId(
+            donation.setPropertyTypeId(
                     propertyType.getPropertyTypes() != null && propertyType.getPropertyTypes().get(0) != null
                             ? propertyType.getPropertyTypes().get(0).getId() : "");
 
@@ -118,14 +133,14 @@ public class DonationService {
 
     }
 
-    public Boolean getUsageTypeByName(final DonationRequest donationRequest) {
+    public Boolean getUsageTypeByName(final Donation donation) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                donationRequest.getDonation().getUsageType(),
-                donationRequest.getDonation().getTenantId());
+                donation.getUsageType(),
+                donation.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
-            donationRequest.getDonation()
+            donation
                     .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
                             ? usageType.getUsageMasters().get(0).getId() : "");
 

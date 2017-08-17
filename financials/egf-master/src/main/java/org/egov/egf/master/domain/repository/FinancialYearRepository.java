@@ -56,11 +56,15 @@ public class FinancialYearRepository {
         }
         financialYearQueueRepository.add(message);
     }
+    
+    public String getNextSequence(){
+        return financialYearJdbcRepository.getSequence(FinancialYearEntity.SEQUENCE_NAME);
+    }
 
     public Pagination<FinancialYear> search(FinancialYearSearch domain) {
 
         if (!financialConfigurationService.fetchDataFrom().isEmpty()
-                && !financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+                && financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
             FinancialYearSearchContract financialYearSearchContract = new FinancialYearSearchContract();
             ModelMapper mapper = new ModelMapper();
             mapper.map(domain, financialYearSearchContract);

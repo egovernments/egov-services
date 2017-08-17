@@ -37,6 +37,10 @@ public class FundsourceRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return fundsourceJdbcRepository.getSequence(FundsourceEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public Fundsource save(Fundsource fundsource) {

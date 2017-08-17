@@ -40,16 +40,19 @@
 
 package org.egov.wcms.transaction.consumer;
 
-import java.io.IOException;
+import java.util.Map;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.wcms.transaction.config.ApplicationProperties;
+import org.egov.wcms.transaction.demand.contract.DemandResponse;
+import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,28 +64,33 @@ public class TransactionPersistConsumer {
 
     @Autowired
     private ApplicationProperties applicationProperties;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private WaterConnectionService waterConnectionService;
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics =
+    @KafkaListener(topics =
         { "${kafka.topics.newconnection.create.name}","${kafka.topics.newconnection.update.name}",
-            "${kafka.topics.legacyconnection.create.name}" })
+            "${kafka.topics.legacyconnection.create.name}" , "${kafka.topics.workorder.persist.name}" ,
+            "${kafka.topics.demandBill.update.name}"})
 
-    public void listen(final ConsumerRecord<String, String> record) {
-        LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
-        final ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            if (record.topic().equals(applicationProperties.getCreateNewConnectionTopicName()))
-                waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
-            if (record.topic().equals(applicationProperties.getUpdateNewConnectionTopicName()))
-                waterConnectionService.update(objectMapper.readValue(record.value(), WaterConnectionReq.class));
-    
-          /*  if (record.topic().equals(applicationProperties.getCreateLegacyConnectionTopicName()))
-                waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
-     */   } catch (final IOException e) {
-            LOGGER.error("Exception Encountered : " + e);
-        }
-    }
+    public void processMessage(final Map<String, Object> consumerRecord,
+			@Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
+		LOGGER.debug("key:" + topic + ":" + "value:" + consumerRecord);
+		try {
+			if (topic.equals(applicationProperties.getCreateNewConnectionTopicName()))
+				waterConnectionService.create(objectMapper.convertValue(consumerRecord, WaterConnectionReq.class));
+			if (topic.equals(applicationProperties.getUpdateNewConnectionTopicName()))
+				waterConnectionService.update(objectMapper.convertValue(consumerRecord, WaterConnectionReq.class));
+			if(topic.equals(applicationProperties.getWorkOrderTopicName()))
+				waterConnectionService.persistWorkOrderLog(objectMapper.convertValue(consumerRecord, WorkOrderFormat.class));
+			if(topic.equals(applicationProperties.getUpdateDemandBillTopicName()))
+			    waterConnectionService.updateWaterConnectionAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
+		} catch (final Exception e) {
+			LOGGER.error("Exception Encountered while processing the received message : " + e.getMessage());
+		}
+	}
 
 }

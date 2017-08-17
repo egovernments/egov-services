@@ -61,8 +61,6 @@ import lombok.Setter;
 
 public class LedgerDetail extends Auditable {
 
-	private static final long serialVersionUID = 8704167799390083959L;
-
 	private String id;
 
 	private AccountDetailTypeContract accountDetailType;

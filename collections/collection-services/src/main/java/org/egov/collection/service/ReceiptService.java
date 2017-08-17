@@ -40,7 +40,9 @@
 
 package org.egov.collection.service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -49,21 +51,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.IdGenRequestInfo;
-import org.egov.collection.model.IdRequest;
-import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.Instrument;
+import org.egov.collection.model.PositionSearchCriteria;
+import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.model.WorkflowDetails;
+import org.egov.collection.model.TransactionType;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.ChartOfAccountsRepository;
+import org.egov.collection.repository.IdGenRepository;
 import org.egov.collection.repository.InstrumentRepository;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Bill;
@@ -72,17 +74,18 @@ import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
 import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.ChartOfAccount;
+import org.egov.collection.web.contract.Purpose;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.jayway.jsonpath.JsonPath;
 
 @Service
 public class ReceiptService {
@@ -92,12 +95,6 @@ public class ReceiptService {
 
 	@Autowired
 	private ReceiptRepository receiptRepository;
-
-	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	@Autowired
-	private RestTemplate restTemplate;
 
 	@Autowired
 	private BusinessDetailsRepository businessDetailsRepository;
@@ -113,31 +110,43 @@ public class ReceiptService {
 
 	@Autowired
 	private InstrumentRepository instrumentRepository;
+	
+	@Autowired
+	private IdGenRepository idGenRepository;
+	
+	@Autowired
+	private WorkflowService workflowService;
 
 	public ReceiptCommonModel getReceipts(
-			ReceiptSearchCriteria receiptSearchCriteria) throws ParseException {
+			ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
 		return receiptRepository
-				.findAllReceiptsByCriteria(receiptSearchCriteria);
+				.findAllReceiptsByCriteria(receiptSearchCriteria, requestInfo);
 	}
 
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
-		try {
-			bill.setBillDetails(apportionPaidAmount(
-					receiptReq.getRequestInfo(), bill, receiptReq.getTenantId()));
-		} catch (Exception e) {
-			LOGGER.error("Receipt persist failed due to internal server error"
-					+ e);
-		}
+		Instrument instrument = receipt.getInstrument();
+		bill.setBillDetails(apportionPaidAmount(
+					receiptReq.getRequestInfo(), bill, receipt.getTenantId()));
 		// return receiptRepository.pushToQueue(receiptReq); //async call
-
+		
+		LOGGER.info("Bill object after apportioning: "+bill.toString());
+		
+		List<BillDetail> billDetails = configureDebitAmountHead(receiptReq);
+		bill.getBillDetails().clear();
+		bill.setBillDetails(billDetails);
+		
+		LOGGER.info("Bill object after debit head config: "+bill.toString());
+		
 		receipt = create(bill, receiptReq.getRequestInfo(),
-				receiptReq.getTenantId(), receipt.getInstrument()); // sync call
-
-		LOGGER.info("Pushing receipt to kafka queue");
-		receiptReq.setReceipt(Arrays.asList(receipt));
-		receipt = receiptRepository.pushToQueue(receiptReq);
+				receipt.getTenantId(), receipt.getInstrument()); // sync call
+		if(null != receipt.getBill()){
+			LOGGER.info("Pushing receipt to kafka queue");
+			receiptReq.setReceipt(Arrays.asList(receipt));
+			receipt = receiptRepository.pushToQueue(receiptReq);
+		}
+		receipt.setInstrument(instrument);
 		return receipt;
 	}
 
@@ -150,6 +159,7 @@ public class ReceiptService {
 		Boolean callBackForApportion = false;
 		List<BillDetail> apportionBillDetails = new ArrayList<>();
 		for (BillDetail billDetail : bill.getBillDetails()) {
+			if(billDetail.getAmountPaid().longValueExact() > 0){
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billDetail.getBusinessService(), requestInfo, tenantId);
 			if (billDetail.getAmountPaid() != billDetail.getTotalAmount()) {
@@ -166,6 +176,7 @@ public class ReceiptService {
 				}
 			}
 			apportionBillDetails.add(billDetail);
+		  }
 		}
 		if (callBackForApportion) {
 			apportionBillDetails.addAll(billingServiceRepository
@@ -197,7 +208,7 @@ public class ReceiptService {
 	public Boolean validateFundAndDept(
 			BusinessDetailsResponse businessDetailsRes) {
 		BusinessDetailsRequestInfo businessDetails;
-		if (null != businessDetailsRes) {
+		if (null != businessDetailsRes && !businessDetailsRes.getBusinessDetails().isEmpty()) {
 			businessDetails = businessDetailsRes.getBusinessDetails().get(0);
 			if (null != businessDetails) {
 				String fund = businessDetails.getFund();
@@ -214,6 +225,7 @@ public class ReceiptService {
 			}
 			return true;
 		}
+		LOGGER.info("Returning false");
 		return false;
 	}
 
@@ -231,48 +243,75 @@ public class ReceiptService {
 		LOGGER.info("Persisting recieptdetail");
 		Receipt receipt = new Receipt();
 		AuditDetails auditDetail = getAuditDetails(requestInfo.getUserInfo());
+        String transactionId = idGenRepository.generateTransactionNumber(requestInfo,tenantId);
 		for (BillDetail billDetail : bill.getBillDetails()) {
+			if(billDetail.getAmountPaid().longValueExact() > 0){
+				String instrumentId = null;
+				Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
+			try{
+				instrument.setTransactionType(TransactionType.Debit);
+                instrument.setTenantId(tenantId);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                if(instrument.getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH)) {
+                    String transactionDate = simpleDateFormat.format(new Date());
+                    instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
+                    instrument.setTransactionNumber(transactionId);
+                } else {
+                    String transactionDate = simpleDateFormat.format(new Date(instrument.getTransactionDateInput()));
+                    instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
+                }
 
-			Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
-			String instrumentId = instrumentRepository.createInstrument(
-					requestInfo, instrument);
-			LOGGER.info("ReceiptHeaderId: " + receiptHeaderId);
-
-			billDetail.setCollectionType(CollectionType.COUNTER);
-			billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
-			billDetail.setReceiptDate(new Date().getTime());
-			billDetail.setReceiptNumber(generateReceiptNumber(requestInfo,
-					tenantId));
-			LOGGER.info("Rcpt no generated: " + billDetail.getReceiptNumber());
-			Map<String, Object> parametersMap;
-			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
-					billDetail.getBusinessService(), requestInfo, tenantId);
-
-			if (validateFundAndDept(businessDetailsRes)
-					&& validateGLCode(requestInfo, tenantId, billDetail)) {
-				BusinessDetailsRequestInfo businessDetails = businessDetailsRes
-						.getBusinessDetails().get(0);
-				parametersMap = prepareReceiptHeader(bill, tenantId,
-						auditDetail, billDetail, receiptHeaderId,
-						businessDetails);
-
-				LOGGER.info("InstrumentId: " + instrument
-						+ " ReceiptHeaderId: " + receiptHeaderId);
-
-				Map<String, Object>[] parametersReceiptDetails = prepareReceiptDetails(
-						requestInfo, tenantId, billDetail, receiptHeaderId);
-				try {
-					receiptRepository.persistReceipt(parametersMap,
-							parametersReceiptDetails, receiptHeaderId,
-							instrumentId);
-				} catch (Exception e) {
-					LOGGER.error("Persistingreceipt FAILED! ", e);
-					return receipt;
-				}
+				instrumentId = instrumentRepository.createInstrument(
+						requestInfo, instrument);
+			}catch(Exception e){
+				LOGGER.error("Exception while creating instrument: ", e);
+				throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+						CollectionServiceConstants.INSTRUMENT_EXCEPTION_MSG, CollectionServiceConstants.INSTRUMENT_EXCEPTION_DESC);
 			}
+				
+				billDetail.setCollectionType(CollectionType.COUNTER);
+				//TODO: Revert back once the workflow is enabled
+				billDetail.setStatus(ReceiptStatus.APPROVED.toString());
+				billDetail.setReceiptDate(new Date().getTime());
+				billDetail.setReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
+						tenantId));
+				Map<String, Object> parametersMap;
+				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
+						billDetail.getBusinessService(), requestInfo, tenantId);
+	
+				if (validateFundAndDept(businessDetailsRes)
+						&& validateGLCode(requestInfo, tenantId, billDetail)) {
+					BusinessDetailsRequestInfo businessDetails = businessDetailsRes
+							.getBusinessDetails().get(0);
+					parametersMap = prepareReceiptHeader(bill, tenantId,
+							auditDetail, billDetail, receiptHeaderId,
+							businessDetails);
+                    parametersMap.put("transactionid",transactionId);
+					LOGGER.info("Rcpt no generated: " + billDetail.getReceiptNumber());
+					LOGGER.info("InstrumentId: " + instrumentId
+							+ " ReceiptHeaderId: " + receiptHeaderId);
+	
+					Map<String, Object>[] parametersReceiptDetails = prepareReceiptDetails(
+							requestInfo, tenantId, billDetail, receiptHeaderId);
+					try {
+						receiptRepository.persistReceipt(parametersMap,
+								parametersReceiptDetails, receiptHeaderId,
+								instrumentId);
+					} catch (Exception e) {
+						LOGGER.error("Persisting receipt FAILED! ", e);
+						return receipt;
+					}
+					startWokflow(requestInfo, tenantId, receiptHeaderId);
+				}else{
+					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+							CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
+				}
+		}
 		}
 		receipt.setBill(Arrays.asList(bill));
 		receipt.setAuditDetails(auditDetail);
+        receipt.setTransactionId(transactionId);
+        receipt.setTenantId(tenantId);
 		return receipt;
 	}
 
@@ -280,7 +319,9 @@ public class ReceiptService {
 			String tenantId, AuditDetails auditDetail, BillDetail billDetail,
 			Long receiptHeaderId, BusinessDetailsRequestInfo businessDetails) {
 		final Map<String, Object> parametersMap = new HashMap<>();
-
+		String collectionModesNotAllowed = billDetail
+				.getCollectionModesNotAllowed().toString().replace("[", "");
+		collectionModesNotAllowed = collectionModesNotAllowed.replace("]", "");
 		parametersMap.put("id", receiptHeaderId);
 		parametersMap.put("payeename", bill.getPayeeName());
 		parametersMap.put("payeeaddress", bill.getPayeeAddress());
@@ -297,8 +338,7 @@ public class ReceiptService {
 				billDetail.getReasonForCancellation());
 		parametersMap.put("minimumamount", billDetail.getMinimumAmount());
 		parametersMap.put("totalamount", billDetail.getAmountPaid());
-		parametersMap.put("collmodesnotallwd", billDetail
-				.getCollectionModesNotAllowed().toString());
+		parametersMap.put("collmodesnotallwd",collectionModesNotAllowed);
 		parametersMap.put("consumercode", billDetail.getConsumerCode());
 		parametersMap.put("channel", billDetail.getChannel());
 		parametersMap.put("fund", businessDetails.getFund());
@@ -350,7 +390,6 @@ public class ReceiptService {
 				parameterMap.put("cramount",
 						billAccountDetails.getCreditAmount());
 				parameterMap.put("ordernumber", billAccountDetails.getOrder());
-				parameterMap.put("receiptheader", receiptHeaderId);
 				parameterMap.put("actualcramounttobepaid",
 						billAccountDetails.getCrAmountToBePaid());
 				parameterMap.put("description",
@@ -362,6 +401,7 @@ public class ReceiptService {
 						.toString());
 				parameterMap.put("tenantid", tenantId);
 				parameterMap.put("receiptheader", receiptHeaderId);
+
 
 				parametersReceiptDetails[parametersReceiptDetailsCount] = parameterMap;
 				parametersReceiptDetailsCount++;
@@ -383,66 +423,18 @@ public class ReceiptService {
 					.getBusinessDetails(Arrays.asList(businessDetailsCode),
 							tenantId, requestInfo);
 		} catch (Exception e) {
-			LOGGER.error("Error while fetching buisnessDetails from coll-master service. "
-					+ e);
+			LOGGER.error("Exception while fetching buisnessDetails: ", e);
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
+
+		}
+		if(null == businessDetailsResponse.getBusinessDetails() || businessDetailsResponse.getBusinessDetails().isEmpty()){
+			LOGGER.info("Buisness "+businessDetailsResponse.toString());
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
 		}
 		LOGGER.info("Response from coll-master: " + businessDetailsResponse);
 		return businessDetailsResponse;
-	}
-
-	public String generateReceiptNumber(RequestInfo requestInfo, String tenantId) {
-		LOGGER.info("Generating receipt number for the receipt.");
-
-		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getIdGenServiceHost();
-		String baseUri = applicationProperties.getIdGeneration();
-		builder.append(hostname).append(baseUri);
-
-		LOGGER.info("URI being hit: " + builder.toString());
-
-		IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
-		IdGenRequestInfo idGenReq = new IdGenRequestInfo();
-
-		// Because idGen Svc uses a slightly different form of requestInfo
-
-		idGenReq.setAction(requestInfo.getAction());
-		idGenReq.setApiId(requestInfo.getApiId());
-		idGenReq.setAuthToken(requestInfo.getAuthToken());
-		idGenReq.setCorrelationId(requestInfo.getCorrelationId());
-		idGenReq.setDid(requestInfo.getDid());
-		idGenReq.setKey(requestInfo.getKey());
-		idGenReq.setMsgId(requestInfo.getMsgId());
-		idGenReq.setRequesterId(requestInfo.getRequesterId());
-		idGenReq.setTs(requestInfo.getTs().getTime()); // this
-														// is
-														// the
-														// difference.
-		idGenReq.setUserInfo(requestInfo.getUserInfo());
-		idGenReq.setVer(requestInfo.getVer());
-
-		IdRequest idRequest = new IdRequest();
-		idRequest.setIdName(CollectionServiceConstants.COLL_ID_NAME);
-		idRequest.setTenantId(tenantId);
-		idRequest.setFormat(CollectionServiceConstants.COLL_ID_FORMAT);
-
-		List<IdRequest> idRequests = new ArrayList<>();
-		idRequests.add(idRequest);
-
-		idRequestWrapper.setIdGenRequestInfo(idGenReq);
-		idRequestWrapper.setIdRequests(idRequests);
-		Object response = null;
-
-		try {
-			response = restTemplate.postForObject(builder.toString(),
-					idRequestWrapper, Object.class);
-		} catch (Exception e) {
-			LOGGER.error("Error while generating receipt number. " + e);
-			return null;
-
-		}
-		LOGGER.info("Response from id gen service: " + response.toString());
-
-		return JsonPath.read(response, "$.idResponses[0].id");
 	}
 
 	public Boolean checkVoucherCreation(Boolean voucherCreation,
@@ -468,19 +460,15 @@ public class ReceiptService {
 				.pushReceiptCancelDetailsToQueue(receiptRequest);
 	}
 
-	public WorkflowDetails updateStateId(WorkflowDetails workflowDetails) {
-		LOGGER.info("WorkflowDetails: " + workflowDetails.toString());
+	public WorkflowDetailsRequest updateStateId(WorkflowDetailsRequest workflowDetailsRequest) {
+		LOGGER.info("WorkflowDetailsRequest: " + workflowDetailsRequest.toString());
 		try {
-			pushUpdateReceiptDetailsToQueque(
-					workflowDetails.getReceiptHeaderId(),
-					workflowDetails.getStateId(), workflowDetails.getStatus(),
-					workflowDetails.getTenantId(),
-					workflowDetails.getRequestInfo());
+			pushUpdateReceiptDetailsToQueque(workflowDetailsRequest);
 		} catch (Exception e) {
-			LOGGER.error("Couldn't update stateId and status" + e);
+			LOGGER.error("Couldn't update stateId and status: ", e);
 			return null;
 		}
-		return workflowDetails;
+		return workflowDetailsRequest;
 	}
 
 	public List<User> getReceiptCreators(final RequestInfo requestInfo,
@@ -492,26 +480,12 @@ public class ReceiptService {
 		return receiptRepository.getReceiptStatus(tenantId);
 	}
 
-	public void pushUpdateReceiptDetailsToQueque(Long id, Long stateId,
-			String status, String tenantId, RequestInfo requestInfo)
-			throws ParseException {
-		ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria
-				.builder().tenantId(tenantId).ids(Arrays.asList(id)).build();
-		List<Receipt> receipts = receiptRepository.findAllReceiptsByCriteria(
-				receiptSearchCriteria).toDomainContract();
-		receipts.get(0).getBill().get(0).getBillDetails().get(0)
-				.setStatus(status);
-		receipts.get(0).setStateId(stateId);
-		ReceiptReq receiptRequest = new ReceiptReq();
-		receiptRequest.setRequestInfo(requestInfo);
-		receiptRequest.setReceipt(receipts);
-		receiptRepository.pushUpdateDetailsToQueque(receiptRequest);
-	}
+	public void updateReceipt(WorkflowDetailsRequest workflowDetails){
+		if(workflowDetails.getStatus().equals("Created")){
+			workflowDetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 
-	public Boolean updateReceipt(ReceiptReq receiptRequest) {
-		LOGGER.info("ReceiptRequest:" + receiptRequest);
-		return receiptRepository.updateReceipt(receiptRequest);
-
+			receiptRepository.updateReceipt(workflowDetails);
+		}
 	}
 
 	public List<BusinessDetailsRequestInfo> getBusinessDetails(
@@ -522,6 +496,81 @@ public class ReceiptService {
 	public List<ChartOfAccount> getChartOfAccountsForByGlCodes(
 			final String tenantId, final RequestInfo requestInfo) {
 		return receiptRepository.getChartOfAccounts(tenantId, requestInfo);
+	}
+	
+	public void pushUpdateReceiptDetailsToQueque(WorkflowDetailsRequest workFlowDetailsRequest) {
+		   LOGGER.info("WorkflowDetailsRequest :"+workFlowDetailsRequest);
+			receiptRepository.pushUpdateDetailsToQueque(workFlowDetailsRequest);
+			}
+	
+	private List<BillDetail> configureDebitAmountHead(ReceiptReq receiptReq){
+		LOGGER.info("Fetching glcode for instrument type: "+
+						receiptReq.getReceipt().get(0).getInstrument().getInstrumentType().getName());
+		String glcode = null;
+		try{
+			glcode = instrumentRepository.getAccountCodeId(receiptReq.getRequestInfo(), 
+					receiptReq.getReceipt().get(0).getInstrument(), receiptReq.getReceipt().get(0).getTenantId());
+		}catch(Exception e){
+			LOGGER.error("Exception while fetching glcode from instrument service: ", e);
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_MSG, CollectionServiceConstants.ACCOUNT_CODE_EXCEPTION_DESC);
+			
+		}
+		LOGGER.info("glcode obtained is: "+glcode);
+	  	BigDecimal drAmount = BigDecimal.ZERO;
+	  	List<BillDetail> billDetailsList = new ArrayList<>();
+		for(BillDetail billDetails: receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails()){
+			  for(BillAccountDetail billAccountDetails: billDetails.getBillAccountDetails()){
+				  drAmount = drAmount.add(billAccountDetails.getCreditAmount());
+			  }
+			  LOGGER.info("Dramount for debit head: "+drAmount);
+
+			  BillAccountDetail billAccountDetail = new BillAccountDetail();
+			  billAccountDetail.setGlcode(glcode);
+			  billAccountDetail.setDebitAmount(drAmount);
+			  billAccountDetail.setCreditAmount(BigDecimal.ZERO);
+			  billAccountDetail.setPurpose(Purpose.OTHERS);
+				
+			  billDetails.getBillAccountDetails().add(billAccountDetail);
+			  
+			  billDetailsList.add(billDetails);
+				
+		}
+		
+		return billDetailsList;
+	}
+
+	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
+		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
+		
+		WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
+		
+		workflowDetails.setReceiptHeaderId(receiptHeaderId);	
+		workflowDetails.setTenantId(tenantId);
+		workflowDetails.setState("NEW");
+		workflowDetails.setAction("Create");
+		workflowDetails.setAssignee(requestInfo.getUserInfo().getId());
+		workflowDetails.setInitiatorPosition(requestInfo.getUserInfo().getId());
+		workflowDetails.setRequestInfo(requestInfo);
+		
+		PositionSearchCriteriaWrapper positionSearchCriteriaWrapper = new PositionSearchCriteriaWrapper();
+		PositionSearchCriteria positionSearchCriteria = new PositionSearchCriteria();
+		positionSearchCriteria.setEmployeeId(requestInfo.getUserInfo().getId());
+		positionSearchCriteria.setTenantId(tenantId);
+		positionSearchCriteriaWrapper.setPositionSearchCriteria(positionSearchCriteria);
+		positionSearchCriteriaWrapper.setRequestInfo(requestInfo);
+		
+	/*	workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));	
+		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper)); */
+		
+		
+		try{
+			workflowService.start(workflowDetails);
+		}catch(Exception e){
+			LOGGER.error("Starting workflow failed: ", e);
+		}
+		
+		
 	}
 
 }

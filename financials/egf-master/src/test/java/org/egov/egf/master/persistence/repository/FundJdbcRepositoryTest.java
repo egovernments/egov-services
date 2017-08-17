@@ -44,7 +44,7 @@ public class FundJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/clearFund.sql" })
 	public void test_create() {
 
-		FundEntity fund = FundEntity.builder().code("code").name("name").active(true).level(1l).isParent(false)
+		FundEntity fund = FundEntity.builder().id("2374257").code("code").name("name").active(true).level(1l)
 				.parentId("1").identifier('F').build();
 		fund.setTenantId("default");
 		FundEntity actualResult = fundJdbcRepository.create(fund);
@@ -63,7 +63,7 @@ public class FundJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/clearFund.sql" })
 	public void test_create_with_tenantId_null() {
 
-		FundEntity fund = FundEntity.builder().code("code").name("name").active(true).level(1l).isParent(false)
+		FundEntity fund = FundEntity.builder().code("code").name("name").active(true).level(1l)
 				.parentId("1").identifier('F').build();
 		fundJdbcRepository.create(fund);
 
@@ -73,7 +73,7 @@ public class FundJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/clearFund.sql", "/sql/insertFundData.sql" })
 	public void test_update() {
 
-		FundEntity fund = FundEntity.builder().code("codeU").name("nameU").active(true).level(1l).isParent(false)
+		FundEntity fund = FundEntity.builder().code("codeU").name("nameU").active(true).level(1l)
 				.identifier('F').id("2").build();
 		fund.setTenantId("default");
 		FundEntity actualResult = fundJdbcRepository.update(fund);
@@ -159,7 +159,6 @@ public class FundJdbcRepositoryTest {
 						put("code", resultSet.getString("code"));
 						put("active", resultSet.getBoolean("active"));
 						put("level", resultSet.getLong("level"));
-						put("isParent", resultSet.getBoolean("isParent"));
 						put("createdBy", resultSet.getString("createdBy"));
 						put("createdDate", resultSet.getString("createdDate"));
 						put("lastModifiedBy", resultSet.getString("lastModifiedBy"));

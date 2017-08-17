@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/supplytype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "SupplyTypes[0].code",
 		"objectName": "SupplyType",
 		"groups": [
 			{
@@ -11,34 +12,35 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SupplyType.name",
+							"jsonPath": "SupplyType[0].name",
 							"label": "Supply Type",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "SupplyType.description",
+							"jsonPath": "SupplyType[0].description",
 							"label": "Description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SupplyType.active",
+							"jsonPath": "SupplyType[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
+							"defaultValue":true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -61,12 +63,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "name",
 							"label": "wc.create.supplyType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "Active",
@@ -141,11 +143,10 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/supplytype/_search?id={id}",
-		"url":"/wcms/masters/supplytype/{SupplyType.code}/_update",
-		"isResponseArray":true,
+		"url":"/wcms/masters/supplytype/{SupplyTypes.id}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "SupplyType",
+		"objectName": "SupplyTypes",
 		"groups": [
 			{
 				"label": "wc.update.supplyType.title",
@@ -153,29 +154,29 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SupplyType.name",
+							"jsonPath": "SupplyTypes[0].name",
 							"label": "wc.create.supplyType",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "SupplyType.description",
+							"jsonPath": "SupplyTypes[0].description",
 							"label": "wc.create.description",
-							"pattern": "",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Length is more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SupplyType.active",
+							"jsonPath": "SupplyTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

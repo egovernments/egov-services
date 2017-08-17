@@ -80,9 +80,31 @@ public class Fund extends Auditable {
 	@NotNull
 	protected Boolean active;
 
-	protected Boolean isParent;
-
 	@NotNull
 	protected Long level;
+	
+	public void add()
+	{
+	    if(parent==null)
+	    {
+	        level=0l;
+	        
+	    }else
+	    {
+	        level=parent.getLevel()+1;
+	    }
+	}
+	
+	public void update()
+	{
+	    if(parent==null)
+	    {
+	        level=0l;
+	        
+	    }else
+	    {
+	        level=parent.getLevel()+1;
+	    }
+	}
 
 }

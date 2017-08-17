@@ -14,6 +14,8 @@ html, body{
   src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v22/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
 }
 
+
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
@@ -700,10 +702,8 @@ table td {
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
 }
 .uiCard {
-	margin:15px;
+	margin: 15px;
 }
-
-
 
 .menuStyle{
 
@@ -735,8 +735,8 @@ table thead th {
 	border-bottom:none !important;
 	font-weight:500 !important;
 	font-size:12px !important;
-	  border-left:0 !important;
-	  border-right:0 !important;
+	border-left:0 !important;
+	border-right:0 !important;
 }
 
  table tbody td {
@@ -747,6 +747,11 @@ table thead th {
 	  color:rgba(0,0,0,0.87) !important;
 	  border-left:0 !important;
 	  border-right:0 !important;
+	  text-align: left;
+ }
+ 
+ .lastTdBorder {
+	 border-right:1px solid #ddd !important;
  }
 
 
@@ -764,3 +769,132 @@ table thead th {
  .searchButton button{
 	 background-color:#607d8b !important;
  }
+
+
+ /*  Bootstrap Clearfix */
+ .row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.disable-selection{
+	-moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+ 	margin-bottom: 10px;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.application-title{
+ 	text-align: center;
+ 	font-weight: 400;
+ 	font-family: Roboto;
+ 	font-size: 28px;
+ 	color: #8d8d8d;
+ 	padding-bottom: 10px;
+}
+
+.check-list-item label{
+ 	color: rgb(95, 92, 98) !important;
+}
+
+.file-input-container{
+ 	 padding: 5px 5px 10px 5px;
+   background: #fcfcfc;
+   border: dashed 2px #bcbcbc;
+	 margin-bottom: 16px;
+	 margin-top:10px;
+}
+
+.file-input-container.error{
+	border:dashed 2px rgb(244, 67, 54);
+}
+
+.errorMsg{
+	color:rgb(244, 67, 54) !important;
+}
+
+.file-header .name{
+	margin-bottom: 10px;
+	color:rgb(95, 92, 98);
+}
+
+.documents{
+ 	margin-bottom: 16px;
+}
+
+.file-browser{
+	padding: 5px 15px 0 15px;
+}
+
+.file-header{
+	padding-left:16px;
+	padding-right: 16px;
+}
+
+.file-header span{
+	vertical-align: top;
+	padding-left: 5px;
+	color:#9E9E9E;
+}
+
+span.errorMsg{
+	padding-left: 0px;
+	font-size: 12px;
+}
+
+.list-remove-button{
+	top: -12px;
+  bottom: 12px;
+	right:12px;
+}
+
+.custom-card-title{
+	vertical-align: top;
+	line-height: 50px;
+	font-size: 24px;
+	margin-left: 5px;
+}
+
+.empty-info{
+	 padding: 20px 20px 0 20px;
+	 text-align: center;
+}
+
+.empty-info .icon{
+	font-size:50px !important;
+	color:rgb(165, 164, 164) !important;
+}
+
+.empty-info .msg{
+	display: block;
+	font-size: 18px;
+	color:rgb(165, 164, 164);
+}
+
+.radio-group {
+	margin-top:10px;
+	margin-bottom: 16px;
+}
+
+.radio-group .field-title{
+	margin-bottom: 10px;
+}

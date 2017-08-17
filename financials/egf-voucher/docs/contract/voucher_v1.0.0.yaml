@@ -1,0 +1,13 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: Voucher Service
+  description: Voucher services APIs - to create, update and search Voucher. 
+  contact:
+    name: Manikanta P T
+    email: info@egovernments.org
+  
+basePath: "/egf-voucher/v110"
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/egf-voucher/contracts/v1-0-0.yml'
+x-api-id: 'org.egov.egf.voucher'

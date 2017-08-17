@@ -1,0 +1,18 @@
+{
+	"responseInfo": {
+		
+	},
+	"apartments": [
+		{
+			"tenantId": "default",
+			"code": "1010",
+			"name": "FACEBOOK",
+			"auditDetails": {
+				"createdBy": null,
+				"lastModifiedBy": null,
+				"createdTime": null,
+				"lastModifiedTime": null
+			}
+		}
+	]
+}

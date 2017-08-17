@@ -154,7 +154,7 @@ public class RoleController {
 	private List<ErrorField> getErrorFields(final RoleRequest roleRequest, String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 
-		addRolesLengthValidationErrors(roleRequest,errorFields);
+		addRolesLengthValidationErrors(roleRequest, errorFields);
 		if (roleRequest.getRoles() != null && roleRequest.getRoles().size() > 0) {
 
 			addRoleameValidationErrors(roleRequest, errorFields);
@@ -210,9 +210,8 @@ public class RoleController {
 			}
 		}
 	}
-	
-	private void addRolesLengthValidationErrors(final RoleRequest roleRequest,
-			final List<ErrorField> errorFields) {
+
+	private void addRolesLengthValidationErrors(final RoleRequest roleRequest, final List<ErrorField> errorFields) {
 
 		if (!(roleRequest.getRoles() != null && roleRequest.getRoles().size() > 0)) {
 

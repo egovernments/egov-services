@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -15,17 +14,13 @@ import Api from '../../../../../api/api';
 import DataTable from '../../../../common/Table';
 import {translate} from '../../../../common/common';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-
-
-const buttons = require('datatables.net-buttons-bs');
-
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var _this;
 var flag = 0;
@@ -68,27 +63,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
   }
 };
 
@@ -131,15 +105,6 @@ class searchRouter extends Component {
   }
 
   componentWillMount() {
-    $('#searchTable').DataTable({
-         dom: 'lBfrtip',
-         buttons: [],
-          ordering: false,
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
-    });
   }
 
   componentWillUnmount(){
@@ -149,15 +114,18 @@ class searchRouter extends Component {
   }
 
   componentDidUpdate() {
-    $('#searchTable').DataTable({
-         dom: 'lBfrtip',
-         buttons: [],
-          ordering: false,
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+
+    var t = $('#searchTable').DataTable({
+      dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      buttons: ['excel', 'pdf'],
+      bDestroy: true
     });
+
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
   }
 
   componentDidMount() {
@@ -277,23 +245,23 @@ class searchRouter extends Component {
    const viewTable = function() {
       if(isSearchClicked)
       return (
-          <Card>
+          <Card style={styles.marginStyle}>
             <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
             <CardText>
-            <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
-             <thead>
-                <tr>
-                  <th>#</th>
-                  <th>{translate("pgr.lbl.grievance.type")}</th>
-                  <th>{translate("pgr.lbl.boundarytype")}</th>
-                  <th>{translate("pgr.lbl.boundary")}</th>
-                  <th>{translate("pgr.lbl.position")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {renderBody()}
-              </tbody>
-            </Table>
+              <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+               <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{translate("pgr.lbl.grievance.type")}</th>
+                    <th>{translate("pgr.lbl.boundarytype")}</th>
+                    <th>{translate("pgr.lbl.boundary")}</th>
+                    <th>{translate("pgr.lbl.position")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {renderBody()}
+                </tbody>
+              </Table>
            </CardText>
         </Card>
     )
@@ -303,11 +271,11 @@ class searchRouter extends Component {
       <div className="searchRouter">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Grievance Router </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {translate('core.lbl.search')} {translate('pgr.lbl.router')}</div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={6} md={6} lg={6}>
                     <AutoComplete
                         hintText=""
                         floatingLabelText={translate("pgr.lbl.grievance.type")}
@@ -318,17 +286,23 @@ class searchRouter extends Component {
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "serviceid")}}
                         value={routerSearchSet.serviceid}
+                        ref="serviceid"
                         onNewRequest={(chosenRequest, index) => {
-                          var e = {
-                            target: {
-                              value: chosenRequest.id
-                            }
-                          };
-                          handleChange(e, "serviceid", true, "");
+                          if(index === -1){
+                            this.refs['serviceid'].setState({searchText:''});
+                          }else{
+                            var e = {
+                              target: {
+                                value: chosenRequest.id
+                              }
+                            };
+                            handleChange(e, "serviceid", true, "");
+                          }
+
                          }}
                         />
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={6} md={6} lg={6}>
                     <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
                             var e = {target: {value: val}};
                             loadBoundaries(val);
@@ -338,7 +312,7 @@ class searchRouter extends Component {
                                   ))}
                      </SelectField>
                    </Col>
-                   <Col xs={12} md={8}>
+                   <Col xs={12} sm={6} md={6} lg={6}>
                     <AutoComplete
                         hintText=""
                         floatingLabelText={translate("pgr.lbl.boundary")}
@@ -349,13 +323,19 @@ class searchRouter extends Component {
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundaryid")}}
                         value={routerSearchSet.boundaryid}
+                        ref="boundaryid"
                         onNewRequest={(chosenRequest, index) => {
-                          var e = {
-                            target: {
-                              value: chosenRequest.id
-                            }
-                          };
-                          handleChange(e, "boundaryid", true, "");
+                          if(index === -1){
+                            this.refs['boundaryid'].setState({searchText:''});
+                          }else{
+                            var e = {
+                              target: {
+                                value: chosenRequest.id
+                              }
+                            };
+                            handleChange(e, "boundaryid", true, "");
+                          }
+
                          }}
                         />
                    </Col>
@@ -364,12 +344,10 @@ class searchRouter extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-
              <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} primary={true}/>
-
            </div>
+           {viewTable()}
          </form>
-         {viewTable()}
         </div>
     );
   }

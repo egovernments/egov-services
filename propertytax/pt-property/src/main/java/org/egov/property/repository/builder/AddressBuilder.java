@@ -22,12 +22,6 @@ public class AddressBuilder {
 		return addressUpdateSQL.toString();
 	}
 
-	public static final String INSERT_ADDRESSHISTORY_QUERY = "INSERT INTO egpt_Address_history ("
-			+ "tenantId, latitude, longitude, addressNumber, addressLine1,"
-			+ " addressLine2, landmark, city, pincode, detail,"
-			+ "createdBy, lastModifiedBy, createdTime, lastModifiedTime, property,id)"
-			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
 	public static final String AUDIT_DETAILS_FOR_ADDRESS = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_address where id= ?";
 

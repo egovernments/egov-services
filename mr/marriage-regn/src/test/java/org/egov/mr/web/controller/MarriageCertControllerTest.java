@@ -17,6 +17,7 @@ import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageDocument;
+import org.egov.mr.model.Page;
 import org.egov.mr.model.ReissueApplicantInfo;
 import org.egov.mr.model.ReissueCertAppl;
 import org.egov.mr.model.enums.ApplicationStatus;
@@ -24,6 +25,7 @@ import org.egov.mr.model.enums.CertificateType;
 import org.egov.mr.service.MarriageCertService;
 import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageCertCriteria;
+import org.egov.mr.web.contract.ReissueCertRequest;
 import org.egov.mr.web.contract.ReissueCertResponse;
 import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.ResponseInfo;
@@ -61,24 +63,31 @@ public class MarriageCertControllerTest {
 	private MarriageCertController marriageCertController;
 
 	@MockBean
-	private ReissueCertResponse reissueCertResponse;
-
-	@MockBean
-	private ResponseInfo responseinfo;
-
-	@MockBean
 	private ErrorHandler errorHandler;
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
 
 	@Test
 	public void testForSearch() throws IOException, Exception {
 
+		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
+				.key("successful").status("200").ver("string").ts("string").build();
+		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
+				.build();
+
 		ReissueCertResponse expectedReissueCertApplList = ReissueCertResponse.builder()
-				.reissueApplications(getReissueCertApplFromDB()).build();
+				.reissueApplications(getReissueCertApplFromDB()).responseInfo(responseinfo).page(page).build();
 		when(marriageCertService.getMarriageCerts(Matchers.any(MarriageCertCriteria.class),
 				Matchers.any(RequestInfo.class))).thenReturn(expectedReissueCertApplList);
 
 		try {
-			mockMvc.perform(post("/certs/reissueAppl/_search").content(getFileContents("ReissueCertRequest.json)"))
+			mockMvc.perform(post("/certs/reissueAppl/_search").content(getFileContents("ReissueCertRequest.json"))
 					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 					.andExpect(content().json(getFileContents("ReissuecertResponse.json")));
@@ -88,7 +97,47 @@ public class MarriageCertControllerTest {
 		}
 
 	}
+	
+	@Test
+	public void testForCreate() throws IOException, Exception{
+		
+		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
+				.key("successful").status("200").ver("string").ts("string").build();
+		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
+				.build();
+		
+		ReissueCertResponse expectedReissueCertApplList = ReissueCertResponse.builder()
+				.reissueApplications(getReissueCertApplFromDB()).responseInfo(responseinfo).page(page).build();
+		
+		when(marriageCertService.createAsync(Matchers.any(ReissueCertRequest.class))).thenReturn(expectedReissueCertApplList);
 
+		mockMvc.perform(post("/certs/reissueAppl/_create").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("ReissuecertificateRequest.json"))).andExpect(status().isCreated())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("ReissuecertResponse.json")));
+		
+	}
+
+	@Test
+	public void testForUpdate() throws IOException, Exception{
+		
+		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
+				.key("successful").status("200").ver("string").ts("string").build();
+		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
+				.build();
+		
+		ReissueCertResponse expectedReissueCertApplList = ReissueCertResponse.builder()
+				.reissueApplications(getReissueCertApplFromDB()).responseInfo(responseinfo).page(page).build();
+		
+		when(marriageCertService.updateAsync(Matchers.any(ReissueCertRequest.class))).thenReturn(expectedReissueCertApplList);
+		
+		mockMvc.perform(post("/certs/reissueAppl/_update").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("ReissuecertificateRequest.json"))).andExpect(status().isCreated())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("ReissuecertResponse.json")));
+	}
+	
+	
 	private String getFileContents(String filePath) throws IOException {
 		return new FileUtils().getFileContents("org/egov/mr/web/controller/" + filePath);
 	}
@@ -96,34 +145,43 @@ public class MarriageCertControllerTest {
 	public List<ReissueCertAppl> getReissueCertApplFromDB() {
 
 		List<Long> demandList = new ArrayList<>();
-		demandList.add(987654L);
+		demandList.add(1496430744825L);
 		List<ReissueCertAppl> reissueCertApplList = new ArrayList<>();
 		List<ReissueApplicantInfo> reissueApplicantInfoList = new ArrayList<>();
-		AuditDetails auditDetails = AuditDetails.builder().createdBy("kusuma").createdTime(8976L)
-				.lastModifiedBy("kusuma").lastModifiedTime(6789L).build();
-		MarriageCertificate marriageCertificate = MarriageCertificate.builder().applicationNumber("sdfghjkj")
-				.bridePhoto("photo").bridegroomPhoto("photo").certificateDate(23456L).certificateNo("certno")
-				.certificatePlace("sdfghj").certificateType(CertificateType.REISSUE).husbandAddress("qwewrtyui")
-				.husbandName("qwertyui").marriageDate(123456L).marriageVenueAddress("asdfghjk").regnDate(2345678L)
-				.regnNumber("qwertfcrt").regnSerialNo("zdxtrvghv").regnVolumeNo("ertyvvvvbv").templateVersion("v2")
+		AuditDetails auditDetails = AuditDetails.builder().createdBy("creator").createdTime(1496430744825L)
+				.lastModifiedBy("modifier").lastModifiedTime(1496430744825L).build();
+		MarriageCertificate marriageCertificate = MarriageCertificate.builder().applicationNumber("applnno")
+				.bridePhoto("photo").bridegroomPhoto("photo").certificateDate(1496430744825L).certificateNo("certno")
+				.certificatePlace("certplace").certificateType(CertificateType.REISSUE).husbandAddress("hus address")
+				.husbandName("husname").wifeName("wife name").wifeAddress("wife address").marriageDate(1496430744825L)
+				.marriageVenueAddress("venu address").regnDate(1496430744825L).regnNumber("regnnumber")
+				.regnSerialNo("serialno").regnVolumeNo("volumeno").templateVersion("v2").tenantId("ap.kurnool").build();
+		MarriageDocument marriageDocument = MarriageDocument.builder().location("location").id("1")
+				.auditDetails(auditDetails).documentType("documenttype").reissueCertificateId("1234")
 				.tenantId("ap.kurnool").build();
-		MarriageDocument marriageDocument = MarriageDocument.builder().location("dfghjkuyuw").id("1234")
-				.reissueCertificateId("1234").tenantId("ap.kurnool").build();
 		List<MarriageDocument> documentsList = new ArrayList<>();
 		documentsList.add(marriageDocument);
-		ReissueApplicantInfo reissueApplicantInfo = ReissueApplicantInfo.builder().aadhaar("234567987654")
-				.address("sdfghjkoiuyt").email("fggsftdqjhdu").fee(new BigDecimal(20)).mobileNo("9876543210")
-				.name("bnavdhja").build();
+		ReissueApplicantInfo reissueApplicantInfo = ReissueApplicantInfo.builder().aadhaar("123456789")
+				.address("address12345").email("emailid@gmail.com").fee(new BigDecimal(34)).mobileNo("9876543210")
+				.name("name").build();
 		reissueApplicantInfoList.add(reissueApplicantInfo);
-		ApprovalDetails approvalDetails = ApprovalDetails.builder().action("action").assignee(1234L)
-				.comments("comments").department(2345L).designation(1234L).status("Approved").build();
-		ReissueCertAppl reissueCertAppl = ReissueCertAppl.builder().applicationNumber("retyui")
-				.auditDetails(auditDetails).certificate(marriageCertificate).documents(documentsList).regnNo("wqertyui")
-				.reissueApplStatus(ApplicationStatus.CREATED).rejectionReason("asdfghjertyu").remarks("jaweerrt")
-				.stateId("234567").tenantId("ap.kurnool").demands(demandList).approvalDetails(approvalDetails)
-				.applicantInfo(reissueApplicantInfo).build();
-		reissueCertApplList.add(reissueCertAppl);
+		ApprovalDetails approvalDetails = ApprovalDetails.builder().action("action").assignee(1496430744825L)
+				.comments("comments").department(1496430744825L).designation(1496430744825L).status("Approved").build();
+		ReissueCertAppl reissueCertAppl = ReissueCertAppl.builder().id("1").applicationNumber("egov1234")
+				.auditDetails(auditDetails).certificate(marriageCertificate).documents(documentsList).regnNo("regnno")
+				.reissueApplStatus(ApplicationStatus.CREATED).rejectionReason("rejectionreaon").remarks("remarks")
+				.stateId("12345").tenantId("ap.kurnool").demands(demandList).isActive(null)
+				.approvalDetails(approvalDetails).applicantInfo(reissueApplicantInfo).build();
 
+		reissueCertApplList.add(reissueCertAppl);
+		/*
+		 * 
+		 * ReissueCertResponse reissueCertResponse =
+		 * ReissueCertResponse.builder().reissueApplications(
+		 * reissueCertApplList) .responseInfo(responseinfo).page(page).build();
+		 * List<ReissueCertResponse> responselist = new ArrayList<>();
+		 * responselist.add(reissueCertResponse);
+		 */
 		return reissueCertApplList;
 
 	}

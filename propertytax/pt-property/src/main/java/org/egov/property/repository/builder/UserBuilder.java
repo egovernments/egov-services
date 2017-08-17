@@ -25,11 +25,6 @@ public class UserBuilder {
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_property_owner where id= ?";
 
-	public static final String INSERT_USERHISTORY_QUERY = "INSERT INTO egpt_property_owner_history ("
-			+ "property,owner,isPrimaryOwner, isSecondaryOwner,ownerShipPercentage, ownerType,"
-			+ "createdBy, lastModifiedBy, createdTime, lastModifiedTime, id) VALUES(?,?,?,?,?,?,?,?,?,?,?) ";
-			
-	public static final String GET_OWNERTABLE_ID = "SELECT id from egpt_property_owner where property = ? and owner = ?";
-
+	public static final String DELETE_OWNER = "DELETE from egpt_property_owner where property = ? and owner = ?";
 
 }

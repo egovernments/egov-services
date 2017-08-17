@@ -62,7 +62,7 @@ import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.egov.wcms.web.contract.MeterCostRequest;
+import org.egov.wcms.web.contract.MeterCostReq;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -130,7 +130,7 @@ public class WaterMasterConsumer {
 
     @Autowired
     private TreatmentPlantService treatmentPlantService;
-    
+
     @Autowired
     private MeterWaterRatesService meterWaterRatesService;
 
@@ -147,7 +147,9 @@ public class WaterMasterConsumer {
             "${kafka.topics.sourcetype.update.name}", "${kafka.topics.supplytype.create.name}",
             "${kafka.topics.supplytype.update.name}", "${kafka.topics.storagereservoir.create.name}",
             "${kafka.topics.storagereservoir.update.name}", "${kafka.topics.treatmentplant.create.name}",
-            "${kafka.topics.treatmentplant.update.name}" ,"${kafka.topics.meterwaterrates.create.name}","${kafka.topics.meterwaterrates.update.name}"})
+            "${kafka.topics.treatmentplant.update.name}", "${kafka.topics.meterwaterrates.create.name}",
+            "${kafka.topics.meterwaterrates.update.name}", "${kafka.topics.metercost.create.name}",
+            "${kafka.topics.metercost.update.name}" })
 
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
@@ -192,9 +194,13 @@ public class WaterMasterConsumer {
             else if (applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName().equals(topic))
                 docTypeApplTypeService
                         .update(objectMapper.convertValue(consumerRecord, DocumentTypeApplicationTypeReq.class));
-            else if (applicationProperties.getCreateMeterCostTopicName().equals(topic))
-                meterCostService.create(objectMapper.convertValue(consumerRecord, MeterCostRequest.class));
-            else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
+            else if (applicationProperties.getCreateMeterCostTopicName().equals(topic)) {
+                log.info("Consuming MeterCostCreate Request");
+                meterCostService.createMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
+            } else if (applicationProperties.getUpdateMeterCostTopicName().equals(topic)) {
+                log.info("Consuming MeterCostUpdate Request");
+                meterCostService.updateMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
+            }else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.create(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getUpdateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.update(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
@@ -203,9 +209,11 @@ public class WaterMasterConsumer {
             else if (applicationProperties.getUpdateSupplyTypeTopicName().equals(topic))
                 supplyTypeService.updateSupplyType(objectMapper.convertValue(consumerRecord, SupplyTypeRequest.class));
             else if (applicationProperties.getCreateStorageReservoirTopicName().equals(topic))
-                storageReservoirService.create(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
+                storageReservoirService
+                        .create(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
             else if (applicationProperties.getUpdateStorageReservoirTopicName().equals(topic))
-                storageReservoirService.update(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
+                storageReservoirService
+                        .update(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
             else if (applicationProperties.getCreateTreatmentPlantTopicName().equals(topic))
                 treatmentPlantService.create(objectMapper.convertValue(consumerRecord, TreatmentPlantRequest.class));
             else if (applicationProperties.getUpdateTreatmentPlantTopicName().equals(topic))

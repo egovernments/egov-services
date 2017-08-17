@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton, Table ,ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -12,17 +11,13 @@ import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-
-const buttons = require('datatables.net-buttons-bs');
-
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
 const styles = {
@@ -32,30 +27,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -129,17 +100,13 @@ class ViewEscalation extends Component {
        $('#searchTable').DataTable({
              dom: 'lBfrtip',
              buttons: [],
-              bDestroy: true,
-              language: {
-                 "emptyTable": "No Records"
-              }
+             bDestroy: true
         });
     }
 
     componentDidMount() {
       let self = this;
       Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
-        console.log(response);
           self.setState({
             positionSource: response.Position
           })
@@ -150,7 +117,6 @@ class ViewEscalation extends Component {
       });
 
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
-          console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
           })
@@ -161,19 +127,16 @@ class ViewEscalation extends Component {
       });
 
     }
-	
+
 		componentWillUpdate() {
 	  $('#searchTable').dataTable().fnDestroy();
 	}
 
    componentDidUpdate() {
        $('#searchTable').DataTable({
-         dom: 'lBfrtip',
-         buttons: [],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+          dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+          buttons: ['excel', 'pdf'],
+          bDestroy: true
      });
   }
 
@@ -188,7 +151,7 @@ class ViewEscalation extends Component {
 
       let{setLoadingStatus, toggleSnackbarAndSetText} = this.props;
       setLoadingStatus('loading');
-    
+
       e.preventDefault();
 
        let self = this;
@@ -197,7 +160,7 @@ class ViewEscalation extends Component {
 		  fromPosition: this.props.viewEscalation.position,
 		  serviceCode: this.props.viewEscalation.grievanceType
 	  };
-	  
+
 
        Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetFrom).then(function(response) {
 		   setLoadingStatus('hide');
@@ -207,19 +170,17 @@ class ViewEscalation extends Component {
 						isSearchClicked: true
 					  });
 
-      
+
         }, function(err) {
 			setLoadingStatus('hide');
             toggleSnackbarAndSetText(true, err.message)
         });
-   
+
   }
 
     render() {
-		
+
 		let self = this;
-		
-		console.log(this.state.searchResult);
 
       let {
         isFormValid,
@@ -250,7 +211,7 @@ class ViewEscalation extends Component {
       	  if(isSearchClicked)
       		return (
    	        <Card>
-   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
+   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
    		         <thead style={{backgroundColor:"#f2851f",color:"white"}}>
@@ -360,7 +321,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,
@@ -383,7 +343,7 @@ const mapDispatchToProps = dispatch => ({
    setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-	
+
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
     },

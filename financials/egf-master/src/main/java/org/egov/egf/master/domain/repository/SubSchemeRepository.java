@@ -38,6 +38,10 @@ public class SubSchemeRepository {
         return entity.toDomain();
 
     }
+    
+    public String getNextSequence(){
+        return subSchemeJdbcRepository.getSequence(SubSchemeEntity.SEQUENCE_NAME);
+    }
 
     @Transactional
     public SubScheme save(SubScheme subScheme) {

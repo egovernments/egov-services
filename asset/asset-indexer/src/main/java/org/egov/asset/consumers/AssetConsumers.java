@@ -1,78 +1,74 @@
 package org.egov.asset.consumers;
 
-import java.io.IOException;
+import java.util.Map;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.RevaluationRequest;
+import org.egov.asset.model.Depreciation;
 import org.egov.asset.service.AssetIndexService;
+import org.egov.asset.service.CurrentValueIndexService;
+import org.egov.asset.service.DepreciationIndexService;
 import org.egov.asset.service.DisposalIndexService;
 import org.egov.asset.service.RevaluationIndexService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
 public class AssetConsumers {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(AssetConsumers.class);
+    @Autowired
+    private AssetIndexService assetIndexService;
 
-	@Autowired
-	private AssetIndexService assetIndexService;
+    @Autowired
+    private RevaluationIndexService revaluationIndexService;
 
-	@Autowired
-	private RevaluationIndexService revaluationIndexService;
+    @Autowired
+    private DisposalIndexService disposalIndexService;
 
-	@Autowired
-	private DisposalIndexService disposalIndexService;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private DepreciationIndexService depreciationIndexService;
 
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.save.asset}",
-			"${kafka.topics.update.asset}", "${kafka.topics.save.revaluation}", "${kafka.topics.update.revaluation}",
-			"${kafka.topics.save.disposal}", "${kafka.topics.update.disposal}" })
-	public void listen1(final ConsumerRecord<String, String> record) {
+    @Autowired
+    private CurrentValueIndexService currentValueIndexService;
 
-		LOGGER.info("topic:" + record.topic() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
-		final ObjectMapper objectMapper = new ObjectMapper();
-		AssetRequest assetRequest = null;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-		try {
-			assetRequest = objectMapper.readValue(record.value(), AssetRequest.class);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+    @KafkaListener(topics = { "${kafka.topics.save.asset}", "${kafka.topics.save.depreciation}",
+            "${kafka.topics.save.currentvalue}", "${kafka.topics.update.asset}", "${kafka.topics.save.revaluation}",
+            "${kafka.topics.save.disposal}" })
+    public void listen(final Map<String, Object> consumerRecord,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
 
-		if (record.topic().equals(applicationProperties.getCreateAssetTopicName()))
-			assetIndexService.postAsset(assetRequest);
-		else if (record.topic().equals(applicationProperties.getUpdateAssetTopicName()))
-			assetIndexService.putAsset(assetRequest);
-		else if (record.topic().equals(applicationProperties.getCreateAssetRevaluationTopicName())
-				|| record.topic().equals(applicationProperties.getUpdateAssetRevaluationTopicName())) {
-			RevaluationRequest revaluationRequest = null;
-			try {
-				revaluationRequest = objectMapper.readValue(record.value(), RevaluationRequest.class);
-			} catch (final IOException e) {
-				LOGGER.info("An exception occurred in fetching of Revaluation Object ::" + e.toString());
-				e.printStackTrace();
-			}
-			revaluationIndexService.postAssetRevaluation(revaluationRequest);
-		} else if (record.topic().equals(applicationProperties.getCreateAssetDisposalTopicName())
-				|| record.topic().equals(applicationProperties.getUpdateAssetDisposalTopicName())) {
-			DisposalRequest disposalRequest = null;
-			try {
-				disposalRequest = objectMapper.readValue(record.value(), DisposalRequest.class);
-			} catch (final IOException e) {
-				LOGGER.info("An exception occurred in fetching of Disposal Object ::" + e.toString());
-				e.printStackTrace();
-			}
-			disposalIndexService.postAssetDisposal(disposalRequest);
-		}
+        log.info("topic:" + topic + ":" + "value:" + consumerRecord + "thread:" + Thread.currentThread());
+        if (topic.equals(applicationProperties.getCreateAssetTopicName()))
+            assetIndexService.postAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
+        else if (topic.equals(applicationProperties.getUpdateAssetTopicName()))
+            assetIndexService.putAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
+        else if (topic.equals(applicationProperties.getCreateAssetRevaluationTopicName()))
+            revaluationIndexService
+                    .postAssetRevaluation(objectMapper.convertValue(consumerRecord, RevaluationRequest.class));
+        else if (topic.equals(applicationProperties.getCreateAssetDisposalTopicName()))
+            disposalIndexService.postAssetDisposal(objectMapper.convertValue(consumerRecord, DisposalRequest.class));
+        else if (topic.equals(applicationProperties.getSaveCurrentvalueTopic()))
+            currentValueIndexService
+                    .indexCurrentValue(objectMapper.convertValue(consumerRecord, AssetCurrentValueRequest.class));
+        else if (topic.equals(applicationProperties.getSaveDepreciationTopic()))
+            depreciationIndexService.indexDepreciaiton(objectMapper.convertValue(consumerRecord, Depreciation.class));
 
-	}
+    }
 }

@@ -99,7 +99,14 @@ public class PgrWorkflow implements Workflow {
 
     private Long resolveAssignee(final ProcessInstance processInstance) {
         final String complaintTypeCode = processInstance.getValueForKey("complaintTypeCode");
-        final Long boundaryId = Long.valueOf(processInstance.getValueForKey("boundaryId"));
+        String boundaryIdValue = processInstance.getValueForKey("boundaryId");
+        Long boundaryId;
+        if (processInstance.getValueForKey("boundaryId") == "" || processInstance.getValueForKey("boundaryId") == null) {
+            boundaryId = null;
+        }
+        else {
+            boundaryId = Long.valueOf(boundaryIdValue);
+        }
         final Long firstTimeAssignee = null;
         final PositionResponse response = complaintRouterService.getAssignee(boundaryId, complaintTypeCode,
             firstTimeAssignee, processInstance.getTenantId());

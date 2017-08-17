@@ -9,12 +9,12 @@ import org.egov.models.IdGenerationResponse;
 import org.egov.models.IdRequest;
 import org.egov.models.Property;
 import org.egov.models.RequestInfo;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.model.City;
 import org.egov.property.model.SearchTenantResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,7 +33,7 @@ import com.google.gson.GsonBuilder;
 public class UpicNoGeneration {
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -44,9 +44,9 @@ public class UpicNoGeneration {
 
 		String upicNumber = null;
 		StringBuilder tenantCodeUrl = new StringBuilder();
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.hostname"));
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.basepath"));
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.searchpath"));
+		tenantCodeUrl.append(propertiesManager.getTenantHostName());
+		tenantCodeUrl.append(propertiesManager.getTenantBasepath());
+		tenantCodeUrl.append(propertiesManager.getTenantSearchpath());
 		String url = tenantCodeUrl.toString();
 		// Query parameters
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
@@ -66,11 +66,11 @@ public class UpicNoGeneration {
 				searchTenantResponse = mapper.readValue(response, SearchTenantResponse.class);
 				City city = searchTenantResponse.getTenant().get(0).getCity();
 				String cityCode = city.getCode();
-				String upicFormat = environment.getProperty("upic.number.format");
+				String upicFormat = propertiesManager.getUpicNumberFormat();
 				upicNumber = getUpicNumber(property.getTenantId(), requestInfo, upicFormat);
 				upicNumber = String.format("%08d", Integer.parseInt(upicNumber));
 				if (cityCode != null) {
-					upicNumber = cityCode + "-" + upicNumber;
+					upicNumber = cityCode + upicNumber;
 				}
 			}
 		} catch (Exception e) {
@@ -90,15 +90,15 @@ public class UpicNoGeneration {
 	public String getUpicNumber(String tenantId, RequestInfo requestInfo, String upicFormat) {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.hostname"));
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.createpath"));
+		idGenerationUrl.append(propertiesManager.getIdHostName());
+		idGenerationUrl.append(propertiesManager.getIdCreatepath());
 
 		// generating acknowledgement number for all properties
 		String UpicNumber = null;
 		List<IdRequest> idRequests = new ArrayList<>();
 		IdRequest idrequest = new IdRequest();
 		idrequest.setFormat(upicFormat);
-		idrequest.setIdName(environment.getProperty("id.idName"));
+		idrequest.setIdName(propertiesManager.getIdName());
 		idrequest.setTenantId(tenantId);
 		IdGenerationRequest idGeneration = new IdGenerationRequest();
 		idRequests.add(idrequest);
@@ -121,7 +121,7 @@ public class UpicNoGeneration {
 			// Error error = errorResponse.getErrors().get(0);
 		} else if (idResponse.getResponseInfo() != null) {
 			if (idResponse.getResponseInfo().getStatus().toString()
-					.equalsIgnoreCase(environment.getProperty("success"))) {
+					.equalsIgnoreCase(propertiesManager.getSuccess())) {
 				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
 					UpicNumber = idResponse.getIdResponses().get(0).getId();
 			}

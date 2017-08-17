@@ -23,10 +23,10 @@ import lombok.Setter;
 public class LedgerDetailEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_ledgerdetail";
 	private String id;
+	private String ledgerId;
 	private String accountDetailTypeId;
 	private String accountDetailKeyId;
 	private BigDecimal amount;
-	private String ledgerId;
 
 	public LedgerDetail toDomain() {
 		LedgerDetail ledgerDetail = new LedgerDetail();

@@ -1,7 +1,7 @@
 package org.egov.egf.instrument.web.mapper;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
@@ -28,6 +28,7 @@ public class InstrumentMapper {
 		instrument.setBranchName(contract.getBranchName());
 		instrument.setDrawer(contract.getDrawer());
 		instrument.setFinancialStatus(contract.getFinancialStatus());
+		instrument.setRemittanceVoucherId(contract.getRemittanceVoucherId());
 
 		if (contract.getInstrumentType() != null)
 			instrument.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
@@ -37,7 +38,7 @@ public class InstrumentMapper {
 
 		if (contract.getInstrumentVouchers() != null) {
 
-			Set<InstrumentVoucher> instrumentVouchers = new HashSet<>();
+			List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 
 			if (contract.getInstrumentVouchers() != null)
 				for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
@@ -75,6 +76,7 @@ public class InstrumentMapper {
 		contract.setBranchName(instrument.getBranchName());
 		contract.setDrawer(instrument.getDrawer());
 		contract.setFinancialStatus(instrument.getFinancialStatus());
+		contract.setRemittanceVoucherId(instrument.getRemittanceVoucherId());
 
 		if (instrument.getInstrumentType() != null)
 			contract.setInstrumentType(typeMapper.toContract(instrument.getInstrumentType()));
@@ -84,7 +86,7 @@ public class InstrumentMapper {
 
 		if (instrument.getInstrumentVouchers() != null) {
 
-			Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<>();
+			List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 			if (instrument.getInstrumentVouchers() != null)
 				for (InstrumentVoucher iv : instrument.getInstrumentVouchers()) {
@@ -123,6 +125,7 @@ public class InstrumentMapper {
 		instrumentSearch.setBranchName(contract.getBranchName());
 		instrumentSearch.setDrawer(contract.getDrawer());
 		instrumentSearch.setFinancialStatus(contract.getFinancialStatus());
+		instrumentSearch.setRemittanceVoucherId(contract.getRemittanceVoucherId());
 
 		if (contract.getInstrumentType() != null)
 			instrumentSearch.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
@@ -132,7 +135,7 @@ public class InstrumentMapper {
 
 		if (contract.getInstrumentVouchers() != null) {
 
-			Set<InstrumentVoucher> instrumentVouchers = new HashSet<>();
+			List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 			if (contract.getInstrumentVouchers() != null)
 				for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
 					instrumentVouchers.add(InstrumentVoucher.builder().instrument(toDomain(ivc.getInstrument()))
@@ -157,6 +160,10 @@ public class InstrumentMapper {
 		instrumentSearch.setOffset(contract.getOffset());
 		instrumentSearch.setSortBy(contract.getSortBy());
 		instrumentSearch.setIds(contract.getIds());
+		instrumentSearch.setInstrumentTypes(contract.getInstrumentTypes());
+		instrumentSearch.setFinancialStatuses(contract.getFinancialStatuses());
+		instrumentSearch.setTransactionFromDate(contract.getTransactionFromDate());
+		instrumentSearch.setTransactionToDate(contract.getTransactionToDate());
 
 		return instrumentSearch;
 	}
@@ -172,6 +179,7 @@ public class InstrumentMapper {
 		contract.setBranchName(instrumentSearch.getBranchName());
 		contract.setDrawer(instrumentSearch.getDrawer());
 		contract.setFinancialStatus(instrumentSearch.getFinancialStatus());
+		contract.setRemittanceVoucherId(instrumentSearch.getRemittanceVoucherId());
 
 		if (instrumentSearch.getInstrumentType() != null)
 			contract.setInstrumentType(typeMapper.toContract(instrumentSearch.getInstrumentType()));
@@ -181,7 +189,7 @@ public class InstrumentMapper {
 
 		if (instrumentSearch.getInstrumentVouchers() != null) {
 
-			Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<>();
+			List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 			if (instrumentSearch.getInstrumentVouchers() != null)
 				for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers()) {
@@ -209,6 +217,10 @@ public class InstrumentMapper {
 		contract.setOffset(instrumentSearch.getOffset());
 		contract.setSortBy(instrumentSearch.getSortBy());
 		contract.setIds(instrumentSearch.getIds());
+		contract.setFinancialStatuses(instrumentSearch.getFinancialStatuses());
+		contract.setInstrumentTypes(instrumentSearch.getInstrumentTypes());
+		contract.setTransactionFromDate(instrumentSearch.getTransactionFromDate());
+		contract.setTransactionToDate(instrumentSearch.getTransactionToDate());
 
 		return contract;
 	}

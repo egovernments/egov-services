@@ -168,6 +168,22 @@ class ViewProperty extends Component {
 			  this.setState({
 				  resultList: res.properties,
 			  })
+			  
+			  
+			  	var tQuery = {
+					businessService :'PT',
+					consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
+				}		
+		
+		
+				Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
+				  console.log('demands',res);
+				  currentThis.setState({demands : res.Demands})
+				}).catch((err)=> {
+					currentThis.setState({demands : []})
+				  console.log(err)
+				})
+			  
 		}
 	
       }).catch((err)=> {
@@ -348,23 +364,7 @@ class ViewProperty extends Component {
 		  this.setState({
 			  floorNumber: temp
 		  })
-		  
-		var taxDetailQuery = [{"id": "47"}, {"id": "48"}, {"id": "49"}, {"id": "50"}];
-		
-		
-		var tQuery = {
-			businessService :'Property Tax',
-			consumerCode:'AP-PT-2017/07/26-000230-12'
-		}		
-		
-		
-        Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
-          console.log('demands',res);
-          currentThis.setState({demands : res.Demands})
-        }).catch((err)=> {
-			currentThis.setState({demands : []})
-          console.log(err)
-        })
+		  		
   
 }
 
@@ -605,73 +605,26 @@ class ViewProperty extends Component {
                           </Card>
 					
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Amenities</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Property Factors</div>} />
                               <CardText>
 									<Col md={12} xs={12}>
 										
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Lift</div>
-												   {item.lift || 'NA'}
+												   <div style={{fontWeight:500}}>Toilet Factor</div>
+												   NA
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Toilets</div>
-												    {item.toilet || 'NA'}
+												   <div style={{fontWeight:500}}>Road Factor</div>
+												   NA
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Water Tap</div>
-												    {item.waterTap || 'NA'}
-											  </Col>
-										
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Electricity</div>
-												  {item.electricity || 'NA'}
-											  </Col>
-											</Row>
-										 
-											<Row>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Attached Bathroom</div>
-												   {item.attachedBathroom || 'NA'}
-											  </Col>
-					
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Water Harvesting</div>
-												    {item.waterHarvesting || 'NA'}
-											  </Col>
-											
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Cable Connection</div>
-												  {item.cableConnection || 'NA'}
-											  </Col>
-											</Row>
-									
-									</Col>
-									<div className="clearfix"></div>
-                              </CardText>
-                          </Card>
-				
-						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Construction Type</div>} />
-                              <CardText>
-									<Col md={12} xs={12}>
-										
-											<Row>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Floor Type</div>
-												   {getNameByCode(this.state.floortypes ,item.propertyDetail.floorType) || 'NA'}
+												   <div style={{fontWeight:500}}>Lift Factor</div>
+												   NA
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Wall Type</div>
-												    {getNameByCode(this.state.walltypes ,item.propertyDetail.wallType) || 'NA'}
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Roof Type</div>
-												   {getNameByCode(this.state.rooftypes ,item.propertyDetail.roofType) || 'NA'}
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Wood Type</div>
-												   {getNameByCode(this.state.woodtypes ,item.propertyDetail.woodType) || 'NA'}
+												   <div style={{fontWeight:500}}>Parking Factor</div>
+												   NA
 											  </Col>
 											</Row>
 										 

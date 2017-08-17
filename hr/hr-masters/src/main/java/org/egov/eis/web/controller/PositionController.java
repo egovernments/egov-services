@@ -134,15 +134,12 @@ public class PositionController {
 	 * @return ResponseEntity<?>
 	 */
 
-	@PostMapping("/{id}/_update")
+	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody PositionRequest positionRequest,
-			@PathVariable(required = true, name = "id") Long id, BindingResult bindingResult) {
-
+	public ResponseEntity<?> update(@RequestBody PositionRequest positionRequest, BindingResult bindingResult) {
 		ResponseEntity<?> errorResponseEntity = validatePositionRequest(positionRequest, bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
-		positionRequest.getPosition().get(0).setId(id);
 		return positionService.updatePosition(positionRequest);
 	}
 
@@ -175,6 +172,7 @@ public class PositionController {
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, positionRequest.getRequestInfo());
 		}
+
 		return null;
 	}
 

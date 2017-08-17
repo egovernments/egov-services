@@ -60,6 +60,7 @@ import lombok.Setter;
 public class FundEntity extends AuditableEntity {
 
 	public static final String TABLE_NAME = "egf_fund";
+	public static final String SEQUENCE_NAME = "seq_egf_fund";
 	public static final String ALIAS = "fund";
 
 	private static final long serialVersionUID = 7977534010758407945L;
@@ -78,8 +79,6 @@ public class FundEntity extends AuditableEntity {
 
 	@NotNull
 	protected Long level;
-
-	protected Boolean isParent;
 
 	@NotNull
 	protected Boolean active;
@@ -100,7 +99,6 @@ public class FundEntity extends AuditableEntity {
 		fund.setIdentifier(this.identifier);
 		fund.setActive(this.active);
 		fund.setParent(parent);
-		fund.setIsParent(this.isParent);
 		fund.setLevel(this.level);
 		return fund;
 
@@ -117,7 +115,6 @@ public class FundEntity extends AuditableEntity {
 		this.parentId = fund.getParent() != null ? fund.getParent().getId() : null;
 		this.active = fund.getActive();
 		this.level = fund.getLevel();
-		this.isParent = fund.getIsParent();
 		return this;
 
 	}

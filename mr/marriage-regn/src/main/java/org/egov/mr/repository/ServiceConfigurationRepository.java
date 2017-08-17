@@ -7,16 +7,15 @@ import java.util.Map;
 import org.egov.mr.repository.querybuilder.ServiceConfigurationQueryBuilder;
 import org.egov.mr.repository.rowmapper.ServiceConfigurationKeyValuesRowMapper;
 import org.egov.mr.web.contract.ServiceConfigurationSearchCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class ServiceConfigurationRepository {
+import lombok.extern.slf4j.Slf4j;
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceConfigurationRepository.class);
+@Repository
+@Slf4j
+public class ServiceConfigurationRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -33,8 +32,9 @@ public class ServiceConfigurationRepository {
 		String query = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);
 
-		LOGGER.info("QUERY : " + query);
-		LOGGER.info("preparedStatementValues : " + preparedStatementValues);
+		log.info("ServiceConfigurationRepository query: " + query);
+		log.info("preparedStatementValues : " + preparedStatementValues);
+
 		Map<String, List<String>> hrConfigurationKeyValues = jdbcTemplate.query(query,
 				preparedStatementValues.toArray(), serviceConfigurationKeyValuesRowMapper);
 

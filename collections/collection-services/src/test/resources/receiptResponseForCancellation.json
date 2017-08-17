@@ -10,6 +10,7 @@
     "Receipt": [
         {
             "tenantId": "default",
+            "transactionId": "10127859476354",
             "Bill": [ {
                 "id": null,
                 "payeeName": "abc",
@@ -18,7 +19,7 @@
                 "isActive": null,
                 "isCancelled": null,
                 "paidBy": "abc",
-                "BillDetail": [
+                "billDetails": [
                     {
                         "id": "1",
                         "bill": null,
@@ -46,7 +47,7 @@
                         "amountPaid": null,
                         "cancellationRemarks": "receipt number data entered is not proper",
                         "status": "CANCELLED",
-                        "BillAccountDetail": [
+                        "billAccountDetails": [
                             {
                                 "glcode": "456",
                                 "order": null,

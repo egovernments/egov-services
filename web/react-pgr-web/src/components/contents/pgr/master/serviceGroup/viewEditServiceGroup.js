@@ -1,13 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import ImagePreview from '../../../../common/ImagePreview.js';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-import {Link, Route} from 'react-router-dom';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -19,17 +14,13 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-
-
-const buttons = require('datatables.net-buttons-bs');
-
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
 const styles = {
@@ -38,30 +29,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -77,14 +44,6 @@ class ViewEditServiceGroup extends Component {
     }
 
     componentWillMount() {
-        $('#searchTable').DataTable({
-             dom: 'lBfrtip',
-             buttons: [],
-              bDestroy: true,
-              language: {
-                 "emptyTable": "No Records"
-              }
-        });
     }
 
     componentWillUpdate() {
@@ -101,15 +60,19 @@ class ViewEditServiceGroup extends Component {
     }
 
     componentDidUpdate() {
-      if(this.state.modify)
-        $('#searchTable').DataTable({
-             dom: 'lBfrtip',
-             buttons: [],
-              bDestroy: true,
-              language: {
-                 "emptyTable": "No Records"
-              }
+      if(this.state.modify){
+        var t = $('#searchTable').DataTable({
+              dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+              buttons: ['excel', 'pdf'],
+              bDestroy: true
         });
+
+        t.on( 'order.dt search.dt', function () {
+            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+      }
     }
 
     componentDidMount() {
@@ -225,7 +188,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,

@@ -15,20 +15,20 @@ var dat = {
         "multiple": false,
         "fields": [{
             "name": "AssessmentNumber",
-            "jsonPath": "connection.property.propertyIdentifier",
+            "jsonPath": "Connection.property.propertyIdentifier",
             "label": "wc.create.groups.applicantDetails.propertyIdentifier",
             "pattern": "",
             "type": "textSearch",
             "isRequired": true,
             "isDisabled": false,
             "autoCompleteDependancy": {
-              "autoCompleteUrl": "/pt-property/properties/_search?upicNo={value}&tenantId=default",
+              "autoCompleteUrl": "/pt-property/properties/_search?upicNumber={value}&tenantId=default",
               "autoFillFields": {
                 "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
                 "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.asset.email": "properties[0].owners[0].emailId",
                 "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.": "properties[0].propertyDetail.noOfFloors"
+                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors"
 
               }
             },
@@ -148,7 +148,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.propertyType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
             "depedants": [{
@@ -159,7 +159,7 @@ var dat = {
               {
                 "jsonPath": "Connection.property.usageType",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..usageType|$..usageType"
+                "pattern": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..usageCode|$..usageType"
               },
               {
                 "jsonPath": "Connection.hscPipeSizeType",
@@ -176,10 +176,12 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.categoryType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+      			"defaultValue": [],
+      			"url":'/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..categoryTypeName|$..categoryTypeName'
           },
           {
             "name": "UsageType",
@@ -187,10 +189,30 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+      			"defaultValue": [],
+      			"url":'',
+            "depedants": [{
+                "jsonPath": "Connection.subUsageType",
+                "type": "dropDown",
+                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..code|$..name"
+              }]
+          },
+          {
+            "name": "subUsageType",
+            "jsonPath": "Connection.subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":""
           },
           {
             "name": "hscPipeSizeType",
@@ -198,10 +220,12 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.hscPipeSizeType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+			"defaultValue": [],
+			"url":''
           },
           {
             "name": "applicationType",
@@ -259,7 +283,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.sourceType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
             "requiredErrMsg": "",
@@ -271,7 +295,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.supplyType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
             "requiredErrMsg": "",
@@ -284,7 +308,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.waterTreatment",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
             "requiredErrMsg": "",
@@ -296,7 +320,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.fields.sumpCapacity",
             "pattern": "",
             "type": "number",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -305,13 +329,32 @@ var dat = {
             "name": "numberOfPersons",
             "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
-            "pattern": "",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "depedants":[{
+                "jsonPath":"Connection.numberOfFamily",
+                "type":"textField",
+                "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                "rg":"",
+                "isRequired": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }]
+          },
+          {
+            "name": "numberOfFamily",
+            "jsonPath": "Connection.numberOfFamily",
+            "label": "wc.create.numberOfFamily",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
         ]
       },
       {
@@ -346,9 +389,9 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-              "name": "Connection.workflowDetails.approver",
+              "name": "Connection.workflowDetails.assignee",
               "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$..name"
             }]
           },
           {
@@ -363,9 +406,9 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-              "jsonPath": "Connection.workflowDetails.approver",
+              "jsonPath": "Connection.workflowDetails.assignee",
               "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$..name"
             }]
           },
           {
@@ -374,7 +417,7 @@ var dat = {
             "label": "wc.create.groups.approvalDetails.fields.Assignee",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name",
+            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$.Employee.*.id|$.Employee.*.name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -442,7 +485,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.propertyIdentifier",
             "pattern": "",
             "type": "textSearch",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -623,7 +666,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.applicationType",
             "pattern": "",
             "type": "text",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "isHidden": true,
             "defaultValue": "NEWCONNECTION",
@@ -636,7 +679,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.applicationType",
             "pattern": "",
             "type": "text",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "isHidden": true,
             "defaultValue": "INPROGRESS",
@@ -649,7 +692,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.billingType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getbillingtypes?|$..key|$..object",
             "requiredErrMsg": "",
@@ -661,7 +704,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.connectionType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
@@ -717,12 +760,31 @@ var dat = {
           },
           {
             "name": "numberOfPersons",
-            "jsonPath": "Connection[0].numberOfPersons",
+            "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
-            "pattern": "",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "depedants":[{
+                "jsonPath":"Connection.numberOfFamily",
+                "type":"textField",
+                "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                "rg":"",
+                "isRequired": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }]
+          },
+          {
+            "name": "numberOfFamily",
+            "jsonPath": "Connection.numberOfFamily",
+            "label": "wc.create.numberOfFamily",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }
@@ -916,7 +978,7 @@ var dat = {
           "label": "Acknowledgement Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -927,7 +989,7 @@ var dat = {
           "label": "Consumer Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -938,7 +1000,7 @@ var dat = {
           "label": "Name",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -949,7 +1011,7 @@ var dat = {
           "label": "Mobile Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -960,7 +1022,7 @@ var dat = {
           "label": "Locality",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -971,7 +1033,7 @@ var dat = {
           "label": "Revenue Ward",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
@@ -982,7 +1044,7 @@ var dat = {
           "label": "Door Number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""

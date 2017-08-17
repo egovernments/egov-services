@@ -57,6 +57,7 @@ public class BillingServiceApplication {
 	@Bean
 	public ObjectMapper getObjectMapper(){
 		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		return objectMapper;
 	}
 

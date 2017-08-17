@@ -35,6 +35,9 @@ public class ReceiptReq   {
   @NotNull
   @JsonProperty("Receipt")
   private List<Receipt> receipt = null;
+  
+  @JsonProperty("WorkflowDetails")
+  private WorkflowDetailsRequest workflowDetails;
 
 
 }

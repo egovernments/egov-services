@@ -40,8 +40,8 @@
 
 package org.egov.pgr.service;
 
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pgr.domain.model.ReceivingCenterType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ReceivingCenterTypeRepository;
@@ -52,61 +52,63 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 @Service
 public class ReceivingCenterTypeService {
 
-	public static final Logger logger = LoggerFactory.getLogger(ReceivingCenterTypeService.class);
+    public static final Logger logger = LoggerFactory.getLogger(ReceivingCenterTypeService.class);
 
-	@Autowired
-	private ReceivingCenterTypeRepository receivingCenterRepository;
+    @Autowired
+    private ReceivingCenterTypeRepository receivingCenterRepository;
 
-	@Autowired
-	private PGRProducer pgrProducer;
+    @Autowired
+    private PGRProducer pgrProducer;
 
-	public ReceivingCenterTypeReq create(final ReceivingCenterTypeReq centerTypeReq) {
-		return receivingCenterRepository.persistReceivingCenterType(centerTypeReq);
-	}
+    public ReceivingCenterTypeReq create(final ReceivingCenterTypeReq centerTypeReq) {
+        return receivingCenterRepository.persistReceivingCenterType(centerTypeReq);
+    }
 
-	public ReceivingCenterTypeReq update(final ReceivingCenterTypeReq centerTypeReq) {
-		return receivingCenterRepository.persistModifyReceivingCenterType(centerTypeReq);
-	}
-	
+    public ReceivingCenterTypeReq update(final ReceivingCenterTypeReq centerTypeReq) {
+        return receivingCenterRepository.persistModifyReceivingCenterType(centerTypeReq);
+    }
+
     public List<ReceivingCenterType> getAllReceivingCenterTypes(final ReceivingCenterTypeGetReq centerTypeGetRequest) {
         return receivingCenterRepository.getAllReceivingCenterTypes(centerTypeGetRequest);
 
     }
-	
+
     public boolean checkReceivingCenterTypeByCode(final String code, final String tenantId) {
-        return receivingCenterRepository.checkReceivingCenterTypeByCode(code,tenantId);
+        return receivingCenterRepository.checkReceivingCenterTypeByCode(code, tenantId);
     }
-    
-    public boolean checkReceivingCenterNameExists(ReceivingCenterType receivingCenter, boolean flag) {
-    	return receivingCenterRepository.checkReceivingCenterNameExists(receivingCenter, flag);
+
+    public boolean checkReceivingCenterNameExists(ReceivingCenterType receivingCenter, String mode) {
+        return receivingCenterRepository.checkReceivingCenterNameExists(receivingCenter, mode);
     }
-    
-    
 
-	public ReceivingCenterType sendMessage(String topic,String key,final ReceivingCenterTypeReq centerTypeRequest) {
+    public boolean checkReceivingCenterCodeName(final String code, final String name, final String tenantId, final String mode) {
+        return receivingCenterRepository.checkReceivingCenterTypeByCodeAndName(code, name, tenantId, mode);
+    }
 
-		final ObjectMapper mapper = new ObjectMapper();
-		String receivingCenterValue = null;
 
-		try {
-			logger.info("createReceivingCenterType Request::" + centerTypeRequest);
-			receivingCenterValue = mapper.writeValueAsString(centerTypeRequest);
-			logger.info("createReceivingCenterType::" + receivingCenterValue);
-		} catch (final JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		try {
-			pgrProducer.sendMessage(topic, key, receivingCenterValue);
-		} catch (final Exception ex) {
-			logger.error("Exception Encountered : " + ex);
-		}
-		return centerTypeRequest.getCenterType();
-	}
+    public ReceivingCenterType sendMessage(String topic, String key, final ReceivingCenterTypeReq centerTypeRequest) {
+
+        final ObjectMapper mapper = new ObjectMapper();
+        String receivingCenterValue = null;
+
+        try {
+            logger.info("createReceivingCenterType Request::" + centerTypeRequest);
+            receivingCenterValue = mapper.writeValueAsString(centerTypeRequest);
+            logger.info("createReceivingCenterType::" + receivingCenterValue);
+        } catch (final JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        try {
+            pgrProducer.sendMessage(topic, key, receivingCenterValue);
+        } catch (final Exception ex) {
+            logger.error("Exception Encountered : " + ex);
+        }
+        return centerTypeRequest.getCenterType();
+    }
 
 }

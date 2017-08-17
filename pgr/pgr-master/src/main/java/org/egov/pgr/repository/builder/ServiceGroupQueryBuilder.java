@@ -51,7 +51,7 @@ public class ServiceGroupQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceGroupQueryBuilder.class);
 
-	private static final String BASE_QUERY = "SELECT id, code, name, description, tenantId, keyword "
+	private static final String BASE_QUERY = "SELECT id, code, name, description,active, tenantId, keyword "
 			+ " FROM egpgr_complainttype_category ";
 
 	@SuppressWarnings("rawtypes")
@@ -124,12 +124,12 @@ public class ServiceGroupQueryBuilder {
 	}
 
 	public String insertServiceGroupQuery() {
-		return "INSERT INTO egpgr_complainttype_category(id, code, name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,keyword) values "
-				+ "(NEXTVAL('seq_egpgr_complainttype_category'),?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO egpgr_complainttype_category(id, code, name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,keyword) values "
+				+ "(NEXTVAL('seq_egpgr_complainttype_category'),?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	public String updateServiceGroupQuery() {
-		return "UPDATE egpgr_complainttype_category SET name = ?, description = ?, createdby = ?, lastmodifiedby = ?, "
+		return "UPDATE egpgr_complainttype_category SET name = ?, description = ?,active = ?, createdby = ?, lastmodifiedby = ?, "
 				+ "createddate = ?, lastmodifieddate = ?, tenantid = ?, keyword = ? where code = ?";
 	}
 	
@@ -138,11 +138,11 @@ public class ServiceGroupQueryBuilder {
 	}
 	
 	public static String checkIfNameTenantIdAvailable() { 
-		return "SELECT count(*) FROM egpgr_complainttype_category WHERE upper(name) = ? AND tenantid = ? " ;
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(name)) = ? AND tenantid = ? " ;
 	}
 
 	public static String checkIfNameTenantIdAvailableUpdate() { 
-		return "SELECT count(*) FROM egpgr_complainttype_category WHERE upper(name) = ? AND tenantid = ? AND id NOT IN (?) " ;
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(name)) = ? AND tenantid = ? AND id NOT IN (?) " ;
 	}
 
 	private static String getComplaintCategoryByKeyword(){

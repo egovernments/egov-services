@@ -15,10 +15,13 @@ import org.egov.egf.instrument.TestConfiguration;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.model.InstrumentType;
+import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
+import org.egov.egf.instrument.web.contract.InstrumentContract;
+import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -26,7 +29,6 @@ import org.egov.egf.master.web.repository.BankAccountContractRepository;
 import org.egov.egf.master.web.repository.BankContractRepository;
 import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -170,17 +172,18 @@ public class InstrumentServiceTest {
 	public final void test_fetch_instrumenttype() {
 
 		List<Instrument> instruments = getInstruments();
+		Pagination<InstrumentType> expextedResult = new Pagination<>();
+		InstrumentType it = InstrumentType.builder().name("name").description("description").active(true).id("1")
+				.build();
+		expextedResult.setPagedData(new ArrayList<>());
+		expextedResult.getPagedData().add(it);
+		instruments.get(0).setInstrumentType(it);
 
-		InstrumentType expextedResult = InstrumentType.builder().name("name").description("description").active(true)
-				.id("1").build();
-
-		instruments.get(0).setInstrumentType(expextedResult);
-
-		when(instrumentTypeRepository.findById(any(InstrumentType.class))).thenReturn(expextedResult);
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
-		assertEquals(expextedResult, actualResult.get(0).getInstrumentType());
+		assertEquals(expextedResult.getPagedData().get(0), actualResult.get(0).getInstrumentType());
 	}
 
 	@Test
@@ -188,12 +191,12 @@ public class InstrumentServiceTest {
 
 		List<Instrument> instruments = getInstruments();
 
-		BankContract expextedResult = BankContract.builder().name("name").description("description").active(true)
+		BankContract expextedResult = BankContract.builder().code("code").description("description").active(true)
 				.id("1").build();
 
 		instruments.get(0).setBank(expextedResult);
 
-		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(expextedResult);
+		when(bankContractRepository.findByCode(any(BankContract.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
@@ -210,7 +213,8 @@ public class InstrumentServiceTest {
 
 		instruments.get(0).setBankAccount(expextedResult);
 
-		when(bankAccountContractRepository.findById(any(BankAccountContract.class))).thenReturn(expextedResult);
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class)))
+				.thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
@@ -251,43 +255,42 @@ public class InstrumentServiceTest {
 		assertEquals(expextedResult, actualResult.get(0).getSurrenderReason());
 	}
 
-	@Ignore
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_instrumenttype_null() {
 
 		List<Instrument> instruments = getInstruments();
+		Pagination<InstrumentType> expextedResult = new Pagination<>();
+		InstrumentType it = InstrumentType.builder().name("name").description("description").active(true).id("1")
+				.build();
+		expextedResult.setPagedData(new ArrayList<>());
+		expextedResult.getPagedData().add(it);
+		instruments.get(0).setInstrumentType(it);
 
-		InstrumentType expextedResult = InstrumentType.builder().name("name").description("description").active(true)
-				.id("1").build();
-
-		instruments.get(0).setInstrumentType(expextedResult);
-
-		when(instrumentTypeRepository.findById(null)).thenReturn(expextedResult);
+		when(instrumentTypeRepository.search(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
-		assertEquals(expextedResult, actualResult.get(0).getInstrumentType());
+		assertEquals(expextedResult.getPagedData().get(0), actualResult.get(0).getInstrumentType());
+
 	}
 
-	@Ignore
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_bank_null() {
 
 		List<Instrument> instruments = getInstruments();
 
-		BankContract expextedResult = BankContract.builder().name("name").description("description").active(true)
+		BankContract expextedResult = BankContract.builder().code("code").description("description").active(true)
 				.id("1").build();
 
 		instruments.get(0).setBank(expextedResult);
 
-		when(bankContractRepository.findById(null)).thenReturn(expextedResult);
+		when(bankContractRepository.findByCode(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
 		assertEquals(expextedResult, actualResult.get(0).getBank());
 	}
 
-	@Ignore
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_bankaccount_null() {
 
@@ -298,14 +301,13 @@ public class InstrumentServiceTest {
 
 		instruments.get(0).setBankAccount(expextedResult);
 
-		when(bankAccountContractRepository.findById(null)).thenReturn(expextedResult);
+		when(bankAccountContractRepository.findByAccountNumber(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
 
 		assertEquals(expextedResult, actualResult.get(0).getBankAccount());
 	}
 
-	@Ignore
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_financialstatus_null() {
 
@@ -323,7 +325,6 @@ public class InstrumentServiceTest {
 		assertEquals(expextedResult, actualResult.get(0).getFinancialStatus());
 	}
 
-	@Ignore
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_surrenderreason_null() {
 
@@ -341,12 +342,61 @@ public class InstrumentServiceTest {
 		assertEquals(expextedResult, actualResult.get(0).getSurrenderReason());
 	}
 
+	@Test
+	public final void test_deposit() {
+
+		List<Instrument> expextedResult = getInstruments();
+
+		when(instrumentRepository.findById(any(Instrument.class))).thenReturn(getInstruments().get(0));
+		when(financialStatusContractRepository.findByModuleCode(any(FinancialStatusContract.class)))
+				.thenReturn(getFinancialStatusContract());
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.deposit(getInstrumentRequest(), errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	@Test
+	public final void test_dishonor() {
+
+		List<Instrument> expextedResult = getInstruments();
+
+		when(instrumentRepository.findById(any(Instrument.class))).thenReturn(getInstruments().get(0));
+		when(financialStatusContractRepository.findByModuleCode(any(FinancialStatusContract.class)))
+				.thenReturn(getFinancialStatusContract());
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.dishonor(getInstrumentRequest(), errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+	}
+
+	private FinancialStatusContract getFinancialStatusContract() {
+		return FinancialStatusContract.builder().code("Deposit").moduleType("Instrument").build();
+	}
+
+	private InstrumentRequest getInstrumentRequest() {
+		InstrumentRequest instrumentDepositRequest = new InstrumentRequest();
+		instrumentDepositRequest.setInstruments(getInstrumentContracts());
+		instrumentDepositRequest.getInstruments().get(0).setId("instrumentDepositId");
+		return instrumentDepositRequest;
+	}
+
 	private List<Instrument> getInstruments() {
 		List<Instrument> instruments = new ArrayList<Instrument>();
 		Instrument instrument = Instrument.builder().build();
 		instrument.setTenantId("default");
 		instruments.add(instrument);
 		return instruments;
+	}
+	
+	private List<InstrumentContract> getInstrumentContracts() {
+		List<InstrumentContract> instrumentContracts = new ArrayList<InstrumentContract>();
+		InstrumentContract instrumentContract = InstrumentContract.builder().build();
+		instrumentContract.setTenantId("default");
+		instrumentContracts.add(instrumentContract);
+		return instrumentContracts;
 	}
 
 }

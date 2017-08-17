@@ -63,16 +63,16 @@ import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.PtPropertyApplication;
-import org.egov.property.consumer.Producer;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.services.Masterservice;
 import org.egov.property.services.PersisterService;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -87,10 +87,10 @@ public class PropertyServiceTest {
 	Masterservice masterService;
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
-	Producer producer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	PersisterService persisterService;
@@ -194,8 +194,8 @@ public class PropertyServiceTest {
 		String name = "Mansard  Roof";
 		String code = "256";
 		String nameLocal = "Mansard";
-		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+		Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
+		Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 		RequestInfo requestInfo = getRequestInfoObject();
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
@@ -304,8 +304,8 @@ public class PropertyServiceTest {
 		String name = "Maple Wood Type";
 		String code = "256";
 		String nameLocal = "Maple";
-		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+		Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
+		Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 		RequestInfo requestInfo = getRequestInfoObject();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
@@ -416,8 +416,8 @@ public class PropertyServiceTest {
 		String name = "Tile Flooring";
 		String code = "256";
 		String nameLocal = "Tile";
-		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+		Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
+		Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 
 		RequestInfo requestInfo = getRequestInfoObject();
 
@@ -563,8 +563,8 @@ public class PropertyServiceTest {
 			String nameLocal = "kumar";
 			Boolean active = true;
 			Integer orderNumber = 1;
-			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
+			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 
 			OccuapancyMasterResponse occuapancyMasterResponse = masterService.getOccuapancyMaster(
 					getRequestInfoObject(), tenantId, new Integer[] { Integer.valueOf(occupancyId.toString()) }, name,
@@ -698,8 +698,8 @@ public class PropertyServiceTest {
 			String nameLocal = "kumar";
 			Boolean active = true;
 			Integer orderNumber = 1;
-			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
+			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 
 			PropertyTypeResponse propertyTypeResponse = masterService.getPropertyTypeMaster(getRequestInfoObject(),
 					tenantId, ids, name, code, nameLocal, active, orderNumber, pageSize, offset);
@@ -830,8 +830,8 @@ public class PropertyServiceTest {
 			String name = "anil";
 			String code = "testcode";
 			String nameLocal = "kumar";
-			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
+			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 
 			DepartmentResponseInfo departmentResponse = masterService.getDepartmentMaster(getRequestInfoObject(),
 					tenantId, ids, category, name, code, nameLocal, pageSize, offset);
@@ -859,7 +859,6 @@ public class PropertyServiceTest {
 			usageMaster.setCode("1234");
 			usageMaster.setNameLocal("test_namelocal");
 			usageMaster.setDescription("test_description");
-			usageMaster.setParent(new Long(1));
 
 			long createdTime = new Date().getTime();
 
@@ -899,7 +898,6 @@ public class PropertyServiceTest {
 			usageMaster.setCode("1234");
 			usageMaster.setNameLocal("update_namelocal");
 			usageMaster.setDescription("update_description");
-			usageMaster.setParent(new Long(1));
 
 			long createdTime = new Date().getTime();
 
@@ -1012,8 +1010,8 @@ public class PropertyServiceTest {
 			String name = "Yoyo";
 			String code = "1234";
 			String nameLocal = "test_namelocal";
-			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
+			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 			requestInfoWrapper.setRequestInfo(getRequestInfoObject());
 
@@ -1270,8 +1268,7 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(getRequestInfoObject());
 
-			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
-					propertyRequest);
+			kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1506,8 +1503,7 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(getRequestInfoObject());
 
-			producer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
-					propertyRequest);
+			kafkaTemplate.send(propertiesManager.getUpdateWorkflow(), propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

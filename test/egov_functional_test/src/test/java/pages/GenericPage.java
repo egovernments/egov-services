@@ -3,15 +3,10 @@ package pages;
 import org.apache.commons.lang.math.RandomUtils;
 import org.json.JSONObject;
 import org.openqa.selenium.*;
-<<<<<<< c88e212e92195f315f120e3a67946ee592be0284
-=======
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
->>>>>>> Modified the citizen register complaint scenario
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

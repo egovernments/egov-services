@@ -64,6 +64,7 @@ import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.GlCodeMasterCriteria;
+import org.egov.demand.model.Owner;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
@@ -179,8 +180,10 @@ public class BillService {
 		Map<String,BusinessServiceDetail> businessServiceMap = getBusinessService(businessServices,tenantId,requestInfo);
 		log.info("prepareBill map:" +map);
 		Demand demand = demands.get(0);
-		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
-				payeeEmail(demand.getOwner().getEmailId()).payeeName(demand.getOwner().getName()).tenantId(tenantId).build();
+		Owner owner = demand.getOwner();
+		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(owner.getPermanentAddress()).
+				payeeEmail(owner.getEmailId()).payeeName(owner.getName()).mobileNumber(owner.getMobileNumber())
+				.tenantId(tenantId).build();
 
 		List<BillDetail> billDetails = new ArrayList<>();
 

@@ -120,8 +120,6 @@ public class InstrumentController {
 
 		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
 			instrument = mapper.toDomain(instrumentContract);
-			instrument.setLastModifiedBy(instrumentRequest.getRequestInfo().getUserInfo());
-			instrument.setLastModifiedDate(new Date());
 			instruments.add(instrument);
 		}
 

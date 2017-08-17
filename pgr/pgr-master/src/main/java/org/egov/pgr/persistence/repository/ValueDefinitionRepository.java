@@ -40,6 +40,7 @@ public class ValueDefinitionRepository {
         parametersMap.put("servicecode", valueDefinition.getServiceCode());
         parametersMap.put("tenantid", valueDefinition.getTenantId());
         parametersMap.put("active", valueDefinition.getActive());
+        parametersMap.put("required", valueDefinition.getRequired());
         parametersMap.put("key", valueDefinition.getKey());
         parametersMap.put("name", valueDefinition.getName());
         parametersMap.put("attributecode", valueDefinition.getAttributeCode());

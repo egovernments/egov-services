@@ -10,7 +10,7 @@ public class ValueDefinitionQueryBuilder {
     }
 
     public String getInsertQuery(){
-        return "INSERT INTO value_definition (servicecode, attributecode, key, name, tenantid, active, createddate, createdby)"+
-                "VALUES (:servicecode, :attributecode, :key, :name, :tenantid, :active, :createddate, :createdby)";
+        return "INSERT INTO value_definition (servicecode, attributecode, key, name, tenantid, active, required, createddate, createdby)"+
+                "VALUES (:servicecode, :attributecode, :key, :name, :tenantid, :active, :required, :createddate, :createdby)";
     }
 }

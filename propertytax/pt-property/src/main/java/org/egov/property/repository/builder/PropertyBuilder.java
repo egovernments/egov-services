@@ -34,12 +34,6 @@ public class PropertyBuilder {
 
 	public static final String PROPERTY_BY_TENANT_UPIC_NO = "select * from egpt_property where upicnumber=? and tenantId=?";
 
-	public static final String INSERT_PROPERTYHISTORY_QUERY = "INSERT INTO egpt_property_history ("
-			+ "tenantId, upicNumber, oldUpicNumber, vltUpicNumber,creationReason, assessmentDate,"
-			+ " occupancyDate, gisRefNo,isAuthorised, isUnderWorkflow, channel,"
-			+ " createdBy,lastModifiedBy, createdTime,lastModifiedTime,demands,sequenceNo,id)"
-			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
 	public static final String UPDATE_TITLETRANSFERPROPERTY_QUERY = "UPDATE egpt_property set isUnderWorkflow = ?, lastModifiedBy = ?,"
 			+ " lastModifiedTime = ? WHERE id = ?";
 

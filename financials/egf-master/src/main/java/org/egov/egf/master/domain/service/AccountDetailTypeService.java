@@ -45,6 +45,7 @@ public class AccountDetailTypeService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(accountdetailtypes, "AccountDetailTypes to update must not be null");
 				for (AccountDetailType accountDetailType : accountdetailtypes) {
+				        Assert.notNull(accountDetailType.getId(), "Account Detail Type ID to update must not be null");
 					validator.validate(accountDetailType, errors);
 				}
 				break;

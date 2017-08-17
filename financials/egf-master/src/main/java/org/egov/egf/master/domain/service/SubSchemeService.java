@@ -50,6 +50,7 @@ public class SubSchemeService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(subschemes, "SubSchemes to update must not be null");
 				for (SubScheme subScheme : subschemes) {
+                                        Assert.notNull(subScheme.getId(), "SubScheme ID to update must not be null");
 					validator.validate(subScheme, errors);
 				}
 				break;

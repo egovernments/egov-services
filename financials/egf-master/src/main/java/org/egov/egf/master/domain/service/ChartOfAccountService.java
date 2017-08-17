@@ -51,6 +51,7 @@ public class ChartOfAccountService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(chartofaccounts, "ChartOfAccounts to update must not be null");
 				for (ChartOfAccount chartOfAccount : chartofaccounts) {
+				        Assert.notNull(chartOfAccount.getId(), "ChartOfAccount ID to update must not be null");
 					validator.validate(chartOfAccount, errors);
 				}
 				break;

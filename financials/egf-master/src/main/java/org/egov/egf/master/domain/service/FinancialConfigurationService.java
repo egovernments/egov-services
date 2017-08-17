@@ -49,6 +49,7 @@ public class FinancialConfigurationService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(financialconfigurations, "FinancialConfigurations to update must not be null");
 				for (FinancialConfiguration financialConfiguration : financialconfigurations) {
+				        Assert.notNull(financialConfiguration.getId(), "Financial Configuration ID to update must not be null");
 					validator.validate(financialConfiguration, errors);
 				}
 				break;

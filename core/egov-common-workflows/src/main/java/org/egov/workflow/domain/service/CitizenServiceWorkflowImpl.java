@@ -23,6 +23,7 @@ import org.egov.workflow.persistence.entity.WorkflowTypes;
 import org.egov.workflow.persistence.repository.AssignmentRepository;
 import org.egov.workflow.persistence.repository.PositionRepository;
 import org.egov.workflow.persistence.repository.UserRepository;
+import org.egov.workflow.persistence.service.ComplaintRouterService;
 import org.egov.workflow.persistence.service.StateService;
 import org.egov.workflow.persistence.service.WorkFlowMatrixService;
 import org.egov.workflow.persistence.service.WorkflowTypesService;
@@ -46,10 +47,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WorkflowMatrixImpl implements Workflow {
+public class CitizenServiceWorkflowImpl implements Workflow {
 
-	private static Logger LOG = LoggerFactory.getLogger(WorkflowMatrixImpl.class);
+	private static Logger LOG = LoggerFactory.getLogger(CitizenServiceWorkflowImpl.class);
+
 	public static final String SERVICE_CATEGORY_NAME = "serviceCategoryName";
+	public static final String NATURE_OF_TASK = "natureOfTask";
 
 	@Autowired
 	private StateService stateService;
@@ -69,6 +72,9 @@ public class WorkflowMatrixImpl implements Workflow {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private ComplaintRouterService complaintRouterService;
+
 	@Transactional
 	@Override
 	public ProcessInstanceResponse start(ProcessInstanceRequest processInstanceRequest) {
@@ -85,14 +91,14 @@ public class WorkflowMatrixImpl implements Workflow {
 			tenantId = processInstanceRequest.getProcessInstance().getTenantId();
 
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
+		WorkFlowMatrix wfMatrix = null;
 
-		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
-				null, null, tenantId);
-
-		Position owner = processInstance.getAssignee();
-		if (processInstance.getAssignee() != null && processInstance.getAssignee().getId() != null)
-			owner = positionRepository.getById(Long.valueOf(processInstance.getAssignee().getId()), tenantId,
-					processInstanceRequest.getRequestInfo());
+		wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null, null, null,
+				tenantId);
+		if (wfMatrix == null) {
+			wfMatrix = workflowService.getWfMatrix(processInstance.getValueForKey(SERVICE_CATEGORY_NAME), null, null,
+					null, null, null, tenantId);
+		}
 
 		final State state = new State();
 		state.setTenantId(tenantId);
@@ -101,22 +107,9 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setStatus(StateStatus.INPROGRESS);
 		state.setValue(wfMatrix.getNextState());
 		state.setComments(processInstance.getComments());
-		if (owner == null) {
-			LOG.error("Owner info is not availble from respective service");
-			state.setOwnerPosition(processInstance.getAssignee().getId());
-		} else {
-			state.setOwnerPosition(owner.getId());
-		}
+		state.setOwnerPosition(resolveAssignee(processInstance, processInstanceRequest.getRequestInfo()));
 
-		Long userId;
-		if (requestInfo.getUserInfo().getTenantId() != null && !requestInfo.getUserInfo().getTenantId().isEmpty()) {
-			// TO-DO We need to remove this call to user service for user
-			// details, once erp is sending userinfo from user microservice.
-			UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
-			userId = userResponse.getUsers().get(0).getId();
-		} else {
-			userId = requestInfo.getUserInfo().getId();
-		}
+		Long userId = requestInfo.getUserInfo().getId();
 
 		if (processInstance.getInitiatorPosition() != null)
 			state.setInitiatorPosition(processInstance.getInitiatorPosition());
@@ -132,7 +125,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByTypeAndTenantId(state.getType(), tenantId);
 		state.setMyLinkId(type.getLink());
 
-		state.setNatureOfTask(type.getDisplayName());
+		state.setNatureOfTask(processInstance.getValueForKey(NATURE_OF_TASK));
 		state.setExtraInfo(processInstance.getDetails());
 		updateAuditDetails(state, processInstanceRequest.getRequestInfo().getUserInfo());
 		stateService.create(state);
@@ -141,6 +134,17 @@ public class WorkflowMatrixImpl implements Workflow {
 		ProcessInstanceResponse response = new ProcessInstanceResponse();
 		response.setProcessInstance(processInstance);
 		return response;
+	}
+
+	private Long resolveAssignee(final ProcessInstance processInstance, RequestInfo requestInfo) {
+
+		final String complaintTypeCode = processInstance.getValueForKey("complaintTypeCode");
+		final Long boundaryId = processInstance.getValueForKey("boundaryId") != null
+				? Long.valueOf(processInstance.getValueForKey("boundaryId")) : null;
+		final Long firstTimeAssignee = null;
+		final Position response = complaintRouterService.getAssignee(boundaryId, complaintTypeCode, firstTimeAssignee,
+				processInstance.getTenantId(), requestInfo);
+		return response.getId();
 	}
 
 	private void updateAuditDetails(State s, User u) {
@@ -172,13 +176,20 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (task.getAssignee() != null && task.getAssignee().getId() != null)
 			owner = positionRepository.getById(Long.valueOf(task.getAssignee().getId()), tenantId,
 					taskRequest.getRequestInfo());
+
 		// final WorkflowEntity entity = task.getEntity();
 		String dept = null;
 		if (task.getAttributes() != null && task.getAttributes().get("department") != null)
 			dept = task.getAttributes().get("department").getCode();
 
-		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null,
-				task.getStatus(), null, task.getTenantId());
+		WorkFlowMatrix wfMatrix = null;
+
+		wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null, task.getStatus(), null,
+				task.getTenantId());
+		if (wfMatrix == null) {
+			wfMatrix = workflowService.getWfMatrix(task.getValueForKey(SERVICE_CATEGORY_NAME), dept, null, null,
+					task.getStatus(), null, task.getTenantId());
+		}
 
 		String nextState = wfMatrix.getNextState();
 		final State state = stateService.findByIdAndTenantId(Long.valueOf(task.getId()), tenantId);
@@ -192,21 +203,8 @@ public class WorkflowMatrixImpl implements Workflow {
 			ownerId = state.getInitiatorPosition();
 			if (ownerId != null) {
 				Position p = Position.builder().id(ownerId).build();
-				;
 				task.setAssignee(p);
 			}
-			// below logic required to show the messages only....
-			/*
-			 * final Attribute approverDesignationName = new Attribute();
-			 * approverDesignationName.setCode(owner.getDeptdesig().
-			 * getDesignation().getName());
-			 * task.getAttributes().put("approverDesignationName",
-			 * approverDesignationName);
-			 * 
-			 * final Attribute approverName = new Attribute();
-			 * approverName.setCode(getApproverName(owner));
-			 * task.getAttributes().put("approverName", approverName);
-			 */
 			nextState = "Rejected";
 		}
 		if (task.getAction().equalsIgnoreCase(WorkflowConstants.ACTION_CANCEL)) {
@@ -459,23 +457,5 @@ public class WorkflowMatrixImpl implements Workflow {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	/*
-	 * * @Override public List<Object> getAssignee(final String deptCode, final
-	 * String designationName) { final Department dept =
-	 * departmentService.getDepartmentByCode(deptCode); final Long
-	 * ApproverDepartmentId = dept.getId(); final Designation desig =
-	 * designationService.getDesignationByName(designationName); final Long
-	 * DesignationId = desig.getId(); if (DesignationId != null && DesignationId
-	 * != -1) { final HashMap<String, String> paramMap = new HashMap<String,
-	 * String>(); if (ApproverDepartmentId != null && ApproverDepartmentId !=
-	 * -1) paramMap.put("departmentId", ApproverDepartmentId.toString());
-	 * paramMap.put("DesignationId", DesignationId.toString()); approverList =
-	 * new ArrayList<Object>(); final List<Assignment> assignmentList =
-	 * assignmentService
-	 * .findAllAssignmentsByDeptDesigAndDates(ApproverDepartmentId,
-	 * DesignationId, new Date()); for (final Assignment assignment :
-	 * assignmentList) approverList.add(assignment); } return approverList; }
-	 */
 
 }

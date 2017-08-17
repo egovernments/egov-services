@@ -37,29 +37,27 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
 package org.egov.workflow.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Builder
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class RequestInfoWrapper {
+@NoArgsConstructor
+public class EscalationHierarchy {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    private Long fromPosition;
+
+    private String serviceCode;
+
+    private Long toPosition;
+
+    private String tenantId;
+
+    private Long department;
+
+    private Long designation;
 
 }

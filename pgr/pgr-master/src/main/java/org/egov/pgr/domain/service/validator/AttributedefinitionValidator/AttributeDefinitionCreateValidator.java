@@ -98,6 +98,15 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 				throw new PGRMasterException(error);
 				
 			}
+			/*
+			if(!attributeDefinition.isValueList())
+			{
+				HashMap<String, String> error = new HashMap<>();
+				error.put("code", "AttributeDefinition Vaalidator.13");
+				error.put("field", "AttributeDefinition.dataType");
+				error.put("message", "Can not have attrib values");
+				throw new PGRMasterException(error);
+			}*/
 			
 			
 	}

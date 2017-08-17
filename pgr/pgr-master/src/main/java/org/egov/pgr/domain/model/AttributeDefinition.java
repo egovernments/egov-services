@@ -60,6 +60,14 @@ public class AttributeDefinition {
     	return true;
     }
     
+   /* public boolean isValueList(){
+    	if(dataType != null)
+    	{
+    		return (dataType.equalsIgnoreCase("multivaluelist") || dataType.equalsIgnoreCase("singlevaluelist"));
+    	}
+    	return true;
+    }*/
+    
     public boolean isDescriptionLengthMatch(){
     	if(description != null)
     	{

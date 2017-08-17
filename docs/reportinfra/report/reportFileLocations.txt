@@ -1,2 +1,2 @@
-file://ws/egov-services/pgr/pgr-master/src/main/resources/application.yml
-file://ws/egov-services/docs/collections/reports/report.yml
+https://raw.githubusercontent.com/egovernments/egov-services/master/docs/pgr/report/pgrreport.yml
+https://raw.githubusercontent.com/egovernments/egov-services/master/docs/collections/reports/collectionreport.yml

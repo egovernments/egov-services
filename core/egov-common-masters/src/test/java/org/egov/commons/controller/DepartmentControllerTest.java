@@ -95,7 +95,7 @@ public class DepartmentControllerTest {
                 .thenReturn(getListOfModelDepartments());
 
         mockMvc.perform(
-                post("/departments/v1/_search?active=true&tenantId=default&ids=1,2&sortBy=code&sortOrder=desc")
+                post("/departments/v1/_search?active=true&tenantId=default&id=1,2&sortBy=code&sortOrder=desc")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(getFileContents("departmentRequest.json")))
                 .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -105,7 +105,7 @@ public class DepartmentControllerTest {
 
     private DepartmentGetRequest getDepartmentGetRequest() {
         return DepartmentGetRequest.builder().active(true).tenantId("default").sortBy("code").sortOrder("desc")
-                .ids(Arrays.asList(1L, 2L)).build();
+                .id(Arrays.asList(1L, 2L)).build();
     }
 
 

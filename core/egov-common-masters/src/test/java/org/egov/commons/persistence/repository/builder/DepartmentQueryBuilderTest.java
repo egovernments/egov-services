@@ -32,7 +32,7 @@ public class DepartmentQueryBuilderTest {
         DepartmentQueryBuilder builder = new DepartmentQueryBuilder(searchPageSize);
         departmentGetRequest.setName("Health");
         departmentGetRequest.setActive(true);
-        departmentGetRequest.setIds(Arrays.asList(1L));
+        departmentGetRequest.setId(Arrays.asList(1L));
         departmentGetRequest.setTenantId("default");
         departmentGetRequest.setSortBy("code");
         departmentGetRequest.setSortOrder("DESC");
@@ -42,7 +42,7 @@ public class DepartmentQueryBuilderTest {
         assertEquals(
                 "SELECT id, name, code, active, tenantId, createdBy, createdDate, lastModifiedBy,"
                         + " lastModifiedDate FROM eg_department"
-                        + " WHERE tenantId = ? AND ids IN (1) AND name = ? AND active = ? ORDER BY code DESC LIMIT ? OFFSET ?",
+                        + " WHERE tenantId = ? AND id IN (1) AND name = ? AND active = ? ORDER BY code DESC LIMIT ? OFFSET ?",
                 builder.getQuery(departmentGetRequest, new ArrayList<>()));
     }
 }

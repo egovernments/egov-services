@@ -424,8 +424,7 @@ class Report extends Component {
               <CardText >
               <Grid>
 
-                    <Row><Col style={{textAlign:"center"}} xs={12} md={12}><h3><strong> {translate("Receipt")} </strong></h3></Col> </Row>
-                    <Row><Col style={{textAlign:"center"}} xs={12} md={12}><h4><strong> {translate(tenantInfo[0].city.name)} </strong></h4></Col> </Row>
+                    <Row><Col style={{textAlign:"center"}} xs={12} md={12}><h4><strong> {translate(tenantInfo[0].city.name)} </strong></h4><br/><span>{translate("Receipt")}</span></Col> </Row>
 
                     <br/>
 
@@ -447,7 +446,7 @@ class Report extends Component {
                     </thead>}
                     <tbody>
                         <tr>
-                          <td><strong>Payee Name</strong> - {getVal("Receipt[0].Bill[0].payeeName")}</td>
+                          <td><strong>Payee Name</strong> - {getVal("Receipt[0].Bill[0].paidBy")}</td>
                           <td></td>
                           <td></td>
                           <td></td>
@@ -483,7 +482,8 @@ class Report extends Component {
                     </Row>
                     <Row>
                     <Col xs={12} md={3}><strong>Payee Name - </strong>{getVal("Receipt[0].Bill[0].payeeName")} </Col>
-                    <Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>
+                    {/*<Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>*/}
+                    <Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument.transactionDate")} </Col>
                     <Col xs={12} md={3}><strong>Address - </strong>{getVal("Receipt[0].Bill[0].payeeAddress")} </Col>
                     <Col xs={12} md={3}><strong>Transaction Id - </strong>{getVal("Receipt[0].transactionId")} </Col>
                     </Row>
@@ -498,7 +498,7 @@ class Report extends Component {
                         <th>{translate("collection.create.serviceType")}</th>
                         <th>{translate("collection.create.receiptNumber")}</th>
                         <th>{translate("collection.create.consumerCode")}</th>
-                        <th>{translate("collection.search.period")}</th>
+                        {/*<th>{translate("collection.search.period")}</th>*/}
                         {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && <th>{translate("collection.search.arrears")}</th>}
                         {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.current")}</th>}
                         {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.interest")}</th>}
@@ -526,7 +526,7 @@ class Report extends Component {
                                     <td>{item.businessService} </td>
                                     <td>{item.receiptNumber} </td>
                                     <td>{item.consumerCode} </td>
-                                    <td>{item.period} </td>
+                                    {/*<td>{item.period} </td>*/}
                                     {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("ARREAR_AMOUNT",item.billAccountDetails)}</td>}
                                     {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("CURRENT_AMOUNT",item.billAccountDetails)}</td>}
                                     {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("OTHERS",item.billAccountDetails)}</td>}
@@ -545,7 +545,7 @@ class Report extends Component {
                               <td></td>
                               <td></td>
                               <td></td>
-                              <td></td>
+                              {/*<td></td>*/}
                               {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
                               {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
                               {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
@@ -560,7 +560,7 @@ class Report extends Component {
                               <td>Amount in words</td>
                               <td></td>
                               <td></td>
-                              <td></td>
+                              {/*<td></td>*/}
                               {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
                               {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
                               {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
@@ -573,7 +573,7 @@ class Report extends Component {
                           </tr>
 
                           {formData.Receipt[0].instrument && formData.Receipt[0].instrument.instrumentType.name!="Cash" && <tr>
-                              <td colSpan={6}>Cheque/DD No <strong>{formData.Receipt[0].instrument.transactionNumber}</strong> drawn on <strong>{formData.Receipt[0].instrument.bank.name}</strong>, <strong>{formData.Receipt[0].instrument.branchName}</strong> Dated <strong>{formData.Receipt[0].instrument.transactionDate}</strong><br/>
+                              <td colSpan={5}>Cheque/DD No <strong>{formData.Receipt[0].instrument.transactionNumber}</strong> drawn on <strong>{formData.Receipt[0].instrument.bank.name}</strong>, <strong>{formData.Receipt[0].instrument.branchName}</strong> Dated <strong>{formData.Receipt[0].instrument.transactionDate}</strong><br/>
                                 Cheque/DD payments are subject to realisation</td>
                           </tr>}
                           {/*resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {

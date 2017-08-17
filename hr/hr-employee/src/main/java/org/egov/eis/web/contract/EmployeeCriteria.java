@@ -110,7 +110,6 @@ public class EmployeeCriteria implements Cloneable {
 	@Max(500)
 	private Integer pageSize;
 
-	@Min(1)
 	private Integer pageNumber;
 
 	@Override

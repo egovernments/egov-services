@@ -21,9 +21,9 @@ import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.SupportDocumentContract;
-import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
-import org.egov.tl.commons.web.requests.TradeLicenseResponse;
+import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
 import org.egov.tradelicense.configuration.TestConfiguration;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
@@ -124,13 +124,13 @@ public class TradeLicenseControllerTest {
 
 		try {
 
-			TradeLicenseResponse tradeLicenseResponse = new TradeLicenseResponse();
+			TradeLicenseSearchResponse tradeLicenseSearchResponse = new TradeLicenseSearchResponse();
 
 			ResponseInfo responseInfo = new ResponseInfo();
 
 			org.egov.tl.commons.web.contract.AuditDetails auditDetails = new org.egov.tl.commons.web.contract.AuditDetails();
 
-			List<TradeLicenseContract> tradeLicenseContracts = new ArrayList<>();
+			List<TradeLicenseSearchContract> tradeLicenseSearchContracts = new ArrayList<>();
 
 			List<LicenseFeeDetailContract> feeDetails = new ArrayList<>();
 			LicenseFeeDetailContract licenseFeeDetailContract = new LicenseFeeDetailContract();
@@ -140,23 +140,23 @@ public class TradeLicenseControllerTest {
 			SupportDocumentContract supportDocument = new SupportDocumentContract();
 			supportDocuments.add(supportDocument);
 
-			TradeLicenseContract tradeLicenseContract = new TradeLicenseContract();
-			tradeLicenseContract.setTenantId("default");
-			tradeLicenseContract.setFeeDetails(feeDetails);
-			tradeLicenseContract.setAuditDetails(auditDetails);
+			TradeLicenseSearchContract tradeLicenseSearchContract = new TradeLicenseSearchContract();
+			tradeLicenseSearchContract.setTenantId("default");
+			tradeLicenseSearchContract.setFeeDetails(feeDetails);
+			tradeLicenseSearchContract.setAuditDetails(auditDetails);
 
-			tradeLicenseContracts.add(tradeLicenseContract);
+			tradeLicenseSearchContracts.add(tradeLicenseSearchContract);
 
-			tradeLicenseResponse.setResponseInfo(responseInfo);
+			tradeLicenseSearchResponse.setResponseInfo(responseInfo);
 
-			tradeLicenseResponse.setLicenses(tradeLicenseContracts);
+			tradeLicenseSearchResponse.setLicenses(tradeLicenseSearchContracts);
 
 			when(tradeLicenseService.getTradeLicense(any(RequestInfo.class), any(String.class), any(Integer.class),
 					any(Integer.class), any(String.class), any(String.class), any(String.class), any(String.class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
 					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(String.class),
 					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(Integer.class)))
-							.thenReturn(tradeLicenseResponse);
+							.thenReturn(tradeLicenseSearchResponse);
 
 			mockMvc.perform(post("/license/v1/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("legacyTradeSearchRequest.json")))

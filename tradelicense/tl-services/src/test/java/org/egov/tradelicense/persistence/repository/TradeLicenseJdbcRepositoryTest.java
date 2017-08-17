@@ -87,6 +87,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setSubCategoryId(tradeLicense.getSubCategoryId());
 		tradeLicenseEntity.setTenantId(tradeLicense.getTenantId());
 		tradeLicenseEntity.setTradeAddress(tradeLicense.getTradeAddress());
+		tradeLicenseEntity.setIsTradeOwner(tradeLicense.getIsTradeOwner());
 		tradeLicenseEntity
 				.setTradeCommencementDate(TimeStampUtil.getTimeStamp(tradeLicense.getTradeCommencementDate()));
 		tradeLicenseEntity.setTradeTitle(tradeLicense.getTradeTitle());
@@ -131,6 +132,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setRevenueWardId(22);
 		tradeLicense.setStatus(null);
 		tradeLicense.setSubCategoryId(2l);
+		tradeLicense.setIsTradeOwner(Boolean.FALSE);
 		tradeLicense.setSupportDocuments(getSupportDocumentsDomain());
 		tradeLicense.setTenantId("default");
 		tradeLicense.setTradeAddress("tradeAddress");

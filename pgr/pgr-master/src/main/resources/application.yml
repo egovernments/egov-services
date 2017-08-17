@@ -1492,26 +1492,32 @@ ReportDefinitions:
     label: reports.pgr.complainttype.name
     type: string
     source: egpgr_complainttype
+    isMandatory: false
   - name: routerposname
     label: reports.pgr.position.name
     type: number
     source: egeis_position
+    isMandatory: false
   - name: bndryname
     label: reports.pgr.boundary.name
     type: number
     source: eg_boundary
+    isMandatory: false
   - name: esclvl1posname
     label: reports.pgr.position1.name
     type: number
     source: egpgr_router
+    isMandatory: false
   - name: esclvl2posname
     label: reports.pgr.position2.name
     type: number
     source: egpgr_router
+    isMandatory: false
   - name: esclvl3posname
     label: reports.pgr.position3.name
     type: number
     source: egpgr_router
+    isMandatory: false
   
   searchParams:
   - name: complaintcategorytype

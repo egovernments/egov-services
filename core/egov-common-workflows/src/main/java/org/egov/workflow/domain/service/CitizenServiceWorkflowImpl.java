@@ -53,6 +53,8 @@ public class CitizenServiceWorkflowImpl implements Workflow {
 
 	public static final String SERVICE_CATEGORY_NAME = "serviceCategoryName";
 	public static final String NATURE_OF_TASK = "natureOfTask";
+	public static final String SERVICE_REQUEST_ID = "serviceRequestId";
+	
 
 	@Autowired
 	private StateService stateService;
@@ -147,7 +149,7 @@ public class CitizenServiceWorkflowImpl implements Workflow {
 		state.setType(processInstance.getBusinessKey());
 
 		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByTypeAndTenantId(state.getType(), tenantId);
-		state.setMyLinkId(type.getLink());
+		state.setMyLinkId(type.getLink().replace("{serviceRequestId}", processInstance.getValueForKey(SERVICE_REQUEST_ID)));
 
 		state.setNatureOfTask(processInstance.getValueForKey(NATURE_OF_TASK));
 		state.setExtraInfo(processInstance.getDetails());

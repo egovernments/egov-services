@@ -136,7 +136,7 @@ public class ReportApp implements EnvironmentAware {
 	 /*URL oracle = new URL(ReportApp.env.getProperty("report.yaml.path"));
 	 reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);*/
 	 
-	LOGGER.info("Report Defintion PGR: "+reportDefinitions.toString());
+	LOGGER.info("Report Defintion : "+reportDefinitions.toString());
 	return reportDefinitions;
 	}catch (Exception e) {
 	// TODO Auto-generated catch block

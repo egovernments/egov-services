@@ -1,0 +1,2 @@
+file://ws/egov-services/pgr/pgr-master/src/main/resources/application.yml
+file://ws/egov-services/docs/collections/reports/report.yml

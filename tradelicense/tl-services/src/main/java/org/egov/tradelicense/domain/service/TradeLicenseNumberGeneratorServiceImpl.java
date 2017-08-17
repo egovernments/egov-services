@@ -3,6 +3,7 @@ package org.egov.tradelicense.domain.service;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Implementation Generator class for Trade License Number
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Manoj Kulkarni
  *
  */
+@Service
 public class TradeLicenseNumberGeneratorServiceImpl implements TradeLicenseNumberGeneratorService {
 
     @Autowired

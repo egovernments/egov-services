@@ -430,7 +430,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pin')}
+                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pin')+ ' *'}
 												  hintText="201301"
                                                   errorText={fieldErrors.pin ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pin}</span> : ""}
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
@@ -444,9 +444,9 @@ class PropertyAddress extends Component {
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.readyReckoner')}
-                                                  errorText={fieldErrors.readyReckoner ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.readyReckoner}</span> : ""}
-                                                  value={propertyAddress.readyReckoner ? propertyAddress.readyReckoner : ""}
+                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.totalFloors')+' *'}
+                                                  errorText={fieldErrors.totalFloors ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.totalFloors}</span> : ""}
+                                                  value={propertyAddress.totalFloors ? propertyAddress.totalFloors : ""}
                                                   onChange={(event, index, value) => {
 													  (value == -1) ? value = '' : '';
                                                       var e = {
@@ -454,14 +454,19 @@ class PropertyAddress extends Component {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "readyReckoner", false, "")}
+                                                      handleChange(e, "totalFloors", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												>
-												<MenuItem value={1} primaryText="Option"/>
+												<MenuItem value={-1} primaryText="None"/>
+												<MenuItem value={1} primaryText="1 Floor"/>
+												<MenuItem value={2} primaryText="2 Floors"/>
+												<MenuItem value={3} primaryText="3 Floors"/>
+												<MenuItem value={4} primaryText="4 Floors"/>
+												<MenuItem value={5} primaryText="5 Floors"/>
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={12}>
@@ -504,7 +509,7 @@ class PropertyAddress extends Component {
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={12}
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                            maxLength={6}
+														maxLength={6}
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>

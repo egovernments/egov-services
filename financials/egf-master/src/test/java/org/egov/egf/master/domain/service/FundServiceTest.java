@@ -92,7 +92,7 @@ public class FundServiceTest {
 
     private List<Fund> getFunds() {
         List<Fund> funds = new ArrayList<Fund>();
-        Fund fund = Fund.builder().name("name").code("code").identifier('I').level(1234l).active(true).build();
+        Fund fund = Fund.builder().id("1").name("name").code("code").identifier('I').level(1234l).active(true).build();
         fund.setTenantId("default");
         funds.add(fund);
         return funds;

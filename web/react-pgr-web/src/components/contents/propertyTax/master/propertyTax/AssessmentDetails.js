@@ -444,7 +444,7 @@ handleDepartment = (e) => {
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
                                               <Checkbox
-                                                label={translate('pt.create.groups.assessmentDetails.fields.isAuthorized')+' *'}
+                                                label={translate('pt.create.groups.assessmentDetails.fields.isLegal')+' *'}
                                                 style={styles.checkbox}
                                                 defaultChecked ={true}
                                                 onCheck = {(e, i, v) => {

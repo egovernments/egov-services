@@ -1197,6 +1197,9 @@ public class MasterServiceImpl implements Masterservice {
 
 			AuditDetails auditDetails = getUpdatedAuditDetails(apartmentRequest.getRequestInfo(),
 					ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(apartment.getTenantId(),
+					apartment.getCode(), ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
+			validateApartmentData(apartment.getFloor(), apartment.getTenantId(), apartmentRequest.getRequestInfo());
 			apartment.setAuditDetails(auditDetails);
 			apartment.getFloor().setAuditDetails(auditDetails);
 
@@ -1211,11 +1214,6 @@ public class MasterServiceImpl implements Masterservice {
 				}
 				unit.setAuditDetails(auditDetails);
 			}
-
-			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(apartment.getTenantId(),
-					apartment.getCode(), ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
-			validateApartmentData(apartment.getFloor(), apartment.getTenantId(), apartmentRequest.getRequestInfo());
-
 			if (isExists)
 				throw new DuplicateIdException(apartmentRequest.getRequestInfo());
 
@@ -1302,9 +1300,9 @@ public class MasterServiceImpl implements Masterservice {
 					for (Unit unitData : unit.getUnits()) {
 						validateUnitData(tenantId, unitData, requestInfo);
 					}
-				} else {
-					validateUnitData(tenantId, unit, requestInfo);
 				}
+				validateUnitData(tenantId, unit, requestInfo);
+				
 			}
 		} else {
 			throw new InvalidCodeException(propertiesManager.getInvalidFloorNo(), requestInfo);

@@ -45,6 +45,7 @@ public class FunctionaryService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(functionaries, "Functionaries to update must not be null");
 				for (Functionary functionary : functionaries) {
+				        Assert.notNull(functionary.getId(), "Functionary ID to update must not be null");
 					validator.validate(functionary, errors);
 				}
 				break;

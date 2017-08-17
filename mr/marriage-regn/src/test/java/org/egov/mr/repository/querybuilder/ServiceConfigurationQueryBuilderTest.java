@@ -47,7 +47,7 @@ public class ServiceConfigurationQueryBuilderTest {
 
 	@Test
 	public void testSelectQueryWithTenantId() {
-		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? ORDER BY ck.createdTime ASC;";
+		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? ORDER BY ck.keyName ASC,cv.effectivefrom DESC;";
 
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().tenantId("ap.kurnool")
 				.build();
@@ -62,7 +62,7 @@ public class ServiceConfigurationQueryBuilderTest {
 
 	@Test
 	public void testSelectQueryWithName() {
-		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND keyName=? ORDER BY ck.createdTime ASC;";
+		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND keyName=? ORDER BY ck.keyName ASC,cv.effectivefrom DESC;";
 
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().tenantId("ap.kurnool")
 				.name("serviceConfigValues").build();
@@ -79,7 +79,7 @@ public class ServiceConfigurationQueryBuilderTest {
 
 	@Test
 	public void testSelectQueryWithNameAsEmpty() {
-		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? ORDER BY ck.createdTime ASC;";
+		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? ORDER BY ck.keyName ASC,cv.effectivefrom DESC;";
 
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().tenantId("ap.kurnool")
 				.name("").build();
@@ -95,14 +95,14 @@ public class ServiceConfigurationQueryBuilderTest {
 
 	@Test
 	public void testSelectQueryWithId() {
-		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND ck.id=? ORDER BY ck.createdTime ASC;";
+		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND ck.id=? ORDER BY ck.keyName ASC,cv.effectivefrom DESC;";
 
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().id(501).tenantId("ap.kurnool")
 				.build();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String actualQuery = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);
-
+		System.err.println(actualQuery);
 		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(501);
@@ -113,14 +113,13 @@ public class ServiceConfigurationQueryBuilderTest {
 
 	@Test
 	public void testSelectQueryWithIdAsZero() {
-		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? ORDER BY ck.createdTime ASC;";
+		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? ORDER BY ck.keyName ASC,cv.effectivefrom DESC;";
 
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().id(0).tenantId("ap.kurnool")
 				.build();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String actualQuery = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);
-
 		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 
@@ -130,14 +129,13 @@ public class ServiceConfigurationQueryBuilderTest {
 
 	@Test
 	public void testSelectQueryWithEffectiveFrom() {
-		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND cv.effectivefrom=? ORDER BY ck.createdTime ASC;";
+		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND cv.effectivefrom=? ORDER BY ck.keyName ASC,cv.effectivefrom DESC;";
 
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().tenantId("ap.kurnool")
 				.effectiveFrom(Long.valueOf("247862546564")).build();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String actualQuery = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);
-
 		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(Long.valueOf("247862546564"));
@@ -148,14 +146,13 @@ public class ServiceConfigurationQueryBuilderTest {
 
 	@Test
 	public void testSelectQueryWithNotNullValues() {
-		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND keyName=? AND ck.id=? AND cv.effectivefrom=? ORDER BY ck.createdTime ASC;";
+		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND keyName=? AND ck.id=? AND cv.effectivefrom=? ORDER BY ck.keyName ASC,cv.effectivefrom DESC;";
 
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().id(501).tenantId("ap.kurnool")
 				.effectiveFrom(Long.valueOf("247862546564")).name("serviceConfigValues").build();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String actualQuery = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);
-
 		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add("serviceConfigValues");

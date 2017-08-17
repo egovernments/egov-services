@@ -942,10 +942,10 @@ calcAssessableArea = (e, type) => {
 															
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Building cost *"
+														  floatingLabelText="Building cost"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.buildingCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.buildingCost}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.buildingCost : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"buildingCost", true, /^[0-9]+$/i)}}
+														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"buildingCost", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -956,10 +956,10 @@ calcAssessableArea = (e, type) => {
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Land cost *"
+														  floatingLabelText="Land cost"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.landCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.landCost}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.landCost : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"landCost", true, /^[0-9]+$/i)}}
+														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"landCost", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -989,6 +989,7 @@ calcAssessableArea = (e, type) => {
 															
 															 this.props.resetObject("floor", false);
 															  this.props.resetObject("owner", false);
+															  
 															 setTimeout(()=>{
 																	_this.createFloorObject();
 																}, 300);
@@ -999,8 +1000,9 @@ calcAssessableArea = (e, type) => {
 																  this.props.updateObject("floors","floor",  editIndex);
 																  this.props.resetObject("floor", false);
 																  this.props.resetObject("owner", false);
-
+																  
 																  isEditIndex(-1);
+																  
 																  setTimeout(()=>{
 																	_this.createFloorObject();
 																	}, 300);
@@ -1128,8 +1130,8 @@ const mapDispatchToProps = dispatch => ({
       type: "SET_FLOOR_STATE",
 	   validatePropertyFloor: {
         required: {
-          current: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost'],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+          current: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea'],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea']
         },
         pattern: {
           current: [],
@@ -1227,7 +1229,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea']
         },
         pattern: {
           current: [],

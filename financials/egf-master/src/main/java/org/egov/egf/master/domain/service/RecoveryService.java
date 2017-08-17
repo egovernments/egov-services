@@ -101,6 +101,7 @@ public class RecoveryService {
                 case Constants.ACTION_UPDATE:
                     Assert.notNull(recoveries, "Recoverys to update must not be null");
                     for (Recovery recovery : recoveries) {
+                        Assert.notNull(recovery.getId(), "Recovery ID to update must not be null");
                         validator.validate(recovery, errors);
                     }
                     break;

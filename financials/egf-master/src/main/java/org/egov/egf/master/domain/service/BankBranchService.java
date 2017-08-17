@@ -49,6 +49,7 @@ public class BankBranchService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(bankbranches, "BankBranches to update must not be null");
 				for (BankBranch bankBranch : bankbranches) {
+				        Assert.notNull(bankBranch.getId(), "Bank Branch ID to update must not be null");
 					validator.validate(bankBranch, errors);
 				}
 				break;

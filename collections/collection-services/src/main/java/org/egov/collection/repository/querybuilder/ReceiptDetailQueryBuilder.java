@@ -40,6 +40,8 @@
 package org.egov.collection.repository.querybuilder;
 
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import lombok.EqualsAndHashCode;
@@ -228,6 +230,12 @@ public class ReceiptDetailQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
 					selectQuery);
 			selectQuery.append(" rh.receiptDate <= ?");
+            if(searchCriteria.getToDate().equals(searchCriteria.getFromDate())) {
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date(searchCriteria.getToDate()));
+                c.add(Calendar.DATE, 1); 
+                searchCriteria.setToDate(c.getTime().getTime());
+            }
 			preparedStatementValues.add(searchCriteria.getToDate());
 		}
 

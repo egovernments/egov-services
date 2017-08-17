@@ -1,28 +1,70 @@
 {
     "elements":[
         {
+        "elementName":"contactInfo",
+        "identifier":"xpath",
+        "value":"//*[text()='Contact Information']",
+        "waitFor":"presence"
+        },
+        {
          "elementName":"grievanceCategory",
           "identifier":"css",
           "value":"[id^='undefined-undefined-GrievanceCategory']",
-          "waitFor":"visibility"
+          "waitFor":"presence"
         },
         {
         "elementName":"receivingMode",
         "identifier":"css",
         "value":"[id^=undefined-undefined-ReceivingMode]",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"receivingModeDropdown",
-        "identifier":"xpath",
-        "value":"//*[text()='%s']",
-        "waitFor":"visibility"
+        "waitFor":"presence"
         },
         {
         "elementName":"name",
         "identifier":"css",
-        "value":"[id^=undefined-undefined-Name]",
-        "waitFor":"visibility"
+        "value":"input[id^=undefined-undefined-Name]",
+        "waitFor":"presence"
+        },
+        {
+        "elementName":"mobileNumber",
+        "identifier":"css",
+        "value":"input[id^=undefined-undefined-MobileNumber]",
+        "waitFor":"presence"
+        },
+        {
+        "elementName":"email",
+        "identifier":"css",
+        "value":"input[id^=undefined-undefined-EmailID]",
+        "waitFor":"presence"
+        },
+        {
+        "elementName":"grievanceType",
+        "identifier":"css",
+        "value":"[id^=undefined-undefined-GrievanceType]",
+        "waitFor":"presence"
+        },
+        {
+        "elementName":"grievanceDetails",
+        "identifier":"css",
+        "value":"[id^=undefined-Min10Characters-GrievanceDetails]",
+        "waitFor":"presence"
+        },
+        {
+        "elementName":"grievanceLocation",
+        "identifier":"css",
+        "value":"[id^=undefined-Typeyourlocationorselectitfrommaps-GrievanceLocation]",
+        "waitFor":"presence"
+        },
+        {
+        "elementName":"selectPhoto",
+        "identifier":"css",
+        "value":"input[type=file]",
+        "waitFor":"presence"
+        },
+        {
+        "elementName":"create",
+        "identifier":"xpath",
+        "value":"//*[text()='Create']",
+        "waitFor":"presence"
         }
     ]
 }

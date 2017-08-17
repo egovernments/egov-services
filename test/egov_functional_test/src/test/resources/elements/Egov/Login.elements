@@ -19,9 +19,9 @@
             "waitFor":"presence"
         },
         {
-            "elementName":"kurnoolText",
+            "elementName":"cityText",
             "identifier":"xpath",
-            "value":"//*[text()='Kurnool'] ",
+            "value":"//*[text()='Roha Municipal Corporation'] ",
             "waitFor":"visibility"
         },
         {

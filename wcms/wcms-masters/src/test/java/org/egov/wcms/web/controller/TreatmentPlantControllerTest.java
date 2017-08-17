@@ -76,63 +76,59 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(TestConfiguration.class)
 public class TreatmentPlantControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private TreatmentPlantService treatmentPlantService;
+	@MockBean
+	private TreatmentPlantService treatmentPlantService;
 
-    @MockBean
-    private ErrorHandler errHandler;
+	@MockBean
+	private ErrorHandler errHandler;
 
-    @MockBean
-    private ResponseInfoFactory responseInfoFactory;
+	@MockBean
+	private ResponseInfoFactory responseInfoFactory;
 
-    @MockBean
-    private ApplicationProperties applicationProperties;
+	@MockBean
+	private ApplicationProperties applicationProperties;
 
-    @MockBean
-    private ValidatorUtils validatorUtils;
+	@MockBean
+	private ValidatorUtils validatorUtils;
 
-    @InjectMocks
-    private TreatmentPlantController treatmentPlantController;
+	@InjectMocks
+	private TreatmentPlantController treatmentPlantController;
 
-    @Test(expected = Exception.class)
-    public void test_Should_Search_TreatmentPlant() throws Exception {
+	@Test(expected = Exception.class)
+	public void test_Should_Search_TreatmentPlant() throws Exception {
 
-        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
-        final RequestInfo requestInfo = new RequestInfo();
-        final ResponseInfo responseInfo = new ResponseInfo();
-        final TreatmentPlant treatmentPlant = new TreatmentPlant();
-        treatmentPlant.setTenantId("default");
-        treatmentPlant.setName("test");
-        treatmentPlant.setCode("12");
-        treatmentPlant.setLocationNum("3");
-        treatmentPlant.setWardNum("5");
-        treatmentPlant.setZoneNum("6");
-        treatmentPlant.setCapacity(2d);
-        treatmentPlant.setPlantType("test");
-        treatmentPlant.setStorageReservoirId(2l);
-        treatmentPlant.setPlantType("abcd");
-        treatmentPlantList.add(treatmentPlant);
+		final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+		final RequestInfo requestInfo = new RequestInfo();
+		final ResponseInfo responseInfo = new ResponseInfo();
+		final TreatmentPlant treatmentPlant = new TreatmentPlant();
+		treatmentPlant.setTenantId("default");
+		treatmentPlant.setName("test");
+		treatmentPlant.setCode("12");
+		treatmentPlant.setLocationNum("3");
+		treatmentPlant.setWardNum("5");
+		treatmentPlant.setZoneNum("6");
+		treatmentPlant.setCapacity(2d);
+		treatmentPlant.setPlantType("test");
+		treatmentPlant.setStorageReservoirId(2l);
+		treatmentPlant.setPlantType("abcd");
+		treatmentPlantList.add(treatmentPlant);
 
-        final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito
-                .mock(TreatmentPlantGetRequest.class);
+		final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito.mock(TreatmentPlantGetRequest.class);
 
-        when(treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest)).thenReturn(treatmentPlantList);
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
+		when(treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest)).thenReturn(treatmentPlantList);
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/treatmentplant/_search")
-                .param("tenantId", "default")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(getFileContents("requestinfowrapper.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(getFileContents("treatplantresponse.json")));
-    }
+		mockMvc.perform(post("/treatmentplant/_search").param("tenantId", "default")
+				.contentType(MediaType.APPLICATION_JSON).content(getFileContents("requestinfowrapper.json")))
+				.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("treatplantresponse.json")));
+	}
 
-    private String getFileContents(final String fileName) throws IOException {
-        return new FileUtils().getFileContents(fileName);
-    }
+	private String getFileContents(final String fileName) throws IOException {
+		return new FileUtils().getFileContents(fileName);
+	}
 
 }

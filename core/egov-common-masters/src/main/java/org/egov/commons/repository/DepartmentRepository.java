@@ -40,9 +40,6 @@
 
 package org.egov.commons.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.commons.model.Department;
 import org.egov.commons.repository.builder.DepartmentQueryBuilder;
 import org.egov.commons.repository.rowmapper.DepartmentRowMapper;
@@ -50,6 +47,10 @@ import org.egov.commons.web.contract.DepartmentGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class DepartmentRepository {
@@ -63,11 +64,89 @@ public class DepartmentRepository {
 	@Autowired
 	private DepartmentQueryBuilder departmentQueryBuilder;
 
+	public static final String INSERT_DEPATMENT_QUERY = "INSERT INTO eg_department"
+			+ "(id, name, code, active, tenantid,createdBy,createdDate,lastModifiedBy,lastModifiedDate)"
+			+ " VALUES(?,?,?,?,?,?,?,?,?)";
+
+
+	public static final String UPDATE_DEPARTMENT = "Update eg_department"
+			+ " set name=?,active=?,lastModifiedBy=?,lastModifiedDate=?"
+			+ " where code=? and tenantId=?";
+	public static final String GET_DEPARTMENT_BY_NAME_TENANTID_AND_ID = "Select * from eg_department"
+			+ " where name=? and tenantId=? and id != ?";
+	public static final String GET_DEPARTMENT_BY_NAME_AND_TENANTID = "Select * from eg_department"
+			+ " where name=? and tenantId=? ";
+	public static final String GET_DEPARTMENT_BY_CODE_AND_TENANTID_AND_ID = "Select * from eg_department"
+			+ " where code=? and tenantId=? and id != ?";
+	public static final String GET_DEPARTMENT_BY_CODE_AND_TENANTID = "Select * from eg_department"
+			+ " where code=? and tenantId=?";
+
+
 	public List<Department> findForCriteria(DepartmentGetRequest departmentGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = departmentQueryBuilder.getQuery(departmentGetRequest, preparedStatementValues);
 		List<Department> departments = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				departmentRowMapper);
 		return departments;
+	}
+
+	public void create(Department department, Long userId) {
+		Object[] obj = new Object[]{generateSequence("seq_eg_department"), department.getName(), department.getCode()
+				, department.getActive(), department.getTenantId(), userId
+				, new Date(new java.util.Date().getTime()),
+				userId, new Date(new java.util.Date().getTime())};
+		jdbcTemplate.update(INSERT_DEPATMENT_QUERY, obj);
+
+	}
+
+
+	public Long generateSequence(String sequenceName) {
+		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
+	}
+
+	public void update(Department department, Long userId) {
+		Object[] obj = new Object[]{department.getName(), department.getActive(), userId
+				, new Date(new java.util.Date().getTime()), department.getCode(), department.getTenantId()};
+		jdbcTemplate.update(UPDATE_DEPARTMENT, obj);
+
+	}
+
+	public boolean checkDepartmentByNameAndTenantIdExists(String name, String tenantId, Long id, Boolean isUpdate) {
+		final List<Object> preparedStatementValue = new ArrayList<Object>();
+		preparedStatementValue.add(name);
+		preparedStatementValue.add(tenantId);
+		List<Department> detailsFromDb = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(name);
+		preparedStatementValues.add(tenantId);
+		preparedStatementValues.add(id);
+
+		if (isUpdate)
+			detailsFromDb = jdbcTemplate.query(GET_DEPARTMENT_BY_NAME_TENANTID_AND_ID, preparedStatementValues.toArray(),
+					departmentRowMapper);
+		else
+			detailsFromDb = jdbcTemplate.query(GET_DEPARTMENT_BY_NAME_AND_TENANTID, preparedStatementValue.toArray(),
+					departmentRowMapper);
+		return detailsFromDb.isEmpty();
+
+	}
+
+	public boolean checkDepartmentByCodeAndTenantIdExists(String code, String tenantId, Long id, Boolean isUpdate) {
+		final List<Object> preparedStatementValue = new ArrayList<Object>();
+		preparedStatementValue.add(code);
+		preparedStatementValue.add(tenantId);
+		List<Department> detailsFromDb = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(code);
+		preparedStatementValues.add(tenantId);
+		preparedStatementValues.add(id);
+
+		if (isUpdate)
+			detailsFromDb = jdbcTemplate.query(GET_DEPARTMENT_BY_CODE_AND_TENANTID_AND_ID,
+					preparedStatementValues.toArray(), departmentRowMapper);
+		else
+			detailsFromDb = jdbcTemplate.query(GET_DEPARTMENT_BY_CODE_AND_TENANTID,
+					preparedStatementValue.toArray(), departmentRowMapper);
+		return detailsFromDb.isEmpty();
 	}
 }

@@ -179,42 +179,79 @@ public class UserRepository {
 
 	public org.egov.user.domain.model.User update(final org.egov.user.domain.model.User user) {
 		User oldUser = userJpaRepository.findByUserKeyIdAndUserKeyTenantId(user.getId(), user.getTenantId());
-		oldUser.setAadhaarNumber(user.getAadhaarNumber());
-		if(user.getAccountLocked() != null) {
+		if (user.getAadhaarNumber() != null) {
+			oldUser.setAadhaarNumber(user.getAadhaarNumber());
+		}
+		if (user.getAccountLocked() != null) {
 			oldUser.setAccountLocked(user.getAccountLocked());
 		}
-		if(user.getActive() != null) {
+		if (user.getActive() != null) {
 			oldUser.setActive(user.getActive());
 		}
-		oldUser.setAltContactNumber(user.getAltContactNumber());
-		oldUser.setBloodGroup(toEnumType(BloodGroup.class, user.getBloodGroup()));
-		oldUser.setDob(user.getDob());
-		oldUser.setEmailId(user.getEmailId());
-		oldUser.setGender(toEnumType(Gender.class, user.getGender()));
-		oldUser.setGuardian(user.getGuardian());
-		oldUser.setGuardianRelation(toEnumType(GuardianRelation.class, user.getGuardianRelation()));
-		oldUser.setIdentificationMark(user.getIdentificationMark());
-		oldUser.setLocale(user.getLocale());
-		if(!isEmpty(user.getMobileNumber())) {
+		if (user.getAltContactNumber() != null) {
+			oldUser.setAltContactNumber(user.getAltContactNumber());
+		}
+		if (user.getBloodGroup() != null) {
+			oldUser.setBloodGroup(toEnumType(BloodGroup.class, user.getBloodGroup()));
+		}
+		if (user.getDob() != null) {
+
+			oldUser.setDob(user.getDob());
+		}
+		if (user.getEmailId() != null) {
+			oldUser.setEmailId(user.getEmailId());
+		}
+		if (user.getGender() != null) {
+			oldUser.setGender(toEnumType(Gender.class, user.getGender()));
+		}
+		if (user.getGuardian() != null) {
+			oldUser.setGuardian(user.getGuardian());
+		}
+		if (user.getGuardianRelation() != null) {
+			oldUser.setGuardianRelation(toEnumType(GuardianRelation.class, user.getGuardianRelation()));
+		}
+		if (user.getIdentificationMark() != null) {
+			oldUser.setIdentificationMark(user.getIdentificationMark());
+		}
+		if (user.getLocale() != null) {
+			oldUser.setLocale(user.getLocale());
+		}
+
+		if (!isEmpty(user.getMobileNumber()) && user.getMobileNumber() != null) {
 			oldUser.setMobileNumber(user.getMobileNumber());
 		}
-		oldUser.setName(user.getName());
-		oldUser.setPan(user.getPan());
-		if(!isEmpty(user.getPassword())) {
+		if (user.getName() != null) {
+
+			oldUser.setName(user.getName());
+		}
+               if(user.getPan() !=null){
+        	oldUser.setPan(user.getPan());
+               }
+		
+		if (!isEmpty(user.getPassword())) {
 			oldUser.setPassword(user.getPassword());
 			encryptPassword(oldUser);
 		}
-		oldUser.setPhoto(user.getPhoto());
-		if(user.getPasswordExpiryDate() != null) {
+		if(user.getPhoto()!=null){
+			oldUser.setPhoto(user.getPhoto());
+		}
+	
+		if (user.getPasswordExpiryDate() != null) {
 			oldUser.setPwdExpiryDate(user.getPasswordExpiryDate());
 		}
-		if(!CollectionUtils.isEmpty(user.getRoles())) {
+		if (!CollectionUtils.isEmpty(user.getRoles())) {
 			oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));
 		}
-		oldUser.setSalutation(user.getSalutation());
-		oldUser.setSignature(user.getSignature());
-		oldUser.setTitle(user.getTitle());
-		if(user.getType() != null) {
+		if(user.getSalutation() !=null){
+			oldUser.setSalutation(user.getSalutation());
+		}
+		if(user.getSignature() !=null){
+			oldUser.setSignature(user.getSignature());
+		}
+		if(user.getTitle()!=null){
+			oldUser.setTitle(user.getTitle());
+		}
+		if (user.getType() != null) {
 			oldUser.setType(toEnumType(UserType.class, user.getType()));
 		}
 		setEnrichedRolesToUser(oldUser);

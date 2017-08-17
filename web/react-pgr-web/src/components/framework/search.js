@@ -172,7 +172,7 @@ class Report extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
-
+    console.log(formData);
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {

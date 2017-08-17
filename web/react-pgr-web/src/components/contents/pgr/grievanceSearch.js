@@ -485,14 +485,34 @@ class grievanceSearch extends Component {
                             		</SelectField>
 	                			</Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<DatePicker fullWidth={true} floatingLabelText={translate("core.lbl.date.fromdate")} hintText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate} onChange={(e, value) => {
+	                				<DatePicker fullWidth={true} floatingLabelText={translate("core.lbl.date.fromdate")} hintText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate}
+                          formatDate={(date)=>{
+                            let dateObj = new Date(date);
+                            let year = dateObj.getFullYear();
+                            let month = dateObj.getMonth()+1;
+                            let dt = dateObj.getDate();
+                            dt =  dt < 10 ? '0' + dt : dt;
+                            month = month < 10 ? '0' + month : month;
+                            return dt + '-' + month + '-' + year;
+                          }}
+                          onChange={(e, value) => {
                             this.checkDate(value, "startDate", false, "");
 	                				}}
                           errorText={this.state.datefield === 'startDate' ? this.state.dateError : ''}
                           />
 	                			</Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<DatePicker fullWidth={true} floatingLabelText={translate("core.lbl.date.todate")} hintText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate} onChange={(e, value) => {
+	                				<DatePicker fullWidth={true} floatingLabelText={translate("core.lbl.date.todate")} hintText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate}
+                          formatDate={(date)=>{
+                            let dateObj = new Date(date);
+                            let year = dateObj.getFullYear();
+                            let month = dateObj.getMonth()+1;
+                            let dt = dateObj.getDate();
+                            dt =  dt < 10 ? '0' + dt : dt;
+                            month = month < 10 ? '0' + month : month;
+                            return dt + '-' + month + '-' + year;
+                          }}
+                          onChange={(e, value) => {
                             this.checkDate(value, "endDate", false, "");
 	                				}}
                           errorText={this.state.datefield === 'endDate' ? this.state.dateError : ''}

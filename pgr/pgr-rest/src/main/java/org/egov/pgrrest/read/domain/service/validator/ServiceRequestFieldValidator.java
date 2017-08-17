@@ -209,7 +209,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     }
 
     private void childLocationValidation(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!isLatLongAbsent(model.getCrn(), model.getTenantId())) {
+        if (isLatLongAbsent(model.getCrn(), model.getTenantId())) {
             addChildLocationIdPresentValidationErrors(model, errorFields);
         }
     }

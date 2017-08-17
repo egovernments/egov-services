@@ -86,7 +86,7 @@ public class MeterCostRepositoryTest {
 
 	@Mock
 	private MeterCostRowMapper meterCostRowMapper;
-	
+
 	@Mock
 	private CodeGeneratorService CodeGeneratorService;
 
@@ -95,7 +95,7 @@ public class MeterCostRepositoryTest {
 
 	@Test
 	public void test_should_push_create_meterCostRequest_to_Queue() {
-	        when(CodeGeneratorService.generate("SEQ_EGWTR_METER_COST")).thenReturn("1","2");
+		when(CodeGeneratorService.generate("SEQ_EGWTR_METER_COST")).thenReturn("1", "2");
 		when(applicationProperties.getCreateMeterCostTopicName()).thenReturn("egov.wcms.metercost-create");
 		meterCostRepository.pushCreateMeterCostReqToQueue(getMeterCostRequest());
 		verify(kafkaTemplate).send("egov.wcms.metercost-create", getMeterCostRequest());

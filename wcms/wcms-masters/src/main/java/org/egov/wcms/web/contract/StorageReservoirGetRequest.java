@@ -62,45 +62,45 @@ import lombok.ToString;
 @Builder
 public class StorageReservoirGetRequest {
 
-    private List<Long> id;
+	private List<Long> id;
 
-    private String name;
-    
-    private String code;
+	private String name;
 
-    private String reservoirType;
+	private String code;
 
-    private String locationName;
+	private String reservoirType;
 
-    private String locationNum;
+	private String locationName;
 
-    private String wardName;
+	private String locationNum;
 
-    private String wardNum;
+	private String wardName;
 
-    private String zoneName;
+	private String wardNum;
 
-    private String zoneNum;
+	private String zoneName;
 
-    private double capacity;
+	private String zoneNum;
 
-    private Long noOfSubLines;
+	private double capacity;
 
-    private Long noOfMainDistributionLines;
+	private Long noOfSubLines;
 
-    private Long noOfConnection;
+	private Long noOfMainDistributionLines;
 
-    @NotNull
-    private String tenantId;
+	private Long noOfConnection;
 
-    private String sortBy;
+	@NotNull
+	private String tenantId;
 
-    private String sortOrder;
+	private String sortBy;
 
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
+	private String sortOrder;
 
-    private Short pageNumber;
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
+
+	private Short pageNumber;
 
 }

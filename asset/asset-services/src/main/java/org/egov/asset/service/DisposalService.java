@@ -15,6 +15,8 @@ import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
+import org.egov.asset.model.Function;
+import org.egov.asset.model.Fund;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
@@ -140,7 +142,8 @@ public class DisposalService {
                 requestInfo);
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, disposal.getFund(),
+        final Fund fund = voucherService.getFundData(requestInfo, tenantId, disposal.getFund()).getFunds().get(0);
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, fund,
                 asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
 
         log.debug("Voucher Request for Disposal :: " + voucherRequest);
@@ -152,10 +155,13 @@ public class DisposalService {
     private List<VouchercreateAccountCodeDetails> getAccountDetails(final Disposal disposal,
             final AssetCategory assetCategory, final RequestInfo requestInfo) {
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, disposal.getTenantId(),
-                disposal.getAssetSaleAccount(), disposal.getSaleValue(), disposal.getFunction(), false, true));
-        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, disposal.getTenantId(),
-                assetCategory.getAssetAccount(), disposal.getSaleValue(), disposal.getFunction(), true, false));
+        final String tenantId = disposal.getTenantId();
+        final Function function = voucherService.getFunctionData(requestInfo, tenantId, disposal.getFunction())
+                .getFunctions().get(0);
+        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, disposal.getAssetSaleAccount(),
+                disposal.getSaleValue(), function, false, true));
+        accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
+                disposal.getSaleValue(), function, true, false));
         return accountCodeDetails;
     }
 

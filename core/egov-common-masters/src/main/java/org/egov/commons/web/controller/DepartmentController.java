@@ -40,31 +40,33 @@
 
 package org.egov.commons.web.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.Department;
 import org.egov.commons.service.DepartmentService;
+import org.egov.commons.util.CollectionConstants;
 import org.egov.commons.web.contract.DepartmentGetRequest;
+import org.egov.commons.web.contract.DepartmentRequest;
 import org.egov.commons.web.contract.DepartmentResponse;
 import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.factory.ResponseInfoFactory;
-import org.egov.commons.web.errorhandlers.ErrorHandler;
+import org.egov.commons.web.contract.factory.ResponseInfoFact;
+import org.egov.commons.web.errorhandlers.Error;
+import org.egov.commons.web.errorhandlers.ErrorResponse;
+import org.egov.commons.web.errorhandlers.RequestErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/departments")
@@ -76,16 +78,17 @@ public class DepartmentController {
 	private DepartmentService departmentService;
 
 	@Autowired
-	private ErrorHandler errHandler;
+	private RequestErrorHandler errHandler;
+
 
 	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseInfoFact responseInfoFactory;
 
-	@PostMapping("_search")
+	@PostMapping("/v1/_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid DepartmentGetRequest departmentGetRequest,
-			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-			BindingResult requestBodyBindingResult) {
+									BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+									BindingResult requestBodyBindingResult) {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
 		// validate input params
@@ -124,6 +127,128 @@ public class DepartmentController {
 		departmentRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<DepartmentResponse>(departmentRes, HttpStatus.OK);
 
+	}
+
+	@PostMapping(value = "/v1/_create")
+	public ResponseEntity<?> createDepartment(@RequestBody DepartmentRequest departmentRequest,
+											  final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("departmentRequest::" + departmentRequest);
+		final List<ErrorResponse> errorResponses = validateDepartmentRequest(departmentRequest, false);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+		DepartmentRequest deptReq = departmentService.createDepartmentAsync(departmentRequest);
+
+		return getSuccessResponse(Collections.singletonList(deptReq.getDepartment()), departmentRequest.getRequestInfo());
+	}
+
+	@PostMapping(value = "/v1/_update")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<?> updateDepartment(@RequestBody DepartmentRequest departmentRequest, final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("departmentRequest::" + departmentRequest);
+		final List<ErrorResponse> errorResponses = validateDepartmentRequest(departmentRequest, true);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+		DepartmentRequest deptReq = departmentService.updateDepartmentAsync(departmentRequest);
+		return getSuccessResponse(Collections.singletonList(deptReq.getDepartment()), departmentRequest.getRequestInfo());
+	}
+
+	private ErrorResponse populateErrors(final BindingResult errors) {
+		final ErrorResponse errRes = new ErrorResponse();
+
+		final Error error = new Error();
+		error.setCode(1);
+		error.setDescription("Error while binding request");
+		if (errors.hasFieldErrors())
+			for (final FieldError fieldError : errors.getFieldErrors())
+				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+		errRes.setError(error);
+		return errRes;
+	}
+
+	private List<ErrorResponse> validateDepartmentRequest(final DepartmentRequest departmentRequest, Boolean isUpdate) {
+		final List<ErrorResponse> errorResponses = new ArrayList<>();
+		final ErrorResponse errorResponse = new ErrorResponse();
+		final Error error = getError(departmentRequest, isUpdate);
+		errorResponse.setError(error);
+		if (!errorResponse.getErrorFields().isEmpty())
+			errorResponses.add(errorResponse);
+		return errorResponses;
+	}
+
+	private Error getError(final DepartmentRequest departmentRequest, Boolean isUpdate) {
+		final List<ErrorField> errorFields = getErrorFields(departmentRequest, isUpdate);
+		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(CollectionConstants.INVALID_DETAILS_REQUEST_MESSAGE).errorFields(errorFields).build();
+	}
+
+	private List<ErrorField> getErrorFields(final DepartmentRequest departmentRequest, Boolean isUpdate) {
+		final List<ErrorField> errorFields = new ArrayList<>();
+
+		addTenantIdValidationErrors(departmentRequest, errorFields);
+		addNameValidationErrors(departmentRequest, errorFields, isUpdate);
+		addCodeValidationErrors(departmentRequest, errorFields, isUpdate);
+		return errorFields;
+	}
+
+
+	private void addTenantIdValidationErrors(final DepartmentRequest departmentRequest,
+											 final List<ErrorField> errorFields) {
+		final Department department = departmentRequest.getDepartment();
+		if (department.getTenantId() == null || department.getTenantId().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.TENANT_MANDATORY_CODE)
+					.message(CollectionConstants.TENANT_MANADATORY_ERROR_MESSAGE)
+					.field(CollectionConstants.TENANT_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else
+			return;
+
+	}
+
+	private void addNameValidationErrors(final DepartmentRequest departmentRequest,
+										 final List<ErrorField> errorFields, Boolean isUpdate) {
+		final Department department = departmentRequest.getDepartment();
+		if (department.getName() == null || department.getName().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DEPARTMENT_NAME_MANDATORY_CODE)
+					.message(CollectionConstants.DEPARTMENT_NAME_MANADATORY_ERROR_MESSAGE)
+					.field(CollectionConstants.DEPARTMENT_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (!departmentService.getDepartmentByNameAndTenantId(department.getName(),
+				department.getTenantId(), department.getId(), isUpdate)) {
+			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DEPARTMENT_NAME_UNIQUE_CODE)
+					.message(CollectionConstants.DEPARTMENT_NAME_UNIQUE_ERROR_MESSAGE)
+					.field(CollectionConstants.DEPARTMENT_NAME_UNIQUE_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else
+			return;
+
+	}
+
+	private void addCodeValidationErrors(final DepartmentRequest departmentRequest,
+										 final List<ErrorField> errorFields, Boolean isUpdate)
+
+	{
+		final Department department = departmentRequest.getDepartment();
+		if (department.getCode() == null || department.getCode().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DEPARTMENT_CODE_MANDATORY_CODE)
+					.message(CollectionConstants.DEPARTMEN_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(CollectionConstants.DEPARTMENT_CODE_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (!departmentService.getDepartmentByCodeAndTenantId(department.getCode(),
+				department.getTenantId(), department.getId(), isUpdate)) {
+			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DEPARTMENT_CODE_UNIQUE_CODE)
+					.message(CollectionConstants.DEPAREMENT_CODE_UNIQUE_ERROR_MESSAGE)
+					.field(CollectionConstants.DEPARTMENT_CODE_UNIQUE_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else
+			return;
 	}
 
 }

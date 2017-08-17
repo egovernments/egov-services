@@ -57,90 +57,82 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TreatmentPlantService {
 
-    @Autowired
-    private TreatmentPlantRepository treatmentPlantRepository;
+	@Autowired
+	private TreatmentPlantRepository treatmentPlantRepository;
 
-    @Autowired
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    @Autowired
-    private CodeGeneratorService codeGeneratorService;
+	@Autowired
+	private CodeGeneratorService codeGeneratorService;
 
-    @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
+	@Autowired
+	private RestWaterExternalMasterService restExternalMasterService;
 
-    public TreatmentPlantRequest create(final TreatmentPlantRequest treatmentPlantRequest) {
-        return treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest);
-    }
+	public TreatmentPlantRequest create(final TreatmentPlantRequest treatmentPlantRequest) {
+		return treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest);
+	}
 
-    public TreatmentPlantRequest update(final TreatmentPlantRequest treatmentPlantRequest) {
-        return treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest);
-    }
+	public TreatmentPlantRequest update(final TreatmentPlantRequest treatmentPlantRequest) {
+		return treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest);
+	}
 
-    public List<TreatmentPlant> createTreatmentPlant(final String topic, final String key,
-            final TreatmentPlantRequest treatmentPlantRequest) {
-        for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants())
-            treatmentPlant.setCode(codeGeneratorService.generate(TreatmentPlant.SEQ_TREATMENT_PLANT));
-        try {
-            kafkaTemplate.send(topic, key, treatmentPlantRequest);
-        } catch (final Exception ex) {
-            log.error("Exception Encountered : " + ex);
-        }
-        return treatmentPlantRequest.getTreatmentPlants();
-    }
+	public List<TreatmentPlant> createTreatmentPlant(final String topic, final String key,
+			final TreatmentPlantRequest treatmentPlantRequest) {
+		for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants())
+			treatmentPlant.setCode(codeGeneratorService.generate(TreatmentPlant.SEQ_TREATMENT_PLANT));
+		try {
+			kafkaTemplate.send(topic, key, treatmentPlantRequest);
+		} catch (final Exception ex) {
+			log.error("Exception Encountered : " + ex);
+		}
+		return treatmentPlantRequest.getTreatmentPlants();
+	}
 
-    public List<TreatmentPlant> updateTreatmentPlant(final String topic, final String key,
-            final TreatmentPlantRequest treatmentPlantRequest) {
-        try {
-            kafkaTemplate.send(topic, key, treatmentPlantRequest);
-        } catch (final Exception ex) {
-            log.error("Exception Encountered : " + ex);
-        }
-        return treatmentPlantRequest.getTreatmentPlants();
-    }
+	public List<TreatmentPlant> updateTreatmentPlant(final String topic, final String key,
+			final TreatmentPlantRequest treatmentPlantRequest) {
+		try {
+			kafkaTemplate.send(topic, key, treatmentPlantRequest);
+		} catch (final Exception ex) {
+			log.error("Exception Encountered : " + ex);
+		}
+		return treatmentPlantRequest.getTreatmentPlants();
+	}
 
-    public List<TreatmentPlant> getTreatmentPlant(
-            final TreatmentPlantGetRequest treatmentPlantGetRequest) {
-        return treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest);
-    }
+	public List<TreatmentPlant> getTreatmentPlant(final TreatmentPlantGetRequest treatmentPlantGetRequest) {
+		return treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest);
+	}
 
-    public Boolean getBoundaryByZone(
-            final TreatmentPlant treatmentPlant) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.ZONE,
-                treatmentPlant.getZoneNum(),
-                treatmentPlant.getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+	public Boolean getBoundaryByZone(final TreatmentPlant treatmentPlant) {
+		BoundaryResponse boundaryRespose = null;
+		boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.ZONE, treatmentPlant.getZoneNum(),
+				treatmentPlant.getTenantId());
+		return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
-    }
+	}
 
-    public Boolean getBoundaryByWard(final TreatmentPlant treatmentPlant) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.WARD,
-                treatmentPlant.getWardNum(),
-                treatmentPlant.getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+	public Boolean getBoundaryByWard(final TreatmentPlant treatmentPlant) {
+		BoundaryResponse boundaryRespose = null;
+		boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.WARD, treatmentPlant.getWardNum(),
+				treatmentPlant.getTenantId());
+		return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
-    }
+	}
 
-    public Boolean getBoundaryByLocation(final TreatmentPlant treatmentPlant) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.LOCALITY,
-                treatmentPlant.getLocationNum(),
-                treatmentPlant.getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+	public Boolean getBoundaryByLocation(final TreatmentPlant treatmentPlant) {
+		BoundaryResponse boundaryRespose = null;
+		boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.LOCALITY,
+				treatmentPlant.getLocationNum(), treatmentPlant.getTenantId());
+		return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
-    }
+	}
 
-    public boolean getTreatmentPlantByNameAndCode(final String code, final String name, final String tenantId) {
-        return treatmentPlantRepository.checkTreatmentPlantByNameAndCode(code, name, tenantId);
-    }
+	public boolean getTreatmentPlantByNameAndCode(final String code, final String name, final String tenantId) {
+		return treatmentPlantRepository.checkTreatmentPlantByNameAndCode(code, name, tenantId);
+	}
 
-    public boolean checkStorageReservoirExists(final String storageReservoirName, final String tenantId) {
-        return treatmentPlantRepository.checkStorageReservoirExists(storageReservoirName, tenantId);
-    }
+	public boolean checkStorageReservoirExists(final String storageReservoirName, final String tenantId) {
+		return treatmentPlantRepository.checkStorageReservoirExists(storageReservoirName, tenantId);
+	}
 
 }

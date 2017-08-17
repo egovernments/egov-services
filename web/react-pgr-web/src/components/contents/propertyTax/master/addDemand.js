@@ -216,21 +216,21 @@ class AddDemand extends Component {
 
   }
 
-  
+
 validateCollection = (index) => {
-	
+
 	var current = this;
-	
+
 	var demands = [];
 	var collections = [];
 
-	
+
 	setTimeout(() => {
-		
+
 		let {addDemand} = current.props;
-		
+
 		//console.log(addDemand);
-		
+
 		for(var key in addDemand) {
 			if(addDemand.hasOwnProperty(key)){
 				if(key.match('collections')) {
@@ -240,9 +240,9 @@ validateCollection = (index) => {
 				}
 			}
 		}
-		
+
 		console.log(collections, demands);
-		
+
 		for(var i=0; i<collections.length;i++){
 			var count = 0;
 			for (var key in collections[i]){
@@ -261,16 +261,16 @@ validateCollection = (index) => {
 				count++;
 			}
 		}
-	
+
 
 	}, 100)
 
-	
-	
-	
-	
-}  
-  
+
+
+
+
+}
+
 
   render() {
 
@@ -315,7 +315,7 @@ validateCollection = (index) => {
 				<tr key={index}>
 					<td style={{width:100}} className="lastTdBorder">{new Date(demand.taxPeriodFrom).getFullYear()} - {new Date(demand.taxPeriodTo).getFullYear()}</td>
 						{demand.demandDetails.map((detail, i)=>{
-							
+
 							if(!addDemand.hasOwnProperty('demands'+index)){
 								var e = {
 									target: {
@@ -324,7 +324,7 @@ validateCollection = (index) => {
 								}
 								handleChangeNextOne(e ,"demands"+index,"demand"+i, false, '')
 							}
-							
+
 							if((demand.demandDetails.length-1) == i){
 								return (
 									<td key={i} className="lastTdBorder">
@@ -438,7 +438,7 @@ validateCollection = (index) => {
 						<Row>
 							 <Col xs={12}>
 								<h5>Assessment Number : <span style={{fontWeight:400}}>{this.props.match.params.upicNumber}</span></h5>
-								<br/>								
+								<br/>
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
 										<tr>
@@ -469,7 +469,7 @@ validateCollection = (index) => {
 					<RaisedButton type="button" label="Update" disabled={this.state.hasError}  primary={true} onClick={()=> {
 								this.submitDemand();
 								}
-					}/>	
+					}/>
 				</div>
 				</div>)
   }

@@ -1,0 +1,1 @@
+update eg_action set url='/hr-employee/employees/{employeeId}/positions/_search',parentmodule=(select id from service where name='HR Employee' and tenantid='default') where name='SearchEmployeePositions';

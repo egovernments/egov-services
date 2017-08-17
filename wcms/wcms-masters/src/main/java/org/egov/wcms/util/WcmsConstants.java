@@ -57,6 +57,7 @@ public class WcmsConstants {
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
     public static final String INVALID_METER_COST_REQUEST_MESSAGE = "MeterCost Request is invalid";
+    public static final String INVALID_METER_STATUS_REQUEST_MESSAGE = "MeterStatus Request is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
     public static final String INVALID_DONATION_REQUEST_MESSAGE = "Donation Request is invalid";
@@ -382,8 +383,11 @@ public class WcmsConstants {
 	public static final String NAMETENANTID_UNIQUE_CODE = "wcms.0073";
 	public static final String NAMETENANTID_UNIQUE_FIELD_NAME = "metermake,tenantId";
 	public static final String NAMETENANTID_UNIQUE_ERROR_MESSAGE = "Entered MeterMake and tenantId combination already exists";
-
-    
+ 
+    public static final String METERSTATUS_MANDATORY_CODE = "wcms.0074";
+	public static final String METERSTATUS_MANDATORY_FIELD_NAME = "meterStatus";
+	public static final String METERSTATUS_MANDATORY_ERROR_MESSAGE = "meterStatus Is Required";
+	
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";

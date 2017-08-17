@@ -579,9 +579,10 @@ ReportDefinitions:
     type: epoch
     source: seva
   query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us
+         ,servicetype_keyword sk
          where ctype.code=cs.servicecode and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true and us.username =$username
          AND cs.status::text = ANY(ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text])
-         AND ctype.keyword=complaint
+         AND ctype.code=sk.servicecode and sk.keyword='complaint'
          AND (cs.lastmodifieddate - cs.createddate) > ('01:00:00'::interval * ctype.slahours::double precision)
          AND (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double precision)
 

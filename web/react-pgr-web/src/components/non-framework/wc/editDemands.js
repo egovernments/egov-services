@@ -128,30 +128,17 @@ class AddDemand extends Component {
   }
 
   submitDemand = () => {
-
-	  var data = this.state.demands;
-
-	  let { addDemand } = this.props;
-
-	  data.map((demand, index)=> {
-		  demand.demandDetails.map((item, i)=> {
-			  item.taxAmount = (addDemand['taxAmount'+index] ? addDemand['taxAmount'+index]['taxAmount'+i] :  item.taxAmount)|| item.taxAmount;
-			  item.collectionAmount = (addDemand['collections'+index] ? addDemand['collectionAmount'+index]['collectionAmount'+i] :  item.collectionAmount)|| item.collectionAmount;
-		  })
-	  })
-
-	  console.log(data);
-
+    let self = this;
 	  var body = {
-		  DemandDetailBeans : data
-	  }
+      demandDetailBeans: Object.assign([], this.state.DemandDetailBeans)
+    };
 
-
-	Api.commonApiPost('wcms-connection/connection/_leacydemand', {}, body, false, true).then((res)=>{
-
-	}).catch((err)=> {
-		console.log(err)
-	})
+    self.props.setLoadingStatus('loading');
+	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNuber: self.props.match.params.upicNumber, executionDate: "1301616000"}, body, false, true).then((res)=>{
+      self.props.setLoadingStatus('hide');
+	  }).catch((err)=> {
+		  self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+	  })
 
   }
 
@@ -199,11 +186,11 @@ class AddDemand extends Component {
                     <td data-label="taxPeriod">{item.taxPeriod}</td>
                     <td data-label="taxHeadMasterCode">{item.taxHeadMasterCode}</td>
                     <td data-label="taxAmount">
-                    <input type="number" id={item.id} name="taxAmount"  value={item.taxAmount}
+                    <TextField type="number" id={item.id} name="taxAmount"  value={item.taxAmount}
                       onChange={(e)=>{handleChangeSrchRslt(e, "taxAmount", index)}} />
                     </td>
                     <td data-label="collectionAmount">
-                    <input type="number" id={item.id} name="taxAmount"  value={item.collectionAmount}
+                    <TextField type="number" id={item.id} name="taxAmount"  value={item.collectionAmount}
                       onChange={(e)=>{handleChangeSrchRslt(e, "collectionAmount", index)}} />
                     </td>
                 </tr>

@@ -107,7 +107,31 @@ public class CitizenServiceWorkflowImpl implements Workflow {
 		state.setStatus(StateStatus.INPROGRESS);
 		state.setValue(wfMatrix.getNextState());
 		state.setComments(processInstance.getComments());
-		state.setOwnerPosition(resolveAssignee(processInstance, processInstanceRequest.getRequestInfo()));
+
+		if (processInstance.getAssignee() != null && processInstance.getAssignee().getId() != null) {
+
+			Position owner = processInstance.getAssignee();
+
+			owner = positionRepository.getById(Long.valueOf(processInstance.getAssignee().getId()), tenantId,
+					processInstanceRequest.getRequestInfo());
+
+			if (owner == null) {
+
+				LOG.error("Owner info is not availble from respective service");
+
+				state.setOwnerPosition(processInstance.getAssignee().getId());
+
+			} else {
+
+				state.setOwnerPosition(owner.getId());
+
+			}
+
+		} else {
+
+			state.setOwnerPosition(resolveAssignee(processInstance, processInstanceRequest.getRequestInfo()));
+
+		}
 
 		Long userId = requestInfo.getUserInfo().getId();
 

@@ -19,6 +19,18 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties 
 @EnableConfigurationProperties(ReportDefinition.class)
 public class ReportDefinition   {
+  
+	@JsonProperty("moduleName")
+	private String moduleName = null;
+	
+  public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
+
   @JsonProperty("reportName")
   private String reportName = null;
 
@@ -31,7 +43,18 @@ public class ReportDefinition   {
   @JsonProperty("query")
   private String query = null;
   
-  @JsonProperty("linkedReport")
+  @JsonProperty("groupBy")
+  private String groupByQuery = null;
+  
+  public String getGroupByQuery() {
+	return groupByQuery;
+}
+
+public void setGroupByQuery(String groupByQuery) {
+	this.groupByQuery = groupByQuery;
+}
+
+@JsonProperty("linkedReport")
   private LinkedReport linkedReport = null;
 
   
@@ -178,7 +201,8 @@ public void setLinkedReport(LinkedReport linkedReport) {
       return false;
     }
     ReportDefinition reportDefinition = (ReportDefinition) o;
-    return Objects.equals(this.reportName, reportDefinition.reportName) &&
+    return Objects.equals(this.moduleName, reportDefinition.moduleName) &&
+    	Objects.equals(this.reportName, reportDefinition.reportName) &&
         Objects.equals(this.summary, reportDefinition.summary) &&
         Objects.equals(this.version, reportDefinition.version) &&
         Objects.equals(this.query, reportDefinition.query) &&
@@ -189,14 +213,14 @@ public void setLinkedReport(LinkedReport linkedReport) {
 
   @Override
   public int hashCode() {
-    return Objects.hash(reportName, summary, version, query,linkedReport, sourceColumns, searchParams);
+    return Objects.hash( moduleName,reportName, summary, version, query,linkedReport, sourceColumns, searchParams);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ReportDefinition {\n");
-    
+    sb.append("    moduleName: ").append(toIndentedString(moduleName)).append("\n");
     sb.append("    reportName: ").append(toIndentedString(reportName)).append("\n");
     sb.append("    summary: ").append(toIndentedString(summary)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");

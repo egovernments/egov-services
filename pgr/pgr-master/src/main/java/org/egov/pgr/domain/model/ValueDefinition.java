@@ -13,14 +13,18 @@ public class ValueDefinition {
     private String name;
     private String key;
     private boolean active;
+    private boolean required;
     private String serviceCode;
 
     private char activeToChar(){
         return active ? 'Y' : 'N';
     }
 
+    private char requiredToChar(){
+        return required ? 'Y' : 'N';
+    }
+
     /* mandatory field validation*/
- 
     
     public boolean isNameAbsent()
     {
@@ -60,6 +64,7 @@ public class ValueDefinition {
                     .lastModifiedBy(serviceDefinition.getLastModifiedBy())
                     .lastModifiedDate(serviceDefinition.getLastModifiedDate())
                     .active(activeToChar())
+                    .required(requiredToChar())
                     .build();
     }
 }

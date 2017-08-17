@@ -72,118 +72,128 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @WebMvcTest(TreatmentPlantRepository.class)
 public class TreatmentPlantRepositoryTest {
 
-    @Mock
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	@Mock
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Mock
-    private TreatmentPlantRowMapper treatmentPlantRowMapper;
+	@Mock
+	private TreatmentPlantRowMapper treatmentPlantRowMapper;
 
-    @Mock
-    private TreatmentPlantQueryBuilder treatmentPlantQueryBuilder;
+	@Mock
+	private TreatmentPlantQueryBuilder treatmentPlantQueryBuilder;
 
-    @InjectMocks
-    private TreatmentPlantRepository treatmentPlantRepository;
+	@InjectMocks
+	private TreatmentPlantRepository treatmentPlantRepository;
 
-    @Mock
-    private RestWaterExternalMasterService restExternalMasterService;
+	@Mock
+	private RestWaterExternalMasterService restExternalMasterService;
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void test_Should_Search_TreatmentPlant() {
-        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
-        final TreatmentPlant treatmentPlant = getTreatmentPlant();
-        treatmentPlantList.add(treatmentPlant);
-        String[] wardNum={"23"};
-        String[] zoneNum={"3"};
-        String[] localityNum={"12"};
-        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(),eq(Long.class))).thenReturn(2L);
-        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(),any(TreatmentPlantRowMapper.class))).thenReturn(treatmentPlantList);
-        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(),eq(String.class))).thenReturn("abcd");
-        when(restExternalMasterService.getBoundaryName("Ward",wardNum, "default")).thenReturn(getBoundaryWardRes());
-        when(restExternalMasterService.getBoundaryName("Zone",zoneNum,"default")).thenReturn(getBoundaryZoneRes());
-        when(restExternalMasterService.getBoundaryName("Locality",localityNum, "default")).thenReturn(getBoundaryLocalityRes());
-        assertTrue(treatmentPlantRepository.findForCriteria(getTreatmentPlantGetRequest()).get(0).getStorageReservoirName().equals("abcd"));
-        assertTrue(treatmentPlantRepository.findForCriteria(getTreatmentPlantGetRequest()).
-                get(0).getLocationName().equals(getBoundaryLocalityRes().getBoundarys().get(0).getName()));
-    }
-   
-    private TreatmentPlantGetRequest getTreatmentPlantGetRequest() {
-        // TODO Auto-generated method stub
-        return TreatmentPlantGetRequest.builder().tenantId("default").code("12").name("test").capacity(2d).plantType("abcd")
-                .zone("3").ward("23").location("12").build();
-    }
+	@SuppressWarnings("unchecked")
+	@Test
+	public void test_Should_Search_TreatmentPlant() {
+		final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+		final TreatmentPlant treatmentPlant = getTreatmentPlant();
+		treatmentPlantList.add(treatmentPlant);
+		String[] wardNum = { "23" };
+		String[] zoneNum = { "3" };
+		String[] localityNum = { "12" };
+		when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
+		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(TreatmentPlantRowMapper.class)))
+				.thenReturn(treatmentPlantList);
+		when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(String.class)))
+				.thenReturn("abcd");
+		when(restExternalMasterService.getBoundaryName("Ward", wardNum, "default")).thenReturn(getBoundaryWardRes());
+		when(restExternalMasterService.getBoundaryName("Zone", zoneNum, "default")).thenReturn(getBoundaryZoneRes());
+		when(restExternalMasterService.getBoundaryName("Locality", localityNum, "default"))
+				.thenReturn(getBoundaryLocalityRes());
+		assertTrue(treatmentPlantRepository.findForCriteria(getTreatmentPlantGetRequest()).get(0)
+				.getStorageReservoirName().equals("abcd"));
+		assertTrue(treatmentPlantRepository.findForCriteria(getTreatmentPlantGetRequest()).get(0).getLocationName()
+				.equals(getBoundaryLocalityRes().getBoundarys().get(0).getName()));
+	}
 
+	private TreatmentPlantGetRequest getTreatmentPlantGetRequest() {
+		// TODO Auto-generated method stub
+		return TreatmentPlantGetRequest.builder().tenantId("default").code("12").name("test").capacity(2d)
+				.plantType("abcd").zone("3").ward("23").location("12").build();
+	}
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void test_Should_Create_TreatmentPlant() {
-        final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
-        final RequestInfo requestInfo = new RequestInfo();
-        final User user = new User();
-        user.setId(1l);
-        requestInfo.setUserInfo(user);
-        treatmentPlantRequest.setRequestInfo(requestInfo);
-        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
-        final TreatmentPlant treatmentPlant = getTreatmentPlant();
-        treatmentPlantList.add(treatmentPlant);
-        treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
-        TreatmentPlantRequest treatmentPlantReq=treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest);
-        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(),eq(Long.class))).thenReturn(2L);
-       assertThat(treatmentPlantReq.getTreatmentPlants().size()).isEqualTo(1);
-    }
+	@SuppressWarnings("unchecked")
+	@Test
+	public void test_Should_Create_TreatmentPlant() {
+		final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
+		final RequestInfo requestInfo = new RequestInfo();
+		final User user = new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		treatmentPlantRequest.setRequestInfo(requestInfo);
+		final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+		final TreatmentPlant treatmentPlant = getTreatmentPlant();
+		treatmentPlantList.add(treatmentPlant);
+		treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
+		TreatmentPlantRequest treatmentPlantReq = treatmentPlantRepository
+				.persistCreateTreatmentPlant(treatmentPlantRequest);
+		when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
+		assertThat(treatmentPlantReq.getTreatmentPlants().size()).isEqualTo(1);
+	}
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void test_Should_Update_TreatmentPlant() {
-        final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
-        final RequestInfo requestInfo = new RequestInfo();
-        final User user = new User();
-        user.setId(1l);
-        requestInfo.setUserInfo(user);
-        treatmentPlantRequest.setRequestInfo(requestInfo);
-        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
-        final TreatmentPlant treatmentPlant = getTreatmentPlant();
-        treatmentPlantList.add(treatmentPlant);
-        treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
-        TreatmentPlantRequest treatmentPlantReq=treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest);
-        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(),eq(Long.class))).thenReturn(2L);
-       assertThat(treatmentPlantReq.getTreatmentPlants().size()).isEqualTo(1);
-    }
-    
-    private BoundaryResponse getBoundaryLocalityRes() {
-        BoundaryType type=BoundaryType.builder().id("4").name("Locality").build();
-        Boundary boundary =Boundary.builder().boundaryNum("12").boundaryType(type).id("4").name("kontapeta").tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
-    private BoundaryResponseInfo getResponseInfo() {
-        return BoundaryResponseInfo.builder().apiId("api345").msgId("mkede").resMsgId("res345").status("search").ver("2").build();
-    }
+	@SuppressWarnings("unchecked")
+	@Test
+	public void test_Should_Update_TreatmentPlant() {
+		final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
+		final RequestInfo requestInfo = new RequestInfo();
+		final User user = new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		treatmentPlantRequest.setRequestInfo(requestInfo);
+		final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+		final TreatmentPlant treatmentPlant = getTreatmentPlant();
+		treatmentPlantList.add(treatmentPlant);
+		treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
+		TreatmentPlantRequest treatmentPlantReq = treatmentPlantRepository
+				.persistUpdateTreatmentPlant(treatmentPlantRequest);
+		when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
+		assertThat(treatmentPlantReq.getTreatmentPlants().size()).isEqualTo(1);
+	}
 
-    private BoundaryResponse getBoundaryZoneRes() {
-        BoundaryType type=BoundaryType.builder().id("4").name("Zone").build();
-        Boundary boundary =Boundary.builder().boundaryNum("21").boundaryType(type).id("4").name("Zone-1").tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
+	private BoundaryResponse getBoundaryLocalityRes() {
+		BoundaryType type = BoundaryType.builder().id("4").name("Locality").build();
+		Boundary boundary = Boundary.builder().boundaryNum("12").boundaryType(type).id("4").name("kontapeta")
+				.tenantId("default").build();
+		return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
+	}
 
-    private BoundaryResponse getBoundaryWardRes() {
-        BoundaryType type=BoundaryType.builder().id("3").name("Ward").build();
-        Boundary boundary =Boundary.builder().boundaryNum("22").boundaryType(type).id("3").name("Revenue Ward").tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
+	private BoundaryResponseInfo getResponseInfo() {
+		return BoundaryResponseInfo.builder().apiId("api345").msgId("mkede").resMsgId("res345").status("search")
+				.ver("2").build();
+	}
 
-    private TreatmentPlant getTreatmentPlant() {
-        final TreatmentPlant treatmentPlant = new TreatmentPlant();
-        treatmentPlant.setTenantId("default");
-        treatmentPlant.setName("test");
-        treatmentPlant.setCode("12");
-        treatmentPlant.setLocationNum("12");
-        treatmentPlant.setWardNum("23");
-        treatmentPlant.setZoneNum("3");
-        treatmentPlant.setCapacity(2d);
-        treatmentPlant.setPlantType("test");
-        treatmentPlant.setStorageReservoirId(2L);
-        treatmentPlant.setPlantType("abcd");
-        return treatmentPlant;
-    }
+	private BoundaryResponse getBoundaryZoneRes() {
+		BoundaryType type = BoundaryType.builder().id("4").name("Zone").build();
+		Boundary boundary = Boundary.builder().boundaryNum("21").boundaryType(type).id("4").name("Zone-1")
+				.tenantId("default").build();
+		return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
+	}
+
+	private BoundaryResponse getBoundaryWardRes() {
+		BoundaryType type = BoundaryType.builder().id("3").name("Ward").build();
+		Boundary boundary = Boundary.builder().boundaryNum("22").boundaryType(type).id("3").name("Revenue Ward")
+				.tenantId("default").build();
+		return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
+	}
+
+	private TreatmentPlant getTreatmentPlant() {
+		final TreatmentPlant treatmentPlant = new TreatmentPlant();
+		treatmentPlant.setTenantId("default");
+		treatmentPlant.setName("test");
+		treatmentPlant.setCode("12");
+		treatmentPlant.setLocationNum("12");
+		treatmentPlant.setWardNum("23");
+		treatmentPlant.setZoneNum("3");
+		treatmentPlant.setCapacity(2d);
+		treatmentPlant.setPlantType("test");
+		treatmentPlant.setStorageReservoirId(2L);
+		treatmentPlant.setPlantType("abcd");
+		return treatmentPlant;
+	}
 
 }

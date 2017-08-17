@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ReportDefinition;
+import org.egov.swagger.model.SearchColumn;
 import org.egov.swagger.model.SearchParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ public class ReportQueryBuilder {
 		
 		LOGGER.info("searchParams:" + searchParams);
 		
-		String baseQuery = reportDefinition.getQuery();
+		String baseQuery = generateQuery(searchParams, tenantId, reportDefinition);
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
 		
 		for(SearchParam searchParam : searchParams){
@@ -36,5 +37,32 @@ public class ReportQueryBuilder {
 		LOGGER.info("baseQuery :"+baseQuery);
 		return baseQuery;
 	}
-
-}
+public String generateQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+		
+		LOGGER.info("searchParams:" + searchParams);
+		
+		StringBuffer baseQuery = new StringBuffer(reportDefinition.getQuery());
+		
+		String groupByQuery = reportDefinition.getGroupByQuery();
+		
+		for(SearchParam searchParam : searchParams){
+			
+			Object name = searchParam.getName();
+			
+		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
+		    {
+		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
+		            	if(sc.getSearchClause() != null) {
+		            	baseQuery.append(" " +sc.getSearchClause());
+		            	}
+		            }
+		    }
+			
+		
+	}
+	if(groupByQuery != null){
+    baseQuery.append(" "+ groupByQuery);
+	}
+    LOGGER.info("generate baseQuery :"+baseQuery);
+    return baseQuery.toString();
+} }

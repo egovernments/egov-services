@@ -223,7 +223,6 @@ componentWillUpdate() {
 
 
 	handleDepartment = (data) => {
-
 		 let {toggleSnackbarAndSetText, emptyProperty} = this.props;
 
 		 var currentThis = this;
@@ -231,7 +230,7 @@ componentWillUpdate() {
 		  currentThis.setState({toPosition : []});
 
 		let query = {
-			id : data.department
+			id : data.department ? data.department :  data.target.value
 		}
 
 		  Api.commonApiPost("/hr-masters/designations/_search",query).then(function(response)
@@ -243,15 +242,14 @@ componentWillUpdate() {
   }
 
   handleDesignation = (data) => {
-
   let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
 
 		var current = this;
 		this.setState({toPosition : []});
 
 		let query = {
-			departmentId:data.department,
-			designationId:data.designation
+			departmentId:data.department ? data.department : this.props.defineEscalation.department,
+			designationId:data.designation ? data.designation : data.target.value
 		}
 
 		  Api.commonApiPost("/hr-masters/positions/_search",query).then(function(response) {
@@ -489,8 +487,8 @@ componentWillUpdate() {
                                  value: value
                                }
                              };
-							 current.handleDepartment(e);
                              handleChange(e, "department", true, "");
+                             current.handleDepartment(e);
                             }}
                          >
 							 {current.state.departments && current.state.departments.map((item, index)=>{
@@ -512,8 +510,8 @@ componentWillUpdate() {
                                  value: value
                                }
                              };
-							 current.handleDesignation(e);
                              handleChange(e, "designation", true, "");
+                             current.handleDesignation(e);
                             }}
                          >
                            {current.state.designations && current.state.designations.map((item, index)=>{
@@ -588,6 +586,7 @@ componentWillUpdate() {
                                 <AutoComplete
                                   floatingLabelText={translate('pgr.lbl.position')+" *"}
                                   fullWidth={true}
+                                  listStyle={{ maxHeight: 200, overflow: 'auto' }}
                                   filter={function filter(searchText, key) {
                                             return key.toLowerCase().includes(searchText.toLowerCase());
                                          }}
@@ -614,7 +613,7 @@ componentWillUpdate() {
               </CardText>
           </Card>
           <div style={{textAlign:'center'}}>
-              <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false: true} label={translate('core.lbl.search')} />
+              <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false : true} label={translate('core.lbl.search')} />
           </div>
           {this.state.noData &&
             <Card className="text-center" style={styles.marginStyle}>

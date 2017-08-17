@@ -131,7 +131,7 @@ class ViewEditServiceGroup extends Component {
                                 <Table id="searchTable" bordered responsive className="table-striped">
                                     <thead>
                                         <tr>
-                                          <th>ID</th>
+                                          <th>#</th>
                                           <th>{translate("core.lbl.add.name")}</th>
                                           <th>{translate("core.lbl.code")}</th>
                                           <th>{translate("core.lbl.description")}</th>

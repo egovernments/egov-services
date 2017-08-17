@@ -14,11 +14,13 @@ public class AttributeValueDefinition {
     private String name;
     @JsonProperty("isActive")
     private boolean active;
+    private boolean required;
 
     public AttributeValueDefinition(ValueDefinition valueDefinition) {
         this.key = valueDefinition.getKey();
         this.name = valueDefinition.getName();
         this.active = valueDefinition.isActive();
+        this.required = valueDefinition.isRequired();
     }
 
     public ValueDefinition toDomain(){
@@ -26,6 +28,7 @@ public class AttributeValueDefinition {
                     .key(key)
                     .name(name)
                     .active(active)
+                    .required(required)
                     .build();
     }
 }

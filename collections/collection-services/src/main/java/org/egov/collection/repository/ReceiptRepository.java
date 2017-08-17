@@ -292,9 +292,7 @@ public class ReceiptRepository {
 		jdbcTemplate.update(queryString, new Object[] {instrumentId, receiptHeaderId,tenantId});
 	}
 
-	public WorkflowDetailsRequest updateReceipt(WorkflowDetailsRequest workFlowDetailsRequest) {
-		logger.info("workFlowDetailsRequest at repo: "+workFlowDetailsRequest.toString());
-		
+	public WorkflowDetailsRequest updateReceipt(WorkflowDetailsRequest workFlowDetailsRequest) {		
 		String updateQuery = receiptDetailQueryBuilder.getQueryForUpdate(
 				workFlowDetailsRequest.getStateId(), workFlowDetailsRequest.getStatus(), 
 				workFlowDetailsRequest.getReceiptHeaderId(), workFlowDetailsRequest.getTenantId());

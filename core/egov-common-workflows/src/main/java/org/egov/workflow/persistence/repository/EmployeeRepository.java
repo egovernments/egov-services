@@ -1,10 +1,13 @@
 package org.egov.workflow.persistence.repository;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.workflow.web.contract.Employee;
 import org.egov.workflow.web.contract.EmployeeRes;
+import org.egov.workflow.web.contract.RequestInfo;
+import org.egov.workflow.web.contract.RequestInfoWrapper;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,34 +20,38 @@ public class EmployeeRepository {
 	private final String employeesByUserIdUrl;
 	private final String employeesByPositionIdurl;
 
-	private final String employeesByRoleNameurl;
+	private final String employeesByRoleCodeurl;
 
 	@Autowired
 	public EmployeeRepository(final RestTemplate restTemplate,
 			@Value("${egov.services.hr-employee.host}") final String hrEmployeeServiceHostname,
-			@Value("${egov.services.eis.employee_by_userid}") final String employeesByUserIdUrl,
-			@Value("${egov.services.eis.employee_by_position}") final String employeesByPositionIdurl,
-			@Value("${egov.services.eis.employee_by_role}") final String employeesByRoleNameurl) {
+			@Value("${egov.services.hr.employee_by_userid}") final String hrEmployeesByUserIdUrl,
+			@Value("${egov.services.hr.employee_by_position}") final String hrEmployeesByPositionIdurl,
+			@Value("${egov.services.hr_employee_by_role}") final String hrEmployeesByRoleCodeurl) {
 
 		this.restTemplate = restTemplate;
-		this.employeesByUserIdUrl = hrEmployeeServiceHostname + employeesByUserIdUrl;
-		this.employeesByPositionIdurl = hrEmployeeServiceHostname + employeesByPositionIdurl;
-		this.employeesByRoleNameurl = hrEmployeeServiceHostname + employeesByRoleNameurl;
+		this.employeesByUserIdUrl = hrEmployeeServiceHostname + hrEmployeesByUserIdUrl;
+		this.employeesByPositionIdurl = hrEmployeeServiceHostname + hrEmployeesByPositionIdurl;
+		this.employeesByRoleCodeurl = hrEmployeeServiceHostname + hrEmployeesByRoleCodeurl;
 	}
 
-	public List<Employee> getByRoleName(final String roleName) {
-		final EmployeeRes employeeRes = restTemplate.getForObject(employeesByRoleNameurl, EmployeeRes.class, roleName);
+	public List<Employee> getByRoleCode(final String roleCode, final String tenantId) {
+		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(new RequestInfo()).build();
+		final EmployeeRes employeeRes = restTemplate.postForObject(employeesByRoleCodeurl, wrapper, EmployeeRes.class,
+				roleCode, tenantId);
 		return employeeRes.getEmployees();
 	}
 
-	public EmployeeRes getEmployeeForPosition(final Long posId, final LocalDateTime asOnDate) {
-		return restTemplate.getForObject(employeesByPositionIdurl, EmployeeRes.class, posId, asOnDate);
+	public EmployeeRes getEmployeeForPositionAndTenantId(final Long posId, final LocalDate asOnDate,
+			final String tenantId) {
+		RequestInfoWrapper wrapper = RequestInfoWrapper.builder()
+				.requestInfo(RequestInfo.builder().apiId("apiId").ver("ver").ts(new Date()).build()).build();
+		return restTemplate.postForObject(employeesByPositionIdurl, wrapper, EmployeeRes.class, tenantId, posId,
+				asOnDate.toString("dd/MM/yyyy"));
 	}
 
-	public EmployeeRes getEmployeeForUserId(final Long userId) {
-		return restTemplate.getForObject(employeesByUserIdUrl, EmployeeRes.class, userId);
+	public EmployeeRes getEmployeeForUserIdAndTenantId(final Long userId, final String tenantId) {
+		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().build()).build();
+		return restTemplate.postForObject(employeesByUserIdUrl, wrapper, EmployeeRes.class, userId, tenantId);
 	}
-	
-	
-	
 }

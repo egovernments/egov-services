@@ -54,7 +54,7 @@ public class DepreciationQueryBuilder {
 
         final StringBuilder sql = new StringBuilder(
                 "select asset.id as assetid,asset.grossvalue,asset.accumulateddepreciation,"
-                        + "asset.enableyearwisedepreciation,assetcategory.id as assetcategoryid,"
+                        + "asset.enableyearwisedepreciation,assetcategory.id as assetcategoryid,asset.department as department,"
                         + "assetcategory.depreciationmethod,asset.assetreference,assetcategory.name as assetcategoryname,"
                         + "asset.depreciationrate as assetdepreciationrate,"
                         + "assetcategory.depreciationrate as assetcategorydepreciationrate,"

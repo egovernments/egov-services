@@ -126,6 +126,13 @@ public class ApplicationProperties {
     @Value("${egov.services.asset.depreciaition.c.factor}")
     private String depreciaitionFactorForC;
     
+    @Value("${egov.services.egf_service.functions.searchpath}")
+    private String egfServiceFunctionsSearchPath;
+
+    @Value("${egov.services.egf_service.funds.searchpath}")
+    private String egfServiceFundsSearchPath;
+
+    
     @Autowired
     private Environment environment;
 

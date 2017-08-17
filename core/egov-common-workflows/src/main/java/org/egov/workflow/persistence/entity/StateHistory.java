@@ -276,8 +276,7 @@ public class StateHistory implements Serializable {
 	}
 
 	public Task map() {
-		Position p = new Position();
-		p.setId(this.ownerPosition);
+		Position p = Position.builder().id(this.ownerPosition).build();;
 		Task t = Task.builder().businessKey(this.getState().getType())
 				.comments(this.comments == null ? "" : this.comments).createdDate(this.getCreatedDate())
 				.id(this.getId().toString()).status(this.getValue()).natureOfTask(this.getNatureOfTask()).owner(p)

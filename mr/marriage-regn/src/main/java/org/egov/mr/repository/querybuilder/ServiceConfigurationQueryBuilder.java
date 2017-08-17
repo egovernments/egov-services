@@ -41,27 +41,55 @@ public class ServiceConfigurationQueryBuilder {
 	private void addWhereCluase(ServiceConfigurationSearchCriteria serviceConfigurationSearchCriteria,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 		if (serviceConfigurationSearchCriteria.getTenantId() == null
-				&& serviceConfigurationSearchCriteria.getName() == null
-				&& serviceConfigurationSearchCriteria.getId() == null
+				&& serviceConfigurationSearchCriteria.getNames() == null
+				&& serviceConfigurationSearchCriteria.getIds() == null
 				&& serviceConfigurationSearchCriteria.getEffectiveFrom() == null) {
 			return;
 		}
 		selectQuery.append("WHERE ck.tenantId=? ");
 		preparedStatementValues.add(serviceConfigurationSearchCriteria.getTenantId());
-		
-		if (serviceConfigurationSearchCriteria.getName() != null
-				&& serviceConfigurationSearchCriteria.getName() != "") {
-			selectQuery.append("AND keyName=? ");
-			preparedStatementValues.add(serviceConfigurationSearchCriteria.getName());
+
+		if (serviceConfigurationSearchCriteria.getNames() != null
+				&& !serviceConfigurationSearchCriteria.getNames().isEmpty()) {
+			selectQuery.append("AND keyName IN ('" + getNames(serviceConfigurationSearchCriteria.getNames()) + "') ");
 		}
-		if (serviceConfigurationSearchCriteria.getId() != null && serviceConfigurationSearchCriteria.getId() != 0) {
-			selectQuery.append("AND ck.id=? ");
-			preparedStatementValues.add(serviceConfigurationSearchCriteria.getId());
+		if (serviceConfigurationSearchCriteria.getIds() != null
+				&& !serviceConfigurationSearchCriteria.getIds().isEmpty()) {
+			selectQuery.append("AND ck.id IN (" + getIds(serviceConfigurationSearchCriteria.getIds()) + ") ");
 		}
 		if (serviceConfigurationSearchCriteria.getEffectiveFrom() != null) {
 			selectQuery.append("AND cv.effectivefrom=? ");
 			preparedStatementValues.add(serviceConfigurationSearchCriteria.getEffectiveFrom());
 		}
 		selectQuery.append("ORDER BY ck.keyName ASC,cv.effectivefrom DESC;");
+	}
+
+	/**
+	 * @HelperMethods
+	 * 
+	 * @param idsList
+	 * @return
+	 */
+	private String getIds(List<Integer> idsList) {
+		StringBuilder ids = new StringBuilder();
+		ids.append(idsList.get(0));
+		for (int i = 1; i <= idsList.size() - 1; i++) {
+			ids.append("," + idsList.get(i));
+		}
+		return ids.toString();
+	}
+
+	/**
+	 * 
+	 * @param namesList
+	 * @return
+	 */
+	private String getNames(List<String> namesList) {
+		StringBuilder names = new StringBuilder();
+		names.append(namesList.get(0));
+		for (int i = 1; i <= namesList.size() - 1; i++) {
+			names.append("','" + namesList.get(i));
+		}
+		return names.toString();
 	}
 }

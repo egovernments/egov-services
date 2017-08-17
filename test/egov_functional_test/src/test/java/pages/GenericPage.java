@@ -3,15 +3,11 @@ package pages;
 import org.apache.commons.lang.math.RandomUtils;
 import org.json.JSONObject;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import utils.Properties;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class GenericPage extends BasePage {
 
@@ -26,20 +22,20 @@ public class GenericPage extends BasePage {
         if (value.contains("--")) {
             if (value.contains(",") && !value.contains("characters")) {
                 value = value.split(",")[0] +
-                        getRandomRandomNumber(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", "")));
+                        getRandomNumber(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", "")));
             } else if (value.contains("characters")) {
                 value = value.split(",")[0] +
                         getRandomCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", "")));
             } else if (value.contains("email")) {
                 value = getRandomEmail();
             } else {
-                value = getRandomRandomNumber(Integer.parseInt(value.replaceAll("[^0-9]+", "")));
+                value = getRandomNumber(Integer.parseInt(value.replaceAll("[^0-9]+", "")));
             }
         }
         return value.replaceAll("-", "");
     }
 
-    private String getRandomRandomNumber(int c) {
+    private String getRandomNumber(int c) {
         int a = (int) Math.pow(10, c - 1);
         int b = (int) Math.pow(10, c) - 1;
         return String.valueOf(a + RandomUtils.nextInt(b));

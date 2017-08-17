@@ -223,7 +223,7 @@ public class DepreciationService {
                         if (deAccountCodeDetails != null)
                             deAccountCodeDetails.setCreditAmount(deAccountCodeDetails.getCreditAmount().add(amount));
                         else {
-                            deAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, aDAccount, amount,
+                            deAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, dEAccount, amount,
                                     function, true, false);
                             ledgerMap.put(aDAccount, deAccountCodeDetails);
                         }

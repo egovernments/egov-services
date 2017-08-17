@@ -159,7 +159,7 @@ var dat = {
               {
                 "jsonPath": "Connection.property.usageType",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..usageType|$..usageType"
+                "pattern": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..usageCode|$..usageType"
               },
               {
                 "jsonPath": "Connection.hscPipeSizeType",

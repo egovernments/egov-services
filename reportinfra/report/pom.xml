@@ -8,7 +8,7 @@
 	<name>Report Infra</name>
 	<description>Report Infra</description>
 	
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -98,7 +98,7 @@
 			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
 		</repository>
 	</repositories>
-	 <distributionManagement>
+	<!--  <distributionManagement>
         <repository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Releases Repository</name>
@@ -109,7 +109,7 @@
             <name>eGov ERP Snapshots Repository</name>
             <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement> -->
 	<build>
 		<plugins>
 			<!-- Package as an executable jar/war -->

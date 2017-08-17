@@ -11,6 +11,7 @@ import org.egov.tradelicense.web.contract.AckNoGenerationRequest;
 import org.egov.tradelicense.web.contract.AckNoGenerationResponse;
 import org.egov.tradelicense.web.contract.IdGenErrorRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -22,6 +23,7 @@ import com.google.gson.GsonBuilder;
  * @author Manoj Kulkarni
  *
  */
+@Service
 public class IdGenService {
 
     @Autowired

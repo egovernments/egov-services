@@ -267,8 +267,8 @@ var localization_EN_Data = {
   "pt.create.groups.ownerDetails.fields.save": "Save",
   "pt.create.groups.ownerDetails.fields.isPrimaryOwner": "Is Primary Owner",
 
-  "pt.create.groups.propertyAddress.fields.referancePropertyNumber": "Referance Property Number",
-  "pt.create.groups.propertyAddress.fields.appartment": "Appartment/Complex Name",
+  "pt.create.groups.propertyAddress.fields.referancePropertyNumber": "Reference Property Number",
+  "pt.create.groups.propertyAddress.fields.appartment": "Apartment/Complex Name",
   "pt.create.groups.propertyAddress.fields.doorNo": "Door No",
   "pt.create.groups.propertyAddress.fields.locality": "Locality",
   "pt.create.groups.propertyAddress.fields.electionWard": "Election Ward",
@@ -281,7 +281,8 @@ var localization_EN_Data = {
   "pt.create.groups.propertyAddress.fields.readyReckoner": "Ready Reckoner",
   "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": "Is Correspondance Address Different From Address",
   "pt.create.groups.propertyAddress.fields.address1": "Address 1",
-
+  
+  "pt.create.groups.assessmentDetails.fields.creationReason":"Assessment details",
   "pt.create.groups.assessmentDetails.fields.creationReason": "Reason For Creation",
   "pt.create.groups.assessmentDetails.fields.parentUpicNo": "Parent UPIC No.",
   "pt.create.groups.assessmentDetails.fields.propertyType": "Property Type",
@@ -388,7 +389,7 @@ var localization_EN_Data = {
   "pt.create.groups.addDemand.fields.collection": "Collection",
 
   //pt construction details
-  "pt.create.groups.constructionDetails.fields.orderDate":"Order Date",
+  "pt.create.groups.constructionDetails.fields.orderDate":"Commencement Date",
   "pt.create.groups.constructionDetails.fields.certificateNumber": "Certificate Number",
   "pt.create.groups.constructionDetails.fields.certificateCompletionDate":"Certificate Completion Date",
   "pt.create.groups.constructionDetails.fields.certificateReceivedDate":"Certificate Received Date",

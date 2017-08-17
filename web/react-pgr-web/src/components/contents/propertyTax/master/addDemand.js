@@ -192,6 +192,8 @@ class AddDemand extends Component {
 	  var data = this.state.demands;
 
 	  let { addDemand } = this.props;
+	  
+	  let current = this;
 
 	  data.map((demand, index)=> {
 		  demand.businessService = 'PT'
@@ -209,7 +211,7 @@ class AddDemand extends Component {
 
 
 	Api.commonApiPost('billing-service/demand/_update', {}, body, false, true).then((res)=>{
-
+		current.props.history.replace('/propertyTax/demand-acknowledgement');
 	}).catch((err)=> {
 		console.log(err)
 	})

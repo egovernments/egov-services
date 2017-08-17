@@ -152,6 +152,7 @@ constructor(props) {
                       <Row>
                         <Col xs={12} md={3} sm={6}>
                           <TextField
+							tabIndex ={1}
                             hintText="434345456545"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.aadhaarNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.aadhaarNumber}</span>: "") : ""}
@@ -171,6 +172,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
+						  tabIndex ={2}
                             hintText="9999888877"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.phoneNumber')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.mobileNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.mobileNumber}</span>: ""): ""}
@@ -189,6 +191,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
+						   tabIndex ={3}
                             hintText="Joe Doe"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerName')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
@@ -207,6 +210,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
+						  
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.gender')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gender}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gender:""}
@@ -230,6 +234,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
+						  tabIndex ={5}
                             hintText="example@example.com"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.email')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.emailId? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.emailId}</span>:""): ""}
@@ -264,7 +269,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardianRelation')+' *'}
+                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardianRelation')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gaurdianRelation? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gaurdianRelation}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gaurdianRelation:""}
                             onChange={(event, index, value) => {
@@ -274,10 +279,7 @@ constructor(props) {
                                     value: value
                                   }
                                 };
-								handleChangeOwner(e, "owner", "gaurdianRelation", true, "")
-								//handleChangeNextOne(e, "owner", "gaurdianRelation", false, "")
-
-                                
+								handleChangeOwner(e, "owner", "gaurdianRelation", false, "")                                
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -291,12 +293,11 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="Guardian name"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')+' *'}
+                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')}
                             errorText={fieldErrors.owner ?(fieldErrors.owner.fatherOrHusbandName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.fatherOrHusbandName}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName:""}
                             onChange={(e) => {
-								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", true, "")
-								//handleChangeNextOne(e,  "owner",  "gaurdian", false, "")
+								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", false, "")
 							}}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
@@ -471,8 +472,8 @@ setForm: () => {
       type: "SET_OWNER_STATE",
 	   validatePropertyOwner: {
         required: {
-          current: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender'],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          current: ['mobileNumber', 'name', 'gender'],
+          required: ['mobileNumber', 'name',  'gender' ]
         },
         pattern: {
           current: [],
@@ -559,7 +560,7 @@ setForm: () => {
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],

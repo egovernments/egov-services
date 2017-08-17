@@ -406,7 +406,7 @@ createPropertyTax = () => {
 					"isExempted": false,
 					"propertyType": createProperty.propertyType || null,
 					"category": createProperty.propertySubType || null,
-					"usage": null,
+					"usage": createProperty.usage || null,
 					"department": createProperty.department || null,
 					"apartment":null,
 					"siteLength": 12,
@@ -682,7 +682,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],
@@ -765,7 +765,7 @@ const mapDispatchToProps = dispatch => ({
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],

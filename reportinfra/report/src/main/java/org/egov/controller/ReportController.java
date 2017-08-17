@@ -42,7 +42,7 @@ public class ReportController {
 			final BindingResult errors) {
 		try{
 		System.out.println("The Module Name from the URI is :"+moduleName);
-		MetadataResponse mdr = reportService.getMetaData(metaDataRequest);
+		MetadataResponse mdr = reportService.getMetaData(metaDataRequest,moduleName);
 		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		} catch(NullPointerException e){
 			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
@@ -51,17 +51,17 @@ public class ReportController {
 	
 	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(@RequestBody @Valid final ReportRequest reportRequest,
+	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
 		try {
-		ReportResponse reportResponse = reportService.getReportData(reportRequest);
+		ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName);
 		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 		} catch(NullPointerException e){
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		}
 	}
 	
-	@PostMapping("/{moduleName}/_reload")
+	@PostMapping("/_reload")
 	@ResponseBody
 	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {

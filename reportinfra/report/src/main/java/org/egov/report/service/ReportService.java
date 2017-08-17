@@ -46,12 +46,12 @@ public class ReportService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
-	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest) {
+	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest, String moduleName) {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinitions rds = ReportApp.getReportDefs();
 		ReportDefinition reportDefinition = new ReportDefinition();
 		//LOGGER.info("updated repot defs " + ReportApp.getReportDefs() + "\n\n\n");
-		reportDefinition = rds.getReportDefinition(metaDataRequest.getReportName());
+		reportDefinition = rds.getReportDefinition(moduleName+" "+metaDataRequest.getReportName());
 		ReportMetadata rmt = new ReportMetadata();
 		rmt.setReportName(reportDefinition.getReportName());
         rmt.setSummary(reportDefinition.getSummary());
@@ -75,7 +75,7 @@ public class ReportService {
 			sc.setType(te);
 			sc.setLabel(cd.getLabel());
 			sc.setName(cd.getName());
-			sc.setDefaultValue(cd.getDefaultValue());
+			sc.setDefaultValue(cd.getPattern());
 			sc.setIsMandatory(cd.getIsMandatory());
 			searchParams.add(sc);
 
@@ -125,13 +125,13 @@ public class ReportService {
 
 	}
 
-	public ReportResponse getReportData(ReportRequest reportRequest) {
+	public ReportResponse getReportData(ReportRequest reportRequest,String moduleName) {
 		
 		List<ReportDefinition> listReportDefinitions  = ReportApp.getReportDefs().getReportDefinitions();
 		ReportDefinitions rds = ReportApp.getReportDefs();
 		/*ReportDefinition reportDefinition = listReportDefinitions.stream()
 				.filter(t -> (t.getReportName()+" "+t.getModuleName()).equals(reportRequest.getReportName())).findFirst().orElse(null);*/
-		ReportDefinition reportDefinition = rds.getReportDefinition(reportRequest.getReportName());
+		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportRequest.getReportName());
 		//LOGGER.info("reportYamlMetaData::" + reportDefinition);
 		LOGGER.info("Incoming Report Name is "+reportDefinition.getReportName());
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition);

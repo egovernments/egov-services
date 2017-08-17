@@ -1595,7 +1595,7 @@ ReportDefinitions:
 - reportName: RouterEscalation
   summary: Router Escalation Report
   version: 1.0.0
-  moduleName: PGR
+  moduleName: pgr
   sourceColumns:
   - name: ctname
     label: reports.pgr.complainttype.name

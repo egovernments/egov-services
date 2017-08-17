@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,15 +90,23 @@ public class ReportApp implements EnvironmentAware {
 	try {
     //Local Testing
 	Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
+	
 	File file = resource.getFile();
 	
+	//Dev Testing
+	 URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/ReportEnhancements/docs/reportinfra/report/reportFileLocations.txt");
+	 URLConnection urlConnection = url.openConnection();
+	 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+	 
 	try {
 
 		fr = new FileReader(file);
 		br = new BufferedReader(fr);
 
 		String yamlLocation;
-		while ((yamlLocation = br.readLine()) != null) {
+		//while ((yamlLocation = br.readLine()) != null) {
+			while ((yamlLocation = bufferedReader.readLine()) != null) {
+			
 			if(yamlLocation.startsWith("https")) {
 				LOGGER.info("Coming in to the https loop");
 				LOGGER.info("The Yaml Location is : "+yamlLocation);

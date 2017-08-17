@@ -73,7 +73,10 @@ public class ReportService {
 			sc.setType(te);
 			sc.setLabel(cd.getLabel());
 			sc.setName(cd.getName());
+
 			sc.setDefaultValue(cd.getPattern());
+			sc.setIsMandatory(cd.getIsMandatory());
+
 			searchParams.add(sc);
 
 		}
@@ -178,7 +181,7 @@ public class ReportService {
 					}
 				}
 				List<ColumnDetail> columnDetails = columns.stream()
-						.map(p -> new ColumnDetail(p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName()))
+						.map(p -> new ColumnDetail(p.getShowColumn(),p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName()))
 						.collect(Collectors.toList());
 				
 

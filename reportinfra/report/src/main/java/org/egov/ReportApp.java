@@ -65,13 +65,13 @@ public class ReportApp implements EnvironmentAware {
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	try {
     //Local Testing
-	/*Resource resource = resourceLoader.getResource("file:/ws/egov-services/pgr/pgr-master/src/main/resources/application.yml");
+	Resource resource = resourceLoader.getResource("file:/ws/egov-services/pgr/pgr-master/src/main/resources/application.yml");
 	File file = resource.getFile();
-	reportDefinitions = mapper.readValue(file, ReportDefinitions.class);*/
+	reportDefinitions = mapper.readValue(file, ReportDefinitions.class);
      
      //Dev Server
-	 URL oracle = new URL(ReportApp.env.getProperty("report.yaml.path"));
-	 reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+	 /*URL oracle = new URL(ReportApp.env.getProperty("report.yaml.path"));
+	 reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);*/
 	 
 	LOGGER.info("Report Defintion PGR: "+reportDefinitions.toString());
 	return reportDefinitions;

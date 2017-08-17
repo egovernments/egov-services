@@ -23,8 +23,19 @@ public class SearchColumn extends ColumnDetail  {
   
   @JsonProperty("pattern")
   private String pattern = null;
+  
+  @JsonProperty("searchClause")
+  private String searchClause = null;
+  
+  public String getSearchClause() {
+	return searchClause;
+}
 
-  public SearchColumn source(String source) {
+public void setSearchClause(String searchClause) {
+	this.searchClause = searchClause;
+}
+
+public SearchColumn source(String source) {
     this.source = source;
     return this;
   }

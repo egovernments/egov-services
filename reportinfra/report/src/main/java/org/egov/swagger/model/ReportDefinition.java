@@ -31,7 +31,18 @@ public class ReportDefinition   {
   @JsonProperty("query")
   private String query = null;
   
-  @JsonProperty("linkedReport")
+  @JsonProperty("groupBy")
+  private String groupByQuery = null;
+  
+  public String getGroupByQuery() {
+	return groupByQuery;
+}
+
+public void setGroupByQuery(String groupByQuery) {
+	this.groupByQuery = groupByQuery;
+}
+
+@JsonProperty("linkedReport")
   private LinkedReport linkedReport = null;
 
   

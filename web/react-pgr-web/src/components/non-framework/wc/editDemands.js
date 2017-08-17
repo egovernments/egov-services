@@ -115,7 +115,7 @@ class AddDemand extends Component {
 	initForm();
 
 	var getDemands = {
-		consumerNumber: this.props.match.params.upicNumber
+		consumerNuber: this.props.match.params.upicNumber
 	}
 
 	Api.commonApiPost('wcms-connection/connection/_leacydemand', getDemands, {}, false, true).then((res)=>{

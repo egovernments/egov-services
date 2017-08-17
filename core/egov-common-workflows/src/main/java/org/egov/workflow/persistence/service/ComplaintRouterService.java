@@ -95,7 +95,7 @@ public class ComplaintRouterService {
 	}
 
 	/**
-	 * @param complaint
+	 * @param
 	 * @return This api takes responsibility of returning suitable position for
 	 *         the given complaint Api considers two fields from complaint a.
 	 *         complaintType b. Boundary The descision is taken as below 1. If
@@ -124,20 +124,19 @@ public class ComplaintRouterService {
 	 *         give p6, if line 6 not added then it will give P8
 	 */
 	public Position getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId,
-			RequestInfo requestInfo) {
-		Position positionResponse = null;
+			final String tenantId,RequestInfo requestInfo) {
+		Position position = null;
 		Employee employeeResponse = null;
 		ComplaintRouter complaintRouter = null;
-		List<Position> positions = null;
-		List<PositionHierarchyResponse> positionHierarchies = null;
+		PositionHierarchyResponse positionHierarchies = null;
 		final List<BoundaryResponse> boundaries = new ArrayList<>();
 		if (assigneeId == null) {
 			if (null != boundaryId) {
-				getParentBoundaries(boundaryId, boundaries);
+				getParentBoundaries(boundaryId, boundaries, tenantId);
 				if (StringUtils.isNotBlank(complaintTypeCode)) {
 					for (final BoundaryResponse bndry : boundaries) {
 						final ComplaintTypeResponse complaintType = complaintTypeRepository
-								.fetchComplaintTypeByCode(complaintTypeCode);
+								.fetchComplaintTypeByCode(complaintTypeCode, tenantId);
 						complaintRouter = complaintRouterRepository
 								.findByComplaintTypeAndBoundary(complaintType.getId(), bndry.getId());
 						if (null != complaintRouter)
@@ -145,7 +144,7 @@ public class ComplaintRouterService {
 					}
 					if (null == complaintRouter) {
 						final ComplaintTypeResponse complaintType = complaintTypeRepository
-								.fetchComplaintTypeByCode(complaintTypeCode);
+								.fetchComplaintTypeByCode(complaintTypeCode, tenantId);
 						complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
 					}
 					if (null == complaintRouter)
@@ -157,44 +156,51 @@ public class ComplaintRouterService {
 				}
 			} else {
 				final ComplaintTypeResponse complaintType = complaintTypeRepository
-						.fetchComplaintTypeByCode(complaintTypeCode);
+						.fetchComplaintTypeByCode(complaintTypeCode, tenantId);
 				complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
 				if (null == complaintRouter)
-					complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");
+					complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION",
+							tenantId);
 			}
-			if (complaintRouter != null)
-				positionResponse = positionRepository.getById(complaintRouter.getPosition(),requestInfo.getUserInfo().getTenantId(),requestInfo);
-			else
+			if (complaintRouter != null) {
+				position = positionRepository.getById(complaintRouter.getPosition(), tenantId, requestInfo);
+			} else
 				throw new ApplicationRuntimeException("PGR.001");
 		} else
 			try {
 				positionHierarchies = positionHierarchyRepository
-						.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", complaintTypeCode, assigneeId);
-				if (positionHierarchies.isEmpty() || positionHierarchies.contains(null)) {
-					final List<Employee> employees = employeeRepository.getByRoleName("Grievance Routing Officer");
+						.getByPositionByComplaintTypeAndFromPosition(assigneeId, complaintTypeCode, tenantId);
+				if (positionHierarchies.getEscalationHierarchies().isEmpty()
+						|| positionHierarchies.getEscalationHierarchies().contains(null)) {
+					final List<Employee> employees = employeeRepository.getByRoleCode("GRO", tenantId);
 					if (!employees.isEmpty())
 						employeeResponse = employees.iterator().next();
-					if (employeeResponse != null)
-						positions = positionRepository.getByEmployeeId(employeeResponse.getCode(), requestInfo);
-					if (!positions.isEmpty())
-						positionResponse = positionRepository.getById(positions.iterator().next().getId(),requestInfo.getUserInfo().getTenantId(), requestInfo);
+					if (employeeResponse != null) {
+						employeeResponse.getAssignments().stream()
+								.anyMatch(assignment -> assignment.getPosition().equals(Boolean.TRUE));
+						position = positionRepository.getById(employeeResponse.getAssignments().get(0).getPosition(),
+								tenantId, requestInfo);
+					}
 				} else
-					positionResponse = positionHierarchies.iterator().next().getToPosition();
+					position = Position.builder()
+							.id(positionHierarchies.getEscalationHierarchies().iterator().next().getToPosition())
+							.build();
 			} catch (final EscalationException e) {
 				// Ignoring and logging exception since exception will cause
 				// multi city scheduler to fail for all remaining cities.
 				LOG.error("An error occurred, escalation can't be completed ", e);
 				throw new ApplicationRuntimeException("PGR.001", e);
 			}
-		return positionResponse;
+		return position;
 	}
 
-	public void getParentBoundaries(final Long bndryId, final List<BoundaryResponse> boundaryList) {
-		final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId);
+	public void getParentBoundaries(final Long bndryId, final List<BoundaryResponse> boundaryList,
+			final String tenantId) {
+		final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId, tenantId);
 		if (bndry != null) {
 			boundaryList.add(bndry);
 			if (bndry.getParent() != null)
-				getParentBoundaries(bndry.getParent().getId(), boundaryList);
+				getParentBoundaries(bndry.getParent().getId(), boundaryList, tenantId);
 		}
 	}
 }

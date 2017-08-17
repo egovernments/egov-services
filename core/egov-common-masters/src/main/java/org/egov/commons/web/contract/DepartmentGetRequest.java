@@ -40,19 +40,13 @@
 
 package org.egov.commons.web.contract;
 
-import java.util.List;
+import lombok.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.List;
 
 @Getter
 @Setter
@@ -60,9 +54,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Builder
 public class DepartmentGetRequest {
 
-	private List<Long> id;
+	private List<Long> ids;
 
 	@Size(min=8, max=64)
 	private String name;

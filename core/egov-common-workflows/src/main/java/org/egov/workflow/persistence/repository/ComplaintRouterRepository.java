@@ -51,7 +51,7 @@ public interface ComplaintRouterRepository extends JpaRepository<ComplaintRouter
 
 	@Query("select cr from ComplaintRouter cr where cr.complaintType=:complaintType and cr.boundary=:boundary")
 	ComplaintRouter findByComplaintTypeAndBoundary(@Param("complaintType") Long complaintType,
-												   @Param("boundary") Long boundary);
+			@Param("boundary") Long boundary);
 
 	@Query("select cr from ComplaintRouter cr where cr.complaintType=:complaintType and cr.boundary is null")
 	ComplaintRouter findByOnlyComplaintType(@Param("complaintType") Long complaintType);
@@ -59,7 +59,8 @@ public interface ComplaintRouterRepository extends JpaRepository<ComplaintRouter
 	@Query("select cr from ComplaintRouter cr where cr.boundary=:bndry and cr.complaintType is null")
 	ComplaintRouter findByOnlyBoundary(@Param("bndry") Long bndry);
 
-	@Query(value = "select cr from egpgr_router cr, eg_boundary boundary , eg_boundary_type boundarytype ,eg_hierarchy_type hierarchytype where boundary.boundarytype = boundarytype.id and hierarchytype.id = boundarytype.hierarchytype and cr.bndryid = boundary.id and boundary.parent is null and cr.complainttypeid is null and hierarchytype.name=:hierarchyType", nativeQuery = true)
-	ComplaintRouter findCityAdminGrievanceOfficer(@Param("hierarchyType") String hierarchyType);
+	@Query(value = "select cr.* from egpgr_router cr, eg_boundary boundary , eg_boundary_type boundarytype ,eg_hierarchy_type hierarchytype where boundary.boundarytype = boundarytype.id and hierarchytype.id = boundarytype.hierarchytype and cr.bndryid = boundary.id and boundary.parent is null and cr.complainttypeid is null and hierarchytype.name=:hierarchyType and cr.tenantid=:tenantId", nativeQuery = true)
+	ComplaintRouter findCityAdminGrievanceOfficer(@Param("hierarchyType") String hierarchyType,
+			@Param("tenantId") String tenantId);
 
 }

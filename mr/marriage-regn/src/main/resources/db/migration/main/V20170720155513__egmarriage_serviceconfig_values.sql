@@ -11,7 +11,8 @@ CREATE TABLE egmr_serviceconfiguration (
 	lastModifiedTime BIGINT,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
-	CONSTRAINT pk_egmr_serviceConfiguration PRIMARY KEY (Id,tenantId)
+	CONSTRAINT pk_egmr_serviceConfiguration_Id PRIMARY KEY (Id,tenantId),
+	CONSTRAINT uk_egmr_serviceConfiguration_keyName UNIQUE (keyName,tenantId)
 );
 
 CREATE TABLE egmr_serviceconfigurationvalues (
@@ -25,6 +26,7 @@ CREATE TABLE egmr_serviceconfigurationvalues (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 	effectivefrom BIGINT NOT NULL,
 
-	CONSTRAINT pk_egmr_serviceConfigurationValues PRIMARY KEY (Id,tenantId)
+	CONSTRAINT pk_egmr_serviceConfigurationValues PRIMARY KEY (Id,tenantId),
+	CONSTRAINT uk_egmr_serviceConfigurationValues UNIQUE (keyId,value,effectivefrom,tenantId)
 );
 

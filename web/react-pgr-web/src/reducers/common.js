@@ -120,7 +120,10 @@ let menuConvention={
   "Employee Management.Employee Masters.Position.ViewPosition":"/search/employee/createPosition/view",
   "Employee Management.Employee Masters.Employee.CreateEmployee":"/employee/create",
   "Employee Management.Employee Masters.Employee.ViewEmployee":"/empsearch/view",
-  "Employee Management.Employee Masters.Employee.UpdateEmployee":"/empsearch/update"
+  "Employee Management.Employee Masters.Employee.UpdateEmployee":"/empsearch/update",
+
+  //Administration
+  "Administration.UpdateUserWithoutValidation":"/administration/searchUserRole"
 
 
 

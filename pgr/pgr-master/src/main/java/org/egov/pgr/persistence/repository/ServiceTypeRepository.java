@@ -3,7 +3,6 @@ package org.egov.pgr.persistence.repository;
 import org.egov.pgr.domain.model.ServiceTypeSearchCriteria;
 import org.egov.pgr.persistence.dto.ServiceType;
 import org.egov.pgr.persistence.dto.ServiceTypeKeyword;
-import org.egov.pgr.persistence.querybuilder.AttributeDefinitionQueryBuilder;
 import org.egov.pgr.persistence.querybuilder.ServiceTypeKeywordQueryBuilder;
 import org.egov.pgr.persistence.querybuilder.ServiceTypeQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -24,20 +23,12 @@ public class ServiceTypeRepository {
 
     private ServiceTypeKeywordQueryBuilder serviceTypeKeywordQueryBuilder;
 
-    private AttributeDefinitionQueryBuilder attributeDefinitionQueryBuilder;
-
-    private ValueDefinitionRepository valueDefinitionRepository;
-
     public ServiceTypeRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
                                  ServiceTypeQueryBuilder serviceTypeQueryBuilder,
-                                 ServiceTypeKeywordQueryBuilder serviceTypeKeywordQueryBuilder,
-                                 AttributeDefinitionQueryBuilder attributeDefinitionQueryBuilder,
-                                 ValueDefinitionRepository valueDefinitionRepository) {
+                                 ServiceTypeKeywordQueryBuilder serviceTypeKeywordQueryBuilder) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.serviceTypeQueryBuilder = serviceTypeQueryBuilder;
         this.serviceTypeKeywordQueryBuilder = serviceTypeKeywordQueryBuilder;
-        this.attributeDefinitionQueryBuilder = attributeDefinitionQueryBuilder;
-        this.valueDefinitionRepository = valueDefinitionRepository;
     }
 
     public void save(ServiceType serviceType) {

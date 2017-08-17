@@ -40,24 +40,27 @@
 
 package org.egov.commons.repository.builder;
 
-import java.util.List;
-
-import org.egov.commons.config.ApplicationProperties;
 import org.egov.commons.web.contract.DepartmentGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class DepartmentQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(DepartmentQueryBuilder.class);
+	private static final String BASE_QUERY = "SELECT id, name, code, active, tenantId, createdBy, createdDate, lastModifiedBy, lastModifiedDate FROM eg_department";
+	private String searchPageSize;
+
 
 	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	private static final String BASE_QUERY = "SELECT id, name, code, active, tenantId FROM eg_department";
+	public DepartmentQueryBuilder(@Value("${egov.services.egov.commons.search.pagesize.default}") String searchPageSize) {
+		this.searchPageSize = searchPageSize;
+	}
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(DepartmentGetRequest departmentGetRequest, List preparedStatementValues) {
@@ -73,9 +76,9 @@ public class DepartmentQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			DepartmentGetRequest departmentGetRequest) {
+								DepartmentGetRequest departmentGetRequest) {
 
-		if (departmentGetRequest.getId() == null && departmentGetRequest.getName() == null
+		if (departmentGetRequest.getIds() == null && departmentGetRequest.getName() == null
 				&& departmentGetRequest.getCode() == null && departmentGetRequest.getActive() == null
 				&& departmentGetRequest.getTenantId() == null)
 			return;
@@ -89,9 +92,9 @@ public class DepartmentQueryBuilder {
 			preparedStatementValues.add(departmentGetRequest.getTenantId());
 		}
 
-		if (departmentGetRequest.getId() != null) {
+		if (departmentGetRequest.getIds() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(departmentGetRequest.getId()));
+			selectQuery.append(" ids IN " + getIdQuery(departmentGetRequest.getIds()));
 		}
 
 		if (departmentGetRequest.getName() != null) {
@@ -114,7 +117,7 @@ public class DepartmentQueryBuilder {
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery,
-			DepartmentGetRequest departmentGetRequest) {
+								  DepartmentGetRequest departmentGetRequest) {
 		String sortBy = (departmentGetRequest.getSortBy() == null ? "name"
 				: departmentGetRequest.getSortBy());
 		String sortOrder = (departmentGetRequest.getSortOrder() == null ? "ASC"
@@ -124,10 +127,10 @@ public class DepartmentQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			DepartmentGetRequest departmentGetRequest) {
+								 DepartmentGetRequest departmentGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(searchPageSize);
 		if (departmentGetRequest.getPageSize() != null)
 			pageSize = departmentGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
@@ -143,7 +146,7 @@ public class DepartmentQueryBuilder {
 	/**
 	 * This method is always called at the beginning of the method so that and
 	 * is prepended before the field's predicate is handled.
-	 * 
+	 *
 	 * @param appendAndClauseFlag
 	 * @param queryString
 	 * @return boolean indicates if the next predicate should append an "AND"

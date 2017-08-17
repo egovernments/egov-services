@@ -40,21 +40,17 @@
 
 package org.egov.commons.model;
 
+import lombok.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Setter
 @ToString
 public class Department {
 
@@ -74,5 +70,18 @@ public class Department {
 
 	@NotNull
 	private String tenantId;
+
+	@NotNull
+	private Long createdBy;
+
+	@NotNull
+	private Date createdDate;
+
+
+	@NotNull
+	private Long lastModifiedBy;
+
+	@NotNull
+	private Date lastModifiedDate;
 
 }

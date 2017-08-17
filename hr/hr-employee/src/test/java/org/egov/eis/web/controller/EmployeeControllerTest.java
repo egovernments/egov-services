@@ -13,10 +13,7 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
-import org.egov.eis.web.validator.DataIntegrityValidatorForUpdateEmployee;
-import org.egov.eis.web.validator.EmployeeAssignmentValidator;
-import org.egov.eis.web.validator.RequestValidator;
+import org.egov.eis.web.validator.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.Errors;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +35,7 @@ import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

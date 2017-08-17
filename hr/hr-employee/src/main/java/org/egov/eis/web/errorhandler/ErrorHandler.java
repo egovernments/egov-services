@@ -48,7 +48,9 @@ import java.util.Map;
 import org.apache.commons.lang.WordUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
+import org.egov.eis.web.contract.IdGenerationErrorResponse;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -145,6 +147,33 @@ public class ErrorHandler {
 				fields.put(fieldKey, fieldValue);
 			});
 			responseInfo = userException.getUserErrorResponse().getResponseInfo();
+		}
+		error.setFields(fields);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setError(error);
+		errorResponse.setResponseInfo(responseInfo);
+
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<?> getResponseEntityForIdGenerationErrors(IdGenerationException idGenerationException) {
+		IdGenerationErrorResponse idGenerationErrorResponse = idGenerationException.getIdGenerationErrorResponse();
+
+		ResponseInfo responseInfo;
+		Error error = new Error();
+		Map<String, Object> fields = new HashMap<>();
+		error.setCode(400);
+
+		if (isEmpty(idGenerationErrorResponse)) {
+			error.setMessage("Id Generation Request Failed");
+			error.setDescription("Unknown Error Occurred In Id Generation Service");
+			responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(idGenerationException.getRequestInfo(),
+					false);
+		} else {
+			error.setMessage(idGenerationErrorResponse.getErrors().get(0).getMessage());
+			error.setDescription(idGenerationErrorResponse.getErrors().get(0).getDescription());
+			responseInfo = idGenerationException.getIdGenerationErrorResponse().getResponseInfo();
 		}
 		error.setFields(fields);
 

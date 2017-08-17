@@ -417,12 +417,12 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 
     @Override
 	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code,
-			String fromDate, String toDate)
+			String fromDate, String toDate, String sortTaxPeriod)
             throws Exception {
 
         List<TaxPeriod> taxPeriods = null;
         try {
-            taxPeriods = taxPeriodRespository.searchTaxPeriod(tenantId, validDate, code, fromDate, toDate);
+            taxPeriods = taxPeriodRespository.searchTaxPeriod(tenantId, validDate, code, fromDate, toDate, sortTaxPeriod);
         } catch (Exception e) {
             throw new InvalidInputException(requestInfo);
         }

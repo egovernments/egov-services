@@ -47,6 +47,7 @@ public class FundsourceService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(fundsources, "Fundsources to update must not be null");
 				for (Fundsource fundsource : fundsources) {
+				        Assert.notNull(fundsource.getId(), "Fundsource ID to update must not be null");
 					validator.validate(fundsource, errors);
 				}
 				break;

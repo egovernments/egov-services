@@ -58,6 +58,7 @@ public class BankAccountService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(bankaccounts, "BankAccounts to update must not be null");
 				for (BankAccount bankAccount : bankaccounts) {
+				        Assert.notNull(bankAccount.getId(), "Bank Account ID to update must not be null");
 					validator.validate(bankAccount, errors);
 				}
 				break;

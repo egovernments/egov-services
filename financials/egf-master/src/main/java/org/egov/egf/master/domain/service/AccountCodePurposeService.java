@@ -45,6 +45,7 @@ public class AccountCodePurposeService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(accountcodepurposes, "AccountCodePurposes to update must not be null");
 				for (AccountCodePurpose accountCodePurpose : accountcodepurposes) {
+				        Assert.notNull(accountCodePurpose.getId(), "Account Code Purpose ID to update must not be null");
 					validator.validate(accountCodePurpose, errors);
 				}
 				break;

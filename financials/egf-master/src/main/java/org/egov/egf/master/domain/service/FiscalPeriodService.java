@@ -50,6 +50,7 @@ public class FiscalPeriodService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(fiscalperiods, "FiscalPeriods to update must not be null");
 				for (FiscalPeriod fiscalPeriod : fiscalperiods) {
+				        Assert.notNull(fiscalPeriod.getId(), "FiscalPeriod ID to update must not be null");
 					validator.validate(fiscalPeriod, errors);
 				}
 				break;

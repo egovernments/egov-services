@@ -47,6 +47,7 @@ public class FunctionService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(functions, "Functions to update must not be null");
 				for (Function function : functions) {
+				        Assert.notNull(function.getId(), "Function ID to update must not be null");
 					validator.validate(function, errors);
 				}
 				break;

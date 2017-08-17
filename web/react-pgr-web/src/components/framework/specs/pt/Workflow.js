@@ -100,6 +100,7 @@ class Workflow extends Component {
         designation: [],
         workflowDepartment:[],
         approver:[],
+		result: []
     }
   } 
 
@@ -119,8 +120,27 @@ class Workflow extends Component {
       })
       console.log(err)
     })
+	
+	var query2 = {
+		  propertyId: localStorage['propertyId']
+	}
+	
+	 Api.commonApiPost('pt-property/properties/_search', query2,{}, false, true).then((res)=>{ 
 
-     Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus=&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
+		console.log('bboom');
+	
+		if(res.hasOwnProperty('Errors')){
+			//toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
+		} else {
+			var query = {
+				id : res.properties[0].propertyDetail.stateId
+			}
+		
+			Api.commonApiPost('egov-common-workflows/process/_search', query,{}, false, true).then((res)=>{
+				
+				console.log('dsgdhgdfgfdgdgffdgd',res);
+				
+				 Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
 			    
 				for(var i=0; i<res.length;i++){
 					Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
@@ -138,15 +158,29 @@ class Workflow extends Component {
 						console.log(err)
 					})
 				}
+								
+					}).catch((err)=> {
+					  currentThis.setState({
+						designation:[]
+					  })
+					  console.log(err)
+					})
 				
-    }).catch((err)=> {
-      currentThis.setState({
-        designation:[]
+				console.log(res);
+				currentThis.setState({
+					result: res.processInstance
+				});
+			}).catch((err)=> {
+				console.log(res);
+				currentThis.setState({
+					result: []
+				});
+			})																		
+		}
+	
+      }).catch((err)=> {
+			//toggleSnackbarAndSetText(true, err.message)
       })
-      console.log(err)
-    })
-
-  
   } 
 
   handleWorkFlowChange = (e, type) => {

@@ -407,7 +407,7 @@ dataEntryTax = () => {
 					"isExempted": false,
 					"propertyType": dataEntry.propertyType || null,
 					"category": dataEntry.propertySubType || null,
-					"usage": null,
+					"usage": dataEntry.usage || null,
 					"department": dataEntry.department || null,
 					"apartment":null,
 					"siteLength": 12,
@@ -676,7 +676,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],
@@ -759,7 +759,7 @@ const mapDispatchToProps = dispatch => ({
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],

@@ -50,6 +50,7 @@ import org.egov.eis.model.*;
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.repository.*;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
+import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
@@ -151,6 +152,9 @@ public class EmployeeService {
 
     @Autowired
     private HRMastersService hrMastersService;
+
+    @Autowired
+    private IdGenService idGenService;
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -270,17 +274,30 @@ public class EmployeeService {
         return employee;
     }
 
-    public Employee createAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
-        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-        requestInfoWrapper.setRequestInfo(employeeRequest.getRequestInfo());
+    private String getEmployeeCode(String tenantId, RequestInfo requestInfo) throws IdGenerationException {
+        String idGenEmpCodeName = propertiesManager.getIdGenServiceEmpCodeName();
+        String idGenEmpCodeFormat = propertiesManager.getIdGenServiceEmpCodeFormat();
+        return idGenService.generate(tenantId, idGenEmpCodeName, idGenEmpCodeFormat, requestInfo);
+    }
+
+    public Employee createAsync(EmployeeRequest employeeRequest) throws UserException, IdGenerationException, JsonProcessingException {
         Employee employee = employeeRequest.getEmployee();
+        RequestInfo requestInfo = employeeRequest.getRequestInfo();
+        // FIXME : Setting ts as null in RequestInfo as hr is following common-contracts with ts as Date
+        // & ID Generation Service is following ts as epoch
+        requestInfo.setTs(null);
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
         Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(requestInfoWrapper);
+
+        if (hrConfigurations.get("Autogenerate_employeecode").get(0).equalsIgnoreCase("Y")) {
+            employee.setCode(getEmployeeCode(employee.getTenantId(), requestInfo));
+        }
 
         UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
         userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
                 : userRequest.getUser().getBloodGroup());
-        if (hrConfigurations.get("Autogenerate_username").get(0).equals("Y")) {
+        if (hrConfigurations.get("Autogenerate_username").get(0).equalsIgnoreCase("Y")) {
             userRequest.getUser().setUserName(employee.getCode());
         }
 
@@ -291,7 +308,7 @@ public class EmployeeService {
         employee.setId(user.getId());
         employee.setUser(user);
 
-        employeeHelper.populateDefaultDataForCreate(employeeRequest, hrConfigurations);
+        employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
         log.info("employeeRequest before sending to kafka :: " + employeeRequest);
         kafkaTemplate.send(propertiesManager.getSaveEmployeeTopic(), employeeRequest);

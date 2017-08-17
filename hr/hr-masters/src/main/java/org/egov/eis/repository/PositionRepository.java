@@ -66,7 +66,8 @@ public class PositionRepository {
 
 	public static final String INSERT_POSITION_QUERY = "INSERT INTO egeis_position" +
 			" (id, name, deptDesigId, isPostOutsourced, active, tenantId)" +
-			" VALUES (?,(SELECT ?::TEXT||LPAD((count(id)+1)::TEXT,3,'0') FROM egeis_position WHERE deptdesigid=?),?,?,?,?)";
+			" VALUES (?, (SELECT ?::TEXT || LPAD((count(id) + 1)::TEXT, 3, '0') FROM egeis_position" +
+			" WHERE deptDesigId = ? AND tenantId = ?), ?, ?, ?, ?)";
 
 	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position SET active = ?, isPostOutsourced = ?" +
 			" WHERE id = ? AND tenantId = ?";
@@ -103,8 +104,8 @@ public class PositionRepository {
 
 		for (Position position : positionRequest.getPosition()) {
 			Long deptDesigId = position.getDeptdesig().getId();
-			Object[] positionRecord = { position.getId(), position.getName(), deptDesigId, deptDesigId,
-					position.getIsPostOutsourced(), position.getActive(), position.getTenantId() };
+			Object[] positionRecord = { position.getId(), position.getName(), deptDesigId, position.getTenantId(),
+					deptDesigId, position.getIsPostOutsourced(), position.getActive(), position.getTenantId() };
 			batchArgs.add(positionRecord);
 		}
 

@@ -198,7 +198,7 @@ public class EmployeeQueryBuilder {
 		selectQuery.append(" OFFSET :pageNumber");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
 		if (!isEmpty(employeeCriteria.getPageNumber()))
-			pageNumber = employeeCriteria.getPageNumber() - 1;
+			pageNumber = employeeCriteria.getPageNumber() < 1 ? 0 : employeeCriteria.getPageNumber() - 1;
 		preparedStatementValues.put("pageNumber", pageNumber * pageSize); // Set offset to pageNo * pageSize
 	}
 }

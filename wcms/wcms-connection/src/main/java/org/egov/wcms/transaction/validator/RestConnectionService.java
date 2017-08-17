@@ -245,7 +245,7 @@ public class RestConnectionService {
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
                 .append(configurationManager.getWaterMasterPropUsageTypeMappingTopic())
                 .append("?propertyType=").append(waterConnectionRequest.getConnection().getProperty().getPropertyType())
-                .append("&usageType=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
+                .append("&usageCode=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
                 .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
         final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();

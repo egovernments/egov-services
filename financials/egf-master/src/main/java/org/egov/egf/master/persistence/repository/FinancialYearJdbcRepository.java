@@ -123,6 +123,13 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 			params.append("transferClosingBalance =:transferClosingBalance");
 			paramValues.put("transferClosingBalance", financialYearSearchEntity.getTransferClosingBalance());
 		}
+		if (financialYearSearchEntity.getAsOnDate() != null) {
+		    if (params.length() > 0) {
+		        params.append(" and ");
+		    }
+		    params.append("startingDate <=:asOnDate and endingDate >= :asOnDate");
+		    paramValues.put("asOnDate", financialYearSearchEntity.getAsOnDate());
+		}
 
 		Pagination<FinancialYear> page = new Pagination<>();
 		if (financialYearSearchEntity.getOffset() != null) {

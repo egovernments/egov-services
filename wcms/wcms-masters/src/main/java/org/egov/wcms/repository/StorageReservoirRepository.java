@@ -122,13 +122,13 @@ public class StorageReservoirRepository {
 					.addValue("lastmodifiedby",
 							Long.valueOf(storageReservoirRequest.getRequestInfo().getUserInfo().getId()))
 					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
-					.addValue("code", storageReservoir.getCode() ) 
-					.addValue("tenantid", storageReservoir.getTenantId()).getValues());
+					.addValue("code", storageReservoir.getCode()).addValue("tenantid", storageReservoir.getTenantId())
+					.getValues());
 		}
 
-			namedParameterJdbcTemplate.batchUpdate(storageReservoirUpdate,
-					batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoir().size()]));
-		
+		namedParameterJdbcTemplate.batchUpdate(storageReservoirUpdate,
+				batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoir().size()]));
+
 		return storageReservoirRequest;
 	}
 
@@ -181,17 +181,17 @@ public class StorageReservoirRepository {
 
 	public boolean checkStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
 		Map<String, Object> preparedStatementValues = new HashMap<>();
-		preparedStatementValues.put("name",name);
-		preparedStatementValues.put("tenantId",tenantId);
+		preparedStatementValues.put("name", name);
+		preparedStatementValues.put("tenantId", tenantId);
 		final String query;
 		if (code == null)
 			query = StorageReservoirQueryBuilder.selectStorageResrvoirByNameByCodeQuery();
 		else {
-			preparedStatementValues.put("code",code);
+			preparedStatementValues.put("code", code);
 			query = StorageReservoirQueryBuilder.selectStorageReservoirByNameByCodeNotInQuery();
 		}
-		final List<StorageReservoir> storageReservoir = namedParameterJdbcTemplate.query(query,
-				preparedStatementValues,storageReservoirRowMapper);
+		final List<StorageReservoir> storageReservoir = namedParameterJdbcTemplate.query(query, preparedStatementValues,
+				storageReservoirRowMapper);
 		if (!storageReservoir.isEmpty())
 			return false;
 

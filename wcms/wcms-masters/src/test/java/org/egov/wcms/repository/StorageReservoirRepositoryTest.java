@@ -73,115 +73,122 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @WebMvcTest(StorageReservoirRepository.class)
 public class StorageReservoirRepositoryTest {
 
-    @Mock
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	@Mock
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Mock
-    private StorageReservoirRowMapper storageReservoirRowMapper;
+	@Mock
+	private StorageReservoirRowMapper storageReservoirRowMapper;
 
-    @Mock
-    private StorageReservoirQueryBuilder storageReservoirQueryBuilder;
+	@Mock
+	private StorageReservoirQueryBuilder storageReservoirQueryBuilder;
 
-    @InjectMocks
-    private StorageReservoirRepository storageReservoirRepository;
+	@InjectMocks
+	private StorageReservoirRepository storageReservoirRepository;
 
-    @Mock
-    private RestWaterExternalMasterService restExternalMasterService;
+	@Mock
+	private RestWaterExternalMasterService restExternalMasterService;
 
-    @Test
-    public void test_Should_Create_StorageReservoir() {
-        final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
-        final RequestInfo requestInfo = new RequestInfo();
-        final User user = new User();
-        user.setId(1l);
-        requestInfo.setUserInfo(user);
-        storageReservoirRequest.setRequestInfo(requestInfo);
-        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
-        final StorageReservoir storageReservoir = getStorageReservoir();
-        storageReservoirList.add(storageReservoir);
-        storageReservoirRequest.setStorageReservoir(storageReservoirList);
-        StorageReservoirRequest storageReserviorReq=storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
-        assertThat(storageReserviorReq.getStorageReservoir().size()).isEqualTo(1);
-    }
+	@Test
+	public void test_Should_Create_StorageReservoir() {
+		final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
+		final RequestInfo requestInfo = new RequestInfo();
+		final User user = new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		storageReservoirRequest.setRequestInfo(requestInfo);
+		final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+		final StorageReservoir storageReservoir = getStorageReservoir();
+		storageReservoirList.add(storageReservoir);
+		storageReservoirRequest.setStorageReservoir(storageReservoirList);
+		StorageReservoirRequest storageReserviorReq = storageReservoirRepository
+				.persistCreateStorageReservoir(storageReservoirRequest);
+		assertThat(storageReserviorReq.getStorageReservoir().size()).isEqualTo(1);
+	}
 
-    @Test
-    public void test_Should_Update_StorageReservoir() {
-        final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
-        final RequestInfo requestInfo = new RequestInfo();
-        final User user = new User();
-        user.setId(1l);
-        requestInfo.setUserInfo(user);
-        storageReservoirRequest.setRequestInfo(requestInfo);
-        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
-        final StorageReservoir storageReservoir = getStorageReservoir();
-        storageReservoirList.add(storageReservoir);
-        storageReservoirRequest.setStorageReservoir(storageReservoirList);
-        StorageReservoirRequest storageReserviorReq=storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
-        assertThat(storageReserviorReq.getStorageReservoir().size()).isEqualTo(1);
-    }
+	@Test
+	public void test_Should_Update_StorageReservoir() {
+		final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
+		final RequestInfo requestInfo = new RequestInfo();
+		final User user = new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		storageReservoirRequest.setRequestInfo(requestInfo);
+		final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+		final StorageReservoir storageReservoir = getStorageReservoir();
+		storageReservoirList.add(storageReservoir);
+		storageReservoirRequest.setStorageReservoir(storageReservoirList);
+		StorageReservoirRequest storageReserviorReq = storageReservoirRepository
+				.persistCreateStorageReservoir(storageReservoirRequest);
+		assertThat(storageReserviorReq.getStorageReservoir().size()).isEqualTo(1);
+	}
 
-    @Test
-    public void test_Should_Search_StorageReservoir() {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
-        final StorageReservoir storageReservoir = getStorageReservoir();
-        storageReservoirList.add(storageReservoir);
-        final StorageReservoirGetRequest storageReservoirGetRequest =getStorageReservoirGetCriteria();
-        when(namedParameterJdbcTemplate.query(any(String.class),anyMap(), any(StorageReservoirRowMapper.class)))
-                .thenReturn(storageReservoirList);
-        String[] wardNum={"22"};
-        String[] zoneNum={"21"};
-        String[] localityNum={"12"};
+	@Test
+	public void test_Should_Search_StorageReservoir() {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+		final StorageReservoir storageReservoir = getStorageReservoir();
+		storageReservoirList.add(storageReservoir);
+		final StorageReservoirGetRequest storageReservoirGetRequest = getStorageReservoirGetCriteria();
+		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(StorageReservoirRowMapper.class)))
+				.thenReturn(storageReservoirList);
+		String[] wardNum = { "22" };
+		String[] zoneNum = { "21" };
+		String[] localityNum = { "12" };
 
-        when(restExternalMasterService.getBoundaryName("Ward",wardNum, "default")).thenReturn(getBoundaryWardRes());
-        when(restExternalMasterService.getBoundaryName("Zone",zoneNum,"default")).thenReturn(getBoundaryZoneRes());
-        when(restExternalMasterService.getBoundaryName("Locality",localityNum, "default")).thenReturn(getBoundaryLocalityRes());
-       assertTrue(storageReservoirRepository.findForCriteria(storageReservoirGetRequest)
-               .get(0).getCode().equals(storageReservoirList.get(0).getCode()));
-    }
+		when(restExternalMasterService.getBoundaryName("Ward", wardNum, "default")).thenReturn(getBoundaryWardRes());
+		when(restExternalMasterService.getBoundaryName("Zone", zoneNum, "default")).thenReturn(getBoundaryZoneRes());
+		when(restExternalMasterService.getBoundaryName("Locality", localityNum, "default"))
+				.thenReturn(getBoundaryLocalityRes());
+		assertTrue(storageReservoirRepository.findForCriteria(storageReservoirGetRequest).get(0).getCode()
+				.equals(storageReservoirList.get(0).getCode()));
+	}
 
-    private BoundaryResponse getBoundaryLocalityRes() {
-        BoundaryType type=BoundaryType.builder().id("4").name("Locality").build();
-        Boundary boundary =Boundary.builder().boundaryNum("12").boundaryType(type).id("4").name("kontapeta").tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
+	private BoundaryResponse getBoundaryLocalityRes() {
+		BoundaryType type = BoundaryType.builder().id("4").name("Locality").build();
+		Boundary boundary = Boundary.builder().boundaryNum("12").boundaryType(type).id("4").name("kontapeta")
+				.tenantId("default").build();
+		return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
+	}
 
-    private BoundaryResponse getBoundaryZoneRes() {
-        BoundaryType type=BoundaryType.builder().id("4").name("Zone").build();
-        Boundary boundary =Boundary.builder().boundaryNum("21").boundaryType(type).id("4").name("Zone-1").tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
+	private BoundaryResponse getBoundaryZoneRes() {
+		BoundaryType type = BoundaryType.builder().id("4").name("Zone").build();
+		Boundary boundary = Boundary.builder().boundaryNum("21").boundaryType(type).id("4").name("Zone-1")
+				.tenantId("default").build();
+		return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
+	}
 
-    private BoundaryResponse getBoundaryWardRes() {
-        BoundaryType type=BoundaryType.builder().id("3").name("Ward").build();
-        Boundary boundary =Boundary.builder().boundaryNum("22").boundaryType(type).id("3").name("Revenue Ward").tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
+	private BoundaryResponse getBoundaryWardRes() {
+		BoundaryType type = BoundaryType.builder().id("3").name("Ward").build();
+		Boundary boundary = Boundary.builder().boundaryNum("22").boundaryType(type).id("3").name("Revenue Ward")
+				.tenantId("default").build();
+		return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
+	}
 
-    private BoundaryResponseInfo getResponseInfo() {
-        return BoundaryResponseInfo.builder().apiId("api345").msgId("mkede").resMsgId("res345").status("search").ver("2").build();
-    }
+	private BoundaryResponseInfo getResponseInfo() {
+		return BoundaryResponseInfo.builder().apiId("api345").msgId("mkede").resMsgId("res345").status("search")
+				.ver("2").build();
+	}
 
-    private StorageReservoirGetRequest getStorageReservoirGetCriteria() {
-        return StorageReservoirGetRequest.builder().code("12").name("test").zoneNum("21").wardNum("22").reservoirType("abcd")
-                .tenantId("default").build();
-        
-    }
+	private StorageReservoirGetRequest getStorageReservoirGetCriteria() {
+		return StorageReservoirGetRequest.builder().code("12").name("test").zoneNum("21").wardNum("22")
+				.reservoirType("abcd").tenantId("default").build();
 
-    private StorageReservoir getStorageReservoir() {
-        final StorageReservoir storageReservoir = new StorageReservoir();
-        storageReservoir.setTenantId("default");
-        storageReservoir.setName("test");
-        storageReservoir.setCode("12");
-        storageReservoir.setLocationNum("12");
-        storageReservoir.setWardNum("22");
-        storageReservoir.setZoneNum("21");
-        storageReservoir.setCapacity(2d);
-        storageReservoir.setNoOfSubLines(2l);
-        storageReservoir.setNoOfMainDistributionLines(2l);
-        storageReservoir.setNoOfConnection(2l);
-        storageReservoir.setReservoirType("abcd");
-        return storageReservoir;
-    }
+	}
+
+	private StorageReservoir getStorageReservoir() {
+		final StorageReservoir storageReservoir = new StorageReservoir();
+		storageReservoir.setTenantId("default");
+		storageReservoir.setName("test");
+		storageReservoir.setCode("12");
+		storageReservoir.setLocationNum("12");
+		storageReservoir.setWardNum("22");
+		storageReservoir.setZoneNum("21");
+		storageReservoir.setCapacity(2d);
+		storageReservoir.setNoOfSubLines(2l);
+		storageReservoir.setNoOfMainDistributionLines(2l);
+		storageReservoir.setNoOfConnection(2l);
+		storageReservoir.setReservoirType("abcd");
+		return storageReservoir;
+	}
 
 }

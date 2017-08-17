@@ -64,77 +64,79 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 @WebMvcTest(StorageReservoirService.class)
 public class StorageReservoirServiceTest {
 
-    @Mock
-    private StorageReservoirRepository storageReservoirRepository;
+	@Mock
+	private StorageReservoirRepository storageReservoirRepository;
 
-    @Mock
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	@Mock
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    @Mock
-    private ApplicationProperties applicationProperties;
+	@Mock
+	private ApplicationProperties applicationProperties;
 
-    @InjectMocks
-    private StorageReservoirService storageReservoirService;
+	@InjectMocks
+	private StorageReservoirService storageReservoirService;
 
-    @Mock
-    private CodeGeneratorService codeGeneratorService;
+	@Mock
+	private CodeGeneratorService codeGeneratorService;
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = Exception.class)
-    public void test_Should_Search_StorageReservoir() {
-        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
-        storageReservoirList.add(getStorageReservoir());
-        final StorageReservoirGetRequest storageReservoirGetRequest = Mockito.mock(StorageReservoirGetRequest.class);
-        when(storageReservoirRepository.findForCriteria(storageReservoirGetRequest)).thenThrow(Exception.class);
-        assertTrue(storageReservoirList
-                .equals(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)));
-    }
+	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_Should_Search_StorageReservoir() {
+		final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+		storageReservoirList.add(getStorageReservoir());
+		final StorageReservoirGetRequest storageReservoirGetRequest = Mockito.mock(StorageReservoirGetRequest.class);
+		when(storageReservoirRepository.findForCriteria(storageReservoirGetRequest)).thenThrow(Exception.class);
+		assertTrue(
+				storageReservoirList.equals(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)));
+	}
 
-    @Test
-    public void test_throwException_Push_To_Producer_StorageReservoir() {
-        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
-        storageReservoirList.add(getStorageReservoir());
-        final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
-        storageReservoirRequest.setStorageReservoir(storageReservoirList);
-        assertTrue(storageReservoirList.equals(storageReservoirService.createStorageReservoir("", "", storageReservoirRequest)));
-    }
+	@Test
+	public void test_throwException_Push_To_Producer_StorageReservoir() {
+		final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+		storageReservoirList.add(getStorageReservoir());
+		final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
+		storageReservoirRequest.setStorageReservoir(storageReservoirList);
+		assertTrue(storageReservoirList
+				.equals(storageReservoirService.createStorageReservoir("", "", storageReservoirRequest)));
+	}
 
-    @Test
-    public void test_throwException_Create_StorageReservoir() {
+	@Test
+	public void test_throwException_Create_StorageReservoir() {
 
-        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
-        storageReservoirList.add(getStorageReservoir());
-        final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
-        storageReservoirRequest.setStorageReservoir(storageReservoirList);
-        when(storageReservoirRepository.persistCreateStorageReservoir(any(StorageReservoirRequest.class)))
-                .thenReturn(storageReservoirRequest);
-        assertTrue(storageReservoirRequest.equals(storageReservoirService.create(storageReservoirRequest)));
-    }
+		final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+		storageReservoirList.add(getStorageReservoir());
+		final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
+		storageReservoirRequest.setStorageReservoir(storageReservoirList);
+		when(storageReservoirRepository.persistCreateStorageReservoir(any(StorageReservoirRequest.class)))
+				.thenReturn(storageReservoirRequest);
+		assertTrue(storageReservoirRequest.equals(storageReservoirService.create(storageReservoirRequest)));
+	}
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = Exception.class)
-    public void test_throwException_Update_StorageReservoir() throws Exception {
+	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_throwException_Update_StorageReservoir() throws Exception {
 
-        final StorageReservoirRequest storageReservoirRequest = Mockito.mock(StorageReservoirRequest.class);
-        when(storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest)).thenThrow(Exception.class);
+		final StorageReservoirRequest storageReservoirRequest = Mockito.mock(StorageReservoirRequest.class);
+		when(storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest))
+				.thenThrow(Exception.class);
 
-        assertTrue(storageReservoirRequest.equals(storageReservoirService.update(storageReservoirRequest)));
-    }
+		assertTrue(storageReservoirRequest.equals(storageReservoirService.update(storageReservoirRequest)));
+	}
 
-    private StorageReservoir getStorageReservoir() {
-        final StorageReservoir storageReservoir = new StorageReservoir();
-        storageReservoir.setTenantId("default");
-        storageReservoir.setName("test");
-        storageReservoir.setCode("12");
-        storageReservoir.setLocationNum("test1");
-        storageReservoir.setWardNum("test2");
-        storageReservoir.setZoneNum("test3");
-        storageReservoir.setCapacity(2d);
-        storageReservoir.setNoOfSubLines(2l);
-        storageReservoir.setNoOfMainDistributionLines(2l);
-        storageReservoir.setNoOfConnection(2l);
-        storageReservoir.setReservoirType("abcd");
-        return storageReservoir;
-    }
+	private StorageReservoir getStorageReservoir() {
+		final StorageReservoir storageReservoir = new StorageReservoir();
+		storageReservoir.setTenantId("default");
+		storageReservoir.setName("test");
+		storageReservoir.setCode("12");
+		storageReservoir.setLocationNum("test1");
+		storageReservoir.setWardNum("test2");
+		storageReservoir.setZoneNum("test3");
+		storageReservoir.setCapacity(2d);
+		storageReservoir.setNoOfSubLines(2l);
+		storageReservoir.setNoOfMainDistributionLines(2l);
+		storageReservoir.setNoOfConnection(2l);
+		storageReservoir.setReservoirType("abcd");
+		return storageReservoir;
+	}
 
 }

@@ -49,6 +49,7 @@ import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.MeterCost;
+import org.egov.wcms.model.MeterStatus;
 import org.egov.wcms.model.MeterWaterRates;
 import org.egov.wcms.model.PipeSize;
 import org.egov.wcms.model.PropertyTypeCategoryType;
@@ -80,6 +81,7 @@ import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.MeterCostReq;
+import org.egov.wcms.web.contract.MeterStatusReq;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -568,6 +570,51 @@ public class ValidatorUtils {
             errorFields.add(errorField);
         }
     }
+    public List<ErrorResponse> validateMeterStatusRequest(final MeterStatusReq meterStatusRequest) {
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Error error = getError(meterStatusRequest);
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponses.add(errorResponse);
+        return errorResponses;
+    }
+    
+    private Error getError(final MeterStatusReq meterStatusRequest) {
+        final List<ErrorField> errorFields = getErrorFields(meterStatusRequest);
+        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                .message(WcmsConstants.INVALID_METER_STATUS_REQUEST_MESSAGE).errorFields(errorFields).build();
+    }
+    
+    private List<ErrorField> getErrorFields(final MeterStatusReq meterStatusRequest) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+        final List<MeterStatus> meterStatuses = meterStatusRequest.getMeterStatus();
+        for (final MeterStatus meterStatus : meterStatuses)
+            addMeterStatusValidationErrors(meterStatus, errorFields);
+        return errorFields;
+    }
+    
+    private void addMeterStatusValidationErrors(final MeterStatus meterStatus, final List<ErrorField> errorFields) {
+
+        if (StringUtils.isBlank(meterStatus.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
+                    .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (meterStatus.getMeterStatus() == null) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.ACTIVE_MANDATORY_CODE)
+                    .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (meterStatus.getCode() == null || meterStatus.getCode().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                    .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else
+            return;
+    }
+
 
     public List<ErrorResponse> validateMeterCostRequest(final MeterCostReq meterCostRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -576,7 +623,6 @@ public class ValidatorUtils {
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
-
         return errorResponses;
     }
 

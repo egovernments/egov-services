@@ -57,88 +57,80 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StorageReservoirService {
 
-    @Autowired
-    private StorageReservoirRepository storageReservoirRepository;
+	@Autowired
+	private StorageReservoirRepository storageReservoirRepository;
 
-    @Autowired
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    @Autowired
-    private CodeGeneratorService codeGeneratorService;
+	@Autowired
+	private CodeGeneratorService codeGeneratorService;
 
-    @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
+	@Autowired
+	private RestWaterExternalMasterService restExternalMasterService;
 
-    public StorageReservoirRequest create(final StorageReservoirRequest storageReservoirRequest) {
-        return storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
-    }
+	public StorageReservoirRequest create(final StorageReservoirRequest storageReservoirRequest) {
+		return storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
+	}
 
-    public StorageReservoirRequest update(final StorageReservoirRequest storageReservoirRequest) {
-        return storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest);
-    }
+	public StorageReservoirRequest update(final StorageReservoirRequest storageReservoirRequest) {
+		return storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest);
+	}
 
-    public List<StorageReservoir> createStorageReservoir(final String topic, final String key,
-            final StorageReservoirRequest storageReservoirRequest) {
-        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
-            storageReservoir.setCode(codeGeneratorService.generate(StorageReservoir.SEQ_STORAGE_RESERVOIR));
-        try {
-            kafkaTemplate.send(topic, key, storageReservoirRequest);
-        } catch (final Exception ex) {
-            log.error("Exception Encountered : " + ex);
-        }
-        return storageReservoirRequest.getStorageReservoir();
-    }
+	public List<StorageReservoir> createStorageReservoir(final String topic, final String key,
+			final StorageReservoirRequest storageReservoirRequest) {
+		for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
+			storageReservoir.setCode(codeGeneratorService.generate(StorageReservoir.SEQ_STORAGE_RESERVOIR));
+		try {
+			kafkaTemplate.send(topic, key, storageReservoirRequest);
+		} catch (final Exception ex) {
+			log.error("Exception Encountered : " + ex);
+		}
+		return storageReservoirRequest.getStorageReservoir();
+	}
 
-    public List<StorageReservoir> updateStorageReservoir(final String topic, final String key,
-            final StorageReservoirRequest storageReservoirRequest) {
-        try {
-            kafkaTemplate.send(topic, key, storageReservoirRequest);
-        } catch (final Exception ex) {
-            log.error("Exception Encountered : " + ex);
-        }
-        return storageReservoirRequest.getStorageReservoir();
-    }
+	public List<StorageReservoir> updateStorageReservoir(final String topic, final String key,
+			final StorageReservoirRequest storageReservoirRequest) {
+		try {
+			kafkaTemplate.send(topic, key, storageReservoirRequest);
+		} catch (final Exception ex) {
+			log.error("Exception Encountered : " + ex);
+		}
+		return storageReservoirRequest.getStorageReservoir();
+	}
 
-    public List<StorageReservoir> getStorageReservoir(
-            final StorageReservoirGetRequest storageReservoirGetRequest) {
-        return storageReservoirRepository.findForCriteria(storageReservoirGetRequest);
-    }
+	public List<StorageReservoir> getStorageReservoir(final StorageReservoirGetRequest storageReservoirGetRequest) {
+		return storageReservoirRepository.findForCriteria(storageReservoirGetRequest);
+	}
 
-    public Boolean getBoundaryByZone(
-            final StorageReservoir storageReservoir) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.ZONE,
-                storageReservoir.getZoneNum(),
-                storageReservoir.getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+	public Boolean getBoundaryByZone(final StorageReservoir storageReservoir) {
+		BoundaryResponse boundaryRespose = null;
+		boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.ZONE, storageReservoir.getZoneNum(),
+				storageReservoir.getTenantId());
+		return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
-    }
+	}
 
-    public Boolean getBoundaryByWard(final StorageReservoir storageReservoir) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.WARD,
-                storageReservoir.getWardNum() ,
-                storageReservoir.getTenantId());
-           
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+	public Boolean getBoundaryByWard(final StorageReservoir storageReservoir) {
+		BoundaryResponse boundaryRespose = null;
+		boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.WARD, storageReservoir.getWardNum(),
+				storageReservoir.getTenantId());
 
-    }
+		return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
-    public Boolean getBoundaryByLocation(final StorageReservoir storageReservoir) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.LOCALITY,
-                storageReservoir.getLocationNum(),
-                storageReservoir.getTenantId());
-        
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+	}
 
-    }
+	public Boolean getBoundaryByLocation(final StorageReservoir storageReservoir) {
+		BoundaryResponse boundaryRespose = null;
+		boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.LOCALITY,
+				storageReservoir.getLocationNum(), storageReservoir.getTenantId());
 
-    public boolean getStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
-        return storageReservoirRepository.checkStorageReservoirByNameAndCode(code, name, tenantId);
-    }
+		return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+
+	}
+
+	public boolean getStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
+		return storageReservoirRepository.checkStorageReservoirByNameAndCode(code, name, tenantId);
+	}
 
 }

@@ -85,6 +85,12 @@ public class ApplicationProperties {
 
 	@Value("${kafka.topics.propertyCategory.update.name}")
 	private String updatePropertyCategoryTopicName;
+	
+	@Value("${kafka.topics.meterstatus.create.name}")
+	private String createMeterStatusTopicName;
+	
+	@Value("${kafka.topics.meterstatus.update.name}")
+	private String updateMeterStatusTopicName;
 
 	@Value("${kafka.topics.propertyusage.create.name}")
 	private String createPropertyUsageTopicName;
@@ -191,6 +197,14 @@ public class ApplicationProperties {
 
 	public String getUpdatePropertyCategoryTopicName() {
 		return updatePropertyCategoryTopicName;
+	}
+	
+	public String getCreateMeterStatusTopicName() {
+	    return createMeterStatusTopicName;
+	}
+	
+	public String getUpdateMeterStatusTopicName() {
+	    return updateMeterStatusTopicName;
 	}
 
 	public String getCreatePropertyUsageTopicName() {

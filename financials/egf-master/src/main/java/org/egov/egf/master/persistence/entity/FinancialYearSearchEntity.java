@@ -1,5 +1,7 @@
 package org.egov.egf.master.persistence.entity;
 
+import java.util.Date;
+
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FinancialYearSearch;
 
@@ -17,6 +19,7 @@ public class FinancialYearSearchEntity extends FinancialYearEntity {
 	private Integer pageSize;
 	private Integer offset;
 	private String sortBy;
+	private Date asOnDate;
 
 	@Override
 	public FinancialYear toDomain() {
@@ -30,6 +33,7 @@ public class FinancialYearSearchEntity extends FinancialYearEntity {
 		this.pageSize = financialYearSearch.getPageSize();
 		this.offset = financialYearSearch.getOffset();
 		this.sortBy = financialYearSearch.getSortBy();
+		this.asOnDate = financialYearSearch.getAsOnDate();
 		return this;
 	}
 

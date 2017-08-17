@@ -165,7 +165,7 @@ ReportDefinitions:
     label: reports.pgr.dateto
     type: string
     source: egpgr_complainttype  
-  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs,egpgr_complainttype ctype , servicetype_keyword sk where ctype.code=cs.servicecode  and and cs.status=$status and cs.createddate >= $fromDate and cs.createddate <=$toDate and ctype.code = $complainttype and ctype.code=sk.servicecode and sk.keyword ='complaint' and sk.tenantid =$tenantid
+  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs,egpgr_complainttype ctype , servicetype_keyword sk where ctype.code=cs.servicecode  and cs.status=$status and cs.createddate >= $fromDate and cs.createddate <=$toDate and ctype.code = $complainttype and ctype.code=sk.servicecode and sk.keyword ='complaint' and sk.tenantid =$tenantid
 
 - reportName: DrillDownComplaintDetailByGrievanceTypeWithINSLA
   summary: DrillDown ComplaintDetail By GrievanceType
@@ -392,7 +392,7 @@ ReportDefinitions:
     egpgr_complainttype ctype, egeis_assignment ass, eg_user us ,servicetype_keyword sk WHERE cs.positionid
     = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code
     and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true
-    and cs.createddate >= $fromDate and cs.createddate <= $toDate  ctype.code=sk.servicecode and sk.keyword='complaint' GROUP BY us.username;
+    and cs.createddate >= $fromDate and cs.createddate <= $toDate  and ctype.code=sk.servicecode and sk.keyword='complaint' GROUP BY us.username;
 
 
 - reportName: DrillDownComplaintDetailByFunctionary

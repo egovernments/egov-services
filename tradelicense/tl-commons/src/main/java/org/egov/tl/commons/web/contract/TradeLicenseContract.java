@@ -8,8 +8,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
 import org.egov.tl.commons.web.contract.enums.OwnerShipTypeEnum;
@@ -51,7 +49,7 @@ public class TradeLicenseContract {
 	private String licenseNumber;
 
 	@JsonProperty("oldLicenseNumber")
-	@Size( min =20, max =20, message="oldLicenseNumber is required, Please enter valid Old License Number with 20 characters")
+	@Length( min =20, max =20, message="oldLicenseNumber is required, Please enter valid Old License Number with 20 characters")
 	private String oldLicenseNumber;
 
 	@NotEmpty(message="applicationDate is required, Please enter valid date in dd/mm/yyyy")

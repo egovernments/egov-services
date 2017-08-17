@@ -101,7 +101,7 @@ class AddDemand extends Component {
 		demands: [],
 		hasError: false,
 		errorMsg: 'Invalid',
-    demandDetailBeans:[]
+    DemandDetailBeans:[]
     }
   }
 
@@ -118,38 +118,13 @@ class AddDemand extends Component {
 		consumerNuber: this.props.match.params.upicNumber
 	}
 
-	Api.commonApiPost('wcms-connection/connection/_leacydemand', getDemands, {}, false, true).then((res)=>{
-
-		console.log('search',res);
-
-		 currentThis.setState({
-			 demandDetailBeans: res.demandDetailBeans
-		 })
-
-		res.demandDetailBeans.map((demand, index)=>{
-			demand.demandDetails.map((item, i)=>{
-				var query = {
-					service:'PT',
-					code:item.taxHeadMasterCode
-				}
-
-				Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
-						setLoadingStatus('hide');
-					 currentThis.setState({
-						 taxHeads:[
-							...currentThis.state.taxHeads,
-							res.TaxHeadMasters[0]
-						 ]
-					 })
-				}).catch((err)=> {
-					console.log(err)
-				})
-			})
-		})
-
-	}).catch((err)=> {
-		console.log(err)
-	})
+	 Api.commonApiPost('wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate', getDemands, {}, false, true).then((res)=>{
+  		 currentThis.setState({
+  			 DemandDetailBeans: res.DemandDetailBeans
+  		 })
+    	}).catch((err)=> {
+    		console.log(err)
+    	})
   }
 
   submitDemand = () => {
@@ -159,77 +134,26 @@ class AddDemand extends Component {
 	  let { addDemand } = this.props;
 
 	  data.map((demand, index)=> {
-		  demand.businessService = 'PT'
 		  demand.demandDetails.map((item, i)=> {
-			  item.taxAmount = (addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] :  item.taxAmount)|| item.taxAmount;
-			  item.collectionAmount = (addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] :  item.collectionAmount)|| item.collectionAmount;
+			  item.taxAmount = (addDemand['taxAmount'+index] ? addDemand['taxAmount'+index]['taxAmount'+i] :  item.taxAmount)|| item.taxAmount;
+			  item.collectionAmount = (addDemand['collections'+index] ? addDemand['collectionAmount'+index]['collectionAmount'+i] :  item.collectionAmount)|| item.collectionAmount;
 		  })
 	  })
 
 	  console.log(data);
 
 	  var body = {
-		  Demands : data
+		  DemandDetailBeans : data
 	  }
 
 
-	Api.commonApiPost('billing-service/demand/_update', {}, body, false, true).then((res)=>{
+	Api.commonApiPost('wcms-connection/connection/_leacydemand', {}, body, false, true).then((res)=>{
 
 	}).catch((err)=> {
 		console.log(err)
 	})
 
   }
-
-
-validateCollection = (index) => {
-
-	var current = this;
-
-	var demands = [];
-	var collections = [];
-
-
-	setTimeout(() => {
-
-		let {addDemand} = current.props;
-
-		//console.log(addDemand);
-
-		for(var key in addDemand) {
-			if(addDemand.hasOwnProperty(key)){
-				if(key.match('collections')) {
-					collections.push(addDemand[key])
-				} else {
-					demands.push(addDemand[key])
-				}
-			}
-		}
-
-		console.log(collections, demands);
-
-		for(var i=0; i<collections.length;i++){
-			var count = 0;
-			for (var key in collections[i]){
-				if(collections[i][key] && demands[i]["demand" + count] && Number(collections[i][key]) > Number(demands[i]["demand" + count])){
-					console.log(collections[i][key]);
-					console.log(demands[i]["demand" + count]);
-					current.setState({
-						hasError: true
-					})
-					return false;
-				} else {
-					current.setState({
-						hasError: false
-					})
-				}
-				count++;
-			}
-		}
-
-
-	}, 100)
-}
 
 
   render() {
@@ -252,32 +176,35 @@ validateCollection = (index) => {
     } = this.props;
 
     let {search, handleDepartment, getTaxHead, validateCollection} = this;
-    let { demandDetailBeans } = this.state;
+    let { DemandDetailBeans } = this.state;
 
     let cThis = this;
 
     const handleChangeSrchRslt = function(e, name, ind){
-    var _emps = Object.assign([], this.state.demandDetailBeans);
+      console.log(e.target.value);
+      console.log(name);
+      console.log(ind);
+    var _emps = Object.assign([], DemandDetailBeans);
     _emps[ind][name] = e.target.value;
     cThis.setState({
         ...cThis.state,
-        demandDetailBeans: _emps
+        DemandDetailBeans: _emps
     })
   }
 
 	const showfields = () => {
-    if(demandDetailBeans.length>0) {
-      return demandDetailBeans.map((item, index)=> {
+    if(DemandDetailBeans.length>0) {
+      return DemandDetailBeans.map((item, index)=> {
             return (<tr key={index}>
                     <td data-label="taxPeriod">{item.taxPeriod}</td>
-                    <td data-label="taxHeadMasterCode">{item.taxPeriod}</td>
+                    <td data-label="taxHeadMasterCode">{item.taxHeadMasterCode}</td>
                     <td data-label="taxAmount">
                     <input type="number" id={item.id} name="taxAmount"  value={item.taxAmount}
-                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} />
+                      onChange={(e)=>{handleChangeSrchRslt(e, "taxAmount", index)}} />
                     </td>
                     <td data-label="collectionAmount">
                     <input type="number" id={item.id} name="taxAmount"  value={item.collectionAmount}
-                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} />
+                      onChange={(e)=>{handleChangeSrchRslt(e, "collectionAmount", index)}} />
                     </td>
                 </tr>
             );

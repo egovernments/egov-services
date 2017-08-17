@@ -232,7 +232,7 @@ class updateUserRole extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(JSON.stringify(state.form.form));
+  //console.log(JSON.stringify(state.form.form));
   return ({updateUserRole: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 

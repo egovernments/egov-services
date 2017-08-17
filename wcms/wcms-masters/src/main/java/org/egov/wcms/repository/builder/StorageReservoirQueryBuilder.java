@@ -51,133 +51,135 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StorageReservoirQueryBuilder {
 
-    private static final String BASE_QUERY = "SELECT storagereservoir.id as storagereservoir_id,storagereservoir.code as storagereservoir_code, storagereservoir.name as storagereservoir_name,"
-            + "storagereservoir.reservoirtype as storagereservoir_reservoirtype,storagereservoir.location as storagereservoir_location, "
-            + "storagereservoir.ward as storagereservoir_ward,storagereservoir.zone as storagereservoir_zone, storagereservoir.capacity as storagereservoir_capacity ,"
-            + "storagereservoir.noofsublines as storagereservoir_noofsublines,storagereservoir.noofmaindistributionlines as storagereservoir_noofmaindistributionlines ,"
-            + "storagereservoir.noofconnection as storagereservoir_noofconnection ,"
-            + "storagereservoir.tenantId as storagereservoir_tenantId "
-            + "FROM egwtr_storage_reservoir storagereservoir ";
+	private static final String BASE_QUERY = "SELECT storagereservoir.id as storagereservoir_id,storagereservoir.code as storagereservoir_code, storagereservoir.name as storagereservoir_name,"
+			+ "storagereservoir.reservoirtype as storagereservoir_reservoirtype,storagereservoir.location as storagereservoir_location, "
+			+ "storagereservoir.ward as storagereservoir_ward,storagereservoir.zone as storagereservoir_zone, storagereservoir.capacity as storagereservoir_capacity ,"
+			+ "storagereservoir.noofsublines as storagereservoir_noofsublines,storagereservoir.noofmaindistributionlines as storagereservoir_noofmaindistributionlines ,"
+			+ "storagereservoir.noofconnection as storagereservoir_noofconnection ,"
+			+ "storagereservoir.tenantId as storagereservoir_tenantId "
+			+ "FROM egwtr_storage_reservoir storagereservoir ";
 
-    public String getQuery(final StorageReservoirGetRequest storageReservoirGetRequest,
-            @SuppressWarnings("rawtypes") final Map<String, Object>  preparedStatementValues) {
-        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        addWhereClause(selectQuery, preparedStatementValues, storageReservoirGetRequest);
-        addOrderByClause(selectQuery, storageReservoirGetRequest);
-        log.debug("Query : " + selectQuery);
-        return selectQuery.toString();
-    }
+	public String getQuery(final StorageReservoirGetRequest storageReservoirGetRequest,
+			@SuppressWarnings("rawtypes") final Map<String, Object> preparedStatementValues) {
+		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		addWhereClause(selectQuery, preparedStatementValues, storageReservoirGetRequest);
+		addOrderByClause(selectQuery, storageReservoirGetRequest);
+		log.debug("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
 
-    @SuppressWarnings("unchecked")
-    private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object>  preparedStatementValues,
-            final StorageReservoirGetRequest storageReservoirGetRequest) {
+	@SuppressWarnings("unchecked")
+	private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
+			final StorageReservoirGetRequest storageReservoirGetRequest) {
 
-        if (storageReservoirGetRequest.getId() == null && storageReservoirGetRequest.getName() == null &&
-                storageReservoirGetRequest.getReservoirType() == null && storageReservoirGetRequest.getLocationName() == null
-                && storageReservoirGetRequest.getWardName() == null && storageReservoirGetRequest.getZoneName() == null &&
-                storageReservoirGetRequest.getCapacity() == 0 && storageReservoirGetRequest.getTenantId() == null)
-            return;
+		if (storageReservoirGetRequest.getId() == null && storageReservoirGetRequest.getName() == null
+				&& storageReservoirGetRequest.getReservoirType() == null
+				&& storageReservoirGetRequest.getLocationName() == null
+				&& storageReservoirGetRequest.getWardName() == null && storageReservoirGetRequest.getZoneName() == null
+				&& storageReservoirGetRequest.getCapacity() == 0 && storageReservoirGetRequest.getTenantId() == null)
+			return;
 
-        selectQuery.append(" WHERE");
-        boolean isAppendAndClause = false;
+		selectQuery.append(" WHERE");
+		boolean isAppendAndClause = false;
 
-        if (storageReservoirGetRequest.getTenantId() != null) {
-            isAppendAndClause = true;
-            selectQuery.append(" storagereservoir.tenantId = :tenantId");
-            preparedStatementValues.put("tenantId",storageReservoirGetRequest.getTenantId());
-        }
+		if (storageReservoirGetRequest.getTenantId() != null) {
+			isAppendAndClause = true;
+			selectQuery.append(" storagereservoir.tenantId = :tenantId");
+			preparedStatementValues.put("tenantId", storageReservoirGetRequest.getTenantId());
+		}
 
-        if (storageReservoirGetRequest.getId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.id IN (:ids)");
-            preparedStatementValues.put("ids",storageReservoirGetRequest.getId());
-        }
+		if (storageReservoirGetRequest.getId() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" storagereservoir.id IN (:ids)");
+			preparedStatementValues.put("ids", storageReservoirGetRequest.getId());
+		}
 
-        if (storageReservoirGetRequest.getName() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.name = :name");
-            preparedStatementValues.put("name",storageReservoirGetRequest.getName());
-        }
+		if (storageReservoirGetRequest.getName() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" storagereservoir.name = :name");
+			preparedStatementValues.put("name", storageReservoirGetRequest.getName());
+		}
 
-        if (storageReservoirGetRequest.getCode() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.code = :code");
-            preparedStatementValues.put("code",storageReservoirGetRequest.getCode());
-        }
+		if (storageReservoirGetRequest.getCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" storagereservoir.code = :code");
+			preparedStatementValues.put("code", storageReservoirGetRequest.getCode());
+		}
 
-        if (storageReservoirGetRequest.getReservoirType() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.reservoirtype = :reservoirtype");
-            preparedStatementValues.put("reservoirtype",storageReservoirGetRequest.getReservoirType());
-        }
+		if (storageReservoirGetRequest.getReservoirType() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" storagereservoir.reservoirtype = :reservoirtype");
+			preparedStatementValues.put("reservoirtype", storageReservoirGetRequest.getReservoirType());
+		}
 
-        if (storageReservoirGetRequest.getLocationNum() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.location = :location");
-            preparedStatementValues.put("location",storageReservoirGetRequest.getLocationNum());
-        }
+		if (storageReservoirGetRequest.getLocationNum() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" storagereservoir.location = :location");
+			preparedStatementValues.put("location", storageReservoirGetRequest.getLocationNum());
+		}
 
-        if (storageReservoirGetRequest.getWardNum() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.ward = :ward");
-            preparedStatementValues.put("ward",storageReservoirGetRequest.getWardNum());
-        }
+		if (storageReservoirGetRequest.getWardNum() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" storagereservoir.ward = :ward");
+			preparedStatementValues.put("ward", storageReservoirGetRequest.getWardNum());
+		}
 
-        if (storageReservoirGetRequest.getZoneNum() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.zone = :zone");
-            preparedStatementValues.put("zone",storageReservoirGetRequest.getZoneNum());
-        }
-    }
+		if (storageReservoirGetRequest.getZoneNum() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" storagereservoir.zone = :zone");
+			preparedStatementValues.put("zone", storageReservoirGetRequest.getZoneNum());
+		}
+	}
 
-    private void addOrderByClause(final StringBuilder selectQuery,
-            final StorageReservoirGetRequest storageReservoirGetRequest) {
-        final String sortBy = storageReservoirGetRequest.getSortBy() == null ? "storagereservoir.id"
-                : "storagereservoir." + storageReservoirGetRequest.getSortBy();
-        final String sortOrder = storageReservoirGetRequest.getSortOrder() == null ? "DESC"
-                : storageReservoirGetRequest.getSortOrder();
-        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-    }
+	private void addOrderByClause(final StringBuilder selectQuery,
+			final StorageReservoirGetRequest storageReservoirGetRequest) {
+		final String sortBy = storageReservoirGetRequest.getSortBy() == null ? "storagereservoir.id"
+				: "storagereservoir." + storageReservoirGetRequest.getSortBy();
+		final String sortOrder = storageReservoirGetRequest.getSortOrder() == null ? "DESC"
+				: storageReservoirGetRequest.getSortOrder();
+		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+	}
 
-    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-        if (appendAndClauseFlag)
-            queryString.append(" AND");
+	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+		if (appendAndClauseFlag)
+			queryString.append(" AND");
 
-        return true;
-    }
+		return true;
+	}
 
-    private static String getIdQuery(final List<Long> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", " + idList.get(i));
-        }
-        return query.append(")").toString();
-    }
+	private static String getIdQuery(final List<Long> idList) {
+		final StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++)
+				query.append(", " + idList.get(i));
+		}
+		return query.append(")").toString();
+	}
 
-    public static String insertStorageReserviorQuery() {
-        return "INSERT INTO egwtr_storage_reservoir(id,code,name,reservoirtype,location,ward,zone,capacity,noofsublines,noofmaindistributionlines,"
-                + "noofconnection,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(:id,:code,:name,:reservoirtype,:location,:ward,:zone,:capacity,:noofsublines,"
-                + ":noofmaindistributionlines,:noofconnection,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
-    }
+	public static String insertStorageReserviorQuery() {
+		return "INSERT INTO egwtr_storage_reservoir(id,code,name,reservoirtype,location,ward,zone,capacity,noofsublines,noofmaindistributionlines,"
+				+ "noofconnection,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(:id,:code,:name,:reservoirtype,:location,:ward,:zone,:capacity,:noofsublines,"
+				+ ":noofmaindistributionlines,:noofconnection,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
+	}
 
-    public static String updateStorageReserviorQuery() {
-        return "UPDATE egwtr_storage_reservoir SET name = :name,reservoirtype = :reservoirtype,location = :location,ward = :ward ,zone = :zone"
-                + " , capacity = :capacity,noofsublines = :noofsublines,noofmaindistributionlines = :noofmaindistributionlines,"
-                + "noofconnection = :noofconnection,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code  and tenantid = :tenantid";
-    }
+	public static String updateStorageReserviorQuery() {
+		return "UPDATE egwtr_storage_reservoir SET name = :name,reservoirtype = :reservoirtype,location = :location,ward = :ward ,zone = :zone"
+				+ " , capacity = :capacity,noofsublines = :noofsublines,noofmaindistributionlines = :noofmaindistributionlines,"
+				+ "noofconnection = :noofconnection,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code  and tenantid = :tenantid";
+	}
 
-    public static String selectStorageResrvoirByNameByCodeQuery() {
-    	StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-    	selectQuery.append("where storagereservoir.name= :name and storagereservoir.tenantId = :tenantId");
-    	return selectQuery.toString();
-    }
+	public static String selectStorageResrvoirByNameByCodeQuery() {
+		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		selectQuery.append("where storagereservoir.name= :name and storagereservoir.tenantId = :tenantId");
+		return selectQuery.toString();
+	}
 
-    public static String selectStorageReservoirByNameByCodeNotInQuery() {
-       	StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-       	selectQuery.append("where storagereservoir.name = :name and storagereservoir.tenantId = :tenantId and storagereservoir.code != :code");
-        return selectQuery.toString();
-    }
+	public static String selectStorageReservoirByNameByCodeNotInQuery() {
+		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		selectQuery.append(
+				"where storagereservoir.name = :name and storagereservoir.tenantId = :tenantId and storagereservoir.code != :code");
+		return selectQuery.toString();
+	}
 }

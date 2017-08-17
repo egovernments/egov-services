@@ -140,11 +140,165 @@ var dat = {
               "name": "NoOfFlats",
               "isGroup": false,
               "isField": true
-             }]
+            },
+            {
+             "name": "applicantDetailsWithProp",
+             "isGroup": true,
+             "isField": false
+           }]
             }]
           }
         ]
       },{
+        "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
+        "name": "applicantDetailsWithProp", //Follow Title case pattern
+        "multiple": false,
+        "hide":true,
+        "fields": [
+          {
+            "name": "NameOfApplicant",
+            "jsonPath": "Connection.connectionOwner.name",
+            "label": "wc.create.groups.applicantDetails.nameOfApplicant",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "MobileNumber",
+            "jsonPath": "Connection.connectionOwner.mobileNumber",
+            "label": "wc.create.groups.applicantDetails.mobileNumber",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Email",
+            "jsonPath": "Connection.connectionOwner.emailId",
+            "label": "wc.create.groups.applicantDetails.email",
+            "pattern": "",
+            "type": "email",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "isHidden": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "AadharNumber",
+            "jsonPath": "Connection.connectionOwner.aadhaarNumber",
+            "label": "wc.create.groups.applicantDetails.adharNumber",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "gender",
+            "jsonPath": "Connection.connectionOwner.gender",
+            "label": "employee.Employee.fields.User.gender",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-common-masters/genders/_search?|$.Gender.*|$.Gender.*",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Address",
+            "jsonPath": "Connection.address.addressLine1",
+            "label": "wc.create.groups.applicantDetails.address",
+            "pattern": "",
+            "type": "textarea",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "City",
+            "jsonPath": "Connection.address.city",
+            "label": "employee.Employee.fields.city",
+            "pattern": "",
+            "type": "textarea",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "PinCode",
+            "jsonPath": "Connection.address.pinCode",
+            "label": "pt.create.groups.propertyAddress.fields.pin",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Locality",
+            "jsonPath": "Connection.connectionLocation.locationBoundary.id",
+            "label": "wc.create.groups.applicantDetails.locality",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "wardName",
+            "jsonPath": "Connection.connectionLocation.adminBoundary.id",
+            "label": "wc.create.groups.fields.ward",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "zoneName",
+            "jsonPath": "Connection.connectionLocation.revenueBoundary.id",
+            "label": "wc.create.groups.fields.zone",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Is Primary?",
+            "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
+            "label": "",
+            "pattern": "",
+            "type": "radio",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+      			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
+      			"defaultValue":true
+          }
+
+        ]
+      },
+      {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
@@ -674,7 +828,7 @@ var dat = {
       }
     ]
   },
-  "wc.view": {
+  "wc.viewLegacy": {
     "numCols": 12 / 3,
     "version": "v1",
     "url": "/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}",

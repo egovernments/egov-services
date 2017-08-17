@@ -65,6 +65,8 @@ import ViewEditDocumentTypeApplicationType from './components/contents/wc/master
 import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
 
 import AddDemandWc from './components/contents/wc/master/addDemand';
+import ViewLegacy from './components/framework/view';
+import AddDemand from './components/contents/propertyTax/master/addDemand';
 
 //Property tax
 import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
@@ -75,7 +77,7 @@ import WallType from './components/contents/propertyTax/master/WallType';
 import WoodType from './components/contents/propertyTax/master/WoodType';
 import UsageType from './components/contents/propertyTax/master/UsageType';
 import PropertyType from './components/contents/propertyTax/master/PropertyType';
-import AddDemand from './components/contents/propertyTax/master/addDemand';
+import EditDemands from './components/non-framework/wc/editDemands';
 
 // import Occupancy from './components/contents/propertyTax/master/Occupancy';
 import MutationReason from './components/contents/propertyTax/master/MutationReason';
@@ -220,6 +222,8 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
+      <Route exact path={base+'/legacyView/:moduleName/:master?/:id'} component={ViewLegacy}/>
+      <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
 
 
     </Switch>

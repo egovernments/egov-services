@@ -16,8 +16,8 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
+import {translate} from '../../common/common';
+import Api from '../../../api/api';
 
 
 var flag = 0;
@@ -92,38 +92,6 @@ chip: {
 }
 };
 
-
-const getNameByCode = function(object, code, property = "") {
-  if (code == "" || code == null) {
-        return "";
-    }
-    for (var i = 0; i < object.length; i++) {
-        if (property == "") {
-            if (object[i].code == code) {
-                return object[i].name;
-            }
-        } else {
-            if (object[i].hasOwnProperty(property)) {
-                if (object[i].code == code) {
-                    return object[i][property];
-                }
-            } else {
-                return "";
-            }
-        }
-    }
-    return "";
-}
-
-const getHeadByCode = function(object, code) {
-	object.map((item, index)=>{
-		if(item.code == code){
-			console.log(item.name);
-			return item.name;
-		}
-	})
-}
-
 class AddDemand extends Component {
 
   constructor(props) {
@@ -133,6 +101,7 @@ class AddDemand extends Component {
 		demands: [],
 		hasError: false,
 		errorMsg: 'Invalid',
+    demandDetailBeans:[]
     }
   }
 
@@ -146,18 +115,18 @@ class AddDemand extends Component {
 	initForm();
 
 	var getDemands = {
-		upicNumber: this.props.match.params.upicNumber
+		consumerNumber: this.props.match.params.upicNumber
 	}
 
-	Api.commonApiPost('pt-property/properties/_preparedcb', getDemands, {}, false, true).then((res)=>{
+	Api.commonApiPost('wcms-connection/connection/_leacydemand', getDemands, {}, false, true).then((res)=>{
 
 		console.log('search',res);
 
 		 currentThis.setState({
-			 demands: res.Demands
+			 demandDetailBeans: res.demandDetailBeans
 		 })
 
-		res.Demands.map((demand, index)=>{
+		res.demandDetailBeans.map((demand, index)=>{
 			demand.demandDetails.map((item, i)=>{
 				var query = {
 					service:'PT',
@@ -260,25 +229,10 @@ validateCollection = (index) => {
 
 
 	}, 100)
-
-
-
-
-
 }
 
 
   render() {
-
-    const renderOption = function(list,listName="") {
-        if(list)
-        {
-            return list.map((item)=>
-            {
-                return (<MenuItem key={item.id} value={item.code} primaryText={item.name}/>)
-            })
-        }
-    }
 
     let {
       addDemand,
@@ -298,134 +252,40 @@ validateCollection = (index) => {
     } = this.props;
 
     let {search, handleDepartment, getTaxHead, validateCollection} = this;
+    let { demandDetailBeans } = this.state;
 
     let cThis = this;
 
+    const handleChangeSrchRslt = function(e, name, ind){
+    var _emps = Object.assign([], this.state.demandDetailBeans);
+    _emps[ind][name] = e.target.value;
+    cThis.setState({
+        ...cThis.state,
+        demandDetailBeans: _emps
+    })
+  }
+
 	const showfields = () => {
-
-		if(this.state.demands.length !=0){
-
-		return this.state.demands.map((demand, index)=> {
-
-			return(
-				<tr key={index}>
-					<td style={{width:100}} className="lastTdBorder">{new Date(demand.taxPeriodFrom).getFullYear()} - {new Date(demand.taxPeriodTo).getFullYear()}</td>
-						{demand.demandDetails.map((detail, i)=>{
-
-							if(!addDemand.hasOwnProperty('demands'+index)){
-								var e = {
-									target: {
-										value : detail.taxAmount
-									}
-								}
-								handleChangeNextOne(e ,"demands"+index,"demand"+i, false, '')
-							}
-
-							if((demand.demandDetails.length-1) == i){
-								return (
-									<td key={i} className="lastTdBorder">
-										<TextField  className="fullWidth"
-										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
-										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
-										  onChange={(e) => {
-											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
-												  validateCollection(i)
-											  } else {
-												  validateCollection(i);
-											  }
-											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')}}
-										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-										  underlineStyle={styles.underlineStyle}
-										  underlineFocusStyle={styles.underlineFocusStyle}
-										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-										/>
-									</td>)
-							} else {
-								return (
-									<td key={i}>
-										<TextField  className="fullWidth"
-										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
-										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
-										  onChange={(e) => {
-											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
-												  validateCollection(i)
-											  } else {
-												  validateCollection(i);
-											  }
-											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
-										  }}
-										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-										  underlineStyle={styles.underlineStyle}
-										  underlineFocusStyle={styles.underlineFocusStyle}
-										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-										/>
-									</td>)
-							}
-
-						})}
-						{demand.demandDetails.map((detail, i)=>{
-							if(!addDemand.hasOwnProperty('collections'+index)){
-								var e = {
-									target: {
-										value : detail.collectionAmount
-									}
-								}
-								handleChangeNextOne(e ,"collections"+index,"collection"+i, false, '')
-							}
-							return (
-							<td key={i} >
-								<TextField  className="fullWidth"
-								  floatingLabelText={<span style={{fontSize:'14px'}}>Collection</span>}
-								  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
-								  type="number"
-								  onChange={(e) => {
-									  if(addDemand.hasOwnProperty('demands'+index) && addDemand['demands'+index].hasOwnProperty('demand'+i) && addDemand['demands'+index]['demand'+i]) {
-										  validateCollection(i)
-									  } else {
-										  validateCollection(i);
-									  }
-
-									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
-								  }}
-								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-								  underlineStyle={styles.underlineStyle}
-								  underlineFocusStyle={styles.underlineFocusStyle}
-								  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-								/>
-							</td>)
-						})}
-				</tr>
-			)
-
-		})
-		}
-	}
-
-	const showSubHeading = () => {
-		if(this.state.demands.length !=0){
-			return this.state.demands[0].demandDetails.map((detail, index)=>{
-			if((this.state.demands[0].demandDetails.length-1) == index){
-				return (
-				<td key={index} className="lastTdBorder">{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
-					if(e.code == detail.taxHeadMasterCode){
-						return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
-					}
-				})}</td>)
-			} else {
-				return (<td key={index}>{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
-					if(e.code == detail.taxHeadMasterCode){
-						return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
-					}
-				})}</td>)
-			}
-
-			})
-		}
-
+    if(demandDetailBeans.length>0) {
+      return demandDetailBeans.map((item, index)=> {
+            return (<tr key={index}>
+                    <td data-label="taxPeriod">{item.taxPeriod}</td>
+                    <td data-label="taxHeadMasterCode">{item.taxPeriod}</td>
+                    <td data-label="taxAmount">
+                    <input type="number" id={item.id} name="taxAmount"  value={item.taxAmount}
+                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} />
+                    </td>
+                    <td data-label="collectionAmount">
+                    <input type="number" id={item.id} name="taxAmount"  value={item.collectionAmount}
+                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} />
+                    </td>
+                </tr>
+            );
+      })
+  }
 
 	}
+
 
     return (<div><Card className="uiCard">
 				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.demands.addDemand')}</div>} />
@@ -438,17 +298,14 @@ validateCollection = (index) => {
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
 										<tr>
-											<th style={{textAlign:'center'}}>Period</th>
-											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>Demand</th>
-											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>Collection</th>
+											<th style={{textAlign:'center'}}>Installment</th>
+											<th  style={{textAlign:'center'}}>Tax</th>
+											<th style={{textAlign:'center'}}>Demand</th>
+                      <th style={{textAlign:'center'}}>Collection</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-										  <td className="lastTdBorder"></td>
-										{showSubHeading()}
-										{showSubHeading()}
-										</tr>
+
 										{showfields()}
 									</tbody>
 								</Table>

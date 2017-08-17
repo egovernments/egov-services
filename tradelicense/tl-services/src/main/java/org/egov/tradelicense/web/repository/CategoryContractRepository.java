@@ -109,9 +109,9 @@ public class CategoryContractRepository {
 			content.append("&type=subcategoy");
 		}
 
-		if (tradeLicense.getTenantId() != null) {
-			content.append("&businessNature=" + tradeLicense.getTradeType());
-		}
+//		if (tradeLicense.getTenantId() != null) {
+//			content.append("&businessNature=" + tradeLicense.getTradeType());
+//		}
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		url = url + content.toString();
 		CategoryResponse categoryResponse = null;

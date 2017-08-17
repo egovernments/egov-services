@@ -1652,4 +1652,4 @@ ReportDefinitions:
     / 86400::double precision) <= 2::double precision THEN 1 ELSE NULL::integer END)
     AS lsthn2 FROM egpgr_complainttype ctype, submission cs,submission_attribute sa,eg_boundary
     boundary where cs.servicecode = ctype.code and cs.crn = sa.crn and sa.key = 'systemLocationId' and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate
-    and cs.tenantid = $tenantid AND cs.status=$grievancestatustype GROUP BY boundary.name and ctype.keyword=complaint;
+    and cs.tenantid = $tenantid AND cs.status=$grievancestatustype and ctype.keyword=complaint GROUP BY boundary.name ;

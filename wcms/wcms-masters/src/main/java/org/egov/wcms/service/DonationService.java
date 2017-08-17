@@ -107,7 +107,7 @@ public class DonationService {
 
         }
         if (donationGetRequest.getUsageType() != null) {
-            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
+            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
                     donationGetRequest.getUsageType(), donationGetRequest.getTenantId());
             if (usageType != null && usageType.getUsageTypesSize())
                 donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());

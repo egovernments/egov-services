@@ -1572,7 +1572,7 @@ ReportDefinitions:
          union 
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status,
           property.id::character varying ||':'||comments as details,
-         replace('_url?/propertyTax/update-property/:id', ':id', states.id::character varying) as url from EG_WF_STATES states JOIN EGPT_PROPERTYDETAILS property
+         replace('_url?/views/inbox/:id', ':id', property.property::character varying) as url from EG_WF_STATES states JOIN EGPT_PROPERTYDETAILS property
          ON property.stateid::integer = states.id where type = 'Create Property'and owner_pos = $positionId and tenantId=$tenantid and states.status<> 2 order by states.createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, water.acknowledgmentnumber::character varying ||':'||comments as details,

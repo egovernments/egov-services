@@ -4,7 +4,9 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceRequestFieldException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestValidator;
+import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -81,11 +83,9 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     private static final String ATTRIBUTE_LOCATION_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemLocationId";
     private static final String ATTRIBUTE_LOCATION_ID_MANDATORY_MESSAGE = "Location ID is required";
 
-/*
     private static final String CHILD_LOCATION_ID_MANDATORY_CODE = "pgr.0021";
     private static final String CHILD_LOCATION_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemChildLocationId";
     private static final String CHILD_LOCATION_ID_MANDATORY_MESSAGE = "Child Location ID is required";
-*/
 
     private static final String POSITION_ID_MANDATORY_CODE = "pgr.0022";
     private static final String POSITION_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemPositionId";
@@ -121,7 +121,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String EXTERNAL_CRN = "systemExternalCRN";
     public static final String SYSTEM_RECEIVING_MODE = "systemReceivingMode";
     public static final String SYSTEM_LOCATION_ID = "systemLocationId";
-    //   public static final String SYSTEM_CHILD_LOCATION_ID = "systemChildLocationId";
+    public static final String SYSTEM_CHILD_LOCATION_ID = "systemChildLocationId";
     public static final String SYSTEM_POSITION_ID = "systemPositionId";
     public static final String SYSTEM_APPROVAL_COMMENTS = "systemApprovalComments";
     public static final String SYSTEM_RATING = "systemRating";
@@ -130,9 +130,13 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String REOPENED = "REOPENED";
     public static final String WITHDRAWN = "WITHDRAWN";
     public static final String SYSTEM_STATE_ID = "systemStateId";
-    public static final String COMPLAINT = "Complaint";
-    public static final String DELIVERABLE_SERVICE = "Deliverable_Service";
 
+
+    private ServiceRequestRepository serviceRequestRepository;
+
+    public ServiceRequestFieldValidator(ServiceRequestRepository serviceRequestRepository) {
+        this.serviceRequestRepository = serviceRequestRepository;
+    }
 
     @Override
     public boolean canValidate(ServiceRequest serviceRequest) {
@@ -196,12 +200,27 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         if (model.isModifyServiceRequest()) {
             addCRNValidationErrors(model, errorFields);
             addLocationIdPresentValidationErrors(model, errorFields);
-            //addChildLocationIdPresentValidationErrors(model, errorFields);
+            childLocationValidation(model, errorFields);
             addAssigneeIdPresentValidationErrors(model, errorFields);
             addCommentsPresentValidationErrors(model, errorFields);
             addSystemRatingCitizenPresentValidationErrors(model, errorFields);
             addStateIdIdPresentValidationErrors(model, errorFields);
         }
+    }
+
+    private void childLocationValidation(ServiceRequest model, List<ErrorField> errorFields) {
+        if (!isLatLongAbsent(model.getCrn(), model.getTenantId())) {
+            addChildLocationIdPresentValidationErrors(model, errorFields);
+        }
+    }
+
+    private boolean isLatLongAbsent(String crn, String tenantId) {
+        ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
+            .serviceRequestId(crn)
+            .tenantId(tenantId)
+            .build();
+        List<ServiceRequest> serviceRequests = serviceRequestRepository.findFromDb(serviceRequestSearchCriteria);
+        return !serviceRequests.isEmpty() && serviceRequests.get(0).isCoordinatesAbsent();
     }
 
     private void addCRNValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
@@ -392,20 +411,20 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         errorFields.add(errorField);
     }
 
-    /* private void addChildLocationIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-         List<AttributeEntry> childLocationId = model.getAttributeValueByKey(SYSTEM_CHILD_LOCATION_ID);
-         if (!childLocationId.isEmpty()) {
-             return;
-         }
+    private void addChildLocationIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
+        List<AttributeEntry> childLocationId = model.getAttributeValueByKey(SYSTEM_CHILD_LOCATION_ID);
+        if (!childLocationId.isEmpty()) {
+            return;
+        }
 
-         final ErrorField errorField = ErrorField.builder()
-             .code(CHILD_LOCATION_ID_MANDATORY_CODE)
-             .message(CHILD_LOCATION_ID_MANDATORY_MESSAGE)
-             .field(CHILD_LOCATION_ID_MANDATORY_FIELD_NAME)
-             .build();
-         errorFields.add(errorField);
-     }
- */
+        final ErrorField errorField = ErrorField.builder()
+            .code(CHILD_LOCATION_ID_MANDATORY_CODE)
+            .message(CHILD_LOCATION_ID_MANDATORY_MESSAGE)
+            .field(CHILD_LOCATION_ID_MANDATORY_FIELD_NAME)
+            .build();
+        errorFields.add(errorField);
+    }
+
     private void addAssigneeIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         List<AttributeEntry> assigneeId = model.getAttributeValueByKey(SYSTEM_POSITION_ID);
         if (!assigneeId.isEmpty()) {

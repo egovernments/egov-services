@@ -1,12 +1,15 @@
 package org.egov.workflow.web.contract;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+import org.activiti.engine.form.FormProperty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -162,5 +165,56 @@ public class Task {
 
 		return "";
 	}
-
+	
+	/**
+	 * name of the task can indicate the identifying process of task state.
+	 * 
+	 */
+	private String name;
+	
+	/**
+	 * processDefinitionId can indicate to identifying the which processDefinition of process
+	 */
+	
+	private String processDefinitionId;
+	
+	/**
+	 * processInstanceId can indicate to identifying the which process
+	 */
+	private String processInstanceId;
+	
+	/**
+	 * dueDate can indicate to identifying the task dueDate
+	 */
+	private String dueDate;
+	
+	/**
+	 * priority can indicate to identifying the task priority.(By default task priority is 50)
+	 */
+	private int priority;
+	
+	/**
+	 * candidateGroup can indicate to identifying the task candidateGroup
+	 */
+	private String candidateGroup;
+	
+	/**
+	 * claimTime can indicate to identifying the task claiming time
+	 */
+	private Date claimTime = null;
+	
+	/**
+	 * 
+	 * 
+	 */
+	
+	private Date endTime;
+	
+	private String taskDefinitionKey;
+	
+	
+	private List<ActivitiFormProperty> formProperties = new ArrayList<ActivitiFormProperty>();
+	
+	
+	
 }

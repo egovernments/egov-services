@@ -9,10 +9,13 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+import org.activiti.engine.form.FormProperty;
+import org.activiti.engine.impl.form.FormPropertyImpl;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +27,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class ProcessInstance {
 
 	/**
@@ -117,14 +121,6 @@ public class ProcessInstance {
 	@Length(max = 128, min = 1)
 	private String details;
 
-	/**
-	 * tasks gives the list of tasks owned by the process. For eGov internal
-	 * work flow this value will be empty.
-	 * 
-	 */
-
-	List<Task> tasks = new ArrayList<Task>();
-
 	private String tenantId;
 	/**
 	 * attributes used to pass any additional properties which is not defined in
@@ -155,5 +151,33 @@ public class ProcessInstance {
 
 		return "";
 	}
+	
+	
+	/**
+	 * name of the ProcessInstance
+	 *  
+	 */
+	
+	private String name;
+	
+	/**
+	 * processDefinitionId can indicate to identifying the which processDefinition of process
+	 */
+	private String processDefinationId;	
+	
+	private Date endTime;
+	
+	private List<ActivitiFormProperty> formProperties = new ArrayList<ActivitiFormProperty>();
+	
+	/**
+	 * tasks gives the list of tasks owned by the process. For eGov internal
+	 * work flow this value will be empty.
+	 * 
+	 */
+
+	List<Task> tasks = new ArrayList<Task>();
+	
+	
+	
 
 }

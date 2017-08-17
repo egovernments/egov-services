@@ -40,6 +40,12 @@ public class WorkflowConstants {
     public static final String VAR_designationList = "designationList";
     
     public static final String OBJ_WORKFLOWBEAN= "workflowBean";
+    
+    public static final String ACTION_COMPLETE = "complete";
+    public static final String ACTION_CLAIM = "claim";
+    public static final String ACTION_DELEGATE = "delegate";
+    public static final String ACTION_RESOLVE = "resolve";
+    public static final String ACTION_UPDATE = "update";
   
 
 }

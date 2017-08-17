@@ -672,7 +672,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo']
+          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors']
         },
         pattern: {
           current: [],
@@ -692,7 +692,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea']
         },
         pattern: {
           current: [],
@@ -775,7 +775,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea']
         },
         pattern: {
           current: [],

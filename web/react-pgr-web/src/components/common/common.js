@@ -290,7 +290,7 @@ var localization_EN_Data = {
     "pt.create.groups.assessmentDetails.fields.department": "Department",
     "pt.create.groups.assessmentDetails.fields.extentOfSite": "Total Area",
     "pt.create.groups.assessmentDetails.fields.sequenceNo": "Sequence No.",
-    "pt.create.groups.assessmentDetails.fields.isAuthorized": "Is Authorized?",
+    "pt.create.groups.assessmentDetails.fields.isLegal": "Is Legal?",
 
     "pt.create.groups.propertyFactors": "Property Factors",
     "pt.create.groups.propertyFactors.fields.totalFactor": "Toilet factor",
@@ -298,6 +298,7 @@ var localization_EN_Data = {
     "pt.create.groups.propertyFactors.fields.liftFactor": "Lift factor",
     "pt.create.groups.propertyFactors.fields.parkingFactor": "Parking Factor",
 
+	"pt.create.groups.propertyAddress.fields.totalFloors": "Total Floors",
     "pt.create.groups.propertyAddress.fields.lift": "Lift",
     "pt.create.groups.propertyAddress.fields.toilet": "Toilet",
     "pt.create.groups.propertyAddress.fields.waterTap": "Water Tap",
@@ -383,7 +384,15 @@ var localization_EN_Data = {
     "pt.create.groups.addDemand.fields.treetax": "Tree Tax",
     "pt.create.groups.addDemand.fields.totalPropertyTax": "Total Property Tax",
     "pt.create.groups.addDemand.fields.collection": "Collection",
-
+	
+	"pt.create.groups.constructionDetails.fields.orderDate":"Order Date",
+	"pt.create.groups.constructionDetails.fields.certificateNumber": "Certificate Number",
+	"pt.create.groups.constructionDetails.fields.certificateCompletionDate":"Certificate Completion Date",
+	"pt.create.groups.constructionDetails.fields.certificateReceivedDate":"Certificate Received Date",
+	"pt.create.groups.constructionDetails.fields.agencyName": "Agency Name",
+	"pt.create.groups.constructionDetails.fields.licenseType": "License Type",
+	"pt.create.groups.constructionDetails.fields.licenseNumber": "License Number", 
+	
 
     //employee Object
     "employee.Employee.fields.code": "Code",

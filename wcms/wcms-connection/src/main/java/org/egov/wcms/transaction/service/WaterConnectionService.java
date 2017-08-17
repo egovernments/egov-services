@@ -276,12 +276,21 @@ public class WaterConnectionService {
 		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().ts(111111111L).build()).build();
 		List<Long> propertyIdentifierList = new ArrayList<>();
 		String urlToInvoke = buildUrlToInvoke(waterConnectionGetReq);
-		try {
-			propertyIdentifierList = restConnectionService.getPropertyDetailsByParams(wrapper, urlToInvoke); 
-		} catch (Exception e) {
-			logger.error("Encountered an Exception while getting the property identifier from Property Module :" + e.getMessage());
+		if((null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) 
+				||  (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) 
+				||  (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty())
+				||  (null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()) 
+				||  (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty())) {
+			try {
+				propertyIdentifierList = restConnectionService.getPropertyDetailsByParams(wrapper, urlToInvoke); 
+			} catch (Exception e) {
+				logger.error("Encountered an Exception while getting the property identifier from Property Module :" + e.getMessage());
+			}
 		}
-		waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
+		
+		if(propertyIdentifierList.size() > 0){
+			waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);			
+		}
 		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
 		if(connectionList.size() == 1) { 
 			for(Connection conn : connectionList){ 

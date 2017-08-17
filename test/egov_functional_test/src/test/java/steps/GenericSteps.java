@@ -2,6 +2,7 @@ package steps;
 
 import com.testvagrant.stepdefs.exceptions.NoSuchEventException;
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import org.openqa.selenium.WebElement;
@@ -29,7 +30,7 @@ public class GenericSteps extends BaseSteps {
                 .withValue(value)
                 .serveWithElement(webElement);
 
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(3);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)$")
@@ -44,7 +45,7 @@ public class GenericSteps extends BaseSteps {
                 .doAction(action)
                 .serveWithElement(webElement);
 
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(3);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen verifies\\s+(\\w+)\\s+is\\s+(.*)$")
@@ -59,13 +60,26 @@ public class GenericSteps extends BaseSteps {
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen verifies\\s+(\\w+)\\s+has\\s+(\\w+)\\s+value\\s+(.*)$")
     public void assertElementWithValue(String consumer, String screen, String element, String action, String value) throws NoSuchEventException, IOException {
-        tapster().useDriver(pageStore.getDriver())
-                .onScreen(screen)
-                .asConsumer(consumer)
-                .onElement(element)
-                .doAction(action)
-                .withValue(value)
-                .serve();
+        if(value.equals("aboveApplicationNumber")){
+            value = scenarioContext.getApplicationNumber();
+            WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen,element,value);
+            tapster().useDriver(pageStore.getDriver())
+                    .onScreen(screen)
+                    .asConsumer(consumer)
+                    .onElement(element)
+                    .doAction(action)
+                    .withValue(value)
+                    .serveWithElement(webElement);
+        }
+        else{
+            tapster().useDriver(pageStore.getDriver())
+                    .onScreen(screen)
+                    .asConsumer(consumer)
+                    .onElement(element)
+                    .doAction(action)
+                    .withValue(value)
+                    .serve();
+        }
     }
 
     @And("^(\\w+) on (\\w+) screen performs following actions$")
@@ -111,31 +125,44 @@ public class GenericSteps extends BaseSteps {
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen\\s+(\\w+)\\son\\s+(\\w+)\\s+with\\s+above\\s+(.*)$")
     public void userOnScreenTypesOnApplicationSearchWithAboveApplicationNumber(String consumer, String screen, String action, String element, String value) throws Throwable {
-
         if (value.equals("applicationNumber"))
             value = scenarioContext.getApplicationNumber();
         else
             value = scenarioContext.getAssessmentNumber();
 
+        if (action.equals("opens")) {
+            tapster().useDriver(pageStore.getDriver())
+                    .onScreen(screen)
+                    .asConsumer(consumer)
+                    .onElement(element)
+                    .doAction("types")
+                    .withValue(value)
+                    .serve();
+
+            TimeUnit.SECONDS.sleep(1);
+            pageStore.get(GenericPage.class).openApplication(value).click();
+        }
+        else {
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
-        tapster().useDriver(pageStore.getDriver())
-                .onScreen(screen)
-                .asConsumer(consumer)
-                .onElement(element)
-                .doAction(action)
-                .withValue(value)
-                .serveWithElement(webElement);
+            tapster().useDriver(pageStore.getDriver())
+                    .onScreen(screen)
+                    .asConsumer(consumer)
+                    .onElement(element)
+                    .doAction(action)
+                    .withValue(value)
+                    .serveWithElement(webElement);
+        }
     }
 
-    @And("^user on (\\w+) screen selects (\\w+) with value as (.*)$")
-    public void selectsDropdownWithValue(String screen, String element, String value) throws Throwable {
+    @And("^(\\w+)\\s+on (\\w+) screen selects (\\w+) with value as (.*)$")
+    public void selectsDropdownWithValue(String consumer, String screen, String element, String value) throws Throwable {
         TimeUnit.SECONDS.sleep(1);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
         pageStore.get(GenericPage.class).clickOnDropdown(webElement, value);
     }
 
-    @And("^user on (\\w+) screen types on (\\w+) suggestion box with value (.*)$")
-    public void selectsSuggestionBoxWithValue(String screen, String element, String value) throws Throwable {
+    @And("^(\\w+)\\s+on (\\w+) screen types on (\\w+) suggestion box with value (.*)$")
+    public void selectsSuggestionBoxWithValue(String consumer,String screen, String element, String value) throws Throwable {
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
         pageStore.get(GenericPage.class).actionOnSuggestionBox(webElement, value);
     }

@@ -51,7 +51,7 @@
         {
          "elementName":"complaintNum",
          "identifier":"xpath",
-         "value":"//*[contains(text(),'CRN')]",
+         "value":"//*[contains(text(),'future')]",
          "waitFor":"visibility"
         },
         {
@@ -68,7 +68,9 @@
         },
         {
         "elementName":"submitButton",
-        "referTo":"submitButtonCommon"
+        "identifier":"xpath",
+        "value":"//span[text()='Submit']",
+        "waitFor":"visibility"
         },
         {
         "elementName":"successBox",
@@ -84,7 +86,9 @@
         },
         {
         "elementName":"homeButton",
-        "referTo":"homeButtonCommon"
+        "identifier":"xpath",
+        "value":"//i[text()='home']",
+        "waitFor":"visibility"
         }
     ]
 }

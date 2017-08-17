@@ -17,6 +17,18 @@
         "identifier":"css",
         "value":"span[style='color: white;']",
         "waitFor":"visibility"
+        },
+        {
+        "elementName":"homePageSearch",
+        "identifier":"css",
+        "value":"[id^='undefined-Search-Search']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"applicationBox",
+        "identifier":"xpath",
+        "value":"//*[contains(text(),'%s')]",
+        "waitFor":"visibility"
         }
     ]
 }

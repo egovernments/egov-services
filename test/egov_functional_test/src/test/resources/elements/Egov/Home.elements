@@ -13,12 +13,6 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"search",
-        "identifier":"css",
-        "value":"[id^=undefined-Search-undefined]",
-        "waitFor":"visibility"
-        },
-        {
         "elementName":"profile",
         "identifier":"xpath",
         "value":"//i[text()='more_vert']",
@@ -31,15 +25,21 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"applicationSearch",
+        "elementName":"dashBoardSearch",
         "identifier":"css",
-        "value":"[id^='undefined-Search-Search']",
+        "value":"input[type='search']",
         "waitFor":"visibility"
         },
         {
         "elementName":"profileName",
         "identifier":"css",
         "value":"span[style='color: white;']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"dashBoardApplications",
+        "identifier":"css",
+        "value":"[id='searchTable'] tbody",
         "waitFor":"visibility"
         }
     ]

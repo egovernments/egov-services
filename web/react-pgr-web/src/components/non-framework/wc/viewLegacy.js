@@ -1,16 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-
 import _ from "lodash";
-import ShowFields from "./showFields";
-
-import {translate} from '../common/common';
-import Api from '../../api/api';
-import jp from "jsonpath";
-import UiButton from './components/UiButton';
-import {fileUpload} from './utility/utility';
-import UiTable from './components/UiTable';
+import ShowFields from "../../framework/showFields";
+import {translate} from '../../common/common';
+import Api from '../../../api/api';
+import UiButton from '../../framework/components/UiButton';
+import UiDynamicTable from '../../framework/components/UiDynamicTable';
+import {fileUpload} from '../../framework/utility/utility';
+import UiTable from '../../framework/components/UiTable';
 
 var specifications={};
 
@@ -180,37 +178,26 @@ class Report extends Component {
   }
 
   initData() {
-    try {
-      var hash = window.location.hash.split("/");
-      if(hash.length == 4) {
-        specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-      } else {
-        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-      }
-    } catch(e) {
-
-    }
+    specifications = require(`../../framework/specs/wc/master/legacy`).default;
 
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
-    let hashLocation = window.location.hash;
+
     let self = this;
-    let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    let obj = specifications["wc.view"];
     self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName(hashLocation.split("/")[2]);
-    setActionName(hashLocation.split("/")[1]);
+    setModuleName("wc");
+    setActionName("view");
     //Get view form data
-    var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[0];
-    var hash = window.location.hash.split("/");
-    var value = (hash.length == 4) ? hash[3] : hash[4];
+    var url = specifications[`wc.view`].url.split("?")[0];
     var query = {
-      [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[1].split("=")[0]]: value
+      acknowledgementNumber: this.props.match.params.id
     };
 
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications[`wc.view`].useTimestamp).then(function(res){
       self.props.setFormData(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "wc", "view", specifications[`wc.view`].objectName);
     }, function(err){
 
     })
@@ -228,10 +215,13 @@ class Report extends Component {
   printer = () => {
     window.print();
   }
+  dcbButton = () =>{
+    this.props.setRoute("/wc/addDemand/" + this.props.formData.Connection[0].acknowledgementNumber);
+  }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {handleChange, getVal, addNewCard, removeCard, printer} = this;
+    let {handleChange, getVal, addNewCard, removeCard, printer, dcbButton } = this;
 
     const renderTable = function() {
       if(moduleName && actionName && formData && formData[objectName]) {
@@ -262,7 +252,8 @@ class Report extends Component {
           <br/>
         </form>
         <div style={{"textAlign": "center"}}>
-            <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" handler={printer}/>
+            <RaisedButton label="Print" primary={true}  onClick={(e)=>{printer()}}/>&nbsp;
+            {this.props.formData &&  this.props.formData.Connection && this.props.formData.Connection[0].isLegacy && <RaisedButton label="Add/ Edit DCB" primary={true}  onClick={(e)=>{dcbButton()}}/>}
         </div>
       </div>
     );
@@ -299,6 +290,7 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
-  }
+  },
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

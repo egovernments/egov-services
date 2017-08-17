@@ -154,14 +154,13 @@ public class VoucherService {
             final Boolean isDebit) {
 
         final VouchercreateAccountCodeDetails debitAccountCodeDetail = new VouchercreateAccountCodeDetails();
-        ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
                 + accountId;
         log.debug("Chart of Account URL ::" + url);
         log.debug("Chart of Account Request Info :: " + requestInfo);
-        chartOfAccountContractResponse = restTemplate.postForObject(url, requestInfo,
-                ChartOfAccountContractResponse.class);
+        final ChartOfAccountContractResponse chartOfAccountContractResponse = restTemplate.postForObject(url,
+                requestInfo, ChartOfAccountContractResponse.class);
         log.debug("Chart of Account Response :: " + chartOfAccountContractResponse);
 
         final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
@@ -209,12 +208,4 @@ public class VoucherService {
             throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
     }
 
-    public void validateCOAActiveForPosting(final List<ChartOfAccountDetailContract> coads) {
-        log.debug("Validating Active For Posting for Chart of Accounts ");
-        if (coads != null && !coads.isEmpty()) {
-            final ChartOfAccountContract coa = coads.get(0).getChartOfAccount();
-            if (!coa.getIsActiveForPosting())
-                throw new RuntimeException("Chart of Account " + coa.getName() + " is not active for posting.");
-        }
-    }
 }

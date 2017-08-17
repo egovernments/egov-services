@@ -123,11 +123,18 @@ public class WaterConnectionService {
         Long connectionAddressId = 0L ;
         Long connectionLocationId = 0L ;
         try {
-        	waterConnectionRepository.persistConnection(waterConnectionRequest);
-        	if(!waterConnectionRequest.getConnection().isWithProperty()) { 
+        	if(waterConnectionRequest.getConnection().getWithProperty()){ 
+        		waterConnectionRepository.persistConnection(waterConnectionRequest);
+        	}
+        	else { 
+        		waterConnectionRepository.persistConnection(waterConnectionRequest);
+        		logger.info("Creating User Id :: " );
         		createUserId(waterConnectionRequest); 
+        		logger.info("Creating Address Id :: " );
         		connectionAddressId = waterConnectionRepository.insertConnectionAddress(waterConnectionRequest);
+        		logger.info("Creating Location Id :: " );
         		connectionLocationId = waterConnectionRepository.insertConnectionLocation(waterConnectionRequest);
+        		logger.info("Updating Water Connection :: " );
         		waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest, connectionAddressId, connectionLocationId);
         	}
         	

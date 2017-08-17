@@ -136,9 +136,6 @@ public class DisposalService {
                 .getSubledgerDetails(requestInfo, tenantId, disposal.getAssetSaleAccount());
         voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount, subledgerDetailsForAssetSaleAccount);
 
-        voucherService.validateCOAActiveForPosting(subledgerDetailsForAssetAccount);
-        voucherService.validateCOAActiveForPosting(subledgerDetailsForAssetSaleAccount);
-
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
                 requestInfo);
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);

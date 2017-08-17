@@ -206,10 +206,6 @@ public class DepreciationService {
                 tenantId, dEAccount);
 
         voucherService.validateSubLedgerDetails(subledgerDetailsForAD, subledgerDetailsForDE);
-
-        voucherService.validateCOAActiveForPosting(subledgerDetailsForAD);
-        voucherService.validateCOAActiveForPosting(subledgerDetailsForDE);
-
         Map<String, String> voucherParamsMap = new HashMap<>();
         try {
             voucherParamsMap = getDepreciationVoucherParamsMap(tenantId);

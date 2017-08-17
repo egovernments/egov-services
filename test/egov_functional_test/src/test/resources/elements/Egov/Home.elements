@@ -7,6 +7,12 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"menuSearch",
+        "identifier":"css",
+        "value":"[id^='undefined-Search-undefined']",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"firstMenuItem",
         "identifier":"css",
         "value":".menuStyle",

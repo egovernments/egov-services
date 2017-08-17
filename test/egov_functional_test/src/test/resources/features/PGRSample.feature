@@ -19,14 +19,13 @@ Feature: Sample Test From PGR
     And citizen on Login screen types on username value 7777777777
     And citizen on Login screen types on password value eGov@123
     And citizen on Login screen clicks on signIn
-    And citizen on CitizenPortalHome screen verifies profileName has visible value Akhila
-
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
 
     #Create Grievance#
     And citizen on CitizenPortalHome screen clicks on createGrievance
     And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
     And citizen on CitizenGrievance screen selects grievanceCategory with value as Public Health and Sanitation
-    And citizen on CitizenGrievance screen selects grievanceType with value as Slaughter House
+    And citizen on CitizenGrievance screen selects grievanceType with value as Spilling of Garbage from lorry
     And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
     And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value BankRoad
     And citizen on CitizenGrievance screen clicks on create
@@ -34,7 +33,7 @@ Feature: Sample Test From PGR
     And citizen on CitizenGrievance screen clicks on view
     And citizen on CitizenGrievance screen verifies commentBox is enabled
     And citizen on CitizenGrievance screen clicks on homeButton
-    And citizen on CitizenPortalHome screen verifies profileName has visible value Akhila
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
 
     #View Applicaion On Home Page#
     And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber

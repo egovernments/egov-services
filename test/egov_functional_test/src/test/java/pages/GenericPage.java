@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class GenericPage extends BasePage {
 
@@ -128,10 +129,14 @@ public class GenericPage extends BasePage {
 
         do {
             clickOnButton(webElement, driver);
-
-            waitForElementToBeVisible(driver.findElement(By.cssSelector("div[role=presentation]:nth-child(1)")), driver);
-            WebElement scroll = driver.findElement(By.cssSelector("div[role=presentation]:nth-child(1)"));
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", scroll);
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+//            waitForElementToBeVisible(driver.findElement(By.cssSelector("div[role=presentation]:nth-child(1)")), driver);
+//            WebElement scroll = driver.findElement(By.cssSelector("div[role=presentation]:nth-child(1)"));
+//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", scroll);
 
             String element = "//*[text()='" + value + "']";
             WebElement element1 = driver.findElement(By.xpath(element));

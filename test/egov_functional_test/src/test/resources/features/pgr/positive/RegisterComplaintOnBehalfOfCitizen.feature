@@ -4,14 +4,14 @@ Feature: Registering a Complaint
   Scenario: Creating a complaint on behalf of Citizen
 
     ### On Login Screen ###
-    And user on Login screen verifies cityText has visible value Roha Municipal Corporation
+#    And user on Login screen verifies cityText has visible value Roha Municipal Corporation
     Given user on Login screen types on username value ramana
     And user on Login screen types on password value demo
     And user on Login screen clicks on signIn
 
     ### On Homepage Screen ###
     And user on Home screen clicks on menu
-    And user on Home screen types on search value Officials Register Grievance
+    And user on Home screen types on menuSearch value Officials Register Grievance
     And user on Home screen clicks on firstMenuItem
 
     ### On Create Complaint Grievance Screen ###

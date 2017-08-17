@@ -248,7 +248,7 @@ definitions:
         type: string
         description: Unique Old License Number of the Trade. This is  unique in system for a tenant. This is mandatory  for legacy license.
         maxLength: 20
-        minLength: 6  
+        minLength: 20  
       licenseNumber:
         type: string
         description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
@@ -257,7 +257,7 @@ definitions:
       applicationDate:
         type: string
         format: date
-        description: date on which applicaiton has been generated for new Trade License in DD-MM-YY format
+        description: date on which applicaiton has been generated for new Trade License in dd/MM/YY format
       adhaarNumber:
         type: string
         description : Adhaar Number of trade owner
@@ -316,7 +316,7 @@ definitions:
         type: string
         description: Title of the Trade
         pattern: '[a-zA-Z0-9\s\.,]'
-        maxLength: 32
+        maxLength: 100
       tradeType:
         $ref : 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml#/definitions/BusinessNature'
       categoryId:
@@ -342,15 +342,15 @@ definitions:
       tradeCommencementDate:
         type: string
         format: date
-        description:  Commencement Date of the trade in DD-MM-YY format
+        description:  Commencement Date of the trade in dd/mm/yyy format
       licenseValidFromDate:
         type: string
         format: date
-        description: Date from when license is valid
+        description: Date from when license is valid in dd/mm/yyy format
       agreementDate:
         type: string
         format: date
-        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running in DD-MM-YY format
+        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running in dd/mm/yyy format
       agreementNo:
         type: string
         maxLength: 128

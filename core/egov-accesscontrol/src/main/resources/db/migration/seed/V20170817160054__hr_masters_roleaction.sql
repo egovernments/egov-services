@@ -1,0 +1,10 @@
+INSERT INTO eg_action (id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate)   VALUES (nextval('SEQ_EG_ACTION'), 'SearchEmployeePositions', '/hr-masters/employees/{employeeId}/positions/_search', 'EIS',null,   (select id from service where name='HR Masters' and tenantid='default'), 1,   'Search Employee Positions', false, 1, now(), 1, now());
+INSERT INTO eg_action (id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate)   VALUES (nextval('SEQ_EG_ACTION'), 'SearchEmployeeAssignments', '/hr-employee/employees/{id}/assignments/_search', 'EIS', '', (select id from service where name='HR Employee' and tenantid='default'), 1,   'Search Employee Assignments', false, 1, now(), 1, now());
+
+INSERT INTO eg_roleaction (roleCode,actionid,tenantId)   VALUES ('SUPERUSER',(select id FROM eg_action WHERE name='SearchEmployeePositions'),'default');
+INSERT INTO eg_roleaction (roleCode,actionid,tenantId)   VALUES ('EMPLOYEE ADMIN',(select id FROM eg_action WHERE name='SearchEmployeePositions' ),'default');
+INSERT INTO eg_roleaction (roleCode,actionid,tenantId)   VALUES ('EMPLOYEE',(select id FROM eg_action WHERE name='SearchEmployeePositions' ),'default');
+
+INSERT INTO eg_roleaction (roleCode,actionid,tenantId)   VALUES ('SUPERUSER',(select id FROM eg_action WHERE name='SearchEmployeeAssignments' ),'default');
+INSERT INTO eg_roleaction (roleCode,actionid,tenantId)   VALUES ('EMPLOYEE ADMIN',(select id FROM eg_action WHERE name='SearchEmployeeAssignments' ),'default');
+INSERT INTO eg_roleaction (roleCode,actionid,tenantId)   VALUES ('EMPLOYEE',(select id FROM eg_action WHERE name='SearchEmployeeAssignments' ),'default');

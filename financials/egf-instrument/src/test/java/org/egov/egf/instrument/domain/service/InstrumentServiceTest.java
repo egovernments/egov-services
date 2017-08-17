@@ -114,6 +114,19 @@ public class InstrumentServiceTest {
 		assertEquals(expextedResult, actualResult);
 
 	}
+	
+	@Test
+	public final void test_delete_() {
+
+		List<Instrument> expextedResult = getInstruments();
+
+		when(instrumentRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.delete(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
 
 	@Test(expected = CustomBindException.class)
 	public final void test_update_with_null_req() {
@@ -123,6 +136,19 @@ public class InstrumentServiceTest {
 		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.update(null, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = CustomBindException.class)
+	public final void test_delete_with_null_req() {
+
+		List<Instrument> expextedResult = getInstruments();
+
+		when(instrumentRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.delete(null, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 
@@ -164,6 +190,18 @@ public class InstrumentServiceTest {
 		when(instrumentRepository.update(any(Instrument.class))).thenReturn(expextedResult);
 
 		Instrument actualResult = instrumentService.update(expextedResult);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	@Test
+	public final void test_delete() {
+
+		Instrument expextedResult = getInstruments().get(0);
+
+		when(instrumentRepository.delete(any(Instrument.class))).thenReturn(expextedResult);
+
+		Instrument actualResult = instrumentService.delete(expextedResult);
 
 		assertEquals(expextedResult, actualResult);
 	}

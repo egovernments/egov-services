@@ -91,6 +91,23 @@ public class InstrumentAccountCodeControllerTest {
 						.readResponse("instrumentaccountcode/instrumentaccountcode_update_valid_response.json")));
 
 	}
+	
+	@Test
+	public void test_delete() throws IOException, Exception {
+
+		List<InstrumentAccountCode> instrumentAccountCodes = getInstrumentAccountCodes();
+		instrumentAccountCodes.get(0).setId("1");
+
+		when(instrumentAccountCodeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(instrumentAccountCodes);
+
+		mockMvc.perform(post("/instrumentaccountcodes/_delete")
+				.content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_update_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+						.readResponse("instrumentaccountcode/instrumentaccountcode_update_valid_response.json")));
+
+	}
 
 	@Test
 	public void test_update_error() throws IOException, Exception {

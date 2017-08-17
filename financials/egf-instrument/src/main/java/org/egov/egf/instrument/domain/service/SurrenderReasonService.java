@@ -22,6 +22,7 @@ public class SurrenderReasonService {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
@@ -83,6 +84,20 @@ public class SurrenderReasonService {
 		return surrenderReasonRepository.update(surrenderReasons, requestInfo);
 
 	}
+	
+	@Transactional
+	public List<SurrenderReason> delete(List<SurrenderReason> surrenderReasons,
+			BindingResult errors, RequestInfo requestInfo) {
+		try {
+			validate(surrenderReasons, ACTION_DELETE, errors);
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+		} catch (CustomBindException e) {
+			throw new CustomBindException(errors);
+		}
+		return surrenderReasonRepository.delete(surrenderReasons, requestInfo);
+	}
 
 	private BindingResult validate(List<SurrenderReason> surrenderreasons, String method, BindingResult errors) {
 
@@ -114,6 +129,11 @@ public class SurrenderReasonService {
 
 	}
 
+	@Transactional
+	public SurrenderReason delete(SurrenderReason surrenderReason) {
+		return surrenderReasonRepository.delete(surrenderReason);
+	}
+	
 	public List<SurrenderReason> fetchRelated(List<SurrenderReason> surrenderreasons) {
 
 		return surrenderreasons;

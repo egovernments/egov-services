@@ -146,6 +146,25 @@ public class InstrumentAccountCodeRepositoryTest {
         assertEquals(expectedResult.get(0).getTenantId(),
                 actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
     }
+    
+    @Test
+    public void test_delete_with_kafka() {
+
+        List<InstrumentAccountCode> expectedResult = getInstrumentAccountCodes();
+
+        instrumentAccountCodeRepositoryWithKafka.delete(expectedResult, requestInfo);
+
+        verify(instrumentAccountCodeQueueRepository).addToQue(captor.capture());
+
+        final InstrumentAccountCodeRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getInstrumentType().getName(),
+                actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getName());
+        assertEquals(expectedResult.get(0).getAccountCode().getGlcode(),
+                actualRequest.getInstrumentAccountCodes().get(0).getAccountCode().getGlcode());
+        assertEquals(expectedResult.get(0).getTenantId(),
+                actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
+    }
 
     @Test
     public void test_update_with_out_kafka() {
@@ -157,6 +176,29 @@ public class InstrumentAccountCodeRepositoryTest {
         when(instrumentAccountCodeJdbcRepository.update(any(InstrumentAccountCodeEntity.class))).thenReturn(entity);
 
         instrumentAccountCodeRepositoryWithOutKafka.update(expectedResult, requestInfo);
+
+        verify(instrumentAccountCodeQueueRepository).addToSearchQue(captor.capture());
+
+        final InstrumentAccountCodeRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getInstrumentType().getName(),
+                actualRequest.getInstrumentAccountCodes().get(0).getInstrumentType().getName());
+        assertEquals(expectedResult.get(0).getAccountCode().getGlcode(),
+                actualRequest.getInstrumentAccountCodes().get(0).getAccountCode().getGlcode());
+        assertEquals(expectedResult.get(0).getTenantId(),
+                actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
+    }
+    
+    @Test
+    public void test_delete_with_out_kafka() {
+
+        List<InstrumentAccountCode> expectedResult = getInstrumentAccountCodes();
+
+        InstrumentAccountCodeEntity entity = new InstrumentAccountCodeEntity().toEntity(expectedResult.get(0));
+
+        when(instrumentAccountCodeJdbcRepository.delete(any(InstrumentAccountCodeEntity.class))).thenReturn(entity);
+
+        instrumentAccountCodeRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
         verify(instrumentAccountCodeQueueRepository).addToSearchQue(captor.capture());
 

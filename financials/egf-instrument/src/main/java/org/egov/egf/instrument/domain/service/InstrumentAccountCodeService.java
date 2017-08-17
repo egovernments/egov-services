@@ -27,6 +27,7 @@ public class InstrumentAccountCodeService {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
@@ -95,6 +96,22 @@ public class InstrumentAccountCodeService {
 		return instrumentAccountCodeRepository.update(instrumentAccountCodes, requestInfo);
 
 	}
+	
+	@Transactional
+	public List<InstrumentAccountCode> delete(
+			List<InstrumentAccountCode> instrumentAccountCodes,
+			BindingResult errors, RequestInfo requestInfo) {
+		try {
+			validate(instrumentAccountCodes, ACTION_DELETE, errors);
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+		} catch (CustomBindException e) {
+			throw new CustomBindException(errors);
+		}
+		return instrumentAccountCodeRepository.delete(instrumentAccountCodes,
+				requestInfo);
+	}
 
 	private BindingResult validate(List<InstrumentAccountCode> instrumentaccountcodes, String method,
 			BindingResult errors) {
@@ -154,6 +171,11 @@ public class InstrumentAccountCodeService {
 			}
 
 		return instrumentaccountcodes;
+	}
+	
+	@Transactional
+	public InstrumentAccountCode delete(InstrumentAccountCode instrumentAccountCode) {
+		return instrumentAccountCodeRepository.delete(instrumentAccountCode);
 	}
 
 	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch instrumentAccountCodeSearch) {

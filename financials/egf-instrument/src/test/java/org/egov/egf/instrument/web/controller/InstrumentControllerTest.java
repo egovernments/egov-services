@@ -93,6 +93,23 @@ public class InstrumentControllerTest {
 				.andExpect(content().json(resources.readResponse("instrument/instrument_update_valid_response.json")));
 
 	}
+	
+	@Test
+	public void test_delete() throws IOException, Exception {
+
+		List<Instrument> instruments = getInstruments();
+		instruments.get(0).setId("1");
+
+		when(instrumentService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(instruments);
+
+		mockMvc.perform(post("/instruments/_delete")
+				.content(resources.readRequest("instrument/instrument_update_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(resources.readResponse("instrument/instrument_update_valid_response.json")));
+
+	}
 
 	@Test
 	public void test_update_error() throws IOException, Exception {

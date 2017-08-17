@@ -34,6 +34,7 @@ public class InstrumentAccountCodeController {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String PLACEHOLDER = "placeholder";
 
 	@Autowired
@@ -99,6 +100,39 @@ public class InstrumentAccountCodeController {
 		}
 
 		instrumentaccountcodes = instrumentAccountCodeService.update(instrumentaccountcodes, errors,
+				instrumentAccountCodeRequest.getRequestInfo());
+
+		for (InstrumentAccountCode iac : instrumentaccountcodes) {
+			contract = mapper.toContract(iac);
+			instrumentAccountCodeContracts.add(contract);
+		}
+
+		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+
+		return instrumentAccountCodeResponse;
+	}
+	
+	@PostMapping("/_delete")
+	@ResponseStatus(HttpStatus.CREATED)
+	public InstrumentAccountCodeResponse delete(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
+			BindingResult errors) {
+
+		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+		instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_DELETE);
+		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
+		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
+		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
+		InstrumentAccountCode instrumentAccountCode;
+		InstrumentAccountCodeContract contract;
+		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
+
+		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
+				.getInstrumentAccountCodes()) {
+			instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
+			instrumentaccountcodes.add(instrumentAccountCode);
+		}
+
+		instrumentaccountcodes = instrumentAccountCodeService.delete(instrumentaccountcodes, errors,
 				instrumentAccountCodeRequest.getRequestInfo());
 
 		for (InstrumentAccountCode iac : instrumentaccountcodes) {

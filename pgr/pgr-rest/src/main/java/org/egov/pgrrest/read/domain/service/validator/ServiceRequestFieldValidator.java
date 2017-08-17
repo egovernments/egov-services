@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 public class ServiceRequestFieldValidator implements ServiceRequestValidator {
 
@@ -119,7 +121,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String EXTERNAL_CRN = "systemExternalCRN";
     public static final String SYSTEM_RECEIVING_MODE = "systemReceivingMode";
     public static final String SYSTEM_LOCATION_ID = "systemLocationId";
- //   public static final String SYSTEM_CHILD_LOCATION_ID = "systemChildLocationId";
+    //   public static final String SYSTEM_CHILD_LOCATION_ID = "systemChildLocationId";
     public static final String SYSTEM_POSITION_ID = "systemPositionId";
     public static final String SYSTEM_APPROVAL_COMMENTS = "systemApprovalComments";
     public static final String SYSTEM_RATING = "systemRating";
@@ -128,6 +130,8 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String REOPENED = "REOPENED";
     public static final String WITHDRAWN = "WITHDRAWN";
     public static final String SYSTEM_STATE_ID = "systemStateId";
+    public static final String COMPLAINT = "Complaint";
+    public static final String DELIVERABLE_SERVICE = "Deliverable_Service";
 
 
     @Override
@@ -145,24 +149,41 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     private List<ErrorField> getError(ServiceRequest model) {
         List<ErrorField> errorFields = new ArrayList<>();
         commomValidation(model, errorFields);
-        createValidation(model, errorFields);
-        updateValidation(model, errorFields);
+
+        if (model.isKeywordComplaint(KEYWORD)) {
+            complaintValidation(model, errorFields);
+        }
 
         return errorFields;
     }
 
+    private void complaintValidation(ServiceRequest model, List<ErrorField> errorFields) {
+        createValidation(model, errorFields);
+        updateValidation(model, errorFields);
+    }
+
     private void commomValidation(ServiceRequest model, List<ErrorField> errorFields) {
+        addKeywordsValidationErrors(model, errorFields);
         addComplainantFirstNameValidationErrors(model, errorFields);
         addComplainantMobileValidationErrors(model, errorFields);
         addTenantIdValidationErrors(model, errorFields);
         addComplaintTypeCodeValidationErrors(model, errorFields);
-        addDescriptionValidationErrors(model, errorFields);
+        getDescriptionValidation(model, errorFields);
         addEmailPattern(model, errorFields);
         addStatusNotPresentValidationErrors(model, errorFields);
-        addKeywordsValidationErrors(model, errorFields);
+    }
+
+    private void getDescriptionValidation(ServiceRequest model, List<ErrorField> errorFields) {
+        if (model.isKeywordComplaint(KEYWORD)) {
+            addDescriptionValidationErrors(model, errorFields);
+        }
+        if (!model.isKeywordComplaint(KEYWORD) && !isEmpty(model.getDescription())) {
+            addDescriptionLengthValidationErrors(model, errorFields);
+        }
     }
 
     private void createValidation(ServiceRequest model, List<ErrorField> errorFields) {
+
         if (model.isNewServiceRequest()) {
             addRawLocationValidationErrors(model, errorFields);
             addLocationIdValidationErrors(model, errorFields);
@@ -220,16 +241,16 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     }
 
     private void addDescriptionValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!model.isDescriptionAbsent() && model.isAttributePresent("Complaint")) {
+        if (model.isDescriptionAbsent()) {
+            final ErrorField errorField = ErrorField.builder()
+                .code(MANDATORY_DESCRIPTION_CODE)
+                .message(DESCRIPTION_MANDATORY_MESSAGE)
+                .field(MANDATORY_DESCRIPTION_FIELD_NAME)
+                .build();
+            errorFields.add(errorField);
+        } else {
             addDescriptionLengthValidationErrors(model, errorFields);
-            return;
         }
-        final ErrorField errorField = ErrorField.builder()
-            .code(MANDATORY_DESCRIPTION_CODE)
-            .message(DESCRIPTION_MANDATORY_MESSAGE)
-            .field(MANDATORY_DESCRIPTION_FIELD_NAME)
-            .build();
-        errorFields.add(errorField);
     }
 
     private void addComplainantFirstNameValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
@@ -333,7 +354,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     }
 
     private void addStatusNotPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!model.isAttributePresent(SYSTEM_STATUS)) {
+        if (!model.isAttributeAbsent(SYSTEM_STATUS)) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()
@@ -348,7 +369,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         List<AttributeEntry> systemReceivingMode = model.getAttributeValueByKey(SYSTEM_RECEIVING_MODE);
         if (!systemReceivingMode.isEmpty()
             && systemReceivingMode.get(0).getCode().equalsIgnoreCase(MANUAL)
-            && model.isAttributePresent(EXTERNAL_CRN)) {
+            && model.isAttributeAbsent(EXTERNAL_CRN)) {
             final ErrorField errorField = ErrorField.builder()
                 .code(EXTERNAL_CRN_MANDATORY_CODE)
                 .message(EXTERNAL_CRN_MANDATORY_MESSAGE)
@@ -371,20 +392,20 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         errorFields.add(errorField);
     }
 
-   /* private void addChildLocationIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        List<AttributeEntry> childLocationId = model.getAttributeValueByKey(SYSTEM_CHILD_LOCATION_ID);
-        if (!childLocationId.isEmpty()) {
-            return;
-        }
+    /* private void addChildLocationIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
+         List<AttributeEntry> childLocationId = model.getAttributeValueByKey(SYSTEM_CHILD_LOCATION_ID);
+         if (!childLocationId.isEmpty()) {
+             return;
+         }
 
-        final ErrorField errorField = ErrorField.builder()
-            .code(CHILD_LOCATION_ID_MANDATORY_CODE)
-            .message(CHILD_LOCATION_ID_MANDATORY_MESSAGE)
-            .field(CHILD_LOCATION_ID_MANDATORY_FIELD_NAME)
-            .build();
-        errorFields.add(errorField);
-    }
-*/
+         final ErrorField errorField = ErrorField.builder()
+             .code(CHILD_LOCATION_ID_MANDATORY_CODE)
+             .message(CHILD_LOCATION_ID_MANDATORY_MESSAGE)
+             .field(CHILD_LOCATION_ID_MANDATORY_FIELD_NAME)
+             .build();
+         errorFields.add(errorField);
+     }
+ */
     private void addAssigneeIdPresentValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         List<AttributeEntry> assigneeId = model.getAttributeValueByKey(SYSTEM_POSITION_ID);
         if (!assigneeId.isEmpty()) {

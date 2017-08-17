@@ -111,6 +111,9 @@ public class WaterConnectionController {
         else
         	waterConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
         
+        if(null != waterConnectionRequest.getConnection().getWithProperty() )
+            waterConnectionRequest.getConnection().setWithProperty(Boolean.FALSE);
+        
         final List<ErrorResponse> errorResponses = connectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())

@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.FunctionResponse;
+import org.egov.asset.contract.FundResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.contract.VoucherResponse;
 import org.egov.asset.model.ChartOfAccountContract;
 import org.egov.asset.model.ChartOfAccountContractResponse;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.ChartOfAccountDetailContractResponse;
-import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.Function;
 import org.egov.asset.model.Fund;
@@ -102,19 +103,17 @@ public class VoucherService {
         }
     }
 
-    public VoucherRequest createVoucherRequest(final Object entity, final Long fundId, final Long depratmentId,
+    public VoucherRequest createVoucherRequest(final Object entity, final Fund fund, final Long depratmentId,
             final List<VouchercreateAccountCodeDetails> accountCodeDetails, final RequestInfo requestInfo,
             final String tenantId) {
         final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
-        final Fund fund = new Fund();
-        fund.setId(fundId);
 
         final Voucher voucher = new Voucher();
         voucher.setType(VoucherType.JOURNALVOUCHER.toString());
         voucher.setVoucherDate(sdf.format(new Date()));
         voucher.setLedgers(accountCodeDetails);
         voucher.setDepartment(depratmentId);
+        voucher.setFund(fund);
 
         log.debug("Entity :: " + entity);
 
@@ -130,15 +129,13 @@ public class VoucherService {
                     .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
             voucher.setDescription(assetConfigurationService
                     .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
-        } else if (entity instanceof Depreciation) {
+        } else {
             log.info("Setting Depreciation Voucher Name and Description ");
             voucher.setName(assetConfigurationService
                     .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId));
             voucher.setDescription(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(
                     AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId));
         }
-        voucher.setFund(fund);
-
         log.debug("Voucher :: " + voucher);
         final List<Voucher> vouchers = new ArrayList<>();
         vouchers.add(voucher);
@@ -150,24 +147,15 @@ public class VoucherService {
     }
 
     public VouchercreateAccountCodeDetails getGlCodes(final RequestInfo requestInfo, final String tenantId,
-            final Long accountId, final BigDecimal amount, final Long functionId, final Boolean iscredit,
+            final Long accountId, final BigDecimal amount, final Function function, final Boolean iscredit,
             final Boolean isDebit) {
 
         final VouchercreateAccountCodeDetails debitAccountCodeDetail = new VouchercreateAccountCodeDetails();
-        final String url = applicationProperties.getEgfServiceHostName()
-                + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
-                + accountId;
-        log.debug("Chart of Account URL ::" + url);
-        log.debug("Chart of Account Request Info :: " + requestInfo);
-        final ChartOfAccountContractResponse chartOfAccountContractResponse = restTemplate.postForObject(url,
-                requestInfo, ChartOfAccountContractResponse.class);
-        log.debug("Chart of Account Response :: " + chartOfAccountContractResponse);
-
-        final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
+        final List<ChartOfAccountContract> chartOfAccounts = getChartOfAccounts(requestInfo, tenantId, accountId);
 
         if (!chartOfAccounts.isEmpty()) {
             final ChartOfAccountContract chartOfAccount = chartOfAccounts.get(0);
-            log.debug("Chart Of Account : " + chartOfAccount);
+            log.debug("Chart Of Account : " + chartOfAccount.getName() + chartOfAccount.getGlcode());
             if (!chartOfAccount.getIsActiveForPosting())
                 throw new RuntimeException(
                         "Chart of Account " + chartOfAccount.getName() + " is not active for posting");
@@ -180,12 +168,25 @@ public class VoucherService {
         if (isDebit)
             debitAccountCodeDetail.setDebitAmount(amount);
 
-        final Function function = new Function();
-        function.setId(functionId);
         debitAccountCodeDetail.setFunction(function);
         log.debug("Account Code Detail :: " + debitAccountCodeDetail);
 
         return debitAccountCodeDetail;
+    }
+
+    private List<ChartOfAccountContract> getChartOfAccounts(final RequestInfo requestInfo, final String tenantId,
+            final Long accountId) {
+        final String url = applicationProperties.getEgfServiceHostName()
+                + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
+                + accountId;
+        log.debug("Chart of Account URL ::" + url);
+        log.debug("Chart of Account Request Info :: " + requestInfo);
+        final ChartOfAccountContractResponse chartOfAccountContractResponse = restTemplate.postForObject(url,
+                requestInfo, ChartOfAccountContractResponse.class);
+        log.debug("Chart of Account Response :: " + chartOfAccountContractResponse);
+
+        final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
+        return chartOfAccounts;
     }
 
     public List<ChartOfAccountDetailContract> getSubledgerDetails(final RequestInfo requestInfo, final String tenantId,
@@ -206,6 +207,46 @@ public class VoucherService {
         log.debug("Validating Sub Ledger Details for Chart of Accounts ");
         if (creditableCOA != null && debitableCOA != null && !creditableCOA.isEmpty() && !debitableCOA.isEmpty())
             throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+    }
+
+    public FundResponse getFundData(final RequestInfo requestInfo, final String tenantId, final Long fundId) {
+        final String url = applicationProperties.getEgfServiceHostName()
+                + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + tenantId + "&id=" + fundId;
+        log.debug("fund search url :: " + url);
+        final FundResponse fundResponse = restTemplate.postForObject(url, requestInfo, FundResponse.class);
+        log.debug("fund Response :: " + fundResponse);
+        return fundResponse;
+    }
+
+    public FunctionResponse getFunctionData(final RequestInfo requestInfo, final String tenantId,
+            final Long functionId) {
+        final String url = applicationProperties.getEgfServiceHostName()
+                + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + tenantId + "&id="
+                + functionId;
+        log.debug("function search url :: " + url);
+        final FunctionResponse functionResponse = restTemplate.postForObject(url, requestInfo, FunctionResponse.class);
+        log.debug("function Response :: " + functionResponse);
+        return functionResponse;
+    }
+
+    public FundResponse getFundByCode(final RequestInfo requestInfo, final String tenantId, final String fundCode) {
+        final String url = applicationProperties.getEgfServiceHostName()
+                + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + tenantId + "&code=" + fundCode;
+        log.debug("fund search url :: " + url);
+        final FundResponse fundResponse = restTemplate.postForObject(url, requestInfo, FundResponse.class);
+        log.debug("fund Response :: " + fundResponse);
+        return fundResponse;
+    }
+
+    public FunctionResponse getFunctionByCode(final RequestInfo requestInfo, final String tenantId,
+            final String functionCode) {
+        final String url = applicationProperties.getEgfServiceHostName()
+                + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + tenantId + "&code="
+                + functionCode;
+        log.debug("function search url :: " + url);
+        final FunctionResponse functionResponse = restTemplate.postForObject(url, requestInfo, FunctionResponse.class);
+        log.debug("function Response :: " + functionResponse);
+        return functionResponse;
     }
 
 }

@@ -14,6 +14,8 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.ChartOfAccountDetailContract;
+import org.egov.asset.model.Function;
+import org.egov.asset.model.Fund;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
@@ -159,8 +161,8 @@ public class RevaluationService {
                 requestInfo);
 
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
-
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(revaluation, revaluation.getFund(),
+        final Fund fund = voucherService.getFundData(requestInfo, tenantId, revaluation.getFund()).getFunds().get(0);
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(revaluation, fund,
                 asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
         log.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
@@ -171,19 +173,20 @@ public class RevaluationService {
     private List<VouchercreateAccountCodeDetails> getAccountDetails(final Revaluation revaluation,
             final AssetCategory assetCategory, final RequestInfo requestInfo) {
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-        final Long functionId = revaluation.getFunction();
         final String tenantId = revaluation.getTenantId();
+        final Function function = voucherService.getFunctionData(requestInfo, tenantId, revaluation.getFunction())
+                .getFunctions().get(0);
         final BigDecimal amount = revaluation.getRevaluationAmount();
         if (assetCategory != null && revaluation.getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                    amount, functionId, false, true));
+                    amount, function, false, true));
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId,
-                    assetCategory.getRevaluationReserveAccount(), amount, functionId, true, false));
+                    assetCategory.getRevaluationReserveAccount(), amount, function, true, false));
         } else if (assetCategory != null && revaluation.getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId,
-                    revaluation.getFixedAssetsWrittenOffAccount(), amount, functionId, false, true));
+                    revaluation.getFixedAssetsWrittenOffAccount(), amount, function, false, true));
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                    amount, functionId, true, false));
+                    amount, function, true, false));
 
         }
         return accountCodeDetails;

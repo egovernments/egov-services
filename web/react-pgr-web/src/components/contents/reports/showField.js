@@ -10,10 +10,7 @@ import areIntlLocalesSupported from 'intl-locales-supported';
 export default class ShowField extends Component
 {
   constructor(props) {
-       super(props);
-      //  this.state={
-      //    value:""
-      //  }
+     super(props);
    }
 
   renderFields = (obj) =>{
@@ -87,6 +84,7 @@ export default class ShowField extends Component
             <Col xs={12} sm={4} md={3} lg={3}>
               <DatePicker fullWidth={true} floatingLabelText={description}
               value={obj.value ? obj.value: ''}
+              errorText={this.props.dateField ? obj.name === this.props.dateField ? this.props.dateError : '' : ''}
               formatDate={(date)=>{
                 let dateObj = new Date(date);
                 let year = dateObj.getFullYear();

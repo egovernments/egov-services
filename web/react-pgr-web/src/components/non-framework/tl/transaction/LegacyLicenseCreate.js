@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
+import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
+import Checkbox from 'material-ui/Checkbox';
+import TextField from 'material-ui/TextField';
 
 import _ from "lodash";
 import ShowFields from "../../../framework/showFields";
@@ -151,6 +155,23 @@ class LegacyLicenseCreate extends Component {
     this.setState({
       pathname:this.props.history.location.pathname
     })
+
+
+                  var curDate = new Date();
+                  var currentDate = curDate.getFullYear();
+                  var fixedDate = curDate.getFullYear();
+                  var FeeDetails = [];
+                  var startYear = 2009;
+                  var Validity = 2;
+                  for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
+                        if(i > (fixedDate - 6)){
+                        let feeDetails = {"financialYear": i + "-" + (i+1), "amount": "", "paid": false};
+                        FeeDetails.push(feeDetails)
+                        console.log(i);
+                        }
+                    }
+
+          this.props.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",false,false);
   }
 
   initData() {
@@ -167,15 +188,17 @@ class LegacyLicenseCreate extends Component {
       // } catch(e) {
       //   console.log(e);
       // }
-specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense`).default;
+      specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense`).default;
       self.displayUI(specifications);
 
   }
 
+
+
   componentDidMount() {
       this.initData();
 
-      //this.props.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",false,false);
+
 
   }
 
@@ -252,6 +275,8 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+  formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
+
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -582,9 +607,44 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
+      let self = this;
       let {handleChange,mockData,setDropDownData} = this.props;
       let hashLocation = window.location.hash;
-      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+      let obj = specifications[`tl.create`];
+
+      // if (property == "licenses[0].tradeCommencementDate") {
+      //   console.log(new Date(e.target.value));
+      //   var month = new Date(e.target.value).getMonth()+1;
+      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
+      //   console.log(date);
+      //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
+      // }
+
+      if (property == "licenses[0].subCategoryId") {
+console.log(e.target.value);
+        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value}).then(function(response)
+        {
+          // handleChange (e, "" )
+          console.log(response.categories[0].validityYears);
+          self.handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears", false, "");
+
+          Api.commonApiPost("/tl-masters/uom/v1/_search",{"ids":response.categories[0].uomId}).then(function(uomResponse)
+          {
+            // handleChange (e, "" )
+            console.log(uomResponse.uoms[0].name);
+            self.handleChange({target:{value:uomResponse.uoms[0].name}}, "licenses[0].uomName", false, "");
+            self.handleChange({target:{value:uomResponse.uoms[0].id}}, "licenses[0].uomId", true, "");
+
+          },function(err) {
+              console.log(err);
+
+          });
+
+        },function(err) {
+            console.log(err);
+
+        });
+      }
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
@@ -776,20 +836,13 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
   }
 
   render() {
+    let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
-console.log(FeeDetails);
 
-    var curDate = new Date();
-    var currentDate = curDate.getFullYear();
-    var fixedDate = curDate.getFullYear();
-    var FeeDetails = [];
-    for(var i = currentDate; i > (fixedDate - 6); i--) {
-      let feeDetails = {"Financial Year": i + "-" + (i+1), "Amount": "", "Is Paid": false};
-      FeeDetails.push(feeDetails)
-      console.log(i);
-    }
+//console.log(formData && formData.licenses && formData.licenses[0] && formData.licenses[0].feeDetails);
+
 
     return (
       <div className="Report">
@@ -808,6 +861,35 @@ console.log(FeeDetails);
                                     removeCard={removeCard}
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
+
+
+          <Card className="uiCard">
+		          <CardHeader title={<strong>Fee Details</strong>}/>
+		          <CardText>
+		          <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
+		          <thead>
+		            <tr>
+                  <th>{translate("tl.create.license.table.financialYear")}</th>
+                  <th>{translate("tl.create.license.table.amount")}</th>
+                  <th>{translate("tl.create.license.table.isPaid")}</th>
+                </tr>
+		          </thead>
+              <tbody>
+
+                {formData && formData.hasOwnProperty("licenses") && formData.licenses[0].hasOwnProperty("feeDetails") && formData.licenses[0].feeDetails.map((item,index)=>{
+                  return (
+                    <tr key={index}>
+                      <td>{item.financialYear}</td>
+                      <td><TextField  onChange= {(e) => this.handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "")}/></td>
+                      <td><Checkbox   onCheck = {(obj, bol) => this.handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+              </Table>
+  		      </CardText>
+  		      </Card>
+
 
 
             <br/>

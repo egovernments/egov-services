@@ -86,10 +86,6 @@ public class SevaRequest {
         return sevaRequestMap;
     }
 
-    public String getComplaintTypeCode() {
-        return (String) this.getServiceRequest().get(SERVICE_CODE);
-    }
-
     public WorkflowRequest getWorkFlowRequest() {
         HashMap<String, Object> serviceRequest = getServiceRequest();
         RequestInfo requestInfo = getRequestInfo();
@@ -142,8 +138,10 @@ public class SevaRequest {
 		processInstance.setStatus(getStatus());
 		processInstance.getAttributes().put(SERVICE_CATEGORY_NAME, Attribute.asStringAttr(SERVICE_CATEGORY_NAME, getServiceCategoryName()));
 		processInstance.getAttributes().put(VALUES_NATUREOFTASK, Attribute.asStringAttr(VALUES_NATUREOFTASK, getServiceName()));
-		
-		
+		processInstance.getAttributes().put(SERVICE_REQUEST_ID, Attribute.asStringAttr(SERVICE_REQUEST_ID, getServiceRequestId()));
+		processInstance.getAttributes().put(VALUES_COMLAINT_TYPE_CODE, Attribute.asStringAttr(VALUES_COMLAINT_TYPE_CODE, getComplaintTypeCode()));
+		processInstance.getAttributes().put(BOUNDARY_ID, Attribute.asStringAttr(BOUNDARY_ID, getLocationId()));
+
 		request.setRequestInfo(getRequestInfo());
 		request.setProcessInstance(processInstance);
         
@@ -201,12 +199,24 @@ public class SevaRequest {
         getServiceRequest().put(EXPECTED_DATETIME, DateFormatter.toString(date));
     }
 
+    public String getComplaintTypeCode() {
+        return (String) this.getServiceRequest().get(SERVICE_CODE);
+    }
+    
+    public String getLocationId() {
+        return getDynamicSingleValue(VALUES_LOCATION_ID);
+    }
+    
     public String getKeyword() {
         return getDynamicSingleValue(VALUES_KEYWORD);
     }
     
     public String getServiceName() {
         return (String) getServiceRequest().get(SERVICE_NAME);
+    }
+    
+    public String getServiceRequestId() {
+        return (String) getServiceRequest().get(SERVICE_REQUEST_ID);
     }
     
     public String getApprovalComments() {

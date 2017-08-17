@@ -1,4 +1,5 @@
 var localization_EN_Data = {
+  "deshboard.title":"Dashboard",
   "ui.framework.required": "Required",
   "ui.framework.patternMessage": "Match the above pattern",
   "reports.pgr.complaintcategorytype": "Complaint Category Type",
@@ -374,8 +375,8 @@ var localization_EN_Data = {
   "pt.create.groups.propertyAddress.fields.firstAssessmentDate": "First Assessment Date",
   "pt.create.groups.propertyAddress.fields.revisedAssessmentDate": "Revised Assessment Date",
   "pt.create.groups.propertyAddress.fields.lastAssessmentDate": "Last Assessment Date",
-  
-  
+
+
 
   //Add Demand
   "pt.create.groups.addDemand.fields.installment": "Installment",
@@ -385,7 +386,7 @@ var localization_EN_Data = {
   "pt.create.groups.addDemand.fields.treetax": "Tree Tax",
   "pt.create.groups.addDemand.fields.totalPropertyTax": "Total Property Tax",
   "pt.create.groups.addDemand.fields.collection": "Collection",
-  
+
   //pt construction details
   "pt.create.groups.constructionDetails.fields.orderDate":"Order Date",
   "pt.create.groups.constructionDetails.fields.certificateNumber": "Certificate Number",
@@ -395,7 +396,7 @@ var localization_EN_Data = {
   "pt.create.groups.constructionDetails.fields.licenseType": "License Type",
   "pt.create.groups.constructionDetails.fields.licenseNumber":"License Number",
   "pt.create.groups.propertyAddress.fields.totalFloors":"Total Floors",
-  
+
 
 
   //employee Object
@@ -819,6 +820,7 @@ var localization_EN_Data = {
 };
 
 var localization_MR_Data = {
+  "deshboard.title":"My Tasks",
   "ui.framework.required": "आवश्यक",
   "ui.framework.patternMessage": " वरील नमुने जुळवा",
   "reports.pgr.complaintcategorytype": "तक्रार श्रेणी प्रकार",

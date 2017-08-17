@@ -15,7 +15,7 @@ var rooms = {
 						{
 							"name": "FloorNumber1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].floorNo",
-							"label": "pt.create.groups.propertyAddress.fields.floorNumber",
+							"label": "pt.create.groups.floorDetails.fields.floorNumber",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -28,7 +28,7 @@ var rooms = {
 						{
 							"name": "UnitType1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].unitType",
-							"label": "pt.create.groups.propertyAddress.fields.unitType",
+							"label": "pt.create.groups.floorDetails.fields.unitType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -42,7 +42,7 @@ var rooms = {
 						{
 							"name": "UnitNumber1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].unitNo",
-							"label": "pt.create.groups.propertyAddress.fields.unitNumber",
+							"label": "pt.create.groups.floorDetails.fields.unitNumber",
 							"pattern": "^\\d{0,3}$",
 							"type": "number",
 							"isRequired": true,
@@ -53,7 +53,7 @@ var rooms = {
 						{
 							"name": "ConstructionType1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].structure",
-							"label": "pt.create.groups.propertyAddress.fields.constructionType",
+							"label": "pt.create.groups.floorDetails.fields.constructionClass",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -66,7 +66,7 @@ var rooms = {
 						{
 							"name": "UsageType1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].usage",
-							"label": "pt.create.groups.propertyAddress.fields.usageType",
+							"label": "pt.create.groups.floorDetails.fields.usageType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -79,7 +79,7 @@ var rooms = {
 						{
 							"name": "UsageSubType1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].usageSubType",
-							"label": "pt.create.groups.propertyAddress.fields.usageSubType",
+							"label": "pt.create.groups.floorDetails.fields.usageSubType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -92,7 +92,7 @@ var rooms = {
 						{
 							"name": "FirmName1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].firmName",
-							"label": "pt.create.groups.propertyAddress.fields.firmName",
+							"label": "pt.create.groups.floorDetails.fields.firmName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -103,7 +103,7 @@ var rooms = {
 						{
 							"name": "Occupancy1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].occupancyType",
-							"label": "pt.create.groups.propertyAddress.fields.occupancy",
+							"label": "pt.create.groups.floorDetails.fields.occupancy",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -125,7 +125,7 @@ var rooms = {
 						{
 							"name": "OccupantName1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].occupierName",
-							"label": "pt.create.groups.propertyAddress.fields.occupantName",
+							"label": "pt.create.groups.floorDetails.fields.occupantName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -136,7 +136,7 @@ var rooms = {
 						{
 							"name": "AnnualRent1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].annualRent",
-							"label": "pt.create.groups.propertyAddress.fields.AnnualRent",
+							"label": "pt.create.groups.floorDetails.fields.AnnualRent",
 							"pattern": "^\\d{9}$",
 							"type": "text",
 							"isRequired": false,
@@ -147,7 +147,7 @@ var rooms = {
 						{
 							"name": "ManualArv1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].manualArv",
-							"label": "pt.create.groups.propertyAddress.fields.manualArv",
+							"label": "pt.create.groups.floorDetails.fields.manualArv",
 							"pattern": "^\\d{9}$",
 							"type": "text",
 							"isRequired": false,
@@ -158,7 +158,7 @@ var rooms = {
 						{
 							"name": "ConstructionStartDate1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].constructionStartDate",
-							"label": "pt.create.groups.propertyAddress.fields.constructionStartDate",
+							"label": "pt.create.groups.floorDetails.fields.constructionStartDate",
 							"pattern": "",
 							"type": "datePicker",
 							"isRequired": false,
@@ -169,7 +169,7 @@ var rooms = {
 						{
 							"name": "ConstructionEndDate1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].constCompletionDate",
-							"label": "pt.create.groups.propertyAddress.fields.constructionDate",
+							"label": "pt.create.groups.floorDetails.fields.constructionDate",
 							"pattern": "",
 							"type": "datePicker",
 							"isRequired": true,
@@ -180,7 +180,7 @@ var rooms = {
 						{
 							"name": "EffectiveFromDate1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].occupancyDate",
-							"label": "pt.create.groups.propertyAddress.fields.effectiveFromDate",
+							"label": "pt.create.groups.floorDetails.fields.effectiveFromDate",
 							"pattern": "",
 							"type": "datePicker",
 							"isRequired": true,
@@ -191,7 +191,7 @@ var rooms = {
 						{
 							"name": "UnstructuredLand1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].isStructured",
-							"label": "pt.create.groups.propertyAddress.fields.unstructuredLand",
+							"label": "pt.create.groups.floorDetails.fields.unstructuredLand",
 							"pattern": "",
 							"type": "singleValueList",
 							"url":"",
@@ -209,7 +209,7 @@ var rooms = {
 						{
 							"name": "Length1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].length",
-							"label": "pt.create.groups.propertyAddress.fields.length",
+							"label": "pt.create.groups.floorDetails.fields.length",
 							"pattern": "^[0-9.]+$",
 							"type": "number",
 							"isRequired": false,
@@ -229,7 +229,7 @@ var rooms = {
 						{
 							"name": "Breadth1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].width",
-							"label": "pt.create.groups.propertyAddress.fields.breadth",
+							"label": "pt.create.groups.floorDetails.fields.breadth",
 							"pattern": "^[0-9.]+$",
 							"type": "number",
 							"isRequired": false,
@@ -249,7 +249,7 @@ var rooms = {
 						{
 							"name": "PlinthArea1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].builtupArea",
-							"label": "pt.create.groups.propertyAddress.fields.plinthArea",
+							"label": "pt.create.groups.floorDetails.fields.plinthArea",
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
@@ -322,7 +322,7 @@ var rooms = {
 						{
 							"name": "AssessableArea1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].assessableArea",
-							"label": "pt.create.groups.propertyAddress.fields.assessableArea",
+							"label": "pt.create.groups.floorDetails.fields.assessableArea",
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
@@ -334,7 +334,7 @@ var rooms = {
 						{
 							"name": "OccupancyCertificateNumber1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].occupancyCertiNumber",
-							"label": "pt.create.groups.propertyAddress.fields.occupancyCertificateNumber",
+							"label": "pt.create.groups.floorDetails.fields.occupancyCertificateNumber",
 							"pattern": "^[a-z0-9]+$",
 							"type": "number",
 							"isRequired": false,
@@ -345,7 +345,7 @@ var rooms = {
 						{
 							"name": "BuildingPermissionNumber1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].bpaNo",
-							"label": "pt.create.groups.propertyAddress.fields.buildingPermissionNumber",
+							"label": "pt.create.groups.floorDetails.fields.buildingPermissionNumber",
 							"pattern": "^[a-z0-9]+$",
 							"type": "number",
 							"isRequired": false,
@@ -356,7 +356,7 @@ var rooms = {
 						{
 							"name": "BuildingPermissionDate1",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].units[0].bpaDate",
-							"label": "pt.create.groups.propertyAddress.fields.buildingPermissionDate",
+							"label": "pt.create.groups.floorDetails.fields.buildingPermissionDate",
 							"pattern": "",
 							"type": "datePicker",
 							"isRequired": false,
@@ -522,7 +522,7 @@ var dat = {
 						{
 							"name": "PrimaryOwner",
 							"jsonPath": "properties[0].owners[0].isPrimaryOwner",
-							"label": "",
+							"label": "pt.create.groups.ownerDetails.fields.primaryOwner",
 							"pattern": "",
 							"type": "radio",
 							"isRequired": true,
@@ -778,7 +778,7 @@ var dat = {
 						{
 							"name": "PropertyType",
 							"jsonPath": "properties[0].propertyDetail.propertyType",
-							"label": "pt.create.groups.propertyAddress.fields.propertyType",
+							"label": "pt.create.groups.assessmentDetails.fields.propertyType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -813,7 +813,7 @@ var dat = {
 						{
 							"name": "PropertySubType",
 							"jsonPath": "properties[0].propertyDetail.propertySubType",
-							"label": "pt.create.groups.propertyAddress.fields.propertySubType",
+							"label": "pt.create.groups.assessmentDetails.fields.propertySubType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -826,7 +826,7 @@ var dat = {
 						{
 							"name": "Department",
 							"jsonPath": "properties[0].propertyDetail.department",
-							"label": "pt.create.groups.propertyAddress.fields.department",
+							"label": "pt.create.groups.assessmentDetails.fields.department",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -839,7 +839,7 @@ var dat = {
 						{
 							"name": "UsageType3",
 							"jsonPath": "properties[0].propertyDetail.usage",
-							"label": "pt.create.groups.propertyAddress.fields.usageType",
+							"label": "pt.create.groups.assessmentDetails.fields.usageType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -852,7 +852,7 @@ var dat = {
 						{
 							"name": "UsageSubType3",
 							"jsonPath": "properties[0].propertyDetail.usageSubType",
-							"label": "pt.create.groups.propertyAddress.fields.usageSubType",
+							"label": "pt.create.groups.assessmentDetails.fields.usageSubType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -865,7 +865,7 @@ var dat = {
 						{
 							"name": "ExtentOfSite",
 							"jsonPath": "properties[0].propertyDetail.sitalArea",
-							"label": "pt.create.groups.propertyAddress.fields.extentOfSite",
+							"label": "pt.create.groups.assessmentDetails.fields.extentOfSite",
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
@@ -875,8 +875,8 @@ var dat = {
 						},
 						{
 							"name": "TotalArea",
-							"jsonPath": "properties[0].propertyDetail.totalArea",
-							"label": "pt.create.groups.propertyAddress.fields.totalArea",
+							"jsonPath": "properties[0].propertyDetail.totalFloor",
+							"label": "pt.create.groups.propertyAddress.fields.totalFloors",
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
@@ -887,7 +887,7 @@ var dat = {
 						{
 							"name": "SequenceNo",
 							"jsonPath": "properties[0].propertyDetail.sequenceNo",
-							"label": "pt.create.groups.propertyAddress.fields.sequenceNo",
+							"label": "pt.create.groups.assessmentDetails.fields.sequenceNo",
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
@@ -1137,7 +1137,7 @@ var dat = {
 						{
 							"name": "FloorNumber",
 							"jsonPath": "properties[0].propertyDetail.floors[0].floorNo",
-							"label": "pt.create.groups.propertyAddress.fields.floorNumber",
+							"label": "pt.create.groups.floorDetails.fields.floorNumber",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -1150,7 +1150,7 @@ var dat = {
 						{
 							"name": "UnitType",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].unitType",
-							"label": "pt.create.groups.propertyAddress.fields.unitType",
+							"label": "pt.create.groups.floorDetails.fields.unitType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -1161,31 +1161,9 @@ var dat = {
 							"defaultValue":[{key:"FLAT", value:"Flat"},{key:"ROOM", value:"Room"}]
 						},
 						{
-							"name": "Add Room",
-							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].addRoom",
-							"label": "pt.create.groups.propertyAddress.fields.addRoom",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"url":"",
-							"patternErrMsg": "",
-							"defaultValue":[{key:"YES", value:"Yes"},{key:"NO", value:"No"}],
-							"showHideFields": [{
-								   "ifValue": "YES",
-								   "hide": [],
-								   "show": [{
-									"name": "Room",
-									"isGroup": true,
-									"isField": false
-								   }]
-								  }],
-						},
-						{
 							"name": "UnitNumber",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].unitNo",
-							"label": "pt.create.groups.propertyAddress.fields.unitNumber",
+							"label": "pt.create.groups.floorDetails.fields.unitNumber",
 							"pattern": "^\\d{0,3}$",
 							"type": "number",
 							"isRequired": true,
@@ -1196,7 +1174,7 @@ var dat = {
 						{
 							"name": "ConstructionType",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].structure",
-							"label": "pt.create.groups.propertyAddress.fields.constructionType",
+							"label": "pt.create.groups.floorDetails.fields.constructionClass",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -1209,7 +1187,7 @@ var dat = {
 						{
 							"name": "UsageType",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].usage",
-							"label": "pt.create.groups.propertyAddress.fields.usageType",
+							"label": "pt.create.groups.floorDetails.fields.usageType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -1222,7 +1200,7 @@ var dat = {
 						{
 							"name": "UsageSubType",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].usageSubType",
-							"label": "pt.create.groups.propertyAddress.fields.usageSubType",
+							"label": "pt.create.groups.floorDetails.fields.usageSubType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -1235,7 +1213,7 @@ var dat = {
 						{
 							"name": "FirmName",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].firmName",
-							"label": "pt.create.groups.propertyAddress.fields.firmName",
+							"label": "pt.create.groups.floorDetails.fields.firmName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -1246,7 +1224,7 @@ var dat = {
 						{
 							"name": "Occupancy",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].occupancyType",
-							"label": "pt.create.groups.propertyAddress.fields.occupancy",
+							"label": "pt.create.groups.floorDetails.fields.occupancy",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -1268,7 +1246,7 @@ var dat = {
 						{
 							"name": "OccupantName",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].occupierName",
-							"label": "pt.create.groups.propertyAddress.fields.occupantName",
+							"label": "pt.create.groups.floorDetails.fields.occupantName",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -1279,7 +1257,7 @@ var dat = {
 						{
 							"name": "AnnualRent",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].annualRent",
-							"label": "pt.create.groups.propertyAddress.fields.AnnualRent",
+							"label": "pt.create.groups.floorDetails.fields.annualRent",
 							"pattern": "^\\d{9}$",
 							"type": "text",
 							"isRequired": false,
@@ -1290,7 +1268,7 @@ var dat = {
 						{
 							"name": "ManualArv",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].manualArv",
-							"label": "pt.create.groups.propertyAddress.fields.manualArv",
+							"label": "pt.create.groups.floorDetails.fields.manualArv",
 							"pattern": "^\\d{9}$",
 							"type": "text",
 							"isRequired": false,
@@ -1301,7 +1279,7 @@ var dat = {
 						{
 							"name": "ConstructionStartDate",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].constructionStartDate",
-							"label": "pt.create.groups.propertyAddress.fields.constructionStartDate",
+							"label": "pt.create.groups.floorDetails.fields.constructionStartDate",
 							"pattern": "",
 							"type": "datePicker",
 							"isRequired": false,
@@ -1312,7 +1290,7 @@ var dat = {
 						{
 							"name": "ConstructionEndDate",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].constCompletionDate",
-							"label": "pt.create.groups.propertyAddress.fields.constructionDate",
+							"label": "pt.create.groups.floorDetails.fields.constructionEndDate",
 							"pattern": "",
 							"type": "datePicker",
 							"isRequired": true,
@@ -1323,7 +1301,7 @@ var dat = {
 						{
 							"name": "EffectiveFromDate",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].occupancyDate",
-							"label": "pt.create.groups.propertyAddress.fields.effectiveFromDate",
+							"label": "pt.create.groups.floorDetails.fields.effectiveFromDate",
 							"pattern": "",
 							"type": "datePicker",
 							"isRequired": true,
@@ -1334,7 +1312,7 @@ var dat = {
 						{
 							"name": "UnstructuredLand",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].isStructured",
-							"label": "pt.create.groups.propertyAddress.fields.unstructuredLand",
+							"label": "pt.create.groups.floorDetails.fields.unstructuredLand",
 							"pattern": "",
 							"type": "singleValueList",
 							"url":"",
@@ -1352,7 +1330,7 @@ var dat = {
 						{
 							"name": "Length",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].length",
-							"label": "pt.create.groups.propertyAddress.fields.length",
+							"label": "pt.create.groups.floorDetails.fields.length",
 							"pattern": "^[0-9.]+$",
 							"type": "number",
 							"isRequired": false,
@@ -1372,7 +1350,7 @@ var dat = {
 						{
 							"name": "Breadth",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].width",
-							"label": "pt.create.groups.propertyAddress.fields.breadth",
+							"label": "pt.create.groups.floorDetails.fields.breadth",
 							"pattern": "^[0-9.]+$",
 							"type": "number",
 							"isRequired": false,
@@ -1392,7 +1370,7 @@ var dat = {
 						{
 							"name": "PlinthArea",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].builtupArea",
-							"label": "pt.create.groups.propertyAddress.fields.plinthArea",
+							"label": "pt.create.groups.floorDetails.fields.plinthArea",
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
@@ -1465,7 +1443,7 @@ var dat = {
 						{
 							"name": "AssessableArea",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].assessableArea",
-							"label": "pt.create.groups.propertyAddress.fields.assessableArea",
+							"label": "pt.create.groups.floorDetails.fields.assessableArea",
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
@@ -1477,7 +1455,7 @@ var dat = {
 						{
 							"name": "OccupancyCertificateNumber",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].occupancyCertiNumber",
-							"label": "pt.create.groups.propertyAddress.fields.occupancyCertificateNumber",
+							"label": "pt.create.groups.floorDetails.fields.occupancyCertificateNumber",
 							"pattern": "^[a-z0-9]+$",
 							"type": "number",
 							"isRequired": false,
@@ -1488,7 +1466,7 @@ var dat = {
 						{
 							"name": "BuildingPermissionNumber",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].bpaNo",
-							"label": "pt.create.groups.propertyAddress.fields.buildingPermissionNumber",
+							"label": "pt.create.groups.floorDetails.fields.buildingPermissionNumber",
 							"pattern": "^[a-z0-9]+$",
 							"type": "number",
 							"isRequired": false,
@@ -1499,7 +1477,7 @@ var dat = {
 						{
 							"name": "BuildingPermissionDate",
 							"jsonPath": "properties[0].propertyDetail.floors[0].units[0].bpaDate",
-							"label": "pt.create.groups.propertyAddress.fields.buildingPermissionDate",
+							"label": "pt.create.groups.floorDetails.fields.buildingPermissionDate",
 							"pattern": "",
 							"type": "datePicker",
 							"isRequired": false,

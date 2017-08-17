@@ -142,13 +142,15 @@ class AddDemand extends Component {
     var currentThis = this;
 
 	let {toggleSnackbarAndSetText, initForm, setLoadingStatus} = this.props;
-	setLoadingStatus('loading');
+	
 	initForm();
 
 	var getDemands = {
 		upicNumber: this.props.match.params.upicNumber
 	}
 
+	setLoadingStatus('loading');
+	
 	Api.commonApiPost('pt-property/properties/_preparedcb', getDemands, {}, false, true).then((res)=>{
 
 		console.log('search',res);
@@ -158,7 +160,9 @@ class AddDemand extends Component {
 		 })
 
 		res.Demands.map((demand, index)=>{
+			
 			demand.demandDetails.map((item, i)=>{
+				setLoadingStatus('loading');
 				var query = {
 					service:'PT',
 					code:item.taxHeadMasterCode

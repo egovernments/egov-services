@@ -80,20 +80,7 @@ public class TradeLicenseRepository {
 		return uniqueQuery.toString();
 	}
 	
-	public void validateUniqueAgreeMentNumber(TradeLicense tradeLicense) {
-
-		String sql = getUniqueTenantAgreementQuery(tradeLicense);
-		Integer count = null;
-		try {
-			count = (Integer) jdbcTemplate.queryForObject(sql, Integer.class);
-		} catch (Exception e) {
-			log.error("error while executing the query :" + sql + " , error message : " + e.getMessage());
-		}
-
-		if (count != 0) {
-			throw new InvalidInputException("agreementNumber number already exists");
-		}
-	}
+	
 
 	private String getUniqueTenantAgreementQuery(TradeLicense tradeLicense) {
 

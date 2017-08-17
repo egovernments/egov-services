@@ -24,7 +24,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "AttributeDefinition Vaalidator.1");
 			error.put("field", "AttributeDefinition.tenant");
-			error.put("message", "tenant Id should be >0 and <=256");
+			error.put("message", "tenant Id should be Min: 1 Characters. Max: 256 Characters");
 			throw new PGRMasterException(error);
 				
 			}
@@ -34,7 +34,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "AttributeDefinition Vaalidator.2");
 			error.put("field", "AttributeDefinition.code");
-			error.put("message", "code should be >0 and <=50");
+			error.put("message", "code should be Min: 1 Characters. Max: 50 Characters");
 			throw new PGRMasterException(error);
 				
 			}
@@ -44,7 +44,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "AttributeDefinition Vaalidator.3");
 			error.put("field", "AttributeDefinition.dataTypeDescription");
-			error.put("message", "dataTypeDescription  should be >0 and <=200");
+			error.put("message", "dataTypeDescription  should be Min: 1 Characters. Max: 200 Characters");
 			throw new PGRMasterException(error);
 				
 			}
@@ -54,7 +54,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 				HashMap<String, String> error = new HashMap<>();
 				error.put("code", "AttributeDefinition Vaalidator.4");
 				error.put("field", "AttributeDefinition.dataType");
-				error.put("message", "dataType should be >0 and <=100");
+				error.put("message", "dataType should be Min: 1 Characters. Max: 100 Characters");
 				throw new PGRMasterException(error);
 				
 			}	
@@ -64,7 +64,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 				HashMap<String, String> error = new HashMap<>();
 				error.put("code", "AttributeDefinition Vaalidator.5");
 				error.put("field", "AttributeDefinition.serviceCode");
-				error.put("message", "serviceCode should be >0 and <=256");
+				error.put("message", "serviceCode should be Min: 1 Characters. Max: 256 Characters");
 				throw new PGRMasterException(error);
 				
 			}
@@ -74,7 +74,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 				HashMap<String, String> error = new HashMap<>();
 				error.put("code", "AttributeDefinition Vaalidator.6");
 				error.put("field", "AttributeDefinition.url");
-				error.put("message", "url should be >0 and <=300");
+				error.put("message", "url should be Min: 1 Characters. Max: 300 Characters");
 				throw new PGRMasterException(error);
 				
 			}
@@ -84,7 +84,7 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 				HashMap<String, String> error = new HashMap<>();
 				error.put("code", "AttributeDefinition Vaalidator.7");
 				error.put("field", "AttributeDefinition.groupCode");
-				error.put("message", "groupCode should be >0 and <=300");
+				error.put("message", "groupCode should be Min: 1 Characters. Max: 300 Characters");
 				throw new PGRMasterException(error);
 				
 			}
@@ -94,11 +94,10 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 				HashMap<String, String> error = new HashMap<>();
 				error.put("code", "AttributeDefinition Vaalidator.8");
 				error.put("field", "AttributeDefinition.description");
-				error.put("message", "description should be >0 and <=300");
+				error.put("message", "description should be Min: 1 Characters. Max: 300 Characters");
 				throw new PGRMasterException(error);
 				
 			}
-			
 			
 	}
 	
@@ -140,10 +139,25 @@ public class AttributeDefinitionCreateValidator implements AttributeDefinitionVa
 
 			error.put("code", "  AttributeDefinition Vaalidator.12");
 			error.put("field", "AttributeDefinition .servicecode");
-			error.put("message", "servicecode Required ");
+			error.put("message", "Servicecode Required ");
 
 			throw new PGRMasterException(error);
 		}
+	}
+	
+	@Override
+	public void validateDataType(AttributeDefinition attributeDefinition) {
+		
+	        if (attributeDefinition.isValueList())
+	               {
+	            HashMap<String, String> error = new HashMap<>();
+	            error.put("code", "ValueDefinition.13");
+	            error.put("field", "ValueDefinition.DataType,key Pair");
+	            error.put("message", "Value List Should be empty for this DataType ");
+	            throw new PGRMasterException(error);
+	        }
+
+	       	
 	}
 
 }

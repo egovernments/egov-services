@@ -7,5 +7,7 @@ public interface AttributeDefinitionValidator {
     boolean canValidate(AttributeDefinition attributeDefinition);
     void validatingLength(AttributeDefinition attributeDefinition);
     void checkMandatoryField(AttributeDefinition attributeDefinition);
+    void validateDataType(AttributeDefinition attributeDefinition);
+
 
 }

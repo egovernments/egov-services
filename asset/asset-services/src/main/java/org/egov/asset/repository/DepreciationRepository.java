@@ -92,6 +92,7 @@ public class DepreciationRepository {
 					ps.setString(3, depreciation.getFinancialYear());
 					ps.setLong(4, depreciation.getFromDate());
 					ps.setLong(5, depreciation.getToDate());
+					ps.setObject(6, depreciationDetail.getVoucherReference());
 					ps.setString(7, depreciation.getTenantId());
 					ps.setString(8, depreciationDetail.getStatus().toString());
 					ps.setObject(9, depreciationDetail.getDepreciationRate());

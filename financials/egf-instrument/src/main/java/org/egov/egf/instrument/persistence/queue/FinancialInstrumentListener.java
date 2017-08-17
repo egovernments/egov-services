@@ -185,6 +185,23 @@ public class FinancialInstrumentListener {
 			mastersMap.put("instrumenttype_persisted", request);
 			financialProducer.sendMessage(completedTopic, instrumentTypeCompletedKey, mastersMap);
 		}
+		
+		if (mastersMap.get("instrumenttype_delete") != null)
+
+		{
+
+			InstrumentTypeRequest request = objectMapper.convertValue(mastersMap.get("instrumenttype_delete"),
+					InstrumentTypeRequest.class);
+
+			for (InstrumentTypeContract instrumentTypeContract : request.getInstrumentTypes()) {
+				InstrumentType domain = typeMapper.toDomain(instrumentTypeContract);
+				instrumentTypeService.delete(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("instrumenttype_deleted", request);
+			financialProducer.sendMessage(completedTopic, instrumentTypeCompletedKey, mastersMap);
+		}
 
 		if (mastersMap.get("surrenderreason_create") != null) {
 
@@ -215,6 +232,22 @@ public class FinancialInstrumentListener {
 
 			mastersMap.clear();
 			mastersMap.put("surrenderreason_persisted", request);
+			financialProducer.sendMessage(completedTopic, surrenderReasonCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("surrenderreason_delete") != null)
+
+		{
+			SurrenderReasonRequest request = objectMapper.convertValue(mastersMap.get("surrenderreason_delete"),
+					SurrenderReasonRequest.class);
+
+			for (SurrenderReasonContract surrenderReasonContract : request.getSurrenderReasons()) {
+				SurrenderReason domain = srMapper.toDomain(surrenderReasonContract);
+				surrenderReasonService.delete(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("surrenderreason_deleted", request);
 			financialProducer.sendMessage(completedTopic, surrenderReasonCompletedKey, mastersMap);
 		}
 

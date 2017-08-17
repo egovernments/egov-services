@@ -15,6 +15,8 @@ public class ValueDefinition {
     private boolean active;
     private boolean required;
     private String serviceCode;
+    private String tenantid;
+    private String attributeCode;
 
     private char activeToChar(){
         return active ? 'Y' : 'N';

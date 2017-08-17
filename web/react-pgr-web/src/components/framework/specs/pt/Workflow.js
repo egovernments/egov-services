@@ -178,7 +178,6 @@ class Workflow extends Component {
 
     if(hasData){
         Api.commonApiPost( '/hr-employee/employees/_search', query).then((res)=>{
-		  res.Employee.unshift({id:-1, name:'None'});
           currentThis.setState({approver: res.Employee})
       }).catch((err)=> {
         currentThis.setState({

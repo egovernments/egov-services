@@ -34,6 +34,7 @@ class Report extends Component {
       resultList : [],
       pageSize: 10,
       pageCount: 0,
+      currentPage: 1,
       designationList: [],
       departmentList: [],
       positionList: []
@@ -184,20 +185,21 @@ class Report extends Component {
   } 
 
   handlePageClick = (data) => {
-    this.search("", data.selected);
+    this.setState({currentPage: (Number(data.selected) + 1)})
+    this.search("", (Number(data.selected) + 1));
   }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler, handlePageClick, handleNavigation} = this;
-    let {showResult, resultList, pageCount, designationList, departmentList, positionList} = this.state;
+    let {showResult, resultList, pageCount, designationList, departmentList, positionList, pageSize, currentPage} = this.state;
 
     const renderBody = function() {
       if(resultList.length) {
         return resultList.map(function(val, i) {
           return (
             <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
-              <td>{i+1}</td>
+              <td>{currentPage == 1 ? i+1 : ((currentPage-1)*pageSize + (i+1))}</td>
               <td>{val.code}</td>
               <td>{val.name}</td>
               <td>{getNameById(departmentList, val.assignments[0].department)}</td>

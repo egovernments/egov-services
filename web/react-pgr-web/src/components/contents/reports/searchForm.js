@@ -10,9 +10,9 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Api from '../../../api/api';
 import ShowField from './showField';
+import {translate} from '../../common/common';
 import jp from "jsonpath";
 import _ from 'lodash';
-
 
 const styles = {
   errorStyle: {
@@ -49,7 +49,12 @@ class ShowForm extends Component {
 
     // console.log(e);
     let {metaData,setMetaData}=this.props;
-    this.props.handleChange(e, property, isRequired, pattern);
+    // console.log(e, property, isRequired, pattern);
+    if(property === 'fromDate' || property === 'toDate'){
+      this.checkDate(e.target.value, property, isRequired, pattern);
+    }else{
+      this.props.handleChange(e, property, isRequired, pattern);
+    }
 
     // console.log(metaData);
     if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
@@ -97,6 +102,50 @@ class ShowForm extends Component {
 
   }
 
+  checkDate = (value, name, required, pattern) => {
+    let e={
+      target:{
+        value:value
+      }
+    }
+    if(name == 'fromDate'){
+      let startDate = value;
+      let endDate = this.props.searchForm.toDate;
+      this.props.handleChange(e, name, required, pattern);
+      this.validateDate(startDate, endDate, 'fromDate');//3rd param to denote whether field fails
+    }else{
+      let endDate = value;
+      let startDate = this.props.searchForm.fromDate;
+      this.props.handleChange(e, name, required, pattern);
+      this.validateDate(startDate, endDate, 'toDate');//3rd param to denote whether field fails
+    }
+  }
+
+  validateDate = (startDate, endDate, field) => {
+    if(startDate && endDate){
+      let sD = new Date(startDate);
+      sD.setHours(0, 0, 0, 0);
+      let eD = new Date(endDate);
+      eD.setHours(0, 0, 0, 0);
+      if(eD >= sD){
+          console.log('ED grater than SD');
+          this.setState({datefield : ''})
+          this.setState({dateError : ''})
+      }else{
+        let e={
+          target:{
+            value:''
+          }
+        }
+        this.props.handleChange(e, field, false, '');
+        console.log('ED less than SD');
+        this.setState({datefield : field});
+        this.setState({dateError :
+          field === 'toDate' ? translate('pgr.lbl.dategreater') : translate('pgr.lbl.datelesser')
+        })
+      }
+    }
+  }
 
   handleFormFields = () => {
     let {currentThis}=this;
@@ -108,7 +157,7 @@ class ShowForm extends Component {
       {
         item["value"]=_.isEmpty(searchForm)?"":searchForm[item.name];
         return (
-          <ShowField key={index} obj={item} handler={this.handleChange}/>
+          <ShowField key={index} obj={item} dateField={this.state.datefield} dateError={this.state.dateError} handler={this.handleChange}/>
         );
       })
     }
@@ -281,7 +330,7 @@ const mapDispatchToProps = dispatch => ({
     });
   },
   handleChange: (e, property, isRequired, pattern) => {
-    dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
+      dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
   handleChangeNextOne: (e, property, propertyOne, isRequired, pattern) => {
     dispatch({

@@ -143,6 +143,7 @@ public class DepreciationService {
     private void getDepreciationDetailsAndCurrentValues(final DepreciationRequest depreciationRequest,
             final Map<Long, DepreciationDetail> depreciationDetailsMap,
             final List<AssetCurrentValue> assetCurrentValues, final HttpHeaders headers) {
+
         final RequestInfo requestInfo = depreciationRequest.getRequestInfo();
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
         final String tenantId = depreciationCriteria.getTenantId();
@@ -158,11 +159,13 @@ public class DepreciationService {
         log.debug("Calculation Asset Details Map :: " + cadMap);
         final Map<Long, BigDecimal> depreciationSumMap = depreciationRepository.getdepreciationSum(tenantId);
         log.debug("Depreciation Sum Map :: " + depreciationSumMap);
-        validationAndGenerationDepreciationVoucher(depreciationDetailsMap, headers, requestInfo, tenantId,
-                calculationAssetDetailList, cadMap);
 
         assetDepreciator.depreciateAsset(depreciationRequest, calculationAssetDetailList, calculationCurrentValues,
                 depreciationSumMap, assetCurrentValues, depreciationDetailsMap);
+
+        validationAndGenerationDepreciationVoucher(depreciationDetailsMap, headers, requestInfo, tenantId,
+                calculationAssetDetailList, cadMap);
+
     }
 
     private void validationAndGenerationDepreciationVoucher(final Map<Long, DepreciationDetail> depreciationDetailsMap,
@@ -220,9 +223,9 @@ public class DepreciationService {
                         if (deAccountCodeDetails != null)
                             deAccountCodeDetails.setCreditAmount(deAccountCodeDetails.getCreditAmount().add(amount));
                         else {
-                            deAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, aDAccount, amount,
+                            deAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, dEAccount, amount,
                                     function, true, false);
-                            ledgerMap.put(aDAccount, deAccountCodeDetails);
+                            ledgerMap.put(dEAccount, deAccountCodeDetails);
                         }
                     }
                 }
@@ -230,9 +233,12 @@ public class DepreciationService {
                 accountCodeDetails.addAll(ledgerMap.values());
                 log.debug("Depreciation Account Code Details :: " + accountCodeDetails);
                 validateDepreciationSubledgerDetails(requestInfo, tenantId, ledgerMap.keySet());
-                final Long voucherId = createVoucherForDepreciation(accountCodeDetails, requestInfo, tenantId,
-                        departmentId, fund, calculationAssetDetailList, headers);
-                setVoucherIdToDepreciaitionDetails(voucherId, entryValue, depreciationDetailsMap);
+                if (!accountCodeDetails.isEmpty()) {
+                    final Long voucherId = createVoucherForDepreciation(accountCodeDetails, requestInfo, tenantId,
+                            departmentId, fund, calculationAssetDetailList, headers);
+                    log.debug("Voucher ID for Depreciation :: " + voucherId);
+                    setVoucherIdToDepreciaitionDetails(voucherId, entryValue, depreciationDetailsMap);
+                }
 
             }
         }

@@ -80,8 +80,8 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 				&& definitionList.get(0).getTenantId().equalsIgnoreCase(serviceDefinition.getTenantId()))) {
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "DefinitionCode Vaalidator.4");
-			error.put("field", "DefinitionTypeConfiguration.code");
-			error.put("message", "Data Exists");
+			error.put("field", "ServiceDefinitionConfiguration.code");
+			error.put("message", "Data Present in Service Definition");
 			throw new PGRMasterException(error);
 
 		}
@@ -97,17 +97,16 @@ public class ServiceDefinitionCreateValidator implements ServiceDefinitionValida
 			HashMap<String, String> error = new HashMap<>();
 			error.put("code", "DefinitionCode Vaalidator.5");
 			error.put("field", "DefinitionTypeConfiguration.tenant");
-			error.put("message", "tenant Id should be >0 and <=256");
+			error.put("message", "tenantId length should Min: 1 Characters. Max: 256 Characters");
 			throw new PGRMasterException(error);
 				
 			}
-			
 			if(!serviceDefinition.isCodeLengthMatch())	
 			{
 				HashMap<String, String> error = new HashMap<>();
 				error.put("code", "DefinitionCode Vaalidator.6");
 				error.put("field", "DefinitionTypeConfiguration.code");
-				error.put("message", "code should be >0 and <=20");
+				error.put("message", "code length should  Min: 1 Characters. Max: 20 Characters");
 				throw new PGRMasterException(error);
 				
 			}	}

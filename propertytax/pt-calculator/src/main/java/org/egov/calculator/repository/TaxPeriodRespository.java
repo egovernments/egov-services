@@ -116,10 +116,10 @@ public class TaxPeriodRespository {
 	 * @return {@link TaxPeriod} List of taxPeriods
 	 */
 	public List<TaxPeriod> searchTaxPeriod(String tenantId, String validDate, String code, String fromDate,
-			String toDate) {
+			String toDate, String sortTaxPeriod) {
 
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String searchQuery = TaxPeriodBuilder.getSearchQuery(tenantId, validDate, code, fromDate, toDate,
+		String searchQuery = TaxPeriodBuilder.getSearchQuery(tenantId, validDate, code, fromDate, toDate, sortTaxPeriod,
 				preparedStatementValues);
 
 		List<TaxPeriod> taxPeriods = null;

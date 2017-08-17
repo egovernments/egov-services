@@ -34,7 +34,9 @@ public class ValueDefinition {
     }
 
     public org.egov.pgr.domain.model.ValueDefinition toDomain(){
-        return new org.egov.pgr.domain.model.ValueDefinition(name, key, isActive(), isRequired(),serviceCode);
+
+
+        return new org.egov.pgr.domain.model.ValueDefinition(name, key, isActive(),isRequired(),serviceCode,tenantId,attributeCode);
     }
 
 }

@@ -189,7 +189,7 @@ public class DepartmentServiceTest {
     }
 
     private DepartmentGetRequest getDepartmentGetRequest() {
-        return DepartmentGetRequest.builder().ids(Arrays.asList(1L, 2L, 3L)).active(true).sortBy("code")
+        return DepartmentGetRequest.builder().id(Arrays.asList(1L, 2L, 3L)).active(true).sortBy("code")
                 .sortOrder("desc").tenantId("default").build();
     }
 

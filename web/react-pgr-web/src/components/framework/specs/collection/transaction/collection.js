@@ -183,7 +183,7 @@ var dat = {
           "type": "text",
           "isRequired": false,
           "isDisabled": false,
-          "requiredErrMsg": "",
+          "requiredErrMsg": "", 
           "patternErrMsg": "Enter Valid EmailID"
         },
         {

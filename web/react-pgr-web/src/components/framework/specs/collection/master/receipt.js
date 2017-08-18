@@ -100,7 +100,7 @@ var dat = {
 							"pattern": "^([0-9]{2,2})+(\/[0-9]{4,4})+(\-[0-9]{2,2})+(\/[0-9]{6,6})+$",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": false,
+							"isDisabled": false, 
 							"requiredErrMsg": "",
 							"patternErrMsg": "Enter valid Receipt Number (ex: 08/2017-18/000418)"
 						},

@@ -195,7 +195,8 @@ public class WaterConnectionService {
                 User user = buildUserObjectFromConnection(waterConnReq);
                 user.setPassword(configurationManager.getDefaultPassword());
                 userRequestInfo.setUser(user);
-                logger.info("UserUtil createUrl ---->> " + createUrl.toString() + " \n userRequestInfo ---->> "
+                logger.info("User Object to create User : "+ userRequestInfo); 
+                logger.info("User createUrl ---->> " + createUrl.toString() + " \n userRequestInfo ---->> "
                         + userRequestInfo);
                 UserResponseInfo userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
                         UserResponseInfo.class);

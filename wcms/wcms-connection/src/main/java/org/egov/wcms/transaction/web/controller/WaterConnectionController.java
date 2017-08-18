@@ -132,6 +132,11 @@ public class WaterConnectionController {
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);
+        // Sending back the details to UI to paint the success page
+        connection.setWithProperty(waterConnectionRequest.getConnection().getWithProperty());
+        connection.setIsLegacy(waterConnectionRequest.getConnection().getIsLegacy());
+        connection.setConsumerNumber(waterConnectionRequest.getConnection().getConsumerNumber());
+        
         List<Connection> connectionList = new ArrayList<>();
         connectionList.add(connection);
         return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());

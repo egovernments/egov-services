@@ -101,7 +101,9 @@ public class WaterConnectionRepository {
             insertQuery = WaterConnectionQueryBuilder.insertConnectionQuery();
 
         final String query = insertQuery;
-
+        LOGGER.info("Insert Query is : " + insertQuery);
+        LOGGER.info("Water Treatment ID Obtained is : " + waterConnectionRequest.getConnection().getWaterTreatmentId());
+        
         Long connectionId = 0L;
         try {
             final KeyHolder keyHolder = new GeneratedKeyHolder();

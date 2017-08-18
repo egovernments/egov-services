@@ -25,7 +25,7 @@ let menuConvention={
 
   "Grievance Redressal.Reports.Ageing Report":"/report/pgr/AgeingByBoundary",
   "Grievance Redressal.Reports.Drill Down Report":"/report/pgr/DrillDownByBoundary",
-  "Grievance Redressal.Reports.Grievance Type Wise Report":"/report/pgr-master/GrievanceByType",
+  "Grievance Redressal.Reports.Grievance Type Wise Report":"/report/pgr/GrievanceByType",
   "Grievance Redressal.Reports.Functionary Wise Report":"/report/pgr/GrievanceByFunctionary",
   "Grievance Redressal.Reports.Router Escalation Report":"/report/pgr/RouterEscalation",
   "Grievance Redressal.Reports.Ageing By Department Report":"/report/pgr/AgeingByDepartment",

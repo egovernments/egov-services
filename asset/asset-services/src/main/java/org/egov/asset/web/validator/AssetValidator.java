@@ -2,6 +2,7 @@ package org.egov.asset.web.validator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -288,12 +289,20 @@ public class AssetValidator {
                             + assetCurrentAmount + " and value after revaluation is "
                             + revaluation.getValueAfterRevaluation());
 
-        if (revaluation.getRevaluationDate() == null)
-            throw new RuntimeException("Revaluation Date is Required");
+        validateRevaluationDate(revaluation);
 
         // Setting Default Revaluation Status as APPROVED
         revaluation.setStatus(Status.APPROVED.toString());
 
+    }
+
+    private void validateRevaluationDate(final Revaluation revaluation) {
+        final Long revaluationDate = revaluation.getRevaluationDate();
+        if (revaluationDate == null)
+            throw new RuntimeException("Revaluation Date is Required");
+
+        if (revaluationDate > new Date().getTime())
+            throw new RuntimeException("Revaluation Date should not be greater than current date.");
     }
 
     private void validateFund(final Long fundId) {
@@ -327,7 +336,7 @@ public class AssetValidator {
             if (typeOfChange != null && TypeOfChangeEnum.INCREASED.compareTo(typeOfChange) == 0 && assetCategory != null
                     && assetCategory.getRevaluationReserveAccount() == null)
                 throw new RuntimeException("Revaluation Reserve Account is necessary for asset " + asset.getName()
-                        + " voucher generation for revaluation");
+                        + " for voucher generation.");
         }
         return typeOfChange;
     }

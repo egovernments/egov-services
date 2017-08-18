@@ -1536,7 +1536,7 @@ ReportDefinitions:
   - name: positiontype
     label: reports.pgr.positiontype
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/positions/_search?tenantId=default|$.Position[*].id|$.Position[*].name
+    pattern: http://hr-masters:8080/hr-masters/positions/_search?tenantId=default&pageSize=1000|$.Position[*].id|$.Position[*].name
     source: seva
   - name: wardtype
     label: reports.pgr.wardtype

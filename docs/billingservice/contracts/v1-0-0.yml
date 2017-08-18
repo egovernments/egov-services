@@ -180,7 +180,7 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: businessService
           in: query
-          description: Name of the businessservice(s) for which 'BusinessServiceDetails' to be returned.
+          description: Code of the businessservice(s) for which 'BusinessServiceDetails' to be returned.
           required: true
           type: array
           items: 
@@ -712,6 +712,41 @@ paths:
           description: Invalid input
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /demand/_dues:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      description: Returns the demand dues for the unique identification(consumercode). The busines service and the consumercode will be mandatory.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: consumerCode
+          in: query
+          description: Unique identification provided by business details.
+          required: true
+          type: string
+        - name: businessService
+          in: query
+          description: Billing system details e.g., PropertyTax(PT),Water Charges(WC) etc.
+          required: true
+          type: string
+      tags:
+        - Demand
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: returns a demand along with its demand details.
+          schema:
+            $ref: '#/definitions/DemandDueResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
     
   /demanddetail/_search:
@@ -1027,6 +1062,47 @@ definitions:
       - taxAmount
       - collectionAmount
       - tenantId
+  
+  DemandDue:
+    type: object
+    description: The object holds the demand, collection and balance information, along with list of demands. 
+    properties:
+      consolidatedTax:
+        $ref: '#/definitions/ConsolidatedTax'
+      demands:
+        type: array
+        items:
+          $ref: '#/definitions/Demand'
+     
+  ConsolidatedTax:
+    type: object
+    description: The object holds the demand, collection and balance information for the current and arrear tax periods.
+    properties:
+      arrearsDemand:
+        type: number
+        format: double
+        description: demand amount of arrear taxperiods(s).
+      arrearsCollection:
+        type: number
+        format: double
+        description: collection amount of arrear taxperiods(s).
+      arrearsBalance:
+        type: number
+        format: double
+        description: balance amount of arrear taxperiods(s).
+      currentDemand:
+        type: number
+        format: double
+        description: demand amount of current taxperiod.
+      currentCollection:
+        type: number
+        format: double
+        description: collection amount of current taxperiod.
+      currentBalance:
+        type: number
+        format: double
+        description: balance amount of current taxperiod.
+  
       
   TaxHeadMaster:
     type: object
@@ -1471,6 +1547,15 @@ definitions:
         items:
           $ref: '#/definitions/DemandDetails'
     type: object
+  
+  DemandDueResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      DemandDue:
+          $ref: '#/definitions/DemandDue'
+    type: object
+    
     
   BillRequest:
     properties:

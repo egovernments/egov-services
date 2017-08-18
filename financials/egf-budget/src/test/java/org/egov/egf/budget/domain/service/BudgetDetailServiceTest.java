@@ -554,7 +554,7 @@ public class BudgetDetailServiceTest {
 
         final List<BudgetDetail> budgetDetails = new ArrayList<BudgetDetail>();
 
-        final BudgetDetail budgetDetail = BudgetDetail.builder().budget(Budget.builder().id("1").build())
+        final BudgetDetail budgetDetail = BudgetDetail.builder().id("1").budget(Budget.builder().id("1").build())
                 .budgetGroup(BudgetGroupContract.builder().id("1").build()).anticipatoryAmount(BigDecimal.TEN)
                 .originalAmount(BigDecimal.TEN).approvedAmount(BigDecimal.TEN).budgetAvailable(BigDecimal.TEN)
                 .planningPercent(BigDecimal.valueOf(1500)).build();

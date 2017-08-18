@@ -284,7 +284,7 @@ public class BudgetServiceTest {
 
     private List<Budget> getBudgets() {
         final List<Budget> budgets = new ArrayList<Budget>();
-        final Budget budget = Budget.builder().name("test")
+        final Budget budget = Budget.builder().name("test").id("1")
                 .financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
                 .estimationType(EstimationType.BE).primaryBudget(false).build();
         budget.setTenantId("default");

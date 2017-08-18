@@ -56,7 +56,7 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new InvalidInputException("Error connecting to Location end point" +url );
+			throw new InvalidInputException("Error connecting to Location end point " +url );
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null

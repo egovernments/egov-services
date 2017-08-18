@@ -168,13 +168,13 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,plumbername,billsequencenumber,outsideulb,meterowner,metermodel) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?)";
+                + ",?,?,?,?,?,?,?,?)";
     }
 
     public static String insertDemandConnection() {
@@ -191,14 +191,14 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,plumbername,billsequencenumber,outsideulb,meterowner,metermodel,legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
-                + " ?,?,?)";
+                + " ?,?,?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {

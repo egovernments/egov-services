@@ -125,21 +125,28 @@ public class WaterConnectionController {
         }else{
         waterConnectionRequest.getConnection().setAcknowledgementNumber(connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
        }
+        
         waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
                 Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
-    
-    
-       Connection connection= waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
-       waterConnectionRequest.setConnection(connection);
        
-       connection=waterConnectionService.createWaterConnection(
+        waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
+       
+      Connection connection=waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);
         // Sending back the details to UI to paint the success page
-       if(null == waterConnectionRequest.getConnection().getWithProperty() )
-           waterConnectionRequest.getConnection().setWithProperty(Boolean.TRUE);
-       else
-           waterConnectionRequest.getConnection().setWithProperty(Boolean.FALSE);
+        if( waterConnectionRequest.getConnection().getProperty()!=null && 
+                waterConnectionRequest.getConnection().getPropertyIdentifier()!=null )
+            connection.setWithProperty(Boolean.TRUE);
+        else
+            connection.setWithProperty(Boolean.FALSE);
+        connection.setIsLegacy(waterConnectionRequest.getConnection().getIsLegacy());
+        if(waterConnectionRequest.getConnection().getIsLegacy()){
+        System.out.println("consumerNumber "+waterConnectionRequest.getConnection().getConsumerNumber()+"legacy= "+waterConnectionRequest.getConnection().getIsLegacy());
+        connection.setConsumerNumber(waterConnectionRequest.getConnection().getConsumerNumber()!=null?waterConnectionRequest.getConnection().getAcknowledgementNumber():null);
+        connection.setIsLegacy(Boolean.TRUE);
+        }
+        connection.setStatus(waterConnectionRequest.getConnection().getStatus());
         List<Connection> connectionList = new ArrayList<>();
         connectionList.add(connection);
         return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());

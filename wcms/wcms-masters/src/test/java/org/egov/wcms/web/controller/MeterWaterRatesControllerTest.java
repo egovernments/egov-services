@@ -46,7 +46,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -107,7 +106,7 @@ public class MeterWaterRatesControllerTest {
         final ResponseInfo responseInfo = new ResponseInfo();
         final MeterWaterRates meterWaterRates = new MeterWaterRates();
         meterWaterRates.setTenantId("default");
-        meterWaterRates.setBillingtype("METERED");
+        meterWaterRates.setBillingType("METERED");
         meterWaterRates.setCode("12");
         meterWaterRates.setSourceTypeId(2l);
         meterWaterRates.setUsageTypeId("1");

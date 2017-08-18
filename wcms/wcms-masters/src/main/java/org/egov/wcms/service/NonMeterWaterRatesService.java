@@ -42,11 +42,11 @@ package org.egov.wcms.service;
 import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.model.MeterWaterRates;
+import org.egov.wcms.model.NonMeterWaterRates;
 import org.egov.wcms.model.enums.BillingType;
-import org.egov.wcms.repository.MeterWaterRatesRepository;
-import org.egov.wcms.web.contract.MeterWaterRatesGetRequest;
-import org.egov.wcms.web.contract.MeterWaterRatesRequest;
+import org.egov.wcms.repository.NonMeterWaterRatesRepository;
+import org.egov.wcms.web.contract.NonMeterWaterRatesGetReq;
+import org.egov.wcms.web.contract.NonMeterWaterRatesReq;
 import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,10 +55,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class MeterWaterRatesService {
+public class NonMeterWaterRatesService {
 
     @Autowired
-    private MeterWaterRatesRepository meterWaterRatesRepository;
+    private NonMeterWaterRatesRepository nonMeterWaterRatesRepository;
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -69,70 +69,70 @@ public class MeterWaterRatesService {
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
 
-    public MeterWaterRatesRequest create(final MeterWaterRatesRequest meterWaterRatesRequest) {
-        return meterWaterRatesRepository.persistCreateMeterWaterRates(meterWaterRatesRequest);
+    public NonMeterWaterRatesReq create(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
+        return nonMeterWaterRatesRepository.persistCreateNonMeterWaterRates(nonMeterWaterRatesReq);
     }
 
-    public MeterWaterRatesRequest update(final MeterWaterRatesRequest meterWaterRatesRequest) {
-        return meterWaterRatesRepository.persistUpdateMeterWaterRates(meterWaterRatesRequest);
+    public NonMeterWaterRatesReq update(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
+        return nonMeterWaterRatesRepository.persistUpdateNonMeterWaterRates(nonMeterWaterRatesReq);
     }
 
-    public List<MeterWaterRates> createMeterWaterRates(final String topic, final String key,
-            final MeterWaterRatesRequest meterWaterRatesRequest) {
-        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) {
-            meterWaterRates.setBillingType(BillingType.METERED.toString());
-            meterWaterRates.setCode(codeGeneratorService.generate(MeterWaterRates.SEQ_METERWATERRATES));
+    public List<NonMeterWaterRates> createNonMeterWaterRates(final String topic, final String key,
+            final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
+        for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesReq.getNonMeterWaterRates()) {
+            nonMeterWaterRates.setBillingType(BillingType.NONMETERED.toString());
+            nonMeterWaterRates.setCode(codeGeneratorService.generate(NonMeterWaterRates.SEQ_NONMETERWATERRATES));
         }
 
         try {
-            kafkaTemplate.send(topic, key, meterWaterRatesRequest);
+            kafkaTemplate.send(topic, key, nonMeterWaterRatesReq);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return meterWaterRatesRequest.getMeterWaterRates();
+        return nonMeterWaterRatesReq.getNonMeterWaterRates();
     }
 
-    public List<MeterWaterRates> updateMeterWaterRates(final String topic, final String key,
-            final MeterWaterRatesRequest meterWaterRatesRequest) {
-        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) 
-            meterWaterRates.setBillingType(BillingType.METERED.toString());
+    public List<NonMeterWaterRates> updateNonMeterWaterRates(final String topic, final String key,
+            final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
+        for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesReq.getNonMeterWaterRates())
+            nonMeterWaterRates.setBillingType(BillingType.NONMETERED.toString());
         try {
-            kafkaTemplate.send(topic, key, meterWaterRatesRequest);
+            kafkaTemplate.send(topic, key, nonMeterWaterRatesReq);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return meterWaterRatesRequest.getMeterWaterRates();
+        return nonMeterWaterRatesReq.getNonMeterWaterRates();
     }
 
-    public List<MeterWaterRates> getMeterWaterRates(
-            final MeterWaterRatesGetRequest meterWaterRatesGetRequest) {
+    public List<NonMeterWaterRates> getNonMeterWaterRates(
+            final NonMeterWaterRatesGetReq nonMeterWaterRatesGetRequest) {
 
-        if (meterWaterRatesGetRequest.getUsageTypeName() != null) {
+        if (nonMeterWaterRatesGetRequest.getUsageTypeName() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                    meterWaterRatesGetRequest.getUsageTypeName(), meterWaterRatesGetRequest.getTenantId());
+                    nonMeterWaterRatesGetRequest.getUsageTypeName(), nonMeterWaterRatesGetRequest.getTenantId());
             if (usageType.getUsageTypesSize())
-                meterWaterRatesGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
+                nonMeterWaterRatesGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
         }
-        return meterWaterRatesRepository.findForCriteria(meterWaterRatesGetRequest);
+        return nonMeterWaterRatesRepository.findForCriteria(nonMeterWaterRatesGetRequest);
     }
 
-    public boolean checkMeterWaterRatesExists(final MeterWaterRates meterWaterRates) {
-        getUsageTypeByName(meterWaterRates);
-        return meterWaterRatesRepository.checkMeterWaterRatesExists(meterWaterRates.getCode(),
-                meterWaterRates.getUsageTypeId(),
-                meterWaterRates.getSourceTypeName(), meterWaterRates.getPipeSize(),
-                meterWaterRates.getTenantId());
+    public boolean checkNonMeterWaterRatesExists(final NonMeterWaterRates nonMeterWaterRates) {
+        getUsageTypeByName(nonMeterWaterRates);
+        return nonMeterWaterRatesRepository.checkNonMeterWaterRatesExists(nonMeterWaterRates.getCode(),
+                nonMeterWaterRates.getConnectionType(), nonMeterWaterRates.getUsageTypeId(),
+                nonMeterWaterRates.getSourceTypeName(), nonMeterWaterRates.getPipeSize(), nonMeterWaterRates.getFromDate(),
+                nonMeterWaterRates.getTenantId());
     }
 
-    public Boolean getUsageTypeByName(final MeterWaterRates meterWaterRates) {
+    public Boolean getUsageTypeByName(final NonMeterWaterRates nonMeterWaterRates) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                meterWaterRates.getUsageTypeName(),
-                meterWaterRates.getTenantId());
+                nonMeterWaterRates.getUsageTypeName(),
+                nonMeterWaterRates.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
-            meterWaterRates
+            nonMeterWaterRates
                     .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
                             ? usageType.getUsageMasters().get(0).getId() : "");
 
@@ -143,11 +143,11 @@ public class MeterWaterRatesService {
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {
-        return meterWaterRatesRepository.checkPipeSizeExists(pipeSize, tenantId);
+        return nonMeterWaterRatesRepository.checkPipeSizeExists(pipeSize, tenantId);
     }
 
     public boolean checkSourceTypeExists(final String sourceTypeName, final String tenantId) {
-        return meterWaterRatesRepository.checkSourceTypeExists(sourceTypeName, tenantId);
+        return nonMeterWaterRatesRepository.checkSourceTypeExists(sourceTypeName, tenantId);
     }
 
 }

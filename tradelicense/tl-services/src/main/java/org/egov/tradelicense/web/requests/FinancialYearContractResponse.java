@@ -31,88 +31,26 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any user of the program
+ *         3) This license does not grant any rights to any Long of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
+package org.egov.tradelicense.web.requests;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.egov.tradelicense.web.contract.FinancialYearContract;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-@Builder
-public class TreatmentPlant {
+import lombok.Data;
 
-    public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
-
-    @NotNull
-    private Long id;
-
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String code;
-
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
-
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String plantType;
-
-    @NotNull
-    private String locationNum;
-    
-    private String locationName;
-
-
-    @NotNull
-    private String wardNum;
-    
-    private String wardName;
-    @NotNull
-    private String zoneNum;
-    
-    private String zoneName;
-
-    @NotNull
-    @Min(1)
-    @Max(8)
-    private double capacity;
-
-    private Long storageReservoirId;
-
-    @NotNull
-    private String storageReservoirName;
-
-    @Size(max = 250)
-    private String description;
-
-    @JsonIgnore
-    private AuditDetails auditDeatils;
-
-    @Size(max = 250)
-    @NotNull
-    private String tenantId;
-
+@JsonInclude(value = Include.NON_NULL)
+public @Data class FinancialYearContractResponse {
+	private FinancialYearResponseInfo responseInfo;
+	private List<FinancialYearContract> financialYears;
+	private FinancialYearContract financialYear;
 }

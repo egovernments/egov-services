@@ -31,88 +31,47 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any user of the program
+ *         3) This license does not grant any rights to any Long of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
+package org.egov.tradelicense.web.contract;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
+@Data
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
-@Builder
-public class TreatmentPlant {
+public class FinancialYearContract {
 
-    public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
+	private Long id;
 
-    @NotNull
-    private Long id;
+	@Length(min = 1, max = 25)
+	@NotBlank
+	private String finYearRange;
 
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String code;
+	@NotNull
+	private Date startingDate;
 
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
+	@NotNull
+	private Date endingDate;
+	@NotNull
+	private Boolean active;
+	@NotNull
+	private Boolean isActiveForPosting;
 
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String plantType;
+	private Boolean isClosed;
 
-    @NotNull
-    private String locationNum;
-    
-    private String locationName;
-
-
-    @NotNull
-    private String wardNum;
-    
-    private String wardName;
-    @NotNull
-    private String zoneNum;
-    
-    private String zoneName;
-
-    @NotNull
-    @Min(1)
-    @Max(8)
-    private double capacity;
-
-    private Long storageReservoirId;
-
-    @NotNull
-    private String storageReservoirName;
-
-    @Size(max = 250)
-    private String description;
-
-    @JsonIgnore
-    private AuditDetails auditDeatils;
-
-    @Size(max = 250)
-    @NotNull
-    private String tenantId;
-
+	private Boolean transferClosingBalance;
 }

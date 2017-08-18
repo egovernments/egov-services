@@ -44,6 +44,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -69,7 +71,7 @@ public class MeterWaterRates {
     private String code;
 
     @NotNull
-    private String billingtype;
+    private String billingType;
 
     @NotNull
     private String usageTypeName;
@@ -98,7 +100,7 @@ public class MeterWaterRates {
     private Long toDate;
 
     private List<Slab> slab;
-
+    @JsonIgnore
     private AuditDetails auditDetails;
 
     @Size(max = 250)

@@ -56,8 +56,6 @@ import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.BillingServiceRequestInfo;
 import org.egov.collection.model.BillingServiceRequestWrapper;
-import org.egov.collection.model.IdGenRequestInfo;
-import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.PositionSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;

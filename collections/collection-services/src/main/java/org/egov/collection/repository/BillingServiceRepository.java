@@ -5,7 +5,6 @@ import org.egov.collection.model.BillingServiceRequestWrapper;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillRequest;
 import org.egov.collection.web.contract.BillResponse;
-import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

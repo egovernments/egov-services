@@ -44,7 +44,7 @@ public class TradeLicenseSearch {
 	private String oldLicenseNumber;
 
 	@JsonProperty("applicationDate")
-	private String applicationDate;
+	private Long applicationDate;
 
 	@JsonProperty("adhaarNumber")
 	@Pattern(regexp = "[0-9]{12}")
@@ -151,14 +151,14 @@ public class TradeLicenseSearch {
 
 	@NotNull
 	@JsonProperty("tradeCommencementDate")
-	private String tradeCommencementDate;
+	private Long tradeCommencementDate;
 
 	@NotNull
 	@JsonProperty("licenseValidFromDate")
-	private String licenseValidFromDate;
+	private Long licenseValidFromDate;
 
 	@JsonProperty("agreementDate")
-	private String agreementDate;
+	private Long agreementDate;
 
 	@JsonProperty("agreementNo")
 	private String agreementNo;
@@ -170,7 +170,7 @@ public class TradeLicenseSearch {
 	private Boolean active = true;
 
 	@JsonProperty("expiryDate")
-	private String expiryDate;
+	private Long expiryDate;
 
 	@JsonProperty("feeDetails")
 	private List<LicenseFeeDetail> feeDetails;

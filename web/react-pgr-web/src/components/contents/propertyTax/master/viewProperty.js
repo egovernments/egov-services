@@ -612,19 +612,19 @@ class ViewProperty extends Component {
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Toilet Factor</div>
-												   NA
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[0].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Road Factor</div>
-												   NA
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[1].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Lift Factor</div>
-												   NA
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[2].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Parking Factor</div>
-												   NA
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[3].value : 'NA' ) : 'NA'}
 											  </Col>
 											</Row>
 										 
@@ -645,7 +645,7 @@ class ViewProperty extends Component {
                                               <th>Unit Type</th>
 											  <th>Flat No.</th>
                                               <th>Unit No.</th>
-                                              <th>Construction Type</th>
+                                              <th>Construction Class</th>
                                               <th>Usage Type</th>
                                               <th>Usage Sub Type</th>
                                               <th>Firm Name</th>
@@ -653,16 +653,19 @@ class ViewProperty extends Component {
                                               <th>Occupant Name</th>
                                               <th>Annual Rent</th>
                                               <th>Manual ARV</th>
-                                              <th>Construction Date</th>
+											  <th>Construction Start Date</th>
+                                              <th>Construction End Date</th>
                                               <th>Effective From Date</th>
                                               <th>Unstructured land</th>
                                               <th>Length</th>
                                               <th>Breadth</th>
-                                              <th>Plinth Area</th>
-                                              <th>Occupancy Certificate Number</th>
+                                              <th>Buildup Area</th>
+											  <th>Occupancy Certificate Number</th>
+											  <td>Building Cost</td>
+											  <td>Land Cost</td>
                                               <th>Building Permission Number</th>
-                                              <th>Building Permission Date</th>
-                                              <th>Plinth Area In Building Plan</th>
+                                             
+                                           
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -670,7 +673,7 @@ class ViewProperty extends Component {
                                               if(i){
 												  console.log(i)
                                                 return (<tr key={index}>
-                                                    <td>{index}</td>
+                                                    <td>{index+1}</td>
                                                     <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || 'NA'}</td>
 													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || 'NA'}</td>
 													<td>{i.flatNo ? i.flatNo : ''}</td>
@@ -683,16 +686,17 @@ class ViewProperty extends Component {
                                                     <td>{i.occupierName || 'NA'}</td>
                                                     <td>{i.annualRent || 'NA'}</td>
                                                     <td>{parseFloat(i.manualArv) || 'NA'}</td>
+													<td>{i.constStartDate ? new Date(i.constStartDate).getDate()+'/'+(new Date(i.constStartDate).getMonth()+1)+'/'+new Date(i.constStartDate).getFullYear() : 'NA' }</td>
                                                     <td>{i.constCompletionDate ? new Date(i.constCompletionDate).getDate()+'/'+(new Date(i.constCompletionDate).getMonth()+1)+'/'+new Date(i.constCompletionDate).getFullYear() : 'NA' }</td>
                                                     <td>{i.occupancyDate ? new Date(i.occupancyDate).getDate()+'/'+(new Date(i.occupancyDate).getMonth()+1)+'/'+new Date(i.occupancyDate).getFullYear() : 'NA' }</td>
                                                     <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| 'NA'}</td>
                                                     <td>{parseFloat(i.length) || 'NA'}</td>
                                                     <td>{parseFloat(i.width) || 'NA'}</td>
                                                     <td>{i.builtupArea || 'NA'}</td>
-                                                    <td>{i.occupancyCertiNumber || 'NA'}</td>
-                                                    <td>{i.bpaNo || 'NA'}</td>
-                                                    <td>{i.bpaDate ? new Date(i.bpaDate).getDate()+'/'+(new Date(i.bpaDate).getMonth()+1)+'/'+new Date(i.bpaDate).getFullYear() : 'NA' }</td>
-                                                    <td>{i.bpaBuiltupArea || 'NA'}</td>
+													<td>{i.occupancyCertiNumber || 'NA'}</td>
+													<td>{i.buildingCost || 'NA'}</td>
+													<td>{i.landCost || 'NA'}</td>
+                                                    <td>{i.bpaNo || 'NA'}</td>  
                                                   </tr>)
 												  
                                               }
@@ -724,7 +728,7 @@ class ViewProperty extends Component {
 												
 												return(
 													<tr key={index}>
-														<td></td>
+														<td>{index +1}</td>
 														<td>
 														
 														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{

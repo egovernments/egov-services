@@ -24,11 +24,11 @@ public class SupportDocumentContract {
 	@JsonProperty("licenseId")
 	private Long licenseId;
 
-	@NotNull(message="DocumentType is required, Please enter valid DocumentType")
+	@NotNull(message="{error.license.documenttype}")
 	@JsonProperty("documentTypeId")
 	private Long documentTypeId;
 
-	@NotNull(message="FileStoreId is required, Please enter valid FileStoreId")
+	@NotNull(message="{error.license.filestore}")
 	@JsonProperty("fileStoreId")
 	private Long fileStoreId;
 

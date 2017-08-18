@@ -1,0 +1,94 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "type": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "description": {
+            "type": "keyword"
+        },
+        "voucherNumber": {
+            "type": "keyword"
+        },
+        "voucherDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "originalVoucherNumber": {
+            "type": "keyword"
+        },
+        "refVoucherNumber": {
+            "type": "keyword"
+        },
+        "moduleName": {
+            "type": "keyword"
+        },
+		"billNumber": {
+            "type": "keyword"
+        },
+        "status": {
+            "type": "object"
+        },
+        "fund": {
+            "type": "object"
+        },
+        "function": {
+            "type": "object"
+        },
+        "fundsource": {
+            "type": "object"
+        },
+        "scheme": {
+            "type": "object"
+        },
+        "subScheme": {
+            "type": "object"
+        },
+        "functionary": {
+            "type": "object"
+        },
+        "division": {
+            "type": "object"
+        },
+        "department": {
+            "type": "object"
+        },
+        "sourcePath": {
+            "type": "keyword"
+        },
+        "budgetCheckRequired": {
+            "type": "boolean"
+        },
+        "budgetAppropriationNo": {
+            "type": "keyword"
+        },
+        "ledgers": {
+            "type": "object"
+        },
+        "createdBy": {
+            "type": "object"
+        },
+        "lastModifiedBy": {
+            "type": "object"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

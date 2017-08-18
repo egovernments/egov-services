@@ -92,6 +92,7 @@ var dat = {
     "version": "v1",
     "url": "/wcms-connection/connection/_create",
     "idJsonPath": "Connection[0].consumerNumber",
+    "ackUrl":"/legacy/view",
     "useTimestamp": true,
     "tenantIdRequired": true, //Instead of boolean value give json path
     "objectName": "Connection",
@@ -114,7 +115,7 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": "",
         			"values": [{"label":"Primary Connection", "value":"NEWCONNECTION"},{"label":"Additional Connection", "value":"ADDITIONCONNECTION"}],
-        			"defaultValue":true
+        			"defaultValue":"NEWCONNECTION"
 
             },
           {
@@ -283,6 +284,28 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "consumerNo",
+            "jsonPath": "Connection.legacyConsumerNumber",
+            "label": "wc.create.groups.applicantDetails.consumerNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+              },
+      	  {
+            "name": "executionDate",
+            "jsonPath": "Connection.executionDate",
+            "label": "wc.create.groups.applicantDetails.connectionDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+              },
+          {
             "name": "Is Primary?",
             "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
             "label": "",
@@ -386,7 +409,6 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "convertToString":false
           },
           {
             "name": "Address",
@@ -434,28 +456,28 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-		  {
-            "name": "consumerNo",
-            "jsonPath": "Connection.property.consumerNo",
-            "label": "wc.create.groups.applicantDetails.consumerNo",
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-		  {
-            "name": "executionDate",
-            "jsonPath": "Connection.executionDate",
-            "label": "wc.create.groups.applicantDetails.connectionDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
+      	  {
+                "name": "consumerNo",
+              "jsonPath": "Connection.legacyConsumerNumber",
+                "label": "wc.create.groups.applicantDetails.consumerNo",
+                "pattern": "",
+                "type": "text",
+                "isRequired": true,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+      	  {
+                "name": "executionDate",
+                "jsonPath": "Connection.executionDate",
+                "label": "wc.create.groups.applicantDetails.connectionDate",
+                "pattern": "",
+                "type": "datePicker",
+                "isRequired": true,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }
         ]
       },
       {
@@ -838,7 +860,7 @@ var dat = {
   "wc.view": {
     "numCols": 12 / 3,
     "version": "v1",
-    "url": "/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}",
+    "url": "/wcms-connection/connection/_search?consumerNumber={consumerNumber}",
     "useTimestamp": true,
     "tenantIdRequired": true, //Instead of boolean value give json path
     "objectName": "Connection",
@@ -851,8 +873,8 @@ var dat = {
           "fields": [
             {
               "name": "With Property",
-              "jsonPath": "Connection.withProperty",
-              "label": "",
+              "jsonPath": "Connection[0].withProperty",
+              "label": "With Property",
               "pattern": "",
               "type": "radio",
               "isRequired": false,
@@ -1362,6 +1384,113 @@ var dat = {
         ]
       }
     ]
+  },
+  "wc.search": {
+    "numCols": 12 / 3,
+    "url": "/wcms-connection/connection/_search",
+    "tenantIdRequired": true,
+    "useTimestamp": true,
+    "objectName": "Connection",
+    "groups": [{
+      "label": "wc.search.searchnewconnection.title",
+      "name": "createCategoryType",
+      "fields": [{
+          "name": "acknowledgementNumber",
+          "jsonPath": "acknowledgementNumber",
+          "label": "Acknowledgement Number",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
+          "name": "consumerNumber",
+          "jsonPath": "consumerNumber",
+          "label": "Consumer Number",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
+          "name": "name",
+          "jsonPath": "name",
+          "label": "Name",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
+          "name": "mobileNumber",
+          "jsonPath": "mobileNumber",
+          "label": "Mobile Number",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
+          "name": "locality",
+          "jsonPath": "locality",
+          "label": "Locality",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
+          "name": "legacyConsumerNumber",
+          "jsonPath": "revenueWard",
+          "label": "Revenue Ward",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
+          "name": "doorNumber",
+          "jsonPath": "doorNumber",
+          "label": "Door Number",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        }
+
+      ]
+    }],
+    "result": {
+      "header": [{
+        label: "wc.search.result.acknowledgementNumber"
+      }, {
+        label: "wc.search.result.applicationType"
+      }, {
+        label: "wc.search.result.usageType"
+      }, {
+        label: "wc.search.result.connectionStatus"
+      }, {
+        label: "wc.search.result.propertyidentifier"
+      }],
+      "values": ["acknowledgementNumber", "applicationType", "property.usageType", "connectionStatus", "property.propertyidentifier"],
+      "resultPath": "Connection",
+      "rowClickUrlUpdate": "/update/wc/legacy/{consumerNumber}",
+      "rowClickUrlView": "/view/wc/legacy/{consumerNumber}"
+    }
   }
 }
 

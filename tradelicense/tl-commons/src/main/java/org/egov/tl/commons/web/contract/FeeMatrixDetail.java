@@ -1,5 +1,7 @@
 package org.egov.tl.commons.web.contract;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,16 +22,22 @@ public class FeeMatrixDetail {
 
 	private Long id = null;
 
-	@NotNull
+	@JsonProperty("feeMatrixId")
+	
 	private Long feeMatrixId = null;
 
-	@NotNull
+	@JsonProperty("uomFrom")
+	@NotNull(message = "{error.uomFrom.null}")
 	private Long uomFrom = null;
 
-	@NotNull
+	@JsonProperty("uomTo")
+	@NotNull(message = "{error.uomTo.null}")
 	private Long uomTo = null;
 
-	@NotNull
+	@NotNull(message="{error.FeeMatrixDetail.amount}")
+	@Min(1)
+	@Digits(integer=10, fraction=2,message="{error.valid.amount}")
+	@JsonProperty("amount")
 	private Double amount = null;
 
 	@JsonProperty("auditDetails")

@@ -114,6 +114,8 @@ const  getNameById = (object, code, property = "") => {
     return "";
 }
 
+var totalFloors = [];
+
 class FloorDetails extends Component {
 	
   constructor(props) {
@@ -126,7 +128,9 @@ class FloorDetails extends Component {
 		occupancies:[],
 		usages:[],
 		hasLengthWidth: false,
-		roomInFlat:[{code:1, name:'Yes'}, {code:2, name:'No'}]
+		roomInFlat:[{code:1, name:'Yes'}, {code:2, name:'No'}],
+		newFloorError : false,
+		negativeValue : false
     }
   }
 
@@ -179,6 +183,8 @@ class FloorDetails extends Component {
 			});
 	
 		this.createFloorObject();
+		
+		this.props.initForm();
   }
   
   createFloorObject = () => {
@@ -326,9 +332,31 @@ class FloorDetails extends Component {
 		
   }
   
-	formatDate(date){
-		return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-	}
+formatDate(date){
+	return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+}
+
+getSmallestDate = (DateArray) => {
+	
+	let {handleChange} = this.props;	
+
+    var SmallestDate = new Date(DateArray[0]);
+	
+    for(var i = 1; i < DateArray.length; i++)
+		{	
+			var TempDate = new Date(DateArray[i]);
+			if(TempDate < SmallestDate)
+			SmallestDate  = TempDate ;
+		}
+		var e = {
+			target: {
+				value: new Date(SmallestDate).getDate() + "/" + (new Date(SmallestDate).getMonth() + 1) + "/" + new Date(SmallestDate).getFullYear()
+			}
+		}
+		
+		handleChange(e, 'occupancyDate', false, '');
+    return SmallestDate;
+}
 	
 componentDidUpdate(){
 
@@ -406,17 +434,36 @@ calcAssessableArea = (e, type) => {
 	if(floorDetails.hasOwnProperty('floor')) {
 	
 		if(type == 'exempted' && floorDetails.floor.hasOwnProperty('carpetArea')){
+			
+			if(parseFloat(floorDetails.floor.carpetArea) < parseFloat(e.target.value)) {
+				this.setState({
+					negativeValue : true
+				})
+			} else {
+				this.setState({
+					negativeValue : false
+				})
+				f.target.value = parseFloat(floorDetails.floor.carpetArea) - parseFloat(e.target.value);
+				handleChangeNextOne(f, "floor","assessableArea", false, "");
+			}
 		
-			f.target.value = parseFloat(floorDetails.floor.carpetArea) - parseFloat(e.target.value);
-	
-			handleChangeNextOne(f, "floor","assessableArea", false, "");
 			
 		} else if(type == 'carpet'){
 			
 			if(floorDetails.floor.hasOwnProperty('exemptedArea')) {
-				f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
-			
-				handleChangeNextOne(f, "floor","assessableArea", false, "");
+				
+				if(parseFloat(e.target.value) < parseFloat(floorDetails.floor.exemptedArea) ) {
+					this.setState({
+						negativeValue : true
+					})
+				} else {
+					this.setState({
+						negativeValue : false
+					})
+					f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
+					handleChangeNextOne(f, "floor","assessableArea", false, "");
+				}
+		
 			} else {
 				f.target.value = parseFloat(e.target.value);
 			
@@ -429,8 +476,56 @@ calcAssessableArea = (e, type) => {
 	}	
 }
 
-				
+checkFloors =(val) => {
+	
+	let {floorDetails, noOfFloors} = this.props;
+	
+	totalFloors = totalFloors.filter(function(elem, index, self) {
+		return index == self.indexOf(elem);
+	})
+	
+	if(noOfFloors === undefined) {
+			this.setState({
+				newFloorError : true
+			});
+			return false;
+	} else {
+		this.setState({
+				newFloorError : false
+			});
+	}
+		
+	if(noOfFloors == totalFloors.length){
+		var index = totalFloors.indexOf(val);
+		console.log(index);
+		if(index == -1) {
+			this.setState({
+				newFloorError : true
+			});
+		} else {
+			this.setState({
+				newFloorError : false
+			});
+		}
+	}
+}
 
+getFloors = () => {
+	totalFloors = [];
+	var alldate = [];
+	let {floorDetails, noOfFloors} = this.props;
+	var allRooms = floorDetails.floors;
+	
+	allRooms.map((item, index)=>{
+		totalFloors.push(item.floorNo)
+		
+		var d = item.occupancyDate.split('/');
+		d = d[2]+'-'+d[1]+'-'+d[0]
+		alldate.push(d);
+	})
+	
+	this.getSmallestDate(alldate);
+}
  
   
    render(){
@@ -463,10 +558,11 @@ calcAssessableArea = (e, type) => {
 		  setLoadingStatus,
 		  toggleSnackbarAndSetText,
 		  handleChangeFloor,
-		  isFloorValid
+		  isFloorValid,
+		  noOfFloors
 				} = this.props;
 
-				let {calcAssessableArea, handleAge} = this;
+				let {calcAssessableArea, handleAge, checkFloors} = this;
 		let cThis = this;
 		
 		console.log(floorDetails);
@@ -492,6 +588,7 @@ calcAssessableArea = (e, type) => {
 																  value: value
 																}
 															  };
+															  checkFloors(value)
 															  handleChangeFloor(e, "floor","floorNo", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -913,7 +1010,7 @@ calcAssessableArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText="Exempted Area "
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :""): ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>Invalid value</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>Invalid value</span>: "" )}
 														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
 														  onChange={(e) => {	  
 															  calcAssessableArea(e,'exempted');
@@ -943,7 +1040,7 @@ calcAssessableArea = (e, type) => {
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText="Building cost"
-														  errorText={fieldErrors.floor ?(fieldErrors.floor.buildingCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.buildingCost}</span>:"" ): ""}
+														  errorText={fieldErrors.floor ?(fieldErrors.floor.buildingCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.buildingCost}</span>: "" ): "" }
 														  value={floorDetails.floor ? floorDetails.floor.buildingCost : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"buildingCost", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -981,10 +1078,15 @@ calcAssessableArea = (e, type) => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
+													<Col xs={12} md={6}>
+														{this.state.negativeValue && <p>Exempted area should not be greater than Carpet area</p>}
+														{this.state.newFloorError && <p>You cannot select more than {this.props.noOfFloors} Floors</p>}
+
+													</Col>
 													
-													<Col xs={12} style={{textAlign:"right"}}>
+													<Col xs={12} md={6}  style={{textAlign:"right"}}>
 														<br/>
-														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid}  primary={true} onClick={()=>{
+														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue}  primary={true} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
 															
 															 this.props.resetObject("floor", false);
@@ -992,11 +1094,12 @@ calcAssessableArea = (e, type) => {
 															  
 															 setTimeout(()=>{
 																	_this.createFloorObject();
+																	_this.getFloors();
 																}, 300);
 															}	
 														}/>}
 														{ (editIndex > -1) &&
-															<RaisedButton type="button" label="Update Room" disabled={!isFloorValid} primary={true}  onClick={()=> {
+															<RaisedButton type="button" label="Update Room" disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue} primary={true}  onClick={()=> {
 																  this.props.updateObject("floors","floor",  editIndex);
 																  this.props.resetObject("floor", false);
 																  this.props.resetObject("owner", false);
@@ -1121,10 +1224,19 @@ const mapStateToProps = state => ({
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
   addRoom : state.form.addRoom,
-  isFloorValid: state.form.isFloorValid
+  isFloorValid: state.form.isFloorValid,
+  noOfFloors: state.form.noOfFloors
 });
 
 const mapDispatchToProps = dispatch => ({
+	
+initForm : () => {
+	dispatch({
+		type: "SET_FLOOR_NUMBER",
+		noOfFloors: 0
+	})
+},
+
  setForm: () => {
     dispatch({
       type: "SET_FLOOR_STATE",

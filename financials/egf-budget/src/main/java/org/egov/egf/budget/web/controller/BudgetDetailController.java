@@ -75,6 +75,7 @@ public class BudgetDetailController {
 
     public static final String ACTION_CREATE = "create";
     public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
     public static final String PLACEHOLDER = "placeholder";
 
     @Autowired
@@ -135,6 +136,39 @@ public class BudgetDetailController {
         }
 
         budgetdetails = budgetDetailService.update(budgetdetails, errors, budgetDetailRequest.getRequestInfo());
+
+        for (final BudgetDetail bd : budgetdetails) {
+            contract = mapper.toContract(bd);
+            budgetDetailContracts.add(contract);
+        }
+
+        budgetDetailResponse.setBudgetDetails(budgetDetailContracts);
+
+        return budgetDetailResponse;
+    }
+    
+    @PostMapping("/_delete")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BudgetDetailResponse delete(@RequestBody @Valid final BudgetDetailRequest budgetDetailRequest,
+            final BindingResult errors) {
+
+        final BudgetDetailMapper mapper = new BudgetDetailMapper();
+        budgetDetailRequest.getRequestInfo().setAction(ACTION_DELETE);
+        final BudgetDetailResponse budgetDetailResponse = new BudgetDetailResponse();
+        budgetDetailResponse.setResponseInfo(getResponseInfo(budgetDetailRequest.getRequestInfo()));
+        List<BudgetDetail> budgetdetails = new ArrayList<>();
+        BudgetDetail budgetDetail = null;
+        BudgetDetailContract contract = null;
+        final List<BudgetDetailContract> budgetDetailContracts = new ArrayList<BudgetDetailContract>();
+
+        for (final BudgetDetailContract budgetDetailContract : budgetDetailRequest.getBudgetDetails()) {
+            budgetDetail = mapper.toDomain(budgetDetailContract);
+            budgetDetail.setCreatedBy(budgetDetailRequest.getRequestInfo().getUserInfo());
+            budgetDetail.setLastModifiedBy(budgetDetailRequest.getRequestInfo().getUserInfo());
+            budgetdetails.add(budgetDetail);
+        }
+
+        budgetdetails = budgetDetailService.delete(budgetdetails, errors, budgetDetailRequest.getRequestInfo());
 
         for (final BudgetDetail bd : budgetdetails) {
             contract = mapper.toContract(bd);

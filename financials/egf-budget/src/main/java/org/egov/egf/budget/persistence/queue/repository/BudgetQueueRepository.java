@@ -86,6 +86,9 @@ public class BudgetQueueRepository {
         case "update":
             topicMap.put("budget_update", request);
             break;
+        case "delete":
+            topicMap.put("budget_delete", request);
+            break;
 
         }
         financialProducer.sendMessage(validatedTopic, budgetValidatedKey, topicMap);

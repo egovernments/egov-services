@@ -9,6 +9,7 @@ import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.model.Depreciation;
+import org.egov.asset.service.AssetCategoryIndexService;
 import org.egov.asset.service.AssetIndexService;
 import org.egov.asset.service.CurrentValueIndexService;
 import org.egov.asset.service.DepreciationIndexService;
@@ -47,12 +48,15 @@ public class AssetConsumers {
     private CurrentValueIndexService currentValueIndexService;
 
     @Autowired
+    private AssetCategoryIndexService assetCategoryIndexService;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @KafkaListener(topics = { "${kafka.topics.save.asset}", "${kafka.topics.save.depreciation}",
             "${kafka.topics.save.currentvalue}", "${kafka.topics.update.asset}", "${kafka.topics.save.revaluation}",
-            "${kafka.topics.save.disposal}" , "${kafka.topics.save.assetcategory}"
-            ,"${kafka.topics.update.assetcategory}"})
+            "${kafka.topics.save.disposal}", "${kafka.topics.save.assetcategory}",
+            "${kafka.topics.update.assetcategory}" })
     public void listen(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
 
@@ -72,9 +76,11 @@ public class AssetConsumers {
         else if (topic.equals(applicationProperties.getSaveDepreciationTopic()))
             depreciationIndexService.indexDepreciaiton(objectMapper.convertValue(consumerRecord, Depreciation.class));
         else if (topic.equals(applicationProperties.getSaveassetCategoryTopic()))
-            assetIndexService.postAssetCategory(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
+            assetCategoryIndexService
+                    .postAssetCategory(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
         else if (topic.equals(applicationProperties.getUpdateAssetCategoryTopic()))
-            assetIndexService.postAssetCategory(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
+            assetCategoryIndexService
+                    .postAssetCategory(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
 
     }
 }

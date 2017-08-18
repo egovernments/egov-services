@@ -100,4 +100,63 @@ public class PropertiesManager {
 
 	@Value("${id.anFormat}")
 	private String idApplicationNumberGenFormatServiceTopic;
+	
+	@Value("${error.license.locationendpoint}")
+	private String endPointError;
+	
+	
+	@Value("${error.license.categoryendpoint}")
+	private String catEndPointError;
+	
+	@Value("${error.license.documentendpoint}")
+	private String documentEndPointErrormsg;
+	
+	@Value("${error.license.propertyendpoint}")
+	private String propertyEndPointErrormsg;
+	
+	
+	@Value("${error.license.oldLicenseNumber}")
+	private String oldLicenseNumberErrorMsg;
+	
+	@Value("${error.license.agreementdate}")
+	private String agreementDateErrorMsg;
+	
+	@Value("${error.license.agreementno}")
+	private String agreementNoErrorMsg;
+	
+	@Value("${error.license.propertyassesmentNo}")
+	private String propertyassesmentNoErrorMsg;
+	
+	@Value("${error.license.aadhaarnumber}")
+	private String aadhaarNumberErrorMsg;
+	
+	@Value("${error.license.locality}")
+	private String localityErrorMsg;
+	
+	@Value("${error.license.revenueward}")
+	private String revenueWardErrorMsg;
+	
+	@Value("${error.license.adminward}")
+	private String adminWardErrorMsg;
+	
+	
+	@Value("${error.license.category}")
+	private String categoryErrorMsg;
+	
+	@Value("${error.license.subcategory}")
+	private String subCategoryErrorMsg;
+	
+	@Value("${error.license.uom}")
+	private String uomErrorMsg;
+	
+	@Value("${error.license.documenttype}")
+	private String documentTypeErrorMsg;
+	
+	@Value("${error.license.validityyears}")
+	private String validtyYearsErrorMsg;
+	
+	@Value("${error.license.feedetails}")
+	private String feeDetailsErrorMsg;
+
+	
 }

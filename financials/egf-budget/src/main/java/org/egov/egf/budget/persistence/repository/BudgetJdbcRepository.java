@@ -84,6 +84,11 @@ public class BudgetJdbcRepository extends JdbcRepository {
         return entity;
 
     }
+    
+    public BudgetEntity delete(final BudgetEntity entity) {
+        super.delete(entity.TABLE_NAME, entity.getId());
+        return entity;
+    }
 
     public Pagination<Budget> search(final BudgetSearch domain) {
         final BudgetSearchEntity budgetSearchEntity = new BudgetSearchEntity();

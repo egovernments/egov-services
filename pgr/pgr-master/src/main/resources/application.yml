@@ -3,6 +3,7 @@ ReportDefinitions:
 - reportName: GrievanceByType
   summary: Report grouped by Grievance Type and status - based on a date period
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.complainttype.name
@@ -112,6 +113,7 @@ ReportDefinitions:
 - reportName: DrillDownComplaintDetailByGrievanceType
   summary: DrillDown ComplaintDetail By GrievanceType
   version: 1.0.0 
+  moduleName: pgr
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -170,6 +172,7 @@ ReportDefinitions:
 - reportName: DrillDownComplaintDetailByGrievanceTypeWithINSLA
   summary: DrillDown ComplaintDetail By GrievanceType
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -231,6 +234,7 @@ ReportDefinitions:
 - reportName: DrillDownComplaintDetailByGrievanceTypeBeyondSLA
   summary: DrillDown ComplaintDetail By GrievanceType
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -292,6 +296,7 @@ ReportDefinitions:
 - reportName: GrievanceByFunctionary
   summary: Functionary Report grouped by Functionary Name - based on a date period
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: employeename
     label: reports.pgr.functionary.name
@@ -398,6 +403,7 @@ ReportDefinitions:
 - reportName: DrillDownComplaintDetailByFunctionary
   summary: DrillDown ComplaintDetail By Functionary Report
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -459,6 +465,7 @@ ReportDefinitions:
 - reportName: DrillDownComplaintDetailByFunctionaryWithINSLA
   summary: DrillDown ComplaintDetail By Functionary Report
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -524,6 +531,7 @@ ReportDefinitions:
 - reportName: DrillDownComplaintDetailByFunctionaryBeyondSLA
   summary: DrillDown ComplaintDetail By Functionary Report
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -589,6 +597,7 @@ ReportDefinitions:
 - reportName: DrillDownByDepartment
   summary: Drill Down Report grouped by Department Name - based on a date period
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.department.name
@@ -675,6 +684,7 @@ ReportDefinitions:
 - reportName: DrillDownDepartmentGetGrievanceType
   summary: DrillDown Department Report Get GrievanceType
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.complaint.name
@@ -766,6 +776,7 @@ ReportDefinitions:
 - reportName: DrillDownDepartmentGrievanceTypeGetUserNamePosition
   summary: DrillDown Department Report Grievance Type Get UserName Position
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: userposition
     label: reports.pgr.complaint.userposition
@@ -863,6 +874,7 @@ ReportDefinitions:
 - reportName: DrillDownDepartmentGrievanceTypeGetUserNamePositionGetComplaints
   summary: DrillDown Department Report GrievanceType Get UserName Position Get Complaints
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -926,6 +938,7 @@ ReportDefinitions:
 - reportName: DrillDownByBoundary
   summary: Drill Down Report grouped by Boundary Name - based on a date period
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.boundary.name
@@ -1000,6 +1013,7 @@ ReportDefinitions:
 - reportName: DrillDownByBoundaryGetLocality
   summary: DrillDown By Boundary Get Locality
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.locality.name
@@ -1091,6 +1105,7 @@ ReportDefinitions:
 - reportName: DrillDownByBoundaryLocalityGetDepartment
   summary: Drill Down Report By Boundary Locality Get Department
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.department.name
@@ -1172,6 +1187,7 @@ ReportDefinitions:
 - reportName: DrillDownByBoundaryLocalityDepartmentGetComplaintType
   summary: Drill Down Report By Boundary Locality Department Get Complaint Type
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.complainttype.name
@@ -1257,6 +1273,7 @@ ReportDefinitions:
 - reportName: DrillDownByBoundaryLocalityDepartmentGetUserNamePosition
   summary: Drill Down Report By Boundary Locality Department Get UserName Position
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: userposition
     label: reports.pgr.complaint.userposition
@@ -1353,6 +1370,7 @@ ReportDefinitions:
 - reportName: DrillDownByBoundaryLocalityDepartmentUserNamePositionGetComplaints
   summary: Drill Down By Boundary Locality Department UserName Position GetComplaints
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -1427,6 +1445,7 @@ ReportDefinitions:
 - reportName: AgeingByDepartment
   summary: Ageing report by department
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.department.name
@@ -1490,6 +1509,7 @@ ReportDefinitions:
 - reportName: RouterEscalation
   summary: Router Escalation Report
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: ctname
     label: reports.pgr.complainttype.name
@@ -1547,6 +1567,7 @@ ReportDefinitions:
 - reportName: CommonInbox
   summary: Common Inbox
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: createddate
     label: reports.common.createddate
@@ -1603,6 +1624,7 @@ ReportDefinitions:
 - reportName: AgeingByBoundary
   summary: Ageing report by boundary
   version: 1.0.0
+  moduleName: pgr
   sourceColumns:
   - name: name
     label: reports.pgr.boundary.name

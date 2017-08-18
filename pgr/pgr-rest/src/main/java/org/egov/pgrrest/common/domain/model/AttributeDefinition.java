@@ -62,6 +62,10 @@ public class AttributeDefinition {
         } else if (dataType == AttributeDataType.LONG) {
             return Long.parseLong(stringValue);
         }
+        /* else if (dataType == AttributeDataType.TEXTAREA)
+         {
+        	 return stringValue;
+         }*/
         return stringValue;
     }
 

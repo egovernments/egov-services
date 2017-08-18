@@ -17,6 +17,12 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Api from '../../../api/api';
 import $ from "jquery";
 
+var styles = {
+    fontWeight: {
+        fontWeight: 500
+    }
+};
+
 const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
 const checkIfNoDup = function(employee, subObject) {
     if (employee["jurisdictions"].length === 0)
@@ -411,6 +417,79 @@ const getBoundaryValues = function(allBoundariesList, boundary, self, ind) {
     }
 }
 
+
+const defaultEmployeeObject = {
+      code: "",
+      dateOfAppointment: "",
+      dateOfJoining: "",
+      dateOfRetirement: "",
+      employeeStatus: "",
+      recruitmentMode: "",
+      recruitmentType: "",
+      recruitmentQuota: "",
+      retirementAge: "",
+      dateOfResignation: "",
+      dateOfTermination: "",
+      employeeType: "",
+      assignments: [],
+      jurisdictions: [],
+      motherTongue: "",
+      religion: "",
+      community: "",
+      category: "",
+      physicallyDisabled: false,
+      medicalReportProduced: false,
+      languagesKnown: [],
+      maritalStatus: "",
+      passportNo: null,
+      gpfNo: null,
+      bank: "",
+      bankBranch: "",
+      bankAccount: "",
+      group: "",
+      placeOfBirth: "",
+      documents: [],
+      serviceHistory: [],
+      probation: [],
+      regularisation: [],
+      technical: [],
+      education: [],
+      test: [],
+      user: {
+          roles: [{
+              code: "EMPLOYEE",
+              name: "EMPLOYEE",
+              tenantId: localStorage.getItem('tenantId')
+          }],
+          userName: "",
+          name: "",
+          gender: "",
+          mobileNumber: "",
+          emailId: "",
+          altContactNumber: "",
+          pan: "",
+          aadhaarNumber: "",
+          permanentAddress: "",
+          permanentCity: "",
+          permanentPinCode: "",
+          correspondenceCity: "",
+          correspondencePinCode: "",
+          correspondenceAddress: "",
+          active: true,
+          dob: "",
+          locale: "",
+          signature: "",
+          fatherOrHusbandName: "",
+          bloodGroup: null,
+          identificationMark: "",
+          photo: "",
+          type: "EMPLOYEE",
+          password: "12345678",
+          tenantId: localStorage.getItem('tenantId')
+      },
+      tenantId: localStorage.getItem('tenantId')
+    };
+
 const assignmentsDefState = {
     fromDate: "",
     toDate: "",
@@ -481,6 +560,8 @@ class Employee extends Component {
       open: false,
       editIndex: '',
       isModalInvalid: true,
+      autoCode: false,
+      autoUName: false,
       modal: '',
 			employeetypes: [],
 			statuses: [],
@@ -1536,6 +1617,30 @@ class Employee extends Component {
       }
     })
   }
+
+  setInitDat = (empObj, isUpdate) => {
+    let self = this;
+    Api.commonApiPost("hr-masters/hrconfigurations/_search", {}).then(function(res){
+        var autoCode = false, autoUName = false;
+        if(res && res["HRConfiguration"] && (res["HRConfiguration"]["Autogenerate_employeecode"][0] == "N" || typeof(res["HRConfiguration"]["Autogenerate_employeecode"]) == "undefined")) {} else {
+            autoCode = true;
+        }
+
+        if(res && res["HRConfiguration"] && (res["HRConfiguration"]["Autogenerate_username"][0] == "N" || typeof(res["HRConfiguration"]["Autogenerate_username"]) == "undefined")) {} else {
+            autoUName = true;
+        }
+
+        self.setState({
+            autoCode,
+            autoUName
+        })
+
+        self.props.setForm(empObj, isUpdate, autoCode, autoUName);
+    }, function(err) {
+        self.props.setForm(empObj, isUpdate, false, false);
+    })
+  }
+
 	componentDidMount() {
     	let self = this;
         self.setState({
@@ -1546,7 +1651,15 @@ class Employee extends Component {
               for(var i=0; i<res.Employee.assignments.length; i++) {
                 res.Employee.assignments[i].fromServer = true;
               }
-              self.props.setForm(res.Employee, true);
+
+              if(res.Employee && res.Employee.user && res.Employee.user.dob && res.Employee.user.dob.indexOf("-") > -1) {
+                var dobArr = res.Employee.user.dob.split("-");
+                res.Employee.user.dob = dobArr[2] + "/" + dobArr[1] + "/" + dobArr[0];
+              }
+
+              self.setInitDat(res.Employee, self.state.screenType != "view" ? true : false);
+
+              
               if(["view", "update"].indexOf(self.state.screenType) > -1 && res.Employee.bank) {
                 self.loadBranches(res.Employee.bank);
               }
@@ -1554,77 +1667,7 @@ class Employee extends Component {
 
             })
           } else {
-            self.props.setForm({
-              code: "",
-              dateOfAppointment: "",
-              dateOfJoining: "",
-              dateOfRetirement: "",
-              employeeStatus: "",
-              recruitmentMode: "",
-              recruitmentType: "",
-              recruitmentQuota: "",
-              retirementAge: "",
-              dateOfResignation: "",
-              dateOfTermination: "",
-              employeeType: "",
-              assignments: [],
-              jurisdictions: [],
-              motherTongue: "",
-              religion: "",
-              community: "",
-              category: "",
-              physicallyDisabled: false,
-              medicalReportProduced: false,
-              languagesKnown: [],
-              maritalStatus: "",
-              passportNo: null,
-              gpfNo: null,
-              bank: "",
-              bankBranch: "",
-              bankAccount: "",
-              group: "",
-              placeOfBirth: "",
-              documents: [],
-              serviceHistory: [],
-              probation: [],
-              regularisation: [],
-              technical: [],
-              education: [],
-              test: [],
-              user: {
-                  roles: [{
-                      code: "EMPLOYEE",
-                      name: "EMPLOYEE",
-                      tenantId: localStorage.getItem('tenantId')
-                  }],
-                  userName: "",
-                  name: "",
-                  gender: "",
-                  mobileNumber: "",
-                  emailId: "",
-                  altContactNumber: "",
-                  pan: "",
-                  aadhaarNumber: "",
-                  permanentAddress: "",
-                  permanentCity: "",
-                  permanentPinCode: "",
-                  correspondenceCity: "",
-                  correspondencePinCode: "",
-                  correspondenceAddress: "",
-                  active: true,
-                  dob: "",
-                  locale: "",
-                  signature: "",
-                  fatherOrHusbandName: "",
-                  bloodGroup: null,
-                  identificationMark: "",
-                  photo: "",
-                  type: "EMPLOYEE",
-                  password: "12345678",
-                  tenantId: localStorage.getItem('tenantId')
-              },
-              tenantId: localStorage.getItem('tenantId')
-            });
+            self.setInitDat(defaultEmployeeObject, false);
           }
         });
 
@@ -1873,8 +1916,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.name")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.name : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.name")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.name : "-"}</label></span>
                             )
                          :
                             <TextField floatingLabelText={translate("employee.Employee.fields.User.name")+ "*"} errorText={fieldErrors["user"] && fieldErrors["user"]["name"]} value={Employee.user ? Employee.user.name : ""} onChange={(e) => {
@@ -1885,20 +1928,20 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	{self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.code")}</span></label><br/>
-                                <label>{Employee.code}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.code")}</span></label><br/>
+                                <label>{Employee.code || "-"}</label></span>
                             )
                          :
                             <TextField floatingLabelText={translate("employee.Employee.fields.code")+ "*"} errorText={fieldErrors["code"]} value={Employee.code} onChange={(e) => {
                       		    handleChange(e, "code", true, '')
-                      	    }} disabled={self.state.screenType == 'update'}/>
+                      	    }} disabled={self.state.screenType == 'update' || self.state.autoCode}/>
                         }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.employeeType")}</span></label><br/>
-                                <label>{getNameById(self.state.employeetypes, Employee.employeeType)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.employeeType")}</span></label><br/>
+                                <label>{getNameById(self.state.employeetypes, Employee.employeeType) || "-"}</label></span>
                             )
                          :
 
@@ -1918,8 +1961,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.employeeStatus")}</span></label><br/>
-                                <label>{getNameById(self.state.statuses, Employee.employeeStatus)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.employeeStatus")}</span></label><br/>
+                                <label>{getNameById(self.state.statuses, Employee.employeeStatus) || "-"}</label></span>
                             )
                          :
 
@@ -1935,12 +1978,13 @@ class Employee extends Component {
                         }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.group")}</span></label><br/>
-                                <label>{getNameById(self.state.groups, Employee.group)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.group")}</span></label><br/>
+                                <label>{getNameById(self.state.groups, Employee.group) || "-"}</label></span>
                             )
                          :
 
@@ -1958,22 +2002,22 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfBirth")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.dob : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfBirth")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.dob : "-"}</label></span>
                             )
                          :
 
                          <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfBirth") + " *"} errorText={fieldErrors["user"] && fieldErrors["user"]["dob"]} value={Employee.user ? Employee.user.dob : ""} onChange={(e) => {
                             handleChangeNextLevel(e, "user", "dob", true, datePat)
-                        }} disabled={self.state.screenType == 'update'}/>
+                        }}/>
                       	
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	{self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.gender")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.gender : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.gender")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.gender : "-"}</label></span>
                             )
                          :
                             <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.gender")} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
@@ -1990,8 +2034,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	{self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.maritalStatus")}</span></label><br/>
-                                <label>{Employee.maritalStatus}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.maritalStatus")}</span></label><br/>
+                                <label>{Employee.maritalStatus || "-"}</label></span>
                             )
                          :
                             <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.maritalStatus") +"*"} errorText={fieldErrors["maritalStatus"]} value={Employee.maritalStatus} onChange={(event, key, value) => {
@@ -2006,24 +2050,25 @@ class Employee extends Component {
                     }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	{self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.userName")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.userName : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.userName")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.userName : "-"}</label></span>
                             )
                          :
 
                         <TextField floatingLabelText={translate("employee.Employee.fields.User.userName")+" *"} errorText={fieldErrors["user"] && fieldErrors["user"]["userName"]} errorText={fieldErrors["user.userName"]} value={Employee.user ? Employee.user.userName : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, "user", "userName", true, '')
-                      	}} disabled={self.state.screenType == 'update'}/>
+                      	}} disabled={self.state.screenType == 'update' || self.state.autoUName}/>
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.fields.isUserActive")}?</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.fields.isUserActive")}?</span></label><br/>
                                 <label>{Employee.user && [true, "true"].indexOf(Employee.user.active) > -1 ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2") }</label></span>
                             )
                          :
@@ -2046,8 +2091,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.mobileNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.mobileNumber : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.mobileNumber")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.mobileNumber : "-"}</label></span>
                             )
                          :
 
@@ -2060,8 +2105,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.email")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.emailId : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.email")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.emailId : "-"}</label></span>
                             )
                          :
 
@@ -2071,12 +2116,13 @@ class Employee extends Component {
                       }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.fatherSpouseName")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.fatherOrHusbandName : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.fatherSpouseName")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.fatherOrHusbandName : "-"}</label></span>
                             )
                          :
 
@@ -2088,8 +2134,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.birth")}</span></label><br/>
-                                <label>{Employee.placeOfBirth}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.birth")}</span></label><br/>
+                                <label>{Employee.placeOfBirth || "-"}</label></span>
                             )
                          :
 
@@ -2101,8 +2147,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.bloodGroup")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.bloodGroup : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.bloodGroup")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.bloodGroup : "-"}</label></span>
                             )
                          :
 
@@ -2120,8 +2166,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.motherTongue")}</span></label><br/>
-                                <label>{getNameById(self.state.languages, Employee.motherTongue)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.motherTongue")}</span></label><br/>
+                                <label>{getNameById(self.state.languages, Employee.motherTongue) || "-"}</label></span>
                             )
                          :
 
@@ -2137,12 +2183,13 @@ class Employee extends Component {
                     }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.religion")}</span></label><br/>
-                                <label>{getNameById(self.state.religions, Employee.religion)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.religion")}</span></label><br/>
+                                <label>{getNameById(self.state.religions, Employee.religion) || "-"}</label></span>
                             )
                          :
 
@@ -2160,8 +2207,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.community")}</span></label><br/>
-                                <label>{getNameById(self.state.communities, Employee.community)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.community")}</span></label><br/>
+                                <label>{getNameById(self.state.communities, Employee.community) || "-"}</label></span>
                             )
                          :
 
@@ -2179,8 +2226,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.category")}</span></label><br/>
-                                <label>{getNameById(self.state.categories, Employee.category)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.category")}</span></label><br/>
+                                <label>{getNameById(self.state.categories, Employee.category) || "-"}</label></span>
                             )
                          :
 
@@ -2198,7 +2245,7 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.physicallyDisabled")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.physicallyDisabled")}</span></label><br/>
                                 <label>{translate("employee.Employee.fields.physicallyDisabled") ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</label></span>
                             )
                          :
@@ -2219,11 +2266,12 @@ class Employee extends Component {
                             }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.medicalReportProduced")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.medicalReportProduced")}</span></label><br/>
                                 <label>{Employee.medicalReportProduced ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</label></span>
                             )
                          :
@@ -2246,8 +2294,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.identification")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.identificationMark : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.identification")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.identificationMark : "-"}</label></span>
                             )
                          :
 
@@ -2259,8 +2307,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.pan")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.pan : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.pan")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.pan : "-"}</label></span>
                             )
                          :
 
@@ -2272,8 +2320,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.passportNo")}</span></label><br/>
-                                <label>{Employee.passportNo}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.passportNo")}</span></label><br/>
+                                <label>{Employee.passportNo || "-"}</label></span>
                             )
                          :
 
@@ -2283,12 +2331,13 @@ class Employee extends Component {
                       }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.gpfNo")}</span></label><br/>
-                                <label>{Employee.gpfNo}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.gpfNo")}</span></label><br/>
+                                <label>{Employee.gpfNo || "-"}</label></span>
                             )
                          :
 
@@ -2300,8 +2349,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.aadhaarNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.aadhaarNumber : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.aadhaarNumber")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.aadhaarNumber : "-"}</label></span>
                             )
                          :
 
@@ -2314,8 +2363,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.bank")}</span></label><br/>
-                                <label>{getNameById(self.state.banks, Employee.bank)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.bank")}</span></label><br/>
+                                <label>{getNameById(self.state.banks, Employee.bank) || "-"}</label></span>
                             )
                          :
 
@@ -2334,8 +2383,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.bankBranch")}</span></label><br/>
-                                <label>{getNameById(self.state.bankBranches, Employee.bankBranch)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.bankBranch")}</span></label><br/>
+                                <label>{getNameById(self.state.bankBranches, Employee.bankBranch) || "-"}</label></span>
                             )
                          :
 
@@ -2351,11 +2400,12 @@ class Employee extends Component {
                     }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.bankAccount")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.bankAccount")}</span></label><br/>
                                 <label>{Employee.bankAccount}</label></span>
                             )
                          :
@@ -2368,12 +2418,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.mobileNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.altContactNumber : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.mobileNumber")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.altContactNumber : "-"}</label></span>
                             )
                          :
 
-                      	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["altContactNumber"]} value={Employee.user ? Employee.user.altContactNumber : ""} onChange={(e) => {
+                      	<TextField maxLength="10" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["altContactNumber"]} value={Employee.user ? Employee.user.altContactNumber : ""} onChange={(e) => {
                       		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                             handleChangeNextLevel(e, 'user', 'altContactNumber', false, /^\d{10}$/)
                       	}}/>
@@ -2382,12 +2432,13 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}></Col>
                       <Col xs={12} sm={4} md={3} lg={3}></Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.permanentAddress")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.permanentAddress : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.permanentAddress")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.permanentAddress : "-"}</label></span>
                             )
                          :
 
@@ -2399,8 +2450,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.city")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.permanentCity : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.city")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.permanentCity : "-"}</label></span>
                             )
                          :
 
@@ -2412,8 +2463,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.parmanentPinNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.permanentPinCode : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.parmanentPinNumber")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.permanentPinCode : "-"}</label></span>
                             )
                          :
 
@@ -2424,12 +2475,13 @@ class Employee extends Component {
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}></Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.correspondenceAddress")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.correspondenceAddress : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.correspondenceAddress")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.correspondenceAddress : "-"}</label></span>
                             )
                          :
 
@@ -2441,8 +2493,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.city")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.correspondenceCity : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.city")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.correspondenceCity : "-"}</label></span>
                             )
                          :
 
@@ -2454,7 +2506,7 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.correspondencePinNumber")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.correspondencePinNumber")}</span></label><br/>
                                 <label>{Employee.user ? Employee.user.correspondencePinCode : ""}</label></span>
                             )
                          :
@@ -2466,12 +2518,13 @@ class Employee extends Component {
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}></Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.languagesKnown")}</span></label><br/>
-                                <label>{Employee.languagesKnown}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.languagesKnown")}</span></label><br/>
+                                <label>{Employee.languagesKnown || "-"}</label></span>
                             )
                          :
 
@@ -2489,8 +2542,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.recruitmentMode")}</span></label><br/>
-                                <label>{Employee.recruitmentMode}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.recruitmentMode")}</span></label><br/>
+                                <label>{Employee.recruitmentMode || "-"}</label></span>
                             )
                          :
 
@@ -2508,8 +2561,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.recruitmentType")}</span></label><br/>
-                                <label>{Employee.recruitmentType}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.recruitmentType")}</span></label><br/>
+                                <label>{Employee.recruitmentType || "-"}</label></span>
                             )
                          :
 
@@ -2527,8 +2580,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.recruitmentQuota")}</span></label><br/>
-                                <label>{Employee.recruitmentQuota}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.recruitmentQuota")}</span></label><br/>
+                                <label>{Employee.recruitmentQuota || "-"}</label></span>
                             )
                          :
 
@@ -2544,11 +2597,12 @@ class Employee extends Component {
                     }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfAppointment")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfAppointment")}</span></label><br/>
                                 <label>{Employee.dateOfAppointment}</label></span>
                             )
                          :
@@ -2561,8 +2615,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfJoining")}</span></label><br/>
-                                <label>{Employee.dateOfJoining}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfJoining")}</span></label><br/>
+                                <label>{Employee.dateOfJoining || "-"}</label></span>
                             )
                          :
 
@@ -2574,8 +2628,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.retirementAge")}</span></label><br/>
-                                <label>{Employee.retirementAge}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.retirementAge")}</span></label><br/>
+                                <label>{Employee.retirementAge || "-"}</label></span>
                             )
                          :
 
@@ -2587,8 +2641,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfRetirement")}</span></label><br/>
-                                <label>{Employee.dateOfRetirement}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfRetirement")}</span></label><br/>
+                                <label>{Employee.dateOfRetirement || "-"}</label></span>
                             )
                          :
 
@@ -2598,12 +2652,13 @@ class Employee extends Component {
                       }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfTermination")}</span></label><br/>
-                                <label>{Employee.dateOfTermination}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfTermination")}</span></label><br/>
+                                <label>{Employee.dateOfTermination || "-"}</label></span>
                             )
                          :
 
@@ -2615,8 +2670,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfResignation")}</span></label><br/>
-                                <label>{Employee.dateOfResignation}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfResignation")}</span></label><br/>
+                                <label>{Employee.dateOfResignation || "-"}</label></span>
                             )
                          :
 
@@ -2634,6 +2689,7 @@ class Employee extends Component {
                       	<input type="file"/>
                       </Col> : ""}
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                    	  {self.state.screenType != "view" ? <Col xs={12} sm={4} md={3} lg={3}>
                         <label style={{marginTop:"20px"}}>{translate("employee.Employee.fields.OtherAttachments")}</label>
@@ -3117,7 +3173,8 @@ class Employee extends Component {
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, (self.state.screenType == "update" ? "Employee updated successfully." : "Employee created successfully."));
             setTimeout(function() {
-                self.props.setRoute("/empSearch/view");
+                self.props.setRoute("/employee/view/" + res.Employee.id);
+                window.location.reload();
             }, 1500);
           }, function(err) {
             self.props.setLoadingStatus('hide');
@@ -3202,8 +3259,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 
-    setForm: (data, isUpdate) => {
+    setForm: (data, isUpdate, codeAuto, unameAuto) => {
         var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob'];
+        if(codeAuto) requiredList.splice(1, 1);
+        if(unameAuto) requiredList.splice(6, 1);
         dispatch({
             type: "SET_FORM",
             data,

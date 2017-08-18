@@ -160,8 +160,8 @@ public class WaterConnectionService {
 		UserResponseInfo userResponse = null;
         Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
         userSearchRequestInfo.put("userName", waterConnReq.getConnection().getConnectionOwner().getMobileNumber());
-        userSearchRequestInfo.put("type", waterConnReq.getConnection().getConnectionOwner().getType());
-        userSearchRequestInfo.put("tenantId", waterConnReq.getConnection().getConnectionOwner().getTenantId());
+        userSearchRequestInfo.put("type", roleName);
+        userSearchRequestInfo.put("tenantId", waterConnReq.getConnection().getTenantId());
         userSearchRequestInfo.put("RequestInfo", waterConnReq.getRequestInfo());
         
         logger.info("UserUtil searchUrl --username-->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "

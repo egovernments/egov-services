@@ -12,7 +12,8 @@ public enum AttributeDataType {
     MULTI_VALUE_LIST("multivaluelist"),
     SINGLE_FILE("file"),
     MULTI_FILE("multifile"),
-    LONG("long");
+    LONG("long"),
+	TEXTAREA("textarea");
 
     @Getter
     private String name;

@@ -5,6 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
 		"objectName": "licenses",
+		
 		"groups": [
 			{
 				"label": "tl.create.licenses.groups.TradeDetailsTab",
@@ -297,7 +298,7 @@ var dat = {
               "name": "tradeValueForUOM",
               "jsonPath": "licenses[0].quantity",
               "label": "tl.create.licenses.groups.TradeDetails.tradeValueForUOM",
-              "pattern": "",
+              "pattern": "^[0-9]+(\.[0-9]{1,2})?$",
               "type": "number",
               "isRequired": true,
               "isDisabled": false,
@@ -855,7 +856,7 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "TradeValuefortheUOM",
+              "name": "TradeValueforUOM",
               "jsonPath": "licenses[0].quantity",
               "label": "tl.view.licenses.groups.TradeValuefortheUOM",
               "pattern": "",

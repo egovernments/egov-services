@@ -135,7 +135,7 @@ class ShowField extends Component {
         // console.log(queryString);
         // console.log(splitArray[0].split("=")[1]);
 
-        let response=Api.commonApiPost(match.params.moduleName+"/report/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
+        let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
         {
           // console.log(response)
           setReportResult(response)

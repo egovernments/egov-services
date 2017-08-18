@@ -507,7 +507,7 @@ class Report extends Component {
                         <th>{translate("collection.create.receiptNumber")}</th>
                         <th>{translate("collection.create.consumerCode")}</th>
                         {/*<th>{translate("collection.search.period")}</th>*/}
-                        {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && <th>{translate("collection.search.arrears")}</th>}
+                        {getGrandTotal("ARREAR_AMOUNT",`formData.Receipt[0].Bill[0].billDetails`)>0 && <th>{translate("collection.search.arrears")}</th>}
                         {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.current")}</th>}
                         {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.interest")}</th>}
                         {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.rebate")}</th>}

@@ -1574,7 +1574,7 @@ public class PropertyMasterRepository {
 	 * @return {@link String} String value
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString();
+		return object == null ? null : object.toString();
 	}
 
 	/**

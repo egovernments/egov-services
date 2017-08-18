@@ -69,11 +69,11 @@ public class PgrMasterConstants {
     public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
     public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
 
-    public static final String SERVICEGROUP_NAME_MANDATORY_CODE = "pgr.0002";
+    public static final String SERVICEGROUP_NAME_MANDATORY_CODE = "pgr.0055";
     public static final String SERVICEGROUP_NAME_MANADATORY_FIELD_NAME = "name";
-    public static final String SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE = "Service Group is required";
+    public static final String SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE = "Service Group name is required";
 
-    public static final String SERVICEGROUP_CODE_MANDATORY_CODE = "pgr.0003";
+    public static final String SERVICEGROUP_CODE_MANDATORY_CODE = "pgr.0056";
     public static final String SERVICEGROUP_CODE_MANADATORY_FIELD_NAME = "code";
     public static final String SERVICEGROUP_CODE_MANADATORY_ERROR_MESSAGE = "Service Group code is required";
 
@@ -170,9 +170,13 @@ public class PgrMasterConstants {
     public static final String TOPOSITION_MANADATORY_ERROR_MESSAGE = "To Position is required.";
     public static final String TOPOSITION_MANADATORY_FIELD_NAME = "toPosition";
 
-    public static final String SERVICEGROUP_CODENAME_UNIQUE_CODE = "pgr.0015";
-    public static final String SERVICEGROUP_CODENAME_ERROR_MESSAGE = "Service Group Code or Name already exists";
-    public static final String SERVICEGROUP_CODENAME_FIELD_NAME = "name";
+    public static final String SERVICEGROUP_CODE_UNIQUE_CODE = "pgr.0058";
+    public static final String SERVICEGROUP_CODE_ERROR_MESSAGE = "Service Group Code  already exists";
+    public static final String SERVICEGROUP_CODE_FIELD_NAME = "name";
+
+    public static final String SERVICEGROUP_NAME_UNIQUE_CODE = "pgr.0059";
+    public static final String SERVICEGROUP_NAME_ERROR_MESSAGE = "Service Group Name already exists";
+    public static final String SERVICEGROUP_NAME_FIELD_NAME = "name";
 
     public static final String GRIEVANCETYPE_NAME_UNIQUE_CODE = "pgr.0027";
     public static final String GRIEVANCETYPE_NAME_UNIQUE_FIELD_NAME = "serviceName";

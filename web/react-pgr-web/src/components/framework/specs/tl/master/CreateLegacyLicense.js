@@ -5,6 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
 		"objectName": "licenses",
+		
 		"groups": [
 			{
 				"label": "tl.create.licenses.groups.TradeDetailsTab",
@@ -855,7 +856,7 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "TradeValuefortheUOM",
+              "name": "TradeValueforUOM",
               "jsonPath": "licenses[0].quantity",
               "label": "tl.view.licenses.groups.TradeValuefortheUOM",
               "pattern": "",

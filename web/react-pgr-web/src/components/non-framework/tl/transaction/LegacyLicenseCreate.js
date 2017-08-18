@@ -878,6 +878,7 @@ console.log(e.target.value);
 
     return (
       <div className="Report">
+      <h3 style={{"textAlign": "center"}}>Create Legacy Trade License</h3>
         <form onSubmit={(e) => {
           create(e)
         }}>

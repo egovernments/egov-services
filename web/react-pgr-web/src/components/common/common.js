@@ -281,7 +281,7 @@ var localization_EN_Data = {
   "pt.create.groups.propertyAddress.fields.readyReckoner": "Ready Reckoner",
   "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": "Is Correspondance Address Different From Address",
   "pt.create.groups.propertyAddress.fields.address1": "Address 1",
-  
+
   "pt.create.groups.assessmentDetails.fields.creationReason":"Assessment details",
   "pt.create.groups.assessmentDetails.fields.creationReason": "Reason For Creation",
   "pt.create.groups.assessmentDetails.fields.parentUpicNo": "Parent UPIC No.",
@@ -695,7 +695,7 @@ var localization_EN_Data = {
   "tl.create.licenses.groups.TradeDetails.TradeCategory": "Trade Category",
   "tl.create.licenses.groups.TradeDetails.TradeSubCategory": "Trade Sub-Category",
   "tl.create.licenses.groups.TradeDetails.UOM": "UOM",
-  "tl.create.licenses.groups.TradeDetails.TradeAreaPremises": "Trade Area/Weight of Premises (Sq.ft/Tons)",
+  "tl.create.licenses.groups.TradeDetails.tradeValueForUOM": "Trade Value for the UOM",
   "tl.create.licenses.groups.validity": "Validity",
   "tl.create.licenses.groups.TradeDetails.Remarks": "Remarks",
   "tl.create.licenses.groups.TradeDetails.TradeCommencementDate": "Trade Commencement Date",
@@ -756,7 +756,7 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.TradeCategory": "Trade Category",
   "tl.view.licenses.groups.TradeSubCategory": "Trade Sub-Category",
   "tl.view.licenses.groups.UOM": "UOM",
-  "tl.view.licenses.groups.TradeAreaPremises": "Trade Area Premises",
+  "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
   "tl.view.licenses.groups.validity": "Validity",
   "tl.view.licenses.groups.Remarks": "Remarks",
   "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date",

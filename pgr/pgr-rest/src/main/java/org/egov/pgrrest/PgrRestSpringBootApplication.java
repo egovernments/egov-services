@@ -23,6 +23,7 @@ import org.egov.pgrrest.read.domain.service.validator.IntegerAttributeValidator;
 import org.egov.pgrrest.read.domain.service.validator.LongAttributeValidator;
 import org.egov.pgrrest.read.domain.service.validator.MandatoryAttributeValidator;
 import org.egov.pgrrest.read.domain.service.validator.SingleValueAttributeValidator;
+import org.egov.pgrrest.read.domain.service.validator.TextareaAttributeValidator;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;
@@ -158,7 +159,8 @@ public class PgrRestSpringBootApplication {
             new DateAttributeValidator(),
             new IntegerAttributeValidator(),
             new DoubleAttributeValidator(),
-            new LongAttributeValidator()
+            new LongAttributeValidator(),
+            new TextareaAttributeValidator()
         );
     }
 

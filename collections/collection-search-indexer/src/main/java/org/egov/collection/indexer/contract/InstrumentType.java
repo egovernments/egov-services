@@ -39,27 +39,46 @@
  */
 package org.egov.collection.indexer.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.validator.constraints.NotBlank;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-public class Receipt {
+public class InstrumentType {
 
-    private String tenantId;
+	/*
+	 * id is the unique reference to instrument type entered in the system.
+	 */
+	private String id;
 
-    private String instrumentHeader;
+	/*
+	 * type specifies the mode/type of transaction that can be made - i.e
+	 * Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
+	 */
+	@NotNull
+	@NotBlank
+	@Size(max = 50, min = 2)
+	private String name;
 
-    @JsonProperty("Bill")
-    private List<Bill> bill;
+	/*
+	 * description specifies details of the instrument type . For example type
+	 * DD description may be Demand Draft
+	 */
 
-    private Instrument instrument;
+	@Size(max = 100)
+	private String description;
+
+	/*
+	 * active specifies whether the type is active for transacting.
+	 */
+	@NotNull
+	private Boolean active;
+
 
 }

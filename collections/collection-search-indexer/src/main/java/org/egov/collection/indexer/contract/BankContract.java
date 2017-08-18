@@ -31,7 +31,7 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any user of the program
+ *         3) This license does not grant any rights to any Long of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
@@ -40,26 +40,51 @@
 package org.egov.collection.indexer.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
-public class Receipt {
+@NoArgsConstructor
+public class BankContract {
 
-    private String tenantId;
+	private Long id;
 
-    private String instrumentHeader;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private List<Long> ids = new ArrayList<Long>();
 
-    @JsonProperty("Bill")
-    private List<Bill> bill;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String code;
 
-    private Instrument instrument;
+	@NotNull
+	@Length(max = 100, min = 2)
+	private String name;
+
+	@Length(max = 250)
+	private String description;
+
+	@NotNull
+	private Boolean active;
+	// is this required?
+
+	@Length(max = 50)
+	private String type;
+
+	public Long getId() {
+		return id;
+	}
+
+	public BankContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 
 }

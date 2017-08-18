@@ -127,7 +127,8 @@ public class BusinessDetailsRepository {
 
         log.info("Update Business Details Repository::" + businessDetails);
         final String businessDetailsInsertQuery = businessDetailsQueryBuilder.updateBusinessDetailsQuery();
-        final String accountDetailsInsertQuery = businessDetailsQueryBuilder.updateBusinessAccountDetailsQuery();
+        final String accountDetailsDeleteQuery = businessDetailsQueryBuilder.deleteBusinessAccountDetails();
+        final String accountDetailsInsertQuery = businessDetailsQueryBuilder.insertBusinessAccountDetailsQuery();
 
         List<Map<String, Object>> businessDetailsBatchValues = new ArrayList<>(businessDetails.size());
         List<Map<String, Object>> accountDetailsBatchValues = new ArrayList<>(businessDetails.size());
@@ -144,13 +145,14 @@ public class BusinessDetailsRepository {
                     .addValue("lastModifiedBy", businessdetail.getCreatedBy()).addValue("lastModifiedDate", new Date().getTime())
                     .getValues());
             for(BusinessAccountDetails businessAccountDetails : businessdetail.getAccountDetails()) {
-                accountDetailsBatchValues.add(new MapSqlParameterSource().addValue("id", businessAccountDetails.getId()).addValue("businessDetails", businessAccountDetails.getId())
+                accountDetailsBatchValues.add(new MapSqlParameterSource().addValue("id", businessAccountDetails.getId()).addValue("businessDetails", businessdetail.getId())
                         .addValue("chartOfAccount", businessAccountDetails.getChartOfAccount()).addValue("amount", businessAccountDetails.getAmount())
                         .addValue("tenantId", businessAccountDetails.getTenantId()).getValues());
                 accountDetailsSize++;
             }
         }
         namedParameterJdbcTemplate.batchUpdate(businessDetailsInsertQuery, businessDetailsBatchValues.toArray(new Map[businessDetails.size()]));
+        namedParameterJdbcTemplate.batchUpdate(accountDetailsDeleteQuery, accountDetailsBatchValues.toArray(new Map[businessDetails.size()]));
         namedParameterJdbcTemplate.batchUpdate(accountDetailsInsertQuery, accountDetailsBatchValues.toArray(new Map[accountDetailsSize]));
     }
 

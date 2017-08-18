@@ -95,6 +95,7 @@ public class ServiceDefinitionService {
 		matchAttributeAndServiceCode(serviceDefinition);
 		ServiceDefinitionFieldLengthValidate(serviceDefinition);
 		valueDefLengthValidation(serviceDefinition);
+		valueDefinDataTypeValidation(serviceDefinition);
 		attributeLengthValidation(serviceDefinition);
 
 
@@ -192,6 +193,17 @@ public class ServiceDefinitionService {
 			validator.canValidate(valueDefinition))
 				.forEach(v -> v.validateUniqueConstratint(valueDefinition,serviceDefinition.getCode(),attributeDefinition.getCode(),serviceDefinition.getTenantId()));
 			});
+			});
+	}
+	
+	private void valueDefinDataTypeValidation(ServiceDefinition serviceDefinition) {
+		serviceDefinition.getAttributes().stream().forEach(attributeDefinition -> 
+	{			
+		
+		attributeValidate.stream().filter(validator -> 
+			validator.canValidate(attributeDefinition))
+				.forEach(v -> v.validateDataType(attributeDefinition));
+		
 			});
 	}
 	

@@ -796,7 +796,7 @@ public class PropertyServiceImpl implements PropertyService {
      * @return {@link String}
      */
     private String getString(Object object) {
-        return object == null ? "" : object.toString();
+        return object == null ? null: object.toString();
     }
 
     /**
@@ -885,9 +885,10 @@ public class PropertyServiceImpl implements PropertyService {
                 demandResponse = new DemandResponse();
                 demandResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true));
                 for(TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()){
-                    finalDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod, dbDateFormat);
-                    demandResponse.setDemands(finalDemandList);
+                    newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod, dbDateFormat);
+                    finalDemandList.addAll(newDemandList);
                 }
+                demandResponse.setDemands(finalDemandList);
             }
         }
         return demandResponse;

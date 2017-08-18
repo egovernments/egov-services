@@ -42,7 +42,7 @@ public class AttributeDefinition {
 
     /* field length validation*/
     public boolean isTenantIdLengthMatch(){
-        return (!tenantId.isEmpty() && (tenantId.length() > 0 && tenantId.length() <= 256));
+        return (!isEmpty(tenantId) && (tenantId.length() > 0 && tenantId.length() <= 256));
     }
     
     public boolean isCodeLengthMatch(){
@@ -60,13 +60,15 @@ public class AttributeDefinition {
     	return true;
     }
     
-   /* public boolean isValueList(){
-    	if(dataType != null)
-    	{
-    		return (dataType.equalsIgnoreCase("multivaluelist") || dataType.equalsIgnoreCase("singlevaluelist"));
+   public boolean isValueList(){
+    	if(!(dataType.equalsIgnoreCase("multivaluelist")|| dataType.equalsIgnoreCase("singlevaluelist")))
+	{
+    		if(!valueDefinitions.isEmpty())
+    		
+    		return true;
     	}
-    	return true;
-    }*/
+    	return false;
+    }
     
     public boolean isDescriptionLengthMatch(){
     	if(description != null)

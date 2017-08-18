@@ -31,6 +31,9 @@
          "agreementDate":null,
          "agreementNo":null,
          "isLegacy":false,
+         "validityYears":null,
+         "isPropertyOwner":false,
+         "licenseValidFromDate":null,
          "active":true,
          "expiryDate":null,
          "feeDetails":[  

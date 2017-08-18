@@ -1,5 +1,6 @@
 package org.egov.asset.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ public class AssetIndex {
 	private String assetCategoryparentName;
 	private Double assetCategoryDepreciationRate;
 	private String depreciationMethod;
+	private String assetCategoryVersion;
 
 	private String assetDetails;
 	private String modeOfAcquisition;
@@ -63,8 +65,11 @@ public class AssetIndex {
 
 	private Boolean enableYearWiseDepreciation;
 	private Double depreciationRate;
-
 	private String yearWiseDepreciation;
+	private BigDecimal grossValue;
+	private BigDecimal accumulatedDepreciation;
+	private Long assetReference;
+	private String version;
 
 	private String cityName;
 	private String localName;
@@ -78,6 +83,10 @@ public class AssetIndex {
 		assetId = asset.getId();
 		assetName = asset.getName();
 		assetCode = asset.getCode();
+		grossValue = asset.getGrossValue();
+		accumulatedDepreciation = asset.getAccumulatedDepreciation();
+		assetReference = asset.getAssetReference();
+		
 
 		final AssetCategory assetCategory = asset.getAssetCategory();
 		assetCategoryId = assetCategory.getId();

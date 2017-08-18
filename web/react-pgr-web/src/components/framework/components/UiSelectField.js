@@ -91,6 +91,7 @@ class UiSelectField extends Component {
 				return (
 
 						<SelectField
+							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}

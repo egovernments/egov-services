@@ -22,6 +22,7 @@ public class InstrumentTypeService {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
@@ -81,6 +82,27 @@ public class InstrumentTypeService {
 		return instrumentTypeRepository.update(instrumentTypes, requestInfo);
 
 	}
+	
+	@Transactional
+	public List<InstrumentType> delete(List<InstrumentType> instrumentTypes, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			validate(instrumentTypes, ACTION_DELETE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return instrumentTypeRepository.delete(instrumentTypes, requestInfo);
+
+	}
 
 	private BindingResult validate(List<InstrumentType> instrumenttypes, String method, BindingResult errors) {
 
@@ -110,6 +132,11 @@ public class InstrumentTypeService {
 		}
 		return errors;
 
+	}
+	
+	@Transactional
+	public InstrumentType delete(InstrumentType instrumentType) {
+		return instrumentTypeRepository.delete(instrumentType);
 	}
 
 	public List<InstrumentType> fetchRelated(List<InstrumentType> instrumenttypes) {

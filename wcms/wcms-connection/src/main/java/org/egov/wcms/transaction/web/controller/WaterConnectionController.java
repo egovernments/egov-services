@@ -121,7 +121,7 @@ public class WaterConnectionController {
          
         if(waterConnectionRequest.getConnection().getIsLegacy()){
             waterConnectionRequest.getConnection().setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
-            waterConnectionRequest.getConnection().setAcknowledgementNumber(waterConnectionRequest.getConnection().getConsumerNumber());
+            //waterConnectionRequest.getConnection().setAcknowledgementNumber(waterConnectionRequest.getConnection().getConsumerNumber());
         }else{
         waterConnectionRequest.getConnection().setAcknowledgementNumber(connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
         waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
@@ -132,6 +132,15 @@ public class WaterConnectionController {
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);
+        // Sending back the details to UI to paint the success page
+        if( waterConnectionRequest.getConnection().getProperty()!=null && 
+                waterConnectionRequest.getConnection().getPropertyIdentifier()!=null )
+            connection.setWithProperty(Boolean.TRUE);
+        else
+            connection.setWithProperty(Boolean.FALSE);
+        connection.setIsLegacy(waterConnectionRequest.getConnection().getIsLegacy());
+        connection.setConsumerNumber(waterConnectionRequest.getConnection().getConsumerNumber());
+        connection.setStatus(waterConnectionRequest.getConnection().getStatus());
         List<Connection> connectionList = new ArrayList<>();
         connectionList.add(connection);
         return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());

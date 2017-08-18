@@ -88,6 +88,23 @@ public class InstrumentTypeControllerTest {
 						.json(resources.readResponse("instrumenttype/instrumenttype_update_valid_response.json")));
 
 	}
+	
+	@Test
+	public void test_delete() throws IOException, Exception {
+
+		List<InstrumentType> instrumentTypes = getInstrumentTypes();
+		instrumentTypes.get(0).setId("1");
+
+		when(instrumentTypeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(instrumentTypes);
+
+		mockMvc.perform(post("/instrumenttypes/_delete")
+				.content(resources.readRequest("instrumenttype/instrumenttype_update_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
+						.json(resources.readResponse("instrumenttype/instrumenttype_update_valid_response.json")));
+
+	}
 
 	@Test
 	public void test_update_error() throws IOException, Exception {

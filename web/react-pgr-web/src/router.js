@@ -65,7 +65,7 @@ import ViewEditDocumentTypeApplicationType from './components/contents/wc/master
 import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
 
 import AddDemandWc from './components/contents/wc/master/addDemand';
-import ViewLegacy from './components/framework/view';
+import ViewLegacy from './components/non-framework/wc/viewLegacy';
 import AddDemand from './components/contents/propertyTax/master/addDemand';
 
 //Property tax
@@ -87,7 +87,7 @@ import DataEntry from './components/contents/propertyTax/master/DataEntry';
 import ViewProperty from './components/contents/propertyTax/master/viewProperty';
 import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
 import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
-
+import DemandAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_demand';
 
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 import Create from './components/framework/create';
@@ -212,17 +212,18 @@ const Main = () => {
 		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
 		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>
+		  <Route exact path={base+'/propertyTax/demand-acknowledgement'} component={DemandAcknowledgement}/>
 		  <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
         {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
-      <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate/:id?'} component={LegacyLicenseCreate}/>
+      <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
 
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
-      <Route exact path={base+'/legacyView/:moduleName/:master?/:id'} component={ViewLegacy}/>
+      <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
       <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
 
 

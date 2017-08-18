@@ -17,6 +17,13 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Api from '../../../api/api';
 import $ from "jquery";
 
+var styles = {
+    fontWeight: {
+        fontWeight: 500
+    }
+};
+
+const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
 const checkIfNoDup = function(employee, subObject) {
     if (employee["jurisdictions"].length === 0)
         return true;
@@ -410,6 +417,79 @@ const getBoundaryValues = function(allBoundariesList, boundary, self, ind) {
     }
 }
 
+
+const defaultEmployeeObject = {
+      code: "",
+      dateOfAppointment: "",
+      dateOfJoining: "",
+      dateOfRetirement: "",
+      employeeStatus: "",
+      recruitmentMode: "",
+      recruitmentType: "",
+      recruitmentQuota: "",
+      retirementAge: "",
+      dateOfResignation: "",
+      dateOfTermination: "",
+      employeeType: "",
+      assignments: [],
+      jurisdictions: [],
+      motherTongue: "",
+      religion: "",
+      community: "",
+      category: "",
+      physicallyDisabled: false,
+      medicalReportProduced: false,
+      languagesKnown: [],
+      maritalStatus: "",
+      passportNo: null,
+      gpfNo: null,
+      bank: "",
+      bankBranch: "",
+      bankAccount: "",
+      group: "",
+      placeOfBirth: "",
+      documents: [],
+      serviceHistory: [],
+      probation: [],
+      regularisation: [],
+      technical: [],
+      education: [],
+      test: [],
+      user: {
+          roles: [{
+              code: "EMPLOYEE",
+              name: "EMPLOYEE",
+              tenantId: localStorage.getItem('tenantId')
+          }],
+          userName: "",
+          name: "",
+          gender: "",
+          mobileNumber: "",
+          emailId: "",
+          altContactNumber: "",
+          pan: "",
+          aadhaarNumber: "",
+          permanentAddress: "",
+          permanentCity: "",
+          permanentPinCode: "",
+          correspondenceCity: "",
+          correspondencePinCode: "",
+          correspondenceAddress: "",
+          active: true,
+          dob: "",
+          locale: "",
+          signature: "",
+          fatherOrHusbandName: "",
+          bloodGroup: null,
+          identificationMark: "",
+          photo: "",
+          type: "EMPLOYEE",
+          password: "12345678",
+          tenantId: localStorage.getItem('tenantId')
+      },
+      tenantId: localStorage.getItem('tenantId')
+    };
+
 const assignmentsDefState = {
     fromDate: "",
     toDate: "",
@@ -479,6 +559,9 @@ class Employee extends Component {
 		this.state = {
       open: false,
       editIndex: '',
+      isModalInvalid: true,
+      autoCode: false,
+      autoUName: false,
       modal: '',
 			employeetypes: [],
 			statuses: [],
@@ -583,12 +666,42 @@ class Employee extends Component {
     })
   }
 
-  handleStateChange = (e, parent, key, isDate) => {
+  handleStateChange = (e, parent, key, isRequired, pattern) => {
     let self = this;
-    let val = e.target.value;
-    if(isDate) {
-      val = new Date(val);
-      val = ('0' + val.getDate()).slice(-2) + '/' + ('0' + (val.getMonth()+1)).slice(-2) + '/' + val.getFullYear();
+    let val = e.target.value, errorTxt = (isRequired && (typeof val === 'undefined' || val === "")) ? translate('ui.framework.required') : (pattern && val && !pattern.test(val) ? translate("ui.framework.patternMessage") : "");
+    let hasAllReqFields = true;
+    let allFields = Object.assign({}, self.state.subObject[parent]);
+    allFields[key] = val;
+    switch(self.state.modal) {
+        case 'assignment':
+            if(!allFields["fromDate"] || !allFields["toDate"] || !allFields["department"] || !allFields["designation"] || !allFields["position"] || (allFields["hod"] == true && !allFields["mainDepartments"]))
+                    hasAllReqFields = false;
+            break;
+        case 'jurisdiction':
+            if(!allFields["jurisdictionsType"] || !allFields["boundary"])
+                hasAllReqFields = false;
+            break;
+        case 'serviceDet':
+            if(!allFields["serviceInfo"] || !allFields["serviceFrom"])
+                hasAllReqFields = false;
+            break;
+        case 'probation':
+        case 'regular':
+            if(!allFields["designation"] || !allFields["declaredOn"] || !allFields["orderDate"])
+                hasAllReqFields = false;
+            break;
+        case 'edu':
+            if(!allFields["qualification"] || !allFields["yearOfPassing"])
+                hasAllReqFields = false;
+            break;
+        case 'tech':
+            if(!allFields["skill"])
+                hasAllReqFields = false;
+            break;
+        case 'dept':
+            if(!allFields["test"] || !allFields["yearOfPassing"])
+                hasAllReqFields = false;
+            break;
     }
     self.setState({
       subObject: {
@@ -596,6 +709,11 @@ class Employee extends Component {
           ...self.state.subObject[parent],
           [key]: val
         }
+      },
+      isModalInvalid: errorTxt || !hasAllReqFields,
+      errorText: {
+        ...self.state.errorText,
+        [parent + "." + key]: errorTxt
       }
     }, function() {
       self.vacantposition(parent);
@@ -1021,35 +1139,19 @@ class Employee extends Component {
                 </RadioButtonGroup>
               </div>
               <div className="col-md-6 col-xs-12">
-                <DatePicker
-                  errorText = {self.state.errorText["assignments.fromDate"]}
-                  formatDate={function(date) {
-                    date =new Date(date);
-                    return ('0' + date.getDate()).slice(-2) + '/'
-                              + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                              + date.getFullYear();
-                  }}
-                  floatingLabelText={translate("employee.Assignment.fields.fromDate")+" *"} hintText={translate("employee.Assignment.fields.fromDate")+" *"} value={self.getDate(subObject.assignments.fromDate)} onChange={(eve, date) => {
-                  self.handleStateChange({target:{value:date.getTime()}}, "assignments", "fromDate", true)
+                <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Assignment.fields.fromDate")+" *"} errorText={self.state.errorText["assignments.fromDate"]} value={subObject.assignments.fromDate} onChange={(e) => {
+                    self.handleStateChange(e, "assignments", "fromDate", true, datePat)
                 }}/>
               </div>
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <DatePicker
-                  errorText = {self.state.errorText["assignments.toDate"]}
-                  formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                  floatingLabelText={translate("employee.Assignment.fields.toDate")+" *"} hintText={translate("employee.Assignment.fields.toDate")+" *"} value={self.getDate(subObject.assignments.toDate)} onChange={(eve, date) => {
-                  self.handleStateChange({target:{value:date.getTime()}}, "assignments", "toDate", true)
+                <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Assignment.fields.toDate")+" *"} errorText={self.state.errorText["assignments.toDate"]} value={subObject.assignments.toDate} onChange={(e) => {
+                    self.handleStateChange(e, "assignments", "toDate", true, datePat)
                 }}/>
               </div>
               <div className="col-md-6 col-xs-12">
-                <SelectField
+                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                   errorText = {self.state.errorText["assignments.department"]}
                   floatingLabelText={translate("employee.Assignment.fields.department")+" *"} value={subObject.assignments.department} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "department")
@@ -1064,7 +1166,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <SelectField
+                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                   errorText = {self.state.errorText["assignments.designation"]}
                   floatingLabelText={translate("employee.Assignment.fields.designation")+"*"} value={subObject.assignments.designation} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "designation")
@@ -1102,7 +1204,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <SelectField floatingLabelText={translate("employee.Assignment.fields.grade")} value={subObject.assignments.grade} onChange={(event, key, value) => {
+                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.grade")} value={subObject.assignments.grade} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "grade")
                 }}>
                     {
@@ -1113,7 +1215,7 @@ class Employee extends Component {
                 </SelectField>
               </div>
               <div className="col-md-6 col-xs-12">
-                <SelectField floatingLabelText={translate("wc.create.groups.fields.Funtion")} value={subObject.assignments.function} onChange={(event, key, value) => {
+                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("wc.create.groups.fields.Funtion")} value={subObject.assignments.function} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "function")
                 }}>
                     {
@@ -1126,7 +1228,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <SelectField floatingLabelText={translate("employee.Assignment.fields.functionary")} value={subObject.assignments.functionary} onChange={(event, key, value) => {
+                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.functionary")} value={subObject.assignments.functionary} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "functionary")
                 }}>
                     {
@@ -1137,7 +1239,7 @@ class Employee extends Component {
                 </SelectField>
               </div>
               <div className="col-md-6 col-xs-12">
-                <SelectField floatingLabelText={translate("employee.Assignment.fields.fund")} value={subObject.assignments.fund} onChange={(event, key, value) => {
+                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.fund")} value={subObject.assignments.fund} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "fund")
                 }}>
                     {
@@ -1165,7 +1267,7 @@ class Employee extends Component {
                 </RadioButtonGroup>
               </div>
               <div className="col-md-6 col-xs-12">
-              {subObject.assignments.hod && <SelectField
+              {subObject.assignments.hod && <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                errorText = {self.state.errorText["assignments.mainDepartments"]}
                floatingLabelText={translate("employee.Assignment.fields.department")+" *"} multiple={true} value={subObject.assignments.mainDepartments} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "mainDepartments")
@@ -1196,7 +1298,7 @@ class Employee extends Component {
           <form>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <SelectField
+                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                  errorText = {self.state.errorText["jurisdictions.jurisdictionsType"]}
                  floatingLabelText={translate("employee.Employee.fields.jurisdictionsType")+"*"} value={subObject.jurisdictions.jurisdictionsType} onChange={(event, key, value) => {
                   self.loadBoundaries(value)
@@ -1210,7 +1312,7 @@ class Employee extends Component {
                 </SelectField>
               </div>
               <div className="col-md-6 col-xs-12">
-                <SelectField
+                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                   errorText = {self.state.errorText["jurisdictions.boundary"]}
                   floatingLabelText={translate("employee.Employee.fields.jurisdictionsList")+"*"} value={subObject.jurisdictions.boundary} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value: value}}, "jurisdictions", "boundary")
@@ -1237,16 +1339,8 @@ class Employee extends Component {
                 }}/>
               </div>
               <div className="col-md-6 col-xs-12">
-                <DatePicker
-                 errorText = {self.state.errorText["serviceHistory.serviceFrom"]}
-                 formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                floatingLabelText={translate("employee.ServiceHistory.fields.date")+"*"} hintText={translate("employee.ServiceHistory.fields.date")+"*"} value={self.getDate(subObject.serviceHistory.serviceFrom)} onChange={(eve, date) => {
-                  self.handleStateChange({target:{value:date.getTime()}}, "serviceHistory", "serviceFrom", true)
+                <TextField hintText="21/12/1993" floatingLabelText={translate("employee.ServiceHistory.fields.date")+"*"} errorText={self.state.errorText["serviceHistory.serviceFrom"]} value={subObject.serviceHistory.serviceFrom} onChange={(e) => {
+                    self.handleStateChange(e, "serviceHistory", "serviceFrom", true, datePat)
                 }}/>
               </div>
             </div>
@@ -1275,7 +1369,7 @@ class Employee extends Component {
             <form>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <SelectField
+                  <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                     errorText = {self.state.errorText["probation.designation"]}
                     floatingLabelText={translate("employee.Assignment.fields.designation")+" *"} value={subObject.probation.designation} onChange={(event, key, value) => {
                     self.handleStateChange({target:{value: value}}, "probation", "designation")
@@ -1288,17 +1382,9 @@ class Employee extends Component {
                   </SelectField>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <DatePicker
-                  errorText = {self.state.errorText["probation.declaredOn"]}
-                  formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                  floatingLabelText={translate("employee.Regularisation.fields.declaredOn")+" *"} hintText={translate("employee.Regularisation.fields.declaredOn")+" *"} value={self.getDate(subObject.probation.declaredOn)} onChange={(eve, date) => {
-                    self.handleStateChange({target:{value: date.getTime()}}, "probation", "declaredOn", true)
-                  }}/>
+                  <TextField hintText="21/12/1993" floatingLabelText={translate("employee.ServiceHistory.fields.date")+"*"} errorText={self.state.errorText["probation.declaredOn"]} value={subObject.probation.declaredOn} onChange={(e) => {
+                    self.handleStateChange(e, "probation", "declaredOn", true, datePat)
+                }}/>
                 </div>
               </div>
               <div className="row">
@@ -1308,16 +1394,9 @@ class Employee extends Component {
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <DatePicker
-                  formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                  floatingLabelText={translate("employee.Probation.fields.orderDate")+"*"} hintText={translate("employee.Probation.fields.orderDate")+"*" }value={self.getDate(subObject.probation.orderDate)} onChange={(eve, date) => {
-                    self.handleStateChange({target:{value:date.getTime()}}, "probation", "orderDate", true)
-                  }}/>
+                  <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Probation.fields.orderDate")+"*"} errorText={self.state.errorText["probation.orderDate"]} value={subObject.probation.orderDate} onChange={(e) => {
+                    self.handleStateChange(e, "probation", "orderDate", true, datePat)
+                }}/>
                 </div>
               </div>
               <div className="row">
@@ -1338,7 +1417,7 @@ class Employee extends Component {
             <form>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <SelectField
+                  <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                     errorText = {self.state.errorText["regularisation.designation"]}
                     floatingLabelText={translate("employee.Assignment.fields.designation")+" *"} value={subObject.regularisation.designation} onChange={(event, key, value) => {
                     self.handleStateChange({target:{value: value}}, "regularisation", "designation")
@@ -1351,17 +1430,9 @@ class Employee extends Component {
                   </SelectField>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <DatePicker
-                  errorText = {self.state.errorText["regularisation.declaredOn"]}
-                  formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                  floatingLabelText={translate("employee.Regularisation.fields.declaredOn")+" *"} hintText={translate("employee.Regularisation.fields.declaredOn")+" *"} value={self.getDate(subObject.regularisation.declaredOn)} onChange={(eve, date) => {
-                    self.handleStateChange({target:{value: date.getTime()}}, "regularisation", "declaredOn", true)
-                  }}/>
+                  <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Regularisation.fields.declaredOn")+"*"} errorText={self.state.errorText["regularisation.declaredOn"]} value={subObject.regularisation.declaredOn} onChange={(e) => {
+                    self.handleStateChange(e, "regularisation", "declaredOn", true, datePat)
+                }}/>
                 </div>
               </div>
               <div className="row">
@@ -1371,16 +1442,9 @@ class Employee extends Component {
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <DatePicker
-                  formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                  floatingLabelText={translate("employee.Regularisation.fields.orderDate")+" *"} hintText={translate("employee.Regularisation.fields.orderDate")+" *"} value={self.getDate(subObject.regularisation.orderDate)} onChange={(eve, date) => {
-                    self.handleStateChange({target:{value: date.getTime()}}, "regularisation", "orderDate", true)
-                  }}/>
+                  <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Regularisation.fields.orderDate")+" *"} errorText={self.state.errorText["regularisation.orderDate"]} value={subObject.regularisation.orderDate} onChange={(e) => {
+                    self.handleStateChange(e, "regularisation", "orderDate", true, datePat)
+                }}/>
                 </div>
               </div>
               <div className="row">
@@ -1417,7 +1481,9 @@ class Employee extends Component {
                 <div className="col-md-6 col-xs-12">
                   <TextField
                     errorText = {self.state.errorText["education.yearOfPassing"]}
-                    type="number" floatingLabelText={translate("employee.EducationalQualification.fields.yearOfPassing")+"*"} value={subObject.education.yearOfPassing} onChange={(e) => {
+                    maxLength="4"
+                    floatingLabelText={translate("employee.EducationalQualification.fields.yearOfPassing")+"*"} value={subObject.education.yearOfPassing} onChange={(e) => {
+                    if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, "education", "yearOfPassing")
                   }}/>
                 </div>
@@ -1454,7 +1520,8 @@ class Employee extends Component {
               </div>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <TextField type="number" floatingLabelText={translate("employee.TechnicalQualification.fields.yearOfPassing")} value={subObject.technical.yearOfPassing} onChange={(e) => {
+                  <TextField maxLength="4" floatingLabelText={translate("employee.TechnicalQualification.fields.yearOfPassing")} value={subObject.technical.yearOfPassing} onChange={(e) => {
+                    if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, "technical", "yearOfPassing")
                   }}/>
                 </div>
@@ -1486,7 +1553,8 @@ class Employee extends Component {
                 <div className="col-md-6 col-xs-12">
                   <TextField
                     errorText = {self.state.errorText["technical.skill"]}
-                    type="number" floatingLabelText={translate("employee.TechnicalQualification.fields.yearOfPassing")+"*"} value={subObject.test.yearOfPassing} onChange={(e) => {
+                    maxLength="4" floatingLabelText={translate("employee.TechnicalQualification.fields.yearOfPassing")+"*"} value={subObject.test.yearOfPassing} onChange={(e) => {
+                    if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, "test", "yearOfPassing")
                   }}/>
                 </div>
@@ -1531,6 +1599,8 @@ class Employee extends Component {
   setModalOpen = (type) => {
     this.setState({
       open: true,
+      isModalInvalid: true,
+      errorText: {},
       modal: type,
       boundaries: [],
       editIndex: '',
@@ -1547,6 +1617,30 @@ class Employee extends Component {
       }
     })
   }
+
+  setInitDat = (empObj, isUpdate) => {
+    let self = this;
+    Api.commonApiPost("hr-masters/hrconfigurations/_search", {}).then(function(res){
+        var autoCode = false, autoUName = false;
+        if(res && res["HRConfiguration"] && (res["HRConfiguration"]["Autogenerate_employeecode"][0] == "N" || typeof(res["HRConfiguration"]["Autogenerate_employeecode"]) == "undefined")) {} else {
+            autoCode = true;
+        }
+
+        if(res && res["HRConfiguration"] && (res["HRConfiguration"]["Autogenerate_username"][0] == "N" || typeof(res["HRConfiguration"]["Autogenerate_username"]) == "undefined")) {} else {
+            autoUName = true;
+        }
+
+        self.setState({
+            autoCode,
+            autoUName
+        })
+
+        self.props.setForm(empObj, isUpdate, autoCode, autoUName);
+    }, function(err) {
+        self.props.setForm(empObj, isUpdate, false, false);
+    })
+  }
+
 	componentDidMount() {
     	let self = this;
         self.setState({
@@ -1557,7 +1651,15 @@ class Employee extends Component {
               for(var i=0; i<res.Employee.assignments.length; i++) {
                 res.Employee.assignments[i].fromServer = true;
               }
-              self.props.setForm(res.Employee, true);
+
+              if(res.Employee && res.Employee.user && res.Employee.user.dob && res.Employee.user.dob.indexOf("-") > -1) {
+                var dobArr = res.Employee.user.dob.split("-");
+                res.Employee.user.dob = dobArr[2] + "/" + dobArr[1] + "/" + dobArr[0];
+              }
+
+              self.setInitDat(res.Employee, self.state.screenType != "view" ? true : false);
+
+              
               if(["view", "update"].indexOf(self.state.screenType) > -1 && res.Employee.bank) {
                 self.loadBranches(res.Employee.bank);
               }
@@ -1565,77 +1667,7 @@ class Employee extends Component {
 
             })
           } else {
-            self.props.setForm({
-              code: "",
-              dateOfAppointment: "",
-              dateOfJoining: "",
-              dateOfRetirement: "",
-              employeeStatus: "",
-              recruitmentMode: "",
-              recruitmentType: "",
-              recruitmentQuota: "",
-              retirementAge: "",
-              dateOfResignation: "",
-              dateOfTermination: "",
-              employeeType: "",
-              assignments: [],
-              jurisdictions: [],
-              motherTongue: "",
-              religion: "",
-              community: "",
-              category: "",
-              physicallyDisabled: false,
-              medicalReportProduced: false,
-              languagesKnown: [],
-              maritalStatus: "",
-              passportNo: null,
-              gpfNo: null,
-              bank: "",
-              bankBranch: "",
-              bankAccount: "",
-              group: "",
-              placeOfBirth: "",
-              documents: [],
-              serviceHistory: [],
-              probation: [],
-              regularisation: [],
-              technical: [],
-              education: [],
-              test: [],
-              user: {
-                  roles: [{
-                      code: "EMPLOYEE",
-                      name: "EMPLOYEE",
-                      tenantId: localStorage.getItem('tenantId')
-                  }],
-                  userName: "",
-                  name: "",
-                  gender: "",
-                  mobileNumber: "",
-                  emailId: "",
-                  altContactNumber: "",
-                  pan: "",
-                  aadhaarNumber: "",
-                  permanentAddress: "",
-                  permanentCity: "",
-                  permanentPinCode: "",
-                  correspondenceCity: "",
-                  correspondencePinCode: "",
-                  correspondenceAddress: "",
-                  active: true,
-                  dob: "",
-                  locale: "",
-                  signature: "",
-                  fatherOrHusbandName: "",
-                  bloodGroup: null,
-                  identificationMark: "",
-                  photo: "",
-                  type: "EMPLOYEE",
-                  password: "12345678",
-                  tenantId: localStorage.getItem('tenantId')
-              },
-              tenantId: localStorage.getItem('tenantId')
-            });
+            self.setInitDat(defaultEmployeeObject, false);
           }
         });
 
@@ -1884,8 +1916,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.name")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.name : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.name")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.name : "-"}</label></span>
                             )
                          :
                             <TextField floatingLabelText={translate("employee.Employee.fields.User.name")+ "*"} errorText={fieldErrors["user"] && fieldErrors["user"]["name"]} value={Employee.user ? Employee.user.name : ""} onChange={(e) => {
@@ -1896,25 +1928,26 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	{self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.code")}</span></label><br/>
-                                <label>{Employee.code}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.code")}</span></label><br/>
+                                <label>{Employee.code || "-"}</label></span>
                             )
                          :
                             <TextField floatingLabelText={translate("employee.Employee.fields.code")+ "*"} errorText={fieldErrors["code"]} value={Employee.code} onChange={(e) => {
                       		    handleChange(e, "code", true, '')
-                      	    }} disabled={self.state.screenType == 'update'}/>
+                      	    }} disabled={self.state.screenType == 'update' || self.state.autoCode}/>
                         }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.employeeType")}</span></label><br/>
-                                <label>{getNameById(self.state.employeetypes, Employee.employeeType)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.employeeType")}</span></label><br/>
+                                <label>{getNameById(self.state.employeetypes, Employee.employeeType) || "-"}</label></span>
                             )
                          :
 
-                          	<SelectField floatingLabelText={translate("employee.Employee.fields.employeeType") + " *"} errorText={fieldErrors["employeeType"]} value={Employee.employeeType} onChange={(event, key, value) => {
-                          		handleChange({target:{value:value}}, "employeeType", true, '')
+                            <div ref="myField">
+                          	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.employeeType") + " *"} errorText={fieldErrors["employeeType"]} value={Employee.employeeType} onChange={(event, key, value) => {
+                          		 handleChange({target:{value:value}}, "employeeType", true, '')
                           	}}>
                                 {
                                 	self.state.employeetypes && self.state.employeetypes.map(function(v, i){
@@ -1922,17 +1955,18 @@ class Employee extends Component {
                                 	})
                             	}
                             </SelectField>
+                            </div>
                         }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.employeeStatus")}</span></label><br/>
-                                <label>{getNameById(self.state.statuses, Employee.employeeStatus)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.employeeStatus")}</span></label><br/>
+                                <label>{getNameById(self.state.statuses, Employee.employeeStatus) || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.employeeStatus")+" *"} errorText={fieldErrors["employeeStatus"]} value={Employee.employeeStatus} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.employeeStatus")+" *"} errorText={fieldErrors["employeeStatus"]} value={Employee.employeeStatus} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "employeeStatus", true, '')
                       	}}>
                             {
@@ -1944,16 +1978,17 @@ class Employee extends Component {
                         }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.group")}</span></label><br/>
-                                <label>{getNameById(self.state.groups, Employee.group)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.group")}</span></label><br/>
+                                <label>{getNameById(self.state.groups, Employee.group) || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.group")} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.group")} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "group", false, '')
                       	}}>
                             {
@@ -1967,30 +2002,25 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                         {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfBirth")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.dob : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfBirth")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.dob : "-"}</label></span>
                             )
                          :
 
-                      	<DatePicker
-                          formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }} floatingLabelText={translate("employee.Employee.fields.dateOfBirth") + " *"} hintText={translate("employee.Employee.fields.dateOfBirth") + " *"} value={Employee.user ? self.getDate(Employee.user.dob) : ""} onChange={(eve, date) => {
-                      		handleDateChange('dob', date, true)
-                      	}}/>
+                         <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfBirth") + " *"} errorText={fieldErrors["user"] && fieldErrors["user"]["dob"]} value={Employee.user ? Employee.user.dob : ""} onChange={(e) => {
+                            handleChangeNextLevel(e, "user", "dob", true, datePat)
+                        }}/>
+                      	
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	{self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.gender")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.gender : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.gender")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.gender : "-"}</label></span>
                             )
                          :
-                            <SelectField floatingLabelText={translate("employee.Employee.fields.User.gender")} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
+                            <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.gender")} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
                       		handleChangeNextLevel({target:{value:value}}, "user", "gender", false, '')
                       	}}>
                             {
@@ -2004,11 +2034,11 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	{self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.maritalStatus")}</span></label><br/>
-                                <label>{Employee.maritalStatus}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.maritalStatus")}</span></label><br/>
+                                <label>{Employee.maritalStatus || "-"}</label></span>
                             )
                          :
-                            <SelectField floatingLabelText={translate("employee.Employee.fields.maritalStatus") +"*"} errorText={fieldErrors["maritalStatus"]} value={Employee.maritalStatus} onChange={(event, key, value) => {
+                            <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.maritalStatus") +"*"} errorText={fieldErrors["maritalStatus"]} value={Employee.maritalStatus} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "maritalStatus", true, '')
                       	}}>
                             {
@@ -2020,24 +2050,25 @@ class Employee extends Component {
                     }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       	{self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.userName")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.userName : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.userName")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.userName : "-"}</label></span>
                             )
                          :
 
                         <TextField floatingLabelText={translate("employee.Employee.fields.User.userName")+" *"} errorText={fieldErrors["user"] && fieldErrors["user"]["userName"]} errorText={fieldErrors["user.userName"]} value={Employee.user ? Employee.user.userName : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, "user", "userName", true, '')
-                      	}} disabled={self.state.screenType == 'update'}/>
+                      	}} disabled={self.state.screenType == 'update' || self.state.autoUName}/>
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.fields.isUserActive")}?</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.fields.isUserActive")}?</span></label><br/>
                                 <label>{Employee.user && [true, "true"].indexOf(Employee.user.active) > -1 ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2") }</label></span>
                             )
                          :
@@ -2060,36 +2091,38 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.mobileNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.mobileNumber : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.mobileNumber")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.mobileNumber : "-"}</label></span>
                             )
                          :
 
-                      	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")+" *"}  errorText={fieldErrors["user"] && fieldErrors["user"]["mobileNumber"]} value={Employee.user ? Employee.user.mobileNumber : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'mobileNumber', true, /^\d{10}$/)
+                      	<TextField maxLength="10" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")+" *"}  errorText={fieldErrors["user"] && fieldErrors["user"]["mobileNumber"]} value={Employee.user ? Employee.user.mobileNumber : ""} onChange={(e) => {
+                      		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                            handleChangeNextLevel(e, 'user', 'mobileNumber', true, /^\d{10}$/)
                       	}}/>
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.email")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.emailId : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.email")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.emailId : "-"}</label></span>
                             )
                          :
 
                       	<TextField floatingLabelText={translate("employee.Employee.fields.email")} errorText={fieldErrors["user"] && fieldErrors["user"]["emailId"]} type="email" value={Employee.user ? Employee.user.emailId : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'emailId', false, '')
+                      		handleChangeNextLevel(e, 'user', 'emailId', false, /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
                       	}}/>
                       }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.fatherSpouseName")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.fatherOrHusbandName : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.fatherSpouseName")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.fatherOrHusbandName : "-"}</label></span>
                             )
                          :
 
@@ -2101,8 +2134,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.birth")}</span></label><br/>
-                                <label>{Employee.placeOfBirth}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.birth")}</span></label><br/>
+                                <label>{Employee.placeOfBirth || "-"}</label></span>
                             )
                          :
 
@@ -2114,12 +2147,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.bloodGroup")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.bloodGroup : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.bloodGroup")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.bloodGroup : "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.User.bloodGroup")} errorText={fieldErrors["user"] && fieldErrors["user"]["bloodGroup"]} value={Employee.user ? Employee.user.bloodGroup : ""} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.bloodGroup")} errorText={fieldErrors["user"] && fieldErrors["user"]["bloodGroup"]} value={Employee.user ? Employee.user.bloodGroup : ""} onChange={(event, key, value) => {
                       		handleChangeNextLevel({target:{value:value}}, "user", "bloodGroup", false, '')
                       	}}>
                             {
@@ -2133,12 +2166,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.motherTongue")}</span></label><br/>
-                                <label>{getNameById(self.state.languages, Employee.motherTongue)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.motherTongue")}</span></label><br/>
+                                <label>{getNameById(self.state.languages, Employee.motherTongue) || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.motherTongue")} errorText={fieldErrors["motherTongue"]} value={Employee.motherTongue} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.motherTongue")} errorText={fieldErrors["motherTongue"]} value={Employee.motherTongue} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'motherTongue', false, '')
                       	}}>
                             {
@@ -2150,16 +2183,17 @@ class Employee extends Component {
                     }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.religion")}</span></label><br/>
-                                <label>{getNameById(self.state.religions, Employee.religion)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.religion")}</span></label><br/>
+                                <label>{getNameById(self.state.religions, Employee.religion) || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.religion")} errorText={fieldErrors["religion"]} value={Employee.religion} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.religion")} errorText={fieldErrors["religion"]} value={Employee.religion} onChange={(event, key, value) => {
 							handleChange({target:{value:value}}, 'religion', false, '')
                       	}}>
                             {
@@ -2173,12 +2207,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.community")}</span></label><br/>
-                                <label>{getNameById(self.state.communities, Employee.community)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.community")}</span></label><br/>
+                                <label>{getNameById(self.state.communities, Employee.community) || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.community")} errorText={fieldErrors["community"]} value={Employee.community} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.community")} errorText={fieldErrors["community"]} value={Employee.community} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'community', false, '')
                       	}}>
                             {
@@ -2192,12 +2226,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.category")}</span></label><br/>
-                                <label>{getNameById(self.state.categories, Employee.category)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.category")}</span></label><br/>
+                                <label>{getNameById(self.state.categories, Employee.category) || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.category")} errorText={fieldErrors["category"]} value={Employee.category} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.category")} errorText={fieldErrors["category"]} value={Employee.category} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'category', false, '')
                       	}}>
                             {
@@ -2211,7 +2245,7 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.physicallyDisabled")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.physicallyDisabled")}</span></label><br/>
                                 <label>{translate("employee.Employee.fields.physicallyDisabled") ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</label></span>
                             )
                          :
@@ -2232,11 +2266,12 @@ class Employee extends Component {
                             }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.medicalReportProduced")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.medicalReportProduced")}</span></label><br/>
                                 <label>{Employee.medicalReportProduced ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : translate("employee.createPosition.groups.fields.outsourcepost.value2")}</label></span>
                             )
                          :
@@ -2259,8 +2294,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.identification")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.identificationMark : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.identification")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.identificationMark : "-"}</label></span>
                             )
                          :
 
@@ -2272,8 +2307,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.pan")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.pan : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.pan")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.pan : "-"}</label></span>
                             )
                          :
 
@@ -2285,8 +2320,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.passportNo")}</span></label><br/>
-                                <label>{Employee.passportNo}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.passportNo")}</span></label><br/>
+                                <label>{Employee.passportNo || "-"}</label></span>
                             )
                          :
 
@@ -2296,12 +2331,13 @@ class Employee extends Component {
                       }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.gpfNo")}</span></label><br/>
-                                <label>{Employee.gpfNo}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.gpfNo")}</span></label><br/>
+                                <label>{Employee.gpfNo || "-"}</label></span>
                             )
                          :
 
@@ -2313,25 +2349,26 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.aadhaarNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.aadhaarNumber : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.aadhaarNumber")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.aadhaarNumber : "-"}</label></span>
                             )
                          :
 
-                      	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.User.aadhaarNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["aadhaarNumber"]} value={Employee.user ? Employee.user.aadhaarNumber : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'aadhaarNumber', false, /^\d{12}$/)
+                      	<TextField maxLength="12" floatingLabelText={translate("employee.Employee.fields.User.aadhaarNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["aadhaarNumber"]} value={Employee.user ? Employee.user.aadhaarNumber : ""} onChange={(e) => {
+                      		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                            handleChangeNextLevel(e, 'user', 'aadhaarNumber', false, /^\d{12}$/)
                       	}}/>
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.bank")}</span></label><br/>
-                                <label>{getNameById(self.state.banks, Employee.bank)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.bank")}</span></label><br/>
+                                <label>{getNameById(self.state.banks, Employee.bank) || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.bank")} errorText={fieldErrors["bank"]} value={Employee.bank} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.bank")} errorText={fieldErrors["bank"]} value={Employee.bank} onChange={(event, key, value) => {
                       		self.loadBranches(value)
                           handleChange({target:{value:value}}, 'bank', false, '')
                       	}}>
@@ -2346,12 +2383,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.bankBranch")}</span></label><br/>
-                                <label>{getNameById(self.state.bankBranches, Employee.bankBranch)}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.bankBranch")}</span></label><br/>
+                                <label>{getNameById(self.state.bankBranches, Employee.bankBranch) || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.bankBranch")} errorText={fieldErrors["bankBranch"]} value={Employee.bankBranch} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.bankBranch")} errorText={fieldErrors["bankBranch"]} value={Employee.bankBranch} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'bankBranch', false, '')
                       	}}>
                             {
@@ -2363,11 +2400,12 @@ class Employee extends Component {
                     }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.bankAccount")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.bankAccount")}</span></label><br/>
                                 <label>{Employee.bankAccount}</label></span>
                             )
                          :
@@ -2380,25 +2418,27 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.User.mobileNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.altContactNumber : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.mobileNumber")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.altContactNumber : "-"}</label></span>
                             )
                          :
 
-                      	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["altContactNumber"]} value={Employee.user ? Employee.user.altContactNumber : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'altContactNumber', false, '')
+                      	<TextField maxLength="10" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["altContactNumber"]} value={Employee.user ? Employee.user.altContactNumber : ""} onChange={(e) => {
+                      		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                            handleChangeNextLevel(e, 'user', 'altContactNumber', false, /^\d{10}$/)
                       	}}/>
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}></Col>
                       <Col xs={12} sm={4} md={3} lg={3}></Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.permanentAddress")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.permanentAddress : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.permanentAddress")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.permanentAddress : "-"}</label></span>
                             )
                          :
 
@@ -2410,8 +2450,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.city")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.permanentCity : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.city")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.permanentCity : "-"}</label></span>
                             )
                          :
 
@@ -2423,8 +2463,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.parmanentPinNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.permanentPinCode : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.parmanentPinNumber")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.permanentPinCode : "-"}</label></span>
                             )
                          :
 
@@ -2435,12 +2475,13 @@ class Employee extends Component {
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}></Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.correspondenceAddress")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.correspondenceAddress : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.correspondenceAddress")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.correspondenceAddress : "-"}</label></span>
                             )
                          :
 
@@ -2452,8 +2493,8 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.city")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.correspondenceCity : ""}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.city")}</span></label><br/>
+                                <label>{Employee.user ? Employee.user.correspondenceCity : "-"}</label></span>
                             )
                          :
 
@@ -2465,7 +2506,7 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.correspondencePinNumber")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.correspondencePinNumber")}</span></label><br/>
                                 <label>{Employee.user ? Employee.user.correspondencePinCode : ""}</label></span>
                             )
                          :
@@ -2477,16 +2518,17 @@ class Employee extends Component {
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}></Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.languagesKnown")}</span></label><br/>
-                                <label>{Employee.languagesKnown}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.languagesKnown")}</span></label><br/>
+                                <label>{Employee.languagesKnown || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.languagesKnown")} errorText={fieldErrors["languagesKnown"]} multiple={true} value={Employee.languagesKnown} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.languagesKnown")} errorText={fieldErrors["languagesKnown"]} multiple={true} value={Employee.languagesKnown} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'languagesKnown', false, '')
                       	}}>
                             {
@@ -2500,12 +2542,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.recruitmentMode")}</span></label><br/>
-                                <label>{Employee.recruitmentMode}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.recruitmentMode")}</span></label><br/>
+                                <label>{Employee.recruitmentMode || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.recruitmentMode")} errorText={fieldErrors["recruitmentMode"]} value={Employee.recruitmentMode} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentMode")} errorText={fieldErrors["recruitmentMode"]} value={Employee.recruitmentMode} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'recruitmentMode', false, '')
                       	}}>
                             {
@@ -2519,12 +2561,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.recruitmentType")}</span></label><br/>
-                                <label>{Employee.recruitmentType}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.recruitmentType")}</span></label><br/>
+                                <label>{Employee.recruitmentType || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.recruitmentType")} errorText={fieldErrors["recruitmentType"]} value={Employee.recruitmentType} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentType")} errorText={fieldErrors["recruitmentType"]} value={Employee.recruitmentType} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'recruitmentType', false, '')
                       	}}>
                             {
@@ -2538,12 +2580,12 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.recruitmentQuota")}</span></label><br/>
-                                <label>{Employee.recruitmentQuota}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.recruitmentQuota")}</span></label><br/>
+                                <label>{Employee.recruitmentQuota || "-"}</label></span>
                             )
                          :
 
-                      	<SelectField floatingLabelText={translate("employee.Employee.fields.recruitmentQuota")} errorText={fieldErrors["recruitmentQuota"]} value={Employee.recruitmentQuota} onChange={(event, key, value) => {
+                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentQuota")} errorText={fieldErrors["recruitmentQuota"]} value={Employee.recruitmentQuota} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'recruitmentQuota', false, '')
                       	}}>
                             {
@@ -2555,51 +2597,39 @@ class Employee extends Component {
                     }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfAppointment")}</span></label><br/>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfAppointment")}</span></label><br/>
                                 <label>{Employee.dateOfAppointment}</label></span>
                             )
                          :
 
-                      	<DatePicker
-                         formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }} floatingLabelText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} hintText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} errorText={fieldErrors["dateOfAppointment"]} value={self.getDate(Employee.dateOfAppointment)} onChange={(eve, date) => {
-                      		handleDateChange('appointmentDate', date.getTime(), true)
-                      	}}/>
+                      	 <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} errorText={fieldErrors["dateOfAppointment"]} value={Employee.dateOfAppointment} onChange={(e) => {
+                            handleChange(e, 'dateOfAppointment', true, datePat)
+                        }}/>
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfJoining")}</span></label><br/>
-                                <label>{Employee.dateOfJoining}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfJoining")}</span></label><br/>
+                                <label>{Employee.dateOfJoining || "-"}</label></span>
                             )
                          :
 
-                      	<DatePicker
-                          formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                          floatingLabelText={translate("employee.Employee.fields.dateOfJoining")} hintText={translate("employee.Employee.fields.dateOfJoining")} errorText={fieldErrors["dateOfJoining"]} value={self.getDate(Employee.dateOfJoining)} onChange={(eve, date) => {
-                      		handleDateChange('joiningDate', date.getTime())
-                      	}}/>
+                        <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfJoining")} errorText={fieldErrors["dateOfJoining"]} value={Employee.dateOfJoining} onChange={(e) => {
+                            handleChange(e, 'dateOfJoining', false, datePat)
+                        }}/>
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.retirementAge")}</span></label><br/>
-                                <label>{Employee.retirementAge}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.retirementAge")}</span></label><br/>
+                                <label>{Employee.retirementAge || "-"}</label></span>
                             )
                          :
 
@@ -2611,63 +2641,43 @@ class Employee extends Component {
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfRetirement")}</span></label><br/>
-                                <label>{Employee.dateOfRetirement}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfRetirement")}</span></label><br/>
+                                <label>{Employee.dateOfRetirement || "-"}</label></span>
                             )
                          :
 
-                      	<DatePicker
-                         formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                         }}
-                         floatingLabelText={translate("employee.Employee.fields.dateOfRetirement")} hintText={translate("employee.Employee.fields.dateOfRetirement")} errorText={fieldErrors["dateOfRetirement"]} value={self.getDate(Employee.dateOfRetirement)} onChange={(eve, date) => {
-                      		handleDateChange('retirementDate', date.getTime())
-                      	}}/>
+                        <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfRetirement")} errorText={fieldErrors["dateOfRetirement"]} value={Employee.dateOfRetirement} onChange={(e) => {
+                            handleChange(e, 'dateOfRetirement', false, datePat)
+                        }}/>
                       }
                       </Col>
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfTermination")}</span></label><br/>
-                                <label>{Employee.dateOfTermination}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfTermination")}</span></label><br/>
+                                <label>{Employee.dateOfTermination || "-"}</label></span>
                             )
                          :
 
-                      	<DatePicker
-                          formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                          floatingLabelText={translate("employee.Employee.fields.dateOfTermination")} hintText={translate("employee.Employee.fields.dateOfTermination")} errorText={fieldErrors["dateOfTermination"]} value={self.getDate(Employee.dateOfTermination)} onChange={(eve, date) => {
-                      		handleDateChange('terminationDate', date.getTime())
-                      	}}/>
+                        <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfTermination")} errorText={fieldErrors["dateOfTermination"]} value={Employee.dateOfTermination} onChange={(e) => {
+                            handleChange(e, 'dateOfTermination', false, datePat)
+                        }}/>
                       }
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
                       {self.state.screenType == "view" ?
                             (
-                                <span><label><span style={{"fontWeight":"bold"}}>{translate("employee.Employee.fields.dateOfResignation")}</span></label><br/>
-                                <label>{Employee.dateOfResignation}</label></span>
+                                <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.dateOfResignation")}</span></label><br/>
+                                <label>{Employee.dateOfResignation || "-"}</label></span>
                             )
                          :
 
-                      	<DatePicker
-                          formatDate={function(date) {
-                            date =new Date(date);
-                            return ('0' + date.getDate()).slice(-2) + '/'
-                                      + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                                      + date.getFullYear();
-                          }}
-                          floatingLabelText={translate("employee.Employee.fields.dateOfResignation")} hintText={translate("employee.Employee.fields.dateOfResignation")} errorText={fieldErrors["dateOfResignation"]} value={self.getDate(Employee.dateOfResignation)} onChange={(eve, date) => {
-                      		handleDateChange('resignationDate', date.getTime())
-                      	}}/>
+                        <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfResignation")} errorText={fieldErrors["dateOfResignation"]} value={Employee.dateOfResignation} onChange={(e) => {
+                            handleChange(e, 'dateOfResignation', false, datePat)
+                        }}/>
                       }
                       </Col>
                       {self.state.screenType != "view" ? <Col xs={12} sm={4} md={3} lg={3}>
@@ -2679,6 +2689,7 @@ class Employee extends Component {
                       	<input type="file"/>
                       </Col> : ""}
                    </Row>
+                   {self.state.screenType == "view" && <br/>}
                    <Row>
                    	  {self.state.screenType != "view" ? <Col xs={12} sm={4} md={3} lg={3}>
                         <label style={{marginTop:"20px"}}>{translate("employee.Employee.fields.OtherAttachments")}</label>
@@ -3162,7 +3173,8 @@ class Employee extends Component {
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, (self.state.screenType == "update" ? "Employee updated successfully." : "Employee created successfully."));
             setTimeout(function() {
-                self.props.setRoute("/empSearch/view");
+                self.props.setRoute("/employee/view/" + res.Employee.id);
+                window.location.reload();
             }, 1500);
           }, function(err) {
             self.props.setLoadingStatus('hide');
@@ -3225,6 +3237,7 @@ class Employee extends Component {
               label={translate("employee.addedit.Button")}
               primary={true}
               keyboardFocused={true}
+              disabled={self.state.isModalInvalid}
               onClick={self.submitModalData}
             />]
             }
@@ -3246,8 +3259,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 
-    setForm: (data, isUpdate) => {
+    setForm: (data, isUpdate, codeAuto, unameAuto) => {
         var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob'];
+        if(codeAuto) requiredList.splice(1, 1);
+        if(unameAuto) requiredList.splice(6, 1);
         dispatch({
             type: "SET_FORM",
             data,

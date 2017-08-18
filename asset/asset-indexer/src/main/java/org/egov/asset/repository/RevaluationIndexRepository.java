@@ -21,7 +21,7 @@ public class RevaluationIndexRepository {
     private ApplicationProperties applicationProperties;
 
     public void saveAssetRevaluation(final RevaluationIndex revaluationIndex) {
-        final String url = applicationProperties.getIndexerHost() + applicationProperties.getIndexName() + "/"
+        final String url = applicationProperties.getIndexerHost() + applicationProperties.getRevaluationIndexName() + "/"
                 + revaluationIndex.getRevaluationId();
         log.info("Save Asset Revaluation ES URL ::" + url);
         try {

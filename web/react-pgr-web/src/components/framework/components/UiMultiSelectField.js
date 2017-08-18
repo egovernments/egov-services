@@ -62,6 +62,7 @@ class UiMultiSelectField extends Component {
 				return (
 					<div style={{"display": "flex", "flex-direction": "column-reverse"}}>
 						<SelectField
+						 	dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}

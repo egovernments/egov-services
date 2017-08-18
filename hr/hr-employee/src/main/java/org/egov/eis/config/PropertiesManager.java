@@ -52,7 +52,6 @@ import org.springframework.stereotype.Component;
 @ToString
 public class PropertiesManager {
 
-
     @Value("${kafka.topics.employee.savedb.name}")
     private String saveEmployeeTopic;
 
@@ -118,5 +117,17 @@ public class PropertiesManager {
 
     @Value("${egov.services.data_sync_employee.required}")
     private Boolean dataSyncEmployeeRequired;
+
+    @Value("${egov.services.egov_idgen.hostname}")
+    private String idGenServiceHostName;
+
+    @Value("${egov.services.egov_idgen.createpath}")
+    private String idGenServiceCreatePath;
+
+    @Value("${egov.services.egov_idgen.emp.code.name}")
+    private String idGenServiceEmpCodeName;
+
+    @Value("${egov.services.egov_idgen.emp.code.format}")
+    private String idGenServiceEmpCodeFormat;
 
 }

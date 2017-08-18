@@ -2,9 +2,11 @@ package org.egov.asset.service;
 
 import java.util.Map;
 
+import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.model.Asset;
+import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetIndex;
 import org.egov.asset.model.Boundary;
 import org.egov.asset.model.Location;
@@ -31,11 +33,11 @@ public class AssetIndexService {
         assetRepository.saveAsset(assetIndex);
     }
 
-    public void putAsset(final AssetRequest assetRequest) {
+   /* public void putAsset(final AssetRequest assetRequest) {
         final AssetIndex assetIndex = prepareAssetIndex(assetRequest);
         log.info("the logged value of assetIndex in update ::" + assetIndex);
-        assetRepository.updateAsset(assetIndex);
-    }
+        assetRepository.saveAsset(assetIndex);
+    }*/
 
     public AssetIndex prepareAssetIndex(final AssetRequest assetRequest) {
         final AssetIndex assetIndex = new AssetIndex();
@@ -58,4 +60,12 @@ public class AssetIndexService {
         assetIndex.setDistrictName(tenant.getCity().getDistrictName());
         assetIndex.setRegionName(tenant.getCity().getRegionName());
     }
+    
+    public void postAssetCategory(AssetCategoryRequest assetCategoryRequest) {
+        assetRepository.saveAssetCategory(assetCategoryRequest.getAssetCategory());
+    }
+
+   /* public void putAssetCategory(AssetCategory assetRequest) {
+        assetRepository.updateAssetCategory(assetRequest);
+    }*/
 }

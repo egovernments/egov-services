@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BoundaryContractRepository {
 
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManger;
 
@@ -24,7 +24,7 @@ public class BoundaryContractRepository {
 	}
 
 	public BoundaryResponse findByLocalityId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-		
+
 		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
 		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
@@ -56,7 +56,7 @@ public class BoundaryContractRepository {
 	}
 
 	public BoundaryResponse findByRevenueWardId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-		
+
 		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
 		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
@@ -86,8 +86,9 @@ public class BoundaryContractRepository {
 		}
 
 	}
+
 	public BoundaryResponse findByAdminWardId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-		
+
 		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
 		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
@@ -116,5 +117,36 @@ public class BoundaryContractRepository {
 			return null;
 		}
 
+	}
+
+	public BoundaryResponse findByBoundaryIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
+
+		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
+		String searchUrl = propertiesManger.getLocationServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
+		StringBuffer content = new StringBuffer();
+		if (ids != null) {
+			content.append("boundaryIds=" + ids);
+		}
+
+		if (tenantId != null) {
+			content.append("&tenantId=" + tenantId);
+		}
+		url = url + content.toString();
+		BoundaryResponse boundaryResponse = null;
+		try {
+
+			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
+
+		} catch (Exception e) {
+			log.error("Error while connecting to the location end point");
+		}
+
+		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
+				&& boundaryResponse.getBoundarys().size() > 0) {
+			return boundaryResponse;
+		} else {
+			return null;
+		}
 	}
 }

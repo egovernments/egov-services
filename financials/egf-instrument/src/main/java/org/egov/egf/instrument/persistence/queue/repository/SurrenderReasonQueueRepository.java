@@ -47,6 +47,9 @@ public class SurrenderReasonQueueRepository {
 		case "update":
 			topicMap.put("surrenderreason_update", request);
 			break;
+		case "delete":
+			topicMap.put("surrenderreason_delete", request);
+			break;
 
 		}
 		financialInstrumentProducer.sendMessage(validatedTopic, surrenderReasonValidatedKey, topicMap);

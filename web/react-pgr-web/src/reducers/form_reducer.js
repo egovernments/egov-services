@@ -76,7 +76,7 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
   // console.log(validationData.pattern.current);
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  console.log(validationData.required.required.length, validationData.required.current.length);
+  //console.log(validationData.required.required.length, validationData.required.current.length);
   return {
     errorText: errorText,
     validationData: validationData,

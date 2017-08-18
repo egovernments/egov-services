@@ -175,7 +175,7 @@ public class TaxPeriodRespository {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString();
+		return object == null ? null : object.toString();
 	}
 
 	/**

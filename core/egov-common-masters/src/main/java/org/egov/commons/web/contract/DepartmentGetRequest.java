@@ -57,7 +57,7 @@ import java.util.List;
 @Builder
 public class DepartmentGetRequest {
 
-	private List<Long> ids;
+	private List<Long> id;
 
 	@Size(min=8, max=64)
 	private String name;

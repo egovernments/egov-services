@@ -86,10 +86,6 @@ public class WaterConnectionRepository {
     @Autowired
     private WaterConnectionQueryBuilder waterConnectionQueryBuilder;
     
-    @Autowired
-    private WaterConnectionRowMapper waterConnectionRowMapper;
-    
-
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
         String insertQuery = "";
@@ -101,7 +97,9 @@ public class WaterConnectionRepository {
             insertQuery = WaterConnectionQueryBuilder.insertConnectionQuery();
 
         final String query = insertQuery;
-
+        LOGGER.info("Insert Query is : " + insertQuery);
+        LOGGER.info("Water Treatment ID Obtained is : " + waterConnectionRequest.getConnection().getWaterTreatmentId());
+        
         Long connectionId = 0L;
         try {
             final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -488,7 +486,21 @@ public class WaterConnectionRepository {
         final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
         LOGGER.info("Get Connection Details Query : " + fetchQuery);
         final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
-                waterConnectionRowMapper);
+                new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
+        LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
+        
+        final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq, preparedStatementValues);
+        LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
+        try{ 
+        	final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery, preparedStatementValues.toArray(),
+            		new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
+        	LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
+            if(secondConnectionList.size() > 0) { 
+            	connectionList.addAll(secondConnectionList);		
+            }
+        } catch(Exception ex) { 
+        	LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
+        }
         return connectionList;
     }
     

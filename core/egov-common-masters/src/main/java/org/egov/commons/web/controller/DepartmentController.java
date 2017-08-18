@@ -84,9 +84,38 @@ public class DepartmentController {
 	@Autowired
 	private ResponseInfoFact responseInfoFactory;
 
+	@PostMapping("_search")
+	@ResponseBody
+	public ResponseEntity<?> searchExisting(@ModelAttribute @Valid DepartmentGetRequest departmentGetRequest,
+									BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+									BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+		// validate input params
+		if (modelAttributeBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		}
+
+		// validate input params
+		if (requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+		}
+
+		// Call service
+		List<Department> departmentsList = null;
+		try {
+			departmentsList = departmentService.getDepartments(departmentGetRequest);
+		} catch (Exception exception) {
+			logger.error("Error while processing request " + departmentGetRequest, exception);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+		}
+
+		return getSuccessResponse(departmentsList, requestInfo);
+	}
+
 	@PostMapping("/v1/_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid DepartmentGetRequest departmentGetRequest,
+	public ResponseEntity<?> searchNew(@ModelAttribute @Valid DepartmentGetRequest departmentGetRequest,
 									BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 									BindingResult requestBodyBindingResult) {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();

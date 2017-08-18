@@ -40,7 +40,6 @@
 
 package org.egov.eis.repository;
 
-import org.egov.eis.model.DepartmentDesignation;
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.builder.PositionQueryBuilder;
 import org.egov.eis.repository.rowmapper.IdsRowMapper;
@@ -50,14 +49,9 @@ import org.egov.eis.web.contract.PositionGetRequest;
 import org.egov.eis.web.contract.PositionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 

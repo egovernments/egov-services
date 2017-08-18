@@ -184,10 +184,12 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    isMandatory: true
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: string
-    source: wcms  
+    source: wcms
+    isMandatory: true  
   query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
@@ -254,10 +256,12 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    isMandatory: true
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: string
-    source: wcms  
+    source: wcms
+    isMandatory: true
   query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
@@ -324,10 +328,12 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    isMandatory: true
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: string
-    source: wcms  
+    source: wcms
+    isMandatory: true
   query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
@@ -394,10 +400,12 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    isMandatory: true
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: string
-    source: wcms  
+    source: wcms
+    isMandatory: true  
   query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
@@ -488,18 +496,22 @@ ReportDefinitions:
     label: reports.wcms.datefrom
     type: epoch
     source: wcms
+    isMandatory: true
   - name: toDate
     label: reports.wcms.dateto
     type: epoch
     source: wcms
+    isMandatory: true
   - name: status
     label: reports.wcms.dateto
     type: string
     source: wcms
+    isMandatory: true
   - name: complainttype
     label: reports.wcms.dateto
     type: string
     source: wcms  
+    isMandatory: true
   query: select dcbinfo.hscno as "consumerNo", dcbinfo.oldhscno as "oldConsumerNo", dcbinfo.propertyid as "assementNo", dcbinfo.username as "ownerName",dcbinfo.categorytype as "categoryType",
          dcbinfo.username as "period",'' as "doorNo", dcbinfo.connectiontype as "connectionType" , dcbinfo.arr_demand as "arrears" ,  dcbinfo.curr_demand as "current" ,  
          dcbinfo.arr_coll as "arrearsCollection" ,  dcbinfo.curr_coll as "currentCollection" ,  dcbinfo.arr_demand+dcbinfo.curr_demand as "totalDemand" , '' as "usageType" , 

@@ -90,5 +90,8 @@ public class ConnectionOwner {
 
     @JsonProperty("isSecondaryOwner")
     private Boolean isSecondaryOwner;
+    
+    @JsonProperty("type")
+    private String type;
 
 }

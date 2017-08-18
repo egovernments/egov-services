@@ -3,6 +3,7 @@ package org.egov.asset.consumers;
 import java.util.Map;
 
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
@@ -50,7 +51,8 @@ public class AssetConsumers {
 
     @KafkaListener(topics = { "${kafka.topics.save.asset}", "${kafka.topics.save.depreciation}",
             "${kafka.topics.save.currentvalue}", "${kafka.topics.update.asset}", "${kafka.topics.save.revaluation}",
-            "${kafka.topics.save.disposal}" })
+            "${kafka.topics.save.disposal}" , "${kafka.topics.save.assetcategory}"
+            ,"${kafka.topics.update.assetcategory}"})
     public void listen(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
 
@@ -58,7 +60,7 @@ public class AssetConsumers {
         if (topic.equals(applicationProperties.getCreateAssetTopicName()))
             assetIndexService.postAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
         else if (topic.equals(applicationProperties.getUpdateAssetTopicName()))
-            assetIndexService.putAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
+            assetIndexService.postAsset(objectMapper.convertValue(consumerRecord, AssetRequest.class));
         else if (topic.equals(applicationProperties.getCreateAssetRevaluationTopicName()))
             revaluationIndexService
                     .postAssetRevaluation(objectMapper.convertValue(consumerRecord, RevaluationRequest.class));
@@ -69,6 +71,10 @@ public class AssetConsumers {
                     .indexCurrentValue(objectMapper.convertValue(consumerRecord, AssetCurrentValueRequest.class));
         else if (topic.equals(applicationProperties.getSaveDepreciationTopic()))
             depreciationIndexService.indexDepreciaiton(objectMapper.convertValue(consumerRecord, Depreciation.class));
+        else if (topic.equals(applicationProperties.getSaveassetCategoryTopic()))
+            assetIndexService.postAssetCategory(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
+        else if (topic.equals(applicationProperties.getUpdateAssetCategoryTopic()))
+            assetIndexService.postAssetCategory(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
 
     }
 }

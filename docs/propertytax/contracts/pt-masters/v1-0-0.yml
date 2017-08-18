@@ -326,6 +326,11 @@ paths:
             in: query
             description: name local of the PropertyType
             maxLength: 256
+          - name: parent
+            type: string
+            in: query
+            description: search should return all the property types where the given property type code as parent
+            maxLength: 64
           - name: active
             type: boolean
             in: query
@@ -1448,6 +1453,11 @@ definitions:
           description: name local of the PropertyType
           maxLength: 256
           minLength: 8
+        parent:
+          type: string
+          description: The parent property type code. Eg:- Under Buildings there can be sub property types  central, state, etc.
+          maxLength: 64
+          minLength: 4
         description:
           type: string
           description: description of the PropertyType
@@ -2101,4 +2111,5 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 

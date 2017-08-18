@@ -260,7 +260,6 @@ public class ReceiptService {
                     String transactionDate = simpleDateFormat.format(new Date(instrument.getTransactionDateInput()));
                     instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
                 }
-
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){
@@ -270,9 +269,16 @@ public class ReceiptService {
 			}
 				
 				billDetail.setCollectionType(CollectionType.COUNTER);
-				//TODO: Revert back once the workflow is enabled
-				billDetail.setStatus(ReceiptStatus.APPROVED.toString());
+				billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 				billDetail.setReceiptDate(new Date().getTime());
+				try{
+					validateReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
+							tenantId), tenantId);
+				}catch(CustomException e){
+					LOGGER.error("Duplicate Receipt: ", e);
+					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+							CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
+				}
 				billDetail.setReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
 						tenantId));
 				Map<String, Object> parametersMap;
@@ -283,6 +289,10 @@ public class ReceiptService {
 						&& validateGLCode(requestInfo, tenantId, billDetail)) {
 					BusinessDetailsRequestInfo businessDetails = businessDetailsRes
 							.getBusinessDetails().get(0);
+					if(null == businessDetails.getBusinessType() || businessDetails.getBusinessType().isEmpty()){
+						throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+								CollectionServiceConstants.RCPT_TYPE_MISSING_FIELD, CollectionServiceConstants.RCPT_TYPE_MISSING_MESSAGE);
+					}
 					parametersMap = prepareReceiptHeader(bill, tenantId,
 							auditDetail, billDetail, receiptHeaderId,
 							businessDetails);
@@ -294,6 +304,7 @@ public class ReceiptService {
 					Map<String, Object>[] parametersReceiptDetails = prepareReceiptDetails(
 							requestInfo, tenantId, billDetail, receiptHeaderId);
 					try {
+						LOGGER.info("Persiting receipt to resp tables: "+parametersMap.toString());
 						receiptRepository.persistReceipt(parametersMap,
 								parametersReceiptDetails, receiptHeaderId,
 								instrumentId);
@@ -570,6 +581,13 @@ public class ReceiptService {
 		}
 		
 		
+	}
+	
+	public void validateReceiptNumber(String receiptNumber, String tenantId){
+		if(!receiptRepository.validateReceiptNumber(receiptNumber, tenantId)){
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
+		}
 	}
 
 }

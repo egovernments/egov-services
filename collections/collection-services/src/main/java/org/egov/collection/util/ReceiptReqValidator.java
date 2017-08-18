@@ -92,8 +92,7 @@ public class ReceiptReqValidator {
 						.message(CollectionServiceConstants.BD_CODE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.BD_CODE_MISSING_FIELD).build();
 				errorFields.add(errorField);
-			}	
-			
+			}					
 			for(BillAccountDetail billAccountDetail: billAccountDetails){
 				if(null == billAccountDetail.getPurpose()){
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PURPOSE_MISSING_CODE)

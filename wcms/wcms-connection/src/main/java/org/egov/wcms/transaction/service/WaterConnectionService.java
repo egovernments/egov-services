@@ -221,6 +221,7 @@ public class WaterConnectionService {
     			.gender(conn.getConnectionOwner().getGender())
     			.isPrimaryOwner(conn.getConnectionOwner().getIsPrimaryOwner())
     			.isSecondaryOwner(conn.getConnectionOwner().getIsSecondaryOwner())
+    			.type(roleName)
     			.roles(roleList)
     			.active(true)
     			.build();

@@ -127,8 +127,7 @@ public class TradeLicenseService {
 					throw new InvalidInputException(propertiesManager.getAgreementNoErrorMsg());
 				}
 				if (tradeLicense.getAgreementDate() == null) {
-					throw new InvalidInputException(
-							propertiesManager.getAgreementDateErrorMsg());
+					throw new InvalidInputException(propertiesManager.getAgreementDateErrorMsg());
 				}
 
 			}
@@ -136,16 +135,14 @@ public class TradeLicenseService {
 			if (propertiesManager.getPtisValidation()) {
 
 				if (tradeLicense.getPropertyAssesmentNo() == null) {
-					throw new InvalidInputException(
-							);
+					throw new InvalidInputException();
 				} else {
 					PropertyResponse propertyResponse = propertyContractRepository.findByAssesmentNo(tradeLicense,
 							requestInfoWrapper);
 
 					if (propertyResponse == null || propertyResponse.getProperties() == null
 							|| propertyResponse.getProperties().size() == 0) {
-						throw new InvalidInputException(
-								propertiesManager.getPropertyassesmentNoErrorMsg());
+						throw new InvalidInputException(propertiesManager.getPropertyassesmentNoErrorMsg());
 					}
 				}
 			}
@@ -175,8 +172,7 @@ public class TradeLicenseService {
 
 				if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 						|| boundaryResponse.getBoundarys().size() == 0) {
-					throw new InvalidInputException(
-							propertiesManager.getRevenueWardErrorMsg());
+					throw new InvalidInputException(propertiesManager.getRevenueWardErrorMsg());
 				}
 
 			}
@@ -188,8 +184,7 @@ public class TradeLicenseService {
 
 				if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 						|| boundaryResponse.getBoundarys().size() == 0) {
-					throw new InvalidInputException(
-							propertiesManager.getAdminWardErrorMsg());
+					throw new InvalidInputException(propertiesManager.getAdminWardErrorMsg());
 				}
 
 			}
@@ -216,8 +211,7 @@ public class TradeLicenseService {
 				} else {
 					Long validityYears = categoryResponse.getCategories().get(0).getValidityYears();
 					if (Long.valueOf(validityYears) != Long.valueOf(tradeLicense.getValidityYears())) {
-						throw new InvalidInputException(
-								propertiesManager.getValidtyYearsErrorMsg());
+						throw new InvalidInputException(propertiesManager.getValidtyYearsErrorMsg());
 					}
 				}
 			}
@@ -237,8 +231,7 @@ public class TradeLicenseService {
 
 					if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
 							|| documentTypeResponse.getDocumentTypes().size() == 0) {
-						throw new InvalidInputException(
-								propertiesManager.getDocumentTypeErrorMsg());
+						throw new InvalidInputException(propertiesManager.getDocumentTypeErrorMsg());
 					}
 				}
 
@@ -329,6 +322,9 @@ public class TradeLicenseService {
 						}
 						// getting fee details ending year
 						actualFeeDetailsEndYear = currentFinancialFromValue;
+					} else {
+
+						throw new InvalidInputException(propertiesManager.getEndPointError());
 					}
 					// get the actual fee detail record count
 					Integer actualFeeDetailCount = 0;
@@ -339,8 +335,7 @@ public class TradeLicenseService {
 					// checking actual fee detail count with given fee detail
 					// count
 					if (actualFeeDetailCount != tradeLicense.getFeeDetails().size()) {
-						throw new InvalidInputException(
-								propertiesManager.getFeeDetailsErrorMsg());
+						throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
 					}
 					today.add(Calendar.YEAR, (actualFeeDetailStartYear - actualFeeDetailsEndYear));
 					// validate the fee details
@@ -367,12 +362,10 @@ public class TradeLicenseService {
 								}
 							}
 							if (!isFYExists) {
-								throw new InvalidInputException(
-										propertiesManager.getFeeDetailsErrorMsg());
+								throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
 							}
 						} else {
-							throw new InvalidInputException(
-									propertiesManager.getFeeDetailsErrorMsg());
+							throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
 						}
 
 					}

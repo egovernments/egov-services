@@ -54,6 +54,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.AuditDetails;
+import org.egov.collection.model.BillingServiceRequestInfo;
+import org.egov.collection.model.BillingServiceRequestWrapper;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.PositionSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
@@ -71,6 +73,7 @@ import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BillResponse;
 import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
 import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.ChartOfAccount;
@@ -126,6 +129,10 @@ public class ReceiptService {
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
+		if(!validateBill(receiptReq.getRequestInfo(), bill)){
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG, CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
+		}
 		Instrument instrument = receipt.getInstrument();
 		bill.setBillDetails(apportionPaidAmount(
 					receiptReq.getRequestInfo(), bill, receipt.getTenantId()));
@@ -260,7 +267,6 @@ public class ReceiptService {
                     String transactionDate = simpleDateFormat.format(new Date(instrument.getTransactionDateInput()));
                     instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
                 }
-
 				instrumentId = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){
@@ -270,9 +276,16 @@ public class ReceiptService {
 			}
 				
 				billDetail.setCollectionType(CollectionType.COUNTER);
-				//TODO: Revert back once the workflow is enabled
-				billDetail.setStatus(ReceiptStatus.APPROVED.toString());
+				billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 				billDetail.setReceiptDate(new Date().getTime());
+				try{
+					validateReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
+							tenantId), tenantId);
+				}catch(CustomException e){
+					LOGGER.error("Duplicate Receipt: ", e);
+					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+							CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
+				}
 				billDetail.setReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
 						tenantId));
 				Map<String, Object> parametersMap;
@@ -283,6 +296,10 @@ public class ReceiptService {
 						&& validateGLCode(requestInfo, tenantId, billDetail)) {
 					BusinessDetailsRequestInfo businessDetails = businessDetailsRes
 							.getBusinessDetails().get(0);
+					if(null == businessDetails.getBusinessType() || businessDetails.getBusinessType().isEmpty()){
+						throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+								CollectionServiceConstants.RCPT_TYPE_MISSING_FIELD, CollectionServiceConstants.RCPT_TYPE_MISSING_MESSAGE);
+					}
 					parametersMap = prepareReceiptHeader(bill, tenantId,
 							auditDetail, billDetail, receiptHeaderId,
 							businessDetails);
@@ -294,6 +311,7 @@ public class ReceiptService {
 					Map<String, Object>[] parametersReceiptDetails = prepareReceiptDetails(
 							requestInfo, tenantId, billDetail, receiptHeaderId);
 					try {
+						LOGGER.info("Persiting receipt to resp tables: "+parametersMap.toString());
 						receiptRepository.persistReceipt(parametersMap,
 								parametersReceiptDetails, receiptHeaderId,
 								instrumentId);
@@ -559,17 +577,52 @@ public class ReceiptService {
 		positionSearchCriteriaWrapper.setPositionSearchCriteria(positionSearchCriteria);
 		positionSearchCriteriaWrapper.setRequestInfo(requestInfo);
 		
-	/*	workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));	
-		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper)); */
+		workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));	
+		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper));
 		
 		
 		try{
 			workflowService.start(workflowDetails);
 		}catch(Exception e){
 			LOGGER.error("Starting workflow failed: ", e);
+		}	
+	}
+	
+	public void validateReceiptNumber(String receiptNumber, String tenantId){
+		if(!receiptRepository.validateReceiptNumber(receiptNumber, tenantId)){
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
 		}
+	}
+	
+	public boolean validateBill(RequestInfo requestInfo, Bill bill){
+		boolean isBillValid = false;
 		
+		BillingServiceRequestWrapper billingServiceRequestWrapper = new BillingServiceRequestWrapper();
+		BillingServiceRequestInfo billingServiceRequestInfo = new BillingServiceRequestInfo();
+
+		// Because Billing Svc uses a slightly different form of requestInfo
+
+		billingServiceRequestInfo.setAction(requestInfo.getAction());
+		billingServiceRequestInfo.setApiId(requestInfo.getApiId());
+		billingServiceRequestInfo.setAuthToken(requestInfo.getAuthToken());
+		billingServiceRequestInfo.setCorrelationId(requestInfo.getCorrelationId());
+		billingServiceRequestInfo.setDid(requestInfo.getDid());
+		billingServiceRequestInfo.setKey(requestInfo.getKey());
+		billingServiceRequestInfo.setMsgId(requestInfo.getMsgId());
+		billingServiceRequestInfo.setRequesterId(requestInfo.getRequesterId());
+		billingServiceRequestInfo.setTs(requestInfo.getTs().getTime()); // this is the difference
+		billingServiceRequestInfo.setUserInfo(requestInfo.getUserInfo());
+		billingServiceRequestInfo.setVer(requestInfo.getVer());
 		
+		billingServiceRequestWrapper.setBillingServiceRequestInfo(billingServiceRequestInfo);
+		
+		BillResponse billResponse = billingServiceRepository.getBillOnId(billingServiceRequestWrapper, bill);
+		if(null != billResponse){
+			isBillValid = true;
+			return isBillValid;
+		}
+		return isBillValid;
 	}
 
 }

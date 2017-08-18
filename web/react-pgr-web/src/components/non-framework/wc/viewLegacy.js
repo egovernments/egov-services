@@ -216,7 +216,7 @@ class Report extends Component {
     window.print();
   }
   dcbButton = () =>{
-    this.props.setRoute("/wc/addDemand/" + this.props.formData.Connection[0].acknowledgementNumber);
+    this.props.setRoute("/wc/addDemand/" + this.props.formData.Connection[0].ConsumerNumber);
   }
 
   render() {

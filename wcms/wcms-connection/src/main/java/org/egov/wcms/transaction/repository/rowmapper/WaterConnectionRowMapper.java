@@ -43,52 +43,106 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Property;
+import org.egov.wcms.transaction.web.contract.Address;
+import org.egov.wcms.transaction.web.contract.Boundary;
+import org.egov.wcms.transaction.web.contract.ConnectionLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WaterConnectionRowMapper implements RowMapper<Connection> {
-    @Override
-    public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final Connection connection = new Connection();	
-        connection.setId(rs.getLong("conn_id"));
-        connection.setTenantId(rs.getString("conn_tenant")); 
-        connection.setConnectionType(rs.getString("conn_connType")); 
-        connection.setBillingType(rs.getString("conn_billtype")); 
-        connection.setConnectionStatus(rs.getString("conn_constatus"));  
-        connection.setApplicationType(rs.getString("conn_applntype"));
-        connection.setSumpCapacity(rs.getLong("conn_sumpcap")); 
-        connection.setDonationCharge(rs.getLong("conn_doncharge"));  
-        connection.setNumberOfTaps(rs.getInt("conn_nooftaps")); 
-        connection.setSupplyTypeId(rs.getString("supplytype_id")); 
-        connection.setSupplyType(rs.getString("supplytype_name"));
-        connection.setCategoryId(rs.getString("category_id")); 
-        connection.setCategoryType(rs.getString("category_name"));  
-        connection.setHscPipeSizeType(rs.getString("pipesize_sizeinmilimeter")); 
-        connection.setPipesizeId(rs.getString("pipesize_id")); 
-        connection.setSourceTypeId(rs.getString("watersource_id")); 
-        connection.setSourceType(rs.getString("watersource_name"));
-        connection.setNumberOfPersons(rs.getInt("conn_noofperson")); 
-        connection.setStateId(rs.getLong("conn_stateid")); 
-        connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
-        connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
-        connection.setWaterTreatment((null!=rs.getString("watertreatmentname") && rs.getString("watertreatmentname")!="")? rs.getString("watertreatmentname")  : "" );
-        connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
-        connection.setIsLegacy(rs.getBoolean("conn_islegacy")); 
-        connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));  
-        connection.setConsumerNumber(rs.getString("conn_consumerNum")); 
-        connection.setPropertyIdentifier(rs.getString("conn_propid"));  
-        connection.setCreatedDate(rs.getString("createdtime"));
-        Property prop = new Property();
-        prop.setUsageTypeId(rs.getString("conn_usgtype"));
-        prop.setPropertyTypeId(rs.getString("conn_proptype"));
-        prop.setAddress(rs.getString("conn_propaddress"));  
-        prop.setPropertyidentifier(rs.getString("conn_propid"));
-        if(null != rs.getString("propertyowner") && rs.getString("propertyowner")!= ""){
-        	prop.setNameOfApplicant(rs.getString("propertyowner"));
-        }
-        connection.setProperty(prop);
-        return connection;
-    }
+public class WaterConnectionRowMapper {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionRowMapper.class);
+	public class WaterConnectionPropertyRowMapper implements RowMapper<Connection> {
+		@Override
+		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+			final Connection connection = prepareConnectionObject(rs);
+			Property prop = new Property();
+			prop.setUsageTypeId(rs.getString("conn_usgtype"));
+			prop.setPropertyTypeId(rs.getString("conn_proptype"));
+			prop.setAddress(rs.getString("conn_propaddress"));
+			prop.setPropertyidentifier(rs.getString("conn_propid"));
+			if (null != rs.getString("propertyowner") && rs.getString("propertyowner") != "") {
+				prop.setNameOfApplicant(rs.getString("propertyowner"));
+			}
+			connection.setProperty(prop);
+			connection.setWithProperty(true);
+			return connection;
+		}
+	}
+	
+	public class WaterConnectionWithoutPropertyRowMapper implements RowMapper<Connection> {
+		@Override
+		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+			final Connection connection = prepareConnectionObject(rs);
+			Property prop = new Property();
+			prop.setUsageTypeId(rs.getString("conn_usgtype"));
+			prop.setPropertyTypeId(rs.getString("conn_proptype"));
+			prop.setAddress(rs.getString("conn_propaddress"));
+			prop.setPropertyidentifier(rs.getString("conn_propid"));
+			connection.setProperty(prop);
+			ConnectionOwner connOwner = ConnectionOwner.builder()
+					.name(rs.getString("name"))
+					.userName(rs.getString("username"))
+					.mobileNumber(rs.getString("mobilenumber"))
+					.emailId(rs.getString("emailid"))
+					.gender(rs.getString("gender"))
+					.aadhaarNumber(rs.getString("aadhaarnumber")).build();
+			connection.setConnectionOwner(connOwner);
+			ConnectionLocation connLoc = ConnectionLocation.builder()
+					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null))
+					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null))
+					.adminBoundary(new Boundary(rs.getLong("adminboundary"), null)).build();
+			connection.setConnectionLocation(connLoc);
+			Address addr = new Address();
+			addr.setAddressLine1(rs.getString("addressline1"));
+			connection.setAddress(addr);
+			connection.setWithProperty(false);
+			return connection;
+		}
+		
+	}
+	
+	private Connection prepareConnectionObject(ResultSet rs) {
+		Connection connection = new Connection();
+		try { 
+		connection.setId(rs.getLong("conn_id"));
+		connection.setTenantId(rs.getString("conn_tenant"));
+		connection.setConnectionType(rs.getString("conn_connType"));
+		connection.setBillingType(rs.getString("conn_billtype"));
+		connection.setConnectionStatus(rs.getString("conn_constatus")); 
+		connection.setApplicationType(rs.getString("conn_applntype"));
+		connection.setSumpCapacity(rs.getLong("conn_sumpcap"));
+		connection.setDonationCharge(rs.getLong("conn_doncharge"));
+		connection.setNumberOfTaps(rs.getInt("conn_nooftaps"));
+		connection.setSupplyTypeId(rs.getString("supplytype_id"));
+		connection.setSupplyType(rs.getString("supplytype_name"));
+		connection.setCategoryId(rs.getString("category_id"));
+		connection.setCategoryType(rs.getString("category_name"));
+		connection.setHscPipeSizeType(rs.getString("pipesize_sizeinmilimeter"));
+		connection.setPipesizeId(rs.getString("pipesize_id"));
+		connection.setSourceTypeId(rs.getString("watersource_id"));
+		connection.setSourceType(rs.getString("watersource_name"));
+		connection.setNumberOfPersons(rs.getInt("conn_noofperson"));
+		connection.setStateId(rs.getLong("conn_stateid"));
+		connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
+		connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
+		connection.setWaterTreatment(
+				(null != rs.getString("watertreatmentname") && rs.getString("watertreatmentname") != "")
+						? rs.getString("watertreatmentname") : "");
+		connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
+		connection.setIsLegacy(rs.getBoolean("conn_islegacy"));
+		connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));
+		connection.setConsumerNumber(rs.getString("conn_consumerNum"));
+		connection.setPropertyIdentifier(rs.getString("conn_propid"));
+		connection.setCreatedDate(rs.getString("createdtime"));
+		} catch(Exception ex) {
+			LOGGER.error("Exception encountered while mapping the Result Set in Mapper : " + ex); 
+		}
+		return connection;
+	}
 }

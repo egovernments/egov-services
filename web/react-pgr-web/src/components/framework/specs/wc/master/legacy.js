@@ -91,7 +91,7 @@ var dat = {
     "numCols": 12 / 3,
     "version": "v1",
     "url": "/wcms-connection/connection/_create",
-    "idJsonPath": "Connection[0].acknowledgementNumber",
+    "idJsonPath": "Connection[0].consumerNumber",
     "useTimestamp": true,
     "tenantIdRequired": true, //Instead of boolean value give json path
     "objectName": "Connection",
@@ -113,8 +113,8 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-          			"values": [{"label":"Primary Connection", "value":"NEWCONNECTION"},{"label":"Additional Connection", "value":"ADDITIONCONNECTION"}],
-          			"defaultValue":true,
+        			"values": [{"label":"Primary Connection", "value":"NEWCONNECTION"},{"label":"Additional Connection", "value":"ADDITIONCONNECTION"}],
+        			"defaultValue":true
 
             },
           {
@@ -319,7 +319,11 @@ var dat = {
                 "Connection.asset.email": "properties[0].owners[0].emailId",
                 "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
                 "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors",
-                "Connection.asset.locality":"properties[0].boundary.revenueBoundary.id"
+                "Connection.asset.locality":"properties[0].boundary.locationBoundary.id",
+                "Connection.asset.zone":"properties[0].boundary.revenueBoundary.id",
+                "Connection.asset.ward":"properties[0].boundary.adminBoundary.id",
+                "Connection.asset.address":"properties[0].address.addressNumber",
+                "Connection.asset.property":"properties[0].propertyDetail.propertyType"
               }
             },
             "requiredErrMsg": "",
@@ -377,11 +381,12 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "convertToString":false
           },
           {
             "name": "Address",
@@ -399,11 +404,13 @@ var dat = {
             "jsonPath": "Connection.asset.zone",
             "label": "wc.create.groups.applicantDetails.zone",
             "pattern": "",
-            "type": "textarea",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "type": "singleValueList",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "convertToString":true
           },
           {
             "name": "noOfFloors",
@@ -837,6 +844,45 @@ var dat = {
     "objectName": "Connection",
     "level": 0,
     "groups": [{
+          "label": "wc.create.groups.applicationParticular.title", //Cut short labels by taking initial path from parent
+          "name": "applicationParticular", //Follow Title case pattern
+          "children": [],
+          "multiple": false,
+          "fields": [
+            {
+              "name": "With Property",
+              "jsonPath": "Connection.withProperty",
+              "label": "",
+              "pattern": "",
+              "type": "radio",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+  			"values": [{"label":"With Property", "value":true},{"label":"Without Property", "value":false}],
+  			"defaultValue":true,
+        "showHideFields": [{
+               "ifValue": false,
+               "hide": [{
+                "name": "applicantDetails",
+                "isGroup": true,
+                "isField": false
+               }],
+               "show": [{
+                "name": "NoOfFlats",
+                "isGroup": false,
+                "isField": true
+              },
+              {
+               "name": "applicantDetailsWithProp",
+               "isGroup": true,
+               "isField": false
+             }]
+              }]
+            }
+          ]
+        },
+        {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],

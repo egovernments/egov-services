@@ -136,14 +136,16 @@ public class WaterConnectionService {
         	}
         	else { 
         		waterConnectionRepository.persistConnection(waterConnectionRequest);
-        		logger.info("Creating User Id :: " );
-        		createUserId(waterConnectionRequest); 
         		logger.info("Creating Address Id :: " );
         		connectionAddressId = waterConnectionRepository.insertConnectionAddress(waterConnectionRequest);
         		logger.info("Creating Location Id :: " );
         		connectionLocationId = waterConnectionRepository.insertConnectionLocation(waterConnectionRequest);
         		logger.info("Updating Water Connection :: " );
+        		waterConnectionRequest.getConnection().getConnectionOwner().setId(1195L);
         		waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest, connectionAddressId, connectionLocationId);
+        		logger.info("Creating User Id :: " );
+        		createUserId(waterConnectionRequest); 
+        		
         	}
         	
         } catch (final Exception e) {

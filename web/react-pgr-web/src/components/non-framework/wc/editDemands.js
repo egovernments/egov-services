@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {Card, CardHeader, CardText,CardTitle} from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Chip from 'material-ui/Chip';
 import FontIcon from 'material-ui/FontIcon';
@@ -202,12 +202,85 @@ class AddDemand extends Component {
 
 
     return (<div><Card className="uiCard">
-				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.demands.addDemand')}</div>} />
-				<CardText style={styles.reducePadding}>
+				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('Applicant Particulars')}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate('Basic Details')}</div>} />
+        <br/>
+        <CardText style={styles.reducePadding}>
 					<Grid fluid>
 						<Row>
-							 <Col xs={12}>
-								<h5>Assessment Number : <span style={{fontWeight:400}}>{this.props.match.params.upicNumber}</span></h5>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Assessment Number")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("New Consumer Code")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Mobile Number")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Email")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            </Row>
+            <br/>
+            <Row>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Name of Applicant")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Locality")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Address")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Zone / Ward / Block")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            </Row>
+              <br/>
+            <Row>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Aadhaar Number")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("No of floors")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Connection Type")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Usage Type")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            </Row>
+              <br/>
+            <Row>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Property Tax")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Current Water Charge Due")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Connection Date")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Old Consumer Number")}</span></label><br/>
+            <label>{this.props.match.params.upicNumber}</label></span>
+            </Col>
+            </Row>
 								<br/>
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
@@ -223,8 +296,7 @@ class AddDemand extends Component {
 										{showfields()}
 									</tbody>
 								</Table>
-							 </Col>
-						</Row>
+
 					</Grid>
 				</CardText>
 

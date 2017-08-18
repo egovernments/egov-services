@@ -75,7 +75,7 @@ public class ReportService {
 			sc.setType(te);
 			sc.setLabel(cd.getLabel());
 			sc.setName(cd.getName());
-
+            sc.setShowColumn(cd.getShowColumn());
 			sc.setDefaultValue(cd.getPattern());
 			sc.setIsMandatory(cd.getIsMandatory());
 

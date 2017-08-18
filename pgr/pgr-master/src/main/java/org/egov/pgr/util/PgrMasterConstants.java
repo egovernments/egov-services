@@ -110,15 +110,15 @@ public class PgrMasterConstants {
     public static final String GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME = "serviceName";
     public static final String GRIEVANCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Service Type Name is required";
 
-    public static final String GRIEVANCETYPE_CODE_MANDATORY_CODE = "pgr.0007";
+    public static final String GRIEVANCETYPE_CODE_MANDATORY_CODE = "pgr.0054";
     public static final String GRIEVANCETYPE_CODE_MANADATORY_FIELD_NAME = "serviceCode";
     public static final String GRIEVANCETYPE_CODE_MANADATORY_ERROR_MESSAGE = "Service Type Code is required";
 
-    public static final String GRIEVANCETYPE_ID_MANDATORY_CODE = "pgr.0008";
-    public static final String GRIEVANCETYPE_ID_MANADATORY_FIELD_NAME = "serviceId";
-    public static final String GRIEVANCETYPE_ID_MANADATORY_ERROR_MESSAGE = "Service Type/ Grievance Type Id is required";
+    public static final String GRIEVANCETYPE_ID_MANDATORY_CODE = "pgr.0046";
+    public static final String GRIEVANCETYPE_ID_MANDATORY_FIELD_NAME = "serviceId";
+    public static final String GRIEVANCETYPE_ID_MANDATORY_ERROR_MESSAGE = "Service Type/ Grievance Type Id is required";
 
-    public static final String NO_0F_HOURS_MANDATORY_CODE = "pgr.0009";
+    public static final String NO_0F_HOURS_MANDATORY_CODE = "pgr.0047";
     public static final String NO_0F_HOURS_MANADATORY_FIELD_NAME = "noOfHours";
     public static final String NO_0F_HOURS_MANADATORY_ERROR_MESSAGE = "No of hours is required";
 
@@ -162,11 +162,11 @@ public class PgrMasterConstants {
     public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "Channels Are Required.";
     public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "channels;";
 
-    public static final String FROMPOSITION_MANDATORY_CODE = "pgr.0013";
+    public static final String FROMPOSITION_MANDATORY_CODE = "pgr.0051";
     public static final String FROMPOSITION_MANADATORY_ERROR_MESSAGE = "From Position is required.";
     public static final String FROMPOSITION_MANADATORY_FIELD_NAME = "fromPosition";
 
-    public static final String TOPOSITION_MANDATORY_CODE = "pgr.0014";
+    public static final String TOPOSITION_MANDATORY_CODE = "pgr.0052";
     public static final String TOPOSITION_MANADATORY_ERROR_MESSAGE = "To Position is required.";
     public static final String TOPOSITION_MANADATORY_FIELD_NAME = "toPosition";
 
@@ -182,7 +182,7 @@ public class PgrMasterConstants {
     public static final String RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE = "Receiving Mode Name Already Exist.";
     public static final String RECEIVINGMODE_NAME_UNIQUE_FIELD_NAME = "name";
 
-    public static final String FROMTOPOSITION_UNIQUE_CODE = "pgr.0018";
+    public static final String FROMTOPOSITION_UNIQUE_CODE = "pgr.0053";
     public static final String FROMTOPOSITION_UNIQUE_ERROR_MESSAGE = "From Position and To Position cannot be same";
     public static final String FROMTOPOSITION_UNIQUE_FIELD_NAME = "toPosition";
 

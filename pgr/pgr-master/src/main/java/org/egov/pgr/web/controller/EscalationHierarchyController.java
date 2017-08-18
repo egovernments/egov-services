@@ -40,15 +40,10 @@
 
 package org.egov.pgr.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.EscalationHierarchy;
 import org.egov.pgr.service.EscalationHierarchyService;
 import org.egov.pgr.util.PgrMasterConstants;
@@ -67,84 +62,82 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/escalation-hierarchy")
 public class EscalationHierarchyController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchyController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchyController.class);
 
-	private static final String[] taskAction = { "create", "update" };
+    private static final String[] taskAction = {"create", "update"};
+    public static final String CODE = "code";
+    public static final String MESSAGE = "message";
+    public static final String FIELD = "field";
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private EscalationHierarchyService escalationHierarchyService;
+    @Autowired
+    private EscalationHierarchyService escalationHierarchyService;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private ErrorHandler errHandler;
+    @Autowired
+    private ErrorHandler errHandler;
 
-	@PostMapping(value = "/v1/_create")
-	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final EscalationHierarchyReq escalationHierarchyRequest,
-			final BindingResult errors) {
-		if (errors.hasErrors()) {
-			final ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		logger.info("EscalationHierarchy Create : Request ::" + escalationHierarchyRequest);
+    HashMap<String, String> escalationHierarchyException = new HashMap<>();
 
-		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationHierarchyRequest,
-				taskAction[0]);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+    @PostMapping(value = "/v1/_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody @Valid final EscalationHierarchyReq escalationHierarchyRequest,
+                                    final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("EscalationHierarchy Create : Request ::" + escalationHierarchyRequest);
 
-		final List<EscalationHierarchy> escalationHierarchies = escalationHierarchyService.createEscalationHierarchy(
-				applicationProperties.getCreateEscalationHierarchyTopicName(),
-				applicationProperties.getCreateEscalationHierarchyTopicKey(), escalationHierarchyRequest);
+        validateServiceGroupRequest(escalationHierarchyRequest, taskAction[0]);
 
-		return getSuccessResponse(escalationHierarchies, escalationHierarchyRequest.getRequestInfo());
+        final List<EscalationHierarchy> escalationHierarchies = escalationHierarchyService.createEscalationHierarchy(
+                applicationProperties.getCreateEscalationHierarchyTopicName(),
+                applicationProperties.getCreateEscalationHierarchyTopicKey(), escalationHierarchyRequest);
 
-	}
+        return getSuccessResponse(escalationHierarchies, escalationHierarchyRequest.getRequestInfo());
 
-	@PostMapping(value = "/v1/_update")
-	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid final EscalationHierarchyReq escalationHierarchyRequest,
-			final BindingResult errors) {
-		if (errors.hasErrors()) {
-			final ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		logger.info("EscalationHierarchy Update: Request::" + escalationHierarchyRequest);
+    }
 
-		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationHierarchyRequest,
-				taskAction[1]);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+    @PostMapping(value = "/v1/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody @Valid final EscalationHierarchyReq escalationHierarchyRequest,
+                                    final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("EscalationHierarchy Update: Request::" + escalationHierarchyRequest);
 
-		final List<EscalationHierarchy> escalationHierarchies  = escalationHierarchyService.updateEscalationHierarchy(
-				applicationProperties.getUpdateEscalationHierarchyTopicName(),
-				applicationProperties.getUpdateEscalationHierarchyTopicKey(), escalationHierarchyRequest);
+        validateServiceGroupRequest(escalationHierarchyRequest, taskAction[1]);
 
-		return getSuccessResponse(escalationHierarchies, escalationHierarchyRequest.getRequestInfo());
+        final List<EscalationHierarchy> escalationHierarchies = escalationHierarchyService.updateEscalationHierarchy(
+                applicationProperties.getUpdateEscalationHierarchyTopicName(),
+                applicationProperties.getUpdateEscalationHierarchyTopicKey(), escalationHierarchyRequest);
 
-	}
-	
-	@PostMapping("/v1/_search")
+        return getSuccessResponse(escalationHierarchies, escalationHierarchyRequest.getRequestInfo());
+
+    }
+
+    @PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final EscalationHierarchyGetReq escHierarchyGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult requestBodyBindingResult) {
+                                    final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+                                    final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         // validate input params
@@ -158,7 +151,7 @@ public class EscalationHierarchyController {
         // Call service
         List<EscalationHierarchy> escHierarchyList = null;
         try {
-        	escHierarchyList = escalationHierarchyService.getAllEscalationHierarchy(escHierarchyGetRequest);
+            escHierarchyList = escalationHierarchyService.getAllEscalationHierarchy(escHierarchyGetRequest);
         } catch (final Exception exception) {
             logger.error("EscalationHierarchy Search : Error while processing request : " + escHierarchyGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -168,121 +161,97 @@ public class EscalationHierarchyController {
 
     }
 
-	private List<ErrorResponse> validateServiceGroupRequest(final EscalationHierarchyReq escalationHierarchyRequest,
-			String action) {
-		final List<ErrorResponse> errorResponses = new ArrayList<>();
-		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(escalationHierarchyRequest, action);
-		errorResponse.setError(error);
-		if (!errorResponse.getErrorFields().isEmpty())
-			errorResponses.add(errorResponse);
-		return errorResponses;
-	}
+    private void validateServiceGroupRequest(final EscalationHierarchyReq escalationHierarchyRequest,
+                                             String action) {
+        fromtopositioncheck(escalationHierarchyRequest);
+        addTenantIdValidationErrors(escalationHierarchyRequest);
+        serviceCodeCheck(escalationHierarchyRequest);
+        if (action.equals(taskAction[0])) {
+            checkCombinationExists(escalationHierarchyRequest);
+        }
+    }
 
-	private Error getError(final EscalationHierarchyReq escalationHierarchyRequest, String action) {
-		final List<ErrorField> errorFields = getErrorFields(escalationHierarchyRequest, action);
-		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(PgrMasterConstants.INVALID_ESCALATIONHIERARCHY_REQUEST_MESSAGE).errorFields(errorFields)
-				.build();
-	}
+    private ErrorResponse populateErrors(final BindingResult errors) {
+        final ErrorResponse errRes = new ErrorResponse();
 
-	private List<ErrorField> getErrorFields(final EscalationHierarchyReq escalationHierarchyRequest, String action) {
-		final List<ErrorField> errorFields = new ArrayList<>();
-		fromtopositioncheck(escalationHierarchyRequest, errorFields);
-		addTeanantIdValidationErrors(escalationHierarchyRequest, errorFields);
-		serviceCodeCheck(escalationHierarchyRequest, errorFields);
-		if (action.equals(taskAction[0])) {
-			checkCombinationExists(escalationHierarchyRequest, errorFields);
-		}
-		return errorFields;
-	}
+        final Error error = new Error();
+        error.setCode(1);
+        error.setDescription("Error while binding request");
+        if (errors.hasFieldErrors())
+            for (final FieldError fieldError : errors.getFieldErrors())
+                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+        errRes.setError(error);
+        return errRes;
+    }
 
-	private ErrorResponse populateErrors(final BindingResult errors) {
-		final ErrorResponse errRes = new ErrorResponse();
+    private void fromtopositioncheck(final EscalationHierarchyReq escalationHierarchyRequest) {
+        for (int i = 0; i < escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
+            if (null == escalationHierarchyRequest.getEscalationHierarchy().get(i).getFromPosition()
+                    || escalationHierarchyRequest.getEscalationHierarchy().get(i).getFromPosition() <= 0L) {
+                escalationHierarchyException.put(CODE, PgrMasterConstants.FROMPOSITION_MANDATORY_CODE);
+                escalationHierarchyException.put(MESSAGE, PgrMasterConstants.FROMPOSITION_MANADATORY_ERROR_MESSAGE);
+                escalationHierarchyException.put(FIELD, PgrMasterConstants.FROMPOSITION_MANADATORY_FIELD_NAME);
+                throw new PGRMasterException(escalationHierarchyException);
+            }
+            if (null == escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition()
+                    || escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition() <= 0L) {
+                escalationHierarchyException.put(CODE, PgrMasterConstants.TOPOSITION_MANDATORY_CODE);
+                escalationHierarchyException.put(MESSAGE, PgrMasterConstants.TOPOSITION_MANADATORY_ERROR_MESSAGE);
+                escalationHierarchyException.put(FIELD, PgrMasterConstants.TOPOSITION_MANADATORY_FIELD_NAME);
+                throw new PGRMasterException(escalationHierarchyException);
+            }
+            if (escalationHierarchyRequest.getEscalationHierarchy().get(i)
+                    .getFromPosition() == escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition()) {
+                escalationHierarchyException.put(CODE, PgrMasterConstants.FROMTOPOSITION_UNIQUE_CODE);
+                escalationHierarchyException.put(MESSAGE, PgrMasterConstants.FROMTOPOSITION_UNIQUE_ERROR_MESSAGE);
+                escalationHierarchyException.put(FIELD, PgrMasterConstants.FROMTOPOSITION_UNIQUE_FIELD_NAME);
+                throw new PGRMasterException(escalationHierarchyException);
+            }
+        }
+    }
 
-		final Error error = new Error();
-		error.setCode(1);
-		error.setDescription("Error while binding request");
-		if (errors.hasFieldErrors())
-			for (final FieldError fieldError : errors.getFieldErrors())
-				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-		errRes.setError(error);
-		return errRes;
-	}
+    private void serviceCodeCheck(final EscalationHierarchyReq escalationHierarchyRequest) {
+        for (int i = 0; i < escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
+            if (escalationHierarchyRequest.getEscalationHierarchy().get(i).getServiceCode() == null || escalationHierarchyRequest.getEscalationHierarchy().get(i).getServiceCode().isEmpty()) {
+                escalationHierarchyException.put(CODE, PgrMasterConstants.GRIEVANCETYPE_CODE_MANDATORY_CODE);
+                escalationHierarchyException.put(MESSAGE, PgrMasterConstants.GRIEVANCETYPE_CODE_MANADATORY_ERROR_MESSAGE);
+                escalationHierarchyException.put(FIELD, PgrMasterConstants.GRIEVANCETYPE_CODE_MANADATORY_FIELD_NAME);
+                throw new PGRMasterException(escalationHierarchyException);
+            }
+        }
+    }
 
-	private void fromtopositioncheck(final EscalationHierarchyReq escalationHierarchyRequest,
-			final List<ErrorField> errorFields) {
-		for (int i = 0; i < escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
-			if (null == escalationHierarchyRequest.getEscalationHierarchy().get(i).getFromPosition()
-					|| escalationHierarchyRequest.getEscalationHierarchy().get(i).getFromPosition() <= 0L) {
-				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.FROMPOSITION_MANDATORY_CODE)
-						.message(PgrMasterConstants.FROMPOSITION_MANADATORY_ERROR_MESSAGE)
-						.field(PgrMasterConstants.FROMPOSITION_MANADATORY_FIELD_NAME).build();
-				errorFields.add(errorField);
-			}
-			if (null == escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition()
-					|| escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition() <= 0L) {
-				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TOPOSITION_MANDATORY_CODE)
-						.message(PgrMasterConstants.TOPOSITION_MANADATORY_ERROR_MESSAGE)
-						.field(PgrMasterConstants.TOPOSITION_MANDATORY_CODE).build();
-				errorFields.add(errorField);
-			}
-			if (escalationHierarchyRequest.getEscalationHierarchy().get(i)
-					.getFromPosition() == escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition()) {
-				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.FROMTOPOSITION_UNIQUE_CODE)
-						.message(PgrMasterConstants.FROMTOPOSITION_UNIQUE_ERROR_MESSAGE)
-						.field(PgrMasterConstants.FROMTOPOSITION_UNIQUE_FIELD_NAME).build();
-				errorFields.add(errorField);
-			}
-		}
-	}
+    private void addTenantIdValidationErrors(final EscalationHierarchyReq escalationHierarchyRequest) {
+        for (int i = 0; i < escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
+            if (escalationHierarchyRequest.getEscalationHierarchy().get(i).getTenantId() == null || escalationHierarchyRequest.getEscalationHierarchy().get(i).getTenantId().isEmpty()) {
+                escalationHierarchyException.put(CODE, PgrMasterConstants.TENANTID_MANDATORY_CODE);
+                escalationHierarchyException.put(MESSAGE, PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE);
+                escalationHierarchyException.put(FIELD, PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME);
+                throw new PGRMasterException(escalationHierarchyException);
+            } else
+                return;
+        }
+    }
 
-	private void serviceCodeCheck(final EscalationHierarchyReq escalationHierarchyRequest,
-			final List<ErrorField> errorFields) {
-		for(int i=0 ;i<escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
-		if (escalationHierarchyRequest.getEscalationHierarchy().get(i).getServiceCode() == null || escalationHierarchyRequest.getEscalationHierarchy().get(i).getServiceCode().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder()
-					.code(PgrMasterConstants.GRIEVANCETYPE_CODE_MANDATORY_CODE)
-					.message(PgrMasterConstants.GRIEVANCETYPE_CODE_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.GRIEVANCETYPE_CODE_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		}
-		}
-	}
+    private void checkCombinationExists(final EscalationHierarchyReq escalationHierarchyRequest) {
+        for (int i = 0; i < escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
+            if (escalationHierarchyRequest.getEscalationHierarchy().get(i).getTenantId() == null || escalationHierarchyRequest.getEscalationHierarchy().get(i).getTenantId().isEmpty()) {
+                escalationHierarchyException.put(CODE, PgrMasterConstants.TENANTID_MANDATORY_CODE);
+                escalationHierarchyException.put(MESSAGE, PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE);
+                escalationHierarchyException.put(FIELD, PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME);
+                throw new PGRMasterException(escalationHierarchyException);
+            } else
+                return;
+        }
+    }
 
-	private void addTeanantIdValidationErrors(final EscalationHierarchyReq escalationHierarchyRequest,
-			final List<ErrorField> errorFields) {
-		for(int i=0 ;i<escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
-		if (escalationHierarchyRequest.getEscalationHierarchy().get(i).getTenantId() == null || escalationHierarchyRequest.getEscalationHierarchy().get(i).getTenantId().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
-					.message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
-		}
-	}
-	
-	private void checkCombinationExists(final EscalationHierarchyReq escalationHierarchyRequest,
-			final List<ErrorField> errorFields) {
-		for(int i=0 ;i<escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
-		if (escalationHierarchyRequest.getEscalationHierarchy().get(i).getTenantId() == null || escalationHierarchyRequest.getEscalationHierarchy().get(i).getTenantId().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
-					.message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
-		}
-	}
-	
-	private ResponseEntity<?> getSuccessResponse(final List<EscalationHierarchy> escalationHierarchyList,
-			final RequestInfo requestInfo) {
-		final EscalationHierarchyRes escalationHierarchyRes = new EscalationHierarchyRes();
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		escalationHierarchyRes.setResponseInfo(responseInfo);
-		escalationHierarchyRes.setEscalationHierarchies(escalationHierarchyList);
-		return new ResponseEntity<>(escalationHierarchyRes, HttpStatus.OK);
-	}
+    private ResponseEntity<?> getSuccessResponse(final List<EscalationHierarchy> escalationHierarchyList,
+                                                 final RequestInfo requestInfo) {
+        final EscalationHierarchyRes escalationHierarchyRes = new EscalationHierarchyRes();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        escalationHierarchyRes.setResponseInfo(responseInfo);
+        escalationHierarchyRes.setEscalationHierarchies(escalationHierarchyList);
+        return new ResponseEntity<>(escalationHierarchyRes, HttpStatus.OK);
+    }
 }

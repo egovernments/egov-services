@@ -1,0 +1,22 @@
+{
+  "ResponseInfo": {
+    "apiId": "emp",
+    "ver": "1.0",
+    "ts": "2017-01-18T07:18:23.130Z",
+    "resMsgId": "uief87324",
+    "msgId": "20170310130900",
+    "status": "200"
+  },
+  "Designation": [
+    {
+      "id": 1,
+      "code": "100",
+      "name": "clerk",
+      "active": true,
+      "description": "clerk",
+      "chartOfAccounts": "accounts",
+      "tenantId": "default"
+    }
+    ]
+  }
+  

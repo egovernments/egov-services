@@ -1,0 +1,13 @@
+{
+	"RequestInfo" : {
+		"apiId" : "apiId",
+		"ver" : "ver",
+		"ts": "06-01-1964 00:00:00",
+		"action" : "action",
+		"did" : "did",
+		"key" : "key",
+		"msgId" : "msgId",
+		"requesterId" : "requesterId",
+		"authToken" : "authToken"
+	}
+}

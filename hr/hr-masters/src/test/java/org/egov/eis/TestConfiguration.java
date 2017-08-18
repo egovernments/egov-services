@@ -38,42 +38,21 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis;
 
-import lombok.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import static org.mockito.Mockito.mock;
 
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class Designation {
+@Configuration
+public class TestConfiguration {
 
-	@NotNull
-	private Long id;
-
-	@NotNull
-	@Size(min=3, max=100)
-	private String name;
-
-	@NotNull
-	@Size(min=3, max=20)
-	private String code;
-
-	@Size(max=250)
-	private String description;
-
-	private String chartOfAccounts;
-
-	@NotNull
-	private Boolean active;
-
-	@NotNull
-	private String tenantId;
+    @Bean
+    @SuppressWarnings("unchecked")
+    public KafkaTemplate<String, Object> kafkaTemplate() {
+        return mock(KafkaTemplate.class);
+    }
 
 }

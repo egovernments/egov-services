@@ -967,7 +967,7 @@ ReportDefinitions:
     type: string
     source: egpgr_complainttype
     linkedReport:
-      reportName: pgr DrillDownByBoundaryLocalityGetDepartment
+      reportName: DrillDownByBoundaryLocalityGetDepartment
       linkedColumn: _parent?reportName={reportName}&parentboundary={name}
   - name: registered
     label: reports.pgr.status.registered
@@ -1056,7 +1056,7 @@ ReportDefinitions:
     source: egpgr_ddbGetLocality
   - name: registered
     linkedReport:
-      reportName: pgr DrillDownByBoundaryLocalityGetDepartment
+      reportName: DrillDownByBoundaryLocalityGetDepartment
       linkedColumn: _parent?reportName={reportName}&locality={name}
     label: reports.pgr.status.registered
     type: number
@@ -1149,7 +1149,7 @@ ReportDefinitions:
     type: string
     source: eg_department
     linkedReport:
-      reportName: pgr DrillDownByBoundaryLocalityDepartmentGetComplaintType
+      reportName: DrillDownByBoundaryLocalityDepartmentGetComplaintType
       linkedColumn: _parent?reportName={reportName}&deptname={name}
   - name: registered
     label: reports.pgr.status.registered
@@ -1244,7 +1244,7 @@ ReportDefinitions:
     type: string
     source: egpgr_complainttype
     linkedReport:
-      reportName: pgr DrillDownByBoundaryLocalityDepartmentGetUserNamePosition
+      reportName: DrillDownByBoundaryLocalityDepartmentGetUserNamePosition
       linkedColumn: _parent?reportName={reportName}&complainttype={name}
   - name: registered
     label: reports.pgr.status.registered
@@ -1344,7 +1344,7 @@ ReportDefinitions:
     type: string
     source: submission
     linkedReport:
-      reportName: pgr DrillDownByBoundaryLocalityDepartmentUserNamePositionGetComplaints
+      reportName: DrillDownByBoundaryLocalityDepartmentUserNamePositionGetComplaints
       linkedColumn: _parent?reportName={reportName}&username={userposition}
   - name: registered
     label: reports.pgr.status.registered

@@ -10,7 +10,6 @@ import java.util.Map;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.BoundaryResponse;
 import org.egov.asset.model.Asset;
-import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetIndex;
 import org.egov.asset.model.Boundary;
 import org.egov.asset.model.Location;
@@ -42,45 +41,6 @@ public class AssetIndexRepository {
         }
         log.info("ElasticSearchService save ASSET in elasticsearch : " + assetIndex);
     }
-
-/*    public void updateAsset(final AssetIndex assetIndex) {
-        final String url = applicationProperties.getIndexerHost() + applicationProperties.getAssetIndexName() + "/"
-                + assetIndex.getAssetCode();
-        log.info("Asset Update ES Index Push URL :: " + url);
-        try {
-            restTemplate.postForObject(url, assetIndex, Map.class);
-        } catch (final Exception e) {
-            log.error(e.toString());
-            throw e;
-        }
-        log.info("ElasticSearchService save ASSET in elasticsearch : " + assetIndex);
-    }*/
-    
-	public void saveAssetCategory(AssetCategory assetCategory) {
-
-		 final String url = applicationProperties.getIndexerHost() + applicationProperties.getAssetCategoryIndex() + "/"
-	                + assetCategory.getCode();
-	        log.info("Asset Update ES Index Push URL :: " + url);
-	        try {
-	            restTemplate.postForObject(url, assetCategory, Map.class);
-	        } catch (final Exception e) {
-	            log.error(e.toString());
-	            throw e;
-	        }
-	}
-
-	/*public void updateAssetCategory(AssetCategory assetCategory) {
-
-		 final String url = applicationProperties.getIndexerHost() + applicationProperties.getAssetCategoryIndex() + "/"
-	                + assetCategory.getCode();
-	        log.info("Asset Update ES Index Push URL :: " + url);
-	        try {
-	            restTemplate.postForObject(url, assetCategory, Map.class);
-	        } catch (final Exception e) {
-	            log.error(e.toString());
-	            throw e;
-	        }
-	}*/
 
     public Map<Long, Boundary> getlocationsById(final Asset asset) {
         final Location location = asset.getLocationDetails();

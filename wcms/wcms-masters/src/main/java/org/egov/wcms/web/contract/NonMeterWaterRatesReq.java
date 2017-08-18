@@ -37,17 +37,19 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
+package org.egov.wcms.web.contract;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.model.NonMeterWaterRates;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,59 +62,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class TreatmentPlant {
-
-    public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
+public class NonMeterWaterRatesReq {
 
     @NotNull
-    private Long id;
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
 
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String code;
-
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
-
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String plantType;
-
-    @NotNull
-    private String locationNum;
-    
-    private String locationName;
-
-
-    @NotNull
-    private String wardNum;
-    
-    private String wardName;
-    @NotNull
-    private String zoneNum;
-    
-    private String zoneName;
-
-    @NotNull
-    @Min(1)
-    @Max(8)
-    private double capacity;
-
-    private Long storageReservoirId;
-
-    @NotNull
-    private String storageReservoirName;
-
-    @Size(max = 250)
-    private String description;
-
-    @JsonIgnore
-    private AuditDetails auditDeatils;
-
-    @Size(max = 250)
-    @NotNull
-    private String tenantId;
+    @JsonProperty("NonMeterWaterRates")
+    private List<NonMeterWaterRates> nonMeterWaterRates = new ArrayList<>();
 
 }

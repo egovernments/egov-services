@@ -51,6 +51,7 @@ import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.model.MeterStatus;
 import org.egov.wcms.model.MeterWaterRates;
+import org.egov.wcms.model.NonMeterWaterRates;
 import org.egov.wcms.model.PipeSize;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.model.PropertyTypePipeSize;
@@ -60,6 +61,7 @@ import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.model.SupplyType;
 import org.egov.wcms.model.TreatmentPlant;
 import org.egov.wcms.model.enums.ApplicationType;
+import org.egov.wcms.model.enums.ConnectionType;
 import org.egov.wcms.model.enums.PlantType;
 import org.egov.wcms.model.enums.ReservoirType;
 import org.egov.wcms.service.CategoryTypeService;
@@ -68,6 +70,7 @@ import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.MeterCostService;
 import org.egov.wcms.service.MeterWaterRatesService;
+import org.egov.wcms.service.NonMeterWaterRatesService;
 import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeService;
@@ -83,6 +86,7 @@ import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.MeterCostReq;
 import org.egov.wcms.web.contract.MeterStatusReq;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
+import org.egov.wcms.web.contract.NonMeterWaterRatesReq;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
@@ -140,9 +144,12 @@ public class ValidatorUtils {
 
     @Autowired
     private MeterWaterRatesService meterWaterRatesService;
-    
+
     @Autowired
     private MeterCostService meterCostService;
+
+    @Autowired
+    private NonMeterWaterRatesService nonMeterWaterRatesService;
 
     public List<ErrorResponse> validateCategoryRequest(final CategoryTypeRequest categoryRequest, final Boolean isUpdate) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -154,7 +161,7 @@ public class ValidatorUtils {
         return errorResponses;
     }
 
-    private Error getError(final CategoryTypeRequest categoryRequest,final Boolean isUpdate) {
+    private Error getError(final CategoryTypeRequest categoryRequest, final Boolean isUpdate) {
         categoryRequest.getCategoryType();
         final List<ErrorField> errorFields = getErrorFields(categoryRequest, isUpdate);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
@@ -172,7 +179,7 @@ public class ValidatorUtils {
     }
 
     private void addCategoryNameValidationErrors(final CategoryType category,
-            final List<ErrorField> errorFields,final Boolean isUpdate) {
+            final List<ErrorField> errorFields, final Boolean isUpdate) {
         if (isUpdate)
             if (category.getCode() == null || category.getCode().isEmpty()) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
@@ -293,14 +300,14 @@ public class ValidatorUtils {
         return errorResponses;
     }
 
-    private Error getError(final DocumentTypeApplicationTypeReq documentNameRequest,  final Boolean isUpdate) {
+    private Error getError(final DocumentTypeApplicationTypeReq documentNameRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = getErrorFields(documentNameRequest, isUpdate);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_DOCTYPE_APPLICATION_TYPE_REQUEST_MESSAGE).errorFields(errorFields)
                 .build();
     }
 
-    private List<ErrorField> getErrorFields(final DocumentTypeApplicationTypeReq documentApplicationReq,  final Boolean isUpdate) {
+    private List<ErrorField> getErrorFields(final DocumentTypeApplicationTypeReq documentApplicationReq, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
         for (final DocumentTypeApplicationType docTypeAppType : documentApplicationReq.getDocumentTypeApplicationType()) {
             addDocumentTypeValidationErrors(docTypeAppType, errorFields, isUpdate);
@@ -570,6 +577,7 @@ public class ValidatorUtils {
             errorFields.add(errorField);
         }
     }
+
     public List<ErrorResponse> validateMeterStatusRequest(final MeterStatusReq meterStatusRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
@@ -579,13 +587,13 @@ public class ValidatorUtils {
             errorResponses.add(errorResponse);
         return errorResponses;
     }
-    
+
     private Error getError(final MeterStatusReq meterStatusRequest) {
         final List<ErrorField> errorFields = getErrorFields(meterStatusRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_METER_STATUS_REQUEST_MESSAGE).errorFields(errorFields).build();
     }
-    
+
     private List<ErrorField> getErrorFields(final MeterStatusReq meterStatusRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         final List<MeterStatus> meterStatuses = meterStatusRequest.getMeterStatus();
@@ -593,7 +601,7 @@ public class ValidatorUtils {
             addMeterStatusValidationErrors(meterStatus, errorFields);
         return errorFields;
     }
-    
+
     private void addMeterStatusValidationErrors(final MeterStatus meterStatus, final List<ErrorField> errorFields) {
 
         if (StringUtils.isBlank(meterStatus.getTenantId())) {
@@ -614,7 +622,6 @@ public class ValidatorUtils {
         } else
             return;
     }
-
 
     public List<ErrorResponse> validateMeterCostRequest(final MeterCostReq meterCostRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -818,7 +825,8 @@ public class ValidatorUtils {
 
     }
 
-    public List<ErrorResponse> validateUsageTypeRequest(final PropertyTypeUsageTypeReq propUsageTypeRequest, final Boolean isUpdate) {
+    public List<ErrorResponse> validateUsageTypeRequest(final PropertyTypeUsageTypeReq propUsageTypeRequest,
+            final Boolean isUpdate) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(propUsageTypeRequest, isUpdate);
@@ -885,7 +893,8 @@ public class ValidatorUtils {
 
     }
 
-    public List<ErrorResponse> validateWaterSourceRequest(final SourceTypeRequest waterSourceTypeRequest, final Boolean isUpdate) {
+    public List<ErrorResponse> validateWaterSourceRequest(final SourceTypeRequest waterSourceTypeRequest,
+            final Boolean isUpdate) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(waterSourceTypeRequest, isUpdate);
@@ -1241,6 +1250,96 @@ public class ValidatorUtils {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.METER_WATER_RATES_UNIQUE_CODE)
                     .message(WcmsConstants.METER_WATER_RATES_UNQ_ERROR_MESSAGE)
                     .field(WcmsConstants.METER_WATER_RATES_UNQ_FIELD_NAME).build();
+            errorFields.add(errorField);
+
+        }
+    }
+
+    public List<ErrorResponse> validateNonMeterWaterRatesRequest(final NonMeterWaterRatesReq nonMeterWaterRatesReq,
+            final Boolean isUpdate) {
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final List<ErrorResponse> errorResponseList = new ArrayList<>();
+        final Error error = getError(nonMeterWaterRatesReq, isUpdate);
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponseList.add(errorResponse);
+        return errorResponseList;
+
+    }
+
+    private Error getError(final NonMeterWaterRatesReq nonMeterWaterRatesReq, final Boolean isUpdate) {
+        final List<ErrorField> errorFiled = getErrorFields(nonMeterWaterRatesReq, isUpdate);
+        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                .message(WcmsConstants.INVALID_NON_METER_WATER_RATES_REQUEST_MESSAGE).errorFields(errorFiled).build();
+    }
+
+    private List<ErrorField> getErrorFields(final NonMeterWaterRatesReq nonMeterWaterRatesReq, final Boolean isUpdate) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+        for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesReq.getNonMeterWaterRates()) {
+            addNonMeterWaterRatesValidationErrors(nonMeterWaterRates, errorFields, isUpdate);
+            addTenantIdValidationErrors(nonMeterWaterRates.getTenantId(), errorFields);
+        }
+        return errorFields;
+    }
+
+    private void addNonMeterWaterRatesValidationErrors(final NonMeterWaterRates nonMeterWaterRates,
+            final List<ErrorField> errorFields, final Boolean isUpdate) {
+        if (isUpdate)
+            if (nonMeterWaterRates.getCode() == null || nonMeterWaterRates.getCode().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                        .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
+        if (nonMeterWaterRates.getConnectionType() == null || nonMeterWaterRates.getConnectionType().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.CONNECTION_TYPE_MANDATORY_CODE)
+                    .message(WcmsConstants.CONNECTION_TYPE_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.CONNECTION_TYPE_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (ConnectionType.fromValue(nonMeterWaterRates.getConnectionType()) == null) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CONNECTION_TYPE_INVALID_CODE)
+                    .message(WcmsConstants.CONNECTION_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+        if (nonMeterWaterRates.getUsageTypeName() == null
+                || nonMeterWaterRates.getUsageTypeName().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
+                    .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (nonMeterWaterRates.getSourceTypeName() == null || nonMeterWaterRates.getSourceTypeName().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCETYPE_NAME_MANDATORY_CODE)
+                    .message(WcmsConstants.SOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.SOURCETYPE_NAME_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (nonMeterWaterRates.getPipeSize() == null) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
+                    .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (!nonMeterWaterRatesService.getUsageTypeByName(nonMeterWaterRates)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_USAGETYPE_INVALID_CODE)
+                    .message(WcmsConstants.PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PROPERTY_USAGETYPE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (nonMeterWaterRatesService.checkPipeSizeExists(nonMeterWaterRates.getPipeSize(),
+                nonMeterWaterRates.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_INMM_INVALID_CODE)
+                    .message(WcmsConstants.PIPESIZE_INMM_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PIPESIZE_INMM_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (nonMeterWaterRatesService.checkSourceTypeExists(nonMeterWaterRates.getSourceTypeName(),
+                nonMeterWaterRates.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCE_TYPE_NAME_INVALID_CODE)
+                    .message(WcmsConstants.SOURCE_TYPE_NAME_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.SOURCE_TYPE_NAME_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (!nonMeterWaterRatesService.checkNonMeterWaterRatesExists(nonMeterWaterRates)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.NON_METER_WATER_RATES_UNIQUE_CODE)
+                    .message(WcmsConstants.NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE)
+                    .field(WcmsConstants.NON_METER_WATER_RATES_UNQ_FIELD_NAME).build();
             errorFields.add(errorField);
 
         }

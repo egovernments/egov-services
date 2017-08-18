@@ -37,14 +37,13 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
+package org.egov.wcms.web.contract;
+
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,65 +53,54 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 @Builder
-public class TreatmentPlant {
+public class NonMeterWaterRatesGetReq {
 
-    public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
+    private List<Long> id;
 
-    @NotNull
-    private Long id;
-
-    @NotNull
-    @Size(min = 3, max = 20)
     private String code;
 
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
+    private String billingType;
 
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String plantType;
+    private String connectionType;
 
-    @NotNull
-    private String locationNum;
-    
-    private String locationName;
+    private String usageTypeName;
 
+    private String usageTypeId;
 
-    @NotNull
-    private String wardNum;
-    
-    private String wardName;
-    @NotNull
-    private String zoneNum;
-    
-    private String zoneName;
+    private String sourceTypeName;
 
-    @NotNull
-    @Min(1)
-    @Max(8)
-    private double capacity;
+    private Long sourceTypeId;
 
-    private Long storageReservoirId;
+    private Double pipeSize;
 
-    @NotNull
-    private String storageReservoirName;
+    private Long pipeSizeId;
 
-    @Size(max = 250)
-    private String description;
+    private Long fromDate;
 
-    @JsonIgnore
-    private AuditDetails auditDeatils;
+    private String noOfTaps;
 
-    @Size(max = 250)
+    private Double amount;
+
+    private Boolean active;
+
     @NotNull
     private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

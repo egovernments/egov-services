@@ -37,82 +37,36 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
+package org.egov.wcms.repository.rowmapper;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.egov.wcms.model.NonMeterWaterRates;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+@Component
+public class NonMeterWaterRatesRowMapper implements RowMapper<NonMeterWaterRates> {
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-@Builder
-public class TreatmentPlant {
-
-    public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
-
-    @NotNull
-    private Long id;
-
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String code;
-
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
-
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String plantType;
-
-    @NotNull
-    private String locationNum;
-    
-    private String locationName;
-
-
-    @NotNull
-    private String wardNum;
-    
-    private String wardName;
-    @NotNull
-    private String zoneNum;
-    
-    private String zoneName;
-
-    @NotNull
-    @Min(1)
-    @Max(8)
-    private double capacity;
-
-    private Long storageReservoirId;
-
-    @NotNull
-    private String storageReservoirName;
-
-    @Size(max = 250)
-    private String description;
-
-    @JsonIgnore
-    private AuditDetails auditDeatils;
-
-    @Size(max = 250)
-    @NotNull
-    private String tenantId;
-
+    @Override
+    public NonMeterWaterRates mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final NonMeterWaterRates nonMeterWaterRates = new NonMeterWaterRates();
+        nonMeterWaterRates.setId(rs.getLong("nonmeterwater_id"));
+        nonMeterWaterRates.setCode(rs.getString("nonmeterwater_code"));
+        nonMeterWaterRates.setBillingType(rs.getString("billingtype"));
+        nonMeterWaterRates.setUsageTypeId(rs.getString("nonmeterwater_usagetypeid"));
+        nonMeterWaterRates.setSourceTypeId(rs.getLong("nonmeterwater_sourcetypeid"));
+        nonMeterWaterRates.setPipeSizeId(rs.getLong("nonmeterwater_pipesizeId"));
+        nonMeterWaterRates.setActive(rs.getBoolean("nonmeterwater_active"));
+        nonMeterWaterRates.setFromDate(rs.getLong("nonmeterwater_fromdate"));
+        nonMeterWaterRates.setAmount(rs.getDouble("nonmeterwater_amount"));
+        nonMeterWaterRates.setActive(rs.getBoolean("nonmeterwater_active"));
+        nonMeterWaterRates.setTenantId(rs.getString("nonmeterwater_tenantId"));
+        nonMeterWaterRates.setPipeSize(rs.getDouble("pipesize_sizeinmm"));
+        nonMeterWaterRates.setSourceTypeName(rs.getString("watersource_name"));
+        nonMeterWaterRates.setConnectionType(rs.getString("connectiontype"));
+        nonMeterWaterRates.setNoOfTaps(rs.getLong("nonmeterwater_nooftaps"));
+        return nonMeterWaterRates;
+    }
 }

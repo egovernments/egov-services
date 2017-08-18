@@ -57,7 +57,7 @@ public class MeterWaterRatesRowMapper implements RowMapper<MeterWaterRates> {
         final MeterWaterRates meterWaterRates = new MeterWaterRates();
         meterWaterRates.setId(rs.getLong("meterwater_id"));
         meterWaterRates.setCode(rs.getString("meterwater_code"));
-        meterWaterRates.setBillingtype(rs.getString("billingtype"));
+        meterWaterRates.setBillingType(rs.getString("billingtype"));
         meterWaterRates.setUsageTypeId(rs.getString("meterwater_usagetypeid"));
         meterWaterRates.setSourceTypeId(rs.getLong("meterwater_sourcetypeid"));
         meterWaterRates.setPipeSizeId(rs.getLong("meterwater_pipesizeId"));

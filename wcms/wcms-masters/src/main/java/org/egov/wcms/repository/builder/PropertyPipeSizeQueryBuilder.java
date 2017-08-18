@@ -153,7 +153,7 @@ public class PropertyPipeSizeQueryBuilder {
     }
 
     public static String getPipeSizeIdQuery() {
-        return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ? ";
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= :sizeinmilimeter and tenantId = :tenantId ";
     }
 
     public static String getPipeSizeInmm() {

@@ -21,6 +21,8 @@
         - Create, Update and Search for Storage Reservoir Master
         - Create, Update and Search for Water Treatment Plant Master
         - Create, Update and Search for Meter Water Rates Master
+        - Create, Update and Search for Non Meter Water Rates Master
+        
     contact:
       name: Rishi
       email: rishi@egovernments.org
@@ -974,13 +976,82 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
+  #  Non  Meter Water Rates Master API
+    /nonmeterwaterrates/_create:
+      post:
+        summary: Create new non meter water rates.
+        description: API to supports bulk create non meter water rates.
+        tags:
+          - Non Meter Water Rates
+        parameters:
+          - name: Non Meter Water Rates
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/NonMeterWaterRatesReq'
+        responses:
+          '201':
+            description: Non Meter water rates created sucessfully.
+            schema:
+              $ref: "#/definitions/NonMeterWaterRatesRes"
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /nonmeterwaterrates/_update:
+      post:
+        summary: while updating in request body code is required and updates existing values based on code.
+        description: bulk updates existing values
+        tags:
+          - Non Meter Water Rates
+        parameters:
+          - name: Non Meter Water Rates
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/NonMeterWaterRatesReq'
+        responses:
+          '200':
+            description: Non Meter Water Rates updated successfully.
+            schema:
+              $ref: "#/definitions/NonMeterWaterRatesRes"
+          '400':
+            description: Update Non Meter Water Rates failed.
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /nonmeterwaterrates/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Non Meter Water Rates
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/usageTypeName"
+          - $ref: "#/parameters/pipeSizeInMM"
+          - $ref: "#/parameters/sourceTypeName"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/NonMeterWaterRatesReq'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
   #  Meter Cost Master API            
     /metercosts/_create:
       post:
         summary: creates new meter cost.
         description: API to create meter cost.
         tags:
-          - MeterCost
+          - Meter Costs
         parameters:
           - name: MeterCost
             in: body
@@ -1006,7 +1077,7 @@
           values based on code.
         description: updates existing values
         tags:
-        - MeterCost
+        - Meter Costs
         parameters:
           - name: MeterCost
             in: body
@@ -2316,6 +2387,7 @@
       required:
         - RequestInfo
         - MeterStatus 
+        
     MeterStatusRes:
       type: object
       properties:
@@ -2357,5 +2429,82 @@
       required:
         - code 
         - meterStatus
+        - tenantId
+        
+     # Non Meter Water Rates Master definitions
+    NonMeterWaterRatesReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        NonMeterWaterRates:
+          $ref: '#/definitions/NonMeterWaterRates'
+      required:
+        - RequestInfo
+        - NonMeterWaterRates
+    
+    NonMeterWaterRatesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        NonMeterWaterRates:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/NonMeterWaterRates'
+
+    NonMeterWaterRates:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier, typically defined by system and readonly.
+        code:
+          type: string
+          description: unique code this should be defined by system and readonly.
+          maxLength: 20
+        connectionType:
+          type: string
+          description: possible and supported type of new water connection
+          enum:
+           - TEMPORARY
+           - PERMANENT
+        usageTypeId:
+          type: string
+          description: unique identifier of property usage type object
+        sourceTypeId:
+          type: string
+          description: unique identifier of property usage type object
+        pipeSizeId:
+          type: integer
+          format: int64
+          description: unique identifier of pipe size type object
+        fromDate:
+          type: string
+          format: date
+          description: from Date.
+        amount:
+          type: number
+          description: monthly rent for Non-meter
+        noOfTaps:
+          type: number
+          description: monthly rent for Non-meter
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+          maxLength: 250
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - connectionType
+        - sourceTypeId
+        - usageTypeId
+        - pipeSizeId
+        - fromDate
+        - amount
+        - noOfTaps
         - tenantId
 

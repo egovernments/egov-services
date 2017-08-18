@@ -37,82 +37,34 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+package org.egov.wcms.model.enums;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.StringUtils;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-@Builder
-public class TreatmentPlant {
+public enum ConnectionType {
+    PERMANENT("PERMANENT"), TEMPORARY("TEMPORARY");
 
-    public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
+    private String value;
 
-    @NotNull
-    private Long id;
+    ConnectionType(final String value) {
+        this.value = value;
+    }
 
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String code;
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
-
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String plantType;
-
-    @NotNull
-    private String locationNum;
-    
-    private String locationName;
-
-
-    @NotNull
-    private String wardNum;
-    
-    private String wardName;
-    @NotNull
-    private String zoneNum;
-    
-    private String zoneName;
-
-    @NotNull
-    @Min(1)
-    @Max(8)
-    private double capacity;
-
-    private Long storageReservoirId;
-
-    @NotNull
-    private String storageReservoirName;
-
-    @Size(max = 250)
-    private String description;
-
-    @JsonIgnore
-    private AuditDetails auditDeatils;
-
-    @Size(max = 250)
-    @NotNull
-    private String tenantId;
-
+    @JsonCreator
+    public static ConnectionType fromValue(final String passedValue) {
+        for (final ConnectionType obj : ConnectionType.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 }

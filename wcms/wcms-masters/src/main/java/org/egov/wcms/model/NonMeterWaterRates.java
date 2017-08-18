@@ -39,8 +39,6 @@
  */
 package org.egov.wcms.model;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -61,58 +59,64 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class TreatmentPlant {
+public class NonMeterWaterRates {
 
-    public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
+    public static final String SEQ_NONMETERWATERRATES = "seq_egwtr_non_meter_water_rates";
 
-    @NotNull
     private Long id;
 
     @NotNull
-    @Size(min = 3, max = 20)
     private String code;
 
     @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
+    private String billingType;
 
     @NotNull
-    @Size(min = 3, max = 20)
-    private String plantType;
+    private String connectionType;
 
     @NotNull
-    private String locationNum;
-    
-    private String locationName;
-
+    private String usageTypeName;
 
     @NotNull
-    private String wardNum;
-    
-    private String wardName;
-    @NotNull
-    private String zoneNum;
-    
-    private String zoneName;
+    private String usageTypeId;
 
     @NotNull
-    @Min(1)
-    @Max(8)
-    private double capacity;
-
-    private Long storageReservoirId;
+    private String sourceTypeName;
 
     @NotNull
-    private String storageReservoirName;
+    private Long sourceTypeId;
 
-    @Size(max = 250)
-    private String description;
+    @NotNull
+    private Double pipeSize;
 
-    @JsonIgnore
-    private AuditDetails auditDeatils;
+    @NotNull
+    private Long pipeSizeId;
+
+    @NotNull
+    private Long fromDate;
+    @NotNull
+    private Long noOfTaps;
+
+    @NotNull
+    private Double amount;
+
+    @NotNull
+    private Boolean active;
 
     @Size(max = 250)
     @NotNull
     private String tenantId;
 
+    @NotNull
+    @JsonIgnore
+    private Long createdBy;
+
+    @JsonIgnore
+    private Long createdDate;
+
+    @NotNull
+    @JsonIgnore
+    private Long lastModifiedBy;
+    @JsonIgnore
+    private Long lastModifiedDate;
 }

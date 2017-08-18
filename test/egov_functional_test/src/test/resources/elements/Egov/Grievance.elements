@@ -7,10 +7,10 @@
         "waitFor":"presence"
         },
         {
-         "elementName":"grievanceCategory",
-          "identifier":"css",
-          "value":"[id^='undefined-undefined-GrievanceCategory']",
-          "waitFor":"presence"
+        "elementName":"grievanceCategory",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-GrievanceCategory']",
+        "waitFor":"presence"
         },
         {
         "elementName":"receivingMode",
@@ -65,6 +65,72 @@
         "identifier":"xpath",
         "value":"//*[text()='Create']",
         "waitFor":"presence"
+        },
+        {
+        "elementName":"complaintNum",
+        "identifier":"xpath",
+        "value":"//*[contains(text(),'future')]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"view",
+        "identifier":"xpath",
+        "value":"//span[text()='View']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"commentBox",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-Comments']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"homeButton",
+        "identifier":"xpath",
+        "value":"//i[text()='home']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"complaintDetails",
+        "identifier":"css",
+        "value":"[style='position: relative; display: none;']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"changeStatus",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-ChangeStatus']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"comments",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-Comments']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"submitButton",
+        "identifier":"xpath",
+        "value":"//span[text()='Submit']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"okButton",
+        "identifier":"xpath",
+        "value":"//*[text()='Ok']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"userName",
+        "identifier":"css",
+        "value":"[style='height: inherit;'] tr td:nth-child(4)",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"text",
+        "identifier":"xpath",
+        "value":"//*[text()='%s']",
+        "waitFor":"visibility"
         }
     ]
 }

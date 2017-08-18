@@ -1,0 +1,22 @@
+{
+    "elements":[
+        {
+        "elementName":"crnComplaintNumber",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-CRNComplaintRequestNo']",
+        "waitFor":"presence"
+        },
+        {
+        "elementName":"crnSearchButton",
+        "identifier":"xpath",
+        "value":"//*[text()='Search']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"crnStatus",
+        "identifier":"css",
+        "value":"[style='cursor: pointer;'] td:nth-child(5)",
+        "waitFor":"visibility"
+        }
+    ]
+}

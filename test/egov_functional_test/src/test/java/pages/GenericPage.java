@@ -1,5 +1,7 @@
 package pages;
 
+import com.testvagrant.intents.utils.FileFinder;
+import com.testvagrant.stepdefs.utils.FileExtension;
 import org.apache.commons.lang.math.RandomUtils;
 import org.json.JSONObject;
 import org.openqa.selenium.*;
@@ -13,6 +15,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import static com.jayway.awaitility.Awaitility.await;
+import static com.testvagrant.stepdefs.utils.FileFinder.fileFinder;
 
 public class GenericPage extends BasePage {
 
@@ -91,34 +96,42 @@ public class GenericPage extends BasePage {
         str = jsonObject.getJSONArray("elements").getJSONObject(pos).getString("value");
         switch (jsonObject.getJSONArray("elements").getJSONObject(pos).getString("identifier")) {
             case "id":
+                waitForTheElementToBePresent((By.id(str)));
                 webElement = driver.findElement(By.id(str));
                 break;
 
             case "css":
+                waitForTheElementToBePresent((By.cssSelector(str)));
                 webElement = driver.findElement(By.cssSelector(str));
                 break;
 
             case "xpath":
+                waitForTheElementToBePresent((By.xpath(str)));
                 webElement = driver.findElement(By.xpath(str));
                 break;
 
             case "linkText":
+                waitForTheElementToBePresent((By.linkText(str)));
                 webElement = driver.findElement(By.linkText(str));
                 break;
 
             case "className":
+                waitForTheElementToBePresent((By.className(str)));
                 webElement = driver.findElement(By.className(str));
                 break;
 
             case "name":
+                waitForTheElementToBePresent((By.name(str)));
                 webElement = driver.findElement(By.name(str));
                 break;
 
             case "tagName":
+                waitForTheElementToBePresent((By.tagName(str)));
                 webElement = driver.findElement(By.tagName(str));
                 break;
 
             case "partialLinkText":
+                waitForTheElementToBePresent((By.partialLinkText(str)));
                 webElement = driver.findElement(By.partialLinkText(str));
                 break;
         }
@@ -130,7 +143,7 @@ public class GenericPage extends BasePage {
         do {
             clickOnButton(webElement, driver);
             try {
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -163,5 +176,9 @@ public class GenericPage extends BasePage {
             }
         }catch (Exception e){}
         throw new RuntimeException("No application row found in Inbox -- " + number);
+    }
+
+    public void waitForTheElementToBePresent(By by) throws IOException {
+        await().atMost(20, TimeUnit.SECONDS).until(() -> driver.findElements(by).size() > 0);
     }
 }

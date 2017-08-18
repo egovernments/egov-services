@@ -16,3 +16,8 @@ Feature: Generic Feature
     Examples:
       | sumpCapacity |
       | 100          |
+
+  @Custom
+  Scenario: LoginSample
+    Given Intent:LoginIntentTestSample
+      | narasappa | demo |

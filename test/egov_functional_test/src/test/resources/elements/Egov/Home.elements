@@ -7,6 +7,12 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"myTasks",
+        "identifier":"xpath",
+        "value":"//*[text()='My Tasks']",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"menuSearch",
         "identifier":"css",
         "value":"[id^='undefined-Search-undefined']",
@@ -46,6 +52,12 @@
         "elementName":"dashBoardApplications",
         "identifier":"css",
         "value":"[id='searchTable'] tbody",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"applicationBox",
+        "identifier":"xpath",
+        "value":"//*[contains(text(),'%s')]",
         "waitFor":"visibility"
         }
     ]

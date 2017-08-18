@@ -659,8 +659,8 @@ var dat = {
           "fields": [
             {
               "name": "With Property",
-              "jsonPath": "Connection.withProperty",
-              "label": "",
+              "jsonPath": "Connection[0].withProperty",
+              "label": "With Property",
               "pattern": "",
               "type": "radio",
               "isRequired": false,

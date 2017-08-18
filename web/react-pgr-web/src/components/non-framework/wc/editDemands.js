@@ -115,8 +115,10 @@ class AddDemand extends Component {
 	initForm();
 
 	var getDemands = {
-		consumerNuber: this.props.match.params.upicNumber
+		consumerNuber: decodeURIComponent(this.props.match.params.upicNumber)
 	}
+
+    
 
 	 Api.commonApiPost('wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate', getDemands, {}, false, true).then((res)=>{
   		 currentThis.setState({
@@ -130,11 +132,11 @@ class AddDemand extends Component {
   submitDemand = () => {
     let self = this;
 	  var body = {
-      demandDetailBeans: Object.assign([], this.state.DemandDetailBeans)
+      DemandDetailBeans: Object.assign([], this.state.DemandDetailBeans)
     };
 
     self.props.setLoadingStatus('loading');
-	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNuber: self.props.match.params.upicNumber, executionDate: "1301616000"}, body, false, true).then((res)=>{
+	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNuber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: "1301616000"}, body, false, true).then((res)=>{
       self.props.setLoadingStatus('hide');
 	  }).catch((err)=> {
 		  self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -168,9 +170,7 @@ class AddDemand extends Component {
     let cThis = this;
 
     const handleChangeSrchRslt = function(e, name, ind){
-      console.log(e.target.value);
-      console.log(name);
-      console.log(ind);
+
     var _emps = Object.assign([], DemandDetailBeans);
     _emps[ind][name] = e.target.value;
     cThis.setState({

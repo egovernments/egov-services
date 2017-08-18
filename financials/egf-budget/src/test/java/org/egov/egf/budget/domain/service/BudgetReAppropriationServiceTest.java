@@ -229,7 +229,7 @@ public class BudgetReAppropriationServiceTest {
 
         final List<BudgetReAppropriation> budgetReAppropriations = new ArrayList<BudgetReAppropriation>();
 
-        final BudgetReAppropriation budgetReAppropriation = BudgetReAppropriation.builder()
+        final BudgetReAppropriation budgetReAppropriation = BudgetReAppropriation.builder().id("1")
                 .budgetDetail(BudgetDetail.builder().id("1").build()).additionAmount(BigDecimal.TEN)
                 .deductionAmount(BigDecimal.TEN).originalAdditionAmount(BigDecimal.TEN)
                 .originalDeductionAmount(BigDecimal.TEN).anticipatoryAmount(BigDecimal.TEN).build();

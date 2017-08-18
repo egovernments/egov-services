@@ -131,9 +131,15 @@ public class InstrumentAccountCodeService {
 			case ACTION_UPDATE:
 				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to update must not be null");
 				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
+					Assert.notNull(instrumentAccountCode.getId(), "InstrumentAccountCode ID to update must not be null");
 					validator.validate(instrumentAccountCode, errors);
 				}
 				break;
+			case ACTION_DELETE:
+				Assert.notNull(instrumentaccountcodes, "Instruments to delete must not be null");
+				for (InstrumentAccountCode instrumentaccountcode : instrumentaccountcodes) {
+					validator.validate(instrumentaccountcode, errors);
+				}
 			default:
 
 			}

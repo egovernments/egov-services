@@ -48,8 +48,8 @@ public class TradeLicenseContract {
 	@JsonProperty("licenseNumber")
 	private String licenseNumber;
 
-	@JsonProperty("oldLicenseNumber")
-	@Length( min =20, max =20, message="oldLicenseNumber is required, Please enter valid Old License Number with 20 characters")
+	@JsonProperty("oldLicenseNumber") 
+	@Length( min =4, max =20, message="oldLicenseNumber is required, Please enter valid Old License Number between  4-20 characters")
 	private String oldLicenseNumber;
 
 	@NotEmpty(message="applicationDate is required, Please enter valid date in dd/mm/yyyy")
@@ -80,7 +80,7 @@ public class TradeLicenseContract {
 	private String fatherSpouseName;
 
 	@NotEmpty(message="Emailid is required. Please enter the valid emailid")
-	@Length( min = 1, max = 50, message="Emailid is required. Please enter the valid emailid")
+	@Length( min = 1, max = 50, message="Emailid more than 50 characters not allowed.")
 	@Email(message="Emailid is required. Please enter the valid emailid")
 	@JsonProperty("emailId")
 	private String emailId;
@@ -91,7 +91,7 @@ public class TradeLicenseContract {
 	private String ownerAddress;
 
 	@JsonProperty("propertyAssesmentNo")
-	@Length( min = 15, max = 20, message = "Property Assesment No  is required ,  please enter Valid Property Assesment No  between 15-20 characters")
+	@Length( min = 4, max = 20, message = "Property Assesment No  is required ,  please enter Valid Property Assesment No  between 4-20 characters")
 	private String propertyAssesmentNo;
 
 	@NotNull(message = "Locality  is required ,  please enter valid Locality ")
@@ -172,10 +172,12 @@ public class TradeLicenseContract {
 	private String agreementNo;
 
 	@JsonProperty("isLegacy")
+	@NotNull(message="isLegacy is required, Please enter valid value true/false")
 	private Boolean isLegacy = false;
 
-	@JsonProperty("isTradeOwner")
-	private Boolean isTradeOwner = false;
+	@JsonProperty("isPropertyOwner")
+	@NotNull(message="isPropertyOwner is required, Please enter valid value true/false")
+	private Boolean isPropertyOwner = false;
 	
 	@JsonProperty("active")
 	private Boolean active = true;

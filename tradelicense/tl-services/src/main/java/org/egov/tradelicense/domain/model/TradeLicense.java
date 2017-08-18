@@ -148,8 +148,8 @@ public class TradeLicense {
 	@JsonProperty("isLegacy")
 	private Boolean isLegacy = false;
 	
-	@JsonProperty("isTradeOwner")
-	private Boolean isTradeOwner = false;
+	@JsonProperty("isPropertyOwner")
+	private Boolean isPropertyOwner = false;
 	
 	@JsonProperty("active")
 	private Boolean active = true;

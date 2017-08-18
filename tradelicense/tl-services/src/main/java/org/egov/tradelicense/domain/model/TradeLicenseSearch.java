@@ -175,6 +175,9 @@ public class TradeLicenseSearch {
 	@JsonProperty("feeDetails")
 	private List<LicenseFeeDetail> feeDetails;
 
+	@JsonProperty("isPropertyOwner")
+	private Boolean isPropertyOwner = false;
+	
 	@JsonProperty("supportDocuments")
 	private List<SupportDocument> supportDocuments;
 

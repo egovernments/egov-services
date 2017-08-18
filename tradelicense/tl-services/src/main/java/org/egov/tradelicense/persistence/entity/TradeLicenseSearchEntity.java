@@ -94,6 +94,8 @@ public class TradeLicenseSearchEntity {
 
 	private Timestamp agreementDate;
 
+	private Boolean isPropertyOwner = false;
+	
 	private Timestamp licenseValidFromDate;
 
 	private Long status;
@@ -212,6 +214,7 @@ public class TradeLicenseSearchEntity {
 			tradeLicenseSearch.setLicenseValidFromDate(TimeStampUtil.getDateFromTimeStamp(this.licenseValidFromDate));
 		}
 
+		tradeLicenseSearch.setIsPropertyOwner( this.isPropertyOwner);
 		tradeLicenseSearch.setAgreementNo(this.agreementNo);
 
 		tradeLicenseSearch.setIsLegacy(this.isLegacy);
@@ -334,6 +337,8 @@ public class TradeLicenseSearchEntity {
 			this.licenseValidFromDate = TimeStampUtil.getTimeStamp(tradeLicenseSearch.getLicenseValidFromDate());
 		}
 
+		this.isPropertyOwner = tradeLicenseSearch.getIsPropertyOwner();
+		
 		this.agreementNo = tradeLicenseSearch.getAgreementNo();
 
 		this.isLegacy = tradeLicenseSearch.getIsLegacy();

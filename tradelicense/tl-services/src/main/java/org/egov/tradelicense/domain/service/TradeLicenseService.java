@@ -71,6 +71,12 @@ public class TradeLicenseService {
 	PropertyContractRespository propertyContractRepository;
 	
 	@Autowired
+	TradeLicenseNumberGeneratorService licenseNumberGenerationService;
+	
+	@Autowired
+	ApplicationNumberGeneratorService applNumberGenrationService;
+	
+	@Autowired
 	private SmartValidator validator;
 	
 	@Autowired
@@ -112,15 +118,13 @@ public class TradeLicenseService {
 				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
 			}
 			
-			if( tradeLicense.getIsTradeOwner() ){
+			if( !tradeLicense.getIsPropertyOwner() ){
 				if( ( tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty() ) ){
 					throw new InvalidInputException("Agreement No is Required Please enter Valid Agreement No");
 				}
 				if( tradeLicense.getAgreementDate() == null || tradeLicense.getAgreementDate().trim().isEmpty() ){
 					throw new InvalidInputException("Agreement Date is Required  Please enter valid date in dd/mm/yyyy");
 				}
-				
-				
 				
 			}
 			
@@ -307,6 +311,8 @@ public class TradeLicenseService {
 					feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 				}
 			}
+//			license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
+//			license.setApplicationNumber( applNumberGenrationService.generate(license.getTenantId(), requestInfo));
 		}
 
 		return tradeLicenses;
@@ -328,20 +334,20 @@ public class TradeLicenseService {
 			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
 
 		TradeLicenseSearchResponse tradeLicenseSearchResponse = new TradeLicenseSearchResponse();
-
-		tradeLicenseSearchResponse = getLicensesFromEs(tenantId, pageSize, pageNumber, sort, active, tradeLicenseId,
-				applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
-				propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
-				tradeSubCategory, legacy, status);
-
+//
+//		tradeLicenseSearchResponse = getLicensesFromEs(tenantId, pageSize, pageNumber, sort, active, tradeLicenseId,
+//				applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
+//				propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+//				tradeSubCategory, legacy, status);
+//
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-
-		if (tradeLicenseSearchResponse != null && tradeLicenseSearchResponse.getLicenses() != null
-				&& !(tradeLicenseSearchResponse.getLicenses().size() == 0)) {
-
-			tradeLicenseSearchResponse.setResponseInfo(responseInfo);
-			return tradeLicenseSearchResponse;
-		}
+//
+//		if (tradeLicenseSearchResponse != null && tradeLicenseSearchResponse.getLicenses() != null
+//				&& !(tradeLicenseSearchResponse.getLicenses().size() == 0)) {
+//
+//			tradeLicenseSearchResponse.setResponseInfo(responseInfo);
+//			return tradeLicenseSearchResponse;
+//		}
 
 		List<TradeLicenseSearch> licenses = tradeLicenseRepository.search(requestInfo, tenantId, pageSize, pageNumber,
 				sort, active, tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber,

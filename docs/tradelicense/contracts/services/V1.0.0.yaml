@@ -67,7 +67,7 @@ paths:
           description: The unique reference number for a trade license Application
           type: string
           minLength: 4
-          maxLength: 128
+          maxLength: 20
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: licenseNumber
@@ -76,7 +76,7 @@ paths:
           description: The unique  license number no for a Trade license.
           type: string
           minLength: 4
-          maxLength: 128
+          maxLength: 20
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: oldLicenseNumber
@@ -85,7 +85,7 @@ paths:
           description: The unique  Old license number no for a Trade license.
           type: string
           minLength: 4
-          maxLength: 128
+          maxLength: 20
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: mobileNumber
@@ -114,7 +114,8 @@ paths:
           description: Assesment Number of the property in which trade is running
           required: false
           type: string
-          maxLength: 15
+          maxLength: 20
+          minLength: 4
         - name: adminWard
           in: query
           description: Unique identifier of the AdminWard where the Trade is located.
@@ -141,7 +142,8 @@ paths:
           description: Title of the Trade .
           required: false
           type: string
-          maxLength: 33
+          maxLength: 100
+          minLength: 4
         - name: tradeType
           in: query
           description: Possible values wil be from BusinessNature Enum.
@@ -243,17 +245,17 @@ definitions:
         type: string
         description: Unique identfiication number of the Trade License Appilcaiton . This is a unique in system. This is mandatory but always be generated on Trade License create Request processing. Not Valid for Legacy Trade License
         maxLength: 20
-        minLength: 20  
+        minLength: 4  
       oldLicenseNumber:
         type: string
         description: Unique Old License Number of the Trade. This is  unique in system for a tenant. This is mandatory  for legacy license.
         maxLength: 20
-        minLength: 20  
+        minLength: 4  
       licenseNumber:
         type: string
         description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
         maxLength: 20
-        minLength: 20
+        minLength: 4
       applicationDate:
         type: string
         format: date
@@ -293,7 +295,7 @@ definitions:
       propertyAssesmentNo:
         type: string
         maxLength: 20
-        minLength: 15
+        minLength: 4
         description: Assesment Number of the Property in which Trade is established or running
       localityId:
         type: integer
@@ -350,6 +352,9 @@ definitions:
         type: string
         format: date
         description: Date from when license is valid in dd/mm/yyy format
+      isPropertyOwner:
+        type: boolean
+        description: set to true if Trade owner is the owner of the property
       agreementDate:
         type: string
         format: date
@@ -409,6 +414,8 @@ definitions:
     - tradeCommencementDate
     - adminWardId
     - licenseValidFromDate
+    - isPropertyOwner
+    - isLegacy
   TradeLicenseSearch:
     type: object
     description: A Object holds the basic data for a Trade License
@@ -428,17 +435,17 @@ definitions:
         type: string
         description: Unique identfiication number of the Trade License Appilcaiton . This is a unique in system. This is mandatory but always be generated on Trade License create Request processing. Not Valid for Legacy Trade License
         maxLength: 20
-        minLength: 20  
+        minLength: 4  
       oldLicenseNumber:
         type: string
         description: Unique Old License Number of the Trade. This is  unique in system for a tenant. This is mandatory  for legacy license.
         maxLength: 20
-        minLength: 20  
+        minLength: 4  
       licenseNumber:
         type: string
         description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
         maxLength: 20
-        minLength: 20
+        minLength: 4
       applicationDate:
         type: string
         format: date
@@ -478,7 +485,7 @@ definitions:
       propertyAssesmentNo:
         type: string
         maxLength: 20
-        minLength: 15
+        minLength: 4
         description: Assesment Number of the Property in which Trade is established or running
       localityId:
         type: integer
@@ -556,6 +563,9 @@ definitions:
         type: string
         format: date
         description: Date from when license is valid
+      isPropertyOwner:
+        type: boolean
+        description: set to true if Trade owner is the owner of the property
       agreementDate:
         type: string
         format: date
@@ -563,6 +573,7 @@ definitions:
       agreementNo:
         type: string
         maxLength: 128
+        minLength : 4
         description: Document of Registered lease agreement between the property owner and trade owner
       isLegacy:
         type: boolean
@@ -614,6 +625,8 @@ definitions:
     - tradeCommencementDate
     - adminWardId
     - licenseValidFromDate
+    - isPropertyOwner
+    - isLegacy
   OwnerShipType:
     type: string
     enum:

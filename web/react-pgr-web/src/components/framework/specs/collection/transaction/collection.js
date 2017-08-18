@@ -168,23 +168,23 @@ var dat = {
           "name": "mobile",
           "jsonPath": "mobileNumber",
           "label": "Mobile",
-          "pattern": "",
+          "pattern": "^.{10,10}$",
           "type": "number",
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
-          "patternErrMsg": ""
+          "patternErrMsg": "Mobile Number must be of 10 digits"
         },
         {
           "name": "email",
           "jsonPath": "email",
           "label": "Email",
-          "pattern": "",
-          "type": "email",
+          "pattern": "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$",
+          "type": "text",
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
-          "patternErrMsg": ""
+          "patternErrMsg": "Enter Valid EmailID"
         },
         {
           "name": "businessService",

@@ -123,10 +123,6 @@ class ShowField extends Component {
       // console.log(item1);
       setRoute(`/pgr/viewGrievance/${item1}`);
     }
-    else {
-      alert("No drilldown reports.")
-        // toggleSnackbarAndSetText(true, "No drilldown reports.");
-    }
   }
 
   checkIfDate = (val, i) => {

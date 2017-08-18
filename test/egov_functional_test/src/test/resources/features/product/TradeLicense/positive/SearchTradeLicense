@@ -1,0 +1,28 @@
+Feature: Trade License
+
+  Scenario: SearchTradeLicense
+
+    Given Intent: LoginIntentTest
+    And user on home screen clicks on menu
+    And user on home screen type on applicationSearchBox value Search Trade License
+    And user on home screen click on ApplicationLink
+
+    #Search Trade License
+
+    And user on searchtradelicense screen type on applicationnumber value TL/100001/2017
+    And user on searchtradelicense screen clicks on showinactivelicense
+    And user on searchtradelicense screen select on status value Active
+#   And user on searchtradelicense screen on license number auto complete
+#   And user on searchtradelicense screen on old license number auto complete
+    And user on searchtradelicense screen select on tradecategory value Active
+    And user on searchtradelicense screen select on tradesubcategory value NewTrade
+    And user on searchtradelicense screen type on tradetitle value Test
+    And user on searchtradelicense screen type on tradeOwnerName value Rakesh
+    And user on searchtradelicense screen type on propertyassessmentno value 1016000009
+    And user on searchtradelicense screen select on ward value 1
+    And user on searchtradelicense screen type on mobilenumber value 9861234567
+    And user on searchtradelicense screen clicks on search
+    And user on searchtradelicense screen clicks on hyperlink
+
+
+

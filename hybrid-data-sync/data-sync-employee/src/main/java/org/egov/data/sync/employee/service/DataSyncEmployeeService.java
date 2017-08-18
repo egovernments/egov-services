@@ -80,7 +80,7 @@ public class DataSyncEmployeeService {
         EmployeeSync employeeSync = employeeSyncRequest.getEmployeeSync();
         dataSyncEmployeeRepository.executeProcedure(employeeSync.getCode(), employeeSync.getTenantId());
 
-        if (employeeSync.getSignature() != null) {
+        if (employeeSync.getSignature() != null && !employeeSync.getSignature().isEmpty()) {
             byte[] fileData = fileStorageService.getFile(employeeSync);
             String[] tenant = employeeSync.getTenantId().split("\\.");
             String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];

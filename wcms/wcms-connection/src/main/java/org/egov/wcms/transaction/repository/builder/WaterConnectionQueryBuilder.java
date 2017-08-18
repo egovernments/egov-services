@@ -168,7 +168,8 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,plumbername,billsequencenumber,outsideulb,meterowner,metermodel) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,"
+                + "plumbername,billsequencenumber,meterowner,metermodel,outsideulb) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
@@ -191,14 +192,17 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,plumbername,billsequencenumber,outsideulb,meterowner,metermodel,legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,"
+                + "subusagetype,plumbername,billsequencenumber,meterowner,metermodel,outsideulb,"
+                + "legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
-                + " ?,?,?,?,?)";
+                + " ?,?,?,?,?,"
+                + "?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {

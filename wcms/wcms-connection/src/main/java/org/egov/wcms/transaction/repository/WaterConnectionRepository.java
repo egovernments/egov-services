@@ -149,10 +149,15 @@ public class WaterConnectionRepository {
                 statement.setDouble(27, waterConnectionRequest.getConnection().getNumberOfFamily());
                 statement.setString(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
                 statement.setString(29,waterConnectionRequest.getConnection().getPlumberName());
-                statement.setLong(30, waterConnectionRequest.getConnection().getBillSequenceNumber());
-                statement.setBoolean(33, waterConnectionRequest.getConnection().getOutsideULB());
-                statement.setString(31, waterConnectionRequest.getConnection().getMeterOwner());
-                statement.setString(32, waterConnectionRequest.getConnection().getMeterModel());
+                System.out.println(waterConnectionRequest.getConnection().getBillSequenceNumber());
+                statement.setLong(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
+                        waterConnectionRequest.getConnection().getBillSequenceNumber():0l);
+                statement.setString(31, waterConnectionRequest.getConnection().getMeterOwner()!=null?
+                        waterConnectionRequest.getConnection().getMeterOwner():"");
+                statement.setString(32, waterConnectionRequest.getConnection().getMeterModel()!=null?
+                        waterConnectionRequest.getConnection().getMeterModel():"");
+                statement.setBoolean(33, Boolean.FALSE);
+
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         ) {
                     statement.setString(34, waterConnectionRequest.getConnection().getLegacyConsumerNumber());

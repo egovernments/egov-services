@@ -28,7 +28,7 @@ Feature: Registering a Complaint
 
     ### On Create Complaint Grievance Screen Entering More Details ###
     And user on Grievance screen types on grievanceLocation suggestion box with value Bank Road
-    And user on Grievance screen uploads on selectPhoto value /home/vinay/pgrDocument.jpg
+    And user on Grievance screen uploads on selectPhoto value /home/vinay/Developement/eGov-Product/egov-services/test/egov_functional_test/src/test/resources/pgrDocument.jpg
     And user on Grievance screen clicks on create
 
     ### On Create Complaint Grievance Screen verifying the details ###

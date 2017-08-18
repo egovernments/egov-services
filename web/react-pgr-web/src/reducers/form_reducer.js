@@ -312,6 +312,12 @@ export default(state = defaultState, action) => {
           }
         break;
 
+      case "RESET_FORM":
+          return {
+            ...state,
+            form: {}
+          } 
+
       case "RESET_OBJECT":
 
               return {

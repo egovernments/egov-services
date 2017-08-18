@@ -492,8 +492,7 @@ public class WaterConnectionRepository {
         final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq, preparedStatementValues);
         LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
         try{ 
-        	final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery, preparedStatementValues.toArray(),
-            		new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
+        	final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery, new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
         	LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
             if(secondConnectionList.size() > 0) { 
             	connectionList.addAll(secondConnectionList);		

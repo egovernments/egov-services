@@ -2,7 +2,6 @@ package org.egov.tradelicense.domain.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.InvalidInputException;
-import org.egov.tradelicense.common.util.TimeStampUtil;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -128,7 +126,7 @@ public class TradeLicenseService {
 				if ((tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty())) {
 					throw new InvalidInputException("Agreement No is Required Please enter Valid Agreement No");
 				}
-				if (tradeLicense.getAgreementDate() == null ) {
+				if (tradeLicense.getAgreementDate() == null) {
 					throw new InvalidInputException(
 							"Agreement Date is Required  Please enter valid date in dd/mm/yyyy");
 				}
@@ -287,9 +285,8 @@ public class TradeLicenseService {
 					validPeriod = Integer.valueOf(tradeLicense.getValidityYears().toString());
 				}
 
-				Long currenDate = (System.currentTimeMillis()/1000);
+				Long currenDate = (System.currentTimeMillis() / 1000);
 				Calendar today = Calendar.getInstance();
-
 
 				if (validFrom != null && validPeriod != null) {
 
@@ -333,30 +330,36 @@ public class TradeLicenseService {
 						// getting fee details ending year
 						actualFeeDetailsEndYear = currentFinancialFromValue;
 					}
-					//get the actual fee detail record count
+					// get the actual fee detail record count
 					Integer actualFeeDetailCount = 0;
 					for (int i = actualFeeDetailStartYear; i <= actualFeeDetailsEndYear;) {
 						actualFeeDetailCount = actualFeeDetailCount + 1;
 						i = i + validPeriod;
 					}
-					//checking actual fee detail count with given fee detail count
+					// checking actual fee detail count with given fee detail
+					// count
 					if (actualFeeDetailCount != tradeLicense.getFeeDetails().size()) {
 						throw new InvalidInputException(
 								"provided fee details are not valid, please provide valid fee details");
 					}
-
+					today.add(Calendar.YEAR, (actualFeeDetailStartYear - actualFeeDetailsEndYear));
 					// validate the fee details
 					for (int i = 0; i < actualFeeDetailCount; i++) {
 						Boolean isFYExists = false;
-						Integer feeYear = actualFeeDetailStartYear + i;
-						//form each fee detail start date and get the corresponding id
-						today.add(Calendar.YEAR, 1);
-//						actualFeeDetailStartDate = currenDate.substring(0, currenDate.lastIndexOf("/")+1);
-//						actualFeeDetailStartDate = actualFeeDetailStartDate.concat(feeYear.toString());
-						
+						// Integer feeYear = actualFeeDetailStartYear +
+						// (i*validPeriod);
+						// form each fee detail start date and get the
+						// corresponding id
+						today.add(Calendar.YEAR, (i * validPeriod));
+						// actualFeeDetailStartDate = currenDate.substring(0,
+						// currenDate.lastIndexOf("/")+1);
+						// actualFeeDetailStartDate =
+						// actualFeeDetailStartDate.concat(feeYear.toString());
+
 						FinancialYearContract feeDetailFYResponse = financialYearContractRepository
-								.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis()/1000), requestInfoWrapper);
-						if(feeDetailFYResponse != null){
+								.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis() / 1000),
+										requestInfoWrapper);
+						if (feeDetailFYResponse != null) {
 							for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
 								if (licenseFeeDetail.getFinancialYear()
 										.equalsIgnoreCase(feeDetailFYResponse.getId().toString())) {
@@ -371,7 +374,7 @@ public class TradeLicenseService {
 							throw new InvalidInputException(
 									"provided fee details are not valid, please provide valid fee details");
 						}
-						
+
 					}
 				}
 			}

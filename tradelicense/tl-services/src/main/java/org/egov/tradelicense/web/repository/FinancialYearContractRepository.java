@@ -1,6 +1,5 @@
 package org.egov.tradelicense.web.repository;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -39,7 +38,7 @@ public class FinancialYearContractRepository {
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
-		String asOnDate = sf.format(new Date(date*1000));
+		String asOnDate = sf.format(new Date(date * 1000));
 		if (date != null) {
 			content.append("asOnDate=" + asOnDate);
 		}
@@ -68,7 +67,7 @@ public class FinancialYearContractRepository {
 		}
 
 	}
-	
+
 	public TlMasterRequestInfoWrapper getTlMasterRequestInfoWrapper(RequestInfoWrapper requestInfoWrapper) {
 
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = new TlMasterRequestInfoWrapper();

@@ -2025,8 +2025,8 @@ class Employee extends Component {
                                 <label>{Employee.user ? Employee.user.gender : "-"}</label></span>
                             )
                          :
-                            <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.gender")} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
-                      		handleChangeNextLevel({target:{value:value}}, "user", "gender", false, '')
+                            <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.gender") + " *"} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
+                      		handleChangeNextLevel({target:{value:value}}, "user", "gender", true, '')
                       	}}>
                             {
                             	self.state.genders && self.state.genders.map(function(v, i){
@@ -3265,7 +3265,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 
     setForm: (data, isUpdate, codeAuto, unameAuto) => {
-        var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob'];
+        var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob', 'user.gender'];
         if(codeAuto) requiredList.splice(1, 1);
         if(unameAuto) requiredList.splice(6, 1);
         dispatch({

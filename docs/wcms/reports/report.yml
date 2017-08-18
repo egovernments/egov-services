@@ -4,6 +4,7 @@ ReportDefinitions:
 - reportName: BaseRegisterReport
   summary: Base Register Report
   version: 1.0.0
+  moduleName: wcms
   sourceColumns:
   - name: consumerNo
     label: reports.wcms.consumerno
@@ -71,18 +72,20 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
     source: seva
+    isMandatory: true
   query: select dcbinfo.hscno as "consumerNo", dcbinfo.oldhscno as "oldConsumerNo", dcbinfo.propertyid as "assementNo", dcbinfo.username as 
          "ownerName",dcbinfo.categorytype as "categoryType", dcbinfo.connectiontype as "connectionType" ,dcbinfo.waterSource as "waterSource" ,
          dcbinfo.pipesize as "pipeSize" , 0 as "monthlyRate",cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_coll) 
          as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll, cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance
          from egwtr_connection_view dcbinfo,eg_boundary boundary, egwtr_water_source_type wt, egwtr_pipesize ps,egwtr_category  cat
          where  dcbinfo.wardid=boundary.id    and dcbinfo.connectionstatus = 'ACTIVE' and  wt.name=dcbinfo.watersource and ps.sizeinmilimeter=dcbinfo.pipesize  and dcbinfo.categorytype = cat.name and 
-         dcbinfo.wardid in ($wardid) group by dcbinfo.wardid,boundary.name,dcbinfo.hscno,dcbinfo.oldhscno ,dcbinfo.propertyid,dcbinfo.username,dcbinfo.categorytype ,dcbinfo.connectiontype,
+         dcbinfo.wardid in ($revenueboundary) group by dcbinfo.wardid,boundary.name,dcbinfo.hscno,dcbinfo.oldhscno ,dcbinfo.propertyid,dcbinfo.username,dcbinfo.categorytype ,dcbinfo.connectiontype,
          dcbinfo.waterSource,dcbinfo.pipesize order by boundary.name;
          
 - reportName: NumberofConnection
   summary: Number of Connection Report Details
   version: 1.0.0
+  moduleName: wcms
   sourceColumns:
   - name: name
     label: reports.wcms.boundary.name
@@ -114,6 +117,7 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
     source: seva
+    isMandatory: true
   query: SELECT bndry.name as name, COUNT(CASE WHEN con.applicationtype IN ('NEWCONNECTION') THEN 1 END) as newconnection , COUNT(CASE WHEN con.applicationtype IN ('ADDNLCONNECTION') THEN 1 END) addconnection, 
          COUNT(CASE WHEN con.applicationtype IN ('CHANGEOFUSE') THEN 1 END) changeofusage, COUNT(CASE WHEN con.applicationtype IN ('CLOSINGCONNECTION') THEN 1 END) closeconnection, 
          COUNT(CASE WHEN con.applicationtype IN ('RECONNECTION') THEN 1 END) reconnection FROM egwtr_waterconnection con 
@@ -124,6 +128,7 @@ ReportDefinitions:
 - reportName: DCBReportZoneWise
   summary: DCB drill down Report Zone wise
   version: 1.0.0 
+  moduleName: wcms
   sourceColumns:
   - name: zoneid
     label: reports.wcms.zoneid
@@ -179,10 +184,12 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    isMandatory: true
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: string
-    source: wcms  
+    source: wcms
+    isMandatory: true  
   query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
@@ -193,6 +200,7 @@ ReportDefinitions:
 - reportName: DCBReportZoneWiseByMunicipality
   summary: DCB drill down Report Zone wise By Municipality
   version: 1.0.0 
+  moduleName: wcms
   sourceColumns:
   - name: zoneid
     label: reports.wcms.zoneid
@@ -248,10 +256,12 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    isMandatory: true
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: string
-    source: wcms  
+    source: wcms
+    isMandatory: true
   query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
@@ -262,6 +272,7 @@ ReportDefinitions:
 - reportName: DCBReportZoneWiseByMunicipalNo
   summary: DCB drill down Report Zone wise
   version: 1.0.0 
+  moduleName: wcms
   sourceColumns:
   - name: zoneid
     label: reports.wcms.zoneid
@@ -317,10 +328,12 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    isMandatory: true
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: string
-    source: wcms  
+    source: wcms
+    isMandatory: true
   query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
@@ -331,6 +344,7 @@ ReportDefinitions:
 - reportName: DCBReportZoneWiseByMunicipalityName
   summary: DCB drill down Report Zone wise
   version: 1.0.0 
+  moduleName: wcms
   sourceColumns:
   - name: zoneid
     label: reports.wcms.zoneid
@@ -386,10 +400,12 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    isMandatory: true
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: string
-    source: wcms  
+    source: wcms
+    isMandatory: true  
   query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
@@ -401,6 +417,7 @@ ReportDefinitions:
 - reportName: DailyCollectionReport
   summary: Daily Collection Report
   version: 1.0.0 
+  moduleName : wcms
   sourceColumns:
   - name: consumerNo
     label: reports.wcms.consumerno
@@ -479,18 +496,22 @@ ReportDefinitions:
     label: reports.wcms.datefrom
     type: epoch
     source: wcms
+    isMandatory: true
   - name: toDate
     label: reports.wcms.dateto
     type: epoch
     source: wcms
+    isMandatory: true
   - name: status
     label: reports.wcms.dateto
     type: string
     source: wcms
+    isMandatory: true
   - name: complainttype
     label: reports.wcms.dateto
     type: string
     source: wcms  
+    isMandatory: true
   query: select dcbinfo.hscno as "consumerNo", dcbinfo.oldhscno as "oldConsumerNo", dcbinfo.propertyid as "assementNo", dcbinfo.username as "ownerName",dcbinfo.categorytype as "categoryType",
          dcbinfo.username as "period",'' as "doorNo", dcbinfo.connectiontype as "connectionType" , dcbinfo.arr_demand as "arrears" ,  dcbinfo.curr_demand as "current" ,  
          dcbinfo.arr_coll as "arrearsCollection" ,  dcbinfo.curr_coll as "currentCollection" ,  dcbinfo.arr_demand+dcbinfo.curr_demand as "totalDemand" , '' as "usageType" , 

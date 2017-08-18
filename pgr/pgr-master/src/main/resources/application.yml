@@ -1514,7 +1514,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED_''PROCESSING''_''REOPENED:PENDING,REJECTED:REJECTED'
+    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED''_''PROCESSING''_''REOPENED:PENDING,REJECTED:REJECTED'
     source: seva
     isMandatory: true
   query: SELECT dept.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
@@ -1705,7 +1705,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED_''PROCESSING''_''REOPENED:PENDING,REJECTED:REJECTED'
+    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED''_''PROCESSING''_''REOPENED:PENDING,REJECTED:REJECTED'
     source: seva
     isMandatory: true
   query: SELECT boundary.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate

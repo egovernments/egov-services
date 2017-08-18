@@ -42,7 +42,9 @@ package org.egov.wcms.transaction.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -52,6 +54,7 @@ import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EstimationNotice;
+import org.egov.wcms.transaction.model.Role;
 import org.egov.wcms.transaction.model.User;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
@@ -96,6 +99,11 @@ public class WaterConnectionService {
 
     @Autowired
     private ConfigurationManager configurationManager;
+    
+    public static final String roleCode = "CITIZEN"; 
+    public static final String roleName = "Citizen"; 
+    public static final Long roleId = 1L; 
+    
 
     public Connection createWaterConnection(final String topic, final String key,
             final WaterConnectionReq waterConnectionRequest) {
@@ -145,14 +153,66 @@ public class WaterConnectionService {
     }
     
     private void createUserId(WaterConnectionReq waterConnReq){
-    	
-    	StringBuffer createUrl = new StringBuffer();
-		createUrl.append(configurationManager.getUserHostName());
-		createUrl.append(configurationManager.getUserBasePath());
-		createUrl.append(configurationManager.getUserCreatePath());
+
+		String searchUrl = getUserServiceSearchPath();
+		String createUrl = getUserServiceCreatePath();
 		
-		Connection conn= waterConnReq.getConnection(); 
-    	User user = User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber())
+		UserResponseInfo userResponse = null;
+        Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
+        userSearchRequestInfo.put("userName", waterConnReq.getConnection().getConnectionOwner().getMobileNumber());
+        userSearchRequestInfo.put("type", waterConnReq.getConnection().getConnectionOwner().getType());
+        userSearchRequestInfo.put("tenantId", waterConnReq.getConnection().getConnectionOwner().getTenantId());
+        userSearchRequestInfo.put("RequestInfo", waterConnReq.getRequestInfo());
+        
+        logger.info("UserUtil searchUrl --username-->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
+                + userSearchRequestInfo);
+        userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
+        logger.info("UserUtil userResponse ---->> " + userResponse);
+        
+		if (userResponse == null || userResponse.getUsers().size() == 0) {
+			userSearchRequestInfo.put("name", waterConnReq.getConnection().getConnectionOwner().getName());
+			userSearchRequestInfo.put("mobileNumber",
+					waterConnReq.getConnection().getConnectionOwner().getMobileNumber());
+
+			if (null != waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber()
+					&& !waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber().isEmpty()) {
+				userSearchRequestInfo.put("aadharNumber",
+						waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber());
+			}
+
+			if (null != waterConnReq.getConnection().getConnectionOwner().getEmailId()
+					&& !waterConnReq.getConnection().getConnectionOwner().getEmailId().isEmpty()) {
+				userSearchRequestInfo.put("emailId", waterConnReq.getConnection().getConnectionOwner().getEmailId());
+			}
+			logger.info("UserUtil searchUrl ---multiparam->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
+                    + userSearchRequestInfo);
+            userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
+                    UserResponseInfo.class);
+            logger.info("UserUtil userResponse ---->> " + userResponse);
+            if (userResponse == null || userResponse.getUsers().size() == 0) {
+                UserRequestInfo userRequestInfo = new UserRequestInfo();
+                userRequestInfo.setRequestInfo(waterConnReq.getRequestInfo());
+                User user = buildUserObjectFromConnection(waterConnReq);
+                user.setPassword(configurationManager.getDefaultPassword());
+                userRequestInfo.setUser(user);
+                logger.info("UserUtil createUrl ---->> " + createUrl.toString() + " \n userRequestInfo ---->> "
+                        + userRequestInfo);
+                UserResponseInfo userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
+                        UserResponseInfo.class);
+                logger.info("UserUtil userCreateResponse ---->> " + userCreateResponse);
+                user.setId(userCreateResponse.getUsers().get(0).getId());
+                waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUsers().get(0).getId());
+            }
+		}
+    }
+    
+    
+    private User buildUserObjectFromConnection(WaterConnectionReq waterConnReq) { 
+    	Connection conn= waterConnReq.getConnection(); 
+    	Role role = Role.builder().id(roleId).code(roleCode).name(roleName).build();
+    	List<Role> roleList = new ArrayList<>();
+    	roleList.add(role);
+    	return User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber())
     			.userName(conn.getConnectionOwner().getUserName())
     			.name(conn.getConnectionOwner().getName())
     			.emailId(conn.getConnectionOwner().getEmailId())
@@ -161,21 +221,26 @@ public class WaterConnectionService {
     			.gender(conn.getConnectionOwner().getGender())
     			.isPrimaryOwner(conn.getConnectionOwner().getIsPrimaryOwner())
     			.isSecondaryOwner(conn.getConnectionOwner().getIsSecondaryOwner())
+    			.roles(roleList)
     			.active(true)
     			.build();
-    	UserRequestInfo userRequestInfo = new UserRequestInfo();
-        userRequestInfo.setRequestInfo(waterConnReq.getRequestInfo());
-        user.setPassword(configurationManager.getDefaultPassword());
-        userRequestInfo.setUser(user);
-    	logger.info("UserUtil createUrl ---->> " + createUrl.toString() + " \n userRequestInfo ---->> "
-                + userRequestInfo);
-        UserResponseInfo userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
-                UserResponseInfo.class);
-        logger.info("UserUtil userCreateResponse ---->> " + userCreateResponse);
-        user.setId(userCreateResponse.getUsers().get(0).getId());
-        waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUsers().get(0).getId());
     }
     
+    private String getUserServiceSearchPath() { 
+    	StringBuffer searchUrl = new StringBuffer();
+		searchUrl.append(configurationManager.getUserHostName());
+		searchUrl.append(configurationManager.getUserBasePath());
+		searchUrl.append(configurationManager.getUserSearchPath());
+		return searchUrl.toString();
+    }
+    
+    private String getUserServiceCreatePath() { 
+    	StringBuffer createUrl = new StringBuffer();
+		createUrl.append(configurationManager.getUserHostName());
+		createUrl.append(configurationManager.getUserBasePath());
+		createUrl.append(configurationManager.getUserCreatePath());
+		return createUrl.toString();
+    }
 
     public Connection create(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for update with initiate workflow Connection");

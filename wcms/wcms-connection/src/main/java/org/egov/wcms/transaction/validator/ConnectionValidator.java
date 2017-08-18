@@ -382,14 +382,14 @@ public class ConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-        /*if (restConnectionService.getTreateMentPlantName(waterConnectionRequest).getTreatmentPlants().isEmpty()) {
+        if (restConnectionService.getTreateMentPlantName(waterConnectionRequest).getTreatmentPlants().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConnectionConstants.TREATPLANT_INVALID_CODE)
                     .message(WcmsConnectionConstants.TREATPLANT_INVALID_FIELD_NAME)
                     .field(WcmsConnectionConstants.TREATPLANT_INVALID_ERROR_MESSAGE)
                     .build();
             errorFields.add(errorField);
-        }*/
+        }
        
         if (restConnectionService.getSupplyTypeByName(waterConnectionRequest) .getSupplytypes().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()

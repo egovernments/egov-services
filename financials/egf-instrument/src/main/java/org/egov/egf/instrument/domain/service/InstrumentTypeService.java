@@ -121,9 +121,15 @@ public class InstrumentTypeService {
 			case ACTION_UPDATE:
 				Assert.notNull(instrumenttypes, "InstrumentTypes to update must not be null");
 				for (InstrumentType instrumentType : instrumenttypes) {
+					Assert.notNull(instrumentType.getId(), "InstrumentType ID to update must not be null");
 					validator.validate(instrumentType, errors);
 				}
 				break;
+			case ACTION_DELETE:
+				Assert.notNull(instrumenttypes, "Instruments to delete must not be null");
+				for (InstrumentType instrumenttype : instrumenttypes) {
+					validator.validate(instrumenttype, errors);
+				}
 			default:
 
 			}

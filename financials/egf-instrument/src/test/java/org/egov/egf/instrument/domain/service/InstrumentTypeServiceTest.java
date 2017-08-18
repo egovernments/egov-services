@@ -164,7 +164,7 @@ public class InstrumentTypeServiceTest {
 
 	private List<InstrumentType> getInstrumentTypes() {
 		List<InstrumentType> instrumentTypes = new ArrayList<InstrumentType>();
-		InstrumentType instrumentType = InstrumentType.builder().build();
+		InstrumentType instrumentType = InstrumentType.builder().id("1").build();
 		instrumentType.setTenantId("default");
 		instrumentTypes.add(instrumentType);
 		return instrumentTypes;

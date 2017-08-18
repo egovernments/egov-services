@@ -116,7 +116,13 @@ public class SurrenderReasonService {
 			case ACTION_UPDATE:
 				Assert.notNull(surrenderreasons, "SurrenderReasons to update must not be null");
 				for (SurrenderReason surrenderReason : surrenderreasons) {
+					Assert.notNull(surrenderReason.getId(), "SurrenderReason ID to update must not be null");
 					validator.validate(surrenderReason, errors);
+				}
+			case ACTION_DELETE:
+				Assert.notNull(surrenderreasons, "Instruments to delete must not be null");
+				for (SurrenderReason surrenderreason : surrenderreasons) {
+					validator.validate(surrenderreason, errors);
 				}
 				break;
 			default:

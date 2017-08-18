@@ -611,7 +611,7 @@ class LegacyLicenseCreate extends Component {
          var month = new Date(e.target.value).getFullYear();
 
       //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
-         console.log("licenses[0].validityYears");
+      //   console.log(date);
       //   self.handleChange({target:{value:date}}, "licenses[0].licenseValidFromDate", false, "");
        }
 
@@ -623,7 +623,7 @@ class LegacyLicenseCreate extends Component {
       //var startYear = licenseValidFrom.getFullYear();
       var startYear = month;
       var Validity = 2;
-    //  var v = "categories[0].validityYears";
+      var v = "categories[0].validityYears";
 
       for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
             if(i > (fixedDate - 6)){

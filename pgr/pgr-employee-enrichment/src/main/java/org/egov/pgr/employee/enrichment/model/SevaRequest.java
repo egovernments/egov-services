@@ -59,6 +59,7 @@ public class SevaRequest {
     private static final String ATTRIBUTE_VALUES_KEY_FIELD = "key";
     private static final String ATTRIBUTE_VALUES_NAME_FIELD = "name";
     private static final String POST = "POST";
+    public static final String SYSTEM_KEYWORD = "keyword";
 
     private HashMap<String, Object> sevaRequestMap;
 
@@ -120,6 +121,7 @@ public class SevaRequest {
         valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId()));
         valuesToSet.put(VALUES_APPROVAL_COMMENT, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT, approvalComment));
         valuesToSet.put(DEPARTMENT_ID, Attribute.asStringAttr(DEPARTMENT_ID, departmentId));
+        valuesToSet.put(SYSTEM_KEYWORD, Attribute.asStringAttr(SYSTEM_KEYWORD, getKeyword()));
         return valuesToSet;
     }
 
@@ -210,7 +212,7 @@ public class SevaRequest {
     public String getKeyword() {
         return getDynamicSingleValue(VALUES_KEYWORD);
     }
-    
+
     public String getServiceName() {
         return (String) getServiceRequest().get(SERVICE_NAME);
     }

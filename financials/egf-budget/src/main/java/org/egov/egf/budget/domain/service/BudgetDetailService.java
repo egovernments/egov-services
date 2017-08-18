@@ -182,8 +182,10 @@ public class BudgetDetailService {
                 break;
             case ACTION_UPDATE:
                 Assert.notNull(budgetdetails, "BudgetDetails to update must not be null");
-                for (final BudgetDetail budgetDetail : budgetdetails)
+                for (final BudgetDetail budgetDetail : budgetdetails){
+                	Assert.notNull(budgetDetail.getId(), "BudgetDetail ID to update must not be null");
                     validator.validate(budgetDetail, errors);
+                }
                 break;
             default:
 

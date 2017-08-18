@@ -445,6 +445,14 @@ public class PropertyRepository {
         else
             return value;
     }
+    
+    public Integer getInteger(Object value) {
+
+        if (value == null)
+            return null;
+        else
+            return Integer.valueOf(value.toString());
+    }
 
     /**
      * VacantLandDetail creation query
@@ -1347,6 +1355,7 @@ public class PropertyRepository {
 
             property.setId(getLong(row.get("id")));
             property.setTenantId(getString(row.get("tenantid")));
+            property.setSequenceNo(getInteger(row.get("sequenceNo")));
             property.setUpicNumber(getString(row.get("upicnumber")));
             property.setOldUpicNumber(getString(row.get("oldupicnumber")));
             property.setVltUpicNumber(getString(row.get("vltupicnumber")));

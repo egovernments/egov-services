@@ -1,0 +1,19 @@
+{
+	"ResponseInfo" : {
+		"apiId" : "apiId",
+		"ver" : "ver",
+		"ts": "06-01-1964 00:00:00",
+		"resMsgId" : "resMsgId",
+		"msgId" : "msgId",
+		"status" : "200"
+	},
+	"Error" : {
+		"code" : 400,
+		"message" : "error message",
+		"description" : "error description",
+		"fields" : {
+			"field1" : "error message for field 1",
+			"field2" : "error message for field 2"
+		}
+	}
+}

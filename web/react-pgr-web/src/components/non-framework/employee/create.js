@@ -17,11 +17,6 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Api from '../../../api/api';
 import $ from "jquery";
 
-var styles = {
-    fontWeight: {
-        fontWeight: 500
-    }
-};
 
 const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
 const checkIfNoDup = function(employee, subObject) {
@@ -417,79 +412,6 @@ const getBoundaryValues = function(allBoundariesList, boundary, self, ind) {
     }
 }
 
-
-const defaultEmployeeObject = {
-      code: "",
-      dateOfAppointment: "",
-      dateOfJoining: "",
-      dateOfRetirement: "",
-      employeeStatus: "",
-      recruitmentMode: "",
-      recruitmentType: "",
-      recruitmentQuota: "",
-      retirementAge: "",
-      dateOfResignation: "",
-      dateOfTermination: "",
-      employeeType: "",
-      assignments: [],
-      jurisdictions: [],
-      motherTongue: "",
-      religion: "",
-      community: "",
-      category: "",
-      physicallyDisabled: false,
-      medicalReportProduced: false,
-      languagesKnown: [],
-      maritalStatus: "",
-      passportNo: null,
-      gpfNo: null,
-      bank: "",
-      bankBranch: "",
-      bankAccount: "",
-      group: "",
-      placeOfBirth: "",
-      documents: [],
-      serviceHistory: [],
-      probation: [],
-      regularisation: [],
-      technical: [],
-      education: [],
-      test: [],
-      user: {
-          roles: [{
-              code: "EMPLOYEE",
-              name: "EMPLOYEE",
-              tenantId: localStorage.getItem('tenantId')
-          }],
-          userName: "",
-          name: "",
-          gender: "",
-          mobileNumber: "",
-          emailId: "",
-          altContactNumber: "",
-          pan: "",
-          aadhaarNumber: "",
-          permanentAddress: "",
-          permanentCity: "",
-          permanentPinCode: "",
-          correspondenceCity: "",
-          correspondencePinCode: "",
-          correspondenceAddress: "",
-          active: true,
-          dob: "",
-          locale: "",
-          signature: "",
-          fatherOrHusbandName: "",
-          bloodGroup: null,
-          identificationMark: "",
-          photo: "",
-          type: "EMPLOYEE",
-          password: "12345678",
-          tenantId: localStorage.getItem('tenantId')
-      },
-      tenantId: localStorage.getItem('tenantId')
-    };
-
 const assignmentsDefState = {
     fromDate: "",
     toDate: "",
@@ -557,6 +479,7 @@ class Employee extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+      pathname: "",
       open: false,
       editIndex: '',
       isModalInvalid: true,
@@ -1641,9 +1564,17 @@ class Employee extends Component {
     })
   }
 
-	componentDidMount() {
-    	let self = this;
+    componentWillReceiveProps(nextProps) {
+        if (this.state.pathname != nextProps.history.location.pathname) {
+          this.initDat();
+        }
+    }
+
+    initDat = () => {
+        let self = this;
+        self.props.resetForm();
         self.setState({
+          pathname: self.props.history.location.pathname,
           screenType: window.location.hash.indexOf("update") > -1 ? "update" : (window.location.hash.indexOf("view") > -1 ? "view" : "create")
         }, function() {
           if(self.state.screenType == "update" || self.state.screenType == "view") {
@@ -1667,87 +1598,157 @@ class Employee extends Component {
 
             })
           } else {
-            self.setInitDat(defaultEmployeeObject, false);
+            self.setInitDat({
+      code: "",
+      dateOfAppointment: "",
+      dateOfJoining: "",
+      dateOfRetirement: "",
+      employeeStatus: "",
+      recruitmentMode: "",
+      recruitmentType: "",
+      recruitmentQuota: "",
+      retirementAge: "",
+      dateOfResignation: "",
+      dateOfTermination: "",
+      employeeType: "",
+      assignments: [],
+      jurisdictions: [],
+      motherTongue: "",
+      religion: "",
+      community: "",
+      category: "",
+      physicallyDisabled: false,
+      medicalReportProduced: false,
+      languagesKnown: [],
+      maritalStatus: "",
+      passportNo: null,
+      gpfNo: null,
+      bank: "",
+      bankBranch: "",
+      bankAccount: "",
+      group: "",
+      placeOfBirth: "",
+      documents: [],
+      serviceHistory: [],
+      probation: [],
+      regularisation: [],
+      technical: [],
+      education: [],
+      test: [],
+      user: {
+          roles: [{
+              code: "EMPLOYEE",
+              name: "EMPLOYEE",
+              tenantId: localStorage.getItem('tenantId')
+          }],
+          userName: "",
+          name: "",
+          gender: "",
+          mobileNumber: "",
+          emailId: "",
+          altContactNumber: "",
+          pan: "",
+          aadhaarNumber: "",
+          permanentAddress: "",
+          permanentCity: "",
+          permanentPinCode: "",
+          correspondenceCity: "",
+          correspondencePinCode: "",
+          correspondenceAddress: "",
+          active: true,
+          dob: "",
+          locale: "",
+          signature: "",
+          fatherOrHusbandName: "",
+          bloodGroup: null,
+          identificationMark: "",
+          photo: "",
+          type: "EMPLOYEE",
+          password: "12345678",
+          tenantId: localStorage.getItem('tenantId')
+      },
+      tenantId: localStorage.getItem('tenantId')
+    }, false);
           }
         });
 
-   		let count = 23, _state = {};
-   		let checkCountAndSetState = function(key, res) {
-   			_state[key] = res;
-   			count--;
-   			if(count == 0) {
-   				self.setInitialState(_state);
+        let count = 23, _state = {};
+        let checkCountAndSetState = function(key, res) {
+            _state[key] = res;
+            count--;
+            if(count == 0) {
+                self.setInitialState(_state);
           self.props.setLoadingStatus('hide');
         }
-   		}
+        }
 
       self.props.setLoadingStatus('loading');
-   		self.fetchURLData("/hr-masters/employeetypes/_search", {}, [], function(res){
-   			checkCountAndSetState("employeetypes", res["EmployeeType"]);
-   		});
+        self.fetchURLData("/hr-masters/employeetypes/_search", {}, [], function(res){
+            checkCountAndSetState("employeetypes", res["EmployeeType"]);
+        });
         self.fetchURLData("hr-masters/positions/_search", {}, [], function(res){
             checkCountAndSetState("allPosition", res["Position"]);
         });
-   		self.fetchURLData("/hr-masters/hrstatuses/_search", { objectName:"Employee Master" }, [], function(res){
-   			checkCountAndSetState("statuses", res["HRStatus"]);
-   		});
-   		self.fetchURLData("/hr-masters/groups/_search", {}, [], function(res){
-   			checkCountAndSetState("groups", res["Group"]);
-   		});
-   		self.fetchURLData("/egf-masters/banks/_search", {}, [], function(res){
-   			checkCountAndSetState("banks", res["banks"]);
-   		});
-   		self.fetchURLData("/egov-common-masters/categories/_search", {}, [], function(res){
-   			checkCountAndSetState("categories", res["Category"]);
-   		});
-   		self.fetchURLData("/hr-employee/maritalstatuses/_search", {}, [], function(res){
-   			checkCountAndSetState("maritalstatuses", res["MaritalStatus"]);
-   		});
-   		self.fetchURLData("/hr-employee/bloodgroups/_search", {}, [], function(res){
-   			checkCountAndSetState("bloodgroups", res["BloodGroup"]);
-   		});
-   		self.fetchURLData("/egov-common-masters/languages/_search", {}, [], function(res){
-   			checkCountAndSetState("languages", res["Language"]);
-   		});
-   		self.fetchURLData("/egov-common-masters/religions/_search", {}, [], function(res){
-   			checkCountAndSetState("religions", res["Religion"]);
-   		});
-   		self.fetchURLData("/hr-masters/recruitmentmodes/_search", {}, [], function(res){
-   			checkCountAndSetState("recruitmentmodes", res["RecruitmentMode"]);
-   		});
-   		self.fetchURLData("/hr-masters/recruitmenttypes/_search", {}, [], function(res){
-   			checkCountAndSetState("recruitmenttypes", res["RecruitmentType"]);
-   		});
-   		self.fetchURLData("/hr-masters/grades/_search", {}, [], function(res){
-   			checkCountAndSetState("grades", res["Grade"]);
-   		});
-   		self.fetchURLData("/egf-masters/funds/_search", {}, [], function(res){
-   			checkCountAndSetState("funds", res["funds"]);
-   		});
-   		self.fetchURLData("/egf-masters/functionaries/_search", {}, [], function(res){
-   			checkCountAndSetState("functionaries", res["functionaries"]);
-   		});
-   		self.fetchURLData("/egf-masters/functions/_search", {}, [], function(res){
-   			checkCountAndSetState("functions", res["functions"]);
-   		});
-   		self.fetchURLData("/egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}, [], function(res){
-   			checkCountAndSetState("boundarytypes", res["BoundaryType"]);
-   		});
-   		self.fetchURLData("hr-masters/designations/_search", {}, [], function(res){
-   			checkCountAndSetState("designations", res["Designation"]);
-   		});
-   		self.fetchURLData("egov-common-masters/departments/_search", {}, [], function(res){
-   			checkCountAndSetState("departments", res["Department"]);
-   		});
-   		self.fetchURLData("hr-masters/recruitmentquotas/_search", {}, [], function(res){
-   			checkCountAndSetState("recruitmentquotas", res["RecruitmentQuota"]);
-   		});
-   		self.fetchURLData("egov-common-masters/genders/_search", {}, [], function(res){
-   			checkCountAndSetState("genders", res["Gender"]);
-   		});
-   		self.fetchURLData("egov-common-masters/communities/_search", {}, [], function(res){
-   			checkCountAndSetState("communities", res["Community"]);
-   		});
+        self.fetchURLData("/hr-masters/hrstatuses/_search", { objectName:"Employee Master" }, [], function(res){
+            checkCountAndSetState("statuses", res["HRStatus"]);
+        });
+        self.fetchURLData("/hr-masters/groups/_search", {}, [], function(res){
+            checkCountAndSetState("groups", res["Group"]);
+        });
+        self.fetchURLData("/egf-masters/banks/_search", {}, [], function(res){
+            checkCountAndSetState("banks", res["banks"]);
+        });
+        self.fetchURLData("/egov-common-masters/categories/_search", {}, [], function(res){
+            checkCountAndSetState("categories", res["Category"]);
+        });
+        self.fetchURLData("/hr-employee/maritalstatuses/_search", {}, [], function(res){
+            checkCountAndSetState("maritalstatuses", res["MaritalStatus"]);
+        });
+        self.fetchURLData("/hr-employee/bloodgroups/_search", {}, [], function(res){
+            checkCountAndSetState("bloodgroups", res["BloodGroup"]);
+        });
+        self.fetchURLData("/egov-common-masters/languages/_search", {}, [], function(res){
+            checkCountAndSetState("languages", res["Language"]);
+        });
+        self.fetchURLData("/egov-common-masters/religions/_search", {}, [], function(res){
+            checkCountAndSetState("religions", res["Religion"]);
+        });
+        self.fetchURLData("/hr-masters/recruitmentmodes/_search", {}, [], function(res){
+            checkCountAndSetState("recruitmentmodes", res["RecruitmentMode"]);
+        });
+        self.fetchURLData("/hr-masters/recruitmenttypes/_search", {}, [], function(res){
+            checkCountAndSetState("recruitmenttypes", res["RecruitmentType"]);
+        });
+        self.fetchURLData("/hr-masters/grades/_search", {}, [], function(res){
+            checkCountAndSetState("grades", res["Grade"]);
+        });
+        self.fetchURLData("/egf-masters/funds/_search", {}, [], function(res){
+            checkCountAndSetState("funds", res["funds"]);
+        });
+        self.fetchURLData("/egf-masters/functionaries/_search", {}, [], function(res){
+            checkCountAndSetState("functionaries", res["functionaries"]);
+        });
+        self.fetchURLData("/egf-masters/functions/_search", {}, [], function(res){
+            checkCountAndSetState("functions", res["functions"]);
+        });
+        self.fetchURLData("/egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}, [], function(res){
+            checkCountAndSetState("boundarytypes", res["BoundaryType"]);
+        });
+        self.fetchURLData("hr-masters/designations/_search", {}, [], function(res){
+            checkCountAndSetState("designations", res["Designation"]);
+        });
+        self.fetchURLData("egov-common-masters/departments/_search", {}, [], function(res){
+            checkCountAndSetState("departments", res["Department"]);
+        });
+        self.fetchURLData("hr-masters/recruitmentquotas/_search", {}, [], function(res){
+            checkCountAndSetState("recruitmentquotas", res["RecruitmentQuota"]);
+        });
+        self.fetchURLData("egov-common-masters/genders/_search", {}, [], function(res){
+            checkCountAndSetState("genders", res["Gender"]);
+        });
+        self.fetchURLData("egov-common-masters/communities/_search", {}, [], function(res){
+            checkCountAndSetState("communities", res["Community"]);
+        });
 
         Api.commonApiGet("egov-location/boundarys", {
             "Boundary.tenantId": localStorage.getItem("tenantId")
@@ -1756,6 +1757,10 @@ class Employee extends Component {
         }, function(err) {
             checkCountAndSetState("allBoundariesList", []);
         })
+    }
+
+	componentDidMount() {
+    	this.initDat();
 	}
 
 	handleDateChange = (type, date, isRequired) => {
@@ -1925,7 +1930,7 @@ class Employee extends Component {
                             }}/>
                         }
                       </Col>
-                      <Col xs={12} sm={4} md={3} lg={3}>
+                      <Col xs={12} sm={4} md={3} lg={3} style={{"display": self.state.screenType == "create" && self.state.autoCode ? "none" : "block"}}>
                       	{self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.code")}</span></label><br/>
@@ -2020,8 +2025,8 @@ class Employee extends Component {
                                 <label>{Employee.user ? Employee.user.gender : "-"}</label></span>
                             )
                          :
-                            <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.gender")} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
-                      		handleChangeNextLevel({target:{value:value}}, "user", "gender", false, '')
+                            <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.gender") + " *"} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
+                      		handleChangeNextLevel({target:{value:value}}, "user", "gender", true, '')
                       	}}>
                             {
                             	self.state.genders && self.state.genders.map(function(v, i){
@@ -2052,7 +2057,7 @@ class Employee extends Component {
                    </Row>
                    {self.state.screenType == "view" && <br/>}
                    <Row>
-                      <Col xs={12} sm={4} md={3} lg={3}>
+                      <Col xs={12} sm={4} md={3} lg={3}  style={{"display": self.state.screenType == "create" && self.state.autoUName ? "none" : "block"}}>
                       	{self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.User.userName")}</span></label><br/>
@@ -2507,7 +2512,7 @@ class Employee extends Component {
                       {self.state.screenType == "view" ?
                             (
                                 <span><label><span style={{"fontWeight":"500"}}>{translate("employee.Employee.fields.correspondencePinNumber")}</span></label><br/>
-                                <label>{Employee.user ? Employee.user.correspondencePinCode : ""}</label></span>
+                                <label>{Employee.user ? Employee.user.correspondencePinCode : "-"}</label></span>
                             )
                          :
 
@@ -2760,7 +2765,7 @@ class Employee extends Component {
 							<th>{translate("employee.Assignment.fields.hod")}</th>
 							<th>{translate("employee.Assignment.fields.govtOrderNumber")}</th>
 							<th>{translate("employee.Assignment.fields.documents")}</th>
-							<th>{translate("employee.Assignment.fields.action")}</th>
+							<th>{translate("reports.common.action")}</th>
 						</thead>
 						<tbody>
 							{renderAssignmentBody()}
@@ -2801,7 +2806,7 @@ class Employee extends Component {
 						<thead>
 							<th>{translate("employee.jurisdiction.fields.boundaryType")}</th>
 							<th>{translate("employee.jurisdiction.fields.boundary")}</th>
-							<th>{translate("employee.Assignment.fields.action")}</th>
+							<th>{translate("reports.common.action")}</th>
 						</thead>
 						<tbody>
 							{renderJurisdictionBody()}
@@ -2900,7 +2905,7 @@ class Employee extends Component {
 								<th>{translate("employee.ServiceHistory.fields.remarks")}</th>
 								<th>{translate("employee.ServiceHistory.fields.orderNo")}</th>
 								<th>{translate("employee.ServiceHistory.fields.documents")}</th>
-								<th>{translate("employee.Assignment.fields.action")}</th>
+								<th>{translate("reports.common.action")}</th>
 							</thead>
 							<tbody>
 								{renderServiceBody('service')}
@@ -2928,7 +2933,7 @@ class Employee extends Component {
 								<th>{translate("employee.Probation.fields.orderDate")}</th>
 								<th>{translate("employee.Probation.fields.remarks")}</th>
 								<th>{translate("employee.Probation.fields.documents")}</th>
-								<th>{translate("employee.Assignment.fields.action")}</th>
+								<th>{translate("reports.common.action")}</th>
 							</thead>
 							<tbody>
 								{renderServiceBody('probation')}
@@ -2956,7 +2961,7 @@ class Employee extends Component {
               <th>{translate("employee.Probation.fields.orderDate")}</th>
               <th>{translate("employee.Probation.fields.remarks")}</th>
               <th>{translate("employee.Probation.fields.documents")}</th>
-              <th>{translate("employee.Assignment.fields.action")}</th>
+              <th>{translate("reports.common.action")}</th>
 							</thead>
 							<tbody>
 								{renderServiceBody('regularization')}
@@ -3054,7 +3059,7 @@ class Employee extends Component {
 								<th>{translate("employee.TechnicalQualification.fields.yearOfPassing")}</th>
 								<th>{translate("employee.EducationalQualification.fields.university")}</th>
 								<th>{translate("employee.EducationalQualification.fields.documents")}</th>
-								<th>{translate("employee.Assignment.fields.action")}</th>
+								<th>{translate("reports.common.action")}</th>
 							</thead>
 							<tbody>
 								{renderOtherDetailsBody('edu')}
@@ -3081,7 +3086,7 @@ class Employee extends Component {
 								<th>{translate("employee.TechnicalQualification.fields.yearOfPassing")}</th>
 								<th>{translate("employee.TechnicalQualification.fields.remarks")}</th>
 								<th>{translate("employee.EducationalQualification.fields.documents")}</th>
-								<th>{translate("employee.Assignment.fields.action")}</th>
+								<th>{translate("reports.common.action")}</th>
 							</thead>
 							<tbody>
 								{renderOtherDetailsBody('tech')}
@@ -3107,7 +3112,7 @@ class Employee extends Component {
 								<th>{translate("employee.TechnicalQualification.fields.yearOfPassing")}n</th>
 								<th>{translate("employee.TechnicalQualification.fields.remarks")}</th>
                 <th>{translate("employee.EducationalQualification.fields.documents")}</th>
-								<th>{translate("employee.Assignment.fields.action")}</th>
+								<th>{translate("reports.common.action")}</th>
 							</thead>
 							<tbody>
 								{renderOtherDetailsBody('dept')}
@@ -3174,7 +3179,7 @@ class Employee extends Component {
             self.props.toggleSnackbarAndSetText(true, (self.state.screenType == "update" ? "Employee updated successfully." : "Employee created successfully."));
             setTimeout(function() {
                 self.props.setRoute("/employee/view/" + res.Employee.id);
-                window.location.reload();
+                //window.location.reload();
             }, 1500);
           }, function(err) {
             self.props.setLoadingStatus('hide');
@@ -3260,9 +3265,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 
     setForm: (data, isUpdate, codeAuto, unameAuto) => {
-        var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob'];
+        var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob', 'user.gender'];
         if(codeAuto) requiredList.splice(1, 1);
         if(unameAuto) requiredList.splice(6, 1);
+        
         dispatch({
             type: "SET_FORM",
             data,
@@ -3279,6 +3285,10 @@ const mapDispatchToProps = dispatch => ({
                 }
             }
         });
+    },
+
+    resetForm: () => {
+        dispatch({"type": "RESET_FORM"})
     },
 
     handleChange: (e, property, isRequired, pattern) => {

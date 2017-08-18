@@ -164,7 +164,7 @@ public class SurrenderReasonServiceTest {
 
 	private List<SurrenderReason> getSurrenderReasons() {
 		List<SurrenderReason> surrenderReasons = new ArrayList<SurrenderReason>();
-		SurrenderReason surrenderReason = SurrenderReason.builder().build();
+		SurrenderReason surrenderReason = SurrenderReason.builder().id("1").build();
 		surrenderReason.setTenantId("default");
 		surrenderReasons.add(surrenderReason);
 		return surrenderReasons;

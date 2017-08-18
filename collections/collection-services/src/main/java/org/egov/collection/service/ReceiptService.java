@@ -133,7 +133,6 @@ public class ReceiptService {
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG, CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
 		}
-		Instrument instrument = receipt.getInstrument();
 		bill.setBillDetails(apportionPaidAmount(
 					receiptReq.getRequestInfo(), bill, receipt.getTenantId()));
 		// return receiptRepository.pushToQueue(receiptReq); //async call
@@ -153,7 +152,6 @@ public class ReceiptService {
 			receiptReq.setReceipt(Arrays.asList(receipt));
 			receipt = receiptRepository.pushToQueue(receiptReq);
 		}
-		receipt.setInstrument(instrument);
 		return receipt;
 	}
 
@@ -253,7 +251,6 @@ public class ReceiptService {
         String transactionId = idGenRepository.generateTransactionNumber(requestInfo,tenantId);
 		for (BillDetail billDetail : bill.getBillDetails()) {
 			if(billDetail.getAmountPaid().longValueExact() > 0){
-				String instrumentId = null;
 				Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
 			try{
 				instrument.setTransactionType(TransactionType.Debit);
@@ -267,7 +264,7 @@ public class ReceiptService {
                     String transactionDate = simpleDateFormat.format(new Date(instrument.getTransactionDateInput()));
                     instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
                 }
-				instrumentId = instrumentRepository.createInstrument(
+                instrument = instrumentRepository.createInstrument(
 						requestInfo, instrument);
 			}catch(Exception e){
 				LOGGER.error("Exception while creating instrument: ", e);
@@ -305,7 +302,7 @@ public class ReceiptService {
 							businessDetails);
                     parametersMap.put("transactionid",transactionId);
 					LOGGER.info("Rcpt no generated: " + billDetail.getReceiptNumber());
-					LOGGER.info("InstrumentId: " + instrumentId
+					LOGGER.info("InstrumentId: " + instrument.getId()
 							+ " ReceiptHeaderId: " + receiptHeaderId);
 	
 					Map<String, Object>[] parametersReceiptDetails = prepareReceiptDetails(
@@ -314,7 +311,7 @@ public class ReceiptService {
 						LOGGER.info("Persiting receipt to resp tables: "+parametersMap.toString());
 						receiptRepository.persistReceipt(parametersMap,
 								parametersReceiptDetails, receiptHeaderId,
-								instrumentId);
+                                instrument.getId());
 					} catch (Exception e) {
 						LOGGER.error("Persisting receipt FAILED! ", e);
 						return receipt;
@@ -330,6 +327,7 @@ public class ReceiptService {
 		receipt.setAuditDetails(auditDetail);
         receipt.setTransactionId(transactionId);
         receipt.setTenantId(tenantId);
+        receipt.setInstrument(instrument);
 		return receipt;
 	}
 

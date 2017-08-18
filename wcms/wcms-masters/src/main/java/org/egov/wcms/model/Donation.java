@@ -68,7 +68,7 @@ public class Donation {
 
     @NotNull
     private Long id;
-    
+
     @NotNull
     @Size(min = 3, max = 20)
     private String code;
@@ -108,12 +108,10 @@ public class Donation {
     private Double donationAmount;
 
     @NotNull
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 
     @NotNull
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
 
@@ -123,6 +121,6 @@ public class Donation {
 
     @NotNull
     private Boolean active;
-
+    @JsonIgnore
     private AuditDetails auditDetails;
 }

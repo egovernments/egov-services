@@ -128,7 +128,6 @@ class ShowForm extends Component {
       let eD = new Date(endDate);
       eD.setHours(0, 0, 0, 0);
       if(eD >= sD){
-          console.log('ED grater than SD');
           this.setState({datefield : ''})
           this.setState({dateError : ''})
       }else{
@@ -138,7 +137,6 @@ class ShowForm extends Component {
           }
         }
         this.props.handleChange(e, field, false, '');
-        console.log('ED less than SD');
         this.setState({datefield : field});
         this.setState({dateError :
           field === 'toDate' ? translate('pgr.lbl.dategreater') : translate('pgr.lbl.datelesser')

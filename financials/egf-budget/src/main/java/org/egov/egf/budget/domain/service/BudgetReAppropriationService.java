@@ -144,8 +144,10 @@ public class BudgetReAppropriationService {
                 break;
             case ACTION_UPDATE:
                 Assert.notNull(budgetreappropriations, "BudgetReAppropriations to update must not be null");
-                for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations)
+                for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations){
+                 	Assert.notNull(budgetReAppropriation.getId(), "BudgetReAppropriation ID to update must not be null");
                     validator.validate(budgetReAppropriation, errors);
+                }
                 break;
             default:
 

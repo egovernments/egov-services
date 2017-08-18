@@ -27,7 +27,7 @@ class searchUserRole extends Component {
     super(props);
     this.state={
       autocompleteSourceConfig: {
-       text: 'userName',
+       text: 'fullName',
        value: 'id',
       },
     };
@@ -40,7 +40,9 @@ class searchUserRole extends Component {
     _this.props.setLoadingStatus('loading');
     Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, userType : 'EMPLOYEE'}).then(function(response) {
       _this.props.setLoadingStatus('loading');
-      _this.setState({users: response.user});
+      const newDataSource = response.user.map(item => {
+        return Object.assign({fullName:item.userName+ " (" +item.name+ ")"},item)});
+      _this.setState({users: newDataSource});
       _this.props.setLoadingStatus('hide');
     }, function(err) {
       _this.props.setLoadingStatus('hide');

@@ -262,6 +262,7 @@ public class WaterConnectionQueryBuilder {
     
     public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
+        addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
         LOGGER.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
@@ -357,6 +358,51 @@ public class WaterConnectionQueryBuilder {
          * selectQuery); selectQuery.append(" name = ?"); preparedStatementValues.add(serviceGroupRequest.getName()); }
          */
 
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addSecondQueryWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final WaterConnectionGetReq waterConnectionGetReq) {
+
+        if (waterConnectionGetReq.getTenantId() == null)
+            return;
+
+        selectQuery.append(" AND ");
+        boolean isAppendAndClause = false;
+
+        if (null != waterConnectionGetReq.getTenantId()) {
+            isAppendAndClause = true;
+            selectQuery.append(" conndetails.tenantid = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getTenantId());
+        }
+
+        if (null != waterConnectionGetReq.getLegacyConsumerNumber()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.legacyconsumernumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getLegacyConsumerNumber());
+        }
+
+        if (waterConnectionGetReq.getAcknowledgementNumber() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.acknowledgmentnumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getAcknowledgementNumber());
+        }
+        if (waterConnectionGetReq.getStateId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.stateid = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getStateId());
+        }
+
+        if (null != waterConnectionGetReq.getConsumerNumber()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.consumerNumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getConsumerNumber());
+        }
+
+        if (null != waterConnectionGetReq.getId()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.id IN " + getIdQuery(waterConnectionGetReq.getId()));
+        }
     }
 
     /**

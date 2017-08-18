@@ -145,6 +145,9 @@ public class CollectionServiceConstants {
     public static final String DUPLICATE_RCPT_EXCEPTION_MSG="Duplicate Receipt";
     public static final String DUPLICATE_RCPT_EXCEPTION_DESC="Receipt number already exists, Receipt cannot be created";
 
+    public static final String INVALID_BILL_EXCEPTION_MSG="Invalid Bill";
+    public static final String INVALID_BILL_EXCEPTION_DESC="Bill is invalid, Receipt cannot be created,";
+    
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     
     public static final String INVALID_DATE_EXCEPTION_MSG="From Date is greater than To Date";

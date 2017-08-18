@@ -1,9 +1,11 @@
 package org.egov.collection.repository;
 
 import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.model.BillingServiceRequestWrapper;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillRequest;
 import org.egov.collection.web.contract.BillResponse;
+import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +44,29 @@ public class BillingServiceRepository {
 			LOGGER.error("Error while apportioning paid amount from billing service. "
 					+ e);
 		}
-		LOGGER.info("Response from coll-master: " + response);
+		LOGGER.info("Response from billing service: " + response);
+		return response;
+	}
+	
+	public BillResponse getBillOnId(BillingServiceRequestWrapper billingServiceRequestWrapper, Bill bill) {
+		LOGGER.info("Search bill from Billing Service");
+		StringBuilder uri = new StringBuilder();
+		String searchCriteria = "?billId="+bill.getId()+"&tenantId="+bill.getTenantId();
+		uri.append(applicationProperties.getBillingServiceHostName())
+		   .append(applicationProperties.getSearchBill())
+		   .append(searchCriteria);
+		LOGGER.info("URI for search bill in Billing Service: "
+				+ uri.toString());
+		BillResponse response = null;
+		try {
+			response = restTemplate.postForObject(uri.toString(),
+					billingServiceRequestWrapper, BillResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error("Error while searching bill from billing service. "
+					+ e);
+		}
+		LOGGER.info("Response from billing service: " + response);
 		return response;
 	}
 }

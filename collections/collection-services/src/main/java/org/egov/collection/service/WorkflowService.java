@@ -78,17 +78,18 @@ public class WorkflowService {
 	public Long getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
 		logger.info("PositionSearchCriteria:"+positionSearchCriteriaWrapper.toString());
 
-		Long position = null;
+		Integer position = null;
 		Object response = workflowRepository.getPositionForUser(positionSearchCriteriaWrapper);
 		try{
-			position = JsonPath.read(response, "$.Employee.assignments[0].position");
+			position = JsonPath.read(response, "$.Position[0].id");
 		}catch(Exception e){
+			e.printStackTrace();
 			logger.error("No position returned from the service: "+e.getCause());
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.POSITION_EXCEPTION_MSG, CollectionServiceConstants.POSITION_EXCEPTION_DESC);
 		}
 		logger.info("Position fetched is: "+position);
-		return position;
+		return Long.valueOf(position);
 	}
 	
 	public WorkflowDetailsRequest start(WorkflowDetailsRequest workflowDetails) {		

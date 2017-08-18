@@ -15,7 +15,7 @@ Feature: All intents belongs to Complaint on behalf of citizen
 
     ### On Create Complaint Grievance Screen Entering More Details ###
     And user on Grievance screen types on grievanceLocation suggestion box with value Bank Road
-    And user on Grievance screen uploads on selectPhoto value /home/vinay/pgrDocument.jpg
+    And user on Grievance screen uploads on selectPhoto value pgrDocument.jpg
     And user on Grievance screen clicks on create
 
     ### On Create Complaint Grievance Screen verifying the details ###

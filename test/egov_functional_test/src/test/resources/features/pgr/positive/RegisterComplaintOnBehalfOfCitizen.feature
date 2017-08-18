@@ -28,7 +28,7 @@ Feature: Registering a Complaint
 
     ### On Create Complaint Grievance Screen Entering More Details ###
     And user on Grievance screen types on grievanceLocation suggestion box with value Bank Road
-    And user on Grievance screen uploads on selectPhoto value /home/vinay/Developement/eGov-Product/egov-services/test/egov_functional_test/src/test/resources/pgrDocument.jpg
+    And user on Grievance screen uploads on selectPhoto value pgrDocument.jpg
     And user on Grievance screen clicks on create
 
     ### On Create Complaint Grievance Screen verifying the details ###
@@ -73,17 +73,25 @@ Feature: Registering a Complaint
     ### Logout ###
     And Intent:LogoutIntentTest
 
+  @TestUsingIntent
   Scenario: Sample Scenario Using Intents
-    Given DataIntent:LoginIntentTest
-      | narasappa | demo |
-    And Intent:SearchATransactionAndClickOnFirstMenuItem
+    Given DataIntent:LoginIntent
+      | narasappa |
+      | demo      |
+    And DataIntent:SearchATransactionAndClickOnFirstMenuItem
+      | Officials Register Grievance |
     And Intent:RegisterComplaintOnBehalfOfCitizen
     And Intent:LogoutIntentTest
-    And Intent:LoginIntentTest
+
+    And DataIntent:LoginIntent
+      | aboveUser |
+      | demo      |
     And Intent:OpenApplicationOnHomePageScreen
     And Intent:VerificationOfComplaint
-    And Intent:SearchATransactionAndClickOnFirstMenuItem1
+    And DataIntent:SearchATransactionAndClickOnFirstMenuItem
+      | Search Grievance |
     And Intent:SearchingComplaintOnSearchGrievanceScreen
     And Intent:LogoutIntentTest
+
 
 

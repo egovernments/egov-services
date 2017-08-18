@@ -212,10 +212,8 @@ public class Connection {
 
     private String plumberName;
 
-    @NotNull
     private Long billSequenceNumber;
 
-    @NotNull
     private Boolean outsideULB;
 
     private String meterOwner;

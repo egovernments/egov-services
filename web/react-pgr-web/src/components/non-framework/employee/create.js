@@ -3268,6 +3268,7 @@ const mapDispatchToProps = dispatch => ({
         var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob', 'user.gender'];
         if(codeAuto) requiredList.splice(1, 1);
         if(unameAuto) requiredList.splice(6, 1);
+        
         dispatch({
             type: "SET_FORM",
             data,

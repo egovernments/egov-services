@@ -86,6 +86,9 @@ public class BudgetReAppropriationQueueRepository {
         case "update":
             topicMap.put("budgetreappropriation_update", request);
             break;
+        case "delete":
+            topicMap.put("budgetreappropriation_delete", request);
+            break;
 
         }
         financialProducer.sendMessage(validatedTopic, budgetReAppValidatedKey, topicMap);

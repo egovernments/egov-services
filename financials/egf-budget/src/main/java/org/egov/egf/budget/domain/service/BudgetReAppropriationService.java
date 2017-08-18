@@ -64,6 +64,7 @@ public class BudgetReAppropriationService {
 
     public static final String ACTION_CREATE = "create";
     public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
     public static final String ACTION_VIEW = "view";
     public static final String ACTION_EDIT = "edit";
     public static final String ACTION_SEARCH = "search";
@@ -127,6 +128,26 @@ public class BudgetReAppropriationService {
         return budgetReAppropriationRepository.update(budgetReAppropriations, requestInfo);
 
     }
+    
+    @Transactional
+    public List<BudgetReAppropriation> delete(List<BudgetReAppropriation> budgetReAppropriations, final BindingResult errors,
+            final RequestInfo requestInfo) {
+
+        try {
+
+            validate(budgetReAppropriations, ACTION_DELETE, errors);
+
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
+
+        } catch (final CustomBindException e) {
+
+            throw new CustomBindException(errors);
+        }
+
+        return budgetReAppropriationRepository.delete(budgetReAppropriations, requestInfo);
+
+    }
 
     private BindingResult validate(final List<BudgetReAppropriation> budgetreappropriations, final String method,
             final BindingResult errors) {
@@ -146,6 +167,13 @@ public class BudgetReAppropriationService {
                 Assert.notNull(budgetreappropriations, "BudgetReAppropriations to update must not be null");
                 for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations){
                  	Assert.notNull(budgetReAppropriation.getId(), "BudgetReAppropriation ID to update must not be null");
+                    validator.validate(budgetReAppropriation, errors);
+                }
+                break;
+            case ACTION_DELETE:
+                Assert.notNull(budgetreappropriations, "BudgetReAppropriations to delete must not be null");
+                for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations){
+                 	Assert.notNull(budgetReAppropriation.getId(), "BudgetReAppropriation ID to delete must not be null");
                     validator.validate(budgetReAppropriation, errors);
                 }
                 break;
@@ -188,6 +216,11 @@ public class BudgetReAppropriationService {
     @Transactional
     public BudgetReAppropriation update(final BudgetReAppropriation budgetReAppropriation) {
         return budgetReAppropriationRepository.update(budgetReAppropriation);
+    }
+    
+    @Transactional
+    public BudgetReAppropriation delete(final BudgetReAppropriation budgetReAppropriation) {
+        return budgetReAppropriationRepository.delete(budgetReAppropriation);
     }
 
 }

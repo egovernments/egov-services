@@ -65,6 +65,7 @@ public class BudgetService {
 
     public static final String ACTION_CREATE = "create";
     public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
     public static final String ACTION_VIEW = "view";
     public static final String ACTION_EDIT = "edit";
     public static final String ACTION_SEARCH = "search";
@@ -126,6 +127,26 @@ public class BudgetService {
         return budgetRepository.update(budgets, requestInfo);
 
     }
+    
+    @Transactional
+    public List<Budget> delete(List<Budget> budgets, final BindingResult errors,
+            final RequestInfo requestInfo) {
+
+        try {
+
+            validate(budgets, ACTION_DELETE, errors);
+
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
+
+        } catch (final CustomBindException e) {
+
+            throw new CustomBindException(errors);
+        }
+
+        return budgetRepository.delete(budgets, requestInfo);
+
+    }
 
     public BindingResult validate(final List<Budget> budgets, final String method, final BindingResult errors) {
 
@@ -144,6 +165,13 @@ public class BudgetService {
                 Assert.notNull(budgets, "Budgets to update must not be null");
                 for (final Budget budget : budgets){
                 	Assert.notNull(budget.getId(), "Budget ID to update must not be null");
+                	validator.validate(budget, errors);
+                }
+                break;
+            case ACTION_DELETE:
+                Assert.notNull(budgets, "Budgets to delete must not be null");
+                for (final Budget budget : budgets){
+                	Assert.notNull(budget.getId(), "Budget ID to delete must not be null");
                 	validator.validate(budget, errors);
                 }
                 break;
@@ -208,4 +236,8 @@ public class BudgetService {
         return budgetRepository.update(budget);
     }
 
+	@Transactional
+	public Budget delete(Budget budget) {
+		return budgetRepository.delete(budget);
+	}
 }

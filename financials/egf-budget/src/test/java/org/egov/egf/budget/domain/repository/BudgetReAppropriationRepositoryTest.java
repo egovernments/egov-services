@@ -206,6 +206,30 @@ public class BudgetReAppropriationRepositoryTest {
                 actualRequest.getBudgetReAppropriations().get(0).getOriginalDeductionAmount());
 
     }
+    
+    @Test
+    public void test_delete_with_kafka() {
+
+        final List<BudgetReAppropriation> expectedResult = getBudgetReAppropriations();
+
+        budgetReAppropriationRepositoryWithKafka.delete(expectedResult, requestInfo);
+
+        verify(budgetReAppropriationQueueRepository).addToQue(captor.capture());
+
+        final BudgetReAppropriationRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getAnticipatoryAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getAnticipatoryAmount());
+        assertEquals(expectedResult.get(0).getAdditionAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getAdditionAmount());
+        assertEquals(expectedResult.get(0).getDeductionAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getDeductionAmount());
+        assertEquals(expectedResult.get(0).getOriginalAdditionAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getOriginalAdditionAmount());
+        assertEquals(expectedResult.get(0).getOriginalDeductionAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getOriginalDeductionAmount());
+
+    }
 
     @Test
     public void test_update_with_out_kafka() {
@@ -217,6 +241,34 @@ public class BudgetReAppropriationRepositoryTest {
         when(budgetReAppropriationJdbcRepository.update(any(BudgetReAppropriationEntity.class))).thenReturn(entity);
 
         budgetReAppropriationRepositoryWithOutKafka.update(expectedResult, requestInfo);
+
+        verify(budgetReAppropriationQueueRepository).addToSearchQue(captor.capture());
+
+        final BudgetReAppropriationRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getAnticipatoryAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getAnticipatoryAmount());
+        assertEquals(expectedResult.get(0).getAdditionAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getAdditionAmount());
+        assertEquals(expectedResult.get(0).getDeductionAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getDeductionAmount());
+        assertEquals(expectedResult.get(0).getOriginalAdditionAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getOriginalAdditionAmount());
+        assertEquals(expectedResult.get(0).getOriginalDeductionAmount(),
+                actualRequest.getBudgetReAppropriations().get(0).getOriginalDeductionAmount());
+
+    }
+    
+    @Test
+    public void test_delete_with_out_kafka() {
+
+        final List<BudgetReAppropriation> expectedResult = getBudgetReAppropriations();
+
+        final BudgetReAppropriationEntity entity = new BudgetReAppropriationEntity().toEntity(expectedResult.get(0));
+
+        when(budgetReAppropriationJdbcRepository.delete(any(BudgetReAppropriationEntity.class))).thenReturn(entity);
+
+        budgetReAppropriationRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
         verify(budgetReAppropriationQueueRepository).addToSearchQue(captor.capture());
 
@@ -264,6 +316,25 @@ public class BudgetReAppropriationRepositoryTest {
 
         final BudgetReAppropriation actualResult = budgetReAppropriationRepositoryWithKafka
                 .update(getBudgetReAppropriationDomin());
+
+        assertEquals(expectedResult.getAnticipatoryAmount(), actualResult.getAnticipatoryAmount());
+        assertEquals(expectedResult.getAdditionAmount(), actualResult.getAdditionAmount());
+        assertEquals(expectedResult.getDeductionAmount(), actualResult.getDeductionAmount());
+        assertEquals(expectedResult.getOriginalAdditionAmount(), actualResult.getOriginalAdditionAmount());
+        assertEquals(expectedResult.getOriginalDeductionAmount(), actualResult.getOriginalDeductionAmount());
+
+    }
+    
+    @Test
+    public void test_delete() {
+
+        final BudgetReAppropriationEntity entity = getBudgetReAppropriationEntity();
+        final BudgetReAppropriation expectedResult = entity.toDomain();
+
+        when(budgetReAppropriationJdbcRepository.delete(any(BudgetReAppropriationEntity.class))).thenReturn(entity);
+
+        final BudgetReAppropriation actualResult = budgetReAppropriationRepositoryWithKafka
+                .delete(getBudgetReAppropriationDomin());
 
         assertEquals(expectedResult.getAnticipatoryAmount(), actualResult.getAnticipatoryAmount());
         assertEquals(expectedResult.getAdditionAmount(), actualResult.getAdditionAmount());

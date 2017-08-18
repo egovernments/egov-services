@@ -377,7 +377,7 @@ public class PropertyRepository {
                 TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
                 unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
                 unit.getAuditDetails().getLastModifiedBy(), unit.getAuditDetails().getCreatedTime(),
-                unit.getAuditDetails().getLastModifiedTime(), floorId, parent, unit.getIsAuthorised(),
+                unit.getAuditDetails().getLastModifiedTime(), floorId, getLong(parent), unit.getIsAuthorised(),
                 unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost() };
 
         jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);

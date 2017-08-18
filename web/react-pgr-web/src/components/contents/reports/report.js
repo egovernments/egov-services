@@ -20,7 +20,7 @@ class Report extends Component {
   initData = (moduleName, reportName) => {
     var _this = this;
     let {setMetaData,setFlag,showTable,setForm,setReportResult}=this.props;
-    Api.commonApiPost(moduleName+"/report/metadata/_get",{},{tenantId:"default",reportName:reportName}).then(function(response)
+    Api.commonApiPost("/report/"+moduleName+"/metadata/_get",{},{tenantId:"default",reportName:reportName}).then(function(response)
     {
       //console.log(moduleName, reportName);
       setFlag(1);

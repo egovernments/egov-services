@@ -13,6 +13,7 @@ import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseResponse;
+import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -34,7 +35,7 @@ public class TradeLicenseController {
 
 	@Autowired
 	TradeLicenseService tradeLicenseService;
-	
+
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
 	
@@ -73,7 +74,7 @@ public class TradeLicenseController {
 
 		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
 		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
-			
+
 			tradeLicense = new TradeLicense();
 			model.map(tradeLicenseContract, tradeLicense);
 			AuditDetails auditDetails = new AuditDetails();
@@ -108,60 +109,32 @@ public class TradeLicenseController {
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 
-		return responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo,true );
-//		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-//				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+		return responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		// return
+		// ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+		// .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 
 	@RequestMapping(path = "/license/v1/_search", method = RequestMethod.POST)
-	public TradeLicenseResponse searchTradelicense(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId,
-			@RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer pageNumber,
-			@RequestParam(required = false) String sort,
-			@RequestParam(required = false) String active,
-			@RequestParam(required = false) String tradeLicenseId,
+	public TradeLicenseSearchResponse searchTradelicense(@RequestBody RequestInfoWrapper requestInfo,
+			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) Integer pageNumber, @RequestParam(required = false) String sort,
+			@RequestParam(required = false) String active, @RequestParam(required = false) String tradeLicenseId,
 			@RequestParam(required = false) String applicationNumber,
 			@RequestParam(required = false) String licenseNumber,
-			@RequestParam(required = false ) String oldLicenseNumber,
-			@RequestParam(required = false) String mobileNumber,
-			@RequestParam(required = false) String aadhaarNumber,
-			@RequestParam(required = false) String emailId,
-			@RequestParam(required = false) String propertyAssesmentNo,
-			@RequestParam(required = false) Integer adminWard,
-			@RequestParam(required = false) Integer locality,
-			@RequestParam(required = false) String ownerName,
-			@RequestParam(required = false) String tradeTitle,
-			@RequestParam(required = false) String tradeType,
-			@RequestParam(required = false) Integer tradeCategory,
-			@RequestParam(required = false) Integer tradeSubCategory,
-			@RequestParam(required = false) String legacy,
+			@RequestParam(required = false) String oldLicenseNumber,
+			@RequestParam(required = false) String mobileNumber, @RequestParam(required = false) String aadhaarNumber,
+			@RequestParam(required = false) String emailId, @RequestParam(required = false) String propertyAssesmentNo,
+			@RequestParam(required = false) Integer adminWard, @RequestParam(required = false) Integer locality,
+			@RequestParam(required = false) String ownerName, @RequestParam(required = false) String tradeTitle,
+			@RequestParam(required = false) String tradeType, @RequestParam(required = false) Integer tradeCategory,
+			@RequestParam(required = false) Integer tradeSubCategory, @RequestParam(required = false) String legacy,
 			@RequestParam(required = false) Integer status) throws Exception {
 
-		return tradeLicenseService.getTradeLicense(requestInfo.getRequestInfo(),
-				tenantId, 
-				pageSize, 
-				pageNumber, 
-				sort, 
-				active,
-				tradeLicenseId, 
-				applicationNumber, 
-				licenseNumber,
-				oldLicenseNumber,
-				mobileNumber,
-				aadhaarNumber, 
-				emailId, 
-				propertyAssesmentNo,
-				adminWard, 
-				locality, 
-				ownerName, 
-				tradeTitle, 
-				tradeType,
-				tradeCategory, 
-				tradeSubCategory, 
-				legacy,
-				status);
+		return tradeLicenseService.getTradeLicense(requestInfo.getRequestInfo(), tenantId, pageSize, pageNumber, sort,
+				active, tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber,
+				emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+				tradeSubCategory, legacy, status);
 	}
-
 
 }

@@ -86,10 +86,6 @@ public class WaterConnectionRepository {
     @Autowired
     private WaterConnectionQueryBuilder waterConnectionQueryBuilder;
     
-    @Autowired
-    private WaterConnectionRowMapper waterConnectionRowMapper;
-    
-
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
         String insertQuery = "";
@@ -101,7 +97,9 @@ public class WaterConnectionRepository {
             insertQuery = WaterConnectionQueryBuilder.insertConnectionQuery();
 
         final String query = insertQuery;
-
+        LOGGER.info("Insert Query is : " + insertQuery);
+        LOGGER.info("Water Treatment ID Obtained is : " + waterConnectionRequest.getConnection().getWaterTreatmentId());
+        
         Long connectionId = 0L;
         try {
             final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -136,25 +134,41 @@ public class WaterConnectionRepository {
                 statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
                 statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatmentId());
                 statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
-                if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0)
+                if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0){
+                    waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.CREATED.name());
                     statement.setString(26, NewConnectionStatus.CREATED.name());
-                else if (waterConnectionRequest.getConnection().getIsLegacy())
+                }
+                else if (waterConnectionRequest.getConnection().getIsLegacy()){
+                    waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.SANCTIONED.name());
                     statement.setString(26, NewConnectionStatus.SANCTIONED.name());
-                else
+                }
+                else{
                     statement.setString(26, NewConnectionStatus.VERIFIED.name());
+                    waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.VERIFIED.name());
+                }
                 statement.setDouble(27, waterConnectionRequest.getConnection().getNumberOfFamily());
                 statement.setString(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
+                statement.setString(29,waterConnectionRequest.getConnection().getPlumberName());
+                System.out.println(waterConnectionRequest.getConnection().getBillSequenceNumber());
+                statement.setLong(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
+                        waterConnectionRequest.getConnection().getBillSequenceNumber():0l);
+                statement.setString(31, waterConnectionRequest.getConnection().getMeterOwner()!=null?
+                        waterConnectionRequest.getConnection().getMeterOwner():"");
+                statement.setString(32, waterConnectionRequest.getConnection().getMeterModel()!=null?
+                        waterConnectionRequest.getConnection().getMeterModel():"");
+                statement.setBoolean(33, Boolean.FALSE);
+
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         ) {
-                    statement.setString(29, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(30, waterConnectionRequest.getConnection().getConsumerNumber());
-                  statement.setLong(31, waterConnectionRequest.getConnection().getExecutionDate());
-                   statement.setInt(32, waterConnectionRequest.getConnection().getNoOfFlats());
+                    statement.setString(34, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(35, waterConnectionRequest.getConnection().getConsumerNumber());
+                  statement.setLong(36, waterConnectionRequest.getConnection().getExecutionDate());
+                   statement.setInt(37, waterConnectionRequest.getConnection().getNoOfFlats());
 
                 }
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
-                    statement.setLong(33, waterConnectionRequest.getConnection().getParentConnectionId());
+                    statement.setLong(38, waterConnectionRequest.getConnection().getParentConnectionId());
                 
                 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
@@ -261,23 +275,23 @@ public class WaterConnectionRepository {
 					PreparedStatement statement = connection.prepareStatement(persistConnectionAddressQuery,
 							returnValColumn);
 					statement.setString(1, conn.getTenantId());
-					statement.setDouble(2, conn.getAddress().getLatitude()); 
-					statement.setDouble(3, conn.getAddress().getLongitude());
-					statement.setString(4, conn.getAddress().getAddressId());
-					statement.setString(5, conn.getAddress().getAddressNumber());
-					statement.setString(6, conn.getAddress().getAddressLine1());
-					statement.setString(7, conn.getAddress().getAddressLine2());
-					statement.setString(8, conn.getAddress().getLandMark());
-					statement.setString(9, conn.getAddress().getDoorNo());
-					statement.setString(10, conn.getAddress().getCity());
-					statement.setString(11, conn.getAddress().getPinCode());
-					statement.setString(12, conn.getAddress().getDetail());
-					statement.setString(13, conn.getAddress().getRoute());
-					statement.setString(14, conn.getAddress().getStreet());
-					statement.setString(15, conn.getAddress().getArea());
-					statement.setString(16, conn.getAddress().getRoadName());
+					statement.setDouble(2, (null!=conn.getAddress().getLatitude() && conn.getAddress().getLatitude()>0)? conn.getAddress().getLatitude() : 0); 
+					statement.setDouble(3, (null!=conn.getAddress().getLongitude() && conn.getAddress().getLongitude()>0)? conn.getAddress().getLongitude() : 0);
+					statement.setString(4, (null!=conn.getAddress().getAddressId() && !conn.getAddress().getAddressId().isEmpty())? conn.getAddress().getAddressId() : "" );
+					statement.setString(5, (null!=conn.getAddress().getAddressNumber() && !conn.getAddress().getAddressNumber().isEmpty())? conn.getAddress().getAddressNumber() : "" );
+					statement.setString(6, (null!=conn.getAddress().getAddressLine1() && !conn.getAddress().getAddressLine1().isEmpty())? conn.getAddress().getAddressLine1() : "" );
+					statement.setString(7, (null!=conn.getAddress().getAddressLine2() && !conn.getAddress().getAddressLine2().isEmpty())? conn.getAddress().getAddressLine2() : "" );
+					statement.setString(8, (null!=conn.getAddress().getLandMark() && !conn.getAddress().getLandMark().isEmpty())? conn.getAddress().getLandMark() : "" );
+					statement.setString(9, (null!=conn.getAddress().getDoorNo() && !conn.getAddress().getDoorNo().isEmpty())? conn.getAddress().getDoorNo() : "" );
+					statement.setString(10, (null!=conn.getAddress().getCity() && !conn.getAddress().getCity().isEmpty())? conn.getAddress().getCity() : "" );
+					statement.setString(11, (null!=conn.getAddress().getPinCode() && !conn.getAddress().getPinCode().isEmpty())? conn.getAddress().getPinCode() : "" );
+					statement.setString(12, (null!=conn.getAddress().getDetail() && !conn.getAddress().getDetail().isEmpty())? conn.getAddress().getDetail() : "" );
+					statement.setString(13, (null!=conn.getAddress().getRoute() && !conn.getAddress().getRoute().isEmpty())? conn.getAddress().getRoute() : "" );
+					statement.setString(14, (null!=conn.getAddress().getStreet() && !conn.getAddress().getStreet().isEmpty())? conn.getAddress().getStreet() : "" );
+					statement.setString(15, (null!=conn.getAddress().getArea() && !conn.getAddress().getArea().isEmpty())? conn.getAddress().getArea() : "" );
+					statement.setString(16, (null!=conn.getAddress().getRoadName() && !conn.getAddress().getRoadName().isEmpty())? conn.getAddress().getRoadName() : "" );
 					statement.setLong(17, waterConnectionReq.getRequestInfo().getUserInfo().getId());
-					statement.setString(18, String.valueOf(new Date(new java.util.Date().getTime()).getTime()));
+					statement.setDate(18, new Date(new java.util.Date().getTime()));
 					return statement;
 				}
 			}, keyHolder);
@@ -304,7 +318,7 @@ public class WaterConnectionRepository {
 					statement.setLong(2, conn.getConnectionLocation().getLocationBoundary().getId()); 
 					statement.setLong(3, conn.getConnectionLocation().getAdminBoundary().getId());
 					statement.setLong(4, waterConnectionReq.getRequestInfo().getUserInfo().getId());
-					statement.setString(5, String.valueOf(new Date(new java.util.Date().getTime()).getTime()));
+					statement.setDate(5, new Date(new java.util.Date().getTime()));
 					return statement;
 				}
 			}, keyHolder);
@@ -488,7 +502,20 @@ public class WaterConnectionRepository {
         final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
         LOGGER.info("Get Connection Details Query : " + fetchQuery);
         final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
-                waterConnectionRowMapper);
+                new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
+        LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
+        
+        final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq, preparedStatementValues);
+        LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
+        try{ 
+        	final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery, new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
+        	LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
+            if(secondConnectionList.size() > 0) { 
+            	connectionList.addAll(secondConnectionList);		
+            }
+        } catch(Exception ex) { 
+        	LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
+        }
         return connectionList;
     }
     

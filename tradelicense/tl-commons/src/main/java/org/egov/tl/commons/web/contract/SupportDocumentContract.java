@@ -1,9 +1,6 @@
 package org.egov.tl.commons.web.contract;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,11 +24,11 @@ public class SupportDocumentContract {
 	@JsonProperty("licenseId")
 	private Long licenseId;
 
-	@NotNull(message="DocumentType is required, Please enter valid DocumentType")
+	@NotNull(message="{error.license.documenttype}")
 	@JsonProperty("documentTypeId")
 	private Long documentTypeId;
 
-	@NotNull(message="FileStoreId is required, Please enter valid FileStoreId")
+	@NotNull(message="{error.license.filestore}")
 	@JsonProperty("fileStoreId")
 	private Long fileStoreId;
 

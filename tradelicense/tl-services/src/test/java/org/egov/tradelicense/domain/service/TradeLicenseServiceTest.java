@@ -4,6 +4,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.tl.commons.web.contract.Category;
@@ -207,12 +208,12 @@ public class TradeLicenseServiceTest {
 		licenseFeeDetails.add(getFeeDetail());
 		supportDocuments.add(getSupportDocument());
 		return TradeLicense.builder().id(1l).tenantId("default").applicationType(ApplicationType.NEW).active(true)
-				.applicationDate("15/08/2017").emailId("abc@xyz.com").isLegacy(true).oldLicenseNumber("12345")
+				.applicationDate((new Date("15/08/2017")).getTime()/1000).emailId("abc@xyz.com").isLegacy(true).oldLicenseNumber("12345")
 				.mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
 				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).categoryId(1l)
 				.subCategoryId(2l).uomId(1l).quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
-				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT).isTradeOwner(Boolean.FALSE)
-				.feeDetails(licenseFeeDetails).supportDocuments(supportDocuments).tradeCommencementDate("15/08/2017")
+				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT).isPropertyOwner(Boolean.TRUE)
+				.feeDetails(licenseFeeDetails).supportDocuments(supportDocuments).tradeCommencementDate((new Date("15/08/2017")).getTime()/1000)
 				.auditDetails(getAuditDetails()).build();
 	}
 

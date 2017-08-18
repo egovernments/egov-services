@@ -86,6 +86,7 @@ public class BudgetDetailService {
 
     public static final String ACTION_CREATE = "create";
     public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
     public static final String ACTION_VIEW = "view";
     public static final String ACTION_EDIT = "edit";
     public static final String ACTION_SEARCH = "search";
@@ -166,6 +167,26 @@ public class BudgetDetailService {
         return budgetDetailRepository.update(budgetDetails, requestInfo);
 
     }
+    
+    @Transactional
+    public List<BudgetDetail> delete(List<BudgetDetail> budgetDetails, final BindingResult errors,
+            final RequestInfo requestInfo) {
+
+        try {
+
+            validate(budgetDetails, ACTION_DELETE, errors);
+
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
+
+        } catch (final CustomBindException e) {
+
+            throw new CustomBindException(errors);
+        }
+
+        return budgetDetailRepository.delete(budgetDetails, requestInfo);
+
+    }
 
     private BindingResult validate(final List<BudgetDetail> budgetdetails, final String method, final BindingResult errors) {
 
@@ -182,8 +203,17 @@ public class BudgetDetailService {
                 break;
             case ACTION_UPDATE:
                 Assert.notNull(budgetdetails, "BudgetDetails to update must not be null");
-                for (final BudgetDetail budgetDetail : budgetdetails)
+                for (final BudgetDetail budgetDetail : budgetdetails){
+                	Assert.notNull(budgetDetail.getId(), "BudgetDetail ID to update must not be null");
                     validator.validate(budgetDetail, errors);
+                }
+                break;
+            case ACTION_DELETE:
+                Assert.notNull(budgetdetails, "BudgetDetails to delete must not be null");
+                for (final BudgetDetail budgetDetail : budgetdetails){
+                	Assert.notNull(budgetDetail.getId(), "BudgetDetail ID to delete must not be null");
+                    validator.validate(budgetDetail, errors);
+                }
                 break;
             default:
 
@@ -323,6 +353,11 @@ public class BudgetDetailService {
     @Transactional
     public BudgetDetail update(final BudgetDetail budgetDetail) {
         return budgetDetailRepository.update(budgetDetail);
+    }
+    
+    @Transactional
+    public BudgetDetail delete(final BudgetDetail budgetDetail) {
+        return budgetDetailRepository.delete(budgetDetail);
     }
 
 }

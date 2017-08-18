@@ -5,6 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
 		"objectName": "licenses",
+
 		"groups": [
 			{
 				"label": "tl.create.licenses.groups.TradeDetailsTab",
@@ -19,6 +20,32 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "applicationType",
+							"jsonPath": "licenses[0].applicationType",
+							"label": "tl.create.licenses.groups.TradeDetails.applicationType",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"hide":true,
+							"defaultValue":"NEW",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "isLegacy",
+							"jsonPath": "licenses[0].isLegacy",
+							"label": "tl.create.licenses.groups.TradeDetails.isLegacy",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"hide":true,
+							"defaultValue":"true",
 							"patternErrMsg": ""
 						}
 				]
@@ -54,7 +81,7 @@ var dat = {
 							"name": "TradeOwnerName",
 							"jsonPath": "licenses[0].ownerName",
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName",
-							"pattern": "^.[a-zA-Z. ]{2,99}$",
+							"pattern": "^.[a-zA-Z. ]{3,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
@@ -65,7 +92,7 @@ var dat = {
 							"name": "FatherSpouseName",
 							"jsonPath": "licenses[0].fatherSpouseName",
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName",
-							"pattern": "^.[a-zA-Z. ]{2,99}$",
+							"pattern": "^.[a-zA-Z. ]{3,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
@@ -164,20 +191,12 @@ var dat = {
             "value": null
           },
           {
-            "key": "STATE_GOVERNMENT_OWNED",
-            "value": "STATE_GOVERNMENT_OWNED"
+            "key": "STATE_GOVERNMENT",
+            "value": "STATE_GOVERNMENT"
           },
           {
             "key": "RENTED",
             "value": "RENTED"
-          },
-          {
-            "key": "CENTRAL_GOVERNMENT_OWNED",
-            "value": "CENTRAL_GOVERNMENT_OWNED"
-          },
-          {
-            "key": "ULB",
-            "value": "ULB"
           }
           ]
 						},
@@ -245,7 +264,12 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"depedants": [{
+	                "jsonPath": "licenses[0].subCategoryId",
+	                "type": "dropDown",
+	                "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={licenses[0].categoryId}|$..id|$..name"
+	              }]
 						},
             {
 							"name": "TradeSubCategory",
@@ -253,7 +277,7 @@ var dat = {
 							"label": "tl.create.licenses.groups.TradeDetails.TradeSubCategory",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory|$..id|$..name",
+              "url": "",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -261,20 +285,20 @@ var dat = {
 						},
             {
               "name": "UOM",
-              "jsonPath": "licenses[0].uomId",
+              "jsonPath": "licenses[0].uomName",
               "label": "tl.create.licenses.groups.TradeDetails.UOM",
               "pattern": "",
               "type": "text",
               "isRequired": true,
-              "isDisabled": false,
+              "isDisabled": true,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
             {
-              "name": "TradeAreaWeight",
-              "jsonPath": "licenses[0].uomValue",
-              "label": "tl.create.licenses.groups.TradeDetails.TradeAreaPremises",
-              "pattern": "",
+              "name": "tradeValueForUOM",
+              "jsonPath": "licenses[0].quantity",
+              "label": "tl.create.licenses.groups.TradeDetails.tradeValueForUOM",
+              "pattern": "^[0-9]+(\.[0-9]{1,2})?$",
               "type": "number",
               "isRequired": true,
               "isDisabled": false,
@@ -283,12 +307,13 @@ var dat = {
             },
             {
               "name": "validity",
-              "jsonPath": "licenses[0].validity",
+              "jsonPath": "licenses[0].validityYears",
               "label": "tl.create.licenses.groups.validity",
               "pattern": "",
+              "url": "/tl-masters/category/v1/_search?tenantId=default&ids=1",
               "type": "text",
               "isRequired": true,
-              "isDisabled": false,
+              "isDisabled": true,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
@@ -345,7 +370,19 @@ var dat = {
                   "isField": false
                    }]
                   }]
-						}
+						},
+						{
+              "name": "UOM ID",
+              "jsonPath": "licenses[0].uomId",
+              "label": "tl.create.licenses.groups.TradeDetails.UOM",
+              "pattern": "",
+              "type": "text",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+							"hide": "true"
+            }
         ]
       },
 
@@ -369,54 +406,54 @@ var dat = {
 							"name": "agreementNo",
 							"jsonPath": "categories[0].agreementNo",
 							"label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-							"pattern": "^.[a-zA-Z. ]{2,49}$",
+							"pattern": "^.[a-zA-Z]{0,29}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Name"
-						}
-				]
-			},
-      {
-				"label": "tl.create.licenses.groups.FeeDetails",
-				"name": "FeeDetails",
-				"fields": [
-						{
-							"name": "FinancialYear",
-							"jsonPath": "licenses[0].FinancialYear",
-							"label": "tl.create.licenses.groups.FeeDetails.FinancialYear",
-							"pattern": "",
-							"type": "number",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-            {
-							"name": "Amount",
-							"jsonPath": "licenses[0].Amount",
-							"label": "tl.create.licenses.groups.FeeDetails.Amount",
-							"pattern": "",
-							"type": "number",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-            {
-							"name": "IsPaid",
-							"jsonPath": "licenses[0].IsPaid",
-							"label": "tl.create.licenses.groups.FeeDetails.IsPaid",
-							"pattern": "",
-							"type": "checkbox",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Document Number"
 						}
 				]
 			}
+      // {
+			// 	"label": "tl.create.licenses.groups.FeeDetails",
+			// 	"name": "FeeDetails",
+			// 	"fields": [
+			// 			{
+			// 				"name": "FinancialYear",
+			// 				"jsonPath": "licenses[0].FinancialYear",
+			// 				"label": "tl.create.licenses.groups.FeeDetails.FinancialYear",
+			// 				"pattern": "",
+			// 				"type": "number",
+			// 				"isRequired": true,
+			// 				"isDisabled": false,
+			// 				"requiredErrMsg": "",
+			// 				"patternErrMsg": ""
+			// 			},
+      //       {
+			// 				"name": "Amount",
+			// 				"jsonPath": "licenses[0].Amount",
+			// 				"label": "tl.create.licenses.groups.FeeDetails.Amount",
+			// 				"pattern": "",
+			// 				"type": "number",
+			// 				"isRequired": true,
+			// 				"isDisabled": false,
+			// 				"requiredErrMsg": "",
+			// 				"patternErrMsg": ""
+			// 			},
+      //       {
+			// 				"name": "IsPaid",
+			// 				"jsonPath": "licenses[0].IsPaid",
+			// 				"label": "tl.create.licenses.groups.FeeDetails.IsPaid",
+			// 				"pattern": "",
+			// 				"type": "checkbox",
+			// 				"isRequired": true,
+			// 				"isDisabled": false,
+			// 				"requiredErrMsg": "",
+			// 				"patternErrMsg": ""
+			// 			}
+			// 	]
+			// }
 
 		]
 	},
@@ -462,32 +499,12 @@ var dat = {
             "label": "tl.search.groups.status",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/tl-masters/status/v1/_search?tenantId=default|$..id|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "defaultValue": [{
-          "key": "",
-          "value": null
-        },
-        {
-          "key": "status1",
-          "value": "status1"
-        },
-        {
-          "key": "status2",
-          "value": "status2"
-        },
-        {
-          "key": "status3",
-          "value": "status3"
-        },
-        {
-          "key": "status4",
-          "value": "status4"
-        }
-        ]
+
           },
           {
             "name": "licenseNumber",
@@ -594,7 +611,7 @@ var dat = {
 	},
 	"tl.view": {
 		"numCols": 12/2,
-		"url": "/tl-services/v1/category/_search?id={id}",
+		"url": "/tl-services/license/v1/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "licenses",
@@ -606,7 +623,7 @@ var dat = {
 				"fields": [
           {
             "name": "aadharNumber",
-            "jsonPath": "adhaarNumber",
+            "jsonPath": "licenses[0].adhaarNumber",
             "label": "tl.view.groups.aadharNumber",
             "pattern": "^.{12,12}$",
             "type": "number",
@@ -628,7 +645,7 @@ var dat = {
           },
           {
             "name": "tradeOwnerName",
-            "jsonPath": "licenses[0].tradeOwnerName",
+            "jsonPath": "licenses[0].ownerName",
             "label": "tl.view.groups.tradeOwnerName",
             "pattern": "^.[a-zA-Z. ]{2,49}$",
             "type": "text",
@@ -661,7 +678,7 @@ var dat = {
           },
           {
             "name": "tradeOwnerAddress",
-            "jsonPath": "licenses[0].tradeOwnerAddress",
+            "jsonPath": "licenses[0].ownerAddress",
             "label": "tl.view.groups.tradeOwnerAddress",
             "pattern": "",
             "type": "textarea",
@@ -739,20 +756,12 @@ var dat = {
             "value": null
           },
           {
-            "key": "STATE_GOVERNMENT_OWNED",
-            "value": "STATE_GOVERNMENT_OWNED"
+            "key": "STATE_GOVERNMENT",
+            "value": "STATE_GOVERNMENT"
           },
           {
             "key": "RENTED",
             "value": "RENTED"
-          },
-          {
-            "key": "CENTRAL_GOVERNMENT_OWNED",
-            "value": "CENTRAL_GOVERNMENT_OWNED"
-          },
-          {
-            "key": "ULB",
-            "value": "ULB"
           }
           ]
             },
@@ -847,9 +856,9 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "TradeAreaWeight",
-              "jsonPath": "licenses[0].uomValue",
-              "label": "tl.view.licenses.groups.TradeAreaPremises",
+              "name": "TradeValueforUOM",
+              "jsonPath": "licenses[0].quantity",
+              "label": "tl.view.licenses.groups.TradeValuefortheUOM",
               "pattern": "",
               "type": "number",
               "isRequired": false,
@@ -859,7 +868,7 @@ var dat = {
             },
             {
               "name": "validity",
-              "jsonPath": "licenses[0].validity",
+              "jsonPath": "categories[0].validityYears",
               "label": "tl.view.licenses.groups.validity",
               "pattern": "",
               "type": "text",
@@ -893,7 +902,7 @@ var dat = {
             {
 							"name": "TradeOwner",
 							"jsonPath": "licenses[0].active",
-							"label": "tl.view.licenses.groups..TraderOwnerProperty",
+							"label": "tl.view.licenses.groups.TraderOwnerProperty",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,

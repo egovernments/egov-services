@@ -63,6 +63,9 @@ public class PropertiesManager {
     @Value("${egov.services.pt_property_propertytype.searchpath.id}")
     private String propertyTaxServicePropertyTypeSearchByIdPathTopic;
 
+    @Value("${egov.services.pt_property_usagetype.searchpath.code}")
+    private String propertyTaxServiceUsageTypeSearchByCodePathTopic;
+
     @Value("${egov.services.pt_property_usagetype.searchpath.name}")
     private String propertyTaxServiceUsageTypeSearchByNamePathTopic;
 
@@ -89,6 +92,10 @@ public class PropertiesManager {
 
     public String getPropertyTaxServiceUsageTypeSearchByNamePathTopic() {
         return propertyTaxServiceUsageTypeSearchByNamePathTopic;
+    }
+
+    public String getPropertyTaxServiceUsageTypeSearchByCodePathTopic() {
+        return propertyTaxServiceUsageTypeSearchByCodePathTopic;
     }
 
     public String getPropertyTaxServiceUsageTypeSearchIdPathTopic() {

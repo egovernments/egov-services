@@ -4,7 +4,9 @@
 package org.egov.tradelicense.domain.services.validator;
 
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +74,9 @@ public class FeeMatrixValidator {
 			String financialYear = feeMatrix.getFinancialYear();
 
 			// validating financial year
-			validateFinancialYear(financialYear, requestInfoWrapper);
+			Date[] dates = validateFinancialYear(financialYear, requestInfoWrapper);
+			feeMatrix.setEffectiveFrom(dates[0].getTime()/1000);
+			feeMatrix.setEffectiveTo(dates[1].getTime()/1000);
 			// validating category
 			validateCategory(categoryId, requestInfo);
 			// validating sub category
@@ -103,7 +107,7 @@ public class FeeMatrixValidator {
 	 * 
 	 * @param financialYear
 	 */
-	public void validateFinancialYear(String financialYear, RequestInfoWrapper requestInfoWrapper) {
+	public Date[] validateFinancialYear(String financialYear, RequestInfoWrapper requestInfoWrapper) {
 
 		StringBuffer financialYearURI = new StringBuffer();
 		financialYearURI.append(propertiesManager.getFinancialServiceHostName())
@@ -132,6 +136,9 @@ public class FeeMatrixValidator {
 
 				throw new InvalidInputException(propertiesManager.getInvalidFinancialYearMsg(),
 						requestInfoWrapper.getRequestInfo());
+			}else{
+				Date[] dates = {FinancialYearContracts.get(0).getStartingDate(),FinancialYearContracts.get(0).getEndingDate()};
+				return dates;
 			}
 
 		} else {
@@ -290,8 +297,8 @@ public class FeeMatrixValidator {
 			feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue(getString(row.get("businessNature"))));
 			feeMatrix.setCategoryId(getLong(row.get("categoryId")));
 			feeMatrix.setSubCategoryId(getLong(row.get("subCategoryId")));
-			feeMatrix.setEffectiveFrom(getString(row.get("effectiveFrom")));
-			feeMatrix.setEffectiveTo(getString(row.get("effectiveTo")));
+			feeMatrix.setEffectiveFrom((new Timestamp((long) row.get("effectiveFrom")).getTime())/1000);
+			feeMatrix.setEffectiveTo((new Timestamp((long) row.get("effectiveTo")).getTime())/1000);
 			feeMatrix.setFinancialYear(getString(row.get("financialYear")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));

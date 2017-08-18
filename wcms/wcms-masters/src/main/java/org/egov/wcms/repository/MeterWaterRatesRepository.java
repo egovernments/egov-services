@@ -113,7 +113,7 @@ public class MeterWaterRatesRepository {
             batchValues.add(
                     new MapSqlParameterSource("id", Long.valueOf(meterWaterRates.getCode()))
                             .addValue("code", meterWaterRates.getCode())
-                            .addValue("billingtype", meterWaterRates.getBillingtype())
+                            .addValue("billingtype", meterWaterRates.getBillingType())
                             .addValue("usagetypeid", meterWaterRates.getUsageTypeId())
                             .addValue("sourcetypeid", sourcetypeId).addValue("pipesizeid", pipesizeId)
                             .addValue("fromdate", meterWaterRates.getFromDate())
@@ -179,7 +179,7 @@ public class MeterWaterRatesRepository {
             if (sourcetypeId == null)
                 log.info("Invalid input.");
             batchValues.add(
-                    new MapSqlParameterSource("billingtype", meterWaterRates.getBillingtype())
+                    new MapSqlParameterSource("billingtype", meterWaterRates.getBillingType())
                             .addValue("usagetypeid", meterWaterRates.getUsageTypeId())
                             .addValue("sourcetypeid", sourcetypeId).addValue("pipesizeid", pipesizeId)
                             .addValue("fromdate", meterWaterRates.getFromDate())

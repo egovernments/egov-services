@@ -55,12 +55,14 @@ paths:
             type: string
             in: query
             description: name of the Category/SubCategory
-            maxLength: 256
+            maxLength: 100
+            minLength: 4
           - name: code
             type: string
             in: query
             description: code of the Category/SubCategory
-            maxLength: 50
+            maxLength: 20
+            minLength: 4
           - name: categoryId
             type: integer
             in: query
@@ -189,12 +191,14 @@ paths:
             type: string
             in: query
             description: name of the Unit of Measure
-            maxLength: 256
+            maxLength: 100
+            minLength: 4
           - name: code
             type: string
             in: query
             description: unique code of the Unit of Measure
-            maxLength: 50
+            maxLength: 20
+            minLength: 4
           - name: active
             type: string
             in: query
@@ -999,11 +1003,13 @@ definitions:
           maxLength: 128
           minLength: 4
         effectiveFrom:
-          type: string
-          format: date
+          type: integer
+          format: int64
+          description: fee matrix effective from date in epoch
         effectiveTo:
-          type: string
-          format: date
+          type: integer
+          format: int64
+          description: fee matric effective till date in epoch
         feeMatixDetails:
           description: Used for search result and create only
           type: array
@@ -1081,10 +1087,12 @@ definitions:
         name:
           type: string
           maxLength: 100
+          minLength: 4
           description: Unique Name of the Status
         code:
           type: string
           maxLength: 20
+          minLength: 4
           description: Unique code of the Status
         active:
           type: string

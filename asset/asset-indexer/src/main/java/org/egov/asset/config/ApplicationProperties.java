@@ -66,7 +66,22 @@ public class ApplicationProperties {
 	private String indexerHost;
 
 	@Value("${egov.services.asset.indexer.name}")
-	private String indexName;
+	private String assetIndexName;
+	
+	@Value("${egov.services.disposal.indexer.name}")
+	private String disposalIndexName;
+	
+	@Value("${egov.services.revaluation.indexer.name}")
+	private String revaluationIndexName;
+	
+	@Value("${egov.services.assetcategory.indexer.name}")
+	private String assetCategoryIndex;
+	
+	@Value("${kafka.topics.save.assetcategory}")
+	private String saveassetCategoryTopic;
+	
+	@Value("${kafka.topics.update.assetcategory}")
+	private String updateAssetCategoryTopic;
 
 	@Value("${kafka.topics.save.revaluation}")
 	private String createAssetRevaluationTopicName;

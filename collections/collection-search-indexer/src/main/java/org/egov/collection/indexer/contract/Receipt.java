@@ -55,11 +55,11 @@ public class Receipt {
 
     private String tenantId;
 
-    private String instrumentType;
-
     private String instrumentHeader;
 
     @JsonProperty("Bill")
     private List<Bill> bill;
+
+    private Instrument instrument;
 
 }

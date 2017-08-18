@@ -50,6 +50,10 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 			if (criteria.getGlcode() != null) {
 				predicates.add(criteriaBuilder.like(glcode, criteria.getGlcode()));
 			}
+			
+			if (criteria.getGlcodes() != null) {
+				predicates.add(root.get(ChartOfAccount_.glcode).in(criteria.getGlcodes()));
+			}
 
 			if (criteria.getName() != null) {
 				predicates.add(criteriaBuilder.equal(name, criteria.getName()));

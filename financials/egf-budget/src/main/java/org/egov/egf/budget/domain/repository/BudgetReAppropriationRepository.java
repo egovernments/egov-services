@@ -178,6 +178,46 @@ public class BudgetReAppropriationRepository {
         }
 
     }
+    
+    @Transactional
+    public List<BudgetReAppropriation> delete(final List<BudgetReAppropriation> budgetReAppropriations,
+                                              final RequestInfo requestInfo) {
+
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
+
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
+
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
+
+            budgetReAppropriationQueueRepository.addToQue(request);
+
+            return budgetReAppropriations;
+        } else {
+
+            final List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
+
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                resultList.add(delete(iac));
+
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
+
+            for (final BudgetReAppropriation iac : resultList)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
+
+            budgetReAppropriationQueueRepository.addToSearchQue(request);
+
+            return resultList;
+        }
+
+    }
 
     @Transactional
     public BudgetReAppropriation save(final BudgetReAppropriation budgetReAppropriation) {
@@ -188,6 +228,12 @@ public class BudgetReAppropriationRepository {
     @Transactional
     public BudgetReAppropriation update(final BudgetReAppropriation entity) {
         return budgetReAppropriationJdbcRepository.update(new BudgetReAppropriationEntity().toEntity(entity))
+                .toDomain();
+    }
+    
+    @Transactional
+    public BudgetReAppropriation delete(final BudgetReAppropriation entity) {
+        return budgetReAppropriationJdbcRepository.delete(new BudgetReAppropriationEntity().toEntity(entity))
                 .toDomain();
     }
 

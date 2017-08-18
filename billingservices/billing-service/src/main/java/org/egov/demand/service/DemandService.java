@@ -57,21 +57,28 @@ import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.ConsolidatedTax;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandDue;
+import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
+import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
+import org.egov.demand.web.contract.DemandDueResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.ReceiptRequest;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -109,6 +116,9 @@ public class DemandService {
 
 	@Autowired
 	private DemandEnrichmentUtil demandEnrichmentUtil;
+	
+	@Autowired
+	private TaxPeriodService taxPeriodService;
 
 	public DemandResponse create(DemandRequest demandRequest) {
 
@@ -396,6 +406,41 @@ public class DemandService {
 	//update mis update method calling from kafka
 	public void updateMIS(DemandUpdateMisRequest demandRequest){
 		demandRepository.updateMIS(demandRequest);
+	}
+	
+	public DemandDueResponse getDues(DemandDueCriteria demandDueCriteria, RequestInfo requestInfo) {
+		
+		Long currDate = new Date().getTime();
+		Double currTaxAmt = 0d;
+		Double currCollAmt = 0d;
+		Double arrTaxAmt = 0d;
+		Double arrCollAmt = 0d;
+
+		DemandCriteria demandCriteria = DemandCriteria.builder().tenantId(demandDueCriteria.getTenantId())
+				.businessService(demandDueCriteria.getBusinessService())
+				.consumerCode(demandDueCriteria.getConsumerCode()).build();
+		
+		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
+		for (Demand demand : demands) {
+			if (demand.getTaxPeriodFrom() <= currDate && currDate <= demand.getTaxPeriodTo()) {
+				for (DemandDetail detail : demand.getDemandDetails()) {
+					currTaxAmt = currTaxAmt + detail.getTaxAmount().doubleValue();
+					currCollAmt = currCollAmt + detail.getCollectionAmount().doubleValue();
+				}
+			} else if(currDate > demand.getTaxPeriodTo()){
+				for (DemandDetail detail : demand.getDemandDetails()) {
+					arrTaxAmt = arrTaxAmt + detail.getTaxAmount().doubleValue();
+					arrCollAmt = arrCollAmt + detail.getCollectionAmount().doubleValue();
+				}
+			}
+		}
+		ConsolidatedTax consolidatedTax = ConsolidatedTax.builder().arrearsBalance(arrTaxAmt - arrCollAmt)
+				.currentBalance(currTaxAmt - currCollAmt).arrearsDemand(arrTaxAmt).arrearsCollection(arrCollAmt)
+				.currentDemand(currTaxAmt).currentCollection(currCollAmt).build();
+		
+		DemandDue due = DemandDue.builder().consolidatedTax(consolidatedTax).demands(demands).build();
+
+		return new DemandDueResponse(responseInfoFactory.getResponseInfo(new RequestInfo(), HttpStatus.OK), due);
 	}
 	
 	private AuditDetail getAuditDetail(RequestInfo requestInfo) {

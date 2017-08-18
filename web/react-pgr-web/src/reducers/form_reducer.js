@@ -75,9 +75,7 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
   // console.log(validationData.required.current)
   // console.log(validationData.pattern.required);
   // console.log(validationData.pattern.current);
-  // var isFormValid=false;
-  // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  console.log(validationData.required.required.length, validationData.required.current.length);
+  // console.log(validationData.required.required.length, validationData.required.current.length);
   return {
     errorText: errorText,
     validationData: validationData,
@@ -336,6 +334,12 @@ export default(state = defaultState, action) => {
           }
         break;
 
+      case "RESET_FORM":
+          return {
+            ...state,
+            form: {}
+          }
+
       case "RESET_OBJECT":
 
               return {
@@ -423,14 +427,14 @@ export default(state = defaultState, action) => {
         isFormValid: action.isFormValid
       }
     break;
-	
-	case "SET_OWNER_STATE": 
+
+	case "SET_OWNER_STATE":
 		return {
 			...state,
 			validatePropertyOwner: action.validatePropertyOwner
 		}
-		
-	case "SET_FLOOR_STATE": 
+
+	case "SET_FLOOR_STATE":
 		return {
 			...state,
 			validatePropertyFloor: action.validatePropertyFloor

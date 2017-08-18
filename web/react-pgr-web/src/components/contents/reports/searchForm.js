@@ -128,7 +128,6 @@ class ShowForm extends Component {
       let eD = new Date(endDate);
       eD.setHours(0, 0, 0, 0);
       if(eD >= sD){
-          console.log('ED grater than SD');
           this.setState({datefield : ''})
           this.setState({dateError : ''})
       }else{
@@ -138,7 +137,6 @@ class ShowForm extends Component {
           }
         }
         this.props.handleChange(e, field, false, '');
-        console.log('ED less than SD');
         this.setState({datefield : field});
         this.setState({dateError :
           field === 'toDate' ? translate('pgr.lbl.dategreater') : translate('pgr.lbl.datelesser')
@@ -203,10 +201,12 @@ class ShowForm extends Component {
       let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams}=this.props;
       let searchParams=[]
 
+      // (variable=="fromDate"?new Date(Date(searchForm[variable]).getFullYear()+"-"+Date(searchForm[variable]).getMonth()+"-"+Date(searchForm[variable]).getDate()+" "+"00:00:00").getTime():new Date(Date(searchForm[variable]).getFullYear()+"-"+Date(searchForm[variable]).getMonth()+"-"+Date(searchForm[variable]).getDate()+" "+"23:59:00").getTime())
 
       for (var variable in searchForm) {
         // console.log(variable);
-        let input=this.state.moduleName=="pgr-master"?(typeof(searchForm[variable])=="object"?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59"):searchForm[variable]):(typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable])
+        let input=this.state.moduleName=="pgr"?
+              (typeof(searchForm[variable])=="object"?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59"):searchForm[variable]):(typeof(searchForm[variable])=="object"?new Date().getTime():searchForm[variable])
         searchParams.push({
           name:variable,
           // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
@@ -224,7 +224,7 @@ class ShowForm extends Component {
       setSearchParams(searchParams);
 
 
-      let response=Api.commonApiPost(this.state.moduleName+"/report/_get",{},{tenantId:"default",reportName:this.state.reportName,searchParams}).then(function(response)
+      let response=Api.commonApiPost("/report/"+this.state.moduleName+"/_get",{},{tenantId:"default",reportName:this.state.reportName,searchParams}).then(function(response)
       {
         // console.log(response)
         setReportResult(response);

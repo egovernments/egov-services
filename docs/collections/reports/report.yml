@@ -3,6 +3,7 @@ ReportDefinitions:
 - reportName: CashCollection
   summary: Cash Collection Report
   version: 1.0.0
+  moduleName: collection
   sourceColumns:
   - name: serialnumber
     label: reports.collection.serialno
@@ -51,6 +52,7 @@ ReportDefinitions:
 - reportName: ReceiptRegister
   summary: Receipt Register Report
   version: 1.0.0 
+  moduleName: collection
   sourceColumns:
   - name: RECEIPT_DATE
     label: reports.collection.receipt.date
@@ -101,24 +103,28 @@ ReportDefinitions:
     label: reports.collection.fromdate
     type: epoch
     source: collection
+    isMandatory: true
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
+    isMandatory: true
   - name: status
     label: reports.collection.status
     type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    isMandatory: true
   - name: department
     label: reports.collection.department
     type: singlevaluelist
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=default|$..id|$..name 
     source: collection 
+    isMandatory: true
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist
     pattern: 'list://CASH:CASH,CHEQUE:CHEQUE,DD:DD' 
-    
+    isMandatory: true
   query: SELECT RECEIPT_DATE,RECEIPT_NUMBER,DEPARTMENT_NAME,SERVICE_NAME,INSTRUMENT_TYPE,SOURCE,CASH_AMOUNT,sum(CHEQUEDD_AMOUNT) AS CHEQUEDD_AMOUNT ,BANK_AMOUNT, ONLINE_AMOUNT,CARD_AMOUNT,STATUS_DESCRIPTION from 
          (SELECT EGCL_RECEIPTHEADER.RECEIPTDATE AS RECEIPT_DATE, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPARTMENT_NAME, EG_DEPARTMENT.NAME AS SERVICE_NAME, 
          (CASE WHEN EGF_INSTRUMENTTYPE.NAME ='cash' THEN 'cash' WHEN EGF_INSTRUMENTTYPE.NAME='bankchallan' THEN 'bankchallan' WHEN  EGF_INSTRUMENTTYPE.NAME='card' THEN 'card' WHEN EGF_INSTRUMENTTYPE.NAME='online' 
@@ -138,6 +144,7 @@ ReportDefinitions:
 - reportName: ChequeCollection
   summary: Cheque Collection Report
   version: 1.0.0
+  moduleName: collection
   sourceColumns:
   - name: serialnumber
     label: reports.collection.serialno
@@ -176,20 +183,24 @@ ReportDefinitions:
     label: reports.collection.fromdate
     type: epoch
     source: collection
+    isMandatory: true
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
+    isMandatory: true
   - name: status
     label: reports.collection.status
     type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
     source: collection
+    isMandatory: true
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..user[*].name
     source: collection
+    isMandatory: true
   query: SELECT row_number() over (order by CH.RECEIPTNUMBER) as serialnumber, CH.RECEIPTNUMBER AS RECEIPT_NUMBER, ED.NAME AS DEPT_NAME, IH.transactionnumber AS CHEQUE_NUMBER, BK.name AS BANK, 
          IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,
          egeis_assignment ass, eg_user us WHERE ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=BK.code AND IH.INSTRUMENTTYPEID IN (SELECT ID FROM 
@@ -200,6 +211,7 @@ ReportDefinitions:
 - reportName: CollectionSummaryAccountHeadWise 
   summary: Collection Summary Account Head wise Report
   version: 1.0.0
+  moduleName: collection
   sourceColumns:
   - name: serialnumber
     label: reports.collection.serialno

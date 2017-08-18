@@ -249,7 +249,7 @@ public class InstrumentAccountCodeServiceTest {
 
 	private List<InstrumentAccountCode> getInstrumentAccountCodes() {
 		List<InstrumentAccountCode> instrumentAccountCodes = new ArrayList<InstrumentAccountCode>();
-		InstrumentAccountCode instrumentAccountCode = InstrumentAccountCode.builder().build();
+		InstrumentAccountCode instrumentAccountCode = InstrumentAccountCode.builder().id("1").build();
 		instrumentAccountCode.setTenantId("default");
 		instrumentAccountCodes.add(instrumentAccountCode);
 		return instrumentAccountCodes;

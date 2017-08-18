@@ -1,10 +1,10 @@
 package org.egov.demand.web.controller;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.Matchers.any;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -14,15 +14,19 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.TestConfiguration;
+import org.egov.demand.model.ConsolidatedTax;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandDue;
+import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.DemandDetailResponse;
+import org.egov.demand.web.contract.DemandDueResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
@@ -33,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -175,6 +180,44 @@ public class DemandControllerTest {
 				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest());
 		
 	}
+	
+	@Test
+	public void testShouldgetDues() throws IOException, Exception{
+		List<Demand> demand=new ArrayList<Demand>();
+		demand.add(getDemand());
+		DemandDueResponse demandDueResponse=new DemandDueResponse();
+		DemandDue due=new DemandDue();
+		ConsolidatedTax consolidatedTax=ConsolidatedTax.builder().arrearsBalance(0.0).arrearsCollection(0.0).arrearsDemand(0.0).
+				currentBalance(50d).currentCollection(205d).currentDemand(255d).build();
+		due.setConsolidatedTax(consolidatedTax);
+		due.setDemands(demand);
+		demandDueResponse.setDemandDue(due);
+		demandDueResponse.setResponseInfo(new ResponseInfo());
+		
+		when(demandService.getDues(any(DemandDueCriteria.class),any(RequestInfo.class))).thenReturn(new DemandDueResponse( getResponseInfo(getRequestInfo()),due));
+		
+		mockMvc.perform(post("/demand/_dues").param("tenantId", "ap.kurnool").param("consumerCode", "consumer").param("businessService", "PT")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("demandDueResponse.json")));
+		
+	}
+	
+	@Test
+	public void testShouldGetDuesWithException() throws IOException, Exception{
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(null);
+		demandResponse.setResponseInfo(new ResponseInfo());
+		
+		when(demandService.getDues(any(DemandDueCriteria.class),any(RequestInfo.class))).thenReturn(new DemandDueResponse(getResponseInfo(getRequestInfo()),null));
+		
+		mockMvc.perform(post("/demand/_dues").param("tenantId", "ap.kurnool")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest());
+		
+	}
+	
 	
 	private String getFileContents(String fileName) throws IOException {
 		return new FileUtils().getFileContents(fileName);

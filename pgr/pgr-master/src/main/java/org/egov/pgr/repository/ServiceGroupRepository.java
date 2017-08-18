@@ -39,11 +39,6 @@
  */
 package org.egov.pgr.repository;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.domain.model.ServiceType;
 import org.egov.pgr.domain.model.ServiceTypeSearchCriteria;
@@ -51,7 +46,6 @@ import org.egov.pgr.domain.service.ServiceTypeService;
 import org.egov.pgr.repository.builder.ServiceGroupQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ServiceGroupRowMapper;
 import org.egov.pgr.web.contract.ServiceGroupGetRequest;
-//import org.egov.pgrrest.master.repository.rowmapper.CategoryTypeRowMapper;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,129 +53,155 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+//import org.egov.pgrrest.master.repository.rowmapper.CategoryTypeRowMapper;
+
 @Repository
 public class ServiceGroupRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceGroupRepository.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceGroupRepository.class);
 
-	private static final String[] taskAction = { "create", "update" };
+    private static final String[] taskAction = {"create", "update"};
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private ServiceGroupRowMapper serviceGroupMapper;
+    @Autowired
+    private ServiceGroupRowMapper serviceGroupMapper;
 
-	@Autowired
-	private ServiceGroupQueryBuilder serviceGroupQueryBuilder;
+    @Autowired
+    private ServiceGroupQueryBuilder serviceGroupQueryBuilder;
 
-	@Autowired
-	private ServiceTypeService serviceTypeService;
+    @Autowired
+    private ServiceTypeService serviceTypeService;
 
-	public ServiceGroupRequest persistCreateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
-		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupInsert = serviceGroupQueryBuilder.insertServiceGroupQuery();
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		final Object[] obj = new Object[] { serviceGroup.getCode(), serviceGroup.getName(),
-				serviceGroup.getDescription(), serviceGroup.getActive(),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				serviceGroup.getTenantId(), serviceGroup.getKeyword() };
-		jdbcTemplate.update(serviceGroupInsert, obj);
-		return serviceGroupRequest;
-	}
+    public ServiceGroupRequest persistCreateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
+        LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
+        final String serviceGroupInsert = serviceGroupQueryBuilder.insertServiceGroupQuery();
+        final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+        final Object[] obj = new Object[]{serviceGroup.getCode(), serviceGroup.getName(),
+                serviceGroup.getDescription(), serviceGroup.getActive(),
+                Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                serviceGroup.getTenantId(), serviceGroup.getKeyword()};
+        jdbcTemplate.update(serviceGroupInsert, obj);
+        return serviceGroupRequest;
+    }
 
-	public ServiceGroupRequest persistUpdateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
-		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
+    public ServiceGroupRequest persistUpdateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
+        LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
 
-		if (serviceGroupRequest != null && serviceGroupRequest.getServiceGroup() != null
-				&& serviceGroupRequest.getServiceGroup().getActive() != null
-				&& !serviceGroupRequest.getServiceGroup().getActive())
-			disableServiceTypes(serviceGroupRequest.getServiceGroup().getKeyword(),
-					serviceGroupRequest.getServiceGroup().getId(),
-					serviceGroupRequest.getServiceGroup().getTenantId());
+        if (serviceGroupRequest != null && serviceGroupRequest.getServiceGroup() != null
+                && serviceGroupRequest.getServiceGroup().getActive() != null
+                && !serviceGroupRequest.getServiceGroup().getActive())
+            disableServiceTypes(serviceGroupRequest.getServiceGroup().getKeyword(),
+                    serviceGroupRequest.getServiceGroup().getId(),
+                    serviceGroupRequest.getServiceGroup().getTenantId());
 
-		final String serviceGroupUpdate = serviceGroupQueryBuilder.updateServiceGroupQuery();
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		final Object[] obj = new Object[] { serviceGroup.getName(), serviceGroup.getDescription(),
-				serviceGroup.getActive(), Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				serviceGroup.getTenantId(), serviceGroup.getKeyword(), serviceGroup.getCode() };
-		jdbcTemplate.update(serviceGroupUpdate, obj);
-		return serviceGroupRequest;
-	}
+        final String serviceGroupUpdate = serviceGroupQueryBuilder.updateServiceGroupQuery();
+        final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+        final Object[] obj = new Object[]{serviceGroup.getName(), serviceGroup.getDescription(),
+                serviceGroup.getActive(), Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                serviceGroup.getTenantId(), serviceGroup.getKeyword(), serviceGroup.getCode()};
+        jdbcTemplate.update(serviceGroupUpdate, obj);
+        return serviceGroupRequest;
+    }
 
-	private void disableServiceTypes(String keyword,Long id, String tenantId) {
+    private void disableServiceTypes(String keyword, Long id, String tenantId) {
 
-		List<ServiceType> serviceTyes = serviceTypeService
-				.search(ServiceTypeSearchCriteria.builder().category(id.intValue()).tenantId(tenantId).build());
-		if (serviceTyes != null)
-			for (ServiceType type : serviceTyes) {
-				type.setActive(false);
-				serviceTypeService.persistForUpdate(type);
-			}
-	}
+        List<ServiceType> serviceTyes = serviceTypeService
+                .search(ServiceTypeSearchCriteria.builder().category(id.intValue()).tenantId(tenantId).build());
+        if (serviceTyes != null)
+            for (ServiceType type : serviceTyes) {
+                type.setActive(false);
+                serviceTypeService.persistForUpdate(type);
+            }
+    }
 
-	public List<ServiceGroup> getAllServiceGroup(ServiceGroupGetRequest serviceGroupGetRequest) {
-		LOGGER.info("Requesting the Service Group List for the tenant ID :" + serviceGroupGetRequest.getTenantId());
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		String getQuery = serviceGroupQueryBuilder.getQuery(serviceGroupGetRequest, preparedStatementValues);
-		final List<ServiceGroup> serviceGroupTypes = jdbcTemplate.query(getQuery, preparedStatementValues.toArray(),
-				serviceGroupMapper);
-		return serviceGroupTypes;
-	}
+    public List<ServiceGroup> getAllServiceGroup(ServiceGroupGetRequest serviceGroupGetRequest) {
+        LOGGER.info("Requesting the Service Group List for the tenant ID :" + serviceGroupGetRequest.getTenantId());
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        String getQuery = serviceGroupQueryBuilder.getQuery(serviceGroupGetRequest, preparedStatementValues);
+        final List<ServiceGroup> serviceGroupTypes = jdbcTemplate.query(getQuery, preparedStatementValues.toArray(),
+                serviceGroupMapper);
+        return serviceGroupTypes;
+    }
 
-	public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest) {
-		String checkQuery = serviceGroupQueryBuilder.checkIfAvailable();
-		List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getCode());
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
+    public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest, String action) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
 
-		final List<Integer> availableCount = jdbcTemplate.queryForList(checkQuery, preparedStatementValues.toArray(),
-				Integer.class);
-		if (availableCount.size() > 0) {
-			if (availableCount.get(0) > 0) {
-				return true;
-			} else {
-				preparedStatementValues = new ArrayList<>();
-				preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
-				preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
-				checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
-				final List<Integer> count = jdbcTemplate.queryForList(checkQuery, preparedStatementValues.toArray(),
-						Integer.class);
-				if (count.size() > 0) {
-					if (count.get(0) > 0) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
+        String tenantId = serviceGroupRequest.getServiceGroup().getTenantId().trim();
+        String code = serviceGroupRequest.getServiceGroup().getCode().toUpperCase().trim();
+        String name = serviceGroupRequest.getServiceGroup().getName().toUpperCase().trim();
+        preparedStatementValues.add(tenantId);
+        String query = "";
+        if (code != null && code != "" && name != null && name != "") {
 
-	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName().toUpperCase().trim());
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
-		String checkQuery = "";
-		if (action.equals(taskAction[0])) {
-			checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
-		} else {
-			preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getId());
-			checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailableUpdate();
-		}
-		final List<Integer> count = jdbcTemplate.queryForList(checkQuery, preparedStatementValues.toArray(),
-				Integer.class);
-		if (count.size() > 0) {
-			if (count.get(0) > 0) {
-				return true;
-			}
-		}
-		return false;
-	}
+            preparedStatementValues.add(code);
+            preparedStatementValues.add(name);
+            query = serviceGroupQueryBuilder.checkIfAvailable();
+
+        }
+        final List<Map<String, Object>> centerTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!centerTypes.isEmpty() && "update".equalsIgnoreCase(action)) {
+            String codeFromDB = (String) centerTypes.get(0).get("code");
+            if (!codeFromDB.equalsIgnoreCase(code))
+                return true;
+        }
+        if (!centerTypes.isEmpty() && "create".equalsIgnoreCase(action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) {
+        List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName().toUpperCase().trim());
+        preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
+        String checkQuery = "";
+        if (action.equals(taskAction[0])) {
+            checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
+        } else {
+            preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getId());
+            checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailableUpdate();
+        }
+        final List<Integer> count = jdbcTemplate.queryForList(checkQuery, preparedStatementValues.toArray(),
+                Integer.class);
+        if (count.size() > 0) {
+            if (count.get(0) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean verifyIfCodeAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) {
+        List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getCode().toUpperCase().trim());
+        preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
+        String checkQuery = "";
+        if (action.equals(taskAction[0])) {
+            checkQuery = serviceGroupQueryBuilder.checkIfCodeTenantIdAvailable();
+        } else {
+            preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getId());
+            checkQuery = serviceGroupQueryBuilder.checkIfCodeTenantIdAvailableUpdate();
+        }
+        final List<Integer> count = jdbcTemplate.queryForList(checkQuery, preparedStatementValues.toArray(),
+                Integer.class);
+        if (count.size() > 0) {
+            if (count.get(0) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

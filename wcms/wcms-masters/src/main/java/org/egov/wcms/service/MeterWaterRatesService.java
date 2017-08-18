@@ -80,7 +80,7 @@ public class MeterWaterRatesService {
     public List<MeterWaterRates> createMeterWaterRates(final String topic, final String key,
             final MeterWaterRatesRequest meterWaterRatesRequest) {
         for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) {
-            meterWaterRates.setBillingtype(BillingType.METERED.toString());
+            meterWaterRates.setBillingType(BillingType.METERED.toString());
             meterWaterRates.setCode(codeGeneratorService.generate(MeterWaterRates.SEQ_METERWATERRATES));
         }
 
@@ -95,7 +95,7 @@ public class MeterWaterRatesService {
     public List<MeterWaterRates> updateMeterWaterRates(final String topic, final String key,
             final MeterWaterRatesRequest meterWaterRatesRequest) {
         for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) 
-            meterWaterRates.setBillingtype(BillingType.METERED.toString());
+            meterWaterRates.setBillingType(BillingType.METERED.toString());
         try {
             kafkaTemplate.send(topic, key, meterWaterRatesRequest);
         } catch (final Exception ex) {

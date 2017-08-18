@@ -118,4 +118,10 @@ public class ApplicationProperties {
     @Value("${search.accountcodes.uri}")
     private String searchAccountCodes;
     
+    @Value("${egov.services.billing_service.search}")
+    private String searchBill;
+    
+    @Value("${positionforuser.get.uri.append}")
+    private String getPositionAppend;
+            
 }

@@ -37,23 +37,23 @@ var chequeOrDD = {
         "name": "chequeOrDDNumber",
         "jsonPath": "Receipt[0].instrument.transactionNumber",
         "label": "Cheque/DD Number",
-        "pattern": "",
+        "pattern": "^[0-9]{6}$",
         "type": "text",
         "isRequired": true,
         "isDisabled": false,
         "requiredErrMsg": "",
-        "patternErrMsg": ""
+        "patternErrMsg": "Cheque/DD number should be 6 digit numeric number"
       },
       {
         "name": "chequeOrDDDate",
         "jsonPath": "Receipt[0].instrument.transactionDateInput",
         "label": "Cheque/DD Date",
         "pattern": "",
-        "type": "datePicker",
+        "type": "date",
         "isRequired": true,
         "isDisabled": false,
         "requiredErrMsg": "",
-        "patternErrMsg": ""
+        "patternErrMsg": "Cheque/DD date should accept up-to previous 90 days or current date"
       },
       {
         "name": "chequeOrDDBankName",

@@ -228,13 +228,14 @@ public class DemandValidator implements Validator {
 	private void validateDemandDetails(List<DemandDetail> demandDetails, Errors errors) {
 
 		for (DemandDetail demandDetail : demandDetails) {
-
-			BigDecimal tax = demandDetail.getTaxAmount();
-			BigDecimal collection = demandDetail.getCollectionAmount();
-			int i = tax.compareTo(collection);
-			if (i < 0)
-				errors.rejectValue("Demands", "", "collectionAmount : " + collection
-						+ " should not be greater than taxAmount : " + tax + " for demandDetail");
+			if(!"ADVANCE".equalsIgnoreCase(demandDetail.getTaxHeadMasterCode())){
+				BigDecimal tax = demandDetail.getTaxAmount();
+				BigDecimal collection = demandDetail.getCollectionAmount();
+				int i = tax.compareTo(collection);
+				if (i < 0)
+					errors.rejectValue("Demands", "", "collectionAmount : " + collection
+							+ " should not be greater than taxAmount : " + tax + " for demandDetail");
+			}
 		}
 	}
 

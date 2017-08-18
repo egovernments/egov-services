@@ -67,7 +67,7 @@ paths:
           description: The unique reference number for a trade license Application
           type: string
           minLength: 4
-          maxLength: 128
+          maxLength: 20
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: licenseNumber
@@ -76,7 +76,7 @@ paths:
           description: The unique  license number no for a Trade license.
           type: string
           minLength: 4
-          maxLength: 128
+          maxLength: 20
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: oldLicenseNumber
@@ -85,7 +85,7 @@ paths:
           description: The unique  Old license number no for a Trade license.
           type: string
           minLength: 4
-          maxLength: 128
+          maxLength: 20
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: mobileNumber
@@ -114,7 +114,8 @@ paths:
           description: Assesment Number of the property in which trade is running
           required: false
           type: string
-          maxLength: 15
+          maxLength: 20
+          minLength: 4
         - name: adminWard
           in: query
           description: Unique identifier of the AdminWard where the Trade is located.
@@ -141,7 +142,8 @@ paths:
           description: Title of the Trade .
           required: false
           type: string
-          maxLength: 33
+          maxLength: 100
+          minLength: 4
         - name: tradeType
           in: query
           description: Possible values wil be from BusinessNature Enum.
@@ -243,21 +245,21 @@ definitions:
         type: string
         description: Unique identfiication number of the Trade License Appilcaiton . This is a unique in system. This is mandatory but always be generated on Trade License create Request processing. Not Valid for Legacy Trade License
         maxLength: 20
-        minLength: 6  
+        minLength: 4  
       oldLicenseNumber:
         type: string
         description: Unique Old License Number of the Trade. This is  unique in system for a tenant. This is mandatory  for legacy license.
         maxLength: 20
-        minLength: 20  
+        minLength: 4  
       licenseNumber:
         type: string
         description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
         maxLength: 20
-        minLength: 6
+        minLength: 4
       applicationDate:
-        type: string
-        format: date
-        description: date on which applicaiton has been generated for new Trade License in dd/MM/YY format
+        type: integer
+        format: int64
+        description: date on which applicaiton has been generated for new Trade License in epoch
       adhaarNumber:
         type: string
         description : Adhaar Number of trade owner
@@ -289,10 +291,11 @@ definitions:
         description: address of the Trade Owner
         type: string
         maxLength: 250
+        minLength: 4
       propertyAssesmentNo:
         type: string
         maxLength: 20
-        minLength: 15
+        minLength: 4
         description: Assesment Number of the Property in which Trade is established or running
       localityId:
         type: integer
@@ -310,6 +313,7 @@ definitions:
         type: string
         description: Address of the property in which Trade is established or running
         maxLength: 250
+        minLength: 4
       ownerShipType:
         $ref : '#/definitions/OwnerShipType'
       tradeTitle:
@@ -317,6 +321,7 @@ definitions:
         description: Title of the Trade
         pattern: '[a-zA-Z0-9\s\.,]'
         maxLength: 100
+        minLength: 4
       tradeType:
         $ref : 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml#/definitions/BusinessNature'
       categoryId:
@@ -340,20 +345,24 @@ definitions:
         description: Remarks for the Trade License
         maxLength: 1000
       tradeCommencementDate:
-        type: string
-        format: date
-        description:  Commencement Date of the trade in dd/mm/yyy format
+        type: integer
+        format: int64
+        description:  Commencement Date of the trade as epoch
       licenseValidFromDate:
-        type: string
-        format: date
-        description: Date from when license is valid in dd/mm/yyy format
+        type: integer
+        format: int64
+        description: Date from when license is valid as epoch
+      isPropertyOwner:
+        type: boolean
+        description: set to true if Trade owner is the owner of the property
       agreementDate:
-        type: string
-        format: date
-        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running in dd/mm/yyy format
+        type: integer
+        format: int64
+        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running as epoch
       agreementNo:
         type: string
         maxLength: 128
+        minLength: 4
         description: Document of Registered lease agreement between the property owner and trade owner
       isLegacy:
         type: boolean
@@ -364,9 +373,9 @@ definitions:
         default: true
         description: True to be set to mark this Trade License as Active, False to be set to mark this Trade License as inActive
       expiryDate:
-        type: string
-        format: date
-        description: Expiry Date of the Trade License in DD-MM-YY format
+        type: integer
+        format: int64
+        description: Expiry Date of the Trade License as epoch
       feeDetails:
         type: array
         description: List of Fee Details for Trade License,  Required only for Legacy Trade License
@@ -405,6 +414,8 @@ definitions:
     - tradeCommencementDate
     - adminWardId
     - licenseValidFromDate
+    - isPropertyOwner
+    - isLegacy
   TradeLicenseSearch:
     type: object
     description: A Object holds the basic data for a Trade License
@@ -424,21 +435,21 @@ definitions:
         type: string
         description: Unique identfiication number of the Trade License Appilcaiton . This is a unique in system. This is mandatory but always be generated on Trade License create Request processing. Not Valid for Legacy Trade License
         maxLength: 20
-        minLength: 6  
+        minLength: 4  
       oldLicenseNumber:
         type: string
         description: Unique Old License Number of the Trade. This is  unique in system for a tenant. This is mandatory  for legacy license.
         maxLength: 20
-        minLength: 6  
+        minLength: 4  
       licenseNumber:
         type: string
         description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
         maxLength: 20
-        minLength: 6
+        minLength: 4
       applicationDate:
-        type: string
-        format: date
-        description: date on which applicaiton has been generated for new Trade License in DD-MM-YY format
+        type: integer
+        format: int64
+        description: date on which applicaiton has been generated for new Trade License as epoch
       adhaarNumber:
         type: string
         description : Adhaar Number of trade owner
@@ -470,10 +481,11 @@ definitions:
         description: address of the Trade Owner
         type: string
         maxLength: 250
+        minLength: 4
       propertyAssesmentNo:
         type: string
         maxLength: 20
-        minLength: 15
+        minLength: 4
         description: Assesment Number of the Property in which Trade is established or running
       localityId:
         type: integer
@@ -500,13 +512,15 @@ definitions:
         type: string
         description: Address of the property in which Trade is established or running
         maxLength: 250
+        minLength: 4
       ownerShipType:
         $ref : '#/definitions/OwnerShipType'
       tradeTitle:
         type: string
         description: Title of the Trade
         pattern: '[a-zA-Z0-9\s\.,]'
-        maxLength: 32
+        maxLength: 100
+        minLength: 4
       tradeType:
         $ref : 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml#/definitions/BusinessNature'
       categoryId:
@@ -540,23 +554,21 @@ definitions:
       remarks: 
         type: string
         description: Remarks for the Trade License
-        maxLength: 1000
       tradeCommencementDate:
-        type: string
-        format: date
-        description:  Commencement Date of the trade in DD-MM-YY format
+        type: integer
+        format: int64
+        description:  Commencement Date of the trade as epoch
       licenseValidFromDate:
-        type: string
-        format: date
-        description: Date from when license is valid
+        type: integer
+        format: int64
+        description: Date from when license is valid as epoch
+      isPropertyOwner:
+        type: boolean
+        description: set to true if Trade owner is the owner of the property
       agreementDate:
-        type: string
-        format: date
-        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running in DD-MM-YY format
-      agreementNo:
-        type: string
-        maxLength: 128
-        description: Document of Registered lease agreement between the property owner and trade owner
+        type: integer
+        format: int64
+        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running as epoch
       isLegacy:
         type: boolean
         default: false
@@ -566,9 +578,9 @@ definitions:
         default: true
         description: True to be set to mark this Trade License as Active, False to be set to mark this Trade License as inActive
       expiryDate:
-        type: string
-        format: date
-        description: Expiry Date of the Trade License in DD-MM-YY format
+        type: integer
+        format: int64
+        description: Expiry Date of the Trade License as epoch
       feeDetails:
         type: array
         description: List of Fee Details for Trade License,  Required only for Legacy Trade License
@@ -607,6 +619,8 @@ definitions:
     - tradeCommencementDate
     - adminWardId
     - licenseValidFromDate
+    - isPropertyOwner
+    - isLegacy
   OwnerShipType:
     type: string
     enum:

@@ -219,7 +219,7 @@ const Main = () => {
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
-      <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate/:id?'} component={LegacyLicenseCreate}/>
+      <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
 
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>

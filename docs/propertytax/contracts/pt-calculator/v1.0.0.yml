@@ -451,22 +451,27 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: periodType
+          in: query
+          description: type of installment, its for monthly, querterly, halfyearly or yearly.
+          required: true
+          type: string
         - name: validDate
           in: query
           description: This date will be compared between the available from and to dates for search results, format is dd/MM/yyyy
-          required: true
+          required: false
           type: string
           format: date
         - name: fromDate
           in: query
           description: If fromDate is given then toDate also mandatory. All the periods from where fromDate is fall in the period to till periods where toDate is fall in the period.
-          required: true
+          required: false
           type: string
           format: date
         - name: toDate
           in: query
           description: If fromDate is given then toDate also mandatory. All the periods from where fromDate is fall in the period to till periods where toDate is fall in the period.
-          required: true
+          required: false
           type: string
           format: date
         - name: code

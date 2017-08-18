@@ -38,7 +38,11 @@ public class AssetIndexCommonService {
         log.info("asset search url :: " + url);
         final AssetResponse assetResponse = restTemplate.postForObject(url, requestInfo, AssetResponse.class);
         log.info("asset Response :: " + assetResponse);
-        return assetResponse.getAssets().get(0);
+        final List<Asset> assets = assetResponse.getAssets();
+        if (!assets.isEmpty())
+            return assets.get(0);
+        else
+            throw new RuntimeException("There is no Asset for tenantId :: " + tenantId);
     }
 
     public SubScheme getSubSchemeData(final RequestInfo requestInfo, final String tenantId, final Long subSchemeId) {

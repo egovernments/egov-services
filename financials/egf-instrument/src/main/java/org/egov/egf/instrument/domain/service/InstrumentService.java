@@ -152,6 +152,7 @@ public class InstrumentService {
 			case ACTION_UPDATE:
 				Assert.notNull(instruments, "Instruments to update must not be null");
 				for (Instrument instrument : instruments) {
+					Assert.notNull(instrument.getId(), "Bank ID to update must not be null");
 					validator.validate(instrument, errors);
 				}
 				break;

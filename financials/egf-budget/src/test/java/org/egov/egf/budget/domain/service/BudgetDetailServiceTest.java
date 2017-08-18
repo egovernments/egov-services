@@ -172,6 +172,19 @@ public class BudgetDetailServiceTest {
         assertEquals(expextedResult, actualResult);
 
     }
+    
+    @Test
+    public final void test_deletete_with_out_kafka() {
+
+        final List<BudgetDetail> expextedResult = getBudgetDetails();
+
+        when(budgetDetailRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+        final List<BudgetDetail> actualResult = budgetDetailService.delete(expextedResult, errors, requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
 
     @Test(expected = CustomBindException.class)
     public final void test_update_with_out_kafka_and_with_null_req() {
@@ -181,6 +194,19 @@ public class BudgetDetailServiceTest {
         when(budgetDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
         final List<BudgetDetail> actualResult = budgetDetailService.update(null, errors, requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+    
+    @Test(expected = CustomBindException.class)
+    public final void test_delete_with_out_kafka_and_with_null_req() {
+
+        final List<BudgetDetail> expextedResult = getBudgetDetails();
+
+        when(budgetDetailRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+        final List<BudgetDetail> actualResult = budgetDetailService.delete(null, errors, requestInfo);
 
         assertEquals(expextedResult, actualResult);
 
@@ -222,6 +248,18 @@ public class BudgetDetailServiceTest {
         when(budgetDetailRepository.update(any(BudgetDetail.class))).thenReturn(expextedResult);
 
         final BudgetDetail actualResult = budgetDetailService.update(expextedResult);
+
+        assertEquals(expextedResult, actualResult);
+    }
+    
+    @Test
+    public final void test_delete() {
+
+        final BudgetDetail expextedResult = getBudgetDetails().get(0);
+
+        when(budgetDetailRepository.delete(any(BudgetDetail.class))).thenReturn(expextedResult);
+
+        final BudgetDetail actualResult = budgetDetailService.delete(expextedResult);
 
         assertEquals(expextedResult, actualResult);
     }
@@ -554,7 +592,7 @@ public class BudgetDetailServiceTest {
 
         final List<BudgetDetail> budgetDetails = new ArrayList<BudgetDetail>();
 
-        final BudgetDetail budgetDetail = BudgetDetail.builder().budget(Budget.builder().id("1").build())
+        final BudgetDetail budgetDetail = BudgetDetail.builder().id("1").budget(Budget.builder().id("1").build())
                 .budgetGroup(BudgetGroupContract.builder().id("1").build()).anticipatoryAmount(BigDecimal.TEN)
                 .originalAmount(BigDecimal.TEN).approvedAmount(BigDecimal.TEN).budgetAvailable(BigDecimal.TEN)
                 .planningPercent(BigDecimal.valueOf(1500)).build();

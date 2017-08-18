@@ -39,12 +39,14 @@
  */
 package org.egov.wcms.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -64,6 +66,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 @WebMvcTest(MeterWaterRatesRepository.class)
@@ -71,6 +74,9 @@ public class MeterWaterRatesRepositoryTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
+
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Mock
     private MeterWaterRatesRowMapper meterWaterRatesRowMapper;
@@ -125,9 +131,12 @@ public class MeterWaterRatesRepositoryTest {
         final List<MeterWaterRates> meterWaterRatesList = new ArrayList<>();
         final MeterWaterRates meterWaterRates = getMeterWaterRates();
         meterWaterRatesList.add(meterWaterRates);
-        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(meterWaterRatesRequest
-                .equals(meterWaterRatesRepository.persistCreateMeterWaterRates(meterWaterRatesRequest)));
+        meterWaterRatesRequest.setMeterWaterRates(meterWaterRatesList);
+
+        final MeterWaterRatesRequest meterWaterRatesReq = meterWaterRatesRepository
+                .persistCreateMeterWaterRates(meterWaterRatesRequest);
+        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
+        assertThat(meterWaterRatesReq.getMeterWaterRates().size()).isEqualTo(1);
     }
 
     @Test
@@ -142,15 +151,18 @@ public class MeterWaterRatesRepositoryTest {
         final List<MeterWaterRates> meterWaterRatesList = new ArrayList<>();
         final MeterWaterRates meterWaterRates = getMeterWaterRates();
         meterWaterRatesList.add(meterWaterRates);
-        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(meterWaterRatesRequest
-                .equals(meterWaterRatesRepository.persistUpdateMeterWaterRates(meterWaterRatesRequest)));
+        meterWaterRatesRequest.setMeterWaterRates(meterWaterRatesList);
+
+        final MeterWaterRatesRequest meterWaterRatesReq = meterWaterRatesRepository
+                .persistUpdateMeterWaterRates(meterWaterRatesRequest);
+        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
+        assertThat(meterWaterRatesReq.getMeterWaterRates().size()).isEqualTo(1);
     }
 
     private MeterWaterRates getMeterWaterRates() {
         final MeterWaterRates meterWaterRates = new MeterWaterRates();
         meterWaterRates.setTenantId("default");
-        meterWaterRates.setBillingtype("METERED");
+        meterWaterRates.setBillingType("METERED");
         meterWaterRates.setCode("12");
         meterWaterRates.setSourceTypeId(2l);
         meterWaterRates.setUsageTypeId("1");

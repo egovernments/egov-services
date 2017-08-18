@@ -22,7 +22,7 @@ public class PgrWorkflow implements Workflow {
     public static final String DEPARTMENT = "department";
     public static final String IN_PROGRESS = "IN PROGRESS";
     public static final String COMPLAINT = "Complaint";
-    public static final String SYSTEM_KEYWORD = "systemKeyword";
+    public static final String SYSTEM_KEYWORD = "keyword";
     public static final String DELIVERABLE_SERVICE = "Deliverable_Service";
     private final ComplaintRouterService complaintRouterService;
     private final StateService stateService;

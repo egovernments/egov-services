@@ -3,6 +3,7 @@ package org.egov.tl.commons.web.contract;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -29,8 +30,9 @@ public class LicenseFeeDetailContract {
 	@JsonProperty("licenseId")
 	private Long licenseId;
 
-	@NotEmpty(message="{error.license.financialyear}")
-	@Length(min =1, max = 128,message="{error.license.financialyear}")
+	@NotEmpty(message="{error.financialYear.empty}")
+	@Length(min =1, max = 128,message="{error.financialYear.empty}")
+	@Pattern(regexp = ".*[^ ].*",message="{error.financialYear.emptyspaces}")
 	@JsonProperty("financialYear")
 	private String financialYear;
 

@@ -52,7 +52,7 @@ public class CategoryContractRepository {
 
 			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			log.error(propertiesManger.getCatEndPointError());
 		}
 		if (categoryResponse != null && categoryResponse.getCategories() != null
 				&& categoryResponse.getCategories().size() > 0) {
@@ -125,7 +125,7 @@ public class CategoryContractRepository {
 		try {
 			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			log.error(propertiesManger.getCatEndPointError());
 		}
 
 		if (categoryResponse.getCategories() != null && categoryResponse.getCategories().size() > 0) {
@@ -157,7 +157,7 @@ public class CategoryContractRepository {
 
 			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			log.error(propertiesManger.getCatEndPointError());
 		}
 		if (categoryResponse != null && categoryResponse.getCategories() != null
 				&& categoryResponse.getCategories().size() > 0) {
@@ -190,7 +190,7 @@ public class CategoryContractRepository {
 
 			uomResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, UOMResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			log.error(propertiesManger.getCatEndPointError());
 		}
 		if (uomResponse != null && uomResponse.getUoms() != null && uomResponse.getUoms().size() > 0) {
 			return uomResponse;
@@ -223,7 +223,7 @@ public class CategoryContractRepository {
 			licenseStatusResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
 					LicenseStatusResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			log.error(propertiesManger.getCatEndPointError());
 		}
 		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
 				&& licenseStatusResponse.getLicenseStatuses().size() > 0) {

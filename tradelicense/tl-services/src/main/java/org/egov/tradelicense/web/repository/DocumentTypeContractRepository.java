@@ -50,7 +50,7 @@ public class DocumentTypeContractRepository {
 			documentTypeResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
 					DocumentTypeResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the document type end point");
+			log.error(propertiesManger.getDocumentEndPointErrormsg());
 		}
 		if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes() != null
 				&& documentTypeResponse.getDocumentTypes().size() > 0) {

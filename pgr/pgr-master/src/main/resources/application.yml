@@ -1514,7 +1514,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED_''PROCESSING''_REOPENED:PENDING,REJECTED:REJECTED'
+    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED_''PROCESSING''_''REOPENED:PENDING,REJECTED:REJECTED'
     source: seva
     isMandatory: true
   query: SELECT dept.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
@@ -1599,10 +1599,10 @@ ReportDefinitions:
     isMandatory: false
     searchClause: and b.id=$wardtype
   query: SELECT COALESCE(ct.name, 'NA'::character varying) AS ctname, p.name AS routerposname, b.name AS bndryname,
-         COALESCE(( SELECT esclvl1pos.name FROM egeis_position esclvl1pos WHERE esclvl1pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.fromposition = r."position" AND ph.servicecode::text = ct.code::text))), 'NA'::character varying) AS esclvl1posname,
-         COALESCE(( SELECT esclvl2pos.name FROM egeis_position esclvl2pos WHERE esclvl2pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.servicecode::text = ct.code::text AND ph.fromposition = (( SELECT ph_1.toposition FROM egpgr_escalation_hierarchy ph_1 WHERE ph_1.fromposition = r."position" AND ph_1.servicecode::text = ct.code::text))))), 'NA'::character varying) AS esclvl2posname,
-         COALESCE(( SELECT escalvl3pos.name FROM egeis_position escalvl3pos WHERE escalvl3pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.servicecode::text = ct.code::text  AND ph.fromposition = (( SELECT ph_1.toposition FROM egpgr_escalation_hierarchy ph_1 WHERE ph_1.servicecode::text = ct.code::text  AND ph_1.fromposition = (( SELECT ph_2.toposition FROM egpgr_escalation_hierarchy ph_2 WHERE ph_2.fromposition = r."position" AND ph_2.servicecode::text = ct.code::text ))))))), 'NA'::character varying) AS esclvl3posname
-         FROM egpgr_router r LEFT JOIN egpgr_complainttype ct ON r.complainttypeid = ct.id LEFT JOIN egpgr_complainttype_category cc ON ct.category = cc.id LEFT JOIN eg_boundary b ON r.bndryid = b.id LEFT JOIN servicetype_keyword sk ON ct.code=sk.servicecode and sk.keyword='complaint' LEFT JOIN egeis_position p ON r."position" = p.id where p.id=$positiontype and b.id=$wardtype and cc.id=$complaintcategorytype and ct.code=$complainttype and cc.keyword='complaint' and r.tenantid=$tenantid  ORDER BY r.complainttypeid;
+         COALESCE(( SELECT esclvl1pos.name FROM egeis_position esclvl1pos WHERE esclvl1pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.fromposition = r.position AND ph.servicecode::text = ct.code::text))), 'NA'::character varying) AS esclvl1posname,
+         COALESCE(( SELECT esclvl2pos.name FROM egeis_position esclvl2pos WHERE esclvl2pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.servicecode::text = ct.code::text AND ph.fromposition = (( SELECT ph_1.toposition FROM egpgr_escalation_hierarchy ph_1 WHERE ph_1.fromposition = r.position AND ph_1.servicecode::text = ct.code::text))))), 'NA'::character varying) AS esclvl2posname,
+         COALESCE(( SELECT escalvl3pos.name FROM egeis_position escalvl3pos WHERE escalvl3pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.servicecode::text = ct.code::text  AND ph.fromposition = (( SELECT ph_1.toposition FROM egpgr_escalation_hierarchy ph_1 WHERE ph_1.servicecode::text = ct.code::text  AND ph_1.fromposition = (( SELECT ph_2.toposition FROM egpgr_escalation_hierarchy ph_2 WHERE ph_2.fromposition = r.position AND ph_2.servicecode::text = ct.code::text ))))))), 'NA'::character varying) AS esclvl3posname
+         FROM egpgr_router r LEFT JOIN egpgr_complainttype ct ON r.complainttypeid = ct.id LEFT JOIN egpgr_complainttype_category cc ON ct.category = cc.id LEFT JOIN eg_boundary b ON r.bndryid = b.id LEFT JOIN servicetype_keyword sk ON ct.code=sk.servicecode and sk.keyword='complaint' LEFT JOIN egeis_position p ON r.position = p.id where p.id=$positiontype and b.id=$wardtype and cc.id=$complaintcategorytype and ct.code=$complainttype and cc.keyword='complaint' and r.tenantid=$tenantid  ORDER BY r.complainttypeid;
   groupBy: ORDER BY r.complainttypeid;
 
 - reportName: CommonInbox
@@ -1705,7 +1705,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED_''PROCESSING''_REOPENED:PENDING,REJECTED:REJECTED'
+    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED_''PROCESSING''_''REOPENED:PENDING,REJECTED:REJECTED'
     source: seva
     isMandatory: true
   query: SELECT boundary.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate

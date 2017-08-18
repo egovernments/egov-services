@@ -5,7 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
 		"objectName": "licenses",
-		
+
 		"groups": [
 			{
 				"label": "tl.create.licenses.groups.TradeDetailsTab",
@@ -290,7 +290,7 @@ var dat = {
               "pattern": "",
               "type": "text",
               "isRequired": true,
-              "isDisabled": false,
+              "isDisabled": true,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
@@ -313,7 +313,7 @@ var dat = {
               "url": "/tl-masters/category/v1/_search?tenantId=default&ids=1",
               "type": "text",
               "isRequired": true,
-              "isDisabled": false,
+              "isDisabled": true,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
@@ -406,12 +406,12 @@ var dat = {
 							"name": "agreementNo",
 							"jsonPath": "categories[0].agreementNo",
 							"label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-							"pattern": "",
-							"type": "number",
+							"pattern": "^.[a-zA-Z]{0,29}$",
+							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Name"
+							"patternErrMsg": "Enter Document Number"
 						}
 				]
 			}

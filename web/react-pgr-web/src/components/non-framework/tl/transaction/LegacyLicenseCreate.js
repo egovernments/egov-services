@@ -25,6 +25,9 @@ class LegacyLicenseCreate extends Component {
   }
   constructor(props) {
     super(props);
+    this.state = {
+      validityYear: ""
+    }
   }
 
   setLabelAndReturnRequired(configObject) {
@@ -598,6 +601,7 @@ class LegacyLicenseCreate extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`tl.create`];
 
+
       // if (property == "licenses[0].tradeCommencementDate") {
       //   console.log(new Date(e.target.value));
       //   var month = new Date(e.target.value).getMonth()+1;
@@ -606,26 +610,36 @@ class LegacyLicenseCreate extends Component {
       //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
       // }
 
-      if (property == "licenses[0].licenseValidFromDate") {
-      //   console.log(new Date(e.target.value));
-         var month = new Date(e.target.value).getFullYear();
 
-      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
-      //   console.log(date);
-      //   self.handleChange({target:{value:date}}, "licenses[0].licenseValidFromDate", false, "");
+    //   if (property == "licenses[0].subCategoryId") {
+    //   console.log(e.target.value);
+    //     Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value}).then(function(response)
+    //     {
+    //     var checkYear ;
+    //     console.log(checkYear);
+    //    self.handleChange({target:{value:response.categories[0].validityYears}}, , false, "");
+    //
+    //   },function(err) {
+    //       console.log(err);
+    //
+    //   });
+    // }
+
+
+      if (property == "licenses[0].licenseValidFromDate") {
+         var getStartYear = new Date(e.target.value).getFullYear();
        }
 
       var curDate = new Date();
       var currentDate = curDate.getFullYear();
       var fixedDate = curDate.getFullYear();
       var FeeDetails = [];
-      //var licenseValidFrom = newDate("licenses[0].licenseValidFromDate");
-      //var startYear = licenseValidFrom.getFullYear();
-      var startYear = month;
+      var startYear = getStartYear;
       var Validity = 2;
-      var v = "categories[0].validityYears";
 
-      for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
+
+      for(var i = startYear; i <= fixedDate; i = (i + self.state.validityYear)) {
+      //  for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
             if(i > (fixedDate - 6)){
             let feeDetails = {"financialYear": i + "-" + (i+1), "amount": "", "paid": false};
             FeeDetails.push(feeDetails)
@@ -650,14 +664,21 @@ this.props.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",fal
       //   console.log(date);
       //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
       // }
+
+
+
+
       if (property == "licenses[0].subCategoryId") {
 console.log(e.target.value);
-        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value}).then(function(response)
+        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
         {
           // handleChange (e, "" )
-          console.log(response.categories[0].validityYears);
+          console.log(response);
+          //console.log(response.categories[0].validityYears);
           self.handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears", false, "");
-
+          self.setState({
+            validityYear: response.categories[0].validityYears
+          })
           Api.commonApiPost("/tl-masters/uom/v1/_search",{"ids":response.categories[0].uomId}).then(function(uomResponse)
           {
             // handleChange (e, "" )
@@ -675,6 +696,11 @@ console.log(e.target.value);
 
         });
       }
+
+
+
+
+
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);

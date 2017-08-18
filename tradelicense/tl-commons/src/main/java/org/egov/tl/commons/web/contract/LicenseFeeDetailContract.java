@@ -29,8 +29,8 @@ public class LicenseFeeDetailContract {
 	@JsonProperty("licenseId")
 	private Long licenseId;
 
-	@NotEmpty(message="financialYear is required, Please enter valid financialYear")
-	@Length(min =1, max = 128,message="financialYear is required, Please enter valid financialYear")
+	@NotEmpty(message="{error.license.financialyear}")
+	@Length(min =1, max = 128,message="{error.license.financialyear}")
 	@JsonProperty("financialYear")
 	private String financialYear;
 

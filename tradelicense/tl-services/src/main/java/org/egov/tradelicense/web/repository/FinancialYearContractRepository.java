@@ -1,5 +1,7 @@
 package org.egov.tradelicense.web.repository;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
@@ -28,7 +30,7 @@ public class FinancialYearContractRepository {
 		this.restTemplate = restTemplate;
 	}
 
-	public FinancialYearContract findFinancialYearIdByDate(String tenantId, String date,
+	public FinancialYearContract findFinancialYearIdByDate(String tenantId, Long date,
 			RequestInfoWrapper requestInfoWrapper) {
 
 		String hostUrl = propertiesManger.getFinancialYearServiceHostName()
@@ -36,9 +38,10 @@ public class FinancialYearContractRepository {
 		String searchUrl = propertiesManger.getFinancialYearServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
+		String asOnDate = sf.format(new Date(date*1000));
 		if (date != null) {
-			content.append("asOnDate=" + date);
+			content.append("asOnDate=" + asOnDate);
 		}
 
 		if (tenantId != null) {

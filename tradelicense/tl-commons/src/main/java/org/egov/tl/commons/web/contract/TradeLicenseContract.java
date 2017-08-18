@@ -52,11 +52,9 @@ public class TradeLicenseContract {
 	@Length( min =4, max =20, message="oldLicenseNumber is required, Please enter valid Old License Number between  4-20 characters")
 	private String oldLicenseNumber;
 
-	@NotEmpty(message="applicationDate is required, Please enter valid date in dd/mm/yyyy")
-	@Pattern(regexp = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)", message="applicationDate is required, Please enter valid date in dd/mm/yyyy")
-	@Length( min =10, max =10, message="applicationDate is required, Please enter valid date in dd/mm/yyyy")
+	@NotNull(message="applicationDate is required, Please enter valid date in epoc")
 	@JsonProperty("applicationDate")
-	private String applicationDate;
+	private Long applicationDate;
 
 	@JsonProperty("adhaarNumber")
 	@Pattern(regexp = "[0-9]{12}", message = "Aadhaar Number is required , please enter 12 digits Aadhaar Number")
@@ -151,21 +149,16 @@ public class TradeLicenseContract {
 	@Length( min = 1, max = 1000)
 	private String remarks;
 
-	@NotEmpty(message="tradeCommencementDate is required, Please enter valid date in dd/mm/yyyy")
-	@Pattern(regexp = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)" , message="tradeCommencementDate is required, Please enter valid date in dd/mm/yyyy")
-	@Length( min =10, max =10)
+	@NotNull(message="tradeCommencementDate is required, Please enter valid date epoc")
 	@JsonProperty("tradeCommencementDate")
-	private String tradeCommencementDate;
+	private Long tradeCommencementDate;
 
-	@NotEmpty(message="licenseValidFromDate is required, Please enter valid date in  dd/mm/yyyy")
-	@Pattern(regexp = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)", message="licenseValidFromDate is required, Please enter valid date in  dd/mm/yyyy")
-	@Length( min =10, max =10)
+	@NotNull(message="licenseValidFromDate is required, Please enter valid date in  epoc")
 	@JsonProperty("licenseValidFromDate")
 	private String licenseValidFromDate;
 
 	@JsonProperty("agreementDate")
-	@Pattern(regexp = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)",message="agreementDate is required, Please enter valid date in dd/mm/yyyy")
-	private String agreementDate;
+	private Long agreementDate;
 
 	@JsonProperty("agreementNo")
 	@Length( min = 4, max = 128, message="Please enter valid agreementNo between 4-128 ")
@@ -183,7 +176,7 @@ public class TradeLicenseContract {
 	private Boolean active = true;
 
 	@JsonProperty("expiryDate")
-	private String expiryDate;
+	private Long expiryDate;
 
 	@JsonProperty("feeDetails")
 	@Valid

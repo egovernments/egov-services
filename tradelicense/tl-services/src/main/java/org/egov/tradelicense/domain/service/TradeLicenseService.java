@@ -1,6 +1,8 @@
 package org.egov.tradelicense.domain.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,7 +128,7 @@ public class TradeLicenseService {
 				if ((tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty())) {
 					throw new InvalidInputException("Agreement No is Required Please enter Valid Agreement No");
 				}
-				if (tradeLicense.getAgreementDate() == null || tradeLicense.getAgreementDate().trim().isEmpty()) {
+				if (tradeLicense.getAgreementDate() == null ) {
 					throw new InvalidInputException(
 							"Agreement Date is Required  Please enter valid date in dd/mm/yyyy");
 				}
@@ -278,18 +280,20 @@ public class TradeLicenseService {
 			// feeDetails Validation
 			if (tradeLicense.getFeeDetails() != null & tradeLicense.getFeeDetails().size() > 0) {
 
-				String validFrom = tradeLicense.getLicenseValidFromDate();
+				Long validFrom = tradeLicense.getLicenseValidFromDate();
 				Integer validPeriod = null;
 				String tenantId = tradeLicense.getTenantId();
 				if (tradeLicense.getValidityYears() != null) {
 					validPeriod = Integer.valueOf(tradeLicense.getValidityYears().toString());
 				}
 
-				String currenDate = TimeStampUtil.generateCurrentDate();
+				Long currenDate = (System.currentTimeMillis()/1000);
+				Calendar today = Calendar.getInstance();
+
 
 				if (validFrom != null && validPeriod != null) {
 
-					/*FinancialYearContract currentFYResponse = financialYearContractRepository
+					FinancialYearContract currentFYResponse = financialYearContractRepository
 							.findFinancialYearIdByDate(tenantId, currenDate, requestInfoWrapper);
 					FinancialYearContract licenseValidFYResponse = financialYearContractRepository
 							.findFinancialYearIdByDate(tenantId, validFrom, requestInfoWrapper);
@@ -345,11 +349,13 @@ public class TradeLicenseService {
 					for (int i = 0; i < actualFeeDetailCount; i++) {
 						Boolean isFYExists = false;
 						Integer feeYear = actualFeeDetailStartYear + i;
-						//form each fee detail start date and get the corresponding id 
-						actualFeeDetailStartDate = currenDate.substring(0, currenDate.lastIndexOf("/")+1);
-						actualFeeDetailStartDate = actualFeeDetailStartDate.concat(feeYear.toString());
+						//form each fee detail start date and get the corresponding id
+						today.add(Calendar.YEAR, 1);
+//						actualFeeDetailStartDate = currenDate.substring(0, currenDate.lastIndexOf("/")+1);
+//						actualFeeDetailStartDate = actualFeeDetailStartDate.concat(feeYear.toString());
+						
 						FinancialYearContract feeDetailFYResponse = financialYearContractRepository
-								.findFinancialYearIdByDate(tenantId, actualFeeDetailStartDate, requestInfoWrapper);
+								.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis()/1000), requestInfoWrapper);
 						if(feeDetailFYResponse != null){
 							for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
 								if (licenseFeeDetail.getFinancialYear()
@@ -366,7 +372,7 @@ public class TradeLicenseService {
 									"provided fee details are not valid, please provide valid fee details");
 						}
 						
-					}*/
+					}
 				}
 			}
 

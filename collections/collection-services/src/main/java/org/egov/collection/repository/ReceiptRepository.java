@@ -381,5 +381,22 @@ public class ReceiptRepository {
                 queryString, String.class, new Object[] { receiptHeader,tenantId });
         return !instrumentHeaders.isEmpty() ? instrumentRepository.searchInstruments(instrumentHeaders.get(0),tenantId,requestInfo) : null;
     }
+    
+    public boolean validateReceiptNumber(String receiptNumber, String tenantId){
+    	boolean isReceiptNumberValid = false;
+    	String query = receiptDetailQueryBuilder.searchReceiptOnRcptNo();
+    	Long id = null;
+    	try{
+    		id = jdbcTemplate.queryForObject(query, new Object[] { receiptNumber,tenantId }, Long.class);
+    	}catch(Exception e){
+    		isReceiptNumberValid = true;
+    		return isReceiptNumberValid;
+    	}
+    	if(null == id || 0L == id){
+        	isReceiptNumberValid = true;
+    		return isReceiptNumberValid;
+    	}
+    	return isReceiptNumberValid;
+    }
 
 }

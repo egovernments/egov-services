@@ -134,12 +134,18 @@ public class WaterConnectionRepository {
                 statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
                 statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatmentId());
                 statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
-                if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0)
+                if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0){
+                    waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.CREATED.name());
                     statement.setString(26, NewConnectionStatus.CREATED.name());
-                else if (waterConnectionRequest.getConnection().getIsLegacy())
+                }
+                else if (waterConnectionRequest.getConnection().getIsLegacy()){
+                    waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.SANCTIONED.name());
                     statement.setString(26, NewConnectionStatus.SANCTIONED.name());
-                else
+                }
+                else{
                     statement.setString(26, NewConnectionStatus.VERIFIED.name());
+                    waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.VERIFIED.name());
+                }
                 statement.setDouble(27, waterConnectionRequest.getConnection().getNumberOfFamily());
                 statement.setString(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
                 if (waterConnectionRequest.getConnection().getIsLegacy()

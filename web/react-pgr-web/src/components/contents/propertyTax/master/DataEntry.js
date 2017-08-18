@@ -372,7 +372,7 @@ dataEntryTax = () => {
 	var currentThis = this;
       var body = {
 			"properties": [{
-				"occupancyDate":"02/12/2016",
+				"occupancyDate":dataEntry.occupancyDate,
 				"tenantId": "default",
 				"oldUpicNumber": dataEntry.oldUpicNumber,
 				"vltUpicNumber": null,
@@ -423,8 +423,37 @@ dataEntryTax = () => {
 					"roofType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.roofType || null) : null),
 					"wallType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.wallType || null) : null),
 					"floors":dataEntry.floorsArr || null,
+					"factors": [{
+								"name": "TOILET",
+								"value": dataEntry.toiletFactor || null
+								},
+								{
+								"name": "ROAD",
+								"value": dataEntry.roadFactor || null
+								},
+								{
+								"name": "LIFT",
+								"value": dataEntry.liftFactor || null
+								},
+								{
+								"name": "PARKING",
+								"value": dataEntry.parkingFactor || null
+								}
+					],
 					"documents": [],
 					"stateId": null,
+					"assessmentDates": {
+						"name": "FIRSTASSESSMENT",
+						"date": "10/06/2017"
+					},
+					"builderDetails": {
+						"certificateNumber": dataEntry.certificateNumber || null,
+						"certificateCompletionDate": dataEntry.certificateCompletionDate || null,
+						"certificateReceiveDate": dataEntry.certificateReceivedDate || null,
+						"agencyName": dataEntry.agencyName || null,
+						"licenseType": dataEntry.licenseType || null,
+						"licenseNumber":dataEntry.licenseNumber || null,
+					},
 					"workFlowDetails": {
 						"department": dataEntry.workflowDepartment || null,
 						"designation":dataEntry.workflowDesignation || null,

@@ -18,7 +18,8 @@ const defaultState = {
   isSuccess: false,
   isError: false,
   isOwnerValid: false,
-  isFloorValid: false
+  isFloorValid: false,
+  noOfFloors: 0
 };
 
 
@@ -102,6 +103,22 @@ console.log('Here', validatePropertyOwner);
       errorText = "This field is required";
     }
   }
+  
+  if(!value.match(/[a-z]/i))  {
+	   if (value.match(/^\d+$/) && parseInt(value) > 0) {
+
+	  }else  {
+			validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
+			  return item != name
+			});
+	   
+			errorText = "Enter positive value";
+		  
+	  }
+  }
+  
+ 
+  
   if (pattern.toString().length > 0) {
     if (value !== "") {
       if (pattern.test(value)) {
@@ -262,7 +279,14 @@ export default(state = defaultState, action) => {
 			...state
 		}
     break;
-
+	
+	case "FLOOR_NUMBERS":
+		return {
+			...state,
+			noOfFloors: action.noOfFloors
+		}
+		
+	 break;
 
 	case "ADD_FLOOR_REQUIRED" :
 		var b = state.validatePropertyFloor.required.required.indexOf(action.property);
@@ -410,6 +434,14 @@ export default(state = defaultState, action) => {
 		return {
 			...state,
 			validatePropertyFloor: action.validatePropertyFloor
+		}
+		break;
+		
+	case "SET_FLOOR_NUMBER":
+		console.log('noOfFloors', action.noOfFloors)
+		return {
+			...state,
+			noOfFloors: action.noOfFloors
 		}
 
     case "HANDLE_CHANGE":

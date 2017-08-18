@@ -356,20 +356,20 @@ constructor(props) {
                             }
                             }
 							handleChangeOwner(e,"owner", "isPrimaryOwner", false,'')
-                           // handleChangeNextOne(e,"owner", "isPrimaryOwner", false,'')
                             }}
-                          >
+							>
                             <RadioButton
                               value="PrimaryOwner"
                               label={translate('pt.create.groups.ownerDetails.fields.primaryOwner')}
                               style={styles.radioButton}
-                              className="col-md-6"
+                              className="col-md-6 row"
                             />
                             <RadioButton
                               value="SecondaryOwner"
                               label={translate('pt.create.groups.ownerDetails.fields.secondaryOwner')}
                               style={styles.radioButton}
                               className="col-md-6"
+							  style={{marginLeft:30}}
                             />
                         </RadioButtonGroup>
                         </Col>

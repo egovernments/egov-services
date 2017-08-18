@@ -297,7 +297,7 @@ var dat = {
               "name": "tradeValueForUOM",
               "jsonPath": "licenses[0].quantity",
               "label": "tl.create.licenses.groups.TradeDetails.tradeValueForUOM",
-              "pattern": "",
+              "pattern": "^[0-9]+(\.[0-9]{1,2})?$",
               "type": "number",
               "isRequired": true,
               "isDisabled": false,

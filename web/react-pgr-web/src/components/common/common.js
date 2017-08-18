@@ -704,9 +704,9 @@ var localization_EN_Data = {
   "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
   "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
   "tl.create.licenses.groups.FeeDetails": "Fee Details",
-  "tl.create.licenses.groups.FeeDetails.FinancialYear": "Financial Year",
-  "tl.create.licenses.groups.FeeDetails.Amount": "Amount",
-  "tl.create.licenses.groups.FeeDetails.IsPaid": "Is Paid",
+  "tl.create.license.table.financialYear": "Financial Year",
+  "tl.create.license.table.amount": "Amount",
+  "tl.create.license.table.isPaid": "Is Paid",
 
   "tl.search.groups.license.searchTradeLicense": "Search Trade License",
   "tl.search.groups.applicationNumber": "Application Number",

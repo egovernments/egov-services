@@ -161,8 +161,17 @@ class LegacyLicenseCreate extends Component {
                   var currentDate = curDate.getFullYear();
                   var fixedDate = curDate.getFullYear();
                   var FeeDetails = [];
+                  //var licenseValidFrom = newDate("licenses[0].licenseValidFromDate");
+                  //var startYear = licenseValidFrom.getFullYear();
                   var startYear = 2009;
                   var Validity = 2;
+                  var v = "categories[0].validityYears";
+                  // if(v > 0){
+                  //   var Validity = v;
+                  // }
+                  // else{
+                  //   Validity = 1;
+                  // }
                   for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
                         if(i > (fixedDate - 6)){
                         let feeDetails = {"financialYear": i + "-" + (i+1), "amount": "", "paid": false};
@@ -620,6 +629,29 @@ class LegacyLicenseCreate extends Component {
       //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
       // }
 
+      //if (property == "licenses[0].licenseValidFromDate") {
+      //   console.log(new Date(e.target.value));
+      //   var month = new Date(e.target.value).getMonth()+1;
+      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
+      //   console.log(date);
+      //   self.handleChange({target:{value:date}}, "licenses[0].licenseValidFromDate", false, "");
+      // }
+
+      //if (property == "licenses[0].agreementDate") {
+      //   console.log(new Date(e.target.value));
+      //   var month = new Date(e.target.value).getMonth()+1;
+      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
+      //   console.log(date);
+      //   self.handleChange({target:{value:date}}, "licenses[0].agreementDate", false, "");
+      // }
+
+      //if (property == "licenses[0].tradeCommencementDate") {
+      //   console.log(new Date(e.target.value));
+      //   var month = new Date(e.target.value).getMonth()+1;
+      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
+      //   console.log(date);
+      //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
+      // }
       if (property == "licenses[0].subCategoryId") {
 console.log(e.target.value);
         Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value}).then(function(response)

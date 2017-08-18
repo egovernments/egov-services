@@ -109,7 +109,8 @@ let menuConvention={
   "Trade License.License Masters.License Sub Category.CreateTLSUBCATEGORY": "/create/tl/CreateLicenseSubCategory",
   "Trade License.License Masters.License Sub Category.ViewTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/view",
   "Trade License.License Masters.License Sub Category.ModifyTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/update",
-  "Trade License.License Transactions.CreateLegacyLicense": "/create/tl/CreateLegacyLicense",
+  "Trade License.License Transactions.CreateLegacyLicense": "/non-framework/tl/transaction/LegacyLicenseCreate",
+  "Trade License.License Search.SearchLicense": "/search/tl/CreateLegacyLicense/view",
 
 
   "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy",

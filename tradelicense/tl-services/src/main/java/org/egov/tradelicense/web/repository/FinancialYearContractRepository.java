@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.common.domain.exception.InvalidInputException;
 import org.egov.tradelicense.web.contract.FinancialYearContract;
 import org.egov.tradelicense.web.requests.FinancialYearContractResponse;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
@@ -30,7 +31,7 @@ public class FinancialYearContractRepository {
 	}
 
 	public FinancialYearContract findFinancialYearIdByDate(String tenantId, Long date,
-			RequestInfoWrapper requestInfoWrapper) {
+			RequestInfoWrapper requestInfoWrapper)  {
 
 		String hostUrl = propertiesManger.getFinancialYearServiceHostName()
 				+ propertiesManger.getFinancialYearServiceBasePath();
@@ -63,7 +64,7 @@ public class FinancialYearContractRepository {
 
 			return financialYearContractResponse.getFinancialYears().get(0);
 		} else {
-			return null;
+			throw new InvalidInputException(propertiesManger.getEndPointError());
 		}
 
 	}

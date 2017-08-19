@@ -83,6 +83,8 @@ public class SourceTypeRepository {
                     new MapSqlParameterSource("id", Long.valueOf(waterSource.getCode())).addValue("code", waterSource.getCode())
                             .addValue("name", waterSource.getName()).addValue("description", waterSource.getDescription())
                             .addValue("active", waterSource.getActive())
+                            .addValue("sourcecapacity", waterSource.getSourceCapacity())
+                            .addValue("ulbreserved", waterSource.getUlbReserved())
                             .addValue("createdby", Long.valueOf(sourceTypeRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifiedby", Long.valueOf(sourceTypeRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("createddate", new Date(new java.util.Date().getTime()))
@@ -104,8 +106,11 @@ public class SourceTypeRepository {
                     new MapSqlParameterSource("name", waterSource.getName())
                             .addValue("description", waterSource.getDescription())
                             .addValue("active", waterSource.getActive())
+                            .addValue("sourcecapacity", waterSource.getSourceCapacity())
+                            .addValue("ulbreserved", waterSource.getUlbReserved())
                             .addValue("lastmodifiedby", Long.valueOf(sourceTypeRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("code", waterSource.getCode())
                             .getValues());
         namedParameterJdbcTemplate.batchUpdate(waterSourceUpdate, batchValues.toArray(new Map[waterSourceList.size()]));
         return sourceTypeRequest;

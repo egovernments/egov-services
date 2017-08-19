@@ -56,6 +56,8 @@ public class SourceTypeRowMapper implements RowMapper<SourceType> {
         waterSourceType.setName(rs.getString("watersource_name"));
         waterSourceType.setDescription(rs.getString("watersource_description"));
         waterSourceType.setActive(rs.getBoolean("watersource_active"));
+        waterSourceType.setSourceCapacity(rs.getDouble("watersource_sourcecapacity"));
+        waterSourceType.setUlbReserved(rs.getDouble("watersource_ulbreserved"));
         waterSourceType.setTenantId(rs.getString("watersource_tenantId"));
         return waterSourceType;
     }

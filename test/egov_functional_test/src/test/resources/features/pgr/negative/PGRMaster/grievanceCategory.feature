@@ -7,6 +7,7 @@ And grievanceAdmin on Login screen clicks on signIn
 And grievanceAdmin on home screen clicks on menu
 And grievanceAdmin on home screen types on applicationSearchBox value Create Category
 And grievanceAdmin on home screen clicks on applicationLink
+
 And grievanceAdmin on createGrievanceCategory screen types on categoryName value Bangalore City Problems
 And grievanceAdmin on createGrievanceCategory screen types on categoryCode value BCPS
 And grievanceAdmin on createGrievanceCategory screen types on categoryDescription value Bangalore City Problems

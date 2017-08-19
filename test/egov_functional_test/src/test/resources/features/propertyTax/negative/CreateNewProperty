@@ -1,0 +1,76 @@
+Feature: Property Tax
+
+  Scenario: CreateNewProperty
+
+    Given Intent: LoginIntentTest
+    And user on home screen clicks on menu
+    And user on home screen type on applicationSearchBox value Create New Property
+    And user on home screen click on ApplicationLink
+
+    And user on createnewproperty screen performs following actions
+
+     # Owner Details block on Create New Property Screen
+
+      | types | aadhaarnumber         | abc123   | Invalid field data     |
+      | types | aadhaarnumber         | @#$%^*&* | Invalid field data     |
+      | types | aadhaarnumber         | 12345    | Invalid field data     |
+      | types | aadhaarnumber         |          | This field is required |
+      | types | mobilenumber          | abc      | Invalid field data     |
+      | types | mobilenumber          | @@$$%^^  | Invalid field data     |
+      | types | mobilenumber          | 12345    | Invalid field data     |
+      | types | mobilenumber          |          | This field is required |
+      | types | ownername             |          | This field is required |
+      | select| gender                |          | This field is required |
+      | types | email                 |   ''     | Invalid field data     |
+      | types | email                 | abcd     | Invalid field data     |
+      | types | email                 | 1234     | Invalid field data     |
+      | types | email                 | @#$%     | Invalid field data     |
+      | types | pan                   | abcd     | Invalid field data     |
+      | types | pan                   | 1234     | Invalid field data     |
+      | types | pan                   | @@@$#    | Invalid field data     |
+      | types | pan                   | ''       | Invalid field data     |
+      | types | percentage of ownership| 123     | Invalid field data     |
+      | types | percentage of ownership| ABC     | Invalid field data     |
+      | types | percentage of ownership| 150     | Invalid field data     |
+      | types | percentage of ownership| @#$%    | Invalid field data     |
+
+    And user on createnewproperty screen performs following actions
+
+       # Property Address Details block on Create New Property Screen
+
+      | types | reference number       | 123     | Invalid field data     |
+      | types | reference number       | abc     | Invalid field data     |
+      | types | reference number       | ''      | Invalid field data     |
+      | types | doorno                 | abc     | Invalid field data     |
+      | types | doorno                 | 12345678978 | Invalid field data     |
+      | types | doorno                 |             | This field is required |
+      | select | locality               |             | This field is required |
+      | select | Election ward          |             | This field is required |
+      | select | Zone no                |             | This field is required |
+      | select | ward no                |             | This field is required |
+      | select | Election ward          |             | This field is required |
+      | types  | pin                    | abc         | Invalid field data     |
+      | types  | pin                    | 123         | Invalid field data     |
+      | types  | pin                    | @#$         | Invalid field data     |
+      | select | totalfloor             |             | This field is required |
+
+    And user on createnewproperty screen performs following actions
+
+     # Assessment Details block on Create New Property Screen
+
+      | select | reasonforcreation      |             | This field is required |
+      | select | propertytype           |             | This field is required |
+      | select | usagetype              |             | This field is required |
+      | types  | totalarea              | @#$         | Invalid field data     |
+      | types  | totalarea              | abc         | Invalid field data     |
+      | types  | totalarea              |             | This field is required |
+      | types  | sequenceno             | abc         |  Invalid field data    |
+      | types  | sequenceno             | @#$$        | Invalid field data     |
+      | types  | sequenceno             |             | This field is required |
+
+
+
+
+
+
+

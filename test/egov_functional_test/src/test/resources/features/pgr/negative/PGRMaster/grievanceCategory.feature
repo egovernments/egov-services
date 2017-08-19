@@ -1,3 +1,5 @@
+Feature: Category Master
+
 Scenario: Create Grievance Category with already existing Name
 Given grievanceAdmin on Login screen types on username value narasappa
 And grievanceAdmin on Login screen types on password value demo
@@ -77,7 +79,7 @@ And grievanceAdmin on UpdateGrievanceCategory screen verifies validationMSG has 
 And Intent:LogoutIntentTest
 
 
-Modify Grievance Category field validation
+  Scenario: Modify Grievance Category field validation
 Given grievanceAdmin on Login screen types on username value narasappa
 And grievanceAdmin on Login screen types on password value demo
 And grievanceAdmin on Login screen clicks on signIn

@@ -1,3 +1,6 @@
+Feature: Grievance Type
+
+
 Scenario: Create Grievance Type with already existing name
 
 Given grievanceAdmin on Login screen types on username value narasappa

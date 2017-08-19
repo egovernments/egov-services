@@ -77,7 +77,7 @@ ReportDefinitions:
   - name: complainttype
     label: reports.pgr.complainttype
     type: singlevaluelist
-    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default&keyword=complaint|$..serviceCode|$..serviceName
+    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default&keywords=complaint|$..serviceCode|$..serviceName
     source: seva
     isMandatory: true
   query: SELECT ctype.name,
@@ -1555,7 +1555,7 @@ ReportDefinitions:
   - name: complainttype
     label: reports.pgr.complainttype
     type: url
-    pattern: /pgr-master/service/v1/_search?tenantId=default&categoryId={complaintcategorytype}&keyword=complaint|$..serviceCode|$..serviceName
+    pattern: /pgr-master/service/v1/_search?tenantId=default&categoryId={complaintcategorytype}&keywords=complaint|$..serviceCode|$..serviceName
     source: seva
     isMandatory: false
     searchClause: and ct.code=$complainttype 

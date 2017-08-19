@@ -13,6 +13,11 @@
 .iframe-parent{
   overflow:scroll !important;overflow-x: hidden !important;-webkit-overflow-scrolling:touch !important;
 }
+
+.iframe-parent.no-overflow{
+  overflow: hidden !important;
+}
+
 html,
 body {
   margin: 0;
@@ -1596,7 +1601,7 @@ strong {
 .g-recaptcha div {
   margin: auto;
 }
-.panel-primary {
+/*.panel-primary {
   border-color: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   padding-bottom: 15px;
@@ -1635,7 +1640,7 @@ strong {
   color: #fff;
   width: 20px;
   padding: 4px;
-}
+}*/
 .panel-primary .panel-body .dynamic-span span,
 .panel-primary .panel-body .dynamic-span span label {
   padding: 0 5px;
@@ -2005,7 +2010,7 @@ a.colorblue
     border-right: 8px solid transparent;
     border-top: 8px solid #f2851f;
     margin-left: 20%;
-    background: transparent; 
+    background: transparent;
 }
 
 .page-container .nav-tabs.arrow-tab li > a
@@ -2015,7 +2020,7 @@ a.colorblue
 
 .page-container .nav-tabs.arrow-tab li.active > a:first-of-type, .page-container .nav-tabs.arrow-tab li.active > a:first-of-type:focus, .page-container .nav-tabs.arrow-tab li.active > a:first-of-type:hover, .page-container .nav-tabs.arrow-tab li.active > a:first-of-type:active {
     background: #f2851f;
-    color:white; 
+    color:white;
 }
 
 .bg-transparent

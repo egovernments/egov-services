@@ -13,6 +13,7 @@ Feature: Routing of complaint to particular employee
     And grievanceAdmin on createRouter screen types on boundary suggestion box with value election ward no 1
     And grievanceAdmin on createRouter screen types on position suggestion box with value Acc_Senior Account_1
     And grievanceAdmin on createRouter screen clicks on create
+    And grievanceAdmin on createRouter screen verifies successMSg has visible value Success
     And grievanceAdmin on home screen clicks on menu
     And grievanceAdmin on home screen types on applicationSearchBox value View Router
     And grievanceAdmin on home screen clicks on applicationLink
@@ -20,3 +21,35 @@ Feature: Routing of complaint to particular employee
     And grievanceAdmin on viewRouter screen clicks on search
     And grievanceAdmin on viewRouter screen verifies grievanceTypeList has visible value Unneccessary Traffic Fines
     And Intent:LogoutIntentTest
+
+  Scenario: Update Router with position for particular complaint type and ward
+
+    Given grievanceAdmin on Login screen types on username value narasappa
+    And grievanceAdmin on Login screen types on password value demo
+    And grievanceAdmin on Login screen clicks on signIn
+    And grievanceAdmin on home screen clicks on menu
+    And grievanceAdmin on home screen types on applicationSearchBox value Update Router
+    And grievanceAdmin on home screen clicks on applicationLink
+    And grievanceAdmin on SearchGrievanceRouter screen types on grievanceType suggestion box with value Unneccessary Traffic Fines
+    And grievanceAdmin on SearchGrievanceRouter screen selects boundaryType with value as Ward
+    And grievanceAdmin on SearchGrievanceRouter screen types on boundary suggestion box with value Election Ward No 1
+    And grievanceAdmin on SearchGrievanceRouter screen clicks on search
+    And grievanceAdmin on SearchGrievanceRouter screen clicks on grievanceTypeInSearchResults
+    And grievanceAdmin on editGrievanceRouter screen types on grievanceType suggestion box with value ENG_Junior Assistant_1
+    And grievanceAdmin on editGrievanceRouter screen clicks on update
+    And grievanceAdmin on editGrievanceRouter screen verifies successMSG has visible value Success
+    And grievanceAdmin on editGrievanceRouter screen clicks on CLOSE
+    And grievanceAdmin on home screen clicks on menu
+    And grievanceAdmin on home screen types on applicationSearchBox value Update Router
+    And grievanceAdmin on home screen clicks on applicationLink
+    And grievanceAdmin on SearchGrievanceRouter screen types on grievanceType suggestion box with value Unneccessary Traffic Fines
+    And grievanceAdmin on SearchGrievanceRouter screen selects boundaryType with value as Ward
+    And grievanceAdmin on SearchGrievanceRouter screen types on boundary suggestion box with value Election Ward No 1
+    And grievanceAdmin on SearchGrievanceRouter screen clicks on search
+    And grievanceAdmin on SearchGrievanceRouter screen verifies searchResultsPosition has visible value ENG_Junior Assistant_1
+    And Intent:LogoutIntentTest
+
+
+
+
+

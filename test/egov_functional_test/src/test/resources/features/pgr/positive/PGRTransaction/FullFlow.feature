@@ -6,14 +6,14 @@ Feature: PGR Full Flow
     Given grievanceAdmin on Login screen types on username value narasappa
     And grievanceAdmin on Login screen types on password value demo
     And grievanceAdmin on Login screen clicks on signIn
-    And grievanceAdmin on home screen clicks on menu
-    And grievanceAdmin on home screen types on applicationSearchBox value Create Category
-    And grievanceAdmin on home screen clicks on applicationLink
-    And grievanceAdmin on Grievance screen types on categoryName value New Grievance Category1
-    And grievanceAdmin on Grievance screen types on categoryCode value NGC1
+    And user on Home screen clicks on menu
+    And user on Home screen types on menuSearch value Create Category
+    And user on Home screen clicks on firstMenuItem
+    And grievanceAdmin on Grievance screen types on categoryName value New Grievance Category for Testing new
+    And grievanceAdmin on Grievance screen types on categoryCode value NGCT1
     And grievanceAdmin on Grievance screen types on categoryDescription value New Grievance Category1
     And grievanceAdmin on Grievance screen clicks on createCategory
-#    And grievanceAdmin on Grievance screen verifies successMSG has visible value Success
+    And grievanceAdmin on Grievance screen verifies createSuccessMSG has visible value Success
 #    And grievanceAdmin on Grievance screen clicks on closeButton
 #    And grievanceAdmin on home screen clicks on menu
 #    And grievanceAdmin on home screen types on applicationSearchBox value Create Grievance Type

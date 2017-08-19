@@ -15,3 +15,6 @@ And grievanceAdmin on createRouter screen verifies boundaryValidationMSG has vis
 And grievanceAdmin on createRouter screen types on position suggestion box with value Acc_Senior Account_1
 And grievanceAdmin on createRouter screen verifies positionValidationMSG has visible value This field is required
 
+
+Scenario: Update Router
+

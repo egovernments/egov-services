@@ -151,6 +151,7 @@
         "waitFor":"visibility"
         },
         {
+<<<<<<< HEAD
         "elementName":"forwardDepartment",
         "identifier":"css",
         "value":"div[id^='undefined-undefined-ForwardtoDepartment']",
@@ -166,6 +167,17 @@
         "elementName":"forwardPosition",
         "identifier":"css",
         "value":"div[id^='undefined-undefined-ForwardtoPosition']",
+=======
+        "elementName":"createCategory",
+        "identifier":"css",
+        "value":"button[type='submit']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"createSuccessMSG",
+        "identifier":"xpath",
+        "value":"//*[text()='Success']",
+>>>>>>> PGR Test cases for Receiving Mode
         "waitFor":"visibility"
         }
     ]

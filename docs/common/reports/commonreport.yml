@@ -3,7 +3,7 @@ ReportDefinitions:
 - reportName: CommonInbox
   summary: Common Inbox
   version: 1.0.0
-  moduleName: pgr
+  moduleName: common
   sourceColumns:
   - name: createddate
     label: reports.common.createddate

@@ -165,12 +165,11 @@ public class GenericSteps extends BaseSteps {
                 scenarioContext.setUser(webElement.getText().split("::")[0]);
                 break;
         }
-        System.out.println(scenarioContext.getApplicationNumber());
-        System.out.println(scenarioContext.getUser());
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen\\s+(\\w+)\\son\\s+(\\w+)\\s+with\\s+above\\s+(.*)$")
     public void userOnScreenTypesOnApplicationSearchWithAboveApplicationNumber(String consumer, String screen, String action, String element, String value) throws Throwable {
+
         if (value.equals("applicationNumber"))
             value = scenarioContext.getApplicationNumber();
         else
@@ -202,6 +201,7 @@ public class GenericSteps extends BaseSteps {
 
     @And("^(\\w+)\\s+on (\\w+) screen selects (\\w+) with value as (.*)$")
     public void selectsDropdownWithValue(String consumer, String screen, String element, String value) throws Throwable {
+        TimeUnit.SECONDS.sleep(1);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
         pageStore.get(GenericPage.class).clickOnDropdown(webElement, value);
     }

@@ -151,9 +151,22 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"createCategory",
-        "identifier":"xpath",
-        "value":"",
+        "elementName":"forwardDepartment",
+        "identifier":"css",
+        "value":"div[id^='undefined-undefined-ForwardtoDepartment']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"forwardDesignation",
+        "identifier":"css",
+        "value":"div[id^='undefined-undefined-ForwardtoDesignation']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"forwardPosition",
+        "identifier":"css",
+        "value":"div[id^='undefined-undefined-ForwardtoPosition']",
+        "waitFor":"visibility"
         }
     ]
 }

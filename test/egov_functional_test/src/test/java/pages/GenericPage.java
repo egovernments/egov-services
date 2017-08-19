@@ -154,7 +154,7 @@ public class GenericPage extends BasePage {
             String element = "//*[text()='" + value + "']";
             WebElement element1 = driver.findElement(By.xpath(element));
             clickOnButton(element1, driver);
-        } while (!(value.equals(webElement.getText())));
+        } while (!(value.equals(driver.findElement(By.xpath("//*[text()='" + value + "']")).getText())));
     }
 
     public void actionOnSuggestionBox(WebElement webElement, String value) {

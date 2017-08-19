@@ -25,7 +25,7 @@
             "waitFor":"visibility"
         },
         {
-        "elementName":"SignInText",
+        "elementName":"signInText",
         "identifier":"xpath",
         "value":"//h4[text()='Sign In']",
         "waitFor":"visibility"

@@ -259,11 +259,12 @@ public interface Masterservice {
 	 * @param orderNumber
 	 * @param pageSize
 	 * @param offSet
+	 * @param String parent
 	 * @return
 	 */
 	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet);
+			Integer offSet, String parent);
 
 	/**
 	 * Description : This method will use for creating Occuapancy

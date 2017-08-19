@@ -520,6 +520,18 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(propertyTypeRequest.getRequestInfo());
 
+			if (propertyType.getParent() != null) {
+				if (!propertyType.getParent().isEmpty()) {
+					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
+							propertyType.getTenantId(), propertyType.getParent(),
+							ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
+
+					if (!isParentCodeExists)
+						throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+								propertyTypeRequest.getRequestInfo());
+				}
+			}
+
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(propertyType);
 			propertyType.setAuditDetails(auditDetails);
@@ -553,6 +565,18 @@ public class MasterServiceImpl implements Masterservice {
 
 			if (isExists)
 				throw new DuplicateIdException(propertyTypeRequest.getRequestInfo());
+			
+			if (propertyType.getParent() != null) {
+				if (!propertyType.getParent().isEmpty()) {
+					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
+							propertyType.getTenantId(), propertyType.getParent(),
+							ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
+
+					if (!isParentCodeExists)
+						throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+								propertyTypeRequest.getRequestInfo());
+				}
+			}
 
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(propertyType);
@@ -570,13 +594,13 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet) {
+			Integer offSet, String parent) {
 		PropertyTypeResponse propertyTypeResponse = new PropertyTypeResponse();
 		List<PropertyType> propertyTypes = null;
 		try {
 
 			propertyTypes = propertyMasterRepository.searchPropertyType(requestInfo, tenantId, ids, name, code,
-					nameLocal, active, orderNumber, pageSize, offSet);
+					nameLocal, active, orderNumber, pageSize, offSet, parent);
 		} catch (Exception e) {
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
@@ -1302,7 +1326,7 @@ public class MasterServiceImpl implements Masterservice {
 					}
 				}
 				validateUnitData(tenantId, unit, requestInfo);
-				
+
 			}
 		} else {
 			throw new InvalidCodeException(propertiesManager.getInvalidFloorNo(), requestInfo);

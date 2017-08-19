@@ -365,9 +365,9 @@ public class PropertyMasterController {
 			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
 			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
 			@RequestParam(required = false) Integer orderNumber, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
+			@RequestParam(required = false) Integer offSet, @RequestParam(required = false) String parent) throws Exception {
 		return masterService.getPropertyTypeMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal,
-				active, orderNumber, pageSize, offSet);
+				active, orderNumber, pageSize, offSet, parent);
 
 	}
 

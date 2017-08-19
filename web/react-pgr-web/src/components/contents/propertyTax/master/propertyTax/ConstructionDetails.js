@@ -190,10 +190,14 @@ handleDepartment = (e) => {
 
 } 
 
-formatDate = (date) => {
-	return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+formatDate(date){
+	
+	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+	var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+	return day + "/" + month + "/" + date.getFullYear();
 }
-  
+
   render() {
 
     const renderOption = function(list,listName="") {
@@ -253,11 +257,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')+' *'}
 												  errorText={fieldErrors.currentAssessmentDate ? (fieldErrors.currentAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.currentAssessmentDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+														var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 										
 													handleChange(e,"currentAssessmentDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -273,11 +279,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')+' *'}
 												  errorText={fieldErrors.firstAssessmentDate ? (fieldErrors.firstAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.firstAssessmentDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+													  var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+													  var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 									
 													handleChange(e,"firstAssessmentDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -293,11 +301,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}
 												  errorText={fieldErrors.revisedAssessmentDate ? (fieldErrors.revisedAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.revisedAssessmentDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+													  var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 									
 													handleChange(e,"revisedAssessmentDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -313,11 +323,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')+' *'}
 												  errorText={fieldErrors.lastAssessmentDate ? (fieldErrors.lastAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.lastAssessmentDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+													  var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 									
 													handleChange(e,"lastAssessmentDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -333,11 +345,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.orderDate')}
 												  errorText={fieldErrors.orderDate ? (fieldErrors.orderDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.orderDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+													  var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 									
 													handleChange(e,"orderDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

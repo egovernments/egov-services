@@ -90,12 +90,12 @@ chip: {
 };
 
 
-class Acknowledgement extends Component {
+class InboxAcknowledgement extends Component {
 
   constructor(props) {
     super(props);
     this.state= {
-          ack:'',
+          status:'',
     }
   } 
 
@@ -104,7 +104,7 @@ class Acknowledgement extends Component {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
 	this.setState({
-		ack : localStorage['ack']
+		status : localStorage['inboxStatus'] || ''
 	});
   }  
 
@@ -114,7 +114,7 @@ class Acknowledgement extends Component {
 
 
     let {
-      acknowledgement
+      InboxAcknowledgement
     } = this.props;
 
     let cThis = this;
@@ -131,7 +131,7 @@ class Acknowledgement extends Component {
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center'}}>
 											<h3>Application Submitted</h3>
-											Your new property application has been submitted : <span style={{fontWeight:500}}>{this.state.ack}</span>
+											{this.state.status} Successfully
 										</Col>
 									  </Row>
 									</Col>
@@ -145,13 +145,13 @@ class Acknowledgement extends Component {
 }
 
 const mapStateToProps = state => ({
-  acknowledgement:state.form.form,
+  InboxAcknowledgement:state.form.form,
 });
 
 const mapDispatchToProps = dispatch => ({
   
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Acknowledgement);
+export default connect(mapStateToProps, mapDispatchToProps)(InboxAcknowledgement);
 
 

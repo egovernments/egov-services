@@ -195,9 +195,7 @@ class FloorDetails extends Component {
 		
 		var allFloors = this.state.floorNumber;
 	  
-	    var allRooms = floorDetails.floors;
-	
-		
+	    var allRooms = floorDetails.floors;		
 		
 		if(!allRooms){
 			return false;
@@ -205,6 +203,9 @@ class FloorDetails extends Component {
 		
 		if(allRooms) {
 			for(var i = 0; i<allRooms.length;i++){
+			if(!allRooms[i].hasOwnProperty('isAuthorised')){
+					allRooms[i].isAuthorised = true;
+			}	
 			if(allRooms[i].isStructured == 'YES'){
 				allRooms[i].isStructured = true;
 			} else {
@@ -333,7 +334,11 @@ class FloorDetails extends Component {
   }
   
 formatDate(date){
-	return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+	
+	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+	var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+	return day + "/" + month + "/" + date.getFullYear();
 }
 
 getSmallestDate = (DateArray) => {
@@ -348,12 +353,16 @@ getSmallestDate = (DateArray) => {
 			if(TempDate < SmallestDate)
 			SmallestDate  = TempDate ;
 		}
+		
+		var date = (new Date(SmallestDate).getDate() < 10) ? ('0'+new Date(SmallestDate).getDate()) : new Date(SmallestDate).getDate();
+		var month = ((new Date(SmallestDate).getMonth() + 1)<10) ? ('0'+(new Date(SmallestDate).getMonth() + 1)) : (new Date(SmallestDate).getMonth() + 1);
+		
 		var e = {
 			target: {
-				value: new Date(SmallestDate).getDate() + "/" + (new Date(SmallestDate).getMonth() + 1) + "/" + new Date(SmallestDate).getFullYear()
+				value: date + "/" + month + "/" + new Date(SmallestDate).getFullYear()
 			}
 		}
-		
+				
 		handleChange(e, 'occupancyDate', false, '');
     return SmallestDate;
 }
@@ -565,7 +574,6 @@ getFloors = () => {
 				let {calcAssessableArea, handleAge, checkFloors} = this;
 		let cThis = this;
 		
-		console.log(floorDetails);
 	   return(
 			
 			<Card className="uiCard">
@@ -810,11 +818,11 @@ getFloors = () => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupierName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupierName}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupierName : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" , "occupierName", false, "")}}
+														  onChange={(e) => {handleChangeNextOne(e,"floor" , "occupierName", false, /^[a-zA-Z,\s]+$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={32}
+														  maxLength={4000}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
@@ -828,6 +836,19 @@ getFloors = () => {
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.annualRent ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.annualRent}</span>:""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.annualRent : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" , "annualRent", false, /^\d{3,64}$/g)}}
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  maxLength={9}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														/>
+													</Col>}
+													{window.location.href.match('dataEntry') && <Col xs={12} md={3} sm={6}>
+														<TextField  className="fullWidth"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.Arv')}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.arv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.arv}</span>:"") : ""}
+														  value={floorDetails.floor ? floorDetails.floor.arv : ""}
+														  onChange={(e) => {handleChangeNextOne(e,"floor" , "arv", false, /^\d{9}$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -852,15 +873,19 @@ getFloors = () => {
 														<DatePicker  className="fullWidth datepicker"
 														  formatDate={(date)=> this.formatDate(date)}
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :""): ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.constStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constStartDate}</span> :""): ""}
 														  onChange={(event,date) => {
+																var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+																var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+
 															  var e = {
 																target:{
-																	value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+																	value: day + "/" + month + "/" + date.getFullYear()
 																}
 															  }
 															handleAge(date.getFullYear());
-															handleChangeFloor(e,"floor" ,"constructionStartDate", false, "")}}
+															handleChangeFloor(e,"floor" ,"constStartDate", false, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -874,9 +899,13 @@ getFloors = () => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionEndDate')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
 														  onChange={(event,date) => {
+															  	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+																var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+
 															  var e = {
 																target:{
-																	value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+																	value: day + "/" + month + "/" + date.getFullYear()
 																}
 															  }
 															handleAge(date.getFullYear());
@@ -894,9 +923,13 @@ getFloors = () => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.effectiveFromDate')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> : "") : ""}
 														  onChange={(event,date) => {
+															  	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+																var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+
 															  var e = {
 																target:{
-																	value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+																	value: day + "/" + month + "/" + date.getFullYear()
 																}
 															  }
 															  handleChangeFloor(e,"floor" ,"occupancyDate", true, "")}}
@@ -1066,25 +1099,29 @@ getFloors = () => {
 													</Col>
 												
 													<Col xs={12} md={3} sm={6}>
-														<TextField  className="fullWidth"
-														  floatingLabelText="Building Permission number"
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.bpaNo? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaNo}</span>:"" ): ""}
-														  value={floorDetails.floor ? floorDetails.floor.bpaNo : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"bpaNo", false, /^[a-z0-9]+$/i)}}
-														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
-														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={15}
-														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														/>
-													</Col>
-													<Col xs={12} md={6}>
+														  <Checkbox
+															label={translate('pt.create.groups.assessmentDetails.fields.isLegal')+' *'}
+															style={styles.checkbox}
+															defaultChecked ={true}
+															onCheck = {(e, i, v) => {
+															  var e = {
+																target: {
+																  value:i
+																}
+															  }
+															  handleChangeNextOne(e, "floor","isAuthorised", false, '')
+															}}
+
+														  />
+													  </Col>
+													<Col xs={12} md={12} >
 														{this.state.negativeValue && <p>Exempted area should not be greater than Carpet area</p>}
 														{this.state.newFloorError && <p>You cannot select more than {this.props.noOfFloors} Floors</p>}
 
 													</Col>
+												
 													
-													<Col xs={12} md={6}  style={{textAlign:"right"}}>
+													<Col xs={12} md={12} style={{textAlign:"right", float:'right'}}>
 														<br/>
 														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue}  primary={true} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");

@@ -444,6 +444,19 @@ class Inbox extends Component {
 		"status": status
 	  }
 	  
+	  		  console.log(actionName);
+			  
+	  if(actionName == 'Forward') {
+		  console.log(actionName);
+		  localStorage.setItem('inboxStatus', 'Forwarded')
+	  } else if(actionName == 'Approve') {
+		  console.log(actionName);
+		  localStorage.setItem('inboxStatus', 'Approved')
+	  } else if(actionName == 'Reject') {
+		  console.log(actionName);
+		  localStorage.setItem('inboxStatus', 'Rejected') 
+	  }
+	  
 		data[0].owners[0].tenantId = "default";
 		data[0].vltUpicNumber = null;
 		data[0].gisRefNo = null;
@@ -460,6 +473,7 @@ class Inbox extends Component {
 	  
 	     Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
 			setLoadingStatus('hide');
+			currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
 		  }).catch((err)=> {
 			console.log(err)
 			setLoadingStatus('hide');

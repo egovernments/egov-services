@@ -203,6 +203,9 @@ class PropertyTaxSearch extends Component {
 		setLoadingStatus('hide');
 		if(res.hasOwnProperty('Errors')){
 			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
+			current.setState({
+				resultList:[]
+			})
 		} else {
 			
 			if(res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
@@ -222,25 +225,32 @@ class PropertyTaxSearch extends Component {
 				resultList:res.properties
 			})
 			
-			var tQuery = {
-				businessService :'PT',
-				consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
-			}		
-	
-			Api.commonApiPost('billing-service/demand/_dues', tQuery, {}).then((res)=>{
-				console.log('demands',res);
-				current.setState({demands : res.DemandDue})
-			}).catch((err)=> {
-				current.setState({demands : ''})
-				console.log(err)
-			})
+			if(res.properties.length !=0){
+				var tQuery = {
+					businessService :'PT',
+					consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
+				}		
+		
+				Api.commonApiPost('billing-service/demand/_dues', tQuery, {}).then((res)=>{
+					console.log('demands',res);
+					current.setState({demands : res.DemandDue})
+				}).catch((err)=> {
+					current.setState({demands : ''})
+					console.log(err)
+				})
+			}
+			
+			
 			
 			showTable(true);
 		}
 	
       }).catch((err)=> {
 			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message)
+			toggleSnackbarAndSetText(true, err.message);
+			current.setState({
+				resultList:[]
+			})
       })
 		 
      

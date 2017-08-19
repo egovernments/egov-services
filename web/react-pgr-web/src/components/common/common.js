@@ -369,6 +369,7 @@ var localization_EN_Data = {
   "pt.create.groups.propertyAddress.fields.buildingCost": "Building Cost",
   "pt.create.groups.propertyAddress.fields.landCost": "Land Cost",
   "pt.create.groups.propertyAddress.fields.assessableArea": "Assessable Area",
+  "pt.create.groups.floorDetails.fields.Arv": "Arv",
 
   "pt.create.groups.propertyAddress.fields.totalArea": "Total Area",
   "pt.create.groups.propertyAddress.fields.propertyAge": "Property Age",

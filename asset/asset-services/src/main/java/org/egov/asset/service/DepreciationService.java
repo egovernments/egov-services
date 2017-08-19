@@ -234,17 +234,17 @@ public class DepreciationService {
                 log.debug("Depreciation Account Code Details :: " + accountCodeDetails);
                 validateDepreciationSubledgerDetails(requestInfo, tenantId, ledgerMap.keySet());
                 if (!accountCodeDetails.isEmpty()) {
-                    final Long voucherId = createVoucherForDepreciation(accountCodeDetails, requestInfo, tenantId,
+                    final String voucherNumber = createVoucherForDepreciation(accountCodeDetails, requestInfo, tenantId,
                             departmentId, fund, calculationAssetDetailList, headers);
-                    log.debug("Voucher ID for Depreciation :: " + voucherId);
-                    setVoucherIdToDepreciaitionDetails(voucherId, entryValue, depreciationDetailsMap);
+                    log.debug("Voucher Number for Depreciation :: " + voucherNumber);
+                    setVoucherIdToDepreciaitionDetails(voucherNumber, entryValue, depreciationDetailsMap);
                 }
 
             }
         }
     }
 
-    private void setVoucherIdToDepreciaitionDetails(final Long voucherId,
+    private void setVoucherIdToDepreciaitionDetails(final String voucherNumber,
             final List<CalculationAssetDetails> entryValue,
             final Map<Long, DepreciationDetail> depreciationDetailsMap) {
 
@@ -252,12 +252,12 @@ public class DepreciationService {
             final DepreciationDetail depreciationDetail = depreciationDetailsMap
                     .get(calculationAssetDetails.getAssetId());
             if (depreciationDetail != null)
-                depreciationDetail.setVoucherReference(voucherId);
+                depreciationDetail.setVoucherReference(voucherNumber);
             log.debug("Depreciation Details having voucher reference :: " + depreciationDetail);
         }
     }
 
-    private Long createVoucherForDepreciation(final List<VouchercreateAccountCodeDetails> accountCodeDetails,
+    private String createVoucherForDepreciation(final List<VouchercreateAccountCodeDetails> accountCodeDetails,
             final RequestInfo requestInfo, final String tenantId, final Long departmentId, final Fund fund,
             final List<CalculationAssetDetails> calculationAssetDetailList, final HttpHeaders headers) {
         final VoucherRequest voucherRequest = voucherService.createVoucherRequest(calculationAssetDetailList, fund,

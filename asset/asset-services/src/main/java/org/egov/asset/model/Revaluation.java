@@ -80,6 +80,6 @@ public class Revaluation {
 	private AuditDetails auditDetails;
 
 	@JsonProperty("voucherReference")
-	private Long voucherReference;
+	private String voucherReference;
 
 }

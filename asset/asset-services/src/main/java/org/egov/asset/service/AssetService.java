@@ -54,15 +54,14 @@ import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class AssetService {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetService.class);
+@Service
+@Slf4j
+public class AssetService {
 
     @Autowired
     private AssetRepository assetRepository;
@@ -80,13 +79,13 @@ public class AssetService {
     private AssetCommonService assetCommonService;
 
     public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
-        logger.info("AssetService getAssets");
+        log.info("AssetService getAssets");
         final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
         return getAssetResponse(assets, requestInfo);
     }
 
     public String getAssetName(final String tenantId, final String name) {
-        logger.info("AssetService getAssetName");
+        log.info("AssetService getAssetName");
         return assetRepository.findAssetName(tenantId, name);
     }
 
@@ -105,7 +104,7 @@ public class AssetService {
 
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
-        logger.debug("assetRequest createAsync::" + assetRequest);
+        log.debug("assetRequest createAsync::" + assetRequest);
 
         logAwareKafkaTemplate.send(applicationProperties.getCreateAssetTopicName(), KafkaTopicName.SAVEASSET.toString(),
                 assetRequest);
@@ -127,7 +126,7 @@ public class AssetService {
         final Asset asset = assetRequest.getAsset();
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
-        logger.debug("assetRequest updateAsync::" + assetRequest);
+        log.debug("assetRequest updateAsync::" + assetRequest);
 
         logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetTopicName(),
                 KafkaTopicName.UPDATEASSET.toString(), assetRequest);
@@ -147,13 +146,13 @@ public class AssetService {
     private void setDepriciationRateAndEnableYearWiseDepreciation(final Asset asset) {
         final List<YearWiseDepreciation> yearWiseDepreciation = asset.getYearWiseDepreciation();
 
-        logger.debug("Year wise depreciations from Request :: " + yearWiseDepreciation);
+        log.debug("Year wise depreciations from Request :: " + yearWiseDepreciation);
 
         final Boolean enableYearWiseDepreciation = asset.getEnableYearWiseDepreciation();
 
-        logger.debug("Enable year wise depreciaition from Request :: " + enableYearWiseDepreciation);
+        log.debug("Enable year wise depreciaition from Request :: " + enableYearWiseDepreciation);
 
-        logger.debug("Asset ID from Request :: " + asset.getId());
+        log.debug("Asset ID from Request :: " + asset.getId());
         if (enableYearWiseDepreciation != null && enableYearWiseDepreciation && yearWiseDepreciation != null
                 && !yearWiseDepreciation.isEmpty())
             for (final YearWiseDepreciation depreciationRate : yearWiseDepreciation)
@@ -162,7 +161,7 @@ public class AssetService {
             asset.setEnableYearWiseDepreciation(false);
             final Double depreciationRate = assetCommonService.getDepreciationRate(asset.getDepreciationRate());
 
-            logger.debug("Depreciation rate for asset create :: " + depreciationRate);
+            log.debug("Depreciation rate for asset create :: " + depreciationRate);
             asset.setDepreciationRate(depreciationRate);
         }
     }

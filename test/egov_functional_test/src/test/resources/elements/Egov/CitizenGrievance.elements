@@ -95,6 +95,30 @@
         "identifier":"css",
         "value":"[id^='undefined-undefined-ChangeStatus']",
         "waitFor":"visibility"
+        },
+        {
+        "elementName":"selectDepartment",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-ForwardtoDepartment']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"selectDesignation",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-ForwardtoDesignation']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"selectPosition",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-ForwardtoPosition']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"Feedback",
+        "identifier":"xpath",
+        "value":".//*[@id='root']/div/main/div/form/div[4]/div/div/div[2]/div[2]/div/span/span[1]/span[2]/span",
+        "waitFor":"visibility"
         }
     ]
 }

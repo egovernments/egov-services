@@ -61,7 +61,7 @@ public class GenericSteps extends BaseSteps {
     private String findDataIsComingFromDataTable(String v) {
         if (v.contains("<"))
             return dataTableStore.get(i++);
-        return v;
+           return v;
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)$")
@@ -78,13 +78,16 @@ public class GenericSteps extends BaseSteps {
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen verifies\\s+(\\w+)\\s+is\\s+(.*)$")
-    public void assertElement(String consumer, String screen, String element, String action) throws NoSuchEventException, IOException {
+    public void assertElement(String consumer, String screen, String element, String action) throws NoSuchEventException, IOException, InterruptedException {
+
+        TimeUnit.SECONDS.sleep(1);
+        WebElement element1 = pageStore.get(GenericPage.class).buildElement(screen,element,"");
         tapster().useDriver(pageStore.getDriver())
                 .onScreen(screen)
                 .asConsumer(consumer)
                 .onElement(element)
                 .doAction(action)
-                .serve();
+                .serveWithElement(element1);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen verifies\\s+(\\w+)\\s+has\\s+(\\w+)\\s+value\\s+(.*)$")

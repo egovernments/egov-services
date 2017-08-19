@@ -14,7 +14,7 @@ const styles = {
     padding: '10px'
   },
   marginStyle:{
-    margin: '15px'
+    margin: '15px 0'
   }
 };
 
@@ -42,7 +42,7 @@ class employeeDocs extends Component{
         if(attrib['key'].indexOf('employeeDocs') !== -1){
           let key = (attrib['key'].split(/_(.+)/)[1]).length > 15 ? (attrib['key'].split(/_(.+)/)[1]).substr(0, 12)+'...' : attrib['key'].split(/_(.+)/)[1];
           return (
-            <Col xs={6} md={3} key={index}>
+            <Col xs={12} sm={6} md={4} lg={3} key={index}>
               <RaisedButton
                 href={'/filestore/v1/files/id?fileStoreId=' + attrib['name']+'&tenantId='+localStorage.getItem('tenantId')}
                 download

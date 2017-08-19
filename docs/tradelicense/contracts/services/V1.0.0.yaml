@@ -681,7 +681,7 @@ definitions:
         type: string
         maxLength: 128
         minLength: 4
-        description: Unique Indentifier of the Financial Year
+        description: financialYear range ex= 2014-15 in request Unique Indentifier of the Financial Year is saved to database
       amount:
         type: number
         format: double

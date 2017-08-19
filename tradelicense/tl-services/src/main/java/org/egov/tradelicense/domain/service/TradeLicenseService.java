@@ -330,20 +330,21 @@ public class TradeLicenseService {
 					}
 					Date tradeValidFromDate = new Date(validFrom);
 					today.setTimeInMillis(tradeValidFromDate.getTime());
-					//today.add(Calendar.YEAR, (actualFeeDetailStartYear - actualFeeDetailsEndYear));
 					// validate the fee details
 					for (int i = 0; i < actualFeeDetailCount; i++) {
 						
 						Boolean isFYExists = false;
 						today.add(Calendar.YEAR, (i * validPeriod));
+						
 						FinancialYearContract feeDetailFYResponse = financialYearContractRepository
-								.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis()),
+								.findFinancialYearIdByDate(tenantId, today.getTimeInMillis(),
 										requestInfoWrapper);
 						if (feeDetailFYResponse != null) {
 							for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
 								if (licenseFeeDetail.getFinancialYear()
-										.equalsIgnoreCase(feeDetailFYResponse.getId().toString())) {
+										.equalsIgnoreCase(feeDetailFYResponse.getFinYearRange())) {
 									isFYExists = true;
+									licenseFeeDetail.setFinancialYear( feeDetailFYResponse.getId().toString());
 								}
 							}
 							if (!isFYExists) {

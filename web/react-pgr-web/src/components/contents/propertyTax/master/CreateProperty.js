@@ -432,6 +432,7 @@ createPropertyTax = () => {
 						"department": createProperty.workflowDepartment || null,
 						"designation":createProperty.workflowDesignation || null,
 						"assignee": createProperty.approver || null,
+						"initiatorPosition" :  createProperty.approver || null,
 						"action": "no",
 						"status": null
 					},

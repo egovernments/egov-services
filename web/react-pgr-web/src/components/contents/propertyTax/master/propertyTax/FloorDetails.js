@@ -814,22 +814,37 @@ getFloors = () => {
 														</SelectField>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
-														<Col xs={12} md={8}>
-															<TextField  className="fullWidth"
-															  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
-															  errorText={fieldErrors.floor ? (fieldErrors.floor.occupierName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupierName}</span> :""): ""}
-															  value={floorDetails.floor ? floorDetails.floor.occupierName : ""}
-															  onChange={(e) => {handleChangeNextOne(e,"floor" , "occupierName", false, /^[a-zA-Z,\s]+$/g)}}
-															  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-															  underlineStyle={styles.underlineStyle}
-															  underlineFocusStyle={styles.underlineFocusStyle}
-															  maxLength={4000}
-															  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-															/>
-														</Col>
-														<Col xs={12} md={4}>
-															<div className="pt-iconCont"><i className="material-icons">add</i></div>
-														</Col>
+														<Row>
+															<Col xs={12} md={9}>
+																<TextField  className="fullWidth"
+																  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
+																  errorText={fieldErrors.floor ? (fieldErrors.floor.occupierName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupierName}</span> :""): ""}
+																  value={floorDetails.floor ? floorDetails.floor.occupierName : ""}
+																  onChange={(e) => {handleChangeNextOne(e,"floor" , "occupierName", false, /^[a-zA-Z,\s]+$/g)}}
+																  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+																  underlineStyle={styles.underlineStyle}
+																  underlineFocusStyle={styles.underlineFocusStyle}
+																  maxLength={4000}
+																  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+																/>
+															</Col>
+															<Col xs={12} md={3}>
+																<div className="pt-iconCont"><i className="material-icons">add</i></div>
+															</Col>
+														</Row>
+													</Col>
+													
+													<Col xs={12} md={3} sm={6}>
+														<Table>
+															<thead>
+																<th>#</th>
+																<th>Name</th>
+															</thead>
+															<tbody>
+																<td></td>
+																<td></td>
+															</tbody>
+														</Table>
 													</Col>
 													
 													{(floorDetails.floor ? !getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : true) 

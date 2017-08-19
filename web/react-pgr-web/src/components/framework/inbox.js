@@ -105,13 +105,14 @@ chip: {
 
 
 function getPosition(objArray, id){
-	console.log(objArray, id);
 	
-	return false;
-	
+	if(id == '' || id == null) {
+		return false;
+	}
+
 	for(var i = 0; i<objArray.length;i++){
-		if(objArray.id == id){
-			
+		if(objArray[i].id == id){
+			return objArray[i].assignments[0].position;
 		}
 	}
 }
@@ -447,7 +448,7 @@ class Inbox extends Component {
   }
   
   updateInbox = (actionName, status) => {
-	  
+	  	  
 	  var currentThis = this;
 	  
 	  let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
@@ -556,7 +557,13 @@ class Inbox extends Component {
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
-			  {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0 && this.state.buttons.attributes.validActions.values[0].name != 'Approve') &&	<Card className="uiCard">
+			  {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && (this.state.buttons.attributes.validActions.values.map((item)=>{
+				  if(item.name != 'Approve') {
+					  return true;
+				  } else {
+					  false
+				  }
+			  })) ) &&	<Card className="uiCard">
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
                                 <Grid fluid>

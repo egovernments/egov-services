@@ -1710,6 +1710,12 @@
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
+        sourceCapacity: 
+          type: number
+          description: Capacity of source (in MCFT).
+        ulbReserved: 
+          type: number
+          description: Reservation for ULB (in MCFT)
         tenantId:
           type: string
           description: Unique Identifier of the tenant

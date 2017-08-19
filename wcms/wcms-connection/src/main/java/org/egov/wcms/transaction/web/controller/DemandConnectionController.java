@@ -142,13 +142,14 @@ public class DemandConnectionController {
             errorResponse.setError(error);
         } else {
             final RequestInfo requestInfo = demandDetailBeanReq.getRequestInfo();
-            final List<Demand> pros = demandConnectionService.prepareDemandForLegacy(demandDetailBeanReq, waterConn, requestInfo,
+            for (final DemandDetailBean demanddetBean : demandDetailBeanReq.getDemandDetailBeans()) {
+            final List<Demand> pros = demandConnectionService.prepareDemandForLegacy(demanddetBean, waterConn, requestInfo,
                     demandBeanGetRequest);
             final DemandResponse demandRes = demandConnectionService.createDemand(pros, demandDetailBeanReq.getRequestInfo());
             if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
                 waterConnectionService.updateConnectionOnChangeOfDemand(demandRes.getDemands().get(0).getId(), waterConn,
                         requestInfo);
-
+            }
         }
         return getSuccessResponse(demandDetailBeanReq.getDemandDetailBeans(), demandDetailBeanReq.getRequestInfo());
     }

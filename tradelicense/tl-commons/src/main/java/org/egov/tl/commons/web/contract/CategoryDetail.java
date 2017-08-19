@@ -1,5 +1,7 @@
 package org.egov.tl.commons.web.contract;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
 import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 
@@ -24,12 +26,19 @@ public class CategoryDetail {
 
 	private Long id = null;
 
-	private Long categoryId = null;
+	@JsonProperty("categoryId")
+	private Long categoryId;
 
-	private FeeTypeEnum feeType = null;
+	@JsonProperty("feeType")
+	@NotNull(message = "{error.feeType.null}")
+	private FeeTypeEnum feeType;
 
+	@JsonProperty("rateType")
+	@NotNull(message = "{error.rateType.null}")
 	private RateTypeEnum rateType = null;
 
+	@JsonProperty("uomId")
+	@NotNull(message = "{error.uomid.null}")
 	private Long uomId = null;
 
 	@JsonProperty("auditDetails")

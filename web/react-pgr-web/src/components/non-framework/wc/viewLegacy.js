@@ -215,14 +215,17 @@ class Report extends Component {
   printer = () => {
     window.print();
   }
+
   dcbButton = () =>{
-    this.props.setRoute("/wc/addDemand/" + this.props.formData.Connection[0].ConsumerNumber);
+
+    this.props.setRoute("/wc/addDemand/" + encodeURIComponent(this.props.formData.Connection[0].consumerNumber));
   }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer, dcbButton } = this;
 
+    console.log(formData);
     const renderTable = function() {
       if(moduleName && actionName && formData && formData[objectName]) {
         var objectName = mockData[`${moduleName}.${actionName}`].objectName;
@@ -242,7 +245,6 @@ class Report extends Component {
         }
       }
     }
-
     return (
       <div className="Report">
         <form id="printable">
@@ -251,6 +253,7 @@ class Report extends Component {
           {renderTable()}
           <br/>
         </form>
+
         <div style={{"textAlign": "center"}}>
             <RaisedButton label="Print" primary={true}  onClick={(e)=>{printer()}}/>&nbsp;
             {this.props.formData &&  this.props.formData.Connection && this.props.formData.Connection[0].isLegacy && <RaisedButton label="Add/ Edit DCB" primary={true}  onClick={(e)=>{dcbButton()}}/>}

@@ -371,7 +371,7 @@ createPropertyTax = () => {
 	var currentThis = this;
       var body = {
 			"properties": [{
-				"occupancyDate":"02/12/2016",
+				"occupancyDate":createProperty.occupancyDate || null,
 				"tenantId": "default",
 				"oldUpicNumber": null,
 				"vltUpicNumber": null,
@@ -422,6 +422,23 @@ createPropertyTax = () => {
 					"roofType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.roofType || null) : null),
 					"wallType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.wallType || null) : null),
 					"floors":createProperty.floorsArr || null,
+					"factors": [{
+								"name": "TOILET",
+								"value": createProperty.toiletFactor || null
+								},
+								{
+								"name": "ROAD",
+								"value": createProperty.roadFactor || null
+								},
+								{
+								"name": "LIFT",
+								"value": createProperty.liftFactor || null
+								},
+								{
+								"name": "PARKING",
+								"value": createProperty.parkingFactor || null
+								}
+								],
 					"documents": [],
 					"stateId": null,
 					"workFlowDetails": {

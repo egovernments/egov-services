@@ -257,9 +257,9 @@ definitions:
         maxLength: 20
         minLength: 4
       applicationDate:
-        type: string
-        format: date
-        description: date on which applicaiton has been generated for new Trade License in dd/MM/YY format
+        type: integer
+        format: int64
+        description: date on which applicaiton has been generated for new Trade License in epoch
       adhaarNumber:
         type: string
         description : Adhaar Number of trade owner
@@ -345,20 +345,20 @@ definitions:
         description: Remarks for the Trade License
         maxLength: 1000
       tradeCommencementDate:
-        type: string
-        format: date
-        description:  Commencement Date of the trade in dd/mm/yyy format
+        type: integer
+        format: int64
+        description:  Commencement Date of the trade as epoch
       licenseValidFromDate:
-        type: string
-        format: date
-        description: Date from when license is valid in dd/mm/yyy format
+        type: integer
+        format: int64
+        description: Date from when license is valid as epoch
       isPropertyOwner:
         type: boolean
         description: set to true if Trade owner is the owner of the property
       agreementDate:
-        type: string
-        format: date
-        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running in dd/mm/yyy format
+        type: integer
+        format: int64
+        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running as epoch
       agreementNo:
         type: string
         maxLength: 128
@@ -373,9 +373,9 @@ definitions:
         default: true
         description: True to be set to mark this Trade License as Active, False to be set to mark this Trade License as inActive
       expiryDate:
-        type: string
-        format: date
-        description: Expiry Date of the Trade License in DD-MM-YY format
+        type: integer
+        format: int64
+        description: Expiry Date of the Trade License as epoch
       feeDetails:
         type: array
         description: List of Fee Details for Trade License,  Required only for Legacy Trade License
@@ -447,9 +447,9 @@ definitions:
         maxLength: 20
         minLength: 4
       applicationDate:
-        type: string
-        format: date
-        description: date on which applicaiton has been generated for new Trade License in DD-MM-YY format
+        type: integer
+        format: int64
+        description: date on which applicaiton has been generated for new Trade License as epoch
       adhaarNumber:
         type: string
         description : Adhaar Number of trade owner
@@ -554,27 +554,21 @@ definitions:
       remarks: 
         type: string
         description: Remarks for the Trade License
-        maxLength: 1000
       tradeCommencementDate:
-        type: string
-        format: date
-        description:  Commencement Date of the trade in DD-MM-YY format
+        type: integer
+        format: int64
+        description:  Commencement Date of the trade as epoch
       licenseValidFromDate:
-        type: string
-        format: date
-        description: Date from when license is valid
+        type: integer
+        format: int64
+        description: Date from when license is valid as epoch
       isPropertyOwner:
         type: boolean
         description: set to true if Trade owner is the owner of the property
       agreementDate:
-        type: string
-        format: date
-        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running in DD-MM-YY format
-      agreementNo:
-        type: string
-        maxLength: 128
-        minLength : 4
-        description: Document of Registered lease agreement between the property owner and trade owner
+        type: integer
+        format: int64
+        description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running as epoch
       isLegacy:
         type: boolean
         default: false
@@ -584,9 +578,9 @@ definitions:
         default: true
         description: True to be set to mark this Trade License as Active, False to be set to mark this Trade License as inActive
       expiryDate:
-        type: string
-        format: date
-        description: Expiry Date of the Trade License in DD-MM-YY format
+        type: integer
+        format: int64
+        description: Expiry Date of the Trade License as epoch
       feeDetails:
         type: array
         description: List of Fee Details for Trade License,  Required only for Legacy Trade License

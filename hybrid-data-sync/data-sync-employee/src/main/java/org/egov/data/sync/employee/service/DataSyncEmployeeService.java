@@ -50,6 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -80,7 +81,7 @@ public class DataSyncEmployeeService {
         EmployeeSync employeeSync = employeeSyncRequest.getEmployeeSync();
         dataSyncEmployeeRepository.executeProcedure(employeeSync.getCode(), employeeSync.getTenantId());
 
-        if (employeeSync.getSignature() != null) {
+        if (!StringUtils.isEmpty(employeeSync.getSignature())) {
             byte[] fileData = fileStorageService.getFile(employeeSync);
             String[] tenant = employeeSync.getTenantId().split("\\.");
             String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];

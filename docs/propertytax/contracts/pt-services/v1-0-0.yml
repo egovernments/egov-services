@@ -636,7 +636,6 @@ definitions:
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
     required:
-    - sitalArea
     - propertyType
 
   PropertyLocation:
@@ -796,7 +795,7 @@ definitions:
       occupierName:
         type: string
         description: Name of the occupier in a Unit
-        maxLength: 128
+        maxLength: 4000
         minLength: 1
       firmName:
         type: string
@@ -842,6 +841,10 @@ definitions:
         type: number
         format: double
         description: manual arv for the Unit
+      rv:
+        type: number
+        format: double
+        description: The system calculated rv for the Unit
       arv:
         type: number
         format: double

@@ -130,9 +130,10 @@ class AddDemand extends Component {
     super(props);
     this.state= {
 		taxHeads: [],
+		taxPeriod:[],
 		demands: [],
 		hasError: false,
-		errorMsg: 'Invalid',
+		errorMsg: 'Invalid'
     }
   }
 
@@ -161,24 +162,43 @@ class AddDemand extends Component {
 
 		res.Demands.map((demand, index)=>{
 			
-			demand.demandDetails.map((item, i)=>{
-				setLoadingStatus('loading');
-				var query = {
-					service:'PT',
-					code:item.taxHeadMasterCode
-				}
+			let periodQuery = {
+				fromDate: demand.taxPeriodFrom,
+				toDate: demand.taxPeriodTo,
+				service: 'PT'
+			}
+						
+			Api.commonApiPost('/billing-service/taxperiods/_search', periodQuery, {}, false, true).then((res)=>{
+					console.log('periods', res);
+					setLoadingStatus('hide');
+					currentThis.setState({
+					 taxPeriod:[
+						...currentThis.state.taxPeriod,
+						res.TaxPeriods[0]
+					 ]
+				 })
+			}).catch((err)=> {
+				console.log(err)
+			})	
+		})
+		
+		res.Demands[0].demandDetails.map((item, i)=>{
+			setLoadingStatus('loading');
+			var query = {
+				service:'PT',
+				code:item.taxHeadMasterCode
+			}
 
-				Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
-						setLoadingStatus('hide');
-					 currentThis.setState({
-						 taxHeads:[
-							...currentThis.state.taxHeads,
-							res.TaxHeadMasters[0]
-						 ]
-					 })
-				}).catch((err)=> {
-					console.log(err)
-				})
+			Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
+					setLoadingStatus('hide');
+				 currentThis.setState({
+					 taxHeads:[
+						...currentThis.state.taxHeads,
+						res.TaxHeadMasters[0]
+					 ]
+				 })
+			}).catch((err)=> {
+				console.log(err)
 			})
 		})
 
@@ -267,15 +287,10 @@ validateCollection = (index) => {
 
 	}, 100)
 
-
-
-
-
 }
 
-
   render() {
-
+	  
     const renderOption = function(list,listName="") {
         if(list)
         {
@@ -312,10 +327,12 @@ validateCollection = (index) => {
 		if(this.state.demands.length !=0){
 
 		return this.state.demands.map((demand, index)=> {
-
+			
+			console.log(index);
+			
 			return(
 				<tr key={index}>
-					<td style={{width:100}} className="lastTdBorder">{new Date(demand.taxPeriodFrom).getFullYear()} - {new Date(demand.taxPeriodTo).getFullYear()}</td>
+					<td style={{width:100}} className="lastTdBorder">{(this.state.taxPeriod.length !=0) ? (this.state.taxPeriod[index] ? this.state.taxPeriod[index].code: '') : ''}</td>
 						{demand.demandDetails.map((detail, i)=>{
 
 							if(!addDemand.hasOwnProperty('demands'+index)){
@@ -410,11 +427,13 @@ validateCollection = (index) => {
 	}
 
 	const showSubHeading = () => {
+		
 		if(this.state.demands.length !=0){
 			return this.state.demands[0].demandDetails.map((detail, index)=>{
 			if((this.state.demands[0].demandDetails.length-1) == index){
 				return (
 				<td key={index} className="lastTdBorder">{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
+				
 					if(e.code == detail.taxHeadMasterCode){
 						return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
 					}
@@ -429,10 +448,9 @@ validateCollection = (index) => {
 
 			})
 		}
-
-
+			
 	}
-
+	
     return (<div><Card className="uiCard">
 				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.demands.addDemand')}</div>} />
 				<CardText style={styles.reducePadding}>

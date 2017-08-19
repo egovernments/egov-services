@@ -66,6 +66,7 @@ class updateUserRole extends Component {
       _this.setState({allRoles: ALL_ROLES});
       Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, id : [_this.props.match.params.userId]}).then(function(response) {
         _this.setState({userName: response.user[0].userName});
+        _this.setState({name: response.user[0].name});
         _this.setState({userRoles: response.user[0].roles});
         let userArray= [];
         response.user[0].roles.map((roles, index) => {
@@ -191,7 +192,7 @@ class updateUserRole extends Component {
     return(
       <div className="userRole">
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > User Role Information : {this.state.userName}< /div>}/>
+          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > User Role Information : {this.state.userName} ({this.state.name})< /div>}/>
             <CardText style={{paddingTop:0}}>
               <Grid>
                 <Row>

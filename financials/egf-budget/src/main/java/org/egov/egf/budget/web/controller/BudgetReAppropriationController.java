@@ -75,6 +75,7 @@ public class BudgetReAppropriationController {
 
     public static final String ACTION_CREATE = "create";
     public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
     public static final String PLACEHOLDER = "placeholder";
 
     @Autowired
@@ -138,6 +139,38 @@ public class BudgetReAppropriationController {
         }
 
         budgetreappropriations = budgetReAppropriationService.update(budgetreappropriations, errors,
+                budgetReAppropriationRequest.getRequestInfo());
+
+        for (final BudgetReAppropriation bra : budgetreappropriations) {
+            contract = mapper.toContract(bra);
+            budgetReAppropriationContracts.add(contract);
+        }
+        budgetReAppropriationResponse.setBudgetReAppropriations(budgetReAppropriationContracts);
+
+        return budgetReAppropriationResponse;
+    }
+    
+    @PostMapping("/_delete")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BudgetReAppropriationResponse delete(
+            @RequestBody @Valid final BudgetReAppropriationRequest budgetReAppropriationRequest, final BindingResult errors) {
+
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+        budgetReAppropriationRequest.getRequestInfo().setAction(ACTION_DELETE);
+        final BudgetReAppropriationResponse budgetReAppropriationResponse = new BudgetReAppropriationResponse();
+        budgetReAppropriationResponse.setResponseInfo(getResponseInfo(budgetReAppropriationRequest.getRequestInfo()));
+        List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
+        BudgetReAppropriation budgetReAppropriation = null;
+        BudgetReAppropriationContract contract = null;
+        final List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
+
+        for (final BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationRequest
+                .getBudgetReAppropriations()) {
+            budgetReAppropriation = mapper.toDomain(budgetReAppropriationContract);
+            budgetreappropriations.add(budgetReAppropriation);
+        }
+
+        budgetreappropriations = budgetReAppropriationService.delete(budgetreappropriations, errors,
                 budgetReAppropriationRequest.getRequestInfo());
 
         for (final BudgetReAppropriation bra : budgetreappropriations) {

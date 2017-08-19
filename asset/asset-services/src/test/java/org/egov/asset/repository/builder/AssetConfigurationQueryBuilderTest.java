@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(AssetConfigurationQueryBuilderTest.class)
+@WebMvcTest(AssetConfigurationQueryBuilder.class)
 @Import(TestConfiguration.class)
 public class AssetConfigurationQueryBuilderTest {
 
@@ -57,6 +57,7 @@ public class AssetConfigurationQueryBuilderTest {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final List<Long> id = new ArrayList<Long>();
         id.add(Long.valueOf("1"));
+        id.add(Long.valueOf("2"));
         Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String expectedQueryWithTenantId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
                 + "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE ck.id IN "
@@ -98,6 +99,23 @@ public class AssetConfigurationQueryBuilderTest {
 		expectedPreparedStatementValues.add(Long.valueOf("1500381058598"));
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
 	}
+    
+    @Test
+    public void getQueryWithTenantIdAndKeyNameTest() {
+            final List<Object> preparedStatementValues = new ArrayList<>();
+            Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
+            final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
+                            .tenantId("ap.kurnool").name("EnableVoucherGeneration").build();
+            final String expectedQueryWithId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
+                            + "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE ck.tenantId = ? "
+                            + "AND ck.keyName = ?";
+            assertEquals(expectedQueryWithId,
+                            assetConfigurationQueryBuilder.getQuery(assetConfigurationCriteria, preparedStatementValues));
+            final List<Object> expectedPreparedStatementValues = new ArrayList<>();
+            expectedPreparedStatementValues.add("ap.kurnool");
+            expectedPreparedStatementValues.add("EnableVoucherGeneration");
+            assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+    }
 
     private static String getIdQuery(final List<Long> idList) {
         final StringBuilder query = new StringBuilder("(");

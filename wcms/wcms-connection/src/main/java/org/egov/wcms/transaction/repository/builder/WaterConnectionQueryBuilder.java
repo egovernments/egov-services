@@ -218,7 +218,8 @@ public class WaterConnectionQueryBuilder {
 
         return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
                 + "categorytype = ?,hscpipesizetype = ?,sourcetype = ?,connectionstatus =?,"
-                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=? ,numberOfFamily=?"
+                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=? ,numberOfFamily=?,"
+                + " status=?, estimationnumber=?, workordernumber=?, consumernumber=?"
                 + " where acknowledgmentnumber = ?";
     }
 

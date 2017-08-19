@@ -402,6 +402,26 @@ public class WaterConnectionQueryBuilder {
             selectQuery.append(" conndetails.consumerNumber = ?");
             preparedStatementValues.add(waterConnectionGetReq.getConsumerNumber());
         }
+        
+        if (null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" eguser.name = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getName());
+        }
+        
+        if (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" eguser.mobilenumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getMobileNumber());
+        }
+        
+        if (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" (connloc.revenueboundary = ? OR connloc.locationboundary = ? OR connloc.adminboundary = ? )");
+            preparedStatementValues.add(waterConnectionGetReq.getLocality());
+            preparedStatementValues.add(waterConnectionGetReq.getLocality());
+            preparedStatementValues.add(waterConnectionGetReq.getLocality());
+        }
 
         if (null != waterConnectionGetReq.getId()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

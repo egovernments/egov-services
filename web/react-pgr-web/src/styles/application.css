@@ -816,9 +816,7 @@ table thead th {
  	text-align: center;
  	font-weight: 400;
  	font-family: Roboto;
- 	font-size: 28px;
  	color: #8d8d8d;
- 	padding-bottom: 10px;
 }
 
 .check-list-item label{
@@ -906,4 +904,9 @@ span.errorMsg{
 
 .radio-group .field-title{
 	margin-bottom: 10px;
+}
+
+.rating{
+	color: #F58720;
+  font-size: 25px;
 }

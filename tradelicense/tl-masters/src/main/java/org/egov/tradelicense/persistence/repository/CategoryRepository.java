@@ -1,9 +1,5 @@
 package org.egov.tradelicense.persistence.repository;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +12,8 @@ import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.CategoryQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -32,11 +28,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CategoryRepository {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	/**
 	 * Description : this method will create category in database
@@ -45,45 +43,24 @@ public class CategoryRepository {
 	 * @return categoryId
 	 */
 	public Long createCategory(Category category) {
-
+		
+		final KeyHolder holder = new GeneratedKeyHolder();
 		AuditDetails auditDetails = category.getAuditDetails();
 		String categoryInsert = CategoryQueryBuilder.INSERT_CATEGORY_QUERY;
-
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(categoryInsert, new String[] { "id" });
-
-				ps.setString(1, category.getTenantId());
-				ps.setString(2, category.getName());
-				ps.setString(3, category.getCode());
-				ps.setBoolean(4, (category.getActive() == null ? true : category.getActive()));
-				ps.setObject(5, category.getParentId());
-
-				if (category.getBusinessNature() == null) {
-					ps.setString(6, null);
-				} else {
-					ps.setString(6, category.getBusinessNature().name());
-				}
-				
-				if( category.getValidityYears() == null ){
-					ps.setLong(7, 0);
-				}else{
-					ps.setLong(7, category.getValidityYears());
-				}
-				
-				ps.setString(8, auditDetails.getCreatedBy());
-				ps.setString(9, auditDetails.getLastModifiedBy());
-				ps.setLong(10, auditDetails.getCreatedTime());
-				ps.setLong(11, auditDetails.getLastModifiedTime());
-				return ps;
-			}
-		};
-
-		// The newly generated key will be saved in this object
-		final KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, holder);
-
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId", category.getTenantId());
+		parameters.addValue("name", category.getName());
+		parameters.addValue("code", category.getCode());
+		parameters.addValue("active", (category.getActive() == null ? true : category.getActive()));
+		parameters.addValue("parentId", category.getParentId());
+		parameters.addValue("businessNature", category.getBusinessNature() == null ? null : category.getBusinessNature().name());
+		parameters.addValue("validityYears", category.getValidityYears() == null ? 0 : category.getValidityYears());
+		parameters.addValue("createdBy", auditDetails.getCreatedBy());
+		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
+		parameters.addValue("createdTime", auditDetails.getCreatedTime());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		namedParameterJdbcTemplate.update(categoryInsert, parameters, holder, new String[] { "id" });
+		
 		return Long.valueOf(holder.getKey().intValue());
 
 	}
@@ -95,30 +72,22 @@ public class CategoryRepository {
 	 * @return CategoryDetailId
 	 */
 	public Long createCategoryDetail(CategoryDetail categoryDetail) {
-
-		String categoryDetailInsert = CategoryQueryBuilder.INSERT_CATEGORY_DETAIL_QUERY;
-		AuditDetails auditDetails = categoryDetail.getAuditDetails();
-
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(categoryDetailInsert, new String[] { "id" });
-
-				ps.setLong(1, categoryDetail.getCategoryId());
-				ps.setString(2, categoryDetail.getFeeType().toString());
-				ps.setString(3, categoryDetail.getRateType().toString());
-				ps.setLong(4, categoryDetail.getUomId());
-				ps.setString(5, auditDetails.getCreatedBy());
-				ps.setString(6, auditDetails.getLastModifiedBy());
-				ps.setLong(7, auditDetails.getCreatedTime());
-				ps.setLong(8, auditDetails.getLastModifiedTime());
-				return ps;
-			}
-		};
-
-		// The newly generated key will be saved in this object
+	
 		final KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, holder);
+		String categoryDetailInsert = CategoryQueryBuilder.INSERT_CATEGORY_DETAIL_QUERY;
+		
+		AuditDetails auditDetails = categoryDetail.getAuditDetails();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("categoryId",  categoryDetail.getCategoryId());
+		parameters.addValue("feeType",  categoryDetail.getFeeType().toString());
+		parameters.addValue("rateType",  categoryDetail.getRateType().toString());
+		parameters.addValue("uomId",  categoryDetail.getUomId());
+		parameters.addValue("createdBy",  auditDetails.getCreatedBy());
+		parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
+		parameters.addValue("createdTime",  auditDetails.getCreatedTime());
+		parameters.addValue("lastModifiedTime",  auditDetails.getLastModifiedTime());
+		
+		namedParameterJdbcTemplate.update(categoryDetailInsert, parameters, holder, new String[] { "id" });
 
 		return Long.valueOf(holder.getKey().intValue());
 	}
@@ -130,40 +99,24 @@ public class CategoryRepository {
 	 * @return Category
 	 */
 	public Category updateCategory(Category category) {
-
+		
 		AuditDetails auditDetails = category.getAuditDetails();
 		String categoryUpdateSql = CategoryQueryBuilder.UPDATE_CATEGORY_QUERY;
+		
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId",  category.getTenantId());
+		parameters.addValue("name",  category.getName());
+		parameters.addValue("code",  category.getCode());
+		parameters.addValue("active", (category.getActive() == null ? true : category.getActive()));
+		parameters.addValue("parentId",  category.getParentId());
+		parameters.addValue("businessNature", (category.getBusinessNature() == null ? null : category.getBusinessNature().name()));
+		parameters.addValue("validityYears",  (category.getValidityYears() == null ? 0 : category.getValidityYears()));
+		parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
+		parameters.addValue("lastModifiedTime",  auditDetails.getLastModifiedTime());
+		parameters.addValue("id",  category.getId());
+	
+		namedParameterJdbcTemplate.update(categoryUpdateSql, parameters);
 
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(categoryUpdateSql);
-
-				ps.setString(1, category.getTenantId());
-				ps.setString(2, category.getName());
-				ps.setString(3, category.getCode());
-				ps.setBoolean(4, (category.getActive() == null ? true : category.getActive()));
-				ps.setObject(5, category.getParentId());
-
-				if (category.getBusinessNature() == null) {
-					ps.setString(6, null);
-				} else {
-					ps.setString(6, category.getBusinessNature().name());
-				}
-				if( category.getValidityYears() == null ){
-					ps.setLong(7, 0);
-				}else{
-					ps.setLong(7, category.getValidityYears());
-				}
-				ps.setString(8, category.getAuditDetails().getLastModifiedBy());
-				ps.setLong(9, auditDetails.getLastModifiedTime());
-				ps.setLong(10, category.getId());
-
-				return ps;
-			}
-		};
-
-		jdbcTemplate.update(psc);
 		return category;
 	}
 
@@ -177,25 +130,18 @@ public class CategoryRepository {
 
 		String categoryDetailsUpdateSql = CategoryQueryBuilder.UPDATE_CATEGORY_DETAIL_QUERY;
 		AuditDetails auditDetails = categoryDetail.getAuditDetails();
+		
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("categoryId",  categoryDetail.getCategoryId());
+		parameters.addValue("feeType",  categoryDetail.getFeeType().toString());
+		parameters.addValue("rateType",  categoryDetail.getRateType().toString());
+		parameters.addValue("uomId", categoryDetail.getUomId());
+		parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		parameters.addValue("id",  categoryDetail.getId());
 
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(categoryDetailsUpdateSql);
-
-				ps.setLong(1, categoryDetail.getCategoryId());
-				ps.setString(2, categoryDetail.getFeeType().toString());
-				ps.setString(3, categoryDetail.getRateType().toString());
-				ps.setLong(4, categoryDetail.getUomId());
-				ps.setString(5, auditDetails.getLastModifiedBy());
-				ps.setLong(6, auditDetails.getLastModifiedTime());
-				ps.setLong(7, categoryDetail.getId());
-
-				return ps;
-			}
-		};
-
-		jdbcTemplate.update(psc);
+		namedParameterJdbcTemplate.update(categoryDetailsUpdateSql, parameters);
+		
 		return categoryDetail;
 	}
 
@@ -214,7 +160,7 @@ public class CategoryRepository {
 			String type, String businessNature, Integer categoryId, String rateType, String feeType,
 			Integer uomId, Integer pageSize, Integer offSet) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
@@ -224,8 +170,9 @@ public class CategoryRepository {
 		}
 
 		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, type,
-				businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet, preparedStatementValues);
-		List<Category> categories = getCategories(categorySearchQuery.toString(), preparedStatementValues);
+				businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet, parameters);
+		
+		List<Category> categories = getCategories(categorySearchQuery.toString(), parameters);
 
 		return categories;
 	}
@@ -240,7 +187,7 @@ public class CategoryRepository {
 	 */
 	public List<CategoryDetail> getCategoryDetailsByCategoryId(Long categoryId, Integer pageSize, Integer offSet) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
@@ -249,9 +196,9 @@ public class CategoryRepository {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
 		String categoryDetailSearchQuery = CategoryQueryBuilder.buildCategoryDetailSearchQuery(categoryId, pageSize,
-				offSet, preparedStatementValues);
+				offSet, parameters);
 		List<CategoryDetail> categoryDetails = getCategoryDetails(categoryDetailSearchQuery.toString(),
-				preparedStatementValues);
+				parameters);
 
 		return categoryDetails;
 	}
@@ -263,10 +210,10 @@ public class CategoryRepository {
 	 * @param query
 	 * @return {@link CategoryDetail} List of CategoryDetail
 	 */
-	private List<CategoryDetail> getCategoryDetails(String query, List<Object> preparedStatementValues) {
+	private List<CategoryDetail> getCategoryDetails(String query, MapSqlParameterSource parameter) {
 
 		List<CategoryDetail> categoryDetails = new ArrayList<>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 
 		for (Map<String, Object> row : rows) {
 
@@ -295,10 +242,10 @@ public class CategoryRepository {
 	 * @param query
 	 * @return {@link Category} List of Category
 	 */
-	private List<Category> getCategories(String query, List<Object> preparedStatementValues) {
+	private List<Category> getCategories(String query, MapSqlParameterSource parameter) {
 
 		List<Category> categories = new ArrayList<>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 
 		for (Map<String, Object> row : rows) {
 

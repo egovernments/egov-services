@@ -1,8 +1,7 @@
 package org.egov.tradelicense.persistence.repository.builder;
 
-import java.util.List;
-
 import org.egov.tradelicense.util.ConstantUtility;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for UOM API's
@@ -15,19 +14,20 @@ public class UomQueryBuilder {
 
 	public static final String INSERT_UOM_QUERY = "INSERT INTO " + uomTableName
 			+ " (tenantId, code, name, active, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(?,?,?,?,?,?,?,?)";
+			+ " VALUES(:tenantId, :code, :name, :active, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_UOM_QUERY = "UPDATE " + uomTableName
-			+ " SET tenantId = ?, code = ?, name = ?, active = ?," + " lastModifiedBy = ?, lastModifiedTime = ?"
-			+ " WHERE id = ?";
+			+ " SET tenantId = :tenantId, code = :code, name = :name, active"
+			+ " = :active," + " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
+			+ " WHERE id = :id";
 
 	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
-			Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
+			Integer pageSize, Integer offSet, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + uomTableName + " where ");
-		searchSql.append(" tenantId = ? ");
-		preparedStatementValues.add(tenantId);
+		searchSql.append(" tenantId = :tenantId ");
+		parameters.addValue("tenantId", tenantId);
 
 		if (ids != null && ids.length > 0) {
 
@@ -46,33 +46,33 @@ public class UomQueryBuilder {
 		}
 
 		if (code != null && !code.isEmpty()) {
-			searchSql.append(" AND code =? ");
-			preparedStatementValues.add(code);
+			searchSql.append(" AND code = :code ");
+			parameters.addValue("code", code);
 		}
 
 		if (name != null && !name.isEmpty()) {
-			searchSql.append(" AND name =? ");
-			preparedStatementValues.add(name);
+			searchSql.append(" AND name = :name ");
+			parameters.addValue("name", name);
 		}
 
 		if (active != null) {
 			if (active.equalsIgnoreCase("False")) {
-				searchSql.append(" AND active =? ");
-				preparedStatementValues.add(false);
+				searchSql.append(" AND active = :active ");
+				parameters.addValue("active", false);
 			} else if (active.equalsIgnoreCase("True")) {
-				searchSql.append(" AND active =? ");
-				preparedStatementValues.add(true);
+				searchSql.append(" AND active = :active ");
+				parameters.addValue("active", true);
 			}
 		}
 
 		if (pageSize != null) {
-			searchSql.append(" limit ? ");
-			preparedStatementValues.add(pageSize);
+			searchSql.append(" limit :limit ");
+			parameters.addValue("limit", pageSize);
 		}
 
 		if (offSet != null) {
-			searchSql.append(" offset ? ");
-			preparedStatementValues.add(offSet);
+			searchSql.append(" offset :offset ");
+			parameters.addValue("offset", offSet);
 		}
 
 		return searchSql.toString();

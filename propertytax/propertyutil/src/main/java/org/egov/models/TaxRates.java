@@ -26,7 +26,6 @@ public class TaxRates {
     @NotNull
     private String fromDate;
 
-    @NotNull
     private String toDate;
 
     @NotNull

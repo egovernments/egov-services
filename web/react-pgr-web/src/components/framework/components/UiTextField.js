@@ -15,7 +15,7 @@ export default class UiTextField extends Component {
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={false}
-							hintText={item.label + (item.isRequired ? " *" : "")}
+							floatingLabelText={item.label + (item.isRequired ? " *" : "")}
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							errorText={this.props.fieldErrors[item.jsonPath]}

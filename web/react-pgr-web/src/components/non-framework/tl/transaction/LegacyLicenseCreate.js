@@ -261,7 +261,7 @@ class LegacyLicenseCreate extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
-  formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
+    formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
 
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
@@ -633,7 +633,7 @@ class LegacyLicenseCreate extends Component {
             }
         }
 
-this.props.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",false,false);
+       this.props.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",false,false);
 
       //if (property == "licenses[0].agreementDate") {
       //   console.log(new Date(e.target.value));
@@ -651,7 +651,7 @@ this.props.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",fal
       //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
       // }
       if (property == "licenses[0].subCategoryId") {
-console.log(e.target.value);
+       console.log(e.target.value);
         Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value}).then(function(response)
         {
           // handleChange (e, "" )

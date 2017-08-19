@@ -97,7 +97,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    let {setTenantInfo}=this.props;
+    let {setTenantInfo,setActionList}=this.props;
     // let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
     // console.log(commonState);
     //if (!window.localStorage.getItem("token")) {
@@ -146,6 +146,7 @@ class App extends Component {
         this.props.onLoad({UserRequest: JSON.parse(localStorage.getItem("userRequest"))}, localStorage.getItem("token"));
         Api.commonApiPost("tenant/v1/tenant/_search", {code:localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default'}).then(function(res){
           // console.log(res);
+          setActionList(JSON.parse(localStorage.getItem("actions")))
           setTenantInfo(res.tenant);
         }, function(err){
             console.log(err);
@@ -262,6 +263,9 @@ const mapDispatchToProps = dispatch => ({
     setTenantInfo:(tenantInfo)=>
     {
       dispatch({type:"SET_TENANT_INFO",tenantInfo});
+    },
+    setActionList:(actionList)=>{
+      dispatch({type:"SET_ACTION_LIST",actionList});
     }
 });
 

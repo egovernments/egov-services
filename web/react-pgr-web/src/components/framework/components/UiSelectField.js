@@ -103,7 +103,6 @@ class UiSelectField extends Component {
 							disabled={item.isDisabled}
 							errorText={this.props.fieldErrors[item.jsonPath]}
 							maxHeight={200}>
-								<MenuItem value={null} key="00000" primaryText="" />
 					            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
 					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
 					            ))}

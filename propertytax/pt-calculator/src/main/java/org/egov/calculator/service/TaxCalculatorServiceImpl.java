@@ -844,15 +844,16 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         Double factorValue = 1.0;
         if (property.getPropertyDetail().getFactors() != null) {
             for (Factors factor : property.getPropertyDetail().getFactors()) {
-                List<CalculationFactor> factors = getFactorByFactorTypeAndFactorCode(factor.getName().toString(),
-                        factor.getValue(),
-                        property.getTenantId(), date);
-                if (factors != null) {
-                    if (factors.size() > 0) {
-                        factorValue = factorValue * factors.get(0).getFactorValue();
+                if (factor.getValue() != null || factor.getValue() != 0) {
+                    List<CalculationFactor> factors = getFactorByFactorTypeAndFactorCode(factor.getName().toString(),
+                            factor.getValue(),
+                            property.getTenantId(), date);
+                    if (factors != null) {
+                        if (factors.size() > 0) {
+                            factorValue = factorValue * factors.get(0).getFactorValue();
+                        }
                     }
                 }
-
             }
         }
         return factorValue;

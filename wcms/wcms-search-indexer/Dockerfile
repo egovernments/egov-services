@@ -1,20 +1,12 @@
 FROM egovio/apline-jre:8u121
 
-MAINTAINER Malathi<malathi@egovernments.org>
+MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 
-#set environment variables for application.properties
-ENV DB_NAME=mydb \
-    SHOW_SQL=true \
-    DB_HOST=localhost \
-    DB_PORT=5432 \
-    DB_USER=postgres \
-    DB_PASSWORD=postgres \
-    GENERATE_DDL=true
 
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/pgr-search-indexer-0.0.1-SNAPSHOT.jar /opt/egov/pgr-search-indexer.jar
+COPY /target/wcms-search-indexer-0.0.1-SNAPSHOT.jar /opt/egov/wcms-search-indexer.jar
 
 COPY start.sh /usr/bin/start.sh
 

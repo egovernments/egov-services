@@ -256,7 +256,7 @@ class Report extends Component {
 
         <div style={{"textAlign": "center"}}>
             <RaisedButton label="Print" primary={true}  onClick={(e)=>{printer()}}/>&nbsp;
-            {this.props.formData &&  this.props.formData.Connection && this.props.formData.Connection[0].isLegacy && this.props.formData.Connection[0].billingType == "NONMETERED" && <RaisedButton label="Add/ Edit DCB" primary={true}  onClick={(e)=>{dcbButton()}}/>}
+            {this.props.formData &&  this.props.formData.Connection && this.props.formData.Connection[0] && this.props.formData.Connection[0].isLegacy && this.props.formData.Connection[0].billingType == "NONMETERED" && <RaisedButton label="Add/ Edit DCB" primary={true}  onClick={(e)=>{dcbButton()}}/>}
         </div>
       </div>
     );

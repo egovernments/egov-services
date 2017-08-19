@@ -150,7 +150,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -529,7 +529,7 @@ var dat = {
             "label": "PlumberName",
             "pattern": "",
             "type": "textarea",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -1065,6 +1065,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
+            "url": "/pt-property/property/usages/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1179,7 +1180,7 @@ var dat = {
           },
           {
             "name": "numberOfPersons",
-            "jsonPath": "Connection.numberOfPersons",
+            "jsonPath": "Connection[0].numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
             "type": "number",
             "pattern":"^(0|[1-9][0-9]*)$",
@@ -1199,7 +1200,7 @@ var dat = {
           },
           {
             "name": "numberOfFamily",
-            "jsonPath": "Connection.numberOfFamily",
+            "jsonPath": "Connection[0].numberOfFamily",
             "label": "wc.create.numberOfFamily",
             "pattern": "",
             "type": "number",
@@ -1225,7 +1226,7 @@ var dat = {
             "label": "PlumberName",
             "pattern": "",
             "type": "textarea",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -1273,7 +1274,7 @@ var dat = {
           // },
           {
             "name": " ",
-            "jsonPath": "Connection.documents[0].fileStoreId",
+            "jsonPath": "Connection[0].documents[0].fileStoreId",
             "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
             "pattern": "",
             "type": "text",
@@ -1286,7 +1287,7 @@ var dat = {
           },
           {
             "name": " ",
-            "jsonPath": "Connection.documents[0].document",
+            "jsonPath": "Connection[0].documents[0].document",
             "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
             "pattern": "",
             "isHidden": true,
@@ -1299,7 +1300,7 @@ var dat = {
           },
           {
             "name": " ",
-            "jsonPath": "Connection.documents[0].name",
+            "jsonPath": "Connection[0].documents[0].name",
             "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
             "pattern": "",
             "type": "singleFileUpload",
@@ -1312,7 +1313,7 @@ var dat = {
           },
           {
             "name": " ",
-            "jsonPath": "Connection.documents[1]",
+            "jsonPath": "Connection[0].documents[1]",
             "label": "wc.create.groups.fileDetails.fields.DistributionLineLocationMap",
             "pattern": "",
             "type": "singleFileUpload",
@@ -1323,7 +1324,7 @@ var dat = {
           },
           {
             "name": " ",
-            "jsonPath": "Connection.documents[2]",
+            "jsonPath": "Connection[0].documents[2]",
             "label": "wc.create.groups.fileDetails.fields.WhiteRationCard",
             "pattern": "",
             "type": "singleFileUpload",
@@ -1334,7 +1335,7 @@ var dat = {
           },
           {
             "name": " ",
-            "jsonPath": "Connection.documents[3]",
+            "jsonPath": "Connection[0].documents[3]",
             "label": "wc.create.groups.fileDetails.fields.CourtFeeStamp",
             "pattern": "",
             "type": "singleFileUpload",

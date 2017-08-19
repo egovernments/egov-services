@@ -2,7 +2,7 @@
 module.exports = {
     //User Roles
     ROLE_CITIZEN : "CITIZEN",
-
+    ROLE_EMPLOYEE : "EMPLOYEE",
     //Labels
     LABEL_SERVICES : "csv.lbl.services",
     LABEL_NO_SERVICS : "csv.lbl.noservices",

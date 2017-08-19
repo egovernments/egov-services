@@ -369,8 +369,8 @@ public class ReceiptDetailQueryBuilder {
         return "select instrumentheader from egcl_receiptinstrument where receiptheader = ? and tenantId = ? ";
     }
     
-    public String searchReceiptOnRcptNo() {
+  /*  public String searchReceiptOnRcptNo() {
         return "select id from egcl_receiptheader where receiptnumber = ? and tenantId = ? ";
-    }
+    } */
 
 }

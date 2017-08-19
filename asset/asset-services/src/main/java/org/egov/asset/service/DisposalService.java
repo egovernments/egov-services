@@ -3,6 +3,7 @@ package org.egov.asset.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
@@ -106,9 +107,9 @@ public class DisposalService {
                 disposal.getTenantId()))
             try {
                 log.info("Commencing Voucher Generation for Asset Sale/Disposal");
-                final Long voucherId = createVoucherForDisposal(disposalRequest, headers);
-                if (voucherId != null)
-                    disposal.setVoucherReference(voucherId);
+                final String voucherNumber = createVoucherForDisposal(disposalRequest, headers);
+                if (StringUtils.isNotBlank(voucherNumber))
+                    disposal.setVoucherReference(voucherNumber);
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
@@ -121,7 +122,7 @@ public class DisposalService {
         return getResponse(disposals, disposalRequest.getRequestInfo());
     }
 
-    private Long createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
+    private String createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         final Disposal disposal = disposalRequest.getDisposal();
         final RequestInfo requestInfo = disposalRequest.getRequestInfo();
         final List<Long> assetIds = new ArrayList<>();

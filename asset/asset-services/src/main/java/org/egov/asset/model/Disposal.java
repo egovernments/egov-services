@@ -76,5 +76,5 @@ public class Disposal {
 	private Long fund = null;
 
 	@JsonProperty("voucherReference")
-	private Long voucherReference;
+	private String voucherReference;
 }

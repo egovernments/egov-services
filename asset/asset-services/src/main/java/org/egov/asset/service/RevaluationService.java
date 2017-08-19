@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.RevaluationRequest;
@@ -74,10 +75,10 @@ public class RevaluationService {
                 revaluation.getTenantId()))
             try {
                 log.info("Commencing Voucher Generation for Asset Revaluation");
-                final Long voucherId = createVoucherForRevaluation(revaluationRequest, headers);
+                final String voucherNumber = createVoucherForRevaluation(revaluationRequest, headers);
 
-                if (voucherId != null)
-                    revaluation.setVoucherReference(voucherId);
+                if (StringUtils.isNotBlank(voucherNumber))
+                    revaluation.setVoucherReference(voucherNumber);
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
@@ -121,7 +122,7 @@ public class RevaluationService {
         return getRevaluationResponse(revaluations);
     }
 
-    private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
+    private String createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final List<Long> assetIds = new ArrayList<>();
         final RequestInfo requestInfo = revaluationRequest.getRequestInfo();

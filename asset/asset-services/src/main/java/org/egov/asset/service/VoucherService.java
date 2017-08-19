@@ -57,7 +57,7 @@ public class VoucherService {
     private AssetConfigurationService assetConfigurationService;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
+    public String createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
         headers.setOrigin("http://kurnool-pilot-services.egovernments.org");
         final String createVoucherUrl = headers.getOrigin() + applicationProperties.getEgfServiceVoucherCreatePath()
                 + "?tenantId=" + tenantId;
@@ -95,9 +95,9 @@ public class VoucherService {
         log.debug("VoucherResponse :: " + voucherResponse);
         try {
             final VoucherResponse voucherRes = mapper.readValue(voucherResponse.toString(), VoucherResponse.class);
-            final Long voucherId = voucherRes.getVouchers().get(0).getId();
-            log.debug("Voucher Id is :: " + voucherId);
-            return voucherId;
+            final String voucherNumber = voucherRes.getVouchers().get(0).getVoucherNumber();
+            log.debug("Voucher Number is :: " + voucherNumber);
+            return voucherNumber;
         } catch (final IOException e) {
             throw new RuntimeException("Voucher response Deserialization Issue :: " + e.getMessage());
         }

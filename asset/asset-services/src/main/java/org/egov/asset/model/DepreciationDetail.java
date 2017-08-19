@@ -39,7 +39,7 @@ public class DepreciationDetail {
     @JsonProperty("valueAfterDepreciation")
     private BigDecimal valueAfterDepreciation = null;
 
-    private Long voucherReference;
+    private String voucherReference;
 
     private ReasonForFailure reasonForFailure;
 }

@@ -1,8 +1,5 @@
 package org.egov.tradelicense.persistence.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +11,8 @@ import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.LicenseStatusQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -31,6 +29,9 @@ public class LicenseStatusRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -42,34 +43,24 @@ public class LicenseStatusRepository {
 	 * @return LicenseStatusId
 	 */
 	public Long createLicenseStatus(LicenseStatus licenseStatus) {
-
+		
+		final KeyHolder holder = new GeneratedKeyHolder();
 		String LicenseStatusInsert = LicenseStatusQueryBuilder.INSERT_LICENSE_STATUS_QUERY;
 		AuditDetails auditDetails = licenseStatus.getAuditDetails();
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(LicenseStatusInsert, new String[] { "id" });
-
-				ps.setString(1, licenseStatus.getTenantId());
-				ps.setString(2, licenseStatus.getName());
-				ps.setString(3, licenseStatus.getCode());
-				if (licenseStatus.getActive() != null) {
-					ps.setBoolean(4, licenseStatus.getActive());
-				} else {
-					ps.setBoolean(4, true);
-				}
-				ps.setString(5, auditDetails.getCreatedBy());
-				ps.setString(6, auditDetails.getLastModifiedBy());
-				ps.setLong(7, auditDetails.getCreatedTime());
-				ps.setLong(8, auditDetails.getLastModifiedTime());
-				return ps;
-			}
-		};
-
-		// The newly generated key will be saved in this object
-		final KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, holder);
-
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId",  licenseStatus.getTenantId());
+		parameters.addValue("name",      licenseStatus.getName());
+		parameters.addValue("code",  licenseStatus.getCode());
+		parameters.addValue("active",  licenseStatus.getActive() == null ? true : licenseStatus.getActive());
+		parameters.addValue("createdBy",   auditDetails.getCreatedBy());
+		parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
+		parameters.addValue("createdTime",  auditDetails.getCreatedTime());
+		parameters.addValue("lastModifiedTime",  auditDetails.getLastModifiedTime());
+		
+		namedParameterJdbcTemplate.update(LicenseStatusInsert, parameters, holder, new String[] { "id" });
+		
+		
+	
 		return Long.valueOf(holder.getKey().intValue());
 	}
 
@@ -83,30 +74,20 @@ public class LicenseStatusRepository {
 
 		Long updatedTime = new Date().getTime();
 		String LicenseStatusUpdateSql = LicenseStatusQueryBuilder.UPDATE_LICENSE_STATUS_QUERY;
-
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(LicenseStatusUpdateSql);
-
-				ps.setString(1, licenseStatus.getTenantId());
-				ps.setString(2, licenseStatus.getCode());
-				ps.setString(3, licenseStatus.getName());
-				if (licenseStatus.getActive() != null) {
-					ps.setBoolean(4, licenseStatus.getActive());
-				} else {
-					ps.setBoolean(4, true);
-				}
-				ps.setString(5, licenseStatus.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, updatedTime);
-				ps.setLong(7, licenseStatus.getId());
-
-				return ps;
-			}
-		};
-
-		jdbcTemplate.update(psc);
+        AuditDetails auditDetails = licenseStatus.getAuditDetails();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId", licenseStatus.getTenantId());
+		parameters.addValue("code", licenseStatus.getCode());
+		parameters.addValue("name", licenseStatus.getName());
+		parameters.addValue("active", licenseStatus.getActive() == null ? true : licenseStatus.getActive());
+		parameters.addValue("lastModifiedBy", auditDetails == null ? null : auditDetails.getLastModifiedBy());
+		parameters.addValue("lastModifiedTime", updatedTime);
+		parameters.addValue("id", licenseStatus.getId());
+		namedParameterJdbcTemplate.update(LicenseStatusUpdateSql, parameters);
+		
 		return licenseStatus;
+
+		
 	}
 
 	/**
@@ -124,7 +105,7 @@ public class LicenseStatusRepository {
 	public List<LicenseStatus> searchLicenseStatus(String tenantId, Integer[] ids, String name, String code,
 			String active, Integer pageSize, Integer offSet) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
@@ -132,9 +113,9 @@ public class LicenseStatusRepository {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
 		String LicenseStatusSearchQuery = LicenseStatusQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active,
-				pageSize, offSet, preparedStatementValues);
+				pageSize, offSet, parameters);
 		List<LicenseStatus> LicenseStatuslst = getLicenseStatusSearchQuery(LicenseStatusSearchQuery.toString(),
-				preparedStatementValues);
+				parameters);
 
 		return LicenseStatuslst;
 	}
@@ -147,10 +128,10 @@ public class LicenseStatusRepository {
 	 *            String that need to be executed
 	 * @return {@link LicenseStatus} List of LicenseStatus
 	 */
-	private List<LicenseStatus> getLicenseStatusSearchQuery(String query, List<Object> preparedStatementValues) {
+	private List<LicenseStatus> getLicenseStatusSearchQuery(String query, MapSqlParameterSource parameter) {
 
 		List<LicenseStatus> LicenseStatuslst = new ArrayList<>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 		for (Map<String, Object> row : rows) {
 
 			LicenseStatus licenseStatus = new LicenseStatus();

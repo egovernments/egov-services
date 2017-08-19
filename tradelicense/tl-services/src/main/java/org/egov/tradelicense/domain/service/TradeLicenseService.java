@@ -284,11 +284,11 @@ public class TradeLicenseService {
 
 				if (validFrom != null && validPeriod != null) {
 
-					Long validFromDateInMillis = validFrom * 1000;
+					
 					FinancialYearContract currentFYResponse = financialYearContractRepository
 							.findFinancialYearIdByDate(tenantId, currenDate, requestInfoWrapper);
 					FinancialYearContract licenseValidFYResponse = financialYearContractRepository
-							.findFinancialYearIdByDate(tenantId, validFromDateInMillis, requestInfoWrapper);
+							.findFinancialYearIdByDate(tenantId, validFrom, requestInfoWrapper);
 
 					String currentFinancialYear = null;
 					String licenseValidFromFinancialYear = null;
@@ -326,7 +326,7 @@ public class TradeLicenseService {
 					if (actualFeeDetailCount != tradeLicense.getFeeDetails().size()) {
 						throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
 					}
-					Date tradeValidFromDate = new Date(validFromDateInMillis);
+					Date tradeValidFromDate = new Date(validFrom);
 					today.setTimeInMillis(tradeValidFromDate.getTime());
 					//today.add(Calendar.YEAR, (actualFeeDetailStartYear - actualFeeDetailsEndYear));
 					// validate the fee details

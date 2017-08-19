@@ -41,6 +41,8 @@ public class RequestEnrichmentFilter extends ZuulFilter {
 
     public RequestEnrichmentFilter() {
         this.objectMapper = new ObjectMapper();
+        objectMapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+
     }
 
     @Override

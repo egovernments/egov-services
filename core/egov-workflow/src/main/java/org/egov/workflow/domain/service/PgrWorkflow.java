@@ -20,7 +20,7 @@ public class PgrWorkflow implements Workflow {
 
     public static final String STATE_ID = "systemStateId";
     public static final String DEPARTMENT = "department";
-    public static final String IN_PROGRESS = "IN PROGRESS";
+    public static final String ESCALATED = "ESCALATED";
     public static final String COMPLAINT = "Complaint";
     public static final String SYSTEM_KEYWORD = "keyword";
     public static final String DELIVERABLE_SERVICE = "Deliverable_Service";
@@ -222,7 +222,7 @@ public class PgrWorkflow implements Workflow {
                 } else {
                     state.setOwnerPosition(newAssignee);
                     state.setPreviousOwner(task.getPreviousAssignee());
-                    state.setValue(IN_PROGRESS);
+                    state.setValue(ESCALATED);
                 }
             } else
                 state.setOwnerPosition(Long.valueOf(task.getAssignee()));

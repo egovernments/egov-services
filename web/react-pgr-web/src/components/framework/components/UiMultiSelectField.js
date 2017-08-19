@@ -19,7 +19,7 @@ class UiMultiSelectField extends Component {
    			this.initDat(nextProps);
    		}
    	}
-   	
+
    	initDat(props) {
    		let {item, setDropDownData, useTimestamp}=props;
 		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1)
@@ -75,7 +75,7 @@ class UiMultiSelectField extends Component {
 							}
 							errorText={this.props.fieldErrors[item.jsonPath]}
 							maxHeight={200}>
-								<MenuItem value={null} key="00000" primaryText="" />
+								
 					            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
 					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
 					            ))}

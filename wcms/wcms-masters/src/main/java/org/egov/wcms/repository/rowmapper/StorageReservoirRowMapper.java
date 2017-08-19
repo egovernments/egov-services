@@ -49,21 +49,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class StorageReservoirRowMapper implements RowMapper<StorageReservoir> {
 
-	@Override
-	public StorageReservoir mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		final StorageReservoir storageReservoir = new StorageReservoir();
-		storageReservoir.setId(rs.getLong("storagereservoir_id"));
-		storageReservoir.setCode(rs.getString("storagereservoir_code"));
-		storageReservoir.setName(rs.getString("storagereservoir_name"));
-		storageReservoir.setReservoirType(rs.getString("storagereservoir_reservoirtype"));
-		storageReservoir.setLocationNum(rs.getString("storagereservoir_location"));
-		storageReservoir.setWardNum(rs.getString("storagereservoir_ward"));
-		storageReservoir.setZoneNum(rs.getString("storagereservoir_zone"));
-		storageReservoir.setCapacity(rs.getDouble("storagereservoir_capacity"));
-		storageReservoir.setNoOfSubLines(rs.getLong("storagereservoir_noofsublines"));
-		storageReservoir.setNoOfMainDistributionLines(rs.getLong("storagereservoir_noofmaindistributionlines"));
-		storageReservoir.setNoOfConnection(rs.getLong("storagereservoir_noofconnection"));
-		storageReservoir.setTenantId(rs.getString("storagereservoir_tenantId"));
-		return storageReservoir;
-	}
+    @Override
+    public StorageReservoir mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final StorageReservoir storageReservoir = new StorageReservoir();
+        storageReservoir.setId(rs.getLong("storagereservoir_id"));
+        storageReservoir.setCode(rs.getString("storagereservoir_code"));
+        storageReservoir.setName(rs.getString("storagereservoir_name"));
+        storageReservoir.setReservoirType(rs.getString("storagereservoir_reservoirtype"));
+        storageReservoir.setLocationNum(rs.getString("storagereservoir_location"));
+        storageReservoir.setWardNum(rs.getString("storagereservoir_ward"));
+        storageReservoir.setZoneNum(rs.getString("storagereservoir_zone"));
+        storageReservoir.setCapacity(rs.getDouble("storagereservoir_capacity"));
+        storageReservoir.setNoOfSubLines(rs.getLong("storagereservoir_noofsublines"));
+        storageReservoir.setNoOfMainDistributionLines(rs.getLong("storagereservoir_noofmaindistributionlines"));
+        storageReservoir.setNoOfConnection(rs.getLong("storagereservoir_noofconnection"));
+        storageReservoir.setTenantId(rs.getString("storagereservoir_tenantId"));
+        return storageReservoir;
+    }
 }

@@ -24,22 +24,22 @@ public class FinancialYearContractRepository {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	private PropertiesManager propertiesManger;
+	private PropertiesManager propertiesManager;
 
 	public FinancialYearContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 	}
 
 	public FinancialYearContract findFinancialYearIdByDate(String tenantId, Long date,
-			RequestInfoWrapper requestInfoWrapper)  {
+			RequestInfoWrapper requestInfoWrapper) {
 
-		String hostUrl = propertiesManger.getFinancialYearServiceHostName()
-				+ propertiesManger.getFinancialYearServiceBasePath();
-		String searchUrl = propertiesManger.getFinancialYearServiceSearchPath();
+		String hostUrl = propertiesManager.getFinancialYearServiceHostName()
+				+ propertiesManager.getFinancialYearServiceBasePath();
+		String searchUrl = propertiesManager.getFinancialYearServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
-		String asOnDate = sf.format(new Date(date * 1000));
+		String asOnDate = sf.format(new Date(date));
 		if (date != null) {
 			content.append("asOnDate=" + asOnDate);
 		}
@@ -56,7 +56,7 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new InvalidInputException("Error connecting to Location end point " +url );
+			throw new InvalidInputException("Error connecting to Location end point " + url);
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null
@@ -64,7 +64,7 @@ public class FinancialYearContractRepository {
 
 			return financialYearContractResponse.getFinancialYears().get(0);
 		} else {
-			throw new InvalidInputException(propertiesManger.getEndPointError());
+			return null;
 		}
 
 	}

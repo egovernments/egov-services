@@ -62,43 +62,43 @@ import lombok.ToString;
 @Builder
 public class TreatmentPlantGetRequest {
 
-	private List<Long> id;
+    private List<Long> id;
 
-	private String name;
+    private String name;
 
-	private String code;
+    private String code;
 
-	private String plantType;
+    private String plantType;
 
-	private String locationName;
+    private String locationName;
 
-	private String location;
+    private String location;
 
-	private String wardName;
+    private String wardName;
 
-	private String ward;
+    private String ward;
 
-	private String zoneName;
+    private String zoneName;
 
-	private String zone;
+    private String zone;
 
-	private double capacity;
+    private double capacity;
 
-	private Long storageReservoirId;
+    private Long storageReservoirId;
 
-	private String storageReservoirName;
+    private String storageReservoirName;
 
-	@NotNull
-	private String tenantId;
+    @NotNull
+    private String tenantId;
 
-	private String sortBy;
+    private String sortBy;
 
-	private String sortOrder;
+    private String sortOrder;
 
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
 
-	private Short pageNumber;
+    private Short pageNumber;
 
 }

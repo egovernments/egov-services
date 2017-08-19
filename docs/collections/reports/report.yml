@@ -117,7 +117,7 @@ ReportDefinitions:
   - name: department
     label: reports.collection.department
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=default|$..id|$..name 
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=default|$..id|$..name 
     source: collection 
     isMandatory: true
   - name: paymentmode

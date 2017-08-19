@@ -143,7 +143,7 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setOldLicenseNumber(this.oldLicenseNumber);
 
 		if (this.applicationDate != null) {
-			tradeLicenseSearch.setApplicationDate( (this.applicationDate.getTime()/1000));
+			tradeLicenseSearch.setApplicationDate( (this.applicationDate.getTime()));
 		}
 
 		tradeLicenseSearch.setAdhaarNumber(this.adhaarNumber);
@@ -203,15 +203,15 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setRemarks(this.remarks);
 
 		if (this.tradeCommencementDate != null) {
-			tradeLicenseSearch.setTradeCommencementDate((this.tradeCommencementDate.getTime()/1000));
+			tradeLicenseSearch.setTradeCommencementDate((this.tradeCommencementDate.getTime()));
 		}
 
 		if (this.agreementDate != null) {
-			tradeLicenseSearch.setAgreementDate((this.agreementDate.getTime()/1000));
+			tradeLicenseSearch.setAgreementDate((this.agreementDate.getTime()));
 		}
 
 		if (this.licenseValidFromDate != null) {
-			tradeLicenseSearch.setLicenseValidFromDate((this.licenseValidFromDate.getTime()/1000));
+			tradeLicenseSearch.setLicenseValidFromDate((this.licenseValidFromDate.getTime()));
 		}
 
 		tradeLicenseSearch.setIsPropertyOwner( this.isPropertyOwner);
@@ -226,7 +226,7 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setStatusName(this.statusName);
 
 		if (this.expiryDate != null) {
-			tradeLicenseSearch.setExpiryDate((this.expiryDate.getTime()/1000));
+			tradeLicenseSearch.setExpiryDate((this.expiryDate.getTime()));
 		}
 
 		tradeLicenseSearch.setFeeDetails(this.feeDetails);

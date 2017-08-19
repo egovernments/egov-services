@@ -106,36 +106,8 @@
         "parentConnectionId": {
             "type": "long"
         },
-        "documents": [{
-        	"document" : {
-             	"type" : "keyword"
-            },
-            "documentId" : {
-             	"type" : "long"
-            },
-            "name" : {
-             	"type" : "keyword"
-            },
-            "fileStoreId" : {
-             	"type" : "string"
-            }
-        }],
-        "connectionDemands" : [{
-       		"id" : {
-             	"type" : "long"
-            },
-            "connectionid" : {
-             	"type" : "long"
-            },
-            "demandid" : {
-             	"type" : "keyword"
-            },
-            "tenantid" : {
-             	"type" : "keyword"
-            }
-        }],
-        "tenantid" : {
-             	"type" : "keyword"
+        "tenantId" : {
+            "type" : "keyword"
         },
         "createdDate": {
             "type": "date",

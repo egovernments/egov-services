@@ -42,7 +42,6 @@ package org.egov.wcms.transaction.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,32 +79,32 @@ public class DemandConnectionService {
 
     @Autowired
     private ConfigurationManager configurationManager;
-    
-    private static final String BUSINESSSERVICE="WC";
+
+    private static final String BUSINESSSERVICE = "WC";
 
     public List<Demand> prepareDemand(final Demand demandrequest, final WaterConnectionReq waterConnectionRequest) {
 
         final List<Demand> demandList = new ArrayList<>();
         final String tenantId = waterConnectionRequest.getConnection().getTenantId();
         final String propertyType = waterConnectionRequest.getConnection().getApplicationType();
-        Owner ownerobj=new Owner();
+        final Owner ownerobj = new Owner();
         ownerobj.setTenantId(tenantId);
         ownerobj.setId(waterConnectionRequest.getRequestInfo().getUserInfo().getId());
         final Map<String, Object> feeDetails = new HashMap<>();
         final Demand demand = new Demand();
-        TaxPeriodResponse taxperiodres=getTaxPeriodByPeriodCycleAndService(tenantId,PeriodCycle.ANNUAL,null);
-        if(!waterConnectionRequest.getConnection().getEstimationCharge().isEmpty())
-        {
-            EstimationCharge estimationCharge=waterConnectionRequest.getConnection().getEstimationCharge().get(0);
-            feeDetails.put(WcmsConnectionConstants.SPECIALDEPOSITECHARGEDEMANDREASON,100d);
-            if(estimationCharge.getSpecialSecurityCharges() > 0.0)
-            feeDetails.put(WcmsConnectionConstants.SPECIALSECURITYCHARGEDEMANDREASON, estimationCharge.getSpecialSecurityCharges());
-           if(estimationCharge.getEstimationCharges() > 0.0)
-            feeDetails.put(WcmsConnectionConstants.ESIMATIONCHARGEDEMANDREASON, estimationCharge.getEstimationCharges());
-           if(estimationCharge.getRoadCutCharges() > 0.0)
-            feeDetails.put(WcmsConnectionConstants.ROADCUTCHARGEDEMANDREASON,estimationCharge.getRoadCutCharges());
-           if(estimationCharge.getSupervisionCharges() > 0.0)
-            feeDetails.put(WcmsConnectionConstants.SUPERVISIONCHARGEREASON, estimationCharge.getSupervisionCharges());
+        final TaxPeriodResponse taxperiodres = getTaxPeriodByPeriodCycleAndService(tenantId, PeriodCycle.ANNUAL, null);
+        if (!waterConnectionRequest.getConnection().getEstimationCharge().isEmpty()) {
+            final EstimationCharge estimationCharge = waterConnectionRequest.getConnection().getEstimationCharge().get(0);
+            feeDetails.put(WcmsConnectionConstants.SPECIALDEPOSITECHARGEDEMANDREASON, 100d);
+            if (estimationCharge.getSpecialSecurityCharges() > 0.0)
+                feeDetails.put(WcmsConnectionConstants.SPECIALSECURITYCHARGEDEMANDREASON,
+                        estimationCharge.getSpecialSecurityCharges());
+            if (estimationCharge.getEstimationCharges() > 0.0)
+                feeDetails.put(WcmsConnectionConstants.ESIMATIONCHARGEDEMANDREASON, estimationCharge.getEstimationCharges());
+            if (estimationCharge.getRoadCutCharges() > 0.0)
+                feeDetails.put(WcmsConnectionConstants.ROADCUTCHARGEDEMANDREASON, estimationCharge.getRoadCutCharges());
+            if (estimationCharge.getSupervisionCharges() > 0.0)
+                feeDetails.put(WcmsConnectionConstants.SUPERVISIONCHARGEREASON, estimationCharge.getSupervisionCharges());
         }
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
@@ -113,149 +112,151 @@ public class DemandConnectionService {
         demand.setConsumerCode(waterConnectionRequest.getConnection().getAcknowledgementNumber());
         final Set<DemandDetail> dmdDetailSet = new HashSet<>();
         for (final String demandReason : feeDetails.keySet())
-           dmdDetailSet.add(createDemandDeatils(tenantId,demandReason, 
-                   (Double)feeDetails.get(demandReason), 0d));
-        
+            dmdDetailSet.add(createDemandDeatils(tenantId, demandReason,
+                    (Double) feeDetails.get(demandReason), 0d));
+
         demand.setOwner(ownerobj);
         demand.setDemandDetails(new ArrayList<>(dmdDetailSet));
         demand.setMinimumAmountPayable(new BigDecimal(1));
-        if(taxperiodres!=null && !taxperiodres.getTaxPeriods().isEmpty()){
-        demand.setTaxPeriodFrom(taxperiodres.getTaxPeriods().get(0).getFromDate());
-        demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
+        if (taxperiodres != null && !taxperiodres.getTaxPeriods().isEmpty()) {
+            demand.setTaxPeriodFrom(taxperiodres.getTaxPeriods().get(0).getFromDate());
+            demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
         }
         demandList.add(demand);
 
         return demandList;
     }
-    public List<Demand> prepareDemandForLegacy( DemandDetailBeanReq demandDetailBeanReq,final Connection connection,RequestInfo requestInfo,DemandBeanGetRequest demandBeanGetRequest) {
+
+    public List<Demand> prepareDemandForLegacy(final DemandDetailBean demandReason, final Connection connection,
+            final RequestInfo requestInfo, final DemandBeanGetRequest demandBeanGetRequest) {
 
         final List<Demand> demandList = new ArrayList<>();
         final String tenantId = connection.getTenantId();
-        Owner ownerobj=new Owner();
+        final Owner ownerobj = new Owner();
         ownerobj.setTenantId(tenantId);
         ownerobj.setId(requestInfo.getUserInfo().getId());
         final Demand demand = new Demand();
-        TaxPeriodResponse taxperiodres=getTaxPeriodByPeriodCycleAndService(tenantId,PeriodCycle.HALFYEAR,demandBeanGetRequest.getExecutionDate());
+        final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
         demand.setConsumerType(connection.getApplicationType());
         demand.setConsumerCode(connection.getConsumerNumber());
         final Set<DemandDetail> dmdDetailSet = new HashSet<>();
-        for (final DemandDetailBean demandReason : demandDetailBeanReq.getDemandDetailBeans()) {
-            String demandreasoncode="WATERCHARGE"+demandReason.getTaxHeadMasterCode().split("#")[1];
+         final String demandreasoncode = "WATERCHARGE" + demandReason.getTaxHeadMasterCode().split("#")[1];
             dmdDetailSet.add(createLegacyDemandDeatils(
-                   tenantId,demandreasoncode, 
-                   demandReason.getTaxAmount(),demandReason.getCollectionAmount(),demandReason.getTaxPeriodCode()));
-            
-        }
-        
+                    tenantId, demandreasoncode,
+                    demandReason.getTaxAmount(), demandReason.getCollectionAmount(), demandReason.getTaxPeriodCode()));
         demand.setOwner(ownerobj);
         demand.setDemandDetails(new ArrayList<>(dmdDetailSet));
         demand.setMinimumAmountPayable(new BigDecimal(1));
-        if(taxperiodres!=null && !taxperiodres.getTaxPeriods().isEmpty()){
-        demand.setTaxPeriodFrom(taxperiodres.getTaxPeriods().get(0).getFromDate());
-        demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
+        if (taxperiodres != null && !taxperiodres.getTaxPeriods().isEmpty()) {
+            demand.setTaxPeriodFrom(taxperiodres.getTaxPeriods().get(0).getFromDate());
+            demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
         }
         demandList.add(demand);
-
         return demandList;
     }
-    private DemandDetail createDemandDeatils(final String tenantId, final String
-            demandReason,final double amount,final double collectedAmount) {
-        DemandDetail  demandDetail = new DemandDetail();
+
+    private DemandDetail createDemandDeatils(final String tenantId, final String demandReason, final double amount,
+            final double collectedAmount) {
+        final DemandDetail demandDetail = new DemandDetail();
         demandDetail.setTaxHeadMasterCode(demandReason);
         demandDetail.setTaxAmount(new BigDecimal(amount));
         demandDetail.setCollectionAmount(new BigDecimal(collectedAmount));
         demandDetail.setTenantId(tenantId);
         return demandDetail;
-        
-    }
-   
-    private DemandDetail createLegacyDemandDeatils(final String tenantId, final String
-            demandReason,final double amount,final double collectedAmount,String taxPeriodCode) {
-        DemandDetail  demandDetail = new DemandDetail();
-        //getTaxHeadMasterByCodeAndDates(tenantId,demandReason,taxPeriodCode);
-        demandDetail.setTaxHeadMasterCode(demandReason);
-        demandDetail.setTaxAmount(new BigDecimal(amount));
-        demandDetail.setCollectionAmount(new BigDecimal(collectedAmount));
-        demandDetail.setTenantId(tenantId);
-        return demandDetail;
-        
-    }
-   
-    public TaxPeriodResponse getTaxPeriodByPeriodCycleAndService(final String tenantId,final PeriodCycle periodCycle,Long fromDate)
-    {
-         TaxPeriodCriteria taxperiodcriteria=new TaxPeriodCriteria();
-         taxperiodcriteria.setTenantId(tenantId);
-         taxperiodcriteria.setFromDate(fromDate);
-         taxperiodcriteria.setService(BUSINESSSERVICE);
-         taxperiodcriteria.setPeriodCycle(periodCycle);
-         StringBuilder url = new StringBuilder();
-         url .append( configurationManager.getBillingDemandServiceHostNameTopic()).append(configurationManager.getTaxperidforfinancialYearTopic());
-         url.append("?service=").append(taxperiodcriteria.getService()).append("&tenantId=").append(taxperiodcriteria.getTenantId())
-        .append("&periodCycle=").append(taxperiodcriteria.getPeriodCycle());
-        return getTaxPeriodServiceResponse(url);
-    }
-    
-    public TaxPeriodResponse getTaxPeriodByTaxCodeAndService(final String taxCode,final String tenantId)
-    {
-         TaxPeriodCriteria taxperiodcriteria=new TaxPeriodCriteria();
-         taxperiodcriteria.setTenantId(tenantId);
-         taxperiodcriteria.setService(BUSINESSSERVICE);
-         taxperiodcriteria.setCode(taxCode);
-         StringBuilder url = new StringBuilder();
-         url .append( configurationManager.getBillingDemandServiceHostNameTopic()).append(configurationManager.getTaxperidforfinancialYearTopic());
-         url.append("?service=").append(taxperiodcriteria.getService()).append("&tenantId=").append(taxperiodcriteria.getTenantId())
-        .append("&code=").append(taxperiodcriteria.getCode());
-        return getTaxPeriodServiceResponse(url);
-    }
-    protected TaxPeriodResponse getTaxPeriodServiceResponse(StringBuilder url) {
-        TaxPeriodResponse taxPeriod;
-        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        
-        taxPeriod=new RestTemplate().postForObject(url.toString(), request, TaxPeriodResponse.class);
-        
-        if(taxPeriod!=null && !taxPeriod.getTaxPeriods().isEmpty()){
-            return taxPeriod;
-        }
-        else {
-        throw new WaterConnectionException("No TaxPeriod Present For Current Financial Year",
-                "No TaxPeriod Present For Current Financial Year", requestInfo);
-        }
+
     }
 
-    public TaxHeadMasterResponse getTaxHeadMasterByCodeAndDates(final String tenantId,String demandReason,final String taxPeriodCode)
-    {
-        TaxHeadMasterResponse taxHeadMaster=null;
-       
+    private DemandDetail createLegacyDemandDeatils(final String tenantId, final String demandReason, final double amount,
+            final double collectedAmount, final String taxPeriodCode) {
+        final DemandDetail demandDetail = new DemandDetail();
+        // getTaxHeadMasterByCodeAndDates(tenantId,demandReason,taxPeriodCode);
+        demandDetail.setTaxHeadMasterCode(demandReason);
+        demandDetail.setTaxAmount(new BigDecimal(amount));
+        demandDetail.setCollectionAmount(new BigDecimal(collectedAmount));
+        demandDetail.setTenantId(tenantId);
+        return demandDetail;
+
+    }
+
+    public TaxPeriodResponse getTaxPeriodByPeriodCycleAndService(final String tenantId, final PeriodCycle periodCycle,
+            final Long fromDate) {
+        final TaxPeriodCriteria taxperiodcriteria = new TaxPeriodCriteria();
+        taxperiodcriteria.setTenantId(tenantId);
+        taxperiodcriteria.setFromDate(fromDate);
+        taxperiodcriteria.setService(BUSINESSSERVICE);
+        taxperiodcriteria.setPeriodCycle(periodCycle);
+        final StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getBillingDemandServiceHostNameTopic())
+                .append(configurationManager.getTaxperidforfinancialYearTopic());
+        url.append("?service=").append(taxperiodcriteria.getService()).append("&tenantId=")
+                .append(taxperiodcriteria.getTenantId())
+                .append("&periodCycle=").append(taxperiodcriteria.getPeriodCycle());
+        return getTaxPeriodServiceResponse(url);
+    }
+
+    public TaxPeriodResponse getTaxPeriodByTaxCodeAndService(final String taxCode, final String tenantId) {
+        final TaxPeriodCriteria taxperiodcriteria = new TaxPeriodCriteria();
+        taxperiodcriteria.setTenantId(tenantId);
+        taxperiodcriteria.setService(BUSINESSSERVICE);
+        taxperiodcriteria.setCode(taxCode);
+        final StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getBillingDemandServiceHostNameTopic())
+                .append(configurationManager.getTaxperidforfinancialYearTopic());
+        url.append("?service=").append(taxperiodcriteria.getService()).append("&tenantId=")
+                .append(taxperiodcriteria.getTenantId())
+                .append("&code=").append(taxperiodcriteria.getCode());
+        return getTaxPeriodServiceResponse(url);
+    }
+
+    protected TaxPeriodResponse getTaxPeriodServiceResponse(final StringBuilder url) {
+        TaxPeriodResponse taxPeriod;
         final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        TaxPeriodResponse taxperiodres=getTaxPeriodByTaxCodeAndService(taxPeriodCode,tenantId);
-        Set<String> reasonCode= new HashSet<>();
+
+        taxPeriod = new RestTemplate().postForObject(url.toString(), request, TaxPeriodResponse.class);
+
+        if (taxPeriod != null && !taxPeriod.getTaxPeriods().isEmpty())
+            return taxPeriod;
+        else
+            throw new WaterConnectionException("No TaxPeriod Present For Current Financial Year",
+                    "No TaxPeriod Present For Current Financial Year", requestInfo);
+    }
+
+    public TaxHeadMasterResponse getTaxHeadMasterByCodeAndDates(final String tenantId, final String demandReason,
+            final String taxPeriodCode) {
+        TaxHeadMasterResponse taxHeadMaster = null;
+
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
+        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(taxPeriodCode, tenantId);
+        final Set<String> reasonCode = new HashSet<>();
         reasonCode.add(demandReason);
-        TaxHeadMasterCriteria taxheadcriteria=new TaxHeadMasterCriteria();
+        final TaxHeadMasterCriteria taxheadcriteria = new TaxHeadMasterCriteria();
         taxheadcriteria.setTenantId(tenantId);
         taxheadcriteria.setValidFrom(taxperiodres.getTaxPeriods().get(0).getFromDate());
         taxheadcriteria.setValidTill(taxperiodres.getTaxPeriods().get(0).getToDate());
         taxheadcriteria.setService(BUSINESSSERVICE);
         taxheadcriteria.setCode(reasonCode);
-        
-        StringBuilder url = new StringBuilder();
-        url .append( configurationManager.getBillingDemandServiceHostNameTopic()).append(configurationManager.getTaxperidforfinancialYearTopic());
+
+        final StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getBillingDemandServiceHostNameTopic())
+                .append(configurationManager.getTaxperidforfinancialYearTopic());
         url.append("?service=").append(taxheadcriteria.getService()).append("&tenantId=")
-        .append(taxheadcriteria.getTenantId()). append("&code=").append(taxheadcriteria.getCode());
-        taxHeadMaster=new RestTemplate().postForObject(url.toString(), request, TaxHeadMasterResponse.class);
-        
-        if(taxHeadMaster!=null && taxHeadMaster.getTaxHeadMasters()!=null && !taxHeadMaster.getTaxHeadMasters().isEmpty()){
+                .append(taxheadcriteria.getTenantId()).append("&code=").append(taxheadcriteria.getCode());
+        taxHeadMaster = new RestTemplate().postForObject(url.toString(), request, TaxHeadMasterResponse.class);
+
+        if (taxHeadMaster != null && taxHeadMaster.getTaxHeadMasters() != null && !taxHeadMaster.getTaxHeadMasters().isEmpty())
             return taxHeadMaster;
-        }
-        else {
-        throw new WaterConnectionException("No TaxHeadMatser Present For TaxHeadMaster  "+taxheadcriteria.getCode()+"and TaxHeadStarts from "+taxheadcriteria.getValidFrom(),
-                "No TaxHeadMatser Present For TaxHeadMaster  "+taxheadcriteria.getCode()+"and TaxHeadStarts from "+taxheadcriteria.getValidFrom(), requestInfo);
-        }
+        else
+            throw new WaterConnectionException("No TaxHeadMatser Present For TaxHeadMaster  " + taxheadcriteria.getCode()
+                    + "and TaxHeadStarts from " + taxheadcriteria.getValidFrom(),
+                    "No TaxHeadMatser Present For TaxHeadMaster  " + taxheadcriteria.getCode() + "and TaxHeadStarts from "
+                            + taxheadcriteria.getValidFrom(),
+                    requestInfo);
     }
 
     public DemandResponse createDemand(final List<Demand> demands, final RequestInfo requestInfo) {

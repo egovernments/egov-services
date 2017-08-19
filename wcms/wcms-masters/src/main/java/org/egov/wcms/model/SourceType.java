@@ -78,6 +78,10 @@ public class SourceType {
     private String description;
 
     private Boolean active;
+    
+    private Double sourceCapacity;
+    
+    private Double ulbReserved;
 
     @JsonIgnore
     private AuditDetails auditDeatils;
@@ -85,4 +89,5 @@ public class SourceType {
     @Size(max = 250)
     @NotNull
     private String tenantId;
+    
 }

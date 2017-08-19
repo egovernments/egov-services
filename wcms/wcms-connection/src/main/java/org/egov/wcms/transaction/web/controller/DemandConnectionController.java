@@ -40,7 +40,6 @@
 package org.egov.wcms.transaction.web.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -79,82 +78,85 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/connection")
 public class DemandConnectionController {
-    
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
     @Autowired
-    private ErrorHandler errHandler;   
-    
+    private ErrorHandler errHandler;
+
     @Autowired
     private DemandConnectionService demandConnectionService;
-    
+
     @Autowired
     private WaterConnectionService waterConnectionService;
-    
-   
+
     @PostMapping(value = "/getLegacyDemandDetailBeanListByExecutionDate")
     @ResponseBody
-    public ResponseEntity<?> getDemandDetailForLegacyAddDemandDetail(@ModelAttribute @Valid final DemandBeanGetRequest demandBeanGetRequest,
+    public ResponseEntity<?> getDemandDetailForLegacyAddDemandDetail(
+            @ModelAttribute @Valid final DemandBeanGetRequest demandBeanGetRequest,
             @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final List<DemandDetailBean> dmdDetailBeanList = new ArrayList<>();
-        if(demandBeanGetRequest!=null && demandBeanGetRequest.getConsumerNuber()!=null){
-        Connection waterConn=waterConnectionService.getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNuber());
-        if(waterConn==null){
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = new Error();
-        error.setDescription("Entered ConsumerNumber is not valid");
-        errorResponse.setError(error);
-        }
-        else
-        {
-        TaxPeriodResponse taxperiodres=demandConnectionService.getTaxPeriodByPeriodCycleAndService(demandBeanGetRequest.getTenantId(),PeriodCycle.HALFYEAR,
-                demandBeanGetRequest.getExecutionDate());
-        List<TaxPeriod>taxPeriodList=taxperiodres.getTaxPeriods();
-        
-        try{
-            for (TaxPeriod tax:taxPeriodList)
-            {
-                dmdDetailBeanList.add(createDemandDeatils(demandBeanGetRequest.getTenantId(),WcmsConnectionConstants.WATERDEMANDREASONNAME+"#"+tax.getFinancialYear(), tax.getFinancialYear(),
-                        0d,0d,tax.getCode()));
+        if (demandBeanGetRequest != null && demandBeanGetRequest.getConsumerNumber() != null) {
+            final Connection waterConn = waterConnectionService
+                    .getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNumber());
+            if (waterConn == null) {
+                final ErrorResponse errorResponse = new ErrorResponse();
+                final Error error = new Error();
+                error.setDescription("Entered ConsumerNumber is not valid");
+                errorResponse.setError(error);
+            } else {
+                final TaxPeriodResponse taxperiodres = demandConnectionService.getTaxPeriodByPeriodCycleAndService(
+                        demandBeanGetRequest.getTenantId(), PeriodCycle.HALFYEAR,
+                        demandBeanGetRequest.getExecutionDate());
+                final List<TaxPeriod> taxPeriodList = taxperiodres.getTaxPeriods();
+
+                try {
+                    for (final TaxPeriod tax : taxPeriodList)
+                        dmdDetailBeanList.add(createDemandDeatils(demandBeanGetRequest.getTenantId(),
+                                WcmsConnectionConstants.WATERDEMANDREASONNAME + "#" + tax.getFinancialYear(),
+                                tax.getFinancialYear(),
+                                0d, 0d, tax.getCode()));
+
+                } catch (final Exception exception) {
+
+                    return errHandler.getResponseEntityForUnexpectedErrors(requestInfoWrapper.getRequestInfo());
+                }
             }
-            
-        } catch (final Exception exception) {
-            
-            return errHandler.getResponseEntityForUnexpectedErrors(requestInfoWrapper.getRequestInfo());
-        }
-        }
         }
         return getSuccessResponse(dmdDetailBeanList, requestInfoWrapper.getRequestInfo());
     }
+
     @PostMapping(value = "/_leacydemand")
     @ResponseBody
     public ResponseEntity<?> updateDemandForLegacy(
             @ModelAttribute @Valid final DemandBeanGetRequest demandBeanGetRequest,
             final BindingResult requestBodyBindingResult,
-            @RequestBody  final DemandDetailBeanReq demandDetailBeanReq) {
-        Connection waterConn=waterConnectionService.getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNuber());
-        if(waterConn==null){
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = new Error();
-        error.setDescription("Entered ConsumerNumber is not valid");
-        errorResponse.setError(error);
-        }
-        else
-        {
-            RequestInfo requestInfo=demandDetailBeanReq.getRequestInfo();
-            List<Demand> pros = demandConnectionService.prepareDemandForLegacy(demandDetailBeanReq, waterConn, requestInfo,demandBeanGetRequest);
-            DemandResponse    demandRes = demandConnectionService.createDemand(pros, demandDetailBeanReq.getRequestInfo());
+            @RequestBody final DemandDetailBeanReq demandDetailBeanReq) {
+        final Connection waterConn = waterConnectionService
+                .getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNumber());
+        if (waterConn == null) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription("Entered ConsumerNumber is not valid");
+            errorResponse.setError(error);
+        } else {
+            final RequestInfo requestInfo = demandDetailBeanReq.getRequestInfo();
+            for (final DemandDetailBean demanddetBean : demandDetailBeanReq.getDemandDetailBeans()) {
+            final List<Demand> pros = demandConnectionService.prepareDemandForLegacy(demanddetBean, waterConn, requestInfo,
+                    demandBeanGetRequest);
+            final DemandResponse demandRes = demandConnectionService.createDemand(pros, demandDetailBeanReq.getRequestInfo());
             if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
-               waterConnectionService.updateConnectionOnChangeOfDemand(demandRes.getDemands().get(0).getId(), waterConn,requestInfo);
-         
-       }
+                waterConnectionService.updateConnectionOnChangeOfDemand(demandRes.getDemands().get(0).getId(), waterConn,
+                        requestInfo);
+            }
+        }
         return getSuccessResponse(demandDetailBeanReq.getDemandDetailBeans(), demandDetailBeanReq.getRequestInfo());
     }
-    
-    private DemandDetailBean createDemandDeatils(final String tenantId, final String demandReason,final String taxperiod,final double amount,final double collection,final String taxPeriodCode) {
-        DemandDetailBean  demandDetail = new DemandDetailBean();
+
+    private DemandDetailBean createDemandDeatils(final String tenantId, final String demandReason, final String taxperiod,
+            final double amount, final double collection, final String taxPeriodCode) {
+        final DemandDetailBean demandDetail = new DemandDetailBean();
         demandDetail.setTaxHeadMasterCode(demandReason);
         demandDetail.setTaxPeriod(taxperiod);
         demandDetail.setTaxPeriodCode(taxPeriodCode);
@@ -163,6 +165,7 @@ public class DemandConnectionController {
         demandDetail.setTenantId(tenantId);
         return demandDetail;
     }
+
     private ResponseEntity<?> getSuccessResponse(final List<DemandDetailBean> dmdDetailBeanList,
             final RequestInfo requestInfo) {
         final DemandDetailBeanRes demandDetailBean = new DemandDetailBeanRes();
@@ -175,5 +178,4 @@ public class DemandConnectionController {
 
     }
 
-    
 }

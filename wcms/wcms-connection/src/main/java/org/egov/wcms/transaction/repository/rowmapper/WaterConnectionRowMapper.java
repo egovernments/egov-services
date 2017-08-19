@@ -109,39 +109,43 @@ public class WaterConnectionRowMapper {
 	
 	private Connection prepareConnectionObject(ResultSet rs) {
 		Connection connection = new Connection();
-		try { 
-		connection.setId(rs.getLong("conn_id"));
-		connection.setTenantId(rs.getString("conn_tenant"));
-		connection.setConnectionType(rs.getString("conn_connType"));
-		connection.setBillingType(rs.getString("conn_billtype"));
-		connection.setConnectionStatus(rs.getString("conn_constatus")); 
-		connection.setApplicationType(rs.getString("conn_applntype"));
-		connection.setSumpCapacity(rs.getLong("conn_sumpcap"));
-		connection.setDonationCharge(rs.getLong("conn_doncharge"));
-		connection.setNumberOfTaps(rs.getInt("conn_nooftaps"));
-		connection.setSupplyTypeId(rs.getString("supplytype_id"));
-		connection.setSupplyType(rs.getString("supplytype_name"));
-		connection.setCategoryId(rs.getString("category_id"));
-		connection.setCategoryType(rs.getString("category_name"));
-		connection.setHscPipeSizeType(rs.getString("pipesize_sizeinmilimeter"));
-		connection.setPipesizeId(rs.getString("pipesize_id"));
-		connection.setSourceTypeId(rs.getString("watersource_id"));
-		connection.setSourceType(rs.getString("watersource_name"));
-		connection.setNumberOfPersons(rs.getInt("conn_noofperson"));
-		connection.setStateId(rs.getLong("conn_stateid"));
-		connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
-		connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
-		connection.setWaterTreatment(
-				(null != rs.getString("watertreatmentname") && rs.getString("watertreatmentname") != "")
-						? rs.getString("watertreatmentname") : "");
-		connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
-		connection.setIsLegacy(rs.getBoolean("conn_islegacy"));
-		connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));
-		connection.setConsumerNumber(rs.getString("conn_consumerNum"));
-		connection.setPropertyIdentifier(rs.getString("conn_propid"));
-		connection.setCreatedDate(rs.getString("createdtime"));
-		} catch(Exception ex) {
-			LOGGER.error("Exception encountered while mapping the Result Set in Mapper : " + ex); 
+		try {
+			connection.setId(rs.getLong("conn_id"));
+			connection.setTenantId(rs.getString("conn_tenant"));
+			connection.setConnectionType(rs.getString("conn_connType"));
+			connection.setBillingType(rs.getString("conn_billtype"));
+			connection.setConnectionStatus(rs.getString("conn_constatus"));
+			connection.setApplicationType(rs.getString("conn_applntype"));
+			connection.setSumpCapacity(rs.getLong("conn_sumpcap"));
+			connection.setDonationCharge(rs.getLong("conn_doncharge"));
+			connection.setNumberOfTaps(rs.getInt("conn_nooftaps"));
+			connection.setSupplyTypeId(rs.getString("supplytype_id"));
+			connection.setSupplyType(rs.getString("supplytype_name"));
+			connection.setCategoryId(rs.getString("category_id"));
+			connection.setCategoryType(rs.getString("category_name"));
+			connection.setHscPipeSizeType(rs.getString("pipesize_sizeinmilimeter"));
+			connection.setPipesizeId(rs.getString("pipesize_id"));
+			connection.setSourceTypeId(rs.getString("watersource_id"));
+			connection.setSourceType(rs.getString("watersource_name"));
+			connection.setNumberOfPersons(rs.getInt("conn_noofperson"));
+			connection.setStateId(rs.getLong("conn_stateid"));
+			connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
+			connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
+			connection.setWaterTreatment(
+					(null != rs.getString("watertreatmentname") && rs.getString("watertreatmentname") != "")
+							? rs.getString("watertreatmentname") : "");
+			connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
+			connection.setIsLegacy(rs.getBoolean("conn_islegacy"));
+			connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));
+			connection.setConsumerNumber(rs.getString("conn_consumerNum"));
+			connection.setPropertyIdentifier(rs.getString("conn_propid"));
+			connection.setCreatedDate(rs.getString("createdtime"));
+			Long execDate = rs.getLong("execdate");
+			if (null != execDate) {
+				connection.setExecutionDate(execDate);
+			}
+		} catch (Exception ex) {
+			LOGGER.error("Exception encountered while mapping the Result Set in Mapper : " + ex);
 		}
 		return connection;
 	}

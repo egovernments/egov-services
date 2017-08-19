@@ -48,6 +48,10 @@ public class PropertyType {
 
 	@JsonProperty("orderNumber")
 	private Integer orderNumber = null;
+	
+	@JsonProperty("parent")
+	@Size(min = 4, max = 64)
+	private String parent = null;
 
 	@JsonIgnore
 	@JsonProperty("data")

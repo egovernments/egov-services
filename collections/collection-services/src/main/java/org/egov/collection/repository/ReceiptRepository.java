@@ -382,7 +382,7 @@ public class ReceiptRepository {
         return !instrumentHeaders.isEmpty() ? instrumentRepository.searchInstruments(instrumentHeaders.get(0),tenantId,requestInfo) : null;
     }
     
-    public boolean validateReceiptNumber(String receiptNumber, String tenantId){
+ /*   public boolean validateReceiptNumber(String receiptNumber, String tenantId){
     	boolean isReceiptNumberValid = false;
     	String query = receiptDetailQueryBuilder.searchReceiptOnRcptNo();
     	Long id = null;
@@ -397,6 +397,6 @@ public class ReceiptRepository {
     		return isReceiptNumberValid;
     	}
     	return isReceiptNumberValid;
-    }
+    } */
 
 }

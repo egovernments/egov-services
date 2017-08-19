@@ -140,12 +140,10 @@ public class WaterConnectionService {
         		connectionAddressId = waterConnectionRepository.insertConnectionAddress(waterConnectionRequest);
         		logger.info("Creating Location Id :: " );
         		connectionLocationId = waterConnectionRepository.insertConnectionLocation(waterConnectionRequest);
-        		logger.info("Updating Water Connection :: " );
-        		waterConnectionRequest.getConnection().getConnectionOwner().setId(1195L);
-        		waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest, connectionAddressId, connectionLocationId);
         		logger.info("Creating User Id :: " );
-        		createUserId(waterConnectionRequest); 
-        		
+        		createUserId(waterConnectionRequest);
+        		logger.info("Updating Water Connection :: " );
+        		waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest, connectionAddressId, connectionLocationId);
         	}
         	
         } catch (final Exception e) {
@@ -162,16 +160,16 @@ public class WaterConnectionService {
 		UserResponseInfo userResponse = null;
         Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
         userSearchRequestInfo.put("userName", waterConnReq.getConnection().getConnectionOwner().getMobileNumber());
-        userSearchRequestInfo.put("type", roleName);
+        userSearchRequestInfo.put("type", roleCode);
         userSearchRequestInfo.put("tenantId", waterConnReq.getConnection().getTenantId());
         userSearchRequestInfo.put("RequestInfo", waterConnReq.getRequestInfo());
         
-        logger.info("UserUtil searchUrl --username-->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
+        logger.info("User Service Search URL :: " + searchUrl.toString() + " \n userSearchRequestInfo  :: "
                 + userSearchRequestInfo);
         userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
-        logger.info("UserUtil userResponse ---->> " + userResponse);
+        logger.info("User Service Search Response :: " + userResponse);
         
-		if (userResponse == null || userResponse.getUsers().size() == 0) {
+		if (null == userResponse || userResponse.getUser().size() == 0) {
 			userSearchRequestInfo.put("name", waterConnReq.getConnection().getConnectionOwner().getName());
 			userSearchRequestInfo.put("mobileNumber",
 					waterConnReq.getConnection().getConnectionOwner().getMobileNumber());
@@ -186,26 +184,33 @@ public class WaterConnectionService {
 					&& !waterConnReq.getConnection().getConnectionOwner().getEmailId().isEmpty()) {
 				userSearchRequestInfo.put("emailId", waterConnReq.getConnection().getConnectionOwner().getEmailId());
 			}
-			logger.info("UserUtil searchUrl ---multiparam->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
+			logger.info("User Service Search URL with Multiparam :: " + searchUrl.toString() + " \n userSearchRequestInfo :: "
                     + userSearchRequestInfo);
             userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
                     UserResponseInfo.class);
-            logger.info("UserUtil userResponse ---->> " + userResponse);
-            if (userResponse == null || userResponse.getUsers().size() == 0) {
+            logger.info("User Service Search Response :: " + userResponse);
+            if (null == userResponse || userResponse.getUser().size() == 0) { 
                 UserRequestInfo userRequestInfo = new UserRequestInfo();
                 userRequestInfo.setRequestInfo(waterConnReq.getRequestInfo());
                 User user = buildUserObjectFromConnection(waterConnReq);
                 user.setPassword(configurationManager.getDefaultPassword());
                 userRequestInfo.setUser(user);
                 logger.info("User Object to create User : "+ userRequestInfo); 
-                logger.info("User createUrl ---->> " + createUrl.toString() + " \n userRequestInfo ---->> "
+                logger.info("User Service Create URL :: " + createUrl.toString() + " \n userRequestInfo :: "
                         + userRequestInfo);
                 UserResponseInfo userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
                         UserResponseInfo.class);
-                logger.info("UserUtil userCreateResponse ---->> " + userCreateResponse);
-                user.setId(userCreateResponse.getUsers().get(0).getId());
-                waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUsers().get(0).getId());
+                logger.info("User Service Create User Response :: " + userCreateResponse);
+                user.setId(userCreateResponse.getUser().get(0).getId());
+                waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUser().get(0).getId());
             }
+		}
+		
+		if(userResponse != null){
+			logger.info("User Response after Create and Search :: " + userResponse);
+			if(null != userResponse.getUser() && userResponse.getUser().size() > 0) { 
+				waterConnReq.getConnection().getConnectionOwner().setId(userResponse.getUser().get(0).getId());
+			}
 		}
     }
     
@@ -216,7 +221,7 @@ public class WaterConnectionService {
     	List<Role> roleList = new ArrayList<>();
     	roleList.add(role);
     	return User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber())
-    			.userName(conn.getConnectionOwner().getUserName())
+    			.userName(conn.getConnectionOwner().getMobileNumber())
     			.name(conn.getConnectionOwner().getName())
     			.emailId(conn.getConnectionOwner().getEmailId())
     			.permanentAddress(conn.getConnectionOwner().getPermanentAddress())
@@ -224,7 +229,8 @@ public class WaterConnectionService {
     			.gender(conn.getConnectionOwner().getGender())
     			.isPrimaryOwner(conn.getConnectionOwner().getIsPrimaryOwner())
     			.isSecondaryOwner(conn.getConnectionOwner().getIsSecondaryOwner())
-    			.type(roleName)
+    			.tenantId(conn.getTenantId())
+    			.type(roleCode)
     			.roles(roleList)
     			.active(true)
     			.build();

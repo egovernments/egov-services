@@ -231,8 +231,8 @@ class grievanceSearch extends Component {
     	checkCountAndCall("receiveingModeList", []);
     });
 
-    Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
-      	checkCountAndCall("complaintTypeList", response.complaintTypes);
+    Api.commonApiPost("/pgr-master/service/v1/_search", {keywords: "complaint"}).then(function(response) {
+      	checkCountAndCall("complaintTypeList", response.Service);
     }, function(err) {
     	checkCountAndCall("complaintTypeList", []);
     });

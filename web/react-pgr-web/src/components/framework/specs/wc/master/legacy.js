@@ -22,23 +22,34 @@ var meterReading = {
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
     },
-    {
-     "name": "Reading1",
-     "jsonPath": "Connection.meter[0].meterReadings[0].readingDate",
-     "label": "Reading1 Date",
-     "pattern": "",
-     "type": "datePicker",
-     "isRequired": false,
-     "isDisabled": false,
-     "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
-    },
 	{
      "name": "Reading2",
      "jsonPath": "Connection.meter[0].meterReadings[1].reading",
      "label": "Reading 2",
      "pattern": "",
      "type": "number",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    },
+  	{
+       "name": "Reading3",
+       "jsonPath": "Connection.meter[0].meterReadings[2].reading",
+       "label": "Reading 3",
+       "pattern": "",
+       "type": "number",
+       "isRequired": false,
+       "isDisabled": false,
+       "requiredErrMsg": "",//Remove required messages
+       "patternErrMsg": ""
+      },
+    {
+     "name": "Reading1",
+     "jsonPath": "Connection.meter[0].meterReadings[0].readingDate",
+     "label": "Reading1 Date",
+     "pattern": "",
+     "type": "datePicker",
      "isRequired": false,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
@@ -55,17 +66,6 @@ var meterReading = {
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
     },
-	{
-     "name": "Reading3",
-     "jsonPath": "Connection.meter[0].meterReadings[2].reading",
-     "label": "Reading 3",
-     "pattern": "",
-     "type": "number",
-     "isRequired": false,
-     "isDisabled": false,
-     "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
-    },
     {
      "name": "Reading3",
      "jsonPath": "Connection.meter[0].meterReadings[2].readingDate",
@@ -77,7 +77,6 @@ var meterReading = {
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
     }
-
    ]
   }
  ]
@@ -684,6 +683,28 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "Sequence No",
+            "jsonPath": "Connection.waterTreatment",
+            "label": "Sequence No",
+            "pattern": "",
+            "type": "number",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "PlumberName",
+            "jsonPath": "Connection.plumberName",
+            "label": "PlumberName",
+            "pattern": "",
+            "type": "textarea",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "numberOfPersons",
             "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
@@ -748,6 +769,18 @@ var dat = {
                 "isDisabled": false,
                 "requiredErrMsg": "",
                 "patternErrMsg": ""
+              },
+              {
+                "name": "Outside ULB",
+                "jsonPath": "Connection.outsideUlb",
+                "label": "Outside ULB",
+                "pattern": "",
+                "type": "checkbox",
+                "isRequired": false,
+                "defaultValue":true,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
               }
         ]
       },
@@ -757,6 +790,28 @@ var dat = {
         "hide":true,
         		"children":[meterReading],
                 "fields": [{
+                    "name": "meterOwner",
+                    "jsonPath": "Connection.meter[0].meterMake",
+                    "label": "Meter Owner",
+                    "pattern": "",
+                    "type": "text",
+                    "isRequired": false,
+                    "isDisabled": false,
+                    "requiredErrMsg": "",
+                    "patternErrMsg": ""
+                  },
+                  {
+                      "name": "meterModel",
+                      "jsonPath": "Connection.meter[0].meterSlNo",
+                      "label": "Meter Model",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                    {
                     "name": "meterMake",
                     "jsonPath": "Connection.meter[0].meterMake",
                     "label": "Meter Make",

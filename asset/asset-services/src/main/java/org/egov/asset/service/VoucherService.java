@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.asset.config.ApplicationProperties;
@@ -24,6 +26,7 @@ import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
+import org.egov.asset.model.enums.AssetFinancialParams;
 import org.egov.asset.model.enums.VoucherType;
 import org.egov.common.contract.request.RequestInfo;
 import org.json.JSONObject;
@@ -36,6 +39,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +63,7 @@ public class VoucherService {
     private AssetConfigurationService assetConfigurationService;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
+    public String createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
         headers.setOrigin("http://kurnool-pilot-services.egovernments.org");
         final String createVoucherUrl = headers.getOrigin() + applicationProperties.getEgfServiceVoucherCreatePath()
                 + "?tenantId=" + tenantId;
@@ -95,9 +101,9 @@ public class VoucherService {
         log.debug("VoucherResponse :: " + voucherResponse);
         try {
             final VoucherResponse voucherRes = mapper.readValue(voucherResponse.toString(), VoucherResponse.class);
-            final Long voucherId = voucherRes.getVouchers().get(0).getId();
-            log.debug("Voucher Id is :: " + voucherId);
-            return voucherId;
+            final String voucherNumber = voucherRes.getVouchers().get(0).getVoucherNumber();
+            log.debug("Voucher Number is :: " + voucherNumber);
+            return voucherNumber;
         } catch (final IOException e) {
             throw new RuntimeException("Voucher response Deserialization Issue :: " + e.getMessage());
         }
@@ -229,24 +235,58 @@ public class VoucherService {
         return functionResponse;
     }
 
-    public FundResponse getFundByCode(final RequestInfo requestInfo, final String tenantId, final String fundCode) {
+    public Fund getFundFromVoucherMap(final RequestInfo requestInfo, final String tenantId) {
+        Map<String, String> voucherParamsMap = new HashMap<>();
+        try {
+            voucherParamsMap = getVoucherParamsMap(tenantId);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        final String fundCode = voucherParamsMap.get(AssetFinancialParams.FUND.toString());
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + tenantId + "&code=" + fundCode;
         log.debug("fund search url :: " + url);
         final FundResponse fundResponse = restTemplate.postForObject(url, requestInfo, FundResponse.class);
         log.debug("fund Response :: " + fundResponse);
-        return fundResponse;
+        final List<Fund> funds = fundResponse.getFunds();
+        if (funds.isEmpty())
+            throw new RuntimeException("Fund Doesn't exists for code :: " + fundCode);
+        else
+            return funds.get(0);
     }
 
-    public FunctionResponse getFunctionByCode(final RequestInfo requestInfo, final String tenantId,
-            final String functionCode) {
+    public Function getFunctionFromVoucherMap(final RequestInfo requestInfo, final String tenantId) {
+        Map<String, String> voucherParamsMap = new HashMap<>();
+        try {
+            voucherParamsMap = getVoucherParamsMap(tenantId);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        final String functionCode = voucherParamsMap.get(AssetFinancialParams.FUNCTION.toString());
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + tenantId + "&code="
                 + functionCode;
         log.debug("function search url :: " + url);
         final FunctionResponse functionResponse = restTemplate.postForObject(url, requestInfo, FunctionResponse.class);
         log.debug("function Response :: " + functionResponse);
-        return functionResponse;
+        final List<Function> functions = functionResponse.getFunctions();
+        if (functions.isEmpty())
+            throw new RuntimeException("Function Doesn't exists for code :: " + functionCode);
+        else
+            return functions.get(0);
+    }
+
+    private HashMap<String, String> getVoucherParamsMap(final String tenantId)
+            throws IOException, JsonParseException, JsonMappingException {
+        final String voucherParams = assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.VOUCHERPARAMS, tenantId);
+
+        log.debug("Voucher Parameters :: " + voucherParams);
+        final TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
+        };
+
+        return mapper.readValue(voucherParams, typeRef);
     }
 
 }

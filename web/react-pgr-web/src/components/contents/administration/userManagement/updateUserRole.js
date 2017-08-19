@@ -13,6 +13,7 @@ import Chip from 'material-ui/Chip';
 import Subheader from 'material-ui/Subheader';
 import Api from '../../../../api/api';
 import {translate} from '../../../common/common';
+const constants = require('../../../common/constants');
 
 const styles = {
   headerStyle : {
@@ -32,20 +33,6 @@ const styles = {
 
 var _this;
 
-var removeByAttr = function(arr, attr, value){
-    var i = arr.length;
-    while(i--){
-       if( arr[i]
-           && arr[i].hasOwnProperty(attr)
-           && (arguments.length > 2 && arr[i][attr] === value ) ){
-
-           arr.splice(i,1);
-
-       }
-    }
-    return arr;
-}
-
 class updateUserRole extends Component {
   constructor(props) {
     super(props);
@@ -61,7 +48,7 @@ class updateUserRole extends Component {
     Api.commonApiPost("/access/v1/roles/_search").then(function(response) {
       _this.props.setLoadingStatus('loading');
       var ALL_ROLES = response.roles.filter(function (el){
-        return el.code !== 'CITIZEN';
+        return el.code !== constants.ROLE_CITIZEN;
       })
       _this.setState({allRoles: ALL_ROLES});
       Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, id : [_this.props.match.params.userId]}).then(function(response) {
@@ -129,7 +116,7 @@ class updateUserRole extends Component {
     if(index !== -1){
       this.props.updateUserRole.userRoles.splice(index, 1);
       this.props.handleChange(this.props.updateUserRole.userRoles, "userRoles", false, "");
-      console.log('removed user role:', removekey, index);
+      // console.log('removed user role:', removekey, index);
     }
     var filteredPeople = this.state.userRoles.filter((item) => item.code !== removekey);
     this.setState({
@@ -142,7 +129,7 @@ class updateUserRole extends Component {
     if(allRoleIndex !== -1){
       this.props.updateUserRole.allRoles.splice(allRoleIndex, 1);
       this.props.handleChange(this.props.updateUserRole.allRoles, "allRoles", false, "");
-      console.log('removed all role:', code, allRoleIndex);
+      // console.log('removed all role:', code, allRoleIndex);
       this.removeUserRole(code);
     }
   }
@@ -174,7 +161,8 @@ class updateUserRole extends Component {
     finObj['roles'] = roles;
     Api.commonApiPost("/user/users/"+this.props.match.params.userId+"/_updatenovalidate",{},{user : finObj}).then(function(response) {
       _this.props.setLoadingStatus('hide');
-      _this.handleError('User Role Mapping updated successfully');
+      let msg = `${translate('core.lbl.urmapping')} ${translate('core.lbl.updatedsuccessful')}`
+      _this.handleError(msg);
     }, function(err) {
       _this.props.setLoadingStatus('hide');
       _this.handleError(err.message);
@@ -192,12 +180,12 @@ class updateUserRole extends Component {
     return(
       <div className="userRole">
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > User Role Information : {this.state.userName} ({this.state.name})< /div>}/>
+          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.urinfo')} : {this.state.userName} ({this.state.name})< /div>}/>
             <CardText style={{paddingTop:0}}>
               <Grid>
                 <Row>
                   <Col sm={12} md={6} lg={6}>
-                    <SelectField fullWidth={true} maxHeight={300} floatingLabelText="All Roles" multiple={true} value={updateUserRole.allRoles?updateUserRole.allRoles:""} onChange={(event, key, value) => {
+                    <SelectField fullWidth={true} maxHeight={300} floatingLabelText={translate('core.lbl.allroles')} multiple={true} value={updateUserRole.allRoles?updateUserRole.allRoles:""} onChange={(event, key, value) => {
                       handleChange(value, "allRoles", false, "");
                       this.updateUserRole(value);
                     }}
@@ -214,7 +202,7 @@ class updateUserRole extends Component {
                     </SelectField>
                   </Col>
                   <Col sm={12} md={6} lg={6}>
-                    <Subheader>Assigned Roles</Subheader>
+                    <Subheader>{translate('core.lbl.assgnedroles')}</Subheader>
                     <div style={styles.wrapper}>
                       {this.state.userRoles ? this.state.userRoles.map(this.renderChip, this) : ''}
                     </div>

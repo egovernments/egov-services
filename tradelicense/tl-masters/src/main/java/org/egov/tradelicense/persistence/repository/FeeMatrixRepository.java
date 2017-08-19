@@ -61,8 +61,8 @@ public class FeeMatrixRepository {
 				ps.setString(4, feeMatrix.getBusinessNature().toString());
 				ps.setLong(5, feeMatrix.getSubCategoryId());
 				ps.setString(6, feeMatrix.getFinancialYear());
-				ps.setTimestamp(7, new Timestamp(feeMatrix.getEffectiveFrom()*1000));
-				ps.setTimestamp(8, new Timestamp(feeMatrix.getEffectiveTo()*1000));
+				ps.setTimestamp(7, new Timestamp(feeMatrix.getEffectiveFrom()));
+				ps.setTimestamp(8, new Timestamp(feeMatrix.getEffectiveTo()));
 				ps.setString(9, auditDetails.getCreatedBy());
 				ps.setString(10, auditDetails.getLastModifiedBy());
 				ps.setLong(11, auditDetails.getCreatedTime());
@@ -135,8 +135,8 @@ public class FeeMatrixRepository {
 				ps.setString(4, feeMatrix.getBusinessNature().toString());
 				ps.setLong(5, feeMatrix.getSubCategoryId());
 				ps.setString(6, feeMatrix.getFinancialYear());
-				ps.setTimestamp(7, new Timestamp(feeMatrix.getEffectiveFrom()*1000));
-				ps.setTimestamp(8, new Timestamp(feeMatrix.getEffectiveTo()*1000));
+				ps.setTimestamp(7, new Timestamp(feeMatrix.getEffectiveFrom()));
+				ps.setTimestamp(8, new Timestamp(feeMatrix.getEffectiveTo()));
 				ps.setString(9, auditDetails.getLastModifiedBy());
 				ps.setLong(10, auditDetails.getLastModifiedTime());
 				ps.setLong(11, feeMatrix.getId());

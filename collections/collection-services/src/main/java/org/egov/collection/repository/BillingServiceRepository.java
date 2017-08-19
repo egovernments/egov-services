@@ -61,7 +61,6 @@ public class BillingServiceRepository {
 			response = restTemplate.postForObject(uri.toString(),
 					billingServiceRequestWrapper, BillResponse.class);
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("Error while searching bill from billing service. "
 					+ e);
 		}

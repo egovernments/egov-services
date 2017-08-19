@@ -3034,10 +3034,9 @@ class Employee extends Component {
           return self.props.Employee.test &&  self.props.Employee.test.length ? self.props.Employee.test.map(function(val, i) {
             return (
               <tr key={i}>
-                  <td>{val.serviceInfo}</td>
-                  <td>{val.serviceFrom}</td>
+                  <td>{val.test}</td>
+                  <td>{val.yearOfPassing}</td>
                   <td>{val.remarks}</td>
-                  <td>{val.orderNo}</td>
                   <td>{val.documents && val.documents.length}</td>
                   <td>
                     {self.state.screenType != "view" && <span className="glyphicon glyphicon-pencil" onClick={() => { self.editModalOpen(i, 'dept')}}></span>}&nbsp;&nbsp;

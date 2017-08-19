@@ -80,9 +80,9 @@
               </a>
 
               <a class="navbar-brand" href="./index.html">
-                <img src="images/AP_Logo-min.png" height="60">
+                <img src="images/maha-logo.png" height="60">
                 <div>
-                  <span class="title2">AP State Dashboard</span>
+                  <span class="title2">Maha State Dashboard</span>
                 </div>
               </a>
             </div>
@@ -103,7 +103,7 @@
 
       </header>
 
-			<div style="height: calc(100% - 40px);" class="iframe-parent">
+			<div style="height: calc(100% - 40px);" class="iframe-parent no-overflow">
           <iframe style="width:100%;height:100%;" scrolling="yes"></iframe>
 			</div>
 
@@ -120,9 +120,9 @@
 	  <script src="js/bootstrap/bootstrap.js"></script>
 
     <script type="text/javascript">
-      
+
       var QueryString = function () {
-      // This function is anonymous, is executed immediately and 
+      // This function is anonymous, is executed immediately and
       // the return value is assigned to QueryString!
       var query_string = {};
       var query = window.location.search.substring(1);
@@ -140,17 +140,22 @@
         } else {
           query_string[pair[0]].push(decodeURIComponent(pair[1]));
         }
-      } 
+      }
       return query_string;
       }();
 
       console.log('back', QueryString.back);
+			console.log('title', QueryString.title);
+
+			if(QueryString.title){
+				$('.title2').html(QueryString.title);
+			}
 
       if(QueryString.url)
       {
 
           $('iframe').attr('src', QueryString.url);
-          
+
           /*var anchors = $('iframe').find('a');
           for (var i = 0; i < anchors.length; i++) {
               var anchor = anchors[i];
@@ -159,7 +164,7 @@
               }, false);
           }*/
 
-      }      
+      }
 
      /* if(QueryString.back)
       {
@@ -173,7 +178,7 @@
 
       $(document).ready(function(e){
 
-          
+
 
           $('.back').click(function(e){
               window.location=$(this).attr('href');

@@ -5,17 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.UOM;
-import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.UOMResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
 import org.egov.tradelicense.common.util.TimeStampUtil;
+import org.egov.tradelicense.persistence.entity.LicenseFeeDetailEntity;
+import org.egov.tradelicense.persistence.entity.SupportDocumentEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
 import org.egov.tradelicense.web.contract.Boundary;
@@ -110,7 +112,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 					revenueWardName = uniqueFieldsMap.get("revenueWardIdAndNameMap")
 							.get(getString(row.get("revenueWardId")));
 				}
-
+				
+				
 				TradeLicenseSearchEntity license = new TradeLicenseSearchEntity();
 
 				license.setId(getLong(row.get("id")));
@@ -169,6 +172,18 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		return tradeLicenses;
 	}
 
+	public List<LicenseFeeDetailEntity> getFeeDetails(){
+		//TODO Query for LicenseFeeDetail for a given license
+		// financialYear should return as financialYearRange instead of id
+		return null;
+	}
+	
+	public List<SupportDocumentEntity> getSupportDocuments(){
+		//TODO Query for SupportDocument for a given license
+		// 
+		return null;
+	}
+	
 	public String buildSearchQuery(String tenantId, Integer pageSize, Integer pageNumber, String sort, String active,
 			String tradeLicenseId, String applicationNumber, String licenseNumber, String oldLicenseNumber,
 			String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard,
@@ -326,12 +341,12 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 			String ids = uniqueIds.get("categoryIds").toString();
 			ids = ids.replace("[", "").replace("]", "");
-			CategoryResponse categoryResponse = categoryContractRepository.findByCategoryIds(tenantId, ids,
+			CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryIds(tenantId, ids,
 					requestInfoWrapper);
 			if (categoryResponse != null && categoryResponse.getCategories() != null
 					&& categoryResponse.getCategories().size() > 0) {
 
-				for (Category category : categoryResponse.getCategories()) {
+				for (CategorySearch category : categoryResponse.getCategories()) {
 					categoryIdAndNameMap.put(category.getId().toString(), category.getName());
 				}
 
@@ -343,12 +358,12 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 			String ids = uniqueIds.get("subCategoryIds").toString();
 			ids = ids.replace("[", "").replace("]", "");
-			CategoryResponse categoryResponse = categoryContractRepository.findByCategoryIds(tenantId, ids,
+			CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryIds(tenantId, ids,
 					requestInfoWrapper);
 			if (categoryResponse != null && categoryResponse.getCategories() != null
 					&& categoryResponse.getCategories().size() > 0) {
 
-				for (Category category : categoryResponse.getCategories()) {
+				for (CategorySearch category : categoryResponse.getCategories()) {
 					subCategoryIdAndNameMap.put(category.getId().toString(), category.getName());
 				}
 

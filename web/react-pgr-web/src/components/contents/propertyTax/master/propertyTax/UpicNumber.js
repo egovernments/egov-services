@@ -150,11 +150,12 @@ class UpicNumber extends Component {
 							  errorText={fieldErrors.oldUpicNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.oldUpicNumber}</span>: ""}
 							  value={upicNumber.oldUpicNumber ? upicNumber.oldUpicNumber : ""}
 							  onChange={(e) => {
-								handleChange(e, "oldUpicNumber", true, "")}}
+								handleChange(e, "oldUpicNumber", true, /^\d{10}$/g)}}
 							  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 							  underlineStyle={styles.underlineStyle}
 							  underlineFocusStyle={styles.underlineFocusStyle}
 							  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+							  maxLength={10}
 							  />         
 						</Col>
 					</Row>

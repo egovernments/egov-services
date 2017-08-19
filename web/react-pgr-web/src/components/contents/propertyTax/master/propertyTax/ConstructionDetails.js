@@ -190,10 +190,14 @@ handleDepartment = (e) => {
 
 } 
 
-formatDate = (date) => {
-	return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+formatDate(date){
+	
+	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+	var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+	return day + "/" + month + "/" + date.getFullYear();
 }
-  
+
   render() {
 
     const renderOption = function(list,listName="") {
@@ -233,31 +237,19 @@ formatDate = (date) => {
                       <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
-                                          <Col xs={12} md={3} sm={6}>
-											  <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.propertyAge')+' *'}
-                                                  errorText={fieldErrors.propertyAge ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertyAge}</span> : ""}
-                                                  value={constructionDetails.propertyAge ? constructionDetails.propertyAge : ""}
-                                                  onChange={(e) => {handleChange(e, "propertyAge", false, "")}}
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-												  type="number"
-                                                  maxLength={15}
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              />
-                                          </Col>
 										  <Col xs={12} md={3} sm={6}>
 											  <DatePicker  className="fullWidth datepicker"
 												  formatDate={(date)=> this.formatDate(date)}
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')+' *'}
 												  errorText={fieldErrors.currentAssessmentDate ? (fieldErrors.currentAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.currentAssessmentDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+														var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 										
 													handleChange(e,"currentAssessmentDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -273,11 +265,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')+' *'}
 												  errorText={fieldErrors.firstAssessmentDate ? (fieldErrors.firstAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.firstAssessmentDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+													  var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+													  var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 									
 													handleChange(e,"firstAssessmentDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -293,11 +287,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}
 												  errorText={fieldErrors.revisedAssessmentDate ? (fieldErrors.revisedAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.revisedAssessmentDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+													  var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 									
 													handleChange(e,"revisedAssessmentDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -313,11 +309,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')+' *'}
 												  errorText={fieldErrors.lastAssessmentDate ? (fieldErrors.lastAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.lastAssessmentDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+													  var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 									
 													handleChange(e,"lastAssessmentDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -333,11 +331,13 @@ formatDate = (date) => {
 												  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.orderDate')}
 												  errorText={fieldErrors.orderDate ? (fieldErrors.orderDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.orderDate}</span> :""): ""}
 												  onChange={(event,date) => {
-													  var e = {
-														target:{
-															value: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-														}
-													  }
+													  var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+														  var e = {
+															target:{
+																value: day + "/" + month + "/" + date.getFullYear()
+															}
+														  }
 									
 													handleChange(e,"orderDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -348,30 +348,6 @@ formatDate = (date) => {
 												/>
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
-                                              <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.propertyAge')+' *'}
-                                                  errorText={fieldErrors.propertyAge2 ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertyAge2}</span> : ""}
-                                                  value={constructionDetails.propertyAge2 ? constructionDetails.propertyAge2 : ""}
-                                                  onChange={(event, index, value) => {
-													    (value == -1) ? value = '' : '';
-                                                      var e = {
-                                                        target: {
-                                                          value: value
-                                                        }
-                                                      };
-                                                      handleChange(e, "propertyAge2", false, "")}
-                                                  }
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                                  id="creationReason"
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
-												  <MenuItem value={-1} primaryText="None"/>
-                                                  <MenuItem value={1} primaryText="Options"/>
-                                              </SelectField>
-										 </Col>	
-											<Col xs={12} md={3} sm={6}>
 											  <TextField  className="fullWidth"
                                                   floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateNumber')}
                                                   errorText={fieldErrors.certificateNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.certificateNumber}</span> : ""}

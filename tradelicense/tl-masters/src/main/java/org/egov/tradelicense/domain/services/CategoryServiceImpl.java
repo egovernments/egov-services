@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.egov.tl.commons.web.contract.Category;
 import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
@@ -133,24 +136,24 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType,
 			Integer uomId, Integer pageSize,Integer offSet) {
 
-		CategoryResponse categoryResponse = new CategoryResponse();
+		CategorySearchResponse categoryResponse = new CategorySearchResponse();
 		try {
 
-			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
+			List<CategorySearch> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
 					businessNature, categoryId,rateType, feeType, uomId, pageSize, offSet);
 
 			for (int i = 0; i < categories.size(); i++) {
 
-				Category category = categories.get(i);
+				CategorySearch category = categories.get(i);
 				Long ParentId = category.getParentId();
 
 				if (ParentId != null) {
 
-					List<CategoryDetail> categoryDetails = categoryRepository
+					List<CategoryDetailSearch> categoryDetails = categoryRepository
 							.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
 
 					category.setDetails(categoryDetails);

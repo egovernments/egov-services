@@ -1,5 +1,6 @@
 package org.egov.filters.pre;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +42,8 @@ public class RequestEnrichmentFilter extends ZuulFilter {
 
     public RequestEnrichmentFilter() {
         this.objectMapper = new ObjectMapper();
+        objectMapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+
     }
 
     @Override

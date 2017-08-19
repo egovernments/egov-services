@@ -1,6 +1,7 @@
 package org.egov.pgrrest.read.persistence.repository;
 
 import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.persistence.entity.ServiceType;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 public class ServiceRequestRepository {
     private static final String POST = "POST";
@@ -18,14 +21,17 @@ public class ServiceRequestRepository {
     private ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository;
     private SubmissionRepository submissionRepository;
     private ServiceRequestESRepository serviceRequestESRepository;
+    private ServiceRequestTypeRepository serviceRequestTypeRepository;
 
     @Autowired
     public ServiceRequestRepository(ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository,
                                     SubmissionRepository submissionRepository, ServiceRequestESRepository
-                                        serviceRequestESRepository) {
+                                        serviceRequestESRepository,
+                                    ServiceRequestTypeRepository serviceRequestTypeRepository) {
         this.serviceRequestMessageQueueRepository = serviceRequestMessageQueueRepository;
         this.submissionRepository = submissionRepository;
         this.serviceRequestESRepository = serviceRequestESRepository;
+        this.serviceRequestTypeRepository = serviceRequestTypeRepository;
     }
 
     public void save(SevaRequest sevaRequest) {
@@ -33,6 +39,10 @@ public class ServiceRequestRepository {
         final Date now = new Date();
         sevaRequest.getServiceRequest().setCreatedDate(now);
         sevaRequest.getServiceRequest().setLastModifiedDate(now);
+        String serviceTypeCode = sevaRequest.getServiceRequest().getServiceTypeCode();
+        String tenantId = sevaRequest.getServiceRequest().getTenantId();
+        String serviceName = getServiceName(serviceTypeCode, tenantId);
+        sevaRequest.getServiceRequest().setServiceTypeName(serviceName);
         this.serviceRequestMessageQueueRepository.save(sevaRequest);
     }
 
@@ -56,5 +66,10 @@ public class ServiceRequestRepository {
 
     public List<ServiceRequest> findFromDb(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         return submissionRepository.find(serviceRequestSearchCriteria);
+    }
+
+    public String getServiceName(String serviceCode, String tenantId) {
+        ServiceType serviceRequestType = serviceRequestTypeRepository.getServiceRequestType(serviceCode, tenantId);
+        return !isEmpty(serviceRequestType) ? serviceRequestType.getName() : "";
     }
 }

@@ -233,7 +233,7 @@ class DataEntry extends Component {
           console.log(err)
         })
 		
-		 Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
@@ -242,21 +242,6 @@ class DataEntry extends Component {
           })
           console.log(err)
         })
-		
-		var query = {
-			tenantId: 'default'
-		}
-		
-		Api.commonApiPost('egov-common-workflows/process/_search',query, {}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-		
 		
   }
 
@@ -417,6 +402,8 @@ dataEntryTax = () => {
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
+					"bpaNo": dataEntry.bpaNo || null,
+					"bpaDate": dataEntry.bpaDate || null,
 					"landOwner": null,
 					"floorType":(dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.floorType || null) : null),
 					"woodType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.woodType || null) : null),

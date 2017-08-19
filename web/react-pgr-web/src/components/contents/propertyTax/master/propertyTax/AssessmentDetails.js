@@ -442,22 +442,33 @@ handleDepartment = (e) => {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
+										  
 										  <Col xs={12} md={3} sm={6}>
-                                              <Checkbox
-                                                label={translate('pt.create.groups.assessmentDetails.fields.isLegal')+' *'}
-                                                style={styles.checkbox}
-                                                defaultChecked ={true}
-                                                onCheck = {(e, i, v) => {
-                                                  var e = {
-                                                    target: {
-                                                      value:i
-                                                    }
-                                                  }
-                                                  handleChange(e, "isAuthorized", false, '')
-                                                }}
-
-                                              />
-                                          </Col>
+												<TextField  className="fullWidth"
+												  floatingLabelText="Building Permission number"
+												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaNo}</span> : ""}
+												  value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ""}
+												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[a-z0-9]+$/i)}}
+												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+												  underlineStyle={styles.underlineStyle}
+												  underlineFocusStyle={styles.underlineFocusStyle}
+												  maxLength={15}
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												/>
+										 </Col>
+										 <Col xs={12} md={3} sm={6}>
+												<TextField  className="fullWidth"
+												  floatingLabelText="Building Permission Date"
+												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaDate}</span> : ""}
+												  value={assessmentDetails.bpaDate ? assessmentDetails.bpaDate : ""}
+												  onChange={(e) => {handleChange(e, "bpaDate", false, /^[a-z0-9]+$/i)}}
+												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+												  underlineStyle={styles.underlineStyle}
+												  underlineFocusStyle={styles.underlineFocusStyle}
+												  maxLength={15}
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												/>
+										 </Col>
                                       </Row>
                                   </Grid>
                       </CardText>

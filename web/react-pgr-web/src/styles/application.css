@@ -803,13 +803,20 @@ table thead th {
   overflow: hidden;
 }
 
+.pt-iconCont {
+	width:30px;
+	height:30px;
+	text-align:center;
+	line-height: 44px;
+    border: 1px solid #ccc;
+    margin-top: 26px;
+}
+
 .application-title{
  	text-align: center;
  	font-weight: 400;
  	font-family: Roboto;
- 	font-size: 28px;
  	color: #8d8d8d;
- 	padding-bottom: 10px;
 }
 
 .check-list-item label{
@@ -897,4 +904,9 @@ span.errorMsg{
 
 .radio-group .field-title{
 	margin-bottom: 10px;
+}
+
+.rating{
+	color: #F58720;
+  font-size: 25px;
 }

@@ -127,7 +127,7 @@ public class DemandConnectionService {
         return demandList;
     }
 
-    public List<Demand> prepareDemandForLegacy(final DemandDetailBeanReq demandDetailBeanReq, final Connection connection,
+    public List<Demand> prepareDemandForLegacy(final DemandDetailBean demandReason, final Connection connection,
             final RequestInfo requestInfo, final DemandBeanGetRequest demandBeanGetRequest) {
 
         final List<Demand> demandList = new ArrayList<>();
@@ -136,21 +136,16 @@ public class DemandConnectionService {
         ownerobj.setTenantId(tenantId);
         ownerobj.setId(requestInfo.getUserInfo().getId());
         final Demand demand = new Demand();
-        final TaxPeriodResponse taxperiodres = getTaxPeriodByPeriodCycleAndService(tenantId, PeriodCycle.HALFYEAR,
-                demandBeanGetRequest.getExecutionDate());
+        final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
         demand.setConsumerType(connection.getApplicationType());
         demand.setConsumerCode(connection.getConsumerNumber());
         final Set<DemandDetail> dmdDetailSet = new HashSet<>();
-        for (final DemandDetailBean demandReason : demandDetailBeanReq.getDemandDetailBeans()) {
-            final String demandreasoncode = "WATERCHARGE" + demandReason.getTaxHeadMasterCode().split("#")[1];
+         final String demandreasoncode = "WATERCHARGE" + demandReason.getTaxHeadMasterCode().split("#")[1];
             dmdDetailSet.add(createLegacyDemandDeatils(
                     tenantId, demandreasoncode,
                     demandReason.getTaxAmount(), demandReason.getCollectionAmount(), demandReason.getTaxPeriodCode()));
-
-        }
-
         demand.setOwner(ownerobj);
         demand.setDemandDetails(new ArrayList<>(dmdDetailSet));
         demand.setMinimumAmountPayable(new BigDecimal(1));
@@ -159,7 +154,6 @@ public class DemandConnectionService {
             demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
         }
         demandList.add(demand);
-
         return demandList;
     }
 

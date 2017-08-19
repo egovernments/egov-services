@@ -88,11 +88,14 @@ import ViewProperty from './components/contents/propertyTax/master/viewProperty'
 import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
 import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
 import DemandAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_demand';
+import InboxAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_inbox';
+
 
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 import Create from './components/framework/create';
 // import CreateTwo from './components/framework/createTwo';
 
+import PayTaxCreate from './components/non-framework/collection/master/paytax/PayTaxCreate';
 import View from './components/framework/view';
 import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
@@ -104,6 +107,7 @@ import LegacyLicenseCreate from './components/non-framework/tl/transaction/Legac
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
 import Employee from './components/non-framework/employee/create';
 import EmployeeSearch from './components/non-framework/employee/search';
+import SearchLegacyWc from './components/non-framework/wc/search';
 
 const base = "";
 
@@ -213,6 +217,7 @@ const Main = () => {
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
 		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>
 		  <Route exact path={base+'/propertyTax/demand-acknowledgement'} component={DemandAcknowledgement}/>
+		  <Route exact path={base+'/propertyTax/inbox-acknowledgement'} component={InboxAcknowledgement}/>
 		  <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
         {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
@@ -221,10 +226,12 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
 
+      <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
       <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
       <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
+      <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
 
 
     </Switch>

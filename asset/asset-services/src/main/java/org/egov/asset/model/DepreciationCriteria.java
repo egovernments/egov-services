@@ -13,27 +13,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DepreciationCriteria {
-	
-	public DepreciationCriteria(DepreciationCriteria depreciationCriteria){
-		this.assetIds = depreciationCriteria.assetIds;
-		this.financialYear = depreciationCriteria.financialYear;
-		this.fromDate = depreciationCriteria.fromDate;
-		this.toDate = depreciationCriteria.toDate;
-		this.tenantId = depreciationCriteria.tenantId;
-	}
 
-	@JsonProperty("tenantId")
-	private String tenantId;
+    public DepreciationCriteria(final DepreciationCriteria depreciationCriteria) {
+        assetIds = depreciationCriteria.assetIds;
+        financialYear = depreciationCriteria.financialYear;
+        fromDate = depreciationCriteria.fromDate;
+        toDate = depreciationCriteria.toDate;
+        tenantId = depreciationCriteria.tenantId;
+    }
 
-	@JsonProperty("financialYear")
-	private String financialYear;
+    @JsonProperty("tenantId")
+    private String tenantId;
 
-	@JsonProperty("fromDate")
-	private Long fromDate;
+    @JsonProperty("financialYear")
+    private String financialYear;
 
-	@JsonProperty("toDate")
-	private Long toDate;
+    @JsonProperty("fromDate")
+    private Long fromDate;
 
-	@JsonProperty("assetIds")
-	private Set<Long> assetIds = new HashSet<>();
+    @JsonProperty("toDate")
+    private Long toDate;
+
+    @JsonProperty("assetIds")
+    private Set<Long> assetIds = new HashSet<>();
 }

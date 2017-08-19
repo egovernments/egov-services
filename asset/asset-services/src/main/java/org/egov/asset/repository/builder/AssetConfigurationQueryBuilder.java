@@ -3,14 +3,13 @@ package org.egov.asset.repository.builder;
 import java.util.List;
 
 import org.egov.asset.model.AssetConfigurationCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Component
-public class AssetConfigurationQueryBuilder {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AssetConfigurationQueryBuilder.class);
+@Component
+@Slf4j
+public class AssetConfigurationQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT ck.keyName as key, cv.value as value"
             + " FROM egasset_assetconfiguration ck JOIN egasset_assetconfigurationvalues cv ON ck.id = cv.keyId "
@@ -22,7 +21,7 @@ public class AssetConfigurationQueryBuilder {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, assetConfigurationCriteria);
-        LOGGER.debug("Asset Configuration Query : " + selectQuery);
+        log.debug("Asset Configuration Query : " + selectQuery);
         return selectQuery.toString();
     }
 

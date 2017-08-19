@@ -241,22 +241,7 @@ class CreateProperty extends Component {
           })
           console.log(err)
         })
-		
-		var query = {
-			tenantId: 'default'
-		}
-		
-		Api.commonApiPost('egov-common-workflows/process/_search',query, {}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-		
-		
+				
   }
 
   componentWillUnmount() {
@@ -416,6 +401,8 @@ createPropertyTax = () => {
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
+					"bpaNo": createProperty.bpaNo || null,
+					"bpaDate": createProperty.bpaDate || null,
 					"landOwner": null,
 					"floorType":(createProperty.propertyType != 'VACANT_LAND' ? (createProperty.floorType || null) : null),
 					"woodType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.woodType || null) : null),
@@ -445,6 +432,7 @@ createPropertyTax = () => {
 						"department": createProperty.workflowDepartment || null,
 						"designation":createProperty.workflowDesignation || null,
 						"assignee": createProperty.approver || null,
+						"initiatorPosition" :  createProperty.approver || null,
 						"action": "no",
 						"status": null
 					},

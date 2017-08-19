@@ -9,16 +9,15 @@ import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.repository.builder.DisposalQueryBuilder;
 import org.egov.asset.repository.rowmapper.DisposalRowMapper;
 import org.egov.common.contract.request.RequestInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class DisposalRepository {
+import lombok.extern.slf4j.Slf4j;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(DisposalRepository.class);
+@Repository
+@Slf4j
+public class DisposalRepository {
 
     @Autowired
     private DisposalQueryBuilder disposalQueryBuilder;
@@ -35,11 +34,11 @@ public class DisposalRepository {
         final String queryStr = disposalQueryBuilder.getQuery(disposalCriteria, preparedStatementValues);
         List<Disposal> disposals = null;
         try {
-            LOGGER.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+            log.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
             disposals = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), disposalRowMapper);
-            LOGGER.info("DisposalRepository::" + disposals);
+            log.info("DisposalRepository::" + disposals);
         } catch (final Exception ex) {
-            LOGGER.info("the exception from findforcriteria : " + ex);
+            log.info("the exception from findforcriteria : " + ex);
         }
         return disposals;
     }
@@ -60,7 +59,7 @@ public class DisposalRepository {
         try {
             jdbcTemplate.update(DisposalQueryBuilder.INSERT_QUERY, values);
         } catch (final Exception ex) {
-            LOGGER.info("DisposalRepository:", ex);
+            log.info("DisposalRepository:", ex);
             throw new RuntimeException(ex);
         }
     }
@@ -73,10 +72,10 @@ public class DisposalRepository {
             result = jdbcTemplate.queryForObject(query, Integer.class);
         } catch (final Exception ex) {
             ex.printStackTrace();
-            LOGGER.info("getNextRevaluationId::" + ex.getMessage());
+            log.info("getNextRevaluationId::" + ex.getMessage());
             throw new RuntimeException("Can not fatch next RevaluationId");
         }
-        LOGGER.info("result:" + result);
+        log.info("result:" + result);
 
         return result;
     }

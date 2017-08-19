@@ -130,7 +130,7 @@ class DemandAcknowledgement extends Component {
 									<Col xs={12} md={12}>
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center'}}>
-											<h3>Application Submited</h3>
+											<h3>Application Submitted</h3>
 												Tax and Collection added/updated Successfully
 										</Col>
 									  </Row>

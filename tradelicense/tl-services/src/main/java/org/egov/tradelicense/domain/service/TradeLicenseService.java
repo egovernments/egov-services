@@ -1,19 +1,19 @@
 package org.egov.tradelicense.domain.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.models.PropertyResponse;
-import org.egov.tl.commons.web.contract.Category;
-import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
-import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
@@ -121,9 +121,11 @@ public class TradeLicenseService {
 				}
 				// check unique constraint
 				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
+			}else{
+				//TODO Application Number and Application Date shoudl be mandatory
 			}
 
-			if (!tradeLicense.getIsPropertyOwner()) {
+			if (tradeLicense.getIsPropertyOwner()) {
 				if ((tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty())) {
 					throw new InvalidInputException(propertiesManager.getAgreementNoErrorMsg());
 				}
@@ -192,7 +194,7 @@ public class TradeLicenseService {
 
 			// category validation
 			if (tradeLicense.getCategoryId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findByCategoryId(tradeLicense,
+				CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryId(tradeLicense,
 						requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -203,7 +205,7 @@ public class TradeLicenseService {
 
 			// subCategory validation
 			if (tradeLicense.getSubCategoryId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findBySubCategoryId(tradeLicense,
+				CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryId(tradeLicense,
 						requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -240,7 +242,7 @@ public class TradeLicenseService {
 
 			// uom validation
 			if (tradeLicense.getUomId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findBySubCategoryUomId(tradeLicense,
+				CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryUomId(tradeLicense,
 						requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -249,13 +251,13 @@ public class TradeLicenseService {
 					throw new InvalidInputException(propertiesManager.getUomErrorMsg());
 				} else {
 
-					for (Category category : categoryResponse.getCategories()) {
+					for (CategorySearch category : categoryResponse.getCategories()) {
 
 						if (category.getDetails() == null && category.getDetails().size() == 0) {
 							throw new InvalidInputException(propertiesManager.getUomErrorMsg());
 						} else {
 							Boolean isExists = false;
-							for (CategoryDetail categoryDetail : category.getDetails()) {
+							for (CategoryDetailSearch categoryDetail : category.getDetails()) {
 								if (categoryDetail.getUomId() == tradeLicense.getUomId()) {
 									isExists = true;
 								}
@@ -284,6 +286,7 @@ public class TradeLicenseService {
 
 				if (validFrom != null && validPeriod != null) {
 
+					
 					FinancialYearContract currentFYResponse = financialYearContractRepository
 							.findFinancialYearIdByDate(tenantId, currenDate, requestInfoWrapper);
 					FinancialYearContract licenseValidFYResponse = financialYearContractRepository
@@ -291,28 +294,18 @@ public class TradeLicenseService {
 
 					String currentFinancialYear = null;
 					String licenseValidFromFinancialYear = null;
-//					String actualFeeDetailsEndingFinancialYear = null;
-//					String actualFeeDetailStartDate = null;
-//					Long currentFYId = null;
-//					Long licenseValidFYId = null;
 					Integer currentFinancialFromValue = null;
-//					Integer currentFinancialToValue = null;
 					Integer licenseValidFinancialFromValue = null;
-//					Integer licenseValidFinancialToValue = null;
 					Integer actualFeeDetailStartYear = null;
 					Integer actualFeeDetailsEndYear = null;
 					if (currentFYResponse != null && licenseValidFYResponse != null) {
 
 						// current financial year details
 						currentFinancialYear = currentFYResponse.getFinYearRange();
-//						currentFYId = currentFYResponse.getId();
 						currentFinancialFromValue = Integer.valueOf(currentFinancialYear.split("-")[0]);
-//						currentFinancialToValue = currentFinancialFromValue + 1;
 						// license valid financial year details
 						licenseValidFromFinancialYear = licenseValidFYResponse.getFinYearRange();
-//						licenseValidFYId = licenseValidFYResponse.getId();
 						licenseValidFinancialFromValue = Integer.valueOf(licenseValidFromFinancialYear.split("-")[0]);
-//						licenseValidFinancialToValue = licenseValidFinancialFromValue + 1;
 						// get the fee details starting year
 						if ((currentFinancialFromValue - licenseValidFinancialFromValue) >= 5) {
 							actualFeeDetailStartYear = (currentFinancialFromValue - 5);
@@ -331,33 +324,27 @@ public class TradeLicenseService {
 						actualFeeDetailCount = actualFeeDetailCount + 1;
 						i = i + validPeriod;
 					}
-					// checking actual fee detail count with given fee detail
-					// count
+					// validate given fee detail count
 					if (actualFeeDetailCount != tradeLicense.getFeeDetails().size()) {
 						throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
 					}
-					today.add(Calendar.YEAR, (actualFeeDetailStartYear - actualFeeDetailsEndYear));
+					Date tradeValidFromDate = new Date(validFrom);
+					today.setTimeInMillis(tradeValidFromDate.getTime());
 					// validate the fee details
 					for (int i = 0; i < actualFeeDetailCount; i++) {
+						
 						Boolean isFYExists = false;
-						// Integer feeYear = actualFeeDetailStartYear +
-						// (i*validPeriod);
-						// form each fee detail start date and get the
-						// corresponding id
 						today.add(Calendar.YEAR, (i * validPeriod));
-						// actualFeeDetailStartDate = currenDate.substring(0,
-						// currenDate.lastIndexOf("/")+1);
-						// actualFeeDetailStartDate =
-						// actualFeeDetailStartDate.concat(feeYear.toString());
-
+						
 						FinancialYearContract feeDetailFYResponse = financialYearContractRepository
-								.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis()),
+								.findFinancialYearIdByDate(tenantId, today.getTimeInMillis(),
 										requestInfoWrapper);
 						if (feeDetailFYResponse != null) {
 							for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
 								if (licenseFeeDetail.getFinancialYear()
-										.equalsIgnoreCase(feeDetailFYResponse.getId().toString())) {
+										.equalsIgnoreCase(feeDetailFYResponse.getFinYearRange())) {
 									isFYExists = true;
+									licenseFeeDetail.setFinancialYear( feeDetailFYResponse.getId().toString());
 								}
 							}
 							if (!isFYExists) {
@@ -370,8 +357,6 @@ public class TradeLicenseService {
 						if( i == actualFeeDetailCount-1){
 							today.setTime(feeDetailFYResponse.getEndingDate() );
 							today.add(Calendar.YEAR, (validPeriod-1));
-//							today.set(feeDetailFYResponse.getEndingDate().getYear()+(validPeriod-1), feeDetailFYResponse.getEndingDate().getMonth(), feeDetailFYResponse.getEndingDate().getDate());
-//							today.add(Calendar.YEAR, (i * validPeriod));
 							 feeDetailFYResponse = financialYearContractRepository
 									.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis()),
 											requestInfoWrapper);
@@ -417,8 +402,8 @@ public class TradeLicenseService {
 					feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 				}
 			}
-			// license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(),
-			// requestInfo));
+			 license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(),
+			 requestInfo));
 			// license.setApplicationNumber(
 			// applNumberGenrationService.generate(license.getTenantId(),
 			// requestInfo));

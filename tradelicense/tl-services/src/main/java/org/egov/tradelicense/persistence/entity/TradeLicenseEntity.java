@@ -3,7 +3,6 @@ package org.egov.tradelicense.persistence.entity;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.egov.tradelicense.common.util.TimeStampUtil;
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;

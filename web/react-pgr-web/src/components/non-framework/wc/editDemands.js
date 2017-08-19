@@ -101,7 +101,8 @@ class AddDemand extends Component {
 		demands: [],
 		hasError: false,
 		errorMsg: 'Invalid',
-    DemandDetailBeans:[]
+    DemandDetailBeans:[],
+    searchData:[]
     }
   }
 
@@ -115,8 +116,17 @@ class AddDemand extends Component {
 	initForm();
 
 	var getDemands = {
-		consumerNuber: this.props.match.params.upicNumber
+		consumerNumber: decodeURIComponent(this.props.match.params.upicNumber)
 	}
+
+    Api.commonApiPost('wcms-connection/connection/_search',getDemands,{},false,true).then((res)=>{
+      console.log(res);
+      currentThis.setState({
+        searchData: res.Connection
+      })
+    }).catch((err)=> {
+      console.log(err)
+    })
 
 	 Api.commonApiPost('wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate', getDemands, {}, false, true).then((res)=>{
   		 currentThis.setState({
@@ -130,11 +140,11 @@ class AddDemand extends Component {
   submitDemand = () => {
     let self = this;
 	  var body = {
-      demandDetailBeans: Object.assign([], this.state.DemandDetailBeans)
+      DemandDetailBeans: Object.assign([], this.state.DemandDetailBeans)
     };
 
     self.props.setLoadingStatus('loading');
-	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNuber: self.props.match.params.upicNumber, executionDate: "1301616000"}, body, false, true).then((res)=>{
+	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: "1301616000"}, body, false, true).then((res)=>{
       self.props.setLoadingStatus('hide');
 	  }).catch((err)=> {
 		  self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -163,14 +173,13 @@ class AddDemand extends Component {
     } = this.props;
 
     let {search, handleDepartment, getTaxHead, validateCollection} = this;
-    let { DemandDetailBeans } = this.state;
+    let { DemandDetailBeans, searchData } = this.state;
+    console.log(this.state.searchData);
 
     let cThis = this;
 
     const handleChangeSrchRslt = function(e, name, ind){
-      console.log(e.target.value);
-      console.log(name);
-      console.log(ind);
+
     var _emps = Object.assign([], DemandDetailBeans);
     _emps[ind][name] = e.target.value;
     cThis.setState({
@@ -228,7 +237,7 @@ class AddDemand extends Component {
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Name of Applicant")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{searchData.nameOfApplicant}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Locality")}</span></label><br/>

@@ -81,142 +81,142 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(TestConfiguration.class)
 public class MeterCostControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-	@MockBean
-	private MeterCostService meterCostService;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private MeterCostService meterCostService;
 
-	@InjectMocks
-	private MeterCostController meterCostController;
+    @InjectMocks
+    private MeterCostController meterCostController;
 
-	@MockBean
-	private ResponseInfoFactory responseInfoFactory;
+    @MockBean
+    private ResponseInfoFactory responseInfoFactory;
 
-	@MockBean
-	private ValidatorUtils validatorUtils;
+    @MockBean
+    private ValidatorUtils validatorUtils;
 
-	@MockBean
-	private ErrorHandler errHandler;
+    @MockBean
+    private ErrorHandler errHandler;
 
-	@Test
-	public void test_should_create_meter_cost() throws Exception {
-		List<ErrorResponse> errorResponses = new ArrayList<>();
-		when(validatorUtils.validateMeterCostRequest(getMeterCostRequest())).thenReturn(errorResponses);
-		when(meterCostService.createMeterCostPushToQueue(any(MeterCostReq.class))).thenReturn(getListOfMeterCosts());
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-				.thenReturn(getSuccessRequestInfo());
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-				.thenReturn(getFailureRequestInfo());
-		mockMvc.perform(post("/metercosts/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(getFileContents("MeterCostRequestCreate.json"))).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("MeterCostResponseCreate.json")));
-	}
+    @Test
+    public void test_should_create_meter_cost() throws Exception {
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        when(validatorUtils.validateMeterCostRequest(getMeterCostRequest())).thenReturn(errorResponses);
+        when(meterCostService.createMeterCostPushToQueue(any(MeterCostReq.class))).thenReturn(getListOfMeterCosts());
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
+                .thenReturn(getSuccessRequestInfo());
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
+                .thenReturn(getFailureRequestInfo());
+        mockMvc.perform(post("/metercosts/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(getFileContents("MeterCostRequestCreate.json"))).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("MeterCostResponseCreate.json")));
+    }
 
-	@Test
-	public void test_should_update_meter_cost() throws Exception {
-		List<ErrorResponse> errorResponses = new ArrayList<>();
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-				.thenReturn(getSuccessRequestInfo());
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-				.thenReturn(getFailureRequestInfo());
-		when(validatorUtils.validateMeterCostRequest(getMeterCostRequestForUpdate())).thenReturn(errorResponses);
-		when(meterCostService.updateMeterCostPushToQueue(getMeterCostRequestForUpdate()))
-				.thenReturn(getListOfUpdatedMeterCosts());
-		mockMvc.perform(post("/metercosts/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(getFileContents("MeterCostRequestUpdate.json"))).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("MeterCostResponseUpdate.json")));
+    @Test
+    public void test_should_update_meter_cost() throws Exception {
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
+                .thenReturn(getSuccessRequestInfo());
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
+                .thenReturn(getFailureRequestInfo());
+        when(validatorUtils.validateMeterCostRequest(getMeterCostRequestForUpdate())).thenReturn(errorResponses);
+        when(meterCostService.updateMeterCostPushToQueue(getMeterCostRequestForUpdate()))
+                .thenReturn(getListOfUpdatedMeterCosts());
+        mockMvc.perform(post("/metercosts/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(getFileContents("MeterCostRequestUpdate.json"))).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("MeterCostResponseUpdate.json")));
 
-	}
+    }
 
-	@Test
-	public void test_should_search_meter_cost() throws Exception {
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-				.thenReturn(getSuccessRequestInfo());
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-				.thenReturn(getFailureRequestInfo());
-		when(meterCostService.getMeterCostByCriteria(getMeterCostGetRequest())).thenReturn(getSearchResult());
-		mockMvc.perform(post("/metercosts/_search?ids=1,2&active=true&tenantId=default&sortBy=code&sortOrder=desc")
-				.contentType(MediaType.APPLICATION_JSON_UTF8).content(getFileContents("MeterCostRequest.json")))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("MeterCostResponse.json")));
+    @Test
+    public void test_should_search_meter_cost() throws Exception {
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
+                .thenReturn(getSuccessRequestInfo());
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
+                .thenReturn(getFailureRequestInfo());
+        when(meterCostService.getMeterCostByCriteria(getMeterCostGetRequest())).thenReturn(getSearchResult());
+        mockMvc.perform(post("/metercosts/_search?ids=1,2&active=true&tenantId=default&sortBy=code&sortOrder=desc")
+                .contentType(MediaType.APPLICATION_JSON_UTF8).content(getFileContents("MeterCostRequest.json")))
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("MeterCostResponse.json")));
 
-	}
+    }
 
-	private List<MeterCost> getSearchResult() {
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("Meter").pipeSizeId(1L).meterMake("meterMake123")
-				.amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("Weter").pipeSizeId(2L).meterMake("meterMake234")
-				.amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		return Arrays.asList(meterCost2, meterCost1);
-	}
+    private List<MeterCost> getSearchResult() {
+        final MeterCost meterCost1 = MeterCost.builder().id(1L).code("Meter").pipeSizeId(1L).meterMake("meterMake123")
+                .amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        final MeterCost meterCost2 = MeterCost.builder().id(2L).code("Weter").pipeSizeId(2L).meterMake("meterMake234")
+                .amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        return Arrays.asList(meterCost2, meterCost1);
+    }
 
-	private MeterCostGetRequest getMeterCostGetRequest() {
-		return MeterCostGetRequest.builder().active(true).ids(Arrays.asList(1L, 2L)).tenantId("default").sortBy("code")
-				.sortOrder("desc").build();
-	}
+    private MeterCostGetRequest getMeterCostGetRequest() {
+        return MeterCostGetRequest.builder().active(true).ids(Arrays.asList(1L, 2L)).tenantId("default").sortBy("code")
+                .sortOrder("desc").build();
+    }
 
-	private List<MeterCost> getListOfUpdatedMeterCosts() {
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L)
-				.meterMake("meterMakeUpdated1").amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L)
-				.tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L)
-				.meterMake("meterMakeUpdated2").amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L)
-				.tenantId("default").build();
-		return Arrays.asList(meterCost1, meterCost2);
-	}
+    private List<MeterCost> getListOfUpdatedMeterCosts() {
+        final MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L)
+                .meterMake("meterMakeUpdated1").amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L)
+                .tenantId("default").build();
+        final MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L)
+                .meterMake("meterMakeUpdated2").amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L)
+                .tenantId("default").build();
+        return Arrays.asList(meterCost1, meterCost2);
+    }
 
-	private MeterCostReq getMeterCostRequestForUpdate() {
-		User userInfo = User.builder().id(1L).build();
-		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L)
-				.meterMake("meterMakeUpdated1").amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L)
-				.tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L)
-				.meterMake("meterMakeUpdated2").amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L)
-				.tenantId("default").build();
-		return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
+    private MeterCostReq getMeterCostRequestForUpdate() {
+        final User userInfo = User.builder().id(1L).build();
+        final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
+                .did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+        final MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L)
+                .meterMake("meterMakeUpdated1").amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L)
+                .tenantId("default").build();
+        final MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L)
+                .meterMake("meterMakeUpdated2").amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L)
+                .tenantId("default").build();
+        return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
 
-	}
+    }
 
-	private ResponseInfo getFailureRequestInfo() {
-		return ResponseInfo.builder().apiId("org.egov.wcms").ver("1.0").resMsgId("uief87324").msgId("654654")
-				.status("failed").build();
-	}
+    private ResponseInfo getFailureRequestInfo() {
+        return ResponseInfo.builder().apiId("org.egov.wcms").ver("1.0").resMsgId("uief87324").msgId("654654")
+                .status("failed").build();
+    }
 
-	private ResponseInfo getSuccessRequestInfo() {
-		return ResponseInfo.builder().apiId("org.egov.wcms").ver("1.0").resMsgId("uief87324").msgId("654654")
-				.status("successful").build();
-	}
+    private ResponseInfo getSuccessRequestInfo() {
+        return ResponseInfo.builder().apiId("org.egov.wcms").ver("1.0").resMsgId("uief87324").msgId("654654")
+                .status("successful").build();
+    }
 
-	private List<MeterCost> getListOfMeterCosts() {
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
-				.amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
-				.amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		return Arrays.asList(meterCost1, meterCost2);
-	}
+    private List<MeterCost> getListOfMeterCosts() {
+        final MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
+                .amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        final MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
+                .amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        return Arrays.asList(meterCost1, meterCost2);
+    }
 
-	private MeterCostReq getMeterCostRequest() {
-		User userInfo = User.builder().id(1L).build();
-		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
-				.amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
-				.amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
+    private MeterCostReq getMeterCostRequest() {
+        final User userInfo = User.builder().id(1L).build();
+        final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
+                .did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+        final MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
+                .amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        final MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
+                .amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
 
-	}
+    }
 
-	private String getFileContents(String fileName) {
-		try {
-			return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    private String getFileContents(final String fileName) {
+        try {
+            return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

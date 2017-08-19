@@ -10,6 +10,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import Api from '../../../../api/api';
 import {translate} from '../../../common/common';
+const constants = require('../../../common/constants');
 
 const styles = {
   headerStyle : {
@@ -27,7 +28,7 @@ class searchUserRole extends Component {
     super(props);
     this.state={
       autocompleteSourceConfig: {
-       text: 'userName',
+       text: 'fullName',
        value: 'id',
       },
     };
@@ -38,9 +39,11 @@ class searchUserRole extends Component {
     initForm();
     let tenantId = localStorage.getItem('tenantId') || 'default';
     _this.props.setLoadingStatus('loading');
-    Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, userType : 'EMPLOYEE'}).then(function(response) {
+    Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, userType : constants.ROLE_EMPLOYEE}).then(function(response) {
       _this.props.setLoadingStatus('loading');
-      _this.setState({users: response.user});
+      const newDataSource = response.user.map(item => {
+        return Object.assign({fullName:item.userName+ " (" +item.name+ ")"},item)});
+      _this.setState({users: newDataSource});
       _this.props.setLoadingStatus('hide');
     }, function(err) {
       _this.props.setLoadingStatus('hide');
@@ -65,14 +68,14 @@ class searchUserRole extends Component {
     return(
       <div className="userRole">
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >User Role Mapping< /div>}/>
+          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >{translate('core.lbl.urmapping')}< /div>}/>
             <CardText style={{paddingTop:0}}>
               <Grid>
                 <Row>
                   <Col md={4}>
                     <AutoComplete
                       ref="userName"
-                      floatingLabelText="User Name *"
+                      floatingLabelText={translate('core.lbl.username')+' *'}
                       filter={function filter(searchText, key) {
                         return key.toLowerCase().includes(searchText.toLowerCase());
                       }}

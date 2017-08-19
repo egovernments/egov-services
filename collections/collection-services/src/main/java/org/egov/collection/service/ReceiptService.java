@@ -57,8 +57,9 @@ import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.BillingServiceRequestInfo;
 import org.egov.collection.model.BillingServiceRequestWrapper;
 import org.egov.collection.model.Instrument;
-import org.egov.collection.model.PositionSearchCriteria;
-import org.egov.collection.model.PositionSearchCriteriaWrapper;
+//TODO:Once the Collection Configuration is set up this has to be reverted back	
+/*import org.egov.collection.model.PositionSearchCriteria;
+import org.egov.collection.model.PositionSearchCriteriaWrapper; */
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.TransactionType;
@@ -117,8 +118,9 @@ public class ReceiptService {
 	@Autowired
 	private IdGenRepository idGenRepository;
 	
-	@Autowired
-	private WorkflowService workflowService;
+	//TODO:Once the Collection Configuration is set up this has to be reverted back		
+/*	@Autowired
+	private WorkflowService workflowService; */
 
 	public ReceiptCommonModel getReceipts(
 			ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
@@ -129,10 +131,14 @@ public class ReceiptService {
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
-		if(!validateBill(receiptReq.getRequestInfo(), bill)){
+		
+		//TODO:Billing Svc throws 403 for default tenantId. Revert once fixed.	
+/*		if(!validateBill(receiptReq.getRequestInfo(), bill)){
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG, CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
 		}
+		} */
+		
 		bill.setBillDetails(apportionPaidAmount(
 					receiptReq.getRequestInfo(), bill, receipt.getTenantId()));
 		// return receiptRepository.pushToQueue(receiptReq); //async call
@@ -273,11 +279,14 @@ public class ReceiptService {
 			}
 				
 				billDetail.setCollectionType(CollectionType.COUNTER);
-				billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
+				
+				//TODO: Revert back once the workflow is enabled		
+				billDetail.setStatus(ReceiptStatus.APPROVED.toString());
+				
 				billDetail.setReceiptDate(new Date().getTime());
 				try{
 					validateReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
-							tenantId), tenantId);
+							tenantId), tenantId, requestInfo);
 				}catch(CustomException e){
 					LOGGER.error("Duplicate Receipt: ", e);
 					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
@@ -316,7 +325,8 @@ public class ReceiptService {
 						LOGGER.error("Persisting receipt FAILED! ", e);
 						return receipt;
 					}
-					startWokflow(requestInfo, tenantId, receiptHeaderId);
+				//TODO:Once the Collection Configuration is set up this has to be reverted back	
+				//	startWokflow(requestInfo, tenantId, receiptHeaderId);
 				}else{
 					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 							CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
@@ -555,7 +565,9 @@ public class ReceiptService {
 		return billDetailsList;
 	}
 
-	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
+	//TODO:Once the Collection Configuration is set up this has to be reverted back	
+	
+/*	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
 		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
 		
 		WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
@@ -584,10 +596,23 @@ public class ReceiptService {
 		}catch(Exception e){
 			LOGGER.error("Starting workflow failed: ", e);
 		}	
-	}
+	} */
 	
-	public void validateReceiptNumber(String receiptNumber, String tenantId){
-		if(!receiptRepository.validateReceiptNumber(receiptNumber, tenantId)){
+	public void validateReceiptNumber(String receiptNumber, String tenantId, RequestInfo requestInfo){
+		
+		ReceiptSearchCriteria receiptSearchCriteria = new ReceiptSearchCriteria();
+		receiptSearchCriteria.setTenantId(tenantId);
+		List<String> receiptNumbers = new ArrayList<>();
+		receiptNumbers.add(receiptNumber);
+		receiptSearchCriteria.setReceiptNumbers(receiptNumbers);
+		List<Receipt> receipts = new ArrayList<>();
+		try{
+			 receipts = getReceipts(receiptSearchCriteria, requestInfo).toDomainContract();
+		}catch(Exception e){
+			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
+		}
+		if(!receipts.isEmpty()){
 			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
 		}

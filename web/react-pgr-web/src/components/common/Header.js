@@ -158,10 +158,10 @@ const RightIcon = (props) => {
   } else {
     return(
       <div>
-        <i onClick={()=>{
+        {props.showHome && <i onClick={()=>{
           props.setRoute("/");
         }} className="material-icons"
-           style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           style={{"color":"white", "cursor": "pointer"}}>home</i>}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
       </div>
     )
@@ -214,7 +214,7 @@ class Header extends Component {
                 iconElementRight={< RightIcon showHome={this.props.showHome} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false} >
-         {this.props.actionList.length>0 && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
+         {this.props.actionList && this.props.actionList.length>0 && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
         </Drawer>
       </div>
     );

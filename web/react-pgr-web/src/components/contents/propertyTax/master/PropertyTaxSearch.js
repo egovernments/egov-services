@@ -103,7 +103,8 @@ class PropertyTaxSearch extends Component {
 		 resultList:[],
 		 usage:[],
 		 propertytypes:[],
-		 showDcb : false
+		 showDcb : false,
+		 demands:''
        }
        this.search=this.search.bind(this);
    }
@@ -194,6 +195,8 @@ class PropertyTaxSearch extends Component {
 	  
 	  setLoadingStatus('loading');
 	  
+	  let current = this;
+	  
 	var query = propertyTaxSearch;
 	  
       Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
@@ -203,21 +206,35 @@ class PropertyTaxSearch extends Component {
 		} else {
 			
 			if(res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
-				this.setState({
+				current.setState({
 					showDcb: true
 				})
 			} else {
-				this.setState({
+				current.setState({
 					showDcb: false
 				})
 			}
 			
 			flag=1;
 			changeButtonText("Search Again");
-			this.setState({
+			current.setState({
 				searchBtnText:'Search Again',
 				resultList:res.properties
 			})
+			
+			var tQuery = {
+				businessService :'PT',
+				consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
+			}		
+	
+			Api.commonApiPost('billing-service/demand/_dues', tQuery, {}).then((res)=>{
+				console.log('demands',res);
+				current.setState({demands : res.DemandDue})
+			}).catch((err)=> {
+				current.setState({demands : ''})
+				console.log(err)
+			})
+			
 			showTable(true);
 		}
 	
@@ -293,7 +310,6 @@ class PropertyTaxSearch extends Component {
               <th>Owner Name</th>
 			  <th>Door Number</th>
 			  <th>Locality</th>
-			  <th>Revenue Circle</th>
               <th>Address</th>
               <th>Current Demand</th>
               <th>Arrears Demand</th>
@@ -314,14 +330,13 @@ class PropertyTaxSearch extends Component {
 						  return(<span>{item.name}</span>)
 					  })}</td>
 					  <td>{item.address.addressNumber || ''}</td>
-					  <td>{item.address.addressLine1 || ''}</td>
-					  <td>-</td>
+					  <td>{getNameById(this.state.location,item.address.addressLine1) || ''}</td>
 					  <td>{item.address.addressNumber? item.address.addressNumber+', ' : ''} {item.address.addressLine1 ? item.address.addressLine1+', ' : ''} 
 						  {item.address.addressLine2 ? item.address.addressLine2+', ':''}{item.address.landmark ? item.address.landmark+',':''}
 						  {item.address.city ? item.address.city : ''}
 						  </td>
-					  <td>0</td>
-					  <td>0</td>
+					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.currentDemand : ''}</td>
+					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.arrearsDemand : ''}</td>
 					  <td>{getNameByCode(currentThis.state.propertytypes ,item.propertyDetail.propertyType) || ''}</td>
 					  <td>{item.propertyDetail.category || ''}</td>
 					  <td>

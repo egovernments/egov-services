@@ -76,61 +76,61 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(TestConfiguration.class)
 public class StorageReservoirControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private StorageReservoirService storageReservoirService;
+    @MockBean
+    private StorageReservoirService storageReservoirService;
 
-	@MockBean
-	private ErrorHandler errHandler;
+    @MockBean
+    private ErrorHandler errHandler;
 
-	@MockBean
-	private ResponseInfoFactory responseInfoFactory;
+    @MockBean
+    private ResponseInfoFactory responseInfoFactory;
 
-	@MockBean
-	private ApplicationProperties applicationProperties;
+    @MockBean
+    private ApplicationProperties applicationProperties;
 
-	@MockBean
-	private ValidatorUtils validatorUtils;
+    @MockBean
+    private ValidatorUtils validatorUtils;
 
-	@InjectMocks
-	private StorageReservoirController storageReservoirController;
+    @InjectMocks
+    private StorageReservoirController storageReservoirController;
 
-	@Test(expected = Exception.class)
-	public void test_Should_Search_StorageReservoir() throws Exception {
+    @Test(expected = Exception.class)
+    public void test_Should_Search_StorageReservoir() throws Exception {
 
-		final List<StorageReservoir> storageReservoirList = new ArrayList<>();
-		final RequestInfo requestInfo = new RequestInfo();
-		final ResponseInfo responseInfo = new ResponseInfo();
-		final StorageReservoir storageReservoir = new StorageReservoir();
-		storageReservoir.setTenantId("default");
-		storageReservoir.setName("test");
-		storageReservoir.setCode("12");
-		storageReservoir.setLocationNum("test1");
-		storageReservoir.setWardNum("test2");
-		storageReservoir.setZoneNum("test3");
-		storageReservoir.setCapacity(2d);
-		storageReservoir.setNoOfSubLines(2l);
-		storageReservoir.setNoOfMainDistributionLines(2l);
-		storageReservoir.setNoOfConnection(2l);
-		storageReservoir.setReservoirType("abcd");
+        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+        final RequestInfo requestInfo = new RequestInfo();
+        final ResponseInfo responseInfo = new ResponseInfo();
+        final StorageReservoir storageReservoir = new StorageReservoir();
+        storageReservoir.setTenantId("default");
+        storageReservoir.setName("test");
+        storageReservoir.setCode("12");
+        storageReservoir.setLocationNum("test1");
+        storageReservoir.setWardNum("test2");
+        storageReservoir.setZoneNum("test3");
+        storageReservoir.setCapacity(2d);
+        storageReservoir.setNoOfSubLines(2l);
+        storageReservoir.setNoOfMainDistributionLines(2l);
+        storageReservoir.setNoOfConnection(2l);
+        storageReservoir.setReservoirType("abcd");
 
-		storageReservoirList.add(storageReservoir);
+        storageReservoirList.add(storageReservoir);
 
-		final StorageReservoirGetRequest storageReservoirGetRequest = Mockito.mock(StorageReservoirGetRequest.class);
+        final StorageReservoirGetRequest storageReservoirGetRequest = Mockito.mock(StorageReservoirGetRequest.class);
 
-		when(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)).thenReturn(storageReservoirList);
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
+        when(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)).thenReturn(storageReservoirList);
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-		mockMvc.perform(post("/storagereservoir/_search").param("tenantId", "default")
-				.contentType(MediaType.APPLICATION_JSON).content(getFileContents("requestinfowrapper.json")))
-				.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-				.andExpect(content().json(getFileContents("storageresponse.json")));
-	}
+        mockMvc.perform(post("/storagereservoir/_search").param("tenantId", "default")
+                .contentType(MediaType.APPLICATION_JSON).content(getFileContents("requestinfowrapper.json")))
+                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("storageresponse.json")));
+    }
 
-	private String getFileContents(final String fileName) throws IOException {
-		return new FileUtils().getFileContents(fileName);
-	}
+    private String getFileContents(final String fileName) throws IOException {
+        return new FileUtils().getFileContents(fileName);
+    }
 
 }

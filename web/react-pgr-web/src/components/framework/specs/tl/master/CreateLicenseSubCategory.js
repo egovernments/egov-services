@@ -182,8 +182,8 @@ var dat = {
       }
     ],
     "result": {
-      "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.name"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}],
-      "values": ["code","name", "type", "active"],
+      "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.categories.details.rateType"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}],
+      "values": ["code","rateType", "type", "active"],
       "resultPath": "categories",
       "rowClickUrlUpdate": "/update/tl/CreateLicenseSubCategory/{id}",
       "rowClickUrlView": "/view/tl/CreateLicenseSubCategory/{id}"

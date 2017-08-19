@@ -73,7 +73,7 @@ class grievanceView extends Component{
 
       if(response.serviceRequests.length === 0){
         currentThis.props.setLoadingStatus('hide');
-        currentThis.handleError('Invalid CRN');
+        currentThis.handleError(translate('pgr.lbl.invalidcrn'));
         return false;
       }
 
@@ -530,7 +530,7 @@ class grievanceView extends Component{
                     <MenuItem value={0} primaryText="Select Position" />
                     {this.state.position !== undefined ?
                     this.state.position.map((position, index) => (
-                        <MenuItem value={position.assignments[0].position} key={index} primaryText={position.userName} />
+                        <MenuItem value={position.assignments[0].position} key={index} primaryText={position.name} />
                     )) : ''}
                   </SelectField>
                 </Col>

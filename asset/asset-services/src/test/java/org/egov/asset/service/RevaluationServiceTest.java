@@ -122,8 +122,8 @@ public class RevaluationServiceTest {
         assets.add(get_Asset());
         when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
         final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
-        PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForRevaluation",
-                any(RevaluationRequest.class), any(HttpHeaders.class));
+        PowerMockito.doReturn("6").when(mock, "createVoucherForRevaluation", any(RevaluationRequest.class),
+                any(HttpHeaders.class));
 
         final RevaluationRequest revaluationRequest = new RevaluationRequest();
         revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
@@ -143,8 +143,6 @@ public class RevaluationServiceTest {
         when(applicationProperties.getCreateAssetDisposalTopicName()).thenReturn("kafka.topics.save.disposal");
 
         assertTrue(revaluationResponse.getRevaluations().get(0).getId().equals(Long.valueOf("15")));
-        // doNothing().when(logAwareKafkaTemplate).send(Matchers.anyString(),
-        // Matchers.anyString(), Matchers.anyObject());
         mock.createAsync(revaluationRequest, new HttpHeaders());
         assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
                 revaluationRequest.getRevaluation().toString());
@@ -185,7 +183,7 @@ public class RevaluationServiceTest {
         revaluation.setComments("coments");
         revaluation.setStatus(Status.APPROVED.toString());
         revaluation.setAuditDetails(getAuditDetails());
-        revaluation.setVoucherReference(Long.valueOf("42"));
+        revaluation.setVoucherReference("42");
         return revaluation;
     }
 

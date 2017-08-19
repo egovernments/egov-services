@@ -137,6 +137,10 @@ class Login extends Component {
      setLoadingStatus("loading");
      setHome(false);
      this.handleLocaleChange(this.state.locale);
+     if(localStorage.reload) {
+        localStorage.removeItem("reload");
+        this.props.forceLogout();
+     }
    }
 
 
@@ -326,8 +330,8 @@ class Login extends Component {
 
    searchGrievance = (e) => {
      let {setRoute, setHome} = this.props;
-     if(this.state.srn) {
-        setRoute("/pgr/viewGrievance/"+this.state.srn);
+     if((this.state.srn).trim()) {
+        setRoute("/pgr/viewGrievance/"+(this.state.srn).trim());
         setHome(true);
      }
    }
@@ -723,7 +727,7 @@ class Login extends Component {
                         </IconButton>
                         <div style={styles.floatLeft}>
                           <h4>{translate('pgr.lbl.grievancecell')}</h4>
-                          <p>{translate("ui.login.call") + " " + (tenantInfo.length && tenantInfo[0] ? (tenantInfo[0].helpLineNumber || "-") : "-") + " " + translate("ui.login.registerGrievance")}</p>
+                          <p>{translate("ui.login.call") + " " + (tenantInfo && tenantInfo.length && tenantInfo[0] ? (tenantInfo[0].helpLineNumber || "-") : "-") + " " + translate("ui.login.registerGrievance")}</p>
                         </div>
                       </Col>
                     </Row>
@@ -737,23 +741,23 @@ class Login extends Component {
                       <FontIcon style={styles.iconSize}>
                         <i className="material-icons">location_on</i>
                       </FontIcon>
-                      <p>{tenantInfo.length && tenantInfo[0].address}</p>
-                      <a target="_blank" href={"https://www.google.com/maps/preview/@-" + (tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.latitude) + "," + (tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.longitude) + ",8z"}>Find us on google maps</a>
+                      <p>{tenantInfo && tenantInfo.length && tenantInfo[0].address}</p>
+                      <a target="_blank" href={"https://www.google.com/maps/preview/@-" + (tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.latitude) + "," + (tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.longitude) + ",8z"}>Find us on google maps</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon   style={styles.iconSize}>
                         <i className="material-icons">phone</i>
                       </FontIcon>
-                      <p>{tenantInfo.length && tenantInfo[0].contactNumber}</p>
-                      <a href={"mailto:"+tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId} >{tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId}</a>
+                      <p>{tenantInfo && tenantInfo.length && tenantInfo[0].contactNumber}</p>
+                      <a href={"mailto:"+ (tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId)} >{tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId}</a>
                   </Col>
                   <Col xs={12} md={4} style={styles.buttonTopMargin}>
                       <FontIcon style={styles.iconSize}>
                         <i className="material-icons">share</i>
                       </FontIcon>
                       <p>Share us on</p>
-                      <a target="_blank" href={tenantInfo.length && tenantInfo[0] && tenantInfo[0].twitterUrl} ><i className="fa fa-twitter" style={styles.iconSize}></i></a>
-                      <a target="_blank" href={tenantInfo.length && tenantInfo[0] && tenantInfo[0].facebookUrl} ><i className="fa fa-facebook" style={styles.iconSize}></i></a>
+                      <a target="_blank" href={(tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].twitterUrl)} ><i className="fa fa-twitter" style={styles.iconSize}></i></a>
+                      <a target="_blank" href={(tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].facebookUrl)} ><i className="fa fa-facebook" style={styles.iconSize}></i></a>
                   </Col>
               </Row>
             </Grid>
@@ -949,7 +953,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_ACTION_LIST",actionList});
   },
   setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
-  setHome: (showHome) => dispatch({type: "SET_HOME", showHome})
+  setHome: (showHome) => dispatch({type: "SET_HOME", showHome}),
+  forceLogout: () => dispatch({type: "FORCE_LOGOUT"})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

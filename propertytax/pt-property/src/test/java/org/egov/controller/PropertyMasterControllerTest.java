@@ -759,7 +759,7 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.getPropertyTypeMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Integer.class),
-					any(Integer.class), any(Integer.class))).thenReturn(propertyTypeResponse);
+					any(Integer.class), any(Integer.class), any(String.class))).thenReturn(propertyTypeResponse);
 
 			mockMvc.perform(post("/property/propertytypes/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)

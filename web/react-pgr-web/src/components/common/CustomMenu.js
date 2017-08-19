@@ -51,9 +51,10 @@ class CustomMenu extends Component {
     this.wrapperRef = node;
   }
 
-  componentWillReceivePropsMount()
+  componentWillReceiveProps()
   {
-    this.resetMenu();
+    //this.resetMenu();
+    console.log("HERE");
   }
 
   componentDidMount() {
@@ -228,7 +229,7 @@ class CustomMenu extends Component {
 
             }
             else {
-              if (menuConvention.hasOwnProperty(item.path)) {
+              if (menuConvention && menuConvention.hasOwnProperty(item.path)) {
                 // {/*<Link  key={index} to={menuConvention[item.path]} >*/}
                   // {/*</Link>*/}
                 return(

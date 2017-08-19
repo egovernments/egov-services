@@ -207,7 +207,17 @@ public class Connection {
     private WorkflowDetails workflowDetails;
 
     private String createdDate;
-    
-    private Boolean withProperty; 
+
+    private Boolean withProperty;
+
+    private String plumberName;
+
+    private Long billSequenceNumber;
+
+    private Boolean outsideULB;
+
+    private String meterOwner;
+
+    private String meterModel;
 
 }

@@ -59,41 +59,41 @@ import lombok.ToString;
 @Builder
 public class MeterCost {
 
-	public static final String SEQ_METERCOST = "SEQ_EGWTR_METER_COST";
+    public static final String SEQ_METERCOST = "SEQ_EGWTR_METER_COST";
 
-	@NotNull
-	private Long id;
+    @NotNull
+    private Long id;
 
-	@NotNull
-	private String code;
+    @NotNull
+    private String code;
 
-	@NotNull
-	private Double pipeSizeInMM;
+    @NotNull
+    private Double pipeSizeInMM;
 
-	private Long pipeSizeId;
+    private Long pipeSizeId;
 
-	@NotNull
-	@Size(min = 3, max = 100)
-	private String meterMake;
+    @NotNull
+    @Size(min = 3, max = 100)
+    private String meterMake;
 
-	@NotNull
-	private Double amount;
+    @NotNull
+    private Double amount;
 
-	@NotNull
-	private Boolean active;
+    @NotNull
+    private Boolean active;
 
-	@NotNull
-	private Long createdBy;
+    @NotNull
+    private Long createdBy;
 
-	private Long createdDate;
+    private Long createdDate;
 
-	@NotNull
-	private Long lastModifiedBy;
+    @NotNull
+    private Long lastModifiedBy;
 
-	private Long lastModifiedDate;
+    private Long lastModifiedDate;
 
-	@NotNull
-	@Size(max = 250)
-	private String tenantId;
+    @NotNull
+    @Size(max = 250)
+    private String tenantId;
 
 }

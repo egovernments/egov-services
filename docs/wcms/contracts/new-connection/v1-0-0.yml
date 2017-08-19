@@ -736,6 +736,23 @@ definitions:
       consumerNumber:
         type: string
         description: HSC consumer number generated after completion of entire workflow.
+      plumberName:
+        type: string
+        description: Name of Plumber.
+      meterOwner:
+        type: string
+        description: Possible Values :ULB/Citizen.
+      meterModel:
+        type: string
+        description: Meter Model .
+      outsideULB:
+        type: boolean
+        format: varchar
+        description: Is OutSide ULB.
+      billSequenceNumber:
+        type: number
+        description: Bill Sequence Number
+      
       documents:
         type: array
         items:
@@ -779,6 +796,7 @@ definitions:
       - supplyType
       - sourceType
       - applicationType
+      - billSequenceNumber
   
   WaterConnectionReq:
     type: object
@@ -1004,3 +1022,4 @@ parameters:
       pattern: '[-+](name|mobileNumber|locality|consumerNumber)'
     default:
       - +name
+      

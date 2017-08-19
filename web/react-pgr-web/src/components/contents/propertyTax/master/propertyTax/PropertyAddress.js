@@ -181,6 +181,8 @@ class PropertyAddress extends Component {
         }).catch((err)=> {
           console.log(err)
         })
+		
+		this.props.initForm();
 
   }      
 
@@ -211,7 +213,8 @@ class PropertyAddress extends Component {
       isEditIndex,
       isAddRoom,
 	  addDepandencyFields,
-	  removeDepandencyFields
+	  removeDepandencyFields,
+	  addFloors
     } = this.props;
 
     let {search} = this;
@@ -454,6 +457,7 @@ class PropertyAddress extends Component {
                                                           value: value
                                                         }
                                                       };
+													  addFloors(value);
                                                       handleChange(e, "totalFloors", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -563,21 +567,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: () => {
-    dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: []
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
+	
+initForm : () => {
+	dispatch({
+		type: "SET_FLOOR_NUMBER",
+		noOfFloors: 0
+	})
+},
+  
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
@@ -684,6 +681,13 @@ const mapDispatchToProps = dispatch => ({
 		dispatch({
 			type: 'REMOVE_REQUIRED',
 			property
+		})
+	},
+	
+	addFloors: (noOfFloors) => {
+		dispatch({
+			type: 'FLOOR_NUMBERS',
+			noOfFloors
 		})
 	}
 

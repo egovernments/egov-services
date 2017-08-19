@@ -13,35 +13,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class DisposalRowMapper implements RowMapper<Disposal> {
 
-	@Override
-	public Disposal mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+    @Override
+    public Disposal mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-		final Disposal disposal = new Disposal();
-		disposal.setId((Long) rs.getObject("id"));
-		disposal.setTenantId(rs.getString("tenantid"));
-		disposal.setAssetId(rs.getLong("assetid"));
-		disposal.setBuyerName(rs.getString("buyername"));
-		disposal.setBuyerAddress(rs.getString("buyeraddress"));
-		disposal.setDisposalReason(rs.getString("disposalreason"));
-		disposal.setDisposalDate((Long) rs.getObject("disposaldate"));
-		disposal.setPanCardNumber(rs.getString("pancardnumber"));
-		disposal.setAadharCardNumber(rs.getString("aadharcardnumber"));
+        final Disposal disposal = new Disposal();
+        disposal.setId((Long) rs.getObject("id"));
+        disposal.setTenantId(rs.getString("tenantid"));
+        disposal.setAssetId(rs.getLong("assetid"));
+        disposal.setBuyerName(rs.getString("buyername"));
+        disposal.setBuyerAddress(rs.getString("buyeraddress"));
+        disposal.setDisposalReason(rs.getString("disposalreason"));
+        disposal.setDisposalDate((Long) rs.getObject("disposaldate"));
+        disposal.setPanCardNumber(rs.getString("pancardnumber"));
+        disposal.setAadharCardNumber(rs.getString("aadharcardnumber"));
 
-		disposal.setAssetCurrentValue(BigDecimal.valueOf(rs.getDouble("assetcurrentvalue")));
-		disposal.setSaleValue(BigDecimal.valueOf(rs.getDouble("salevalue")));
-		disposal.setTransactionType(TransactionType.fromValue(rs.getString("transactiontype")));
-		disposal.setAssetSaleAccount((Long) rs.getObject("id"));
+        disposal.setAssetCurrentValue(BigDecimal.valueOf(rs.getDouble("assetcurrentvalue")));
+        disposal.setSaleValue(BigDecimal.valueOf(rs.getDouble("salevalue")));
+        disposal.setTransactionType(TransactionType.fromValue(rs.getString("transactiontype")));
+        disposal.setAssetSaleAccount((Long) rs.getObject("id"));
 
-		final AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(rs.getString("createdby"));
-		auditDetails.setCreatedDate(rs.getLong("createddate"));
-		auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
-		auditDetails.setLastModifiedDate(rs.getLong("lastmodifieddate"));
-		disposal.setAuditDetails(auditDetails);
+        final AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy(rs.getString("createdby"));
+        auditDetails.setCreatedDate(rs.getLong("createddate"));
+        auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
+        auditDetails.setLastModifiedDate(rs.getLong("lastmodifieddate"));
+        disposal.setAuditDetails(auditDetails);
 
-		disposal.setVoucherReference(rs.getLong("profitlossvoucherreference"));
+        disposal.setProfitLossVoucherReference(rs.getString("profitlossvoucherreference"));
 
-		return disposal;
-	}
+        return disposal;
+    }
 
 }

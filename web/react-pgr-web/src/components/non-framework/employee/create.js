@@ -118,9 +118,9 @@ const checkRequiredFields = function(type, object) {
       }
       break;
     case 'edu':
-      if(!object.designation) {
+      if(!object.qualification) {
         errorText["education.qualification"] = translate("ui.framework.required");
-      } else if(!object.declaredOn) {
+      } else if(!object.yearOfPassing) {
         errorText["education.yearOfPassing"] = translate("ui.framework.required");
       }
       break;
@@ -130,9 +130,9 @@ const checkRequiredFields = function(type, object) {
       }
       break;
     case 'dept':
-      if(!object.skill) {
+      if(!object.test) {
         errorText["test.test"] = translate("ui.framework.required");
-      } else if(!object.skill) {
+      } else if(!object.yearOfPassing) {
         errorText["test.yearOfPassing"] = translate("ui.framework.required");
       }
       break;
@@ -1013,7 +1013,7 @@ class Employee extends Component {
         }
 
         let test = Object.assign([], this.props.Employee.test || []);
-        if(this.state.editIndex == '')
+        if(this.state.editIndex === '')
           test.push(this.state.subObject.test);
         else
           test[editIndex] = Object.assign({}, this.state.subObject.test);
@@ -1599,7 +1599,7 @@ class Employee extends Component {
             })
           } else {
             self.setInitDat({
-      code: "",
+      code: null,
       dateOfAppointment: "",
       dateOfJoining: "",
       dateOfRetirement: "",
@@ -1641,7 +1641,7 @@ class Employee extends Component {
               name: "EMPLOYEE",
               tenantId: localStorage.getItem('tenantId')
           }],
-          userName: "",
+          userName: null,
           name: "",
           gender: "",
           mobileNumber: "",
@@ -2415,8 +2415,9 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.bankAccount")} errorText={fieldErrors["bankAccount"]} value={Employee.bankAccount} onChange={(e) => {
-                      		handleChange(e, 'bankAccount', false, '')
+                      	<TextField floatingLabelText={translate("employee.Employee.fields.bankAccount")} errorText={fieldErrors["bankAccount"]} value={Employee.bankAccount} onChange={(e) => {
+                      		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                            handleChange(e, 'bankAccount', false, '')
                       	}}/>
                       }
                       </Col>
@@ -2473,8 +2474,9 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.parmanentPinNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["permanentPinCode"]} value={Employee.user ? Employee.user.permanentPinCode : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'permanentPinCode', false, '')
+                      	<TextField floatingLabelText={translate("employee.Employee.fields.parmanentPinNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["permanentPinCode"]} value={Employee.user ? Employee.user.permanentPinCode : ""} onChange={(e) => {
+                      		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                            handleChangeNextLevel(e, 'user', 'permanentPinCode', false, '')
                       	}}/>
                       }
                       </Col>
@@ -2516,8 +2518,9 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.correspondencePinNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["correspondencePinCode"]} value={Employee.user ? Employee.user.correspondencePinCode : ""} onChange={(e) => {
-                      		handleChangeNextLevel(e, 'user', 'correspondencePinCode', false, '')
+                      	<TextField floatingLabelText={translate("employee.Employee.fields.correspondencePinNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["correspondencePinCode"]} value={Employee.user ? Employee.user.correspondencePinCode : ""} onChange={(e) => {
+                      		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                            handleChangeNextLevel(e, 'user', 'correspondencePinCode', false, '')
                       	}}/>
                       }
                       </Col>
@@ -3268,7 +3271,7 @@ const mapDispatchToProps = dispatch => ({
         var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob', 'user.gender'];
         if(codeAuto) requiredList.splice(1, 1);
         if(unameAuto) requiredList.splice(6, 1);
-        
+
         dispatch({
             type: "SET_FORM",
             data,

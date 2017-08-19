@@ -49,20 +49,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class TreatmentPlantRowMapper implements RowMapper<TreatmentPlant> {
 
-	@Override
-	public TreatmentPlant mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		final TreatmentPlant treatmentPlant = new TreatmentPlant();
-		treatmentPlant.setId(rs.getLong("treatmentplant_id"));
-		treatmentPlant.setCode(rs.getString("treatmentplant_code"));
-		treatmentPlant.setName(rs.getString("treatmentplant_name"));
-		treatmentPlant.setPlantType(rs.getString("treatmentplant_planttype"));
-		treatmentPlant.setLocationNum(rs.getString("treatmentplant_location"));
-		treatmentPlant.setWardNum(rs.getString("treatmentplant_ward"));
-		treatmentPlant.setZoneNum(rs.getString("treatmentplant_zone"));
-		treatmentPlant.setCapacity(rs.getDouble("treatmentplant_capacity"));
-		treatmentPlant.setStorageReservoirId(rs.getLong("treatmentplant_storagereservoirId"));
-		treatmentPlant.setDescription(rs.getString("treatmentplant_description"));
-		treatmentPlant.setTenantId(rs.getString("treatmentplant_tenantId"));
-		return treatmentPlant;
-	}
+    @Override
+    public TreatmentPlant mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final TreatmentPlant treatmentPlant = new TreatmentPlant();
+        treatmentPlant.setId(rs.getLong("treatmentplant_id"));
+        treatmentPlant.setCode(rs.getString("treatmentplant_code"));
+        treatmentPlant.setName(rs.getString("treatmentplant_name"));
+        treatmentPlant.setPlantType(rs.getString("treatmentplant_planttype"));
+        treatmentPlant.setLocationNum(rs.getString("treatmentplant_location"));
+        treatmentPlant.setWardNum(rs.getString("treatmentplant_ward"));
+        treatmentPlant.setZoneNum(rs.getString("treatmentplant_zone"));
+        treatmentPlant.setCapacity(rs.getDouble("treatmentplant_capacity"));
+        treatmentPlant.setStorageReservoirId(rs.getLong("treatmentplant_storagereservoirId"));
+        treatmentPlant.setDescription(rs.getString("treatmentplant_description"));
+        treatmentPlant.setTenantId(rs.getString("treatmentplant_tenantId"));
+        return treatmentPlant;
+    }
 }

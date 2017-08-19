@@ -1003,11 +1003,13 @@ definitions:
           maxLength: 128
           minLength: 4
         effectiveFrom:
-          type: string
-          format: date
+          type: integer
+          format: int64
+          description: fee matrix effective from date in epoch
         effectiveTo:
-          type: string
-          format: date
+          type: integer
+          format: int64
+          description: fee matric effective till date in epoch
         feeMatixDetails:
           description: Used for search result and create only
           type: array

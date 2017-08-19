@@ -3,6 +3,7 @@ package org.egov.tradelicense.persistence.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +61,8 @@ public class FeeMatrixRepository {
 				ps.setString(4, feeMatrix.getBusinessNature().toString());
 				ps.setLong(5, feeMatrix.getSubCategoryId());
 				ps.setString(6, feeMatrix.getFinancialYear());
-				ps.setTimestamp(7, TimeStampUtil.getTimeStamp(feeMatrix.getEffectiveFrom()));
-				ps.setTimestamp(8, TimeStampUtil.getTimeStamp(feeMatrix.getEffectiveTo()));
+				ps.setTimestamp(7, new Timestamp(feeMatrix.getEffectiveFrom()*1000));
+				ps.setTimestamp(8, new Timestamp(feeMatrix.getEffectiveTo()*1000));
 				ps.setString(9, auditDetails.getCreatedBy());
 				ps.setString(10, auditDetails.getLastModifiedBy());
 				ps.setLong(11, auditDetails.getCreatedTime());
@@ -134,8 +135,8 @@ public class FeeMatrixRepository {
 				ps.setString(4, feeMatrix.getBusinessNature().toString());
 				ps.setLong(5, feeMatrix.getSubCategoryId());
 				ps.setString(6, feeMatrix.getFinancialYear());
-				ps.setTimestamp(7, TimeStampUtil.getTimeStamp(feeMatrix.getEffectiveFrom()));
-				ps.setTimestamp(8, TimeStampUtil.getTimeStamp(feeMatrix.getEffectiveTo()));
+				ps.setTimestamp(7, new Timestamp(feeMatrix.getEffectiveFrom()*1000));
+				ps.setTimestamp(8, new Timestamp(feeMatrix.getEffectiveTo()*1000));
 				ps.setString(9, auditDetails.getLastModifiedBy());
 				ps.setLong(10, auditDetails.getLastModifiedTime());
 				ps.setLong(11, feeMatrix.getId());

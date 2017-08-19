@@ -769,7 +769,7 @@ var localization_EN_Data = {
   "wc.create.groups.applicationParticular.title": "Application Particular",
   "wc.create.groups.applicationParticular.title": "Application Particular",
 
-  "collection.search.categorytype.title": "Serach Receipt",
+  "collection.search.categorytype.title": "Search Receipt", 
   "collection.create.serviceType": "Service Type",
   "collection.create.fromDate": "From Date",
   "collection.create.toDate": "To Date",

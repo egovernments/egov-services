@@ -700,9 +700,10 @@ public class PropertyServiceTest {
 			Integer orderNumber = 1;
 			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
 			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+			String parent=null;
 
 			PropertyTypeResponse propertyTypeResponse = masterService.getPropertyTypeMaster(getRequestInfoObject(),
-					tenantId, ids, name, code, nameLocal, active, orderNumber, pageSize, offset);
+					tenantId, ids, name, code, nameLocal, active, orderNumber, pageSize, offset, parent);
 			if (propertyTypeResponse.getPropertyTypes().size() == 0) {
 				assertTrue(false);
 			}

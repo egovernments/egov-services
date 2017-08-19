@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.sun.org.apache.xerces.internal.impl.PropertyManager;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -43,7 +45,7 @@ public class PropertyContractRespository {
 			propertyResponse = restTemplate.postForObject(url, requestInfoWrapper, PropertyResponse.class);
 
 		} catch (Exception e) {
-			log.error("Error while connecting to the proeprty end point");
+			log.error(propertiesManger.getPropertyEndPointErrormsg());
 		}
 
 		if (propertyResponse != null && propertyResponse.getProperties() != null

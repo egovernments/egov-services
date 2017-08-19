@@ -69,12 +69,6 @@ public class Disposal {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 	
-	@JsonProperty("function")
-	private Long function = null;
-	
-	@JsonProperty("fund")
-	private Long fund = null;
-
-	@JsonProperty("voucherReference")
-	private Long voucherReference;
+	@JsonProperty("profitLossVoucherReference")
+	private String profitLossVoucherReference;
 }

@@ -64,6 +64,9 @@ public class TradeLicenseServiceTest {
 
 	@Mock
 	private DocumentTypeContractRepository documentTypeContractRepository;
+	
+	@Mock
+	private TradeLicenseNumberGeneratorService licenseNumberGenerationService;
 
 	@Mock
 	PropertyContractRespository propertyContractRepository;

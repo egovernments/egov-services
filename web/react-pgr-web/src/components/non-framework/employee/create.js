@@ -1007,7 +1007,6 @@ class Employee extends Component {
         })
         break;
       case 'dept':
-        console.log(this.state.subObject.test);
         errorText = checkRequiredFields('dept', this.state.subObject.test);
         if(Object.keys(errorText).length > 0) {
           return self.setState({errorText});

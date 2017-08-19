@@ -101,7 +101,8 @@ class AddDemand extends Component {
 		demands: [],
 		hasError: false,
 		errorMsg: 'Invalid',
-    DemandDetailBeans:[]
+    DemandDetailBeans:[],
+    searchData:[]
     }
   }
 
@@ -115,10 +116,18 @@ class AddDemand extends Component {
 	initForm();
 
 	var getDemands = {
-		consumerNuber: decodeURIComponent(this.props.match.params.upicNumber)
+		consumerNumber: decodeURIComponent(this.props.match.params.upicNumber)
 	}
 
-    
+    Api.commonApiPost('wcms-connection/connection/_search',getDemands,{},false,true).then((res)=>{
+      console.log(res);
+      currentThis.setState({
+        searchData: res.Collection
+      })
+    }).catch((err)=> {
+      console.log(err)
+    })
+    console.log(currentThis.state.searchData);
 
 	 Api.commonApiPost('wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate', getDemands, {}, false, true).then((res)=>{
   		 currentThis.setState({
@@ -136,7 +145,7 @@ class AddDemand extends Component {
     };
 
     self.props.setLoadingStatus('loading');
-	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNuber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: "1301616000"}, body, false, true).then((res)=>{
+	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: "1301616000"}, body, false, true).then((res)=>{
       self.props.setLoadingStatus('hide');
 	  }).catch((err)=> {
 		  self.props.toggleSnackbarAndSetText(true, err.message, false, true);

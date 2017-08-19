@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.tl.commons.web.contract.Category;
 import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.DocumentType;
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
@@ -159,29 +160,29 @@ public class TradeLicenseServiceTest {
 		return boundaries;
 	}
 
-	public CategoryResponse getCategoyResponse() {
+	public CategorySearchResponse getCategoyResponse() {
 
-		return CategoryResponse.builder().categories(getCategoy()).build();
+		return CategorySearchResponse.builder().categories(getCategoy()).build();
 	}
 
-	public List<Category> getCategoy() {
-		List<Category> categories = new ArrayList<>();
-		Category category = Category.builder().id(1l).build();
+	public List<CategorySearch> getCategoy() {
+		List<CategorySearch> categories = new ArrayList<>();
+		CategorySearch category = CategorySearch.builder().id(1l).build();
 		categories.add(category);
 		return categories;
 	}
 
-	public CategoryResponse getSubCategoyResponse() {
+	public CategorySearchResponse getSubCategoyResponse() {
 
-		return CategoryResponse.builder().categories(getSubCategoy()).build();
+		return CategorySearchResponse.builder().categories(getSubCategoy()).build();
 	}
 
-	public List<Category> getSubCategoy() {
+	public List<CategorySearch> getSubCategoy() {
 
-		List<Category> categories = new ArrayList<>();
-		Category category = Category.builder().id(1l).build();
-		List<CategoryDetail> categoryDetails = new ArrayList<>();
-		CategoryDetail categoryDetail = CategoryDetail.builder().id(1l).build();
+		List<CategorySearch> categories = new ArrayList<>();
+		CategorySearch category = CategorySearch.builder().id(1l).build();
+		List<CategoryDetailSearch> categoryDetails = new ArrayList<>();
+		CategoryDetailSearch categoryDetail = CategoryDetailSearch.builder().id(1l).build();
 		categoryDetail.setUomId(1l);
 		categoryDetails.add(categoryDetail);
 		category.setValidityYears(1l);

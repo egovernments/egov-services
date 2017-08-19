@@ -16,12 +16,15 @@ import java.util.List;
 import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.Category;
 import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
 import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.CategoryService;
@@ -236,9 +239,9 @@ public class CategoryContollerTest {
 	@Test
 	public void testSearchCategory() throws Exception {
 
-		CategoryResponse categoryResponse = new CategoryResponse();
-		List<Category> categories = new ArrayList<>();
-		Category category = new Category();
+		CategorySearchResponse categoryResponse = new CategorySearchResponse();
+		List<CategorySearch> categories = new ArrayList<>();
+		CategorySearch category = new CategorySearch();
 		category.setTenantId("default");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -276,9 +279,9 @@ public class CategoryContollerTest {
 	@Test
 	public void testSearchCategoryDetails() throws Exception {
 
-		CategoryResponse categoryResponse = new CategoryResponse();
-		List<Category> categories = new ArrayList<>();
-		Category category = new Category();
+		CategorySearchResponse categoryResponse = new CategorySearchResponse();
+		List<CategorySearch> categories = new ArrayList<>();
+		CategorySearch category = new CategorySearch();
 		category.setTenantId("default");
 		category.setParentId(Long.parseLong("2"));
 
@@ -286,14 +289,14 @@ public class CategoryContollerTest {
 		category.setAuditDetails(auditDetails);
 
 		categories.add(category);
-		CategoryDetail details = new CategoryDetail();
+		CategoryDetailSearch details = new CategoryDetailSearch();
 		details.setId(Long.valueOf(5));
 		details.setCategoryId(Long.valueOf(10));
 		details.setFeeType(FeeTypeEnum.fromValue("License"));
 		details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
 		details.setUomId(Long.valueOf(1));
 
-		List<CategoryDetail> catDetails = new ArrayList<CategoryDetail>();
+		List<CategoryDetailSearch> catDetails = new ArrayList<CategoryDetailSearch>();
 		catDetails.add(details);
 		category.setDetails(catDetails);
 		categoryResponse.setResponseInfo(new ResponseInfo());

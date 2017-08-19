@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.UOM;
 import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.UOMResponse;
@@ -326,12 +328,12 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 			String ids = uniqueIds.get("categoryIds").toString();
 			ids = ids.replace("[", "").replace("]", "");
-			CategoryResponse categoryResponse = categoryContractRepository.findByCategoryIds(tenantId, ids,
+			CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryIds(tenantId, ids,
 					requestInfoWrapper);
 			if (categoryResponse != null && categoryResponse.getCategories() != null
 					&& categoryResponse.getCategories().size() > 0) {
 
-				for (Category category : categoryResponse.getCategories()) {
+				for (CategorySearch category : categoryResponse.getCategories()) {
 					categoryIdAndNameMap.put(category.getId().toString(), category.getName());
 				}
 
@@ -343,12 +345,12 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 			String ids = uniqueIds.get("subCategoryIds").toString();
 			ids = ids.replace("[", "").replace("]", "");
-			CategoryResponse categoryResponse = categoryContractRepository.findByCategoryIds(tenantId, ids,
+			CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryIds(tenantId, ids,
 					requestInfoWrapper);
 			if (categoryResponse != null && categoryResponse.getCategories() != null
 					&& categoryResponse.getCategories().size() > 0) {
 
-				for (Category category : categoryResponse.getCategories()) {
+				for (CategorySearch category : categoryResponse.getCategories()) {
 					subCategoryIdAndNameMap.put(category.getId().toString(), category.getName());
 				}
 

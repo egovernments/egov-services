@@ -3,6 +3,7 @@ package org.egov.tradelicense.web.repository;
 import java.util.Date;
 
 import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.UOMResponse;
@@ -31,7 +32,7 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategoryResponse findByCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findByCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
@@ -46,11 +47,11 @@ public class CategoryContractRepository {
 		}
 		url = url + content.toString();
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
-		CategoryResponse categoryResponse = null;
+		CategorySearchResponse categoryResponse = null;
 
 		try {
 
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategorySearchResponse.class);
 		} catch (Exception e) {
 			log.error(propertiesManger.getCatEndPointError());
 		}
@@ -63,7 +64,7 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategoryResponse findBySubCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findBySubCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
@@ -82,11 +83,11 @@ public class CategoryContractRepository {
 		}
 		url = url + content.toString();
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
-		CategoryResponse categoryResponse = null;
+		CategorySearchResponse categoryResponse = null;
 
 		try {
 
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategorySearchResponse.class);
 		} catch (Exception e) {
 			log.error("Error while connecting to the category end point");
 		}
@@ -100,7 +101,7 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategoryResponse findBySubCategoryUomId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findBySubCategoryUomId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
@@ -120,10 +121,10 @@ public class CategoryContractRepository {
 		
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		url = url + content.toString();
-		CategoryResponse categoryResponse = null;
+		CategorySearchResponse categoryResponse = null;
 
 		try {
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategorySearchResponse.class);
 		} catch (Exception e) {
 			log.error(propertiesManger.getCatEndPointError());
 		}
@@ -136,7 +137,7 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategoryResponse findByCategoryIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findByCategoryIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
@@ -151,11 +152,11 @@ public class CategoryContractRepository {
 		}
 		url = url + content.toString();
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
-		CategoryResponse categoryResponse = null;
+		CategorySearchResponse categoryResponse = null;
 
 		try {
 
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategorySearchResponse.class);
 		} catch (Exception e) {
 			log.error(propertiesManger.getCatEndPointError());
 		}

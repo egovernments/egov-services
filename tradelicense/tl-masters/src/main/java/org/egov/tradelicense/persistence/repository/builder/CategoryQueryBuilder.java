@@ -37,7 +37,8 @@ public class CategoryQueryBuilder {
 			MapSqlParameterSource parameter) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from " + categoryDetailTableName + " where ");
+		searchSql.append("select cd.*,uom.name as uomName from " + categoryDetailTableName + " cd join "+
+				ConstantUtility.UOM_TABLE_NAME +" uom on( cd.uomId = uom.id) "+" where ");
 
 		if (categoryId != null) {
 			searchSql.append(" categoryId = :categoryId ");

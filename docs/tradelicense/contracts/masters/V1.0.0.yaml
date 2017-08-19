@@ -98,7 +98,7 @@ paths:
           200:
             description: Category/SubCategory (s) retrieved Successfully
             schema:
-              $ref: '#/definitions/CategoryResponse'
+              $ref: '#/definitions/CategorySearchResponse'
           400:
             description: Invalid Input
             schema:
@@ -721,6 +721,55 @@ definitions:
       - name
       - code
       - businessNature
+    CategorySearch:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Category/SubCategory
+        tenantId:
+          type: string
+          description: tenant id of the Category/SubCategory
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the Category/SubCategory
+          maxLength: 100
+          minLength: 4
+        code:
+          type: string
+          description: Unique code of the Category/SubCategory
+          maxLength: 20
+          minLength: 4
+        parentId:
+         type: integer
+         format: int64
+         description: Unique Id of the parent Category for subCategory, null for Category.
+        active:
+          type: boolean
+          description: true if Category is active and false if Category is inactive 
+        validityYears:
+          type: integer
+          description: No of validity years for the trade license created with the given subcategory
+          default: 1
+          maximum: 10
+          minimum: 1
+        businessNature:
+          $ref: '#/definitions/BusinessNature' 
+        details:
+          description: Details of SubCategory, will be considered by the API only when parentId is not null and valid.
+          type: array
+          items: 
+            $ref: '#/definitions/CategoryDetailSearch'
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - name
+      - code
+      - businessNature
     FeeType:
       type: string
       enum:
@@ -767,6 +816,33 @@ definitions:
       - feeType
       - rateType
       - uomId
+    CategoryDetailSearch:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the SubCategoryDetail
+        categoryId:
+          type: integer
+          format: int64
+          description: Unique Identifier of the SubCategory
+        uomName:
+          type: string
+          description: Unit Of Measurment Name of the Sub Category
+        feeType:
+          $ref: '#/definitions/FeeType'
+        rateType:
+          $ref: '#/definitions/RateType'
+        uomId:
+          type: integer
+          format: int64
+          description: Unique Identfier of the UOM
+      required:
+      - categoryId
+      - feeType
+      - rateType
+      - uomId  
     CategoryRequest:
       description: Contract class to receive request. Array of Category items are used in case of create and update
       properties:
@@ -782,7 +858,7 @@ definitions:
         - requestInfo
         - categories
     CategoryResponse:
-      description: Contract class to send response. Array of Catogery items are used in case of search results , response for create and response for udpate
+      description: Contract class to send response. Array of Catogery items are used in case  create and response for udpate
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
@@ -791,6 +867,19 @@ definitions:
           maximum: 500
           items:
             $ref: '#/definitions/Category'
+      required:
+        - responseInfo
+        - categories
+    CategorySearchResponse:
+      description: Contract class to send response. Array of CatogerySearch items are used in case of search results
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        categories:
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/CategorySearch'
       required:
         - responseInfo
         - categories

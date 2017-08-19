@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.models.PropertyResponse;
-import org.egov.tl.commons.web.contract.Category;
-import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
-import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
@@ -121,6 +121,8 @@ public class TradeLicenseService {
 				}
 				// check unique constraint
 				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
+			}else{
+				//TODO Application Number and Application Date shoudl be mandatory
 			}
 
 			if (!tradeLicense.getIsPropertyOwner()) {
@@ -192,7 +194,7 @@ public class TradeLicenseService {
 
 			// category validation
 			if (tradeLicense.getCategoryId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findByCategoryId(tradeLicense,
+				CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryId(tradeLicense,
 						requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -203,7 +205,7 @@ public class TradeLicenseService {
 
 			// subCategory validation
 			if (tradeLicense.getSubCategoryId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findBySubCategoryId(tradeLicense,
+				CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryId(tradeLicense,
 						requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -240,7 +242,7 @@ public class TradeLicenseService {
 
 			// uom validation
 			if (tradeLicense.getUomId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findBySubCategoryUomId(tradeLicense,
+				CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryUomId(tradeLicense,
 						requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -249,13 +251,13 @@ public class TradeLicenseService {
 					throw new InvalidInputException(propertiesManager.getUomErrorMsg());
 				} else {
 
-					for (Category category : categoryResponse.getCategories()) {
+					for (CategorySearch category : categoryResponse.getCategories()) {
 
 						if (category.getDetails() == null && category.getDetails().size() == 0) {
 							throw new InvalidInputException(propertiesManager.getUomErrorMsg());
 						} else {
 							Boolean isExists = false;
-							for (CategoryDetail categoryDetail : category.getDetails()) {
+							for (CategoryDetailSearch categoryDetail : category.getDetails()) {
 								if (categoryDetail.getUomId() == tradeLicense.getUomId()) {
 									isExists = true;
 								}
@@ -399,8 +401,8 @@ public class TradeLicenseService {
 					feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 				}
 			}
-			// license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(),
-			// requestInfo));
+			 license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(),
+			 requestInfo));
 			// license.setApplicationNumber(
 			// applNumberGenrationService.generate(license.getTenantId(),
 			// requestInfo));

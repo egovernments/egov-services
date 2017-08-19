@@ -16,6 +16,7 @@ import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
 import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.UOMRequest;
 import org.egov.tl.commons.web.requests.UOMResponse;
@@ -162,13 +163,13 @@ public class CategoryServiceTest {
 			} else {
 				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
-				categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, name, code, active,
+				CategorySearchResponse categorysearchResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, name, code, active,
 						type, null, null, null, null, null, pageSize, offset);
 
-				if (categoryResponse.getCategories().size() == 0) {
+				if (categorysearchResponse.getCategories().size() == 0) {
 					assertTrue(false);
 				} else {
-					categoryId = categoryResponse.getCategories().get(0).getId();
+					categoryId = categorysearchResponse.getCategories().get(0).getId();
 					assertTrue(true);
 				}
 				// assertTrue(true);
@@ -194,7 +195,7 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
+			CategorySearchResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
 					new Integer[] { categoryId.intValue() }, name, code, active, type, null, null, null, null, parentId, pageSize, offset);
 
 			if (categoryResponse.getCategories().size() == 0) {
@@ -310,13 +311,13 @@ public class CategoryServiceTest {
 			if (categoryConsumer.getLatch().getCount() != 0) {
 				assertTrue(false);
 			} else {
-				categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, null, null, null,
+				CategorySearchResponse categorySearchResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, null, null, null,
 						"SUBCATEGORY", null, null, null, null,null,null,null);
 
-				if (categoryResponse.getCategories().size() == 0) {
+				if (categorySearchResponse.getCategories().size() == 0) {
 					assertTrue(false);
 				} else {
-					categoryResponse.getCategories().get(0).getId();
+					categorySearchResponse.getCategories().get(0).getId();
 					assertTrue(true);
 				}
 
@@ -347,7 +348,7 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
+			CategorySearchResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
 					subCatName, subCatCode, active, "SUBCATEGORY", null, null, null,null,null,pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
@@ -491,7 +492,7 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
+			CategorySearchResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
 					updatedName, null, null, null, null, null, null,null,null,pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
@@ -618,7 +619,7 @@ public class CategoryServiceTest {
 
 		try {
 			categoryConsumer.resetCountDown();
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
+			CategorySearchResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
 					new Integer[] { categoryId.intValue() }, updatedName, updatedCode, active, type, null, parentId,null,null,null, pageSize,
 					offset);
 			categoryConsumer.getLatch().await();

@@ -7,6 +7,8 @@ import java.util.Map;
 import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.Category;
 import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
 import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tradelicense.config.PropertiesManager;
@@ -156,7 +158,7 @@ public class CategoryRepository {
 	 * @param offSet
 	 * @return List<Category>
 	 */
-	public List<Category> searchCategory(String tenantId, Integer[] ids, String name, String code, String active,
+	public List<CategorySearch> searchCategory(String tenantId, Integer[] ids, String name, String code, String active,
 			String type, String businessNature, Integer categoryId, String rateType, String feeType,
 			Integer uomId, Integer pageSize, Integer offSet) {
 
@@ -172,7 +174,7 @@ public class CategoryRepository {
 		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, type,
 				businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet, parameters);
 		
-		List<Category> categories = getCategories(categorySearchQuery.toString(), parameters);
+		List<CategorySearch> categories = getCategories(categorySearchQuery.toString(), parameters);
 
 		return categories;
 	}
@@ -185,7 +187,7 @@ public class CategoryRepository {
 	 * @param offSet
 	 * @return List<CategoryDetail>
 	 */
-	public List<CategoryDetail> getCategoryDetailsByCategoryId(Long categoryId, Integer pageSize, Integer offSet) {
+	public List<CategoryDetailSearch> getCategoryDetailsByCategoryId(Long categoryId, Integer pageSize, Integer offSet) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 
@@ -197,7 +199,7 @@ public class CategoryRepository {
 		}
 		String categoryDetailSearchQuery = CategoryQueryBuilder.buildCategoryDetailSearchQuery(categoryId, pageSize,
 				offSet, parameters);
-		List<CategoryDetail> categoryDetails = getCategoryDetails(categoryDetailSearchQuery.toString(),
+		List<CategoryDetailSearch> categoryDetails = getCategoryDetails(categoryDetailSearchQuery.toString(),
 				parameters);
 
 		return categoryDetails;
@@ -210,19 +212,20 @@ public class CategoryRepository {
 	 * @param query
 	 * @return {@link CategoryDetail} List of CategoryDetail
 	 */
-	private List<CategoryDetail> getCategoryDetails(String query, MapSqlParameterSource parameter) {
+	private List<CategoryDetailSearch> getCategoryDetails(String query, MapSqlParameterSource parameter) {
 
-		List<CategoryDetail> categoryDetails = new ArrayList<>();
+		List<CategoryDetailSearch> categoryDetails = new ArrayList<>();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 
 		for (Map<String, Object> row : rows) {
 
-			CategoryDetail categoryDetail = new CategoryDetail();
+			CategoryDetailSearch categoryDetail = new CategoryDetailSearch();
 			categoryDetail.setId(getLong(row.get("id")));
 			categoryDetail.setCategoryId(getLong(row.get("categoryId")));
 			categoryDetail.setFeeType(FeeTypeEnum.fromValue(getString(row.get("feeType"))));
 			categoryDetail.setRateType(RateTypeEnum.fromValue(getString(row.get("rateType"))));
 			categoryDetail.setUomId(getLong(row.get("uomId")));
+			categoryDetail.setUomName(getString(row.get("uomname")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
@@ -242,14 +245,14 @@ public class CategoryRepository {
 	 * @param query
 	 * @return {@link Category} List of Category
 	 */
-	private List<Category> getCategories(String query, MapSqlParameterSource parameter) {
+	private List<CategorySearch> getCategories(String query, MapSqlParameterSource parameter) {
 
-		List<Category> categories = new ArrayList<>();
+		List<CategorySearch> categories = new ArrayList<>();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 
 		for (Map<String, Object> row : rows) {
 
-			Category category = new Category();
+			CategorySearch category = new CategorySearch();
 			category.setId(getLong(row.get("id")));
 			category.setTenantId(getString(row.get("tenantid")));
 			category.setCode(getString(row.get("code")));

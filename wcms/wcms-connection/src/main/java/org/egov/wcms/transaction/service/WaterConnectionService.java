@@ -214,7 +214,7 @@ public class WaterConnectionService {
     	List<Role> roleList = new ArrayList<>();
     	roleList.add(role);
     	return User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber())
-    			.userName(conn.getConnectionOwner().getUserName())
+    			.userName(conn.getConnectionOwner().getMobileNumber())
     			.name(conn.getConnectionOwner().getName())
     			.emailId(conn.getConnectionOwner().getEmailId())
     			.permanentAddress(conn.getConnectionOwner().getPermanentAddress())

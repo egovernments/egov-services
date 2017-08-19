@@ -29,7 +29,7 @@
         },
         "executionDate": {
             "type": "date",
-            "format": "date_optional_time"
+            "format": "strict_date_optional_time||epoch_millis"
         },
         "supplyType": {
             "type": "keyword"
@@ -111,7 +111,7 @@
         },
         "createdDate": {
             "type": "date",
-            "format": "date_optional_time"
+            "format": "strict_date_optional_time||epoch_millis"
         }
     }
 }

@@ -170,7 +170,7 @@ public class GenericPage extends BasePage {
 
         try {
             for (WebElement applicationRow : totalRows) {
-                if (applicationRow.findElements(By.tagName("td")).get(6).getText().contains(number)) {
+                if (applicationRow.findElements(By.tagName("td")).get(4).getText().contains("No."+number)) {
                     return applicationRow;
                 }
             }

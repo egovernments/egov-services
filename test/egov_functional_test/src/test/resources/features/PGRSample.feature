@@ -14,23 +14,22 @@ Feature: Sample Test From PGR
 
     #Citizen Registers Complaint with his login#
 
-    #Login#
+    #Login as Citizen and create Grievance#
     Given citizen on Login screen verifies SignInText has visible value Sign In
     And citizen on Login screen types on username value 7777777777
     And citizen on Login screen types on password value eGov@123
     And citizen on Login screen clicks on signIn
     And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
-
-    #Create Grievance#
     And citizen on CitizenPortalHome screen clicks on createGrievance
     And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
     And citizen on CitizenGrievance screen selects grievanceCategory with value as Public Health and Sanitation
-    And citizen on CitizenGrievance screen selects grievanceType with value as Spilling of Garbage from lorry
+    And citizen on CitizenGrievance screen selects grievanceType with value as Absenteesim of door to door garbage collector
     And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
-    And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value BankRoad
+    And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
     And citizen on CitizenGrievance screen clicks on create
     And citizen on CitizenGrievance screen copies the complaintNum to applicationNumber
     And citizen on CitizenGrievance screen clicks on view
+    And citizen on CitizenGrievance screen will see the commentBox
     And citizen on CitizenGrievance screen verifies commentBox is enabled
     And citizen on CitizenGrievance screen clicks on homeButton
     And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
@@ -40,10 +39,32 @@ Feature: Sample Test From PGR
     And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
     And Intent:LogoutIntentTest
 
-#    Given employee on Login screen verifies SignInText has visible value Sign In
-#    And employee on Login screen types on username value Soumya
-#    And employee on Login screen types on password value 12345678
-#    And employee on Login screen clicks on signIn
-#    And employee on CitizenPortalHome screen verifies profileName has visible value Soumya
-#    And employee on Home screen opens on dashBoardSearch with above applicationNumber
-#    And Intent:LogoutIntentTest
+    #Login as Employee to change status as Processing#
+    Given employee on Login screen verifies SignInText has visible value Sign In
+    And employee on Login screen types on username value narasappa
+    And employee on Login screen types on password value demo
+    And employee on Login screen clicks on signIn
+    And employee on Home screen verifies profileName has visible value narasappa
+    And employee on Home screen opens on dashBoardSearch with above applicationNumber
+    And employee on CitizenGrievance screen selects grievanceStatus with value as PROCESSING
+    And employee on CitizenGrievance screen types on commentBox value Processing
+    And employee on CitizenGrievance screen clicks on submitButton
+    And employee on CitizenGrievance screen verifies successBox has visible value Grievance updated succesfully
+    And employee on CitizenGrievance screen clicks on Ok
+    And citizen on CitizenGrievance screen will see the homeButton
+    And employee on CitizenGrievance screen clicks on homeButton
+    And employee on Home screen verifies profileName has visible value narasappa
+    And Intent:LogoutIntentTest
+
+    #Login as Citizen to verify the status of Complaint#
+    Given citizen on Login screen verifies SignInText has visible value Sign In
+    And citizen on Login screen types on username value 7777777777
+    And citizen on Login screen types on password value eGov@123
+    And citizen on Login screen clicks on signIn
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value PROCESSING
+    And Intent:LogoutIntentTest
+
+

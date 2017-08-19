@@ -87,7 +87,13 @@
         {
         "elementName":"homeButton",
         "identifier":"xpath",
-        "value":"//i[text()='home']",
+        "value":"//*[text()='home']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"grievanceStatus",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-ChangeStatus']",
         "waitFor":"visibility"
         }
     ]

@@ -95,6 +95,7 @@ import CreateVacantLand from'./components/contents/propertyTax/master/CreateVaca
 import Create from './components/framework/create';
 // import CreateTwo from './components/framework/createTwo';
 
+import PayTaxCreate from './components/non-framework/collection/master/paytax/PayTaxCreate';
 import View from './components/framework/view';
 import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
@@ -224,6 +225,7 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
 
+      <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
       <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>

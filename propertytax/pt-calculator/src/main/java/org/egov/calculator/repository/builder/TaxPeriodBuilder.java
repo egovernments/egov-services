@@ -31,22 +31,28 @@ public class TaxPeriodBuilder {
 		searchSql.append(BASE_SEARCH_QUERY);
 		preparedStatementValues.add(tenantId);
 
-		if (code != null && !code.isEmpty()) {
-			searchSql.append(" AND code =?");
-			preparedStatementValues.add(code);
+		if (code != null) {
+			if (!code.isEmpty()) {
+				searchSql.append(" AND code =?");
+				preparedStatementValues.add(code);
+			}
 		}
 
-		if (validDate != null && !validDate.isEmpty()) {
-			searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
-			preparedStatementValues.add(validDate);
+		if (validDate != null) {
+			if (!validDate.isEmpty()) {
+				searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
+				preparedStatementValues.add(validDate);
+			}
 		}
-		if ((fromDate != null && !fromDate.isEmpty()) && (toDate != null && !toDate.isEmpty())) {
+		if (fromDate != null && toDate != null) {
 			searchSql
-					.append(" AND (fromdate::date >= (SELECT fromdate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' "
+					.append(" AND (fromdate::date >= (SELECT fromdate::date FROM egpt_mstr_taxperiods WHERE tenantId =? "
 							+ "AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date)) and todate::date<="
-							+ "(SELECT todate::date FROM egpt_mstr_taxperiods WHERE tenantId ='default' AND (to_date(?,'dd/MM/yyyy') "
+							+ "(SELECT todate::date FROM egpt_mstr_taxperiods WHERE tenantId = ? AND (to_date(?,'dd/MM/yyyy') "
 							+ "BETWEEN fromdate::date AND  todate::date)))");
+			preparedStatementValues.add(tenantId);
 			preparedStatementValues.add(fromDate);
+			preparedStatementValues.add(tenantId);
 			preparedStatementValues.add(toDate);
 		}
 		if (sortTaxPeriod != null) {

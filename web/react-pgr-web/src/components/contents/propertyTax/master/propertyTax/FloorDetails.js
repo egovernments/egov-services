@@ -826,6 +826,9 @@ getFloors = () => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
+													<Col>
+														<i className="material-icons">add</i>
+													</Col>
 													
 													{(floorDetails.floor ? !getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : true) 
 													

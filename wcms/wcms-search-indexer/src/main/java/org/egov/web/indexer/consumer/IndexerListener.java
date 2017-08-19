@@ -53,10 +53,10 @@ public class IndexerListener {
 		}
 		
 		if (topic.equals(propertiesManager.getNewConnectionTopicName())) {
-			elasticSearchRepository.saveAgreement(connectionIndex);
+			elasticSearchRepository.saveConnection(connectionIndex);
 		}
 		else if (topic.equals(propertiesManager.getUpdateConnectionTopicName())) {
-			elasticSearchRepository.updateAgreement(connectionIndex);
+			elasticSearchRepository.updateConnection(connectionIndex);
 		}
 
 	}

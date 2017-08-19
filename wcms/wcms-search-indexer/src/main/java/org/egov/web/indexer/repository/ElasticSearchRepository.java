@@ -109,7 +109,7 @@ public class ElasticSearchRepository {
         return String.format(BASIC_AUTH, new String(encodedAuthString));
     }
     
-    public void saveAgreement(ConnectionIndex connectionIndex) {
+    public void saveConnection(ConnectionIndex connectionIndex) {
 		// check for both index name and type name and id before confirming the
 		// url
 		String url = propertiesManager.getIndexServiceHostUrl() + propertiesManager.getIndexServiceIndexName() + "/"
@@ -124,7 +124,7 @@ public class ElasticSearchRepository {
 		LOGGER.info("ElasticSearchService saveagreement post agrementindexed in elasticsearch");
 	}
 
-	public void updateAgreement(ConnectionIndex connectionIndex) {
+	public void updateConnection(ConnectionIndex connectionIndex) {
 
 		String url = propertiesManager.getIndexServiceHostUrl() + propertiesManager.getIndexServiceIndexName() + "/"
 				+ connectionIndex.getConnectionDetails().getId();

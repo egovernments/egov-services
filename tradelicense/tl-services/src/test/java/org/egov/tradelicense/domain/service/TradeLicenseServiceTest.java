@@ -216,7 +216,7 @@ public class TradeLicenseServiceTest {
 				.mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
 				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).categoryId(1l)
 				.subCategoryId(2l).uomId(1l).quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
-				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT).isPropertyOwner(Boolean.TRUE)
+				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT).isPropertyOwner(Boolean.FALSE)
 				.feeDetails(licenseFeeDetails).supportDocuments(supportDocuments).tradeCommencementDate((new Date("15/08/2017")).getTime()/1000)
 				.auditDetails(getAuditDetails()).build();
 	}

@@ -43,9 +43,10 @@ public class TradeLicenseIndexerAspectJ {
 	protected void allMethod() {
 	}
 
-
 	/**
-	 * Description :This will log  before any resource annotated with @Controller annotation
+	 * Description :This will log before any resource annotated with @Controller
+	 * annotation
+	 * 
 	 * @param joinPoint
 	 */
 
@@ -56,12 +57,12 @@ public class TradeLicenseIndexerAspectJ {
 		logger.debug("Arguments :  " + Arrays.toString(joinPoint.getArgs()));
 		logger.debug("Target class : " + joinPoint.getTarget().getClass().getName());
 
-
 	}
 
-
 	/**
-	 * Description :This will log for all method within resource annotated with @Controller annotation and return a  value
+	 * Description :This will log for all method within resource annotated
+	 * with @Controller annotation and return a value
+	 * 
 	 * @param joinPoint
 	 * @param result
 	 */
@@ -74,9 +75,10 @@ public class TradeLicenseIndexerAspectJ {
 		logger.debug("LEAVING: " + joinPoint.getSignature().getName() + " WITH: " + returnValue);
 	}
 
-
 	/**
-	 * Description : This will log for any method within resource annotated with @Controller annotation  if any exception occurs
+	 * Description : This will log for any method within resource annotated
+	 * with @Controller annotation if any exception occurs
+	 * 
 	 * @param joinPoint
 	 * @param exception
 	 */
@@ -88,9 +90,10 @@ public class TradeLicenseIndexerAspectJ {
 		exception.printStackTrace();
 	}
 
-
 	/**
-	 * Description : This will log for any method within resource annotated with @Controller annotation 
+	 * Description : This will log for any method within resource annotated
+	 * with @Controller annotation
+	 * 
 	 * @param joinPoint
 	 * @return
 	 * @throws Throwable
@@ -105,9 +108,7 @@ public class TradeLicenseIndexerAspectJ {
 			String methodName = joinPoint.getSignature().getName();
 			Object result = joinPoint.proceed();
 			long elapsedTime = System.currentTimeMillis() - start;
-			logger.debug("Method " + className + "." + methodName + " ()" + " execution time : "
-					+ elapsedTime + " ms");
-
+			logger.debug("Method " + className + "." + methodName + " ()" + " execution time : " + elapsedTime + " ms");
 
 			return result;
 		} catch (IllegalArgumentException e) {
@@ -117,9 +118,9 @@ public class TradeLicenseIndexerAspectJ {
 		}
 	}
 
-
 	/**
 	 * Description : This method will return the string represntation of object
+	 * 
 	 * @param result
 	 * @return
 	 */
@@ -133,6 +134,5 @@ public class TradeLicenseIndexerAspectJ {
 		}
 		return returnValue;
 	}
-
 
 }

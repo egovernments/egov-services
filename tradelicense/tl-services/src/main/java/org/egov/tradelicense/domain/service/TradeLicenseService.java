@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -284,35 +284,26 @@ public class TradeLicenseService {
 
 				if (validFrom != null && validPeriod != null) {
 
+					Long validFromDateInMillis = validFrom * 1000;
 					FinancialYearContract currentFYResponse = financialYearContractRepository
 							.findFinancialYearIdByDate(tenantId, currenDate, requestInfoWrapper);
 					FinancialYearContract licenseValidFYResponse = financialYearContractRepository
-							.findFinancialYearIdByDate(tenantId, validFrom, requestInfoWrapper);
+							.findFinancialYearIdByDate(tenantId, validFromDateInMillis, requestInfoWrapper);
 
 					String currentFinancialYear = null;
 					String licenseValidFromFinancialYear = null;
-//					String actualFeeDetailsEndingFinancialYear = null;
-//					String actualFeeDetailStartDate = null;
-//					Long currentFYId = null;
-//					Long licenseValidFYId = null;
 					Integer currentFinancialFromValue = null;
-//					Integer currentFinancialToValue = null;
 					Integer licenseValidFinancialFromValue = null;
-//					Integer licenseValidFinancialToValue = null;
 					Integer actualFeeDetailStartYear = null;
 					Integer actualFeeDetailsEndYear = null;
 					if (currentFYResponse != null && licenseValidFYResponse != null) {
 
 						// current financial year details
 						currentFinancialYear = currentFYResponse.getFinYearRange();
-//						currentFYId = currentFYResponse.getId();
 						currentFinancialFromValue = Integer.valueOf(currentFinancialYear.split("-")[0]);
-//						currentFinancialToValue = currentFinancialFromValue + 1;
 						// license valid financial year details
 						licenseValidFromFinancialYear = licenseValidFYResponse.getFinYearRange();
-//						licenseValidFYId = licenseValidFYResponse.getId();
 						licenseValidFinancialFromValue = Integer.valueOf(licenseValidFromFinancialYear.split("-")[0]);
-//						licenseValidFinancialToValue = licenseValidFinancialFromValue + 1;
 						// get the fee details starting year
 						if ((currentFinancialFromValue - licenseValidFinancialFromValue) >= 5) {
 							actualFeeDetailStartYear = (currentFinancialFromValue - 5);
@@ -331,25 +322,18 @@ public class TradeLicenseService {
 						actualFeeDetailCount = actualFeeDetailCount + 1;
 						i = i + validPeriod;
 					}
-					// checking actual fee detail count with given fee detail
-					// count
+					// validate given fee detail count
 					if (actualFeeDetailCount != tradeLicense.getFeeDetails().size()) {
 						throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
 					}
-					today.add(Calendar.YEAR, (actualFeeDetailStartYear - actualFeeDetailsEndYear));
+					Date tradeValidFromDate = new Date(validFromDateInMillis);
+					today.setTimeInMillis(tradeValidFromDate.getTime());
+					//today.add(Calendar.YEAR, (actualFeeDetailStartYear - actualFeeDetailsEndYear));
 					// validate the fee details
 					for (int i = 0; i < actualFeeDetailCount; i++) {
+						
 						Boolean isFYExists = false;
-						// Integer feeYear = actualFeeDetailStartYear +
-						// (i*validPeriod);
-						// form each fee detail start date and get the
-						// corresponding id
 						today.add(Calendar.YEAR, (i * validPeriod));
-						// actualFeeDetailStartDate = currenDate.substring(0,
-						// currenDate.lastIndexOf("/")+1);
-						// actualFeeDetailStartDate =
-						// actualFeeDetailStartDate.concat(feeYear.toString());
-
 						FinancialYearContract feeDetailFYResponse = financialYearContractRepository
 								.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis()),
 										requestInfoWrapper);
@@ -370,8 +354,6 @@ public class TradeLicenseService {
 						if( i == actualFeeDetailCount-1){
 							today.setTime(feeDetailFYResponse.getEndingDate() );
 							today.add(Calendar.YEAR, (validPeriod-1));
-//							today.set(feeDetailFYResponse.getEndingDate().getYear()+(validPeriod-1), feeDetailFYResponse.getEndingDate().getMonth(), feeDetailFYResponse.getEndingDate().getDate());
-//							today.add(Calendar.YEAR, (i * validPeriod));
 							 feeDetailFYResponse = financialYearContractRepository
 									.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis()),
 											requestInfoWrapper);

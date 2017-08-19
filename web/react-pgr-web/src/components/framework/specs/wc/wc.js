@@ -15,15 +15,15 @@ var dat = {
           "multiple": false,
           "fields": [
             {
-              "name": "With Property",
-              "jsonPath": "Connection.withProperty",
-              "label": "",
-              "pattern": "",
-              "type": "radio",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": "",
+          "name": "With Property",
+          "jsonPath": "Connection.withProperty",
+          "label": "",
+          "pattern": "",
+          "type": "radio",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": "",
   			"values": [{"label":"With Property", "value":true},{"label":"Without Property", "value":false}],
   			"defaultValue":true,
         "showHideFields": [{
@@ -68,7 +68,7 @@ var dat = {
             "name": "MobileNumber",
             "jsonPath": "Connection.connectionOwner.mobileNumber",
             "label": "wc.create.groups.applicantDetails.mobileNumber",
-            "pattern": "",
+            "pattern": "^\\d{10}$",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
@@ -514,6 +514,28 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "Sequence No",
+            "jsonPath": "Connection.waterTreatment",
+            "label": "Sequence No",
+            "pattern": "",
+            "type": "number",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "PlumberName",
+            "jsonPath": "Connection.plumberName",
+            "label": "PlumberName",
+            "pattern": "",
+            "type": "textarea",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "numberOfPersons",
             "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
@@ -543,6 +565,18 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
+          {
+            "name": "Outside ULB",
+            "jsonPath": "Connection.outsideUlb",
+            "label": "Outside ULB",
+            "pattern": "",
+            "type": "checkbox",
+            "isRequired": false,
+            "defaultValue":true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          }
         ]
       },
       {

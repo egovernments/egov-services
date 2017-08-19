@@ -122,12 +122,11 @@ class AddDemand extends Component {
     Api.commonApiPost('wcms-connection/connection/_search',getDemands,{},false,true).then((res)=>{
       console.log(res);
       currentThis.setState({
-        searchData: res.Collection
+        searchData: res.Connection
       })
     }).catch((err)=> {
       console.log(err)
     })
-    console.log(currentThis.state.searchData);
 
 	 Api.commonApiPost('wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate', getDemands, {}, false, true).then((res)=>{
   		 currentThis.setState({
@@ -174,7 +173,8 @@ class AddDemand extends Component {
     } = this.props;
 
     let {search, handleDepartment, getTaxHead, validateCollection} = this;
-    let { DemandDetailBeans } = this.state;
+    let { DemandDetailBeans, searchData } = this.state;
+    console.log(this.state.searchData);
 
     let cThis = this;
 
@@ -237,7 +237,7 @@ class AddDemand extends Component {
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Name of Applicant")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{searchData.nameOfApplicant}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Locality")}</span></label><br/>

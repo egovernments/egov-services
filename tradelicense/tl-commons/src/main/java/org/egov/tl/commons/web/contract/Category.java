@@ -3,7 +3,6 @@ package org.egov.tl.commons.web.contract;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;

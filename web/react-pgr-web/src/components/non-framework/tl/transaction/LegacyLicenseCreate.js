@@ -228,9 +228,9 @@ class LegacyLicenseCreate extends Component {
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
           if(self.props.actionName == "update") {
-            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+            var hash = "/update/tl/CreateLegacyLicense/";
           } else {
-            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+            var hash = "/view/tl/CreateLegacyLicense" + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
           }
           self.props.setRoute(hash);
         }
@@ -594,11 +594,12 @@ class LegacyLicenseCreate extends Component {
     setMockData(_mockData);
   }
 
-  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
+  handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let self = this;
       let {handleChange,mockData,setDropDownData} = this.props;
       let hashLocation = window.location.hash;
+      let {validityYear}=this.state;
       let obj = specifications[`tl.create`];
 
 
@@ -626,28 +627,29 @@ class LegacyLicenseCreate extends Component {
     // }
 
 
-      if (property == "licenses[0].licenseValidFromDate") {
+     if (property == "licenses[0].licenseValidFromDate" && validityYear) {
          var getStartYear = new Date(e.target.value).getFullYear();
+         var curDate = new Date();
+         var currentDate = curDate.getFullYear();
+         var fixedDate = curDate.getFullYear();
+         var FeeDetails = [];
+         var startYear = getStartYear;
+         var Validity = validityYear;
+
+
+         for(var i = startYear; i <= fixedDate; i = (i + validityYear)) {
+         //  for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
+               if(i > (fixedDate - 4)){
+               let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
+               FeeDetails.push(feeDetails)
+               console.log(i);
+               }
+           }
+
+          handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
+
        }
 
-      var curDate = new Date();
-      var currentDate = curDate.getFullYear();
-      var fixedDate = curDate.getFullYear();
-      var FeeDetails = [];
-      var startYear = getStartYear;
-      var Validity = 2;
-
-
-      for(var i = startYear; i <= fixedDate; i = (i + self.state.validityYear)) {
-      //  for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
-            if(i > (fixedDate - 6)){
-            let feeDetails = {"financialYear": i + "-" + (i+1), "amount": "", "paid": false};
-            FeeDetails.push(feeDetails)
-            console.log(i);
-            }
-        }
-
-       this.props.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails",false,false);
 
       //if (property == "licenses[0].agreementDate") {
       //   console.log(new Date(e.target.value));
@@ -669,27 +671,19 @@ class LegacyLicenseCreate extends Component {
 
 
       if (property == "licenses[0].subCategoryId") {
-console.log(e.target.value);
+        console.log(e.target.value);
         Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
        {
           // handleChange (e, "" )
-          console.log(response);
+          // console.log(response);
           //console.log(response.categories[0].validityYears);
-          self.handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears", false, "");
+          handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
           self.setState({
             validityYear: response.categories[0].validityYears
           })
-          Api.commonApiPost("/tl-masters/uom/v1/_search",{"ids":response.categories[0].uomId}).then(function(uomResponse)
-          {
-            // handleChange (e, "" )
-            console.log(uomResponse.uoms[0].name);
-            self.handleChange({target:{value:uomResponse.uoms[0].name}}, "licenses[0].uomName", false, "");
-            self.handleChange({target:{value:uomResponse.uoms[0].id}}, "licenses[0].uomId", true, "");
 
-          },function(err) {
-              console.log(err);
-
-          });
+          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
+          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
 
         },function(err) {
             console.log(err);
@@ -920,7 +914,7 @@ console.log(e.target.value);
           <div style={{"textAlign": "center"}}>
 
 
-          <Card className="uiCard">
+          {formData && formData.hasOwnProperty("licenses") && formData.licenses[0].hasOwnProperty("feeDetails") && <Card className="uiCard">
 		          <CardHeader title={<strong>Fee Details</strong>}/>
 		          <CardText>
 		          <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
@@ -945,7 +939,7 @@ console.log(e.target.value);
               </tbody>
               </Table>
   		      </CardText>
-  		      </Card>
+  		      </Card>}
 
 
 
@@ -993,7 +987,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: (actionName) => {
     dispatch({type:"SET_ACTION_NAME", actionName})
   },
-  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
+  handleChange: (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch")=>{
     dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {

@@ -803,6 +803,15 @@ table thead th {
   overflow: hidden;
 }
 
+.pt-iconCont {
+	width:30px;
+	height:30px;
+	text-align:center;
+	line-height: 44px;
+    border: 1px solid #ccc;
+    margin-top: 26px;
+}
+
 .application-title{
  	text-align: center;
  	font-weight: 400;

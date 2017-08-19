@@ -237,20 +237,6 @@ formatDate(date){
                       <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
-                                          <Col xs={12} md={3} sm={6}>
-											  <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.propertyAge')+' *'}
-                                                  errorText={fieldErrors.propertyAge ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertyAge}</span> : ""}
-                                                  value={constructionDetails.propertyAge ? constructionDetails.propertyAge : ""}
-                                                  onChange={(e) => {handleChange(e, "propertyAge", false, "")}}
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-												  type="number"
-                                                  maxLength={15}
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              />
-                                          </Col>
 										  <Col xs={12} md={3} sm={6}>
 											  <DatePicker  className="fullWidth datepicker"
 												  formatDate={(date)=> this.formatDate(date)}
@@ -362,30 +348,6 @@ formatDate(date){
 												/>
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
-                                              <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.propertyAge')+' *'}
-                                                  errorText={fieldErrors.propertyAge2 ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertyAge2}</span> : ""}
-                                                  value={constructionDetails.propertyAge2 ? constructionDetails.propertyAge2 : ""}
-                                                  onChange={(event, index, value) => {
-													    (value == -1) ? value = '' : '';
-                                                      var e = {
-                                                        target: {
-                                                          value: value
-                                                        }
-                                                      };
-                                                      handleChange(e, "propertyAge2", false, "")}
-                                                  }
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                                  id="creationReason"
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
-												  <MenuItem value={-1} primaryText="None"/>
-                                                  <MenuItem value={1} primaryText="Options"/>
-                                              </SelectField>
-										 </Col>	
-											<Col xs={12} md={3} sm={6}>
 											  <TextField  className="fullWidth"
                                                   floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateNumber')}
                                                   errorText={fieldErrors.certificateNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.certificateNumber}</span> : ""}

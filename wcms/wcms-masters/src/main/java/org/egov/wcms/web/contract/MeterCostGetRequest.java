@@ -59,23 +59,23 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class MeterCostGetRequest {
 
-	private List<Long> ids;
+    private List<Long> ids;
 
-	private String code;
+    private String code;
 
-	private Double pipeSizeInMM;
+    private Double pipeSizeInMM;
 
-	private Long pipeSizeId;
+    private Long pipeSizeId;
 
-	private String name;
+    private String name;
 
-	private Boolean active;
+    private Boolean active;
 
-	@NotNull
-	private String tenantId;
+    @NotNull
+    private String tenantId;
 
-	private String sortBy;
+    private String sortBy;
 
-	private String sortOrder;
+    private String sortOrder;
 
 }

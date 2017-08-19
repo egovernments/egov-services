@@ -75,105 +75,105 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/treatmentplant")
 public class TreatmentPlantController {
 
-	@Autowired
-	private TreatmentPlantService treatmentPlantService;
+    @Autowired
+    private TreatmentPlantService treatmentPlantService;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private ValidatorUtils validatorUtils;
+    @Autowired
+    private ValidatorUtils validatorUtils;
 
-	@Autowired
-	private ErrorHandler errHandler;
+    @Autowired
+    private ErrorHandler errHandler;
 
-	@PostMapping(value = "/_create")
-	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final TreatmentPlantRequest treatmentPlantRequest,
-			final BindingResult errors) {
-		if (errors.hasErrors()) {
-			final ErrorResponse errRes = validatorUtils.populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		log.info("Treatment Plant Request::" + treatmentPlantRequest);
+    @PostMapping(value = "/_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody @Valid final TreatmentPlantRequest treatmentPlantRequest,
+            final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        log.info("Treatment Plant Request::" + treatmentPlantRequest);
 
-		final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest,
-				false);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest,
+                false);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.createTreatmentPlant(
-				applicationProperties.getCreateTreatmentPlantTopicName(), "treatmentplant-create",
-				treatmentPlantRequest);
+        final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.createTreatmentPlant(
+                applicationProperties.getCreateTreatmentPlantTopicName(), "treatmentplant-create",
+                treatmentPlantRequest);
 
-		return getSuccessResponse(treatmentPlantList, "Created", treatmentPlantRequest.getRequestInfo());
-	}
+        return getSuccessResponse(treatmentPlantList, "Created", treatmentPlantRequest.getRequestInfo());
+    }
 
-	@PostMapping(value = "/_update")
-	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid final TreatmentPlantRequest treatmentPlantRequest,
-			final BindingResult errors) {
-		if (errors.hasErrors()) {
-			final ErrorResponse errRes = validatorUtils.populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		log.info("treatmentPlantRequest::" + treatmentPlantRequest);
-		final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest,
-				true);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+    @PostMapping(value = "/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody @Valid final TreatmentPlantRequest treatmentPlantRequest,
+            final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        log.info("treatmentPlantRequest::" + treatmentPlantRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest,
+                true);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.updateTreatmentPlant(
-				applicationProperties.getUpdateTreatmentPlantTopicName(), "treatmentplant-update",
-				treatmentPlantRequest);
+        final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.updateTreatmentPlant(
+                applicationProperties.getUpdateTreatmentPlantTopicName(), "treatmentplant-update",
+                treatmentPlantRequest);
 
-		return getSuccessResponse(treatmentPlantList, null, treatmentPlantRequest.getRequestInfo());
-	}
+        return getSuccessResponse(treatmentPlantList, null, treatmentPlantRequest.getRequestInfo());
+    }
 
-	@PostMapping("_search")
-	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid final TreatmentPlantGetRequest treatmentPlantGetRequest,
-			final BindingResult modelAttributeBindingResult,
-			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			final BindingResult requestBodyBindingResult) {
-		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@ModelAttribute @Valid final TreatmentPlantGetRequest treatmentPlantGetRequest,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		// validate input params
-		if (modelAttributeBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+        // validate input params
+        if (modelAttributeBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 
-		// validate input params
-		if (requestBodyBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
-		// Call service
-		List<TreatmentPlant> treatmentPlantList = null;
-		try {
-			treatmentPlantList = treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest);
-		} catch (final Exception exception) {
-			log.error("Error while processing request " + treatmentPlantGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-		}
+        // Call service
+        List<TreatmentPlant> treatmentPlantList = null;
+        try {
+            treatmentPlantList = treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest);
+        } catch (final Exception exception) {
+            log.error("Error while processing request " + treatmentPlantGetRequest, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
 
-		return getSuccessResponse(treatmentPlantList, null, requestInfo);
+        return getSuccessResponse(treatmentPlantList, null, requestInfo);
 
-	}
+    }
 
-	private ResponseEntity<?> getSuccessResponse(final List<TreatmentPlant> treatmentPlantList, final String mode,
-			final RequestInfo requestInfo) {
-		final TreatmentPlantResponse treatmentPlantResponse = new TreatmentPlantResponse();
-		treatmentPlantResponse.setTreatmentPlants(treatmentPlantList);
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		if (StringUtils.isNotBlank(mode))
-			responseInfo.setStatus(HttpStatus.CREATED.toString());
-		else
-			responseInfo.setStatus(HttpStatus.OK.toString());
-		treatmentPlantResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<>(treatmentPlantResponse, HttpStatus.OK);
+    private ResponseEntity<?> getSuccessResponse(final List<TreatmentPlant> treatmentPlantList, final String mode,
+            final RequestInfo requestInfo) {
+        final TreatmentPlantResponse treatmentPlantResponse = new TreatmentPlantResponse();
+        treatmentPlantResponse.setTreatmentPlants(treatmentPlantList);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        if (StringUtils.isNotBlank(mode))
+            responseInfo.setStatus(HttpStatus.CREATED.toString());
+        else
+            responseInfo.setStatus(HttpStatus.OK.toString());
+        treatmentPlantResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(treatmentPlantResponse, HttpStatus.OK);
 
-	}
+    }
 
 }

@@ -64,11 +64,11 @@ import lombok.ToString;
 @ToString
 public class StorageReservoirRequest {
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	public RequestInfo requestInfo;
+    @NotNull
+    @JsonProperty("RequestInfo")
+    public RequestInfo requestInfo;
 
-	@JsonProperty("StorageReservoir")
-	private List<StorageReservoir> storageReservoir = new ArrayList<>();
+    @JsonProperty("StorageReservoir")
+    private List<StorageReservoir> storageReservoir = new ArrayList<>();
 
 }

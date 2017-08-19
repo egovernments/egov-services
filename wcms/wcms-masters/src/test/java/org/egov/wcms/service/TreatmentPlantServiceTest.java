@@ -64,76 +64,76 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 @WebMvcTest(TreatmentPlantService.class)
 public class TreatmentPlantServiceTest {
 
-	@Mock
-	private TreatmentPlantRepository treatmentPlantRepository;
+    @Mock
+    private TreatmentPlantRepository treatmentPlantRepository;
 
-	@Mock
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Mock
-	private ApplicationProperties applicationProperties;
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-	@Mock
-	private CodeGeneratorService codeGeneratorService;
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
 
-	@InjectMocks
-	private TreatmentPlantService treatmentPlantService;
+    @InjectMocks
+    private TreatmentPlantService treatmentPlantService;
 
-	@SuppressWarnings("unchecked")
-	@Test(expected = Exception.class)
-	public void test_Should_Search_TreatmentPlant() {
-		final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
-		treatmentPlantList.add(getTreatmentPlant());
-		final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito.mock(TreatmentPlantGetRequest.class);
-		when(treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest)).thenThrow(Exception.class);
-		assertTrue(treatmentPlantList.equals(treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest)));
-	}
+    @SuppressWarnings("unchecked")
+    @Test(expected = Exception.class)
+    public void test_Should_Search_TreatmentPlant() {
+        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+        treatmentPlantList.add(getTreatmentPlant());
+        final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito.mock(TreatmentPlantGetRequest.class);
+        when(treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest)).thenThrow(Exception.class);
+        assertTrue(treatmentPlantList.equals(treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest)));
+    }
 
-	@Test
-	public void test_throwException_Push_To_Producer_TreatmentPlant() {
-		final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
-		treatmentPlantList.add(getTreatmentPlant());
-		final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
-		treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
-		assertTrue(
-				treatmentPlantList.equals(treatmentPlantService.createTreatmentPlant("", "", treatmentPlantRequest)));
-	}
+    @Test
+    public void test_throwException_Push_To_Producer_TreatmentPlant() {
+        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+        treatmentPlantList.add(getTreatmentPlant());
+        final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
+        treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
+        assertTrue(
+                treatmentPlantList.equals(treatmentPlantService.createTreatmentPlant("", "", treatmentPlantRequest)));
+    }
 
-	@Test
-	public void test_throwException_Create_TreatmentPlant() {
+    @Test
+    public void test_throwException_Create_TreatmentPlant() {
 
-		final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
-		treatmentPlantList.add(getTreatmentPlant());
-		final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
-		treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
-		when(treatmentPlantRepository.persistCreateTreatmentPlant(any(TreatmentPlantRequest.class)))
-				.thenReturn(treatmentPlantRequest);
-		assertTrue(treatmentPlantRequest.equals(treatmentPlantService.create(treatmentPlantRequest)));
-	}
+        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+        treatmentPlantList.add(getTreatmentPlant());
+        final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
+        treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
+        when(treatmentPlantRepository.persistCreateTreatmentPlant(any(TreatmentPlantRequest.class)))
+                .thenReturn(treatmentPlantRequest);
+        assertTrue(treatmentPlantRequest.equals(treatmentPlantService.create(treatmentPlantRequest)));
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test(expected = Exception.class)
-	public void test_throwException_Update_TreatmentPlant() throws Exception {
+    @SuppressWarnings("unchecked")
+    @Test(expected = Exception.class)
+    public void test_throwException_Update_TreatmentPlant() throws Exception {
 
-		final TreatmentPlantRequest treatmentPlantRequest = Mockito.mock(TreatmentPlantRequest.class);
-		when(treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest)).thenThrow(Exception.class);
+        final TreatmentPlantRequest treatmentPlantRequest = Mockito.mock(TreatmentPlantRequest.class);
+        when(treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest)).thenThrow(Exception.class);
 
-		assertTrue(treatmentPlantRequest.equals(treatmentPlantService.update(treatmentPlantRequest)));
-	}
+        assertTrue(treatmentPlantRequest.equals(treatmentPlantService.update(treatmentPlantRequest)));
+    }
 
-	private TreatmentPlant getTreatmentPlant() {
-		final TreatmentPlant treatmentPlant = new TreatmentPlant();
-		treatmentPlant.setTenantId("default");
-		treatmentPlant.setName("test");
-		treatmentPlant.setCode("12");
-		treatmentPlant.setLocationNum("2");
-		treatmentPlant.setWardNum("3");
-		treatmentPlant.setZoneNum("5");
-		treatmentPlant.setCapacity(2d);
-		treatmentPlant.setPlantType("test");
-		treatmentPlant.setStorageReservoirId(2l);
-		treatmentPlant.setPlantType("abcd");
-		return treatmentPlant;
-	}
+    private TreatmentPlant getTreatmentPlant() {
+        final TreatmentPlant treatmentPlant = new TreatmentPlant();
+        treatmentPlant.setTenantId("default");
+        treatmentPlant.setName("test");
+        treatmentPlant.setCode("12");
+        treatmentPlant.setLocationNum("2");
+        treatmentPlant.setWardNum("3");
+        treatmentPlant.setZoneNum("5");
+        treatmentPlant.setCapacity(2d);
+        treatmentPlant.setPlantType("test");
+        treatmentPlant.setStorageReservoirId(2l);
+        treatmentPlant.setPlantType("abcd");
+        return treatmentPlant;
+    }
 
 }

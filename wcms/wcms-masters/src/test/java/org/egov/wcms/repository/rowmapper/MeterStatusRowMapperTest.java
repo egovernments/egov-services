@@ -39,29 +39,49 @@
  */
 package org.egov.wcms.repository.rowmapper;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.egov.wcms.model.MeterStatus;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@Component
-public class MeterStatusRowMapper implements RowMapper<MeterStatus> {
+@RunWith(MockitoJUnitRunner.class)
+public class MeterStatusRowMapperTest {
 
-    @Override
-    public MeterStatus mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final MeterStatus meterStatus = new MeterStatus();
-        meterStatus.setId(rs.getLong("ms_id"));
-        meterStatus.setCode(rs.getString("ms_code"));
-        meterStatus.setMeterStatus(rs.getString("ms_status"));
-        meterStatus.setDescription(rs.getString("ms_description"));
-        meterStatus.setCreatedBy((Long) rs.getObject("ms_createdby"));
-        meterStatus.setCreatedDate((Long) rs.getObject("ms_createddate"));
-        meterStatus.setLastModifiedBy((Long) rs.getObject("ms_lastmodifiedby"));
-        meterStatus.setLastModifiedDate((Long) rs.getObject("ms_lastmodifieddate"));
-        meterStatus.setTenantId(rs.getString("ms_tenantid"));
-        return meterStatus;
+    @Mock
+    private ResultSet rs;
+
+    @InjectMocks
+    private MeterStatusRowMapper meterStatusRowMapper;
+
+    @Test
+    public void test_should_map_result_set_to_entity() throws Exception {
+        Mockito.when(rs.next()).thenReturn(true).thenReturn(false);
+        when(rs.getLong("ms_id")).thenReturn(1L);
+        when(rs.getString("ms_code")).thenReturn("1");
+        when(rs.getString("ms_status")).thenReturn("faulty meter");
+        when(rs.getString("ms_description")).thenReturn("meter is faulty");
+        when((Long) rs.getObject("ms_createdby")).thenReturn(1L);
+        when((Long) rs.getObject("ms_createddate")).thenReturn(15436789L);
+        when((Long) rs.getObject("ms_lastmodifiedby")).thenReturn(1L);
+        when((Long) rs.getObject("ms_lastmodifieddate")).thenReturn(15436789L);
+        when(rs.getString("ms_tenantid")).thenReturn("default");
+        final MeterStatus actualMeterStatus = meterStatusRowMapper.mapRow(rs, 1);
+        final MeterStatus expectedMeterStatus = getMeterStatus();
+        assertTrue(expectedMeterStatus.equals(actualMeterStatus));
+    }
+
+    private MeterStatus getMeterStatus() {
+        return MeterStatus.builder().id(1L).code("1").meterStatus("faulty meter").description("meter is faulty").createdBy(1L)
+                .createdDate(15436789L)
+                .lastModifiedBy(1L).lastModifiedDate(15436789L).tenantId("default").build();
     }
 
 }

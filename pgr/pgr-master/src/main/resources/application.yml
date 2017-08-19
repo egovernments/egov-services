@@ -1339,7 +1339,7 @@ ReportDefinitions:
     type: string
     source: egpgr_complainttype
     isMandatory: true
-  query : SELECT us.username as userposition
+  query : SELECT us.username as userposition,
       count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
       count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
       count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,

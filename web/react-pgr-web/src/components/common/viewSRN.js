@@ -40,10 +40,10 @@ class viewsrn extends Component{
       this.getAddress(nextprops.srn.lat, nextprops.srn.lng);
   }
   filesUploaded = () =>{
-    if(this.props.srn.files != undefined){
+    if(this.props.srn.files != undefined && this.props.srn.files.length > 0){
       return this.props.srn.files.map((files, index) => {
         return (
-          <Col xs={6} sm={4} md={4} lg={4} key={index}>
+          <Col xs={12} sm={6} md={4} lg={3} key={index}>
             <RaisedButton
               href={files.url}
               download
@@ -72,41 +72,46 @@ class viewsrn extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-             {translate('pgr.lbl.crnformat')} : {this.props.srn.serviceRequestId}
+             Applicant Details
+           < /div>}/>
+           <CardText style={{padding:'8px 16px 0'}}>
+            <List>
+              <Row>
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('core.lbl.add.name')}
+                    secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.firstName}</p>}
+                  />
+                </Col>
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('core.lbl.mobilenumber')}
+                    secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.phone ? this.props.srn.phone : 'N/A'}</p>}
+                  />
+                </Col>
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('core.lbl.email.compulsory')}
+                    secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.email ? this.props.srn.email : 'N/A'}</p>}
+                  />
+                </Col>
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('core.lbl.address')}
+                    secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.systemRequesterAddress ? this.props.srn.systemRequesterAddress : 'N/A'}</p>}
+                  />
+                </Col>
+              </Row>
+            </List>
+           </CardText>
+        </Card>
+        <Card style={{margin:'15px 0'}}>
+          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+             {translate('pgr.lbl.grievancedetails')}
            < /div>}/>
            <CardText style={{padding:'8px 16px 0'}}>
              <List>
                <Row>
-                 <Col xs={12} sm={6} md={4} lg={3}>
-                   <ListItem
-                     primaryText={translate('core.lbl.add.name')}
-                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.firstName}</p>}
-                   />
-                 </Col>
-                 <Col xs={12} sm={6} md={4} lg={3}>
-                   <ListItem
-                     primaryText={translate('core.lbl.mobilenumber')}
-                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.phone ? this.props.srn.phone : 'N/A'}</p>}
-                   />
-                 </Col>
-                 <Col xs={12} sm={6} md={4} lg={3}>
-                   <ListItem
-                     primaryText={translate('core.lbl.email.compulsory')}
-                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.email ? this.props.srn.email : 'N/A'}</p>}
-                   />
-                 </Col>
-                 <Col xs={12} sm={6} md={4} lg={3}>
-                   <ListItem
-                     primaryText={translate('core.lbl.address')}
-                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.systemRequesterAddress ? this.props.srn.systemRequesterAddress : 'N/A'}</p>}
-                   />
-                 </Col>
-                 <Col xs={12} sm={6} md={4} lg={3}>
-                   <ListItem
-                     primaryText={translate('core.lbl.enter.aadharcard.number')}
-                     secondaryText={<p style={styles.customColumnStyle}>N/A</p>}
-                   />
-                 </Col>
                  <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.description')}
@@ -143,12 +148,14 @@ class viewsrn extends Component{
                      secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.systemReceivingMode}</p>}
                    />
                  </Col>
-                 <Col xs={12} sm={6} md={4} lg={3}>
-                   <ListItem
-                     primaryText={translate('pgr.lbl.receivingcenter')}
-                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.receivingCenterName ? this.props.srn.receivingCenterName :'N/A'}</p>}
-                   />
-                 </Col>
+                 {this.props.srn.receivingCenterName ?
+                   <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate('pgr.lbl.receivingcenter')}
+                         secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.receivingCenterName}</p>}
+                       />
+                   </Col> : ''
+                 }
                  <Col xs={12} sm={6} md={4} lg={3}>
                    <ListItem
                      primaryText={translate('core.lbl.location')}
@@ -159,12 +166,14 @@ class viewsrn extends Component{
                      </p>}
                    />
                  </Col>
-                 <Col xs={12} sm={6} md={4} lg={3}>
-                   <ListItem
-                     primaryText={translate('core.lbl.landmark')}
-                     secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.address ? this.props.srn.address : 'N/A'}</p>}
-                   />
-                 </Col>
+                 {this.props.srn.address ?
+                   <Col xs={12} sm={6} md={4} lg={3}>
+                     <ListItem
+                       primaryText={translate('core.lbl.landmark')}
+                       secondaryText={<p style={styles.customColumnStyle}>{this.props.srn.address}</p>}
+                     />
+                   </Col> : ''
+                 }
                  {this.props.srn.systemExternalCRN ?
                    <Col xs={12} sm={6} md={4} lg={3}>
                      <ListItem
@@ -175,12 +184,15 @@ class viewsrn extends Component{
                  : ''}
                </Row>
                <Row>
-                 <Col xs={12} sm={12} md={12} lg={12}>
-                   <ListItem
-                     primaryText={translate('pgr.lbl.files')}
-                   />
-                 </Col>
-                 {this.filesUploaded()}
+               {this.props.srn.files != undefined && this.props.srn.files.length > 0 ?
+                   <Col xs={12} sm={12} md={12} lg={12}>
+                    <ListItem
+                      primaryText={translate('pgr.lbl.files')}
+                      secondaryText={<div style={styles.customColumnStyle}>{this.filesUploaded()}</div>}
+                    />
+                   </Col>
+                   : ""
+               }
                </Row>
              </List>
            </CardText>

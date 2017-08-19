@@ -546,7 +546,7 @@ class grievanceView extends Component{
               <Row>
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <h4>Feedback</h4>
-                  <Rating initialRate={grievanceView.systemRating} onClick={(rate, event) => { handleChange(rate,"systemRating", true,"")}}/>
+                  <Rating className="rating" empty="glyphicon glyphicon-star-empty" full="glyphicon glyphicon-star" initialRate={grievanceView.systemRating} onClick={(rate, event) => { handleChange(rate,"systemRating", true,"")}}/>
                 </Col>
               </Row> : ''}
               <Row>

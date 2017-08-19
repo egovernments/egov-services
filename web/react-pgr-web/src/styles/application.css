@@ -896,3 +896,8 @@ span.errorMsg{
 .radio-group .field-title{
 	margin-bottom: 10px;
 }
+
+.rating{
+	color: #F58720;
+  font-size: 25px;
+}

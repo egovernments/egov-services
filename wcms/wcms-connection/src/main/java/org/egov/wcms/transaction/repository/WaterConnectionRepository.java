@@ -497,27 +497,31 @@ public class WaterConnectionRepository {
     }
 
 
-    public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
-        LOGGER.info("Get Connection Details Query : " + fetchQuery);
-        final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
-                new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
-        LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
-        
-        final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq, preparedStatementValues);
-        LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
-        try{ 
-        	final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery, new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
-        	LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
-            if(secondConnectionList.size() > 0) { 
-            	connectionList.addAll(secondConnectionList);		
-            }
-        } catch(Exception ex) { 
-        	LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
-        }
-        return connectionList;
-    }
+	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
+		LOGGER.info("Get Connection Details Query : " + fetchQuery);
+		final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
+				new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
+		LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
+
+		final List<Object> secondPreparedStatementValues = new ArrayList<>();
+		final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq,
+				secondPreparedStatementValues);
+		LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
+		try {
+			final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery,
+					secondPreparedStatementValues.toArray(),
+					new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
+			LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
+			if (secondConnectionList.size() > 0) {
+				connectionList.addAll(secondConnectionList);
+			}
+		} catch (Exception ex) {
+			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
+		}
+		return connectionList;
+	}
     
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId) { 
     	String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();

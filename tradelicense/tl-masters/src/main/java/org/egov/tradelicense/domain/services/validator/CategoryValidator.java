@@ -73,6 +73,8 @@ public class CategoryValidator {
 
 			if (ParentId != null) {
 				validateSubCategory(category, requestInfo, isNewCategory);
+			}else{
+				category.setValidityYears(0l);
 			}
 
 		}

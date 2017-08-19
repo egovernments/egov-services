@@ -75,8 +75,8 @@ public class FeeMatrixValidator {
 
 			// validating financial year
 			Date[] dates = validateFinancialYear(financialYear, requestInfoWrapper);
-			feeMatrix.setEffectiveFrom(dates[0].getTime()/1000);
-			feeMatrix.setEffectiveTo(dates[1].getTime()/1000);
+			feeMatrix.setEffectiveFrom(dates[0].getTime());
+			feeMatrix.setEffectiveTo(dates[1].getTime());
 			// validating category
 			validateCategory(categoryId, requestInfo);
 			// validating sub category
@@ -297,8 +297,8 @@ public class FeeMatrixValidator {
 			feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue(getString(row.get("businessNature"))));
 			feeMatrix.setCategoryId(getLong(row.get("categoryId")));
 			feeMatrix.setSubCategoryId(getLong(row.get("subCategoryId")));
-			feeMatrix.setEffectiveFrom((new Timestamp((long) row.get("effectiveFrom")).getTime())/1000);
-			feeMatrix.setEffectiveTo((new Timestamp((long) row.get("effectiveTo")).getTime())/1000);
+			feeMatrix.setEffectiveFrom((new Timestamp((long) row.get("effectiveFrom")).getTime()));
+			feeMatrix.setEffectiveTo((new Timestamp((long) row.get("effectiveTo")).getTime()));
 			feeMatrix.setFinancialYear(getString(row.get("financialYear")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));

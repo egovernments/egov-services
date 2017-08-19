@@ -39,7 +39,7 @@ public class FinancialYearContractRepository {
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
-		String asOnDate = sf.format(new Date(date * 1000));
+		String asOnDate = sf.format(new Date(date));
 		if (date != null) {
 			content.append("asOnDate=" + asOnDate);
 		}

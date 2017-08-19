@@ -157,6 +157,9 @@ public class PropertiesManager {
 	
 	@Value("${error.license.feedetails}")
 	private String feeDetailsErrorMsg;
+	
+	@Value("${error.license.feeDetailYearNotFound}")
+	private String feeDetailYearNotFound;
 
 	
 }

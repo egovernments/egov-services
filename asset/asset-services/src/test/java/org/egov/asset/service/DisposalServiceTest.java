@@ -115,7 +115,7 @@ public class DisposalServiceTest {
 
         final DisposalRequest disposalRequest = new DisposalRequest();
         disposalRequest.setDisposal(getDisposalForCreateAsync());
-        disposalRequest.getDisposal().setVoucherReference("6");
+        disposalRequest.getDisposal().setProfitLossVoucherReference("6");
 
         final List<DisposalRequest> insertedDisposalRequest = new ArrayList<>();
         insertedDisposalRequest.add(disposalRequest);
@@ -136,8 +136,8 @@ public class DisposalServiceTest {
         assertTrue(disposalResponse.getDisposals().get(0).getId().equals(Long.valueOf("15")));
         mock.createAsync(disposalRequest, new HttpHeaders());
 
-        assertEquals(disposalResponse.getDisposals().get(0).getVoucherReference(),
-                disposalRequest.getDisposal().getVoucherReference());
+        assertEquals(disposalResponse.getDisposals().get(0).getProfitLossVoucherReference(),
+                disposalRequest.getDisposal().getProfitLossVoucherReference());
     }
 
     @Test
@@ -153,7 +153,7 @@ public class DisposalServiceTest {
         final DisposalRequest disposalRequest = new DisposalRequest();
         disposalRequest.setDisposal(getDisposalForCreateAsync());
         disposalRequest.getDisposal().setId(Long.valueOf("15"));
-        disposalRequest.getDisposal().setVoucherReference("6");
+        disposalRequest.getDisposal().setProfitLossVoucherReference("6");
 
         doNothing().when(disposalRepository).create(disposalRequest);
         mock.create(disposalRequest);
@@ -205,7 +205,7 @@ public class DisposalServiceTest {
         disposal.setSaleValue(new BigDecimal("200.0"));
         disposal.setTransactionType(TransactionType.SALE);
         disposal.setAssetSaleAccount(Long.valueOf("15"));
-        disposal.setVoucherReference("6");
+        disposal.setProfitLossVoucherReference("6");
         disposal.setAuditDetails(getAuditDetails());
 
         return disposal;

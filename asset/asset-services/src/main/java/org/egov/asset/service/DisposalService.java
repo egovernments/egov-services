@@ -82,14 +82,14 @@ public class DisposalService {
     }
 
     public void setStatusOfAssetToDisposed(final DisposalRequest disposalRequest) {
-
+        final Disposal disposal = disposalRequest.getDisposal();
+        final String tenantId = disposal.getTenantId();
         final List<Long> assetIds = new ArrayList<>();
-        assetIds.add(disposalRequest.getDisposal().getAssetId());
-        final Asset asset = assetRepository.findForCriteria(
-                AssetCriteria.builder().tenantId(disposalRequest.getDisposal().getTenantId()).id(assetIds).build())
-                .get(0);
+        assetIds.add(disposal.getAssetId());
+        final Asset asset = assetRepository
+                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
         final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(AssetStatusObjectName.ASSETMASTER,
-                Status.DISPOSED, disposalRequest.getDisposal().getTenantId());
+                Status.DISPOSED, tenantId);
         asset.setStatus(assetStatuses.get(0).getStatusValues().get(0).getCode());
         final AssetRequest assetRequest = AssetRequest.builder().asset(asset)
                 .requestInfo(disposalRequest.getRequestInfo()).build();
@@ -109,7 +109,7 @@ public class DisposalService {
                 log.info("Commencing Voucher Generation for Asset Sale/Disposal");
                 final String voucherNumber = createVoucherForDisposal(disposalRequest, headers);
                 if (StringUtils.isNotBlank(voucherNumber))
-                    disposal.setVoucherReference(voucherNumber);
+                    disposal.setProfitLossVoucherReference(voucherNumber);
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
@@ -143,7 +143,7 @@ public class DisposalService {
                 requestInfo);
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-        final Fund fund = voucherService.getFundData(requestInfo, tenantId, disposal.getFund()).getFunds().get(0);
+        final Fund fund = voucherService.getFundFromVoucherMap(requestInfo, tenantId);
         final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, fund,
                 asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
 
@@ -157,8 +157,7 @@ public class DisposalService {
             final AssetCategory assetCategory, final RequestInfo requestInfo) {
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
         final String tenantId = disposal.getTenantId();
-        final Function function = voucherService.getFunctionData(requestInfo, tenantId, disposal.getFunction())
-                .getFunctions().get(0);
+        final Function function = voucherService.getFunctionFromVoucherMap(requestInfo, tenantId);
         accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, disposal.getAssetSaleAccount(),
                 disposal.getSaleValue(), function, false, true));
         accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),

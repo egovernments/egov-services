@@ -16,7 +16,7 @@
 			"saleValue": 200.0,
 			"transactionType": "SALE",
 			"assetSaleAccount": 15,
-			"voucherReference": 6,
+			"profitLossVoucherReference": 6,
 			"auditDetails": 
 			{
 				"createdBy": "2",

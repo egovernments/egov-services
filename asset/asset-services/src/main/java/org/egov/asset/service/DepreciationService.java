@@ -1,6 +1,5 @@
 package org.egov.asset.service;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,8 +16,6 @@ import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DepreciationResponse;
 import org.egov.asset.contract.FinancialYearContract;
 import org.egov.asset.contract.FinancialYearContractResponse;
-import org.egov.asset.contract.FunctionResponse;
-import org.egov.asset.contract.FundResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.domain.CalculationAssetDetails;
@@ -32,7 +29,6 @@ import org.egov.asset.model.DepreciationDetail;
 import org.egov.asset.model.Fund;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
-import org.egov.asset.model.enums.AssetFinancialParams;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.DepreciationRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
@@ -42,11 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,9 +74,6 @@ public class DepreciationService {
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
-
-    @Autowired
-    private ObjectMapper mapper;
 
     @Autowired
     private VoucherService voucherService;
@@ -176,24 +164,11 @@ public class DepreciationService {
                 tenantId)) {
             log.info("Commencing voucher generation for depreciation");
             final Map<Long, VouchercreateAccountCodeDetails> ledgerMap = new HashMap<>();
-            Map<String, String> voucherParamsMap = new HashMap<>();
-            try {
-                voucherParamsMap = getDepreciationVoucherParamsMap(tenantId);
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-
-            log.debug("Voucher Params Map :: " + voucherParamsMap);
             final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-            final String functionCode = voucherParamsMap.get(AssetFinancialParams.FUNCTION.toString());
-            final String fundCode = voucherParamsMap.get(AssetFinancialParams.FUND.toString());
-
-            final FunctionResponse functionResponse = voucherService.getFunctionByCode(requestInfo, tenantId,
-                    functionCode);
-            final org.egov.asset.model.Function function = functionResponse.getFunctions().get(0);
+            final org.egov.asset.model.Function function = voucherService.getFunctionFromVoucherMap(requestInfo,
+                    tenantId);
             log.debug("Function For Depreciation Voucher :: " + function);
-            final FundResponse fundResponse = voucherService.getFundByCode(requestInfo, tenantId, fundCode);
-            final Fund fund = fundResponse.getFunds().get(0);
+            final Fund fund = voucherService.getFundFromVoucherMap(requestInfo, tenantId);
             log.debug("Fund for Depreciation Voucher :: " + fund);
 
             for (final Map.Entry<Long, List<CalculationAssetDetails>> entry : cadMap.entrySet()) {
@@ -276,18 +251,6 @@ public class DepreciationService {
                 throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
         }
 
-    }
-
-    private HashMap<String, String> getDepreciationVoucherParamsMap(final String tenantId)
-            throws IOException, JsonParseException, JsonMappingException {
-        final String depreciationVoucherParams = assetConfigurationService
-                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERPARAMS, tenantId);
-
-        log.debug("Depreciation Voucher Parameters :: " + depreciationVoucherParams);
-        final TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-        };
-
-        return mapper.readValue(depreciationVoucherParams, typeRef);
     }
 
     /**

@@ -191,7 +191,7 @@ public class WaterConnectionService {
             userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
                     UserResponseInfo.class);
             logger.info("UserUtil userResponse ---->> " + userResponse);
-            if (userResponse == null || userResponse.getUsers().size() == 0) {
+            if (null == userResponse) { 
                 UserRequestInfo userRequestInfo = new UserRequestInfo();
                 userRequestInfo.setRequestInfo(waterConnReq.getRequestInfo());
                 User user = buildUserObjectFromConnection(waterConnReq);

@@ -295,6 +295,7 @@ public class PropertyMasterRepository {
 				ps.setString(5, propertyType.getAuditDetails().getLastModifiedBy());
 				ps.setLong(6, propertyType.getAuditDetails().getCreatedTime());
 				ps.setLong(7, propertyType.getAuditDetails().getLastModifiedTime());
+				ps.setString(8, propertyType.getParent());
 				return ps;
 			}
 		};
@@ -329,7 +330,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, propertyType.getAuditDetails().getLastModifiedBy());
 				ps.setLong(5, propertyType.getAuditDetails().getLastModifiedTime());
-				ps.setLong(6, propertyType.getId());
+				ps.setString(6, propertyType.getParent());
+				ps.setLong(7, propertyType.getId());
 				return ps;
 			}
 		};
@@ -353,14 +355,14 @@ public class PropertyMasterRepository {
 	 * @return
 	 */
 	public List<PropertyType> searchPropertyType(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet) {
+			String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet, String parent) {
 
 		List<PropertyType> propertyTypes = new ArrayList<>();
 		List<Object> preparedStatementValues = new ArrayList<>();
 
 		String propertyTypeSearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.PROPERTY_TYPE_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet,
-				preparedStatementValues, null, null, null, null);
+				preparedStatementValues, null, null, null, parent);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		propertyTypes = jdbcTemplate.query(propertyTypeSearchSql.toString(), preparedStatementValues.toArray(),
@@ -373,6 +375,7 @@ public class PropertyMasterRepository {
 			propertyType.setNameLocal(propertyData.getNameLocal());
 			propertyType.setActive(propertyData.getActive());
 			propertyType.setOrderNumber(propertyData.getOrderNumber());
+			propertyType.setParent(propertyData.getParent());
 		}
 		return propertyTypes;
 	}

@@ -1,6 +1,8 @@
 package org.egov.property.utility;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +15,8 @@ public class TimeStampUtil {
 			return null;
 		} else {
 			DateTimeFormatter[] formatter = new DateTimeFormatter[] { DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"), DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S") };
+					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+					DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S") };
 			for (int i = 0; i < formatter.length; i++) {
 				try {
 					LocalDateTime time = LocalDateTime.from(LocalDate.parse(date, formatter[i]).atStartOfDay());
@@ -27,5 +30,12 @@ public class TimeStampUtil {
 		}
 
 		return timestamp;
+	}
+
+	public static String getDateFormat(String date) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat connvertFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		return connvertFormat.format(simpleDateFormat.parse(date));
+
 	}
 }

@@ -387,7 +387,7 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
       boundary:
         $ref: "#/definitions/PropertyLocation"
-      sequence:
+      sequenceNo:
         type: integer
         description: This number used to generate bills or some other activities on a property in the order.
       bpaNo:
@@ -829,7 +829,7 @@ definitions:
         type: string
         format: date
         description: occupancy date of the Unit
-      constStartDate:
+      constructionStartDate:
         type: string
         format: date
         description: construction Start date of the Unit

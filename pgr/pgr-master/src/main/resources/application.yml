@@ -80,15 +80,13 @@ ReportDefinitions:
     pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default&keyword=complaint|$..serviceCode|$..serviceName
     source: seva
     isMandatory: true
-  query: SELECT ctype.name,count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN
-    1 ELSE NULL::integer END) AS registered,count(CASE WHEN cs.status::text = ANY
-    (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text,
-    'NOTCOMPLETED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE
-    WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text, 'WITHDRAWN'::character
-    varying::text, 'CLOSED'::character varying::text]) THEN 1 ELSE NULL::integer END)
-    AS completed,count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer
-    END) AS reopened, count(CASE WHEN cs.status::text = 'REJECTED'::text THEN 1 ELSE
-    NULL::integer END) AS rejected, sum(CASE WHEN (cs.status::text = ANY (ARRAY['COMPLETED'::character
+  query: SELECT ctype.name,
+    count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
+    count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+    count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
+    count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
+    count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,
+    sum(CASE WHEN (cs.status::text = ANY (ARRAY['COMPLETED'::character
     varying::text, 'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text]))
     AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double
     precision) THEN 1 WHEN (cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text,

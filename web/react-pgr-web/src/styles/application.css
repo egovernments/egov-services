@@ -810,6 +810,7 @@ table thead th {
 	line-height: 44px;
     border: 1px solid #ccc;
     margin-top: 26px;
+	cursor:pointer;
 }
 
 .application-title{

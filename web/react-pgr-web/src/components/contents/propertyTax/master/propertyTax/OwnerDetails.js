@@ -152,7 +152,6 @@ constructor(props) {
                       <Row>
                         <Col xs={12} md={3} sm={6}>
                           <TextField
-							tabIndex ={1}
                             hintText="434345456545"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.aadhaarNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.aadhaarNumber}</span>: "") : ""}
@@ -172,14 +171,12 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
-						  tabIndex ={2}
                             hintText="9999888877"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.phoneNumber')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.mobileNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.mobileNumber}</span>: ""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.mobileNumber:""}
                             onChange={(e) =>{
 								handleChangeOwner(e, "owner","mobileNumber", true, /^\d{10}$/g)
-                               // handleChangeNextOne(e, "owner","mobileNumber", false, /^\d{10}$/g)
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -191,7 +188,6 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
-						   tabIndex ={3}
                             hintText="Joe Doe"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerName')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
@@ -210,7 +206,6 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
-						  
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.gender')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gender}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gender:""}

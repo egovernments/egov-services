@@ -17,6 +17,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import {translate} from '../../../../common/common';
+import Dialog from 'material-ui/Dialog';
 import Api from '../../../../../api/api';
 
 
@@ -116,6 +117,8 @@ const  getNameById = (object, code, property = "") => {
 
 var totalFloors = [];
 
+var temp = [];
+
 class FloorDetails extends Component {
 	
   constructor(props) {
@@ -130,7 +133,9 @@ class FloorDetails extends Component {
 		hasLengthWidth: false,
 		roomInFlat:[{code:1, name:'Yes'}, {code:2, name:'No'}],
 		newFloorError : false,
-		negativeValue : false
+		negativeValue : false,
+		occupantNames : [],
+		dialogOpen: false
     }
   }
 
@@ -535,6 +540,55 @@ getFloors = () => {
 	
 	this.getSmallestDate(alldate);
 }
+
+handleDialogOpen = () => {
+	this.setState({dialogOpen: true});
+};
+
+handleDialogClose = () => {
+	this.setState({dialogOpen: false});
+};
+
+setOccupantName = (item) => {
+	
+	var a = item.split(',');
+	
+	for(var i = 0; i<a.length;i++){
+		if(temp.indexOf(a[i]) == -1) {
+			temp.push(a[i])
+		}
+	}
+	
+	this.setState({
+		occupantNames: temp
+	})
+	
+	var e = {
+		target: {
+			value: temp.toString()
+		}
+	}
+	
+	this.props.handleChangeNextOne(e,'floor',"occupierName", false,  /^[a-zA-Z,\s]+$/g)
+}
+
+deleteOccupantName = (index) =>{
+	
+	temp.splice(index, 1)
+	
+	this.setState({
+		occupantNames: temp
+	})
+	
+	var e = {
+		target: {
+			value: temp.toString()
+		}
+	}
+	
+	this.props.handleChangeNextOne(e,'floor',"occupierName", false,  /^[a-zA-Z,\s]+$/g)
+	
+}
  
   
    render(){
@@ -571,12 +625,87 @@ getFloors = () => {
 		  noOfFloors
 				} = this.props;
 
-				let {calcAssessableArea, handleAge, checkFloors} = this;
+		let {calcAssessableArea, handleAge, checkFloors} = this;
 		let cThis = this;
+		
+		const occupantNames = () => {
+								
+				return(
+					<div>
+						<Col xs={12} md={12}>
+							<Row>
+								<Col xs={12} md={6}>
+									<TextField  className="fullWidth"
+									  hintText="Mano, Ranjan"
+									  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
+									  errorText={fieldErrors.occupantName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> : ""}
+									  value={floorDetails.occupantName ? floorDetails.occupantName : ""}
+									  onChange={(e) => {handleChange(e,"occupantName", false,  /^[a-zA-Z,\s]+$/g)}}
+									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+									  underlineStyle={styles.underlineStyle}
+									  underlineFocusStyle={styles.underlineFocusStyle}
+									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
+								  </Col>
+								  <Col xs={12} md={6}>
+									<RaisedButton type="button" label="Add Name" disabled={(floorDetails.occupantName && floorDetails.occupantName!='') ? false : true} primary={true} onClick={()=>{
+										this.setOccupantName(floorDetails.occupantName)
+										var e = {
+											target: {
+												value:''
+											}
+										}
+										handleChange(e,"occupantName", false,  /^[a-zA-Z,\s]+$/g)
+										}
+									}/>
+								  </Col>
+							</Row>		  
+						</Col>
+						<Table>
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Name</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								{this.state.occupantNames.length !=0 && this.state.occupantNames.map((item, index)=>{
+									return(
+									<tr key={index}>
+										<td>{index+1}</td>
+										<td>{item}</td>
+										<td><div className="material-icons" onClick={()=>{
+											this.deleteOccupantName(index)
+										}}>delete</div></td>
+									</tr>
+									)
+								})}
+							</tbody>
+						</Table>
+					</div>
+				)
+		}
+		
+		const showDialog = () => {
+			return(
+				<Dialog
+				  title="Occupant Names"
+				  modal={false}
+				  open={this.state.dialogOpen}
+				  onRequestClose={this.handleDialogClose}
+				  style={{height:'auto'}}
+				>
+				  
+					{occupantNames()}
+				
+				</Dialog>
+			)
+		}
 		
 	   return(
 			
 			<Card className="uiCard">
+				{showDialog()}
                 <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.floorDetails')}</div>} />
 				<CardText>
 								<Grid fluid>
@@ -829,23 +958,21 @@ getFloors = () => {
 																/>
 															</Col>
 															<Col xs={12} md={3}>
-																<div className="pt-iconCont"><i className="material-icons">add</i></div>
+													
+																<FloatingActionButton mini={true} disabled= {floorDetails.floor ? (floorDetails.floor.occupierName  && floorDetails.floor.occupierName!='' ? false : true) : true} onClick={()=>{
+																	if(floorDetails.hasOwnProperty('floor') && floorDetails.floor.hasOwnProperty('occupierName')) {
+																		this.handleDialogOpen();
+																		this.setOccupantName(floorDetails.floor.occupierName)
+																	}
+																	
+																}} style={{marginTop:15}}>
+																	<i className="material-icons">add</i>
+																</FloatingActionButton>
 															</Col>
 														</Row>
 													</Col>
 													
-													<Col xs={12} md={3} sm={6}>
-														<Table>
-															<thead>
-																<th>#</th>
-																<th>Name</th>
-															</thead>
-															<tbody>
-																<td></td>
-																<td></td>
-															</tbody>
-														</Table>
-													</Col>
+												
 													
 													{(floorDetails.floor ? !getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : true) 
 													

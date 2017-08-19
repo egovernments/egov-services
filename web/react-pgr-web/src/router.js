@@ -107,6 +107,7 @@ import LegacyLicenseCreate from './components/non-framework/tl/transaction/Legac
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
 import Employee from './components/non-framework/employee/create';
 import EmployeeSearch from './components/non-framework/employee/search';
+import SearchLegacyWc from './components/non-framework/wc/search';
 
 const base = "";
 
@@ -230,6 +231,7 @@ const Main = () => {
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
       <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
       <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
+      <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
 
 
     </Switch>

@@ -120,9 +120,9 @@ class AddDemand extends Component {
 	}
 
     Api.commonApiPost('wcms-connection/connection/_search',getDemands,{},false,true).then((res)=>{
-      console.log(res);
+        console.log(res.Connection[0].acknowledgementNumber);
       currentThis.setState({
-        searchData: res.Connection
+        searchData: res
       })
     }).catch((err)=> {
       console.log(err)
@@ -146,7 +146,10 @@ class AddDemand extends Component {
     self.props.setLoadingStatus('loading');
 	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: "1301616000"}, body, false, true).then((res)=>{
       self.props.setLoadingStatus('hide');
+       self.props.toggleSnackbarAndSetText(true,translate("wc.update.message.success"), true, false);
+      self.props.setRoute("/searchconnection/wc");
 	  }).catch((err)=> {
+      self.props.setLoadingStatus('hide');
 		  self.props.toggleSnackbarAndSetText(true, err.message, false, true);
 	  })
 
@@ -174,7 +177,9 @@ class AddDemand extends Component {
 
     let {search, handleDepartment, getTaxHead, validateCollection} = this;
     let { DemandDetailBeans, searchData } = this.state;
-    console.log(this.state.searchData);
+
+    console.log( );
+
 
     let cThis = this;
 
@@ -217,77 +222,67 @@ class AddDemand extends Component {
 					<Grid fluid>
 						<Row>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Assessment Number")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Acknowledgement Number")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].acknowledgementNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("New Consumer Code")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Consumer Number")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].consumerNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Mobile Number")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Name of Applicant")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.nameOfApplicant}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Email")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Address")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.address}</label></span>
             </Col>
             </Row>
             <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Name of Applicant")}</span></label><br/>
-            <label>{searchData.nameOfApplicant}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Mobile Number")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.mobileNumber}</label></span>
             </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("Email")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.email}</label></span>
+            </Col>
+
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Locality")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.locality}</label></span>
             </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Address")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
-            </Col>
+
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Zone / Ward / Block")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.ward}</label></span>
             </Col>
             </Row>
               <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Aadhaar Number")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.adharNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("No of floors")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].noOfFlats}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Connection Type")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].connectionType}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Usage Type")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.usageType}</label></span>
             </Col>
             </Row>
               <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"bold"}}>{translate("Property Tax")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
-            </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Current Water Charge Due")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
-            </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Connection Date")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
-            </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Old Consumer Number")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.propertyTaxDue}</label></span>
             </Col>
             </Row>
 								<br/>
@@ -461,7 +456,8 @@ const mapDispatchToProps = dispatch => ({
    },
    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
-   }
+   },
+   setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 
 });
 

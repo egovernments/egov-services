@@ -118,9 +118,9 @@ const checkRequiredFields = function(type, object) {
       }
       break;
     case 'edu':
-      if(!object.designation) {
+      if(!object.qualification) {
         errorText["education.qualification"] = translate("ui.framework.required");
-      } else if(!object.declaredOn) {
+      } else if(!object.yearOfPassing) {
         errorText["education.yearOfPassing"] = translate("ui.framework.required");
       }
       break;
@@ -130,9 +130,9 @@ const checkRequiredFields = function(type, object) {
       }
       break;
     case 'dept':
-      if(!object.skill) {
+      if(!object.test) {
         errorText["test.test"] = translate("ui.framework.required");
-      } else if(!object.skill) {
+      } else if(!object.yearOfPassing) {
         errorText["test.yearOfPassing"] = translate("ui.framework.required");
       }
       break;
@@ -1007,13 +1007,14 @@ class Employee extends Component {
         })
         break;
       case 'dept':
+        console.log(this.state.subObject.test);
         errorText = checkRequiredFields('dept', this.state.subObject.test);
         if(Object.keys(errorText).length > 0) {
           return self.setState({errorText});
         }
 
         let test = Object.assign([], this.props.Employee.test || []);
-        if(this.state.editIndex == '')
+        if(this.state.editIndex === '')
           test.push(this.state.subObject.test);
         else
           test[editIndex] = Object.assign({}, this.state.subObject.test);
@@ -1599,7 +1600,7 @@ class Employee extends Component {
             })
           } else {
             self.setInitDat({
-      code: "",
+      code: null,
       dateOfAppointment: "",
       dateOfJoining: "",
       dateOfRetirement: "",

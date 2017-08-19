@@ -78,6 +78,7 @@ module.exports = {
                     var locale = localStorage.getItem('locale');
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
+                    localStorage.reload = true;
                     window.location.hash = "#/";
                 } else if(response){
                     throw new Error(response);

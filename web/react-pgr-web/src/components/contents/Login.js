@@ -326,8 +326,8 @@ class Login extends Component {
 
    searchGrievance = (e) => {
      let {setRoute, setHome} = this.props;
-     if(this.state.srn) {
-        setRoute("/pgr/viewGrievance/"+this.state.srn);
+     if((this.state.srn).trim()) {
+        setRoute("/pgr/viewGrievance/"+(this.state.srn).trim());
         setHome(true);
      }
    }

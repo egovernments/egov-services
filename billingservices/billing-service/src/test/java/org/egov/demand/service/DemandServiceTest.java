@@ -259,28 +259,11 @@ public class DemandServiceTest {
 		when(demandRepository.getDemands(any(DemandCriteria.class),any())).thenReturn(demand);
 		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK)).thenReturn(getResponseInfo(requestInfo));
 		when(demandEnrichmentUtil.enrichOwners(any(List.class),any(List.class))).thenReturn(demand);
-//		when(demandService.getDemands(any(DemandCriteria.class),any(RequestInfo.class))).thenReturn(demandResponse);
 		
 		
 		assertEquals(demandService.getDues(demandDueCriteria, new RequestInfo()).toString(), demandDueResponse.toString());
 		
 	}
-	
-	/*@Test
-	public void testShouldGetDemandDetails(){
-		RequestInfo requestInfo=new RequestInfo();
-		User user=new User();
-		user.setId(1l);
-		requestInfo.setUserInfo(user);
-		DemandDetailResponse demandDetailResponse=new DemandDetailResponse();
-		List<DemandDetail> demandDetails=getDemandDetails();
-		demandDetailResponse.setDemandDetails(demandDetails);
-		
-		when(demandRepository.getDemandDetails(any(DemandDetailCriteria.class))).thenReturn(demandDetails);
-		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK)).thenReturn(getResponseInfo(requestInfo));
-		
-		assertEquals(demandService.getDemandDetails(any(DemandDetailCriteria.class),any(RequestInfo.class)), demandDetailResponse);
-	}*/
 	
 	public static ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();

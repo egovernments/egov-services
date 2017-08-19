@@ -475,6 +475,7 @@ public class WaterConnectionRepository {
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), connection.getStateId(),connection.getNumberOfFamily(),
+                 connection.getStatus(),connection.getEstimationNumber(),connection.getWorkOrderNumber(),connection.getConsumerNumber(),
                  connection.getAcknowledgementNumber() };
         jdbcTemplate.update(insertQuery, obj);
         

@@ -39,6 +39,7 @@
  */
 package org.egov.demand.repository.querybuilder;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +49,7 @@ import org.egov.demand.repository.TaxPeriodRepository;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -64,6 +66,10 @@ public class TaxPeriodQueryBuilder {
     public final String updateQuery="UPDATE public.egbs_taxperiod SET service=?, code=?, fromdate=?, todate=?,"
     		+ " financialyear=?, lastmodifieddate=?, lastmodifiedby=?, tenantid=?,"
     		+ " periodcycle=? WHERE tenantid = ? and id = ? ";
+    
+    public final String PERIOD_VALIDATE_QUERY = "SELECT * FROM egbs_taxperiod WHERE tenantId= ? AND service= ?"
+    		+ " AND ( ? BETWEEN fromdate AND todate OR ? BETWEEN fromdate AND todate)"
+    		+ " OR (fromdate BETWEEN ? AND ? OR todate BETWEEN ? AND ?);";
     
     public String prepareSearchQuery(final TaxPeriodCriteria taxPeriodCriteria, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
@@ -119,27 +125,40 @@ public class TaxPeriodQueryBuilder {
         }
     }
 
-    public String prepareQueryForValidation(List<TaxPeriod> taxPeriodList, String mode){
-        String baseQuery = "select exists (select * from egbs_taxperiod taxperiod where ";
-        StringBuilder whereClause = new StringBuilder();
-        int count = 0;
-        for(TaxPeriod taxPeriod : taxPeriodList){
-            whereClause = whereClause.append(" ( ");
-            if(StringUtils.isNotBlank(taxPeriod.getService()))
-                whereClause = whereClause.append(" taxperiod.service = '").append(taxPeriod.getService()).append("' and ");
-            if(StringUtils.isNotBlank(taxPeriod.getCode()))
-                whereClause = whereClause.append(" taxperiod.code = '").append(taxPeriod.getCode()).append("' and ");
-            if("edit".equalsIgnoreCase(mode))
-                whereClause = whereClause.append(" taxperiod.id != '").append(taxPeriod.getId()).append("' and ");
-            if(StringUtils.isNotBlank(taxPeriod.getTenantId()))
-                whereClause = whereClause.append(" taxperiod.tenantId = '").append(taxPeriod.getTenantId()).append("')");
-
-            count++;
-            if(taxPeriodList.size()>count)
-                whereClause = whereClause.append(" or ");
-        }
-        return baseQuery.concat(whereClause.toString()).concat(" )");
-    }
+	public String prepareQueryForValidation(List<TaxPeriod> taxPeriodList, String mode) {
+		
+		String baseQuery = "select exists (select * from egbs_taxperiod taxperiod where ";
+		StringBuilder whereClause = new StringBuilder();
+		Long currDate = new Date().getTime();
+		int count = 0;
+		
+		for (TaxPeriod taxPeriod : taxPeriodList) {
+			
+			whereClause = whereClause.append(" ( ");
+		
+			if (StringUtils.isNotBlank(taxPeriod.getService()))
+				whereClause = whereClause.append(" taxperiod.service = '").append(taxPeriod.getService())
+						.append("' and ");
+			if (StringUtils.isNotBlank(taxPeriod.getCode()))
+				whereClause = whereClause.append(" taxperiod.code = '").append(taxPeriod.getCode()).append("' and ");
+			if ("edit".equalsIgnoreCase(mode))
+				whereClause = whereClause.append(" taxperiod.id != '").append(taxPeriod.getId()).append("' and ");
+			if (StringUtils.isNotBlank(taxPeriod.getTenantId()))
+				whereClause = whereClause.append(" taxperiod.tenantId = '").append(taxPeriod.getTenantId())
+						.append("' and ( ");
+			// from and to dates validation
+			if (StringUtils.isNotBlank(taxPeriod.getFromDate().toString())
+					&& StringUtils.isNotBlank(taxPeriod.getToDate().toString()))
+				whereClause.append(taxPeriod.getFromDate() + " BETWEEN fromdate AND todate OR " + taxPeriod.getToDate()+
+						" BETWEEN fromdate AND todate)" + " OR (fromdate BETWEEN " + taxPeriod.getFromDate() + 
+						" AND "+ taxPeriod.getToDate() + " OR todate BETWEEN " + taxPeriod.getFromDate() + 
+						" AND "+ taxPeriod.getToDate() + "))");
+			count++;
+			if (taxPeriodList.size() > count)
+				whereClause = whereClause.append(" or ");
+		}
+		return baseQuery.concat(whereClause.toString()).concat(" )");
+	}
 
     private String getQueryForCollection(Set<String> values) {
         StringBuilder query = new StringBuilder();

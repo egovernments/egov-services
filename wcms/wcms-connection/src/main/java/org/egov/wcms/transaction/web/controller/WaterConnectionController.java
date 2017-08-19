@@ -50,6 +50,7 @@ import org.egov.wcms.transaction.config.ApplicationProperties;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
+import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.web.contract.EstimationNoticeRes;
@@ -190,6 +191,20 @@ public class WaterConnectionController {
         
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        
+        if(waterConnectionRequest.getConnection()!=null &&
+        		waterConnectionRequest.getConnection().getStatus()!=null
+        		&& waterConnectionRequest.getConnection().getStatus().equals(NewConnectionStatus.CREATED.name())
+        		&&( waterConnectionRequest.getConnection().getEstimationCharge() == null||waterConnectionRequest.getConnection().getEstimationCharge().isEmpty() )){
+        	final ErrorResponse eRes = new ErrorResponse();
+        	final Error er = new Error();
+        	er.setDescription("EstimationCharge is Required");
+        	eRes.setError(er);
+        	if (eRes!=null)
+        		return new ResponseEntity<>(eRes, HttpStatus.BAD_REQUEST);
+        }
+        
+        
         waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
                 Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
         waterConnectionRequest.getConnection().setId(waterConn.getId());

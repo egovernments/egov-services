@@ -125,7 +125,7 @@ public class TradeLicenseService {
 				//TODO Application Number and Application Date shoudl be mandatory
 			}
 
-			if (!tradeLicense.getIsPropertyOwner()) {
+			if (tradeLicense.getIsPropertyOwner()) {
 				if ((tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty())) {
 					throw new InvalidInputException(propertiesManager.getAgreementNoErrorMsg());
 				}

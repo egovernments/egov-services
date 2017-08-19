@@ -359,7 +359,7 @@ definitions:
         description: Date from when license is valid as epoch
       isPropertyOwner:
         type: boolean
-        description: set to true if Trade owner is the owner of the property
+        description: set to true agreementNo and agreementDate are Mandatory , set to False agreement No and agreementDate are not mandatory
       agreementDate:
         type: integer
         format: int64
